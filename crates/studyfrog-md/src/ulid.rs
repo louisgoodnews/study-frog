@@ -32,3 +32,13 @@ pub fn format_ulid(uid: Uid) -> String {
         })
         .collect()
 }
+
+/// A ULID from a millisecond timestamp (the low 48 bits are used) and 80 random bits. Ids made
+/// later sort later; the caller supplies both inputs so this stays pure.
+pub fn compose_ulid(timestamp_ms: u64, random: [u8; 10]) -> Uid {
+    let ts = u128::from(timestamp_ms & 0xFFFF_FFFF_FFFF);
+    let rnd = random
+        .iter()
+        .fold(0_u128, |acc, b| acc << 8 | u128::from(*b));
+    Uid(ts << 80 | rnd)
+}

@@ -117,3 +117,46 @@ pub fn load_overview(conn: &Connection) -> Result<VaultOverview, StoreError> {
         problems: problems(conn)?,
     })
 }
+
+/// One item of a stack (or of the inbox) as the UI lists it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ItemRow {
+    /// Item identity.
+    pub uid: Uid,
+    /// Title.
+    pub title: String,
+    /// Note, card or question.
+    pub kind: studyfrog_core::plan::ItemKind,
+    /// Vault-relative path of the file.
+    pub path: String,
+}
+
+/// Items directly in `folder` (`None` for the inbox), without the stack file, ordered by path.
+pub fn list_items(conn: &Connection, folder: Option<&str>) -> Result<Vec<ItemRow>, StoreError> {
+    let sql = "SELECT uid, title, kind, path FROM item WHERE stack_path IS ?1 AND kind != 'stack' ORDER BY path";
+    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+    let rows = stmt
+        .query_map([folder], |r| {
+            Ok((
+                r.get::<_, String>(0)?,
+                r.get::<_, String>(1)?,
+                r.get::<_, String>(2)?,
+                r.get::<_, String>(3)?,
+            ))
+        })
+        .map_err(sql_err)?;
+    let mut out = Vec::new();
+    for row in rows {
+        let (id, title, kind, path) = row.map_err(sql_err)?;
+        let uid = parse_ulid(&id).ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}")))?;
+        let kind = studyfrog_core::plan::item_kind_from_name(&kind)
+            .ok_or_else(|| StoreError::Corrupt(format!("kind: {kind:?}")))?;
+        out.push(ItemRow {
+            uid,
+            title,
+            kind,
+            path,
+        });
+    }
+    Ok(out)
+}

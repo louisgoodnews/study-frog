@@ -2,6 +2,7 @@
 
 use studyfrog_core::settings::AppSettings;
 pub use studyfrog_service::session::VaultInfo;
+pub use studyfrog_store::overview::ItemRow;
 
 /// Which screen is showing.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -35,6 +36,44 @@ pub struct Notice {
     pub text: String,
 }
 
+/// What the library screen shows on its right-hand side.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub enum Selection {
+    /// Nothing chosen yet.
+    #[default]
+    Nothing,
+    /// The stack in this vault-relative folder.
+    Stack(String),
+    /// Items outside every stack.
+    Inbox,
+}
+
+/// The card being written in the "new card" form.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct CardDraft {
+    /// Optional title (derived from the front when empty).
+    pub title: String,
+    /// Prompt side.
+    pub front: String,
+    /// Answer side.
+    pub back: String,
+}
+
+/// State of the stack browser.
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct Browser {
+    /// Which stack (or the inbox) is open.
+    pub selection: Selection,
+    /// Items of the selection, as last loaded.
+    pub items: Vec<ItemRow>,
+    /// Title filter.
+    pub search: String,
+    /// Title for a stack about to be created.
+    pub new_stack: String,
+    /// Card being written.
+    pub draft: CardDraft,
+}
+
 /// Everything the views render.
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct State {
@@ -52,4 +91,6 @@ pub struct State {
     pub opening: bool,
     /// A change check is running in the background.
     pub polling: bool,
+    /// The stack browser.
+    pub browser: Browser,
 }

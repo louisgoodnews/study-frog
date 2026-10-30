@@ -53,6 +53,14 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Tick => tick(state),
         Msg::VaultPolled(result) => vault_polled(state, result),
         Msg::AppSettingsSaved(result) => settings_saved(state, result),
+        browse @ (Msg::Select(_)
+        | Msg::SearchEdited(_)
+        | Msg::ItemsLoaded(_)
+        | Msg::NewStackEdited(_)
+        | Msg::CreateStackClicked
+        | Msg::DraftEdited(..)
+        | Msg::AddCardClicked
+        | Msg::Created(_)) => crate::browse::update(state, browse),
     }
 }
 
@@ -159,13 +167,16 @@ fn vault_polled(state: State, result: Result<Option<VaultInfo>, String>) -> (Sta
         ..state
     };
     match result {
-        Ok(Some(info)) if state.vault.is_some() => (
-            State {
-                vault: Some(info),
-                ..state
-            },
-            Vec::new(),
-        ),
+        Ok(Some(info)) if state.vault.is_some() => {
+            let reload = crate::browse::reload(&state.browser.selection);
+            (
+                State {
+                    vault: Some(info),
+                    ..state
+                },
+                reload,
+            )
+        }
         Ok(_) => (state, Vec::new()),
         Err(e) => {
             let notice = notice(NoticeKind::Error, format!("Checking the vault failed: {e}"));

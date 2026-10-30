@@ -2,7 +2,7 @@
 id: STORY-0017
 type: story
 title: Stack browser, run setup and rehearsal screen
-status: backlog
+status: in_progress
 epic: EPIC-008
 parents: [EPIC-008]
 estimate: 8

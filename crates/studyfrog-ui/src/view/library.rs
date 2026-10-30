@@ -1,10 +1,12 @@
-//! The stack overview.
+//! The library screen: stack list on the left, overview or the selected stack on the right.
 
-use eframe::egui::{self, Grid};
+use eframe::egui::{self, Grid, Panel};
 use studyfrog_core::scheduler::{Scheduler, scheduler_name};
 use studyfrog_store::overview::{StackRow, VaultOverview};
 
-use crate::state::State;
+use crate::msg::Msg;
+use crate::state::{Selection, State};
+use crate::view::{items, widgets::text_field};
 
 fn limit(n: Option<u32>) -> String {
     n.map_or_else(|| "–".to_owned(), |v| v.to_string())
@@ -17,8 +19,61 @@ fn scheduler_text(row: &StackRow, default: Scheduler) -> String {
     }
 }
 
-/// Title, counts and a table of stacks; the inbox and any problems below it.
-pub fn draw(state: &State, ui: &mut egui::Ui) {
+/// Both halves of the screen.
+pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if state.vault.is_none() {
+        return;
+    }
+    Panel::left("stack-list")
+        .default_size(220.0)
+        .show(ui, |ui| stack_list(state, ui, out));
+    match &state.browser.selection {
+        Selection::Nothing => overview(state, ui),
+        _ => items::draw(state, ui, out),
+    }
+}
+
+fn stack_list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let Some(vault) = &state.vault else { return };
+    ui.heading("Stacks");
+    let current = &state.browser.selection;
+    for s in &vault.overview.stacks {
+        let target = Selection::Stack(s.folder.clone());
+        if ui.selectable_label(*current == target, &s.title).clicked() {
+            out.push(Msg::Select(target));
+        }
+    }
+    let inbox = vault.overview.inbox_items;
+    if inbox > 0
+        && ui
+            .selectable_label(*current == Selection::Inbox, format!("Inbox ({inbox})"))
+            .clicked()
+    {
+        out.push(Msg::Select(Selection::Inbox));
+    }
+    if ui
+        .selectable_label(*current == Selection::Nothing, "Overview")
+        .clicked()
+    {
+        out.push(Msg::Select(Selection::Nothing));
+    }
+    ui.separator();
+    if let Some(text) = text_field(
+        ui,
+        "New stack title",
+        &state.browser.new_stack,
+        "e.g. French verbs",
+        1,
+    ) {
+        out.push(Msg::NewStackEdited(text));
+    }
+    if ui.button("Create stack").clicked() {
+        out.push(Msg::CreateStackClicked);
+    }
+}
+
+/// Title, counts and a table of stacks; any problems below it.
+fn overview(state: &State, ui: &mut egui::Ui) {
     let Some(vault) = &state.vault else { return };
     ui.heading(&vault.name);
     let o = &vault.overview;
@@ -31,7 +86,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) {
     ui.label(format!("{} stacks, {items} items", o.stacks.len()));
     ui.add_space(8.0);
     if o.stacks.is_empty() {
-        ui.label("No stacks yet. Add a folder with a _stack.md file to the vault.");
+        ui.label("No stacks yet. Create one on the left, or add a folder with a _stack.md file to the vault.");
     } else {
         stack_table(o, vault.settings.scheduler, ui);
     }

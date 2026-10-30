@@ -2,7 +2,7 @@
 
 use studyfrog_core::settings::AppSettings;
 
-use crate::state::{Screen, VaultInfo};
+use crate::state::{ItemRow, Screen, Selection, VaultInfo};
 
 /// An event for [`update`](crate::update::update).
 #[derive(Debug, Clone, PartialEq)]
@@ -34,4 +34,31 @@ pub enum Msg {
     VaultPolled(Result<Option<VaultInfo>, String>),
     /// The app settings were saved (or not).
     AppSettingsSaved(Result<(), String>),
+    /// A stack (or the inbox) was chosen in the browser.
+    Select(Selection),
+    /// The title filter changed.
+    SearchEdited(String),
+    /// The items of the selection were loaded.
+    ItemsLoaded(Result<Vec<ItemRow>, String>),
+    /// The new-stack title changed.
+    NewStackEdited(String),
+    /// "Create stack" was activated.
+    CreateStackClicked,
+    /// A field of the new-card form changed.
+    DraftEdited(DraftField, String),
+    /// "Add card" was activated.
+    AddCardClicked,
+    /// A stack or card was created (or not); carries the refreshed vault.
+    Created(Result<VaultInfo, String>),
+}
+
+/// Which field of the new-card form.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DraftField {
+    /// The optional title.
+    Title,
+    /// The front.
+    Front,
+    /// The back.
+    Back,
 }

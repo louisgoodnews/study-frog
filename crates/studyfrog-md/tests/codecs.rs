@@ -94,3 +94,14 @@ fn fence_edge_cases() {
     assert_eq!(blocks[1].text, "tags:\n  - a\n- b\n\n# note\n");
     assert_eq!(blocks[2].line, 8);
 }
+
+proptest! {
+    #[test]
+    fn composed_ulids_are_valid_and_sort_by_time(a in 0_u64..(1 << 48), b in 0_u64..(1 << 48), ra in any::<[u8; 10]>(), rb in any::<[u8; 10]>()) {
+        use studyfrog_md::ulid::compose_ulid;
+        let (x, y) = (compose_ulid(a, ra), compose_ulid(b, rb));
+        prop_assert_eq!(parse_ulid(&format_ulid(x)), Some(x));
+        if a < b { prop_assert!(format_ulid(x) < format_ulid(y), "text order follows time"); }
+        prop_assert!(format_ulid(x).as_bytes()[0] <= b'7', "fits 128 bits");
+    }
+}

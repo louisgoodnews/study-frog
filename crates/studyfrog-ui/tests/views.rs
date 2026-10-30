@@ -60,7 +60,7 @@ fn library_lists_stacks_counts_inbox_and_problems() {
         "fsrs (default)",
         "Problems (1)",
     ] {
-        assert!(h.query_by_label(text).is_some(), "missing {text:?}");
+        assert!(h.query_all_by_label(text).count() >= 1, "missing {text:?}");
     }
     assert_eq!(
         h.query_all_by_label("20 / –").count(),

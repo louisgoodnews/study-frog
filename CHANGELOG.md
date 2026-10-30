@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Stack browser: choose a stack or the inbox, filter its items by title, create stacks and cards from the UI.
+  Service use cases `create_stack`/`create_card` (never overwrite, validated, reindexed at once), in-house ULID
+  composition with OS randomness, `list_items`; 14 new tests incl. a real-vault build-a-stack flow
+  (TASK-0038).
 - First desktop app (EPIC-008 so far): eframe/egui window with a vault chooser (remembers the last vault),
   library overview (stacks, counts, inbox, problems), navigation and settings view; pure
   `update(State, Msg) -> (State, Vec<Effect>)` with a worker-thread executor and 1 s change polling;

@@ -29,13 +29,15 @@ pub enum ServiceError {
     Io(String),
     /// The index failed.
     Store(StoreError),
+    /// The request itself is not acceptable (empty title, not a stack, ...).
+    Invalid(String),
 }
 
 /// Human-readable description.
 pub fn describe_service_error(e: &ServiceError) -> String {
     match e {
         ServiceError::NotAFolder(p) => format!("{p} is not a folder"),
-        ServiceError::Io(m) => m.clone(),
+        ServiceError::Io(m) | ServiceError::Invalid(m) => m.clone(),
         ServiceError::Store(e) => e.to_string(),
     }
 }

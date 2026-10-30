@@ -4,6 +4,7 @@
 //! about egui; `exec` performs effects; `view` and `model` draw; `runtime` and `app` are the glue.
 
 pub mod app;
+pub mod browse;
 pub mod effect;
 pub mod exec;
 pub mod model;
