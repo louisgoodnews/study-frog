@@ -4,16 +4,16 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (8) | Ready (2) | In progress (0/3) | Review (0) | Blocked (0) | Done (39) |
+| Backlog (7) | Ready (2) | In progress (0/3) | Review (0) | Blocked (0) | Done (40) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) | [TASK-0036](docs/issues/tasks/TASK-0036-eframe-window-and-navigation.md) eframe window and navigation (3) |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-| [TASK-0038](docs/issues/tasks/TASK-0038-stack-browser.md) Stack browser (3) | [TASK-0037](docs/issues/tasks/TASK-0037-elm-style-update-loop-and-effects.md) Elm-style update loop and effects (5) |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-| [TASK-0039](docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-| [TASK-0040](docs/issues/tasks/TASK-0040-editor-widget.md) Editor widget (5) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
-| [TASK-0041](docs/issues/tasks/TASK-0041-preview-renderer.md) Preview renderer (3) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
-| [TASK-0042](docs/issues/tasks/TASK-0042-force-directed-layout-soa.md) Force-directed layout (SoA) (5) |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
-| [TASK-0043](docs/issues/tasks/TASK-0043-graph-render-benchmark.md) Graph render benchmark (3) |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
-| [TASK-0073](docs/issues/tasks/TASK-0073-run-setup-screen-plan-picker.md) Run setup screen (plan picker) (3) |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
+| [TASK-0038](docs/issues/tasks/TASK-0038-stack-browser.md) Stack browser (3) | [TASK-0036](docs/issues/tasks/TASK-0036-eframe-window-and-navigation.md) eframe window and navigation (3) |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+| [TASK-0039](docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) | [TASK-0037](docs/issues/tasks/TASK-0037-elm-style-update-loop-and-effects.md) Elm-style update loop and effects (5) |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+| [TASK-0040](docs/issues/tasks/TASK-0040-editor-widget.md) Editor widget (5) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+| [TASK-0041](docs/issues/tasks/TASK-0041-preview-renderer.md) Preview renderer (3) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+| [TASK-0042](docs/issues/tasks/TASK-0042-force-directed-layout-soa.md) Force-directed layout (SoA) (5) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
+| [TASK-0043](docs/issues/tasks/TASK-0043-graph-render-benchmark.md) Graph render benchmark (3) |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
+| [TASK-0073](docs/issues/tasks/TASK-0073-run-setup-screen-plan-picker.md) Run setup screen (plan picker) (3) |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
+|  |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
 |  |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
 |  |  |  |  |  | [TASK-0010](docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
 |  |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
@@ -21,6 +21,7 @@
 |  |  |  |  |  | [TASK-0013](docs/issues/tasks/TASK-0013-stack-note-card-question-structs.md) Stack, Note, Card, Question structs (3) |
 |  |  |  |  |  | [TASK-0014](docs/issues/tasks/TASK-0014-review-and-rating-types.md) Review and Rating types (2) |
 |  |  |  |  |  | [TASK-0015](docs/issues/tasks/TASK-0015-run-and-event-types.md) Run and event types (3) |
+|  |  |  |  |  | [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) |
 |  |  |  |  |  | [TASK-0017](docs/issues/tasks/TASK-0017-fsrs-property-and-golden-tests.md) FSRS property and golden tests (3) |
 |  |  |  |  |  | [TASK-0018](docs/issues/tasks/TASK-0018-sm-2-functions.md) SM-2 functions (3) |
 |  |  |  |  |  | [TASK-0019](docs/issues/tasks/TASK-0019-srs-criterion-benchmark.md) SRS criterion benchmark (2) |
@@ -56,7 +57,7 @@
 | [STORY-0004](docs/issues/stories/STORY-0004-roadmap-and-issue-tracking.md) Roadmap and issue tracking (5) | done | 3/3 |
 | [STORY-0005](docs/issues/stories/STORY-0005-identity-and-content-types.md) Identity and content types (5) | done | 2/2 |
 | [STORY-0006](docs/issues/stories/STORY-0006-review-and-run-data.md) Review and run data (5) | done | 2/2 |
-| [STORY-0007](docs/issues/stories/STORY-0007-fsrs-implementation.md) FSRS implementation (8) | backlog | 1/2 |
+| [STORY-0007](docs/issues/stories/STORY-0007-fsrs-implementation.md) FSRS implementation (8) | done | 2/2 |
 | [STORY-0008](docs/issues/stories/STORY-0008-sm-2-baseline.md) SM-2 baseline (5) | done | 2/2 |
 | [STORY-0009](docs/issues/stories/STORY-0009-front-matter-parse-and-render.md) Front-matter parse and render (8) | done | 3/3 |
 | [STORY-0010](docs/issues/stories/STORY-0010-body-parsing.md) Body parsing (5) | done | 2/2 |
@@ -78,7 +79,7 @@
 | [EPIC-001](docs/issues/epics/EPIC-001-workspace-and-guardrails.md) Workspace and guardrails | done | 2/2 |
 | [EPIC-002](docs/issues/epics/EPIC-002-documentation-library.md) Documentation library | done | 2/2 |
 | [EPIC-003](docs/issues/epics/EPIC-003-core-domain-types.md) Core domain types | done | 2/2 |
-| [EPIC-004](docs/issues/epics/EPIC-004-srs-scheduling.md) SRS scheduling | backlog | 1/2 |
+| [EPIC-004](docs/issues/epics/EPIC-004-srs-scheduling.md) SRS scheduling | done | 2/2 |
 | [EPIC-005](docs/issues/epics/EPIC-005-markdown-and-front-matter.md) Markdown and front-matter | done | 2/2 |
 | [EPIC-006](docs/issues/epics/EPIC-006-storage.md) Storage | done | 2/2 |
 | [EPIC-007](docs/issues/epics/EPIC-007-rehearsal-engine.md) Rehearsal engine | done | 4/4 |

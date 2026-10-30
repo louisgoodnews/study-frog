@@ -35,6 +35,7 @@ pub fn check_all(issues: &[Issue]) -> Vec<String> {
         }
     }
     errors.extend(issues.iter().flat_map(|i| check_one(i, &index)));
+    errors.extend(issues.iter().flat_map(|i| check_status(i, issues)));
     errors
 }
 
@@ -182,4 +183,33 @@ fn check_sections(issue: &Issue) -> Vec<String> {
             None => Some(err(issue, &format!("missing or misordered section `{s}`"))),
         })
         .collect()
+}
+
+/// Status must agree with the hierarchy: a parent is done exactly when all its children are, and a
+/// done item has no unchecked acceptance criteria.
+fn check_status(issue: &Issue, all: &[Issue]) -> Vec<String> {
+    let mut out = Vec::new();
+    let done = issue.front.status == "done";
+    if done
+        && issue
+            .body
+            .lines()
+            .any(|l| l.trim_start().starts_with("- [ ]"))
+    {
+        out.push(err(issue, "is done but has unchecked acceptance criteria"));
+    }
+    let children: Vec<&Issue> = all
+        .iter()
+        .filter(|c| c.front.parents.iter().any(|p| *p == issue.front.id))
+        .collect();
+    let all_done = !children.is_empty() && children.iter().all(|c| c.front.status == "done");
+    if matches!(issue.front.kind.as_str(), "epic" | "story") && !children.is_empty() {
+        if all_done && !done {
+            out.push(err(issue, "all children are done but this item is not"));
+        }
+        if done && !all_done {
+            out.push(err(issue, "is done but has children that are not"));
+        }
+    }
+    out
 }

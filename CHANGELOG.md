@@ -79,4 +79,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - Placeholder hello-world package and the unverified `repository` manifest field.
 
 ### Fixed
+- Board/issue bookkeeping: TASK-0016, STORY-0007 and EPIC-004 were still `backlog` after M1. `repo-lint`
+  now rejects a parent whose children are all done but is not, a done parent with open children, and a
+  done item with unchecked acceptance criteria.
 - `scripts/linecount.sh` no longer miscounts the `wc` total line on non-English locales.

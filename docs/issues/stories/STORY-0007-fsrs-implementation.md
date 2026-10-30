@@ -2,7 +2,7 @@
 id: STORY-0007
 type: story
 title: FSRS implementation
-status: backlog
+status: done
 epic: EPIC-004
 parents: [EPIC-004]
 estimate: 8

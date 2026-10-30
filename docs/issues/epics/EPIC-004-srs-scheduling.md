@@ -2,7 +2,7 @@
 id: EPIC-004
 type: epic
 title: SRS scheduling
-status: backlog
+status: done
 parents: []
 labels: [m1, srs]
 acceptance_criteria:

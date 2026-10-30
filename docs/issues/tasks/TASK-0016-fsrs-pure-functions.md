@@ -2,7 +2,7 @@
 id: TASK-0016
 type: task
 title: FSRS pure functions
-status: backlog
+status: done
 epic: EPIC-004
 parents: [STORY-0007]
 estimate: 5
