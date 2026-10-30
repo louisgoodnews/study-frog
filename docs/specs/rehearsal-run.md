@@ -108,3 +108,15 @@ Distraction-free: the prompt, a progress counter and the time on the current ite
   suggestion: the rating of the item's latest review is replaced and its schedule rebuilt by replaying the
   review history, which gives exactly the state the other rating would have produced then. The event log
   keeps what the user pressed. Practice-only runs show suggestions but cannot apply them.
+
+## Priority and the owner's difficulty
+Every item has a **priority** (`lowest`, `low`, `medium`, `high`, `highest`; default medium) and may have a
+**difficulty** word (`easy`, `medium`, `difficult`). Both come from the item's own front matter, else the nearest
+stack above that states one. In queue building:
+- **Spaced runs** list due items and then new items by priority first (highest first), so a daily allowance goes
+  to the more important items. A high priority makes an item due 12 hours early, the highest 24 hours early, and
+  the lowest only 12 hours after its due time.
+- **Other orders** keep their own key (hardest, easiest, stalest, lowest recall); priority breaks ties before
+  the library position. Sequential keeps the library order.
+- **Hardest and easiest first** use the owner's difficulty (2.5, 5.5, 8.5 on the 1 to 10 scale) for items that were
+  never reviewed and so have no memory difficulty.

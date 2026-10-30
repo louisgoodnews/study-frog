@@ -27,5 +27,6 @@ pub mod sessions;
 pub mod settings;
 pub mod stackcfg;
 pub mod stackmap;
+mod traits;
 pub mod vault;
 pub mod vault_config;

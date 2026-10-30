@@ -18,6 +18,8 @@ pub struct StackRow {
     pub folder: String,
     /// The folder of the stack this one sits inside, if any.
     pub parent: Option<String>,
+    /// The subjects the stack names itself (items and stacks inside it take them when they name none).
+    pub subjects: Vec<String>,
     /// Notes in the stack.
     pub notes: usize,
     /// Cards in the stack.
@@ -56,7 +58,8 @@ const STACKS_SQL: &str = "
 SELECT s.uid, i.title, s.folder, s.scheduler, s.daily_new_limit, s.daily_review_limit,
        (SELECT COUNT(*) FROM item x WHERE x.stack_path = s.folder AND x.kind = 'note'),
        (SELECT COUNT(*) FROM item x WHERE x.stack_path = s.folder AND x.kind = 'card'),
-       (SELECT COUNT(*) FROM item x WHERE x.stack_path = s.folder AND x.kind = 'question')
+       (SELECT COUNT(*) FROM item x WHERE x.stack_path = s.folder AND x.kind = 'question'),
+       i.subjects
 FROM stack_setting s JOIN item i ON i.uid = s.uid
 ORDER BY s.folder";
 
@@ -68,6 +71,7 @@ fn stack_row(r: &rusqlite::Row) -> rusqlite::Result<(String, StackRow)> {
         title: r.get(1)?,
         folder: r.get(2)?,
         parent: None,
+        subjects: subjects_of(r.get::<_, Option<String>>(9)?),
         notes: count(6)?,
         cards: count(7)?,
         questions: count(8)?,
@@ -76,6 +80,16 @@ fn stack_row(r: &rusqlite::Row) -> rusqlite::Result<(String, StackRow)> {
         daily_review_limit: r.get(5)?,
     };
     Ok((r.get(0)?, row))
+}
+
+/// The names in a comma-separated list, without blanks.
+fn subjects_of(list: Option<String>) -> Vec<String> {
+    list.iter()
+        .flat_map(|l| l.split(','))
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .map(str::to_owned)
+        .collect()
 }
 
 fn stacks(conn: &Connection) -> Result<Vec<StackRow>, StoreError> {
@@ -136,7 +150,7 @@ pub fn load_overview(conn: &Connection) -> Result<VaultOverview, StoreError> {
 }
 
 pub use crate::items::{
-    IndexedItem, ItemRow, due_items, item_path, list_items, load_indexed_items, recent_items,
-    resolve_title, search_items,
+    IndexedItem, ItemRow, due_items, item_path, linking_to, list_items, load_indexed_items,
+    recent_items, resolve_title, search_items,
 };
 pub use crate::link_graph::{GraphNode, LinkGraph, load_link_graph};

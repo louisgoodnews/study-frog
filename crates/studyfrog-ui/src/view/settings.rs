@@ -10,10 +10,18 @@ use crate::state::State;
 
 /// Vault settings (with the reason when `studyfrog.toml` was not usable) and where they come from.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    egui::ScrollArea::vertical()
+        .auto_shrink([false, false])
+        .show(ui, |ui| sections(state, ui, out));
+}
+
+fn sections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.heading("Settings");
     reading_speed(state, ui, out);
     ui.separator();
     answer_comparison(state, ui, out);
+    ui.separator();
+    crate::view::subjects::draw(state, ui, out);
     ui.separator();
     let Some(vault) = &state.vault else { return };
     if let Some(e) = &vault.settings_error {

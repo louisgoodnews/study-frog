@@ -6,7 +6,24 @@ use std::collections::HashMap;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 
+use std::cmp::Reverse;
+
+use studyfrog_core::priority::Priority;
+
 use crate::queue::candidate::{Budget, Budgets, Candidate, is_due, is_reviewed};
+
+const HOUR_MS: i64 = 3_600_000;
+
+/// How early (positive) or late (negative) an item of this priority is suggested: a high-priority item
+/// is due half a day early, the highest a day early, the lowest only half a day after its due time.
+pub fn lead_ms(p: Priority) -> i64 {
+    match p {
+        Priority::Highest => 24 * HOUR_MS,
+        Priority::High => 12 * HOUR_MS,
+        Priority::Medium | Priority::Low => 0,
+        Priority::Lowest => -12 * HOUR_MS,
+    }
+}
 
 fn cap<T>(mut items: Vec<T>, limit: Option<u32>) -> Vec<T> {
     if let Some(n) = limit {
@@ -43,15 +60,15 @@ pub fn spaced_queue<'a>(
     let mut due: Vec<&Candidate> = admitted
         .iter()
         .copied()
-        .filter(|c| is_due(c, now))
+        .filter(|c| is_due(c, UnixMs(now.0 + lead_ms(c.priority))))
         .collect();
-    due.sort_by_key(|c| (c.due, c.position, c.uid));
+    due.sort_by_key(|c| (Reverse(c.priority), c.due, c.position, c.uid));
     let mut new: Vec<&Candidate> = admitted
         .iter()
         .copied()
         .filter(|c| !is_reviewed(c))
         .collect();
-    new.sort_by_key(|c| (c.position, c.uid));
+    new.sort_by_key(|c| (Reverse(c.priority), c.position, c.uid));
     let mut queue = cap(
         within_stacks(due, &budgets.per_stack, |b| b.reviews),
         budgets.global.reviews,

@@ -87,6 +87,7 @@ fn opening_a_vault_closes_the_dialog_and_clears_the_toasts() {
 fn stack(title: &str, folder: &str, parent: Option<&str>) -> StackRow {
     StackRow {
         parent: parent.map(str::to_owned),
+        subjects: Vec::new(),
         ..common::views::stack(title, folder, 0, 0)
     }
 }

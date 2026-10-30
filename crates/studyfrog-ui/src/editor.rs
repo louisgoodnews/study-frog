@@ -7,7 +7,7 @@ use studyfrog_service::document::{LoadedDoc, Saved};
 
 use crate::edit_form::{EditForm, apply_form, form_from_doc};
 use crate::effect::Effect;
-use crate::msg::{EditAction, Msg};
+use crate::msg::Msg;
 use crate::state::{Notice, NoticeKind, Screen, State};
 
 /// A document open for editing.
@@ -29,6 +29,8 @@ pub struct Editor {
     pub previews: Vec<Vec<Block>>,
     /// The document being written, while a save is in flight.
     pub saving: Option<Doc>,
+    /// Items whose text links to this one.
+    pub backlinks: Vec<studyfrog_store::overview::ItemRow>,
 }
 
 /// True when the form differs from what is on disk.
@@ -36,7 +38,11 @@ pub fn is_dirty(e: &Editor) -> bool {
     e.form != e.original
 }
 
-fn notice(state: State, kind: NoticeKind, text: impl Into<String>) -> (State, Vec<Effect>) {
+pub(crate) fn notice(
+    state: State,
+    kind: NoticeKind,
+    text: impl Into<String>,
+) -> (State, Vec<Effect>) {
     (
         State {
             notice: Some(Notice {
@@ -64,6 +70,7 @@ fn editor_new(loaded: LoadedDoc, uid: Uid) -> Editor {
         original: form.clone(),
         form,
         saving: None,
+        backlinks: Vec::new(),
     }
 }
 
@@ -77,7 +84,8 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
     match msg {
         Msg::OpenItem(uid) => open_item(state, uid),
         Msg::DocumentLoaded(uid, result) => loaded(state, uid, result),
-        Msg::Edit(action) => edit(state, action),
+        Msg::BacklinksLoaded(uid, result) => crate::editor_edit::backlinks(state, uid, result),
+        Msg::Edit(action) => crate::editor_edit::edit(state, action),
         Msg::SaveClicked => save(state),
         Msg::Saved(result) => saved(state, result),
         Msg::RevertClicked => revert(state),
@@ -102,34 +110,19 @@ fn open_item(state: State, uid: Uid) -> (State, Vec<Effect>) {
 
 fn loaded(state: State, uid: Uid, result: Result<LoadedDoc, String>) -> (State, Vec<Effect>) {
     match result {
-        Ok(doc) => (
-            State {
-                editor: Some(editor_new(doc, uid)),
+        Ok(doc) => {
+            let editor = editor_new(doc, uid);
+            let ask = Effect::LoadBacklinks(uid, editor.form.title.clone());
+            let state = State {
+                editor: Some(editor),
                 screen: Screen::Editor,
                 notice: None,
                 ..state
-            },
-            Vec::new(),
-        ),
+            };
+            (state, vec![ask])
+        }
         Err(e) => notice(state, NoticeKind::Error, format!("Could not open it: {e}")),
     }
-}
-
-fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
-    let mut state = state;
-    if let Some(e) = &mut state.editor {
-        match action {
-            EditAction::Title(t) => e.form.title = t,
-            EditAction::Tags(t) => e.form.tags = t,
-            EditAction::Field(i, text) => {
-                if let Some(f) = e.form.fields.get_mut(i) {
-                    f.text = text;
-                    e.previews[i] = parse_blocks(&f.text);
-                }
-            }
-        }
-    }
-    (state, Vec::new())
 }
 
 fn save(state: State) -> (State, Vec<Effect>) {

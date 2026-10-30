@@ -74,6 +74,12 @@ turns runs left idle, running or paused into `aborted` and closes their log with
 - `reminder_fired(session_id, date, minutes_before)`: which reminder was shown for which occurrence, so it shows
   once. A reminder missed while the app was closed still shows once, until its occurrence has ended.
 
+## Schema v9 and v10: priority, difficulty, subjects
+- `item.priority` (`lowest` to `highest`) and `item.difficulty` (`easy`, `medium`, `difficult`): the words an
+  item or stack states in its own front matter (`priority:`, `difficulty:`); `NULL` means "ask the stack".
+- `item.subjects`: a stack's own comma-separated `subjects:` list. Items and stacks that name none take the
+  nearest stack above that does. Teachers and subjects themselves are in `subjects.toml`, not in the index.
+
 ## Vault rules (M2)
 - Only `.md` files are indexed; names starting with `.` (and everything inside such folders) are skipped, as are symlinks.
 - A **stack** is a folder containing `_stack.md`. **Stacks nest**: a stack folder inside another stack folder is a

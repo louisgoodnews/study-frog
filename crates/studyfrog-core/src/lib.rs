@@ -10,6 +10,7 @@ pub mod library;
 pub mod memory;
 pub mod meta;
 pub mod plan;
+pub mod priority;
 pub mod review;
 pub mod run;
 pub mod scheduler;

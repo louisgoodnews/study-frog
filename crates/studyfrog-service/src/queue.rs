@@ -35,6 +35,8 @@ pub fn candidates<'a>(items: &'a [IndexedItem], sched: &Schedules) -> Vec<Candid
                 memory: scheduled.and_then(|s| s.memory),
                 due: scheduled.map(|s| s.due),
                 last_review: scheduled.map(|s| s.last_review),
+                priority: it.priority,
+                difficulty_hint: it.difficulty,
             }
         })
         .collect()

@@ -60,3 +60,17 @@ A value outside 50 to 1000 is an error with its line.
 ## Not configuration
 Per-item properties stay in front-matter ([markdown-schema](markdown-schema.md)): `id`, `kind`, `title`, `tags`,
 `aliases`, timestamps, `reversible`, `rehearse_title`, `accepted`, `rubric`, `min_score`.
+
+## `subjects.toml` (vault root, optional)
+Teachers and subjects, edited on the Settings screen:
+```toml
+[[teacher]]
+name = "Ms Rivera"
+
+[[subject]]
+name = "Mathematics"
+teacher = "Ms Rivera"   # optional; a subject has at most one teacher
+```
+Names are unique (ignoring case), one line, without commas. Unknown keys and unknown teachers are errors, and the
+file is then not used (the Settings screen says why). A stack lists its subjects in its front matter:
+`subjects: Mathematics, Physics`.

@@ -2,7 +2,7 @@
 id: STORY-0045
 type: story
 title: Subjects and teachers
-status: backlog
+status: done
 epic: EPIC-021
 parents: [EPIC-021]
 estimate: 5
@@ -18,10 +18,10 @@ The owner reviewed the app again and asked for a knowledge workspace: an item pa
 Subjects and teachers.
 
 ## Acceptance Criteria
-- [ ] A teacher has subjects; a stack has subjects and its items inherit them
+- [x] A teacher has subjects; a stack has subjects and its items inherit them
 
 ## Design Notes
-Stored in _stack.toml and the index.
+Teachers and subjects live in subjects.toml; a stack names its subjects in its front matter; items inherit. Stored in _stack.toml and the index.
 
 ## Dependencies
 None.

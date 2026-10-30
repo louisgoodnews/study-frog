@@ -8,6 +8,14 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- The item page: title, a Markdown editor for every text area (toolbar, Write, Split or Preview), and a side column
+  with the kind, stack, subjects, priority, difficulty, tags, dates, the links to the item and the items that link
+  to it (STORY-0042, STORY-0043). The Create dialog uses the same editor, wide for notes.
+- Priority (lowest to highest) and difficulty for stacks, notes, cards and questions, inherited from the stack;
+  priority orders spaced runs and breaks ties in the other orders, and the owner's difficulty stands in for the
+  memory difficulty of new items (STORY-0053).
+- Teachers and subjects (`subjects.toml`, edited in Settings); stacks name subjects and what is inside takes them
+  (STORY-0045).
 - A date picker (a month grid under the date field) in the Create dialog and the calendar form; a stack's due date
   can be set or changed from its Library page (STORY-0046, STORY-0052).
 - Stacks whose due date has passed are left out of the suggested run and the home page's counts; choosing such a

@@ -6,6 +6,17 @@
 /// `shuffled` become sequential runs with the switch on.
 /// Calendar entries get a kind and reminders; `reminder_fired` remembers which reminder was shown
 /// for which occurrence so it shows once.
+/// Each item's own priority and difficulty word from its front matter (`NULL`: inherit from the stack).
+/// A stack's subjects, as the comma-separated list in its front matter (`NULL`: none).
+pub(crate) const V10: &str = "
+ALTER TABLE item ADD COLUMN subjects TEXT;
+";
+
+pub(crate) const V9: &str = "
+ALTER TABLE item ADD COLUMN priority TEXT CHECK (priority IS NULL OR priority IN ('lowest', 'low', 'medium', 'high', 'highest'));
+ALTER TABLE item ADD COLUMN difficulty TEXT CHECK (difficulty IS NULL OR difficulty IN ('easy', 'medium', 'difficult'));
+";
+
 pub(crate) const V8: &str = "
 ALTER TABLE session ADD COLUMN kind TEXT NOT NULL DEFAULT 'study'
     CHECK (kind IN ('study', 'task', 'appointment', 'exam', 'deadline'));

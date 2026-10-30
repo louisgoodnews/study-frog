@@ -107,6 +107,9 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),
         Effect::SearchItems(query) => search(w, query),
         Effect::LoadHome => exec_run::home(w, now_ns),
+        Effect::LoadSubjects => exec_doc::subjects(w, None),
+        Effect::SaveSubjects(book) => exec_doc::subjects(w, Some(book)),
+        Effect::LoadBacklinks(uid, title) => exec_doc::backlinks(w, uid, &title),
         Effect::CreateItem {
             kind,
             title,

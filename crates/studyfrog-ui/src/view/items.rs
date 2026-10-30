@@ -195,6 +195,9 @@ fn due_row(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if ui.small_button(button).clicked() {
             out.push(Msg::Plan(PlanMsg::StackDeadline(stack.uid)));
         }
+        if ui.small_button("Edit stack").clicked() {
+            out.push(Msg::OpenItem(stack.uid));
+        }
     });
 }
 

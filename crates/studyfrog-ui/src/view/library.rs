@@ -148,6 +148,13 @@ fn stack_card(o: &VaultOverview, s: &StackRow, default: Scheduler, ui: &mut egui
                 .color(p.text_weak),
         );
     }
+    if !s.subjects.is_empty() {
+        ui.horizontal_wrapped(|ui| {
+            for name in &s.subjects {
+                kit::pill(ui, name, p.success);
+            }
+        });
+    }
     ui.horizontal_wrapped(|ui| {
         for (n, word, color) in [
             (s.cards, "cards", p.accent),

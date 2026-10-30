@@ -6,6 +6,7 @@ pub mod build;
 pub mod codeblock;
 pub mod doc;
 pub mod error;
+pub mod extra;
 pub mod fence;
 pub mod links;
 pub mod parse;

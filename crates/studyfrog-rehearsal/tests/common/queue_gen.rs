@@ -37,6 +37,8 @@ pub fn borrow(items: &[Owned]) -> Vec<Candidate<'_>> {
             memory: o.memory,
             due: o.due,
             last_review: o.last_review,
+            priority: Default::default(),
+            difficulty_hint: None,
         })
         .collect()
 }

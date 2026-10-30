@@ -28,6 +28,7 @@ pub fn stack(title: &str, folder: &str, notes: usize, cards: usize) -> StackRow 
         title: title.into(),
         folder: folder.into(),
         parent: None,
+        subjects: Vec::new(),
         notes,
         cards,
         questions: 0,

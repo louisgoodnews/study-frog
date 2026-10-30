@@ -2,7 +2,7 @@
 id: STORY-0043
 type: story
 title: Visual Markdown editor and note links
-status: backlog
+status: done
 epic: EPIC-021
 parents: [EPIC-021]
 estimate: 8
@@ -19,11 +19,11 @@ The owner reviewed the app again and asked for a knowledge workspace: an item pa
 Visual Markdown editor and note links.
 
 ## Acceptance Criteria
-- [ ] New notes open a full visual Markdown editor
-- [ ] Cards and questions can link to notes and the reverse, with backlinks
+- [x] New notes open a full visual Markdown editor
+- [x] Cards and questions can link to notes and the reverse, with backlinks
 
 ## Design Notes
-Depends on STORY-0042.
+view/md_editor.rs (toolbar, Write/Split/Preview) and md_edit.rs (pure commands); the Create dialog uses it for every text area and widens for notes; backlinks via store::linking_to. Depends on STORY-0042.
 
 ## Dependencies
 None.

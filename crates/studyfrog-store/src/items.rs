@@ -1,10 +1,13 @@
 //! Item lookups over the index: listing, queue-building rows, paths and title resolution.
 
 use rusqlite::Connection;
+use studyfrog_core::event::Difficulty;
+use studyfrog_core::priority::Priority;
 use studyfrog_core::uid::Uid;
 use studyfrog_md::ulid::parse_ulid;
 
 use crate::error::{StoreError, sql_err};
+use crate::traits::{inherited, own_of, stack_traits};
 
 /// One item of a stack (or of the inbox) as the UI lists it.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -88,6 +91,10 @@ pub struct IndexedItem {
     pub tags: Vec<String>,
     /// Position in path order, the base order of sequential runs.
     pub position: u32,
+    /// How much it matters: its own, else its stack's, else medium.
+    pub priority: Priority,
+    /// How hard its owner says it is: its own, else its stack's, if either says.
+    pub difficulty: Option<Difficulty>,
 }
 
 fn tags_by_item(
@@ -110,7 +117,9 @@ fn tags_by_item(
 /// Every studiable item (stacks excluded) in path order, with its stack and tags.
 pub fn load_indexed_items(conn: &Connection) -> Result<Vec<IndexedItem>, StoreError> {
     let mut tags = tags_by_item(conn)?;
-    let sql = "SELECT i.uid, i.kind, s.uid FROM item i LEFT JOIN stack_setting s ON s.folder = i.stack_path
+    let stacks = stack_traits(conn)?;
+    let sql = "SELECT i.uid, i.kind, s.uid, i.priority, i.difficulty, i.stack_path
+               FROM item i LEFT JOIN stack_setting s ON s.folder = i.stack_path
                WHERE i.kind != 'stack' ORDER BY i.path";
     let mut stmt = conn.prepare(sql).map_err(sql_err)?;
     let rows = stmt
@@ -119,12 +128,18 @@ pub fn load_indexed_items(conn: &Connection) -> Result<Vec<IndexedItem>, StoreEr
                 r.get::<_, String>(0)?,
                 r.get::<_, String>(1)?,
                 r.get::<_, Option<String>>(2)?,
+                (
+                    r.get::<_, Option<String>>(3)?,
+                    r.get::<_, Option<String>>(4)?,
+                    r.get::<_, Option<String>>(5)?,
+                ),
             ))
         })
         .map_err(sql_err)?;
     let mut out = Vec::new();
     for (position, row) in rows.enumerate() {
-        let (id, kind, stack) = row.map_err(sql_err)?;
+        let (id, kind, stack, (p, d, folder)) = row.map_err(sql_err)?;
+        let (priority, difficulty) = inherited(own_of(p, d), folder.as_deref(), &stacks);
         let corrupt = |what: &str, v: &str| StoreError::Corrupt(format!("{what}: {v:?}"));
         out.push(IndexedItem {
             uid: parse_ulid(&id).ok_or_else(|| corrupt("ulid", &id))?,
@@ -135,6 +150,8 @@ pub fn load_indexed_items(conn: &Connection) -> Result<Vec<IndexedItem>, StoreEr
             })?,
             tags: tags.remove(&id).unwrap_or_default(),
             position: position as u32,
+            priority,
+            difficulty,
         });
     }
     Ok(out)
@@ -161,6 +178,19 @@ pub fn resolve_title(conn: &Connection, target: &str) -> Result<Option<Uid>, Sto
         Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
         Err(e) => Err(sql_err(e)),
     }
+}
+
+/// The items (not stacks) whose text links to `title` with a wikilink, without `except` itself.
+pub fn linking_to(conn: &Connection, title: &str, except: Uid) -> Result<Vec<ItemRow>, StoreError> {
+    let sql = "SELECT DISTINCT i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms)
+               FROM link l JOIN item i ON i.uid = l.src_uid
+               LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
+               WHERE l.target = ?1 COLLATE NOCASE AND i.kind != 'stack' AND i.uid != ?2
+               ORDER BY i.title COLLATE NOCASE, i.path";
+    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+    let params = (title.trim(), studyfrog_md::ulid::format_ulid(except));
+    let rows = stmt.query_map(params, raw_item).map_err(sql_err)?;
+    rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
 }
 
 /// The items due at `now_ms` or earlier, the most overdue first, at most `limit`.

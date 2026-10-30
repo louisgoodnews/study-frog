@@ -7,6 +7,7 @@ use studyfrog_service::document::{load_document, resolve_link, save_document};
 
 use crate::exec::Worker;
 use crate::msg::Msg;
+use crate::subjects_ui::SubjectsMsg;
 
 /// Read a document for editing.
 pub fn load_document_msg(w: &Worker, uid: Uid) -> Msg {
@@ -43,4 +44,29 @@ pub fn load_graph_msg(w: &Worker) -> Msg {
         ),
         None => Msg::GraphLoaded(Err("no vault is open".to_owned())),
     }
+}
+
+/// The items that link to the one with this title.
+pub fn backlinks(w: &Worker, uid: Uid, title: &str) -> Msg {
+    let result = match &w.session {
+        Some(session) => studyfrog_store::overview::linking_to(&session.conn, title, uid)
+            .map_err(|e| e.to_string()),
+        None => Ok(Vec::new()),
+    };
+    Msg::BacklinksLoaded(uid, result)
+}
+
+/// Read the subjects book, or store a changed one and read it back.
+pub fn subjects(w: &Worker, change: Option<studyfrog_config::subjects::SubjectBook>) -> Msg {
+    use studyfrog_service::subjects::{load_subjects, save_subjects};
+    let Some(session) = &w.session else {
+        return Msg::Subjects(SubjectsMsg::Loaded(Ok(Default::default())));
+    };
+    let result = match change {
+        Some(book) => save_subjects(session, book)
+            .map(|b| (b, None))
+            .map_err(|e| e.to_string()),
+        None => Ok(load_subjects(session)),
+    };
+    Msg::Subjects(SubjectsMsg::Loaded(result))
 }

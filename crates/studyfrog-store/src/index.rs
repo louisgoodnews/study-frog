@@ -3,8 +3,11 @@
 use std::collections::HashMap;
 
 use rusqlite::{Connection, Transaction, params};
+use studyfrog_core::event::difficulty_from_name;
+use studyfrog_core::priority::priority_from_name;
 use studyfrog_md::doc::{Doc, doc_kind, doc_meta, doc_texts, kind_name};
 use studyfrog_md::error::describe_parse_error;
+use studyfrog_md::extra::extra_value;
 use studyfrog_md::links::extract_wikilinks;
 use studyfrog_md::ulid::format_ulid;
 
@@ -135,6 +138,11 @@ pub fn write_scanned(tx: &Transaction, f: &ScannedFile) -> Result<(), StoreError
     }
 }
 
+/// The value of a front-matter word key when it is one of the known words, else `NULL`.
+fn word_of(doc: &Doc, key: &str, known: fn(&str) -> bool) -> Option<String> {
+    extra_value(doc, key).filter(|w| known(w))
+}
+
 fn write_item(
     tx: &Transaction,
     rel: &str,
@@ -146,8 +154,8 @@ fn write_item(
     run(tx, "DELETE FROM item WHERE uid = ?1", [&uid])?;
     run(
         tx,
-        "INSERT INTO item (uid, path, kind, title, stack_path, created_ms, updated_ms)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+        "INSERT INTO item (uid, path, kind, title, stack_path, created_ms, updated_ms, priority, difficulty, subjects)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
         params![
             uid,
             rel,
@@ -155,7 +163,10 @@ fn write_item(
             meta.title,
             stack,
             meta.created.map(|t| t.0),
-            meta.updated.map(|t| t.0)
+            meta.updated.map(|t| t.0),
+            word_of(doc, "priority", |w| priority_from_name(w).is_some()),
+            word_of(doc, "difficulty", |w| difficulty_from_name(w).is_some()),
+            extra_value(doc, "subjects")
         ],
     )?;
     write_tags(tx, &uid, &meta.tags)?;

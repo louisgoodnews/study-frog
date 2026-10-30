@@ -71,6 +71,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
             effects.extend(more);
             (state, effects)
         }
+        Msg::Subjects(m) => crate::subjects_ui::update(state, m),
         Msg::RemindersDue(r) => crate::reminder_ui::arrived(state, r),
         Msg::VaultPolled(result) => crate::poll_ui::vault_polled(state, result),
         Msg::AppSettingsSaved(result) => settings_saved(state, result),
@@ -92,6 +93,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::GraphClick(_)) => crate::graph::update(state, graph),
         edit @ (Msg::OpenItem(_)
         | Msg::DocumentLoaded(..)
+        | Msg::BacklinksLoaded(..)
         | Msg::Edit(_)
         | Msg::SaveClicked
         | Msg::Saved(_)
@@ -202,7 +204,14 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
                 notice: None,
                 ..state
             };
-            (state, vec![Effect::SaveAppSettings(app), Effect::LoadHome])
+            (
+                state,
+                vec![
+                    Effect::SaveAppSettings(app),
+                    Effect::LoadHome,
+                    Effect::LoadSubjects,
+                ],
+            )
         }
         Err(e) => {
             let notice = notice(NoticeKind::Error, format!("Could not open the vault: {e}"));

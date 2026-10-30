@@ -66,6 +66,13 @@ pub enum Msg {
     Tick,
     /// The result of a change check: `None` when nothing changed.
     VaultPolled(Result<Option<VaultInfo>, String>),
+    /// A message of the subjects section.
+    Subjects(crate::subjects_ui::SubjectsMsg),
+    /// The items that link to an open item.
+    BacklinksLoaded(
+        studyfrog_core::uid::Uid,
+        Result<Vec<studyfrog_store::overview::ItemRow>, String>,
+    ),
     /// Reminders that came due (each is reported once).
     RemindersDue(Result<Vec<studyfrog_calendar::reminders::DueReminder>, String>),
     /// The app settings were saved (or not).
@@ -183,6 +190,12 @@ pub enum EditAction {
     Tags(String),
     /// A text area, by index.
     Field(usize, String),
+    /// The item's own priority; `None` takes the stack's.
+    Priority(Option<studyfrog_core::priority::Priority>),
+    /// The item's own difficulty; `None` takes the stack's.
+    Difficulty(Option<studyfrog_core::event::Difficulty>),
+    /// A subject of a stack on or off.
+    Subject(String, bool),
 }
 
 /// Which field of the new-card form.

@@ -4,5 +4,6 @@ pub mod achievements;
 pub mod app;
 pub mod error;
 pub mod stack;
+pub mod subjects;
 pub mod values;
 pub mod vault;

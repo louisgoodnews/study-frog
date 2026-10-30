@@ -2,19 +2,21 @@
 //! kind choice and close button on top, a big title, the text fields, the stack it goes into, and a
 //! footer with "Create another" and the primary button.
 
-use eframe::egui::{self, Align, ComboBox, Layout, Role, WidgetInfo};
+use eframe::egui::{self, Align, Layout};
 use studyfrog_service::create_more::NewKind;
 
-use crate::modal::{CreateForm, Field, Modal, ModalMsg, stack_labels};
+use crate::modal::{CreateForm, Field, Modal, ModalMsg};
 use crate::msg::Msg;
-use crate::session_form::REMINDER_CHOICES;
 use crate::state::State;
-use crate::view::date_picker::{date_field, today_of};
 use crate::view::icons::{Glyph, icon_button};
 use crate::view::kit;
+use crate::view::md_editor::{Mode, md_editor};
 use crate::view::widgets::text_field;
 
-const WIDTH: f32 = 560.0;
+pub(super) const WIDTH: f32 = 560.0;
+
+/// A note gets a wide dialog: the editor needs room for the text and its rendering.
+const NOTE_WIDTH: f32 = 900.0;
 
 fn send(out: &mut Vec<Msg>, m: ModalMsg) {
     out.push(Msg::Modal(m));
@@ -24,7 +26,10 @@ fn send(out: &mut Vec<Msg>, m: ModalMsg) {
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(modal) = &state.modal else { return };
     let response = egui::Modal::new(egui::Id::unique("dialog")).show(ui.ctx(), |ui| {
-        ui.set_width(WIDTH);
+        ui.set_width(match modal {
+            Modal::Create(f) if f.kind == NewKind::Note => NOTE_WIDTH,
+            _ => WIDTH,
+        });
         match modal {
             Modal::Create(form) => create(state, form, ui, out),
             Modal::Vault => vault(state, ui, out),
@@ -84,15 +89,22 @@ fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         send(out, ModalMsg::Edit(Field::Title, t));
     }
     let ((text_label, text_hint), answer_label) = labels(f.kind);
-    if let Some(t) = text_field(ui, text_label, &f.text, text_hint, 4) {
+    let (rows, mode) = match f.kind {
+        NewKind::Note => (14, Mode::Split),
+        _ => (4, Mode::Write),
+    };
+    ui.weak(text_hint);
+    if let Some(t) = md_editor(ui, text_label, &f.text, (rows, mode), out) {
         send(out, ModalMsg::Edit(Field::Text, t));
     }
-    if let Some(t) = answer_label.and_then(|label| text_field(ui, label, &f.answer, "", 3)) {
+    let answer =
+        answer_label.and_then(|label| md_editor(ui, label, &f.answer, (3, Mode::Write), out));
+    if let Some(t) = answer {
         send(out, ModalMsg::Edit(Field::Answer, t));
     }
-    parent_picker(state, f, ui, out);
+    super::modal_fields::parent_picker(state, f, ui, out);
     if f.kind == NewKind::Stack {
-        due_fields(state, f, ui, out);
+        super::modal_fields::due_fields(state, f, ui, out);
     }
     if let Some(t) = text_field(ui, "Tags", &f.tags, "comma separated", 1) {
         send(out, ModalMsg::Edit(Field::Tags, t));
@@ -101,71 +113,6 @@ fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         ui.colored_label(ui.visuals().error_fg_color, e);
     }
     footer(f, ui, out);
-}
-
-/// A stack's optional due date and the reminders before it.
-fn due_fields(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    if let Some(t) = date_field(ui, "Due date (optional)", &f.due, today_of(state)) {
-        send(out, ModalMsg::Edit(Field::Due, t));
-    }
-    if f.due.trim().is_empty() {
-        return;
-    }
-    ui.horizontal_wrapped(|ui| {
-        ui.label("Remind me:");
-        for (minutes, label) in REMINDER_CHOICES {
-            if ui
-                .selectable_label(f.reminders.contains(&minutes), label)
-                .clicked()
-            {
-                send(out, ModalMsg::ToggleReminder(minutes));
-            }
-        }
-    });
-}
-
-fn parent_picker(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let stacks = state
-        .vault
-        .as_ref()
-        .map(|v| stack_labels(&v.overview))
-        .unwrap_or_default();
-    let is_stack = f.kind == NewKind::Stack;
-    if stacks.is_empty() && !is_stack {
-        ui.colored_label(crate::theme::palette_of(ui).warning, "There is no stack yet. Every card, note and question lives in a stack: create a stack first.");
-        return;
-    }
-    let none = "None (top level)";
-    let current = f
-        .parent
-        .as_ref()
-        .and_then(|p| stacks.iter().find(|(folder, _)| folder == p))
-        .map_or(none.to_owned(), |(_, label)| label.clone());
-    let label = if is_stack {
-        "Inside stack (optional)"
-    } else {
-        "Parent stack"
-    };
-    ui.label(label);
-    let picker = ComboBox::from_id_salt("parent-stack")
-        .selected_text(current)
-        .width(WIDTH - 24.0)
-        .show_ui(ui, |ui| {
-            if is_stack && ui.selectable_label(f.parent.is_none(), none).clicked() {
-                send(out, ModalMsg::SetParent(None));
-            }
-            for (folder, label) in &stacks {
-                if ui
-                    .selectable_label(f.parent.as_deref() == Some(folder), label)
-                    .clicked()
-                {
-                    send(out, ModalMsg::SetParent(Some(folder.clone())));
-                }
-            }
-        });
-    picker
-        .response
-        .widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, label));
 }
 
 fn footer(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {

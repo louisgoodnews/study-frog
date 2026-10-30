@@ -2,8 +2,10 @@
 
 use std::collections::HashMap;
 
+use studyfrog_core::event::Difficulty;
 use studyfrog_core::memory::MemState;
 use studyfrog_core::plan::ItemKind;
+use studyfrog_core::priority::Priority;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 
@@ -26,6 +28,11 @@ pub struct Candidate<'a> {
     pub due: Option<UnixMs>,
     /// When the item was last reviewed; `None` for new items.
     pub last_review: Option<UnixMs>,
+    /// How much the item matters (its own, else its stack's).
+    pub priority: Priority,
+    /// How hard the owner says the item is, if they said; stands in for the memory difficulty of an
+    /// item that was never reviewed.
+    pub difficulty_hint: Option<Difficulty>,
 }
 
 /// An allowance for the spaced order; `None` means unlimited.

@@ -21,5 +21,6 @@ pub mod rerate;
 pub mod schedule;
 pub mod session;
 pub mod settings;
+pub mod subjects;
 pub mod timezone;
 pub mod track;

@@ -156,6 +156,8 @@ pub struct State {
     pub extensions: Extensions,
     /// The home screen's numbers (also the stack badges in the library).
     pub home: Option<HomeSummary>,
+    /// The teachers and subjects of the vault.
+    pub subjects: crate::subjects_ui::SubjectsState,
     /// The latest reports.
     pub reports: Option<ReportBundle>,
     /// The latest achievement check.

@@ -41,7 +41,7 @@ fn the_form_and_the_live_preview_show_side_by_side() {
         "Title",
         "Tags (comma separated)",
         "Body",
-        "Preview",
+        "Body: preview",
         "Heading",
         "Beta",
         "bold",
@@ -97,7 +97,7 @@ fn save_and_revert_are_disabled_until_there_is_something_to_save() {
 fn a_wikilink_in_the_preview_is_clickable() {
     let mut h = harness(editing());
     h.run_steps(2);
-    h.get_by_label("Beta").click();
+    h.get_all_by_label("Beta").next().unwrap().click();
     h.run_steps(2);
     assert!(h.state().1.contains(&Effect::ResolveLink("Beta".into())));
 }
@@ -141,4 +141,83 @@ fn undo_and_redo_work_in_the_text_areas() {
         "redo brings it back: {:?}",
         body(&h)
     );
+}
+
+#[test]
+fn the_toolbar_formats_the_text_and_the_side_column_shows_the_details() {
+    let mut h = harness(editing());
+    h.run_steps(2);
+    h.get_by_label("Bold in Body").click();
+    h.run_steps(2);
+    let body = h.state().0.state.editor.as_ref().unwrap().form.fields[0]
+        .text
+        .clone();
+    assert!(body.ends_with("**bold**"), "{body:?}");
+    assert!(h.state().0.state.editor.as_ref().is_some());
+    for text in ["Details", "Kind", "note", "Links to"] {
+        assert!(h.query_all_by_label(text).count() >= 1, "missing {text}");
+    }
+    h.get_by_label("Body: preview").click();
+    h.run_steps(2);
+    assert!(
+        h.query_by_label("Bold in Body").is_none(),
+        "no toolbar in preview mode"
+    );
+    h.get_by_label("Body: write").click();
+    h.run_steps(2);
+    assert!(h.query_by_label("Bold in Body").is_some());
+}
+
+#[test]
+fn the_side_column_lists_the_items_that_link_here() {
+    use studyfrog_core::plan::ItemKind;
+    use studyfrog_store::overview::ItemRow;
+    let mut m = editing();
+    let row = ItemRow {
+        uid: Uid(9),
+        title: "Flashcard about Alpha".into(),
+        kind: ItemKind::Card,
+        path: "s/c.md".into(),
+        due: None,
+    };
+    apply(&mut m, Msg::BacklinksLoaded(Uid(0xA), Ok(vec![row])));
+    let mut h = harness(m);
+    h.run_steps(2);
+    assert!(h.query_by_label("Linked from").is_some());
+    h.get_by_label("Flashcard about Alpha").click();
+    h.run_steps(2);
+    assert!(h.state().1.contains(&Effect::LoadDocument(Uid(9))));
+}
+
+#[test]
+fn priority_and_difficulty_are_chosen_on_the_page_and_saved_in_the_front_matter() {
+    use studyfrog_core::event::Difficulty;
+    use studyfrog_core::priority::Priority;
+    let mut h = harness(editing());
+    h.run_steps(2);
+    assert!(
+        h.query_by_label("Priority: inherit").is_some()
+            && h.query_by_label("Difficulty: inherit").is_some()
+    );
+    h.get_by_label("Priority: high").click();
+    h.run_steps(2);
+    h.get_by_label("Difficulty: difficult").click();
+    h.run_steps(2);
+    let e = h.state().0.state.editor.as_ref().unwrap();
+    assert_eq!(
+        (e.form.priority, e.form.difficulty),
+        (Some(Priority::High), Some(Difficulty::Difficult))
+    );
+    assert!(h.query_by_label("unsaved changes").is_some());
+    let saved = studyfrog_ui::edit_form::apply_form(&e.doc, &e.form).unwrap();
+    assert_eq!(
+        studyfrog_md::extra::extra_value(&saved, "priority").as_deref(),
+        Some("high")
+    );
+    h.get_by_label("Priority: inherit").click();
+    h.run_steps(2);
+    let e = h.state().0.state.editor.as_ref().unwrap();
+    let saved = studyfrog_ui::edit_form::apply_form(&e.doc, &e.form).unwrap();
+    assert_eq!(studyfrog_md::extra::extra_value(&saved, "priority"), None);
+    assert_all_named(&h, "item page with priority");
 }

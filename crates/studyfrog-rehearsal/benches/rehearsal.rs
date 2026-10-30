@@ -92,6 +92,8 @@ fn candidates(tags: &[String]) -> Vec<Candidate<'_>> {
                 due: reviewed.then(|| UnixMs(NOW.0 + (i64::from(lcg(&mut seed) % 60) - 30) * day)),
                 last_review: reviewed
                     .then(|| UnixMs(NOW.0 - i64::from(1 + lcg(&mut seed) % 90) * day)),
+                priority: Default::default(),
+                difficulty_hint: None,
             }
         })
         .collect()

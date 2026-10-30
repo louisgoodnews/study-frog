@@ -2,7 +2,10 @@
 //! Everything else in the file (unknown front-matter keys, ids, timestamps) is carried over by
 //! cloning the original document, so editing can never drop it. Pure.
 
+use studyfrog_core::event::{Difficulty, difficulty_from_name, difficulty_name};
+use studyfrog_core::priority::{Priority, priority_from_name, priority_name};
 use studyfrog_md::doc::Doc;
+use studyfrog_md::extra::{extra_value, with_extra};
 
 /// One multi-line text area.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -24,6 +27,12 @@ pub struct EditForm {
     pub tags: String,
     /// Text areas in display order.
     pub fields: Vec<EditField>,
+    /// The priority the item states itself; `None`: inherit.
+    pub priority: Option<Priority>,
+    /// The difficulty the item states itself; `None`: inherit.
+    pub difficulty: Option<Difficulty>,
+    /// The subjects a stack names (empty for other kinds and for a stack that names none).
+    pub subjects: Vec<String>,
 }
 
 fn field(label: &'static str, text: &str, rows: usize) -> EditField {
@@ -61,6 +70,14 @@ pub fn form_from_doc(doc: &Doc) -> EditForm {
         title: meta.title.clone(),
         tags: meta.tags.join(", "),
         fields,
+        priority: extra_value(doc, "priority").and_then(|w| priority_from_name(&w)),
+        difficulty: extra_value(doc, "difficulty").and_then(|w| difficulty_from_name(&w)),
+        subjects: extra_value(doc, "subjects")
+            .iter()
+            .flat_map(|l| l.split(','))
+            .map(|s| s.trim().to_owned())
+            .filter(|s| !s.is_empty())
+            .collect(),
     }
 }
 
@@ -120,5 +137,15 @@ pub fn apply_form(doc: &Doc, form: &EditForm) -> Result<Doc, String> {
             (d.description, d.body) = (text(form, 0), text(form, 1));
         }
     }
-    Ok(out)
+    let out = with_extra(&out, "priority", form.priority.map(priority_name));
+    let out = with_extra(&out, "difficulty", form.difficulty.map(difficulty_name));
+    if !matches!(out, Doc::Stack(_)) {
+        return Ok(out);
+    }
+    let list = form.subjects.join(", ");
+    Ok(with_extra(
+        &out,
+        "subjects",
+        Some(list.as_str()).filter(|l| !l.is_empty()),
+    ))
 }
