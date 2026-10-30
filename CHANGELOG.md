@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Semantic answer comparison: a candle MiniLM runtime (`studyfrog-candle`, linked by the app only) used
+  automatically when `all-MiniLM-L6-v2` is installed under the app data directory, with fallback to word
+  matching and the reason shown; the result line says which engine compared the answer. Measured: p95
+  about 75 ms per comparison, about 85 MB of memory (TASK-0050, 0051).
 - Answer comparison: `SlmRuntime` trait, scoring over embeddings (best of reference and accepted answers,
   rubric points, verdict bands, suggested rating), an in-house offline lexical runtime, property tests and a
   benchmark; typing an answer in rehearsal now shows the match, the verdict and a suggested rating

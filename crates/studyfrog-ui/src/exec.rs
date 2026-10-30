@@ -17,6 +17,7 @@ use studyfrog_service::session::{
     ServiceError, VaultInfo, VaultSession, current_settings, open_vault, poll_vault,
 };
 use studyfrog_service::timezone::local_day_window;
+use studyfrog_slm::models::{Loader, Opened};
 use studyfrog_store::app_config::{read_app_settings, write_app_settings};
 use studyfrog_store::overview::list_items;
 
@@ -31,6 +32,12 @@ pub struct Worker {
     pub config_dir: Option<PathBuf>,
     /// The open vault.
     pub session: Option<VaultSession>,
+    /// Where language models are installed; `None` means word matching only.
+    pub models_dir: Option<PathBuf>,
+    /// The answer-comparison runtime, opened on first use, and why it is not the semantic one.
+    pub slm: Option<Opened>,
+    /// How to open the semantic runtime; `None` for a build without one.
+    pub loader: Option<Loader>,
 }
 
 /// A worker with nothing open.
@@ -38,6 +45,22 @@ pub fn worker_new(config_dir: Option<PathBuf>) -> Worker {
     Worker {
         config_dir,
         session: None,
+        models_dir: None,
+        slm: None,
+        loader: None,
+    }
+}
+
+/// A worker that looks for language models in `models_dir`.
+pub fn worker_with_models(
+    config_dir: Option<PathBuf>,
+    models_dir: Option<PathBuf>,
+    loader: Option<Loader>,
+) -> Worker {
+    Worker {
+        models_dir,
+        loader,
+        ..worker_new(config_dir)
     }
 }
 

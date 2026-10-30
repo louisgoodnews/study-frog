@@ -71,6 +71,10 @@ pub fn lexical_embed(texts: &[&str]) -> Vec<Vec<f32>> {
 }
 
 impl SlmRuntime for Lexical {
+    fn name(&self) -> &str {
+        "word matching (built in)"
+    }
+
     fn embed(&self, texts: &[&str]) -> Result<Vec<Vec<f32>>, SlmError> {
         Ok(lexical_embed(texts))
     }

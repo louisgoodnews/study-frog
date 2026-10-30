@@ -17,7 +17,7 @@ studyfrog-config.workspace = true
 studyfrog-store.workspace = true
 studyfrog-srs.workspace = true
 studyfrog-rehearsal.workspace = true
-studyfrog-slm.workspace = true
+studyfrog-slm = { workspace = true }
 studyfrog-report.workspace = true
 studyfrog-achieve.workspace = true
 studyfrog-board.workspace = true

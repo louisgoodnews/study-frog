@@ -9,6 +9,7 @@ members = [
     "crates/studyfrog-srs",
     "crates/studyfrog-rehearsal",
     "crates/studyfrog-slm",
+    "crates/studyfrog-candle",
     "crates/studyfrog-report",
     "crates/studyfrog-achieve",
     "crates/studyfrog-board",
@@ -37,6 +38,7 @@ studyfrog-store = { path = "crates/studyfrog-store" }
 studyfrog-srs = { path = "crates/studyfrog-srs" }
 studyfrog-rehearsal = { path = "crates/studyfrog-rehearsal" }
 studyfrog-slm = { path = "crates/studyfrog-slm" }
+studyfrog-candle = { path = "crates/studyfrog-candle" }
 studyfrog-report = { path = "crates/studyfrog-report" }
 studyfrog-achieve = { path = "crates/studyfrog-achieve" }
 studyfrog-board = { path = "crates/studyfrog-board" }
@@ -54,6 +56,11 @@ pulldown-cmark = { version = "0.13", default-features = false }
 toml = { version = "1", default-features = false, features = ["parse", "serde"] }
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 dhat = "0.3"
+serde_json = "1"
+candle-core = "0.11"
+candle-nn = "0.11"
+candle-transformers = "0.11"
+tokenizers = { version = "0.22", default-features = false, features = ["fancy-regex"] }
 unicode-normalization = { version = "0.1", default-features = false, features = ["std"] }
 eframe = { version = "0.37", default-features = false, features = ["accesskit", "clipboard", "default_fonts", "glow", "links", "wayland", "x11"] }
 egui_kittest = "0.37"

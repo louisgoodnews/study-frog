@@ -13,13 +13,14 @@ declare -A allowed=(
   [srs]="core"
   [rehearsal]="core srs"
   [slm]="core"
+  [candle]="slm"
   [report]="core srs"
   [achieve]="core"
   [board]="core"
   [calendar]="core"
   [service]="core md config calendar board store srs rehearsal slm"
   [ui]="core md config graph store srs rehearsal slm report achieve board calendar service"
-  [app]="ui"
+  [app]="ui slm candle"
 )
 
 status=0

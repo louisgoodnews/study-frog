@@ -11,10 +11,11 @@ use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::rehearse::{StepContext, record_step, start_run};
 use studyfrog_service::session::current_settings;
 use studyfrog_service::timezone::local_day_window;
-use studyfrog_slm::lexical::Lexical;
+use studyfrog_slm::models::open_runtime;
 
 use crate::exec::Worker;
 use crate::msg::Msg;
+use crate::run_state::Scored;
 
 fn millis(now_ns: i64) -> i64 {
     now_ns / 1_000_000
@@ -61,11 +62,21 @@ pub fn record(w: &mut Worker, ctx: &StepContext, out: &StepOutput, now_ns: i64) 
 }
 
 /// Compare a typed answer with the item's reference (offline, with the built-in lexical runtime).
-pub fn score(w: &Worker, uid: Uid, answer: &str) -> Msg {
+pub fn score(w: &mut Worker, uid: Uid, answer: &str) -> Msg {
+    let (models, loader) = (w.models_dir.clone(), w.loader);
+    let (runtime, why) = w
+        .slm
+        .get_or_insert_with(|| open_runtime(models.as_deref(), loader));
     let result = match &w.session {
-        Some(session) => {
-            score_item_answer(session, &Lexical, uid, answer).map_err(|e| e.to_string())
-        }
+        Some(session) => score_item_answer(session, runtime.as_ref(), uid, answer)
+            .map(|s| match why {
+                Some(why) => Scored {
+                    engine: format!("{} ({why})", s.engine),
+                    ..s
+                },
+                None => s,
+            })
+            .map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
     };
     Msg::AnswerScored(uid, result)

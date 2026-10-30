@@ -1,6 +1,6 @@
 [package]
 name = "studyfrog-slm"
-description = "Local small-language-model boundary: the comparison trait and a swappable local runtime implementation."
+description = "Local small-language-model boundary: the comparison trait, pure scoring, and an offline lexical runtime."
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

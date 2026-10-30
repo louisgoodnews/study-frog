@@ -2,7 +2,7 @@
 id: EPIC-012
 type: epic
 title: SLM runtime
-status: in_progress
+status: done
 parents: []
 labels: [m6, slm]
 acceptance_criteria:
@@ -17,8 +17,8 @@ Compare typed answers with the reference, locally.
 SLM runtime.
 
 ## Acceptance Criteria
-- [ ] Runtime swappable behind `SlmRuntime`
-- [ ] A semantic model runs offline within the latency budget
+- [x] Runtime swappable behind `SlmRuntime`
+- [x] A semantic model runs offline within the latency budget
 
 ## Design Notes
 Children: STORY-0023. The lexical runtime ships first; the semantic runtime waits for the spike (ADR 0004).

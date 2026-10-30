@@ -4,10 +4,10 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (2) | Done (66) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (68) |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  | [TASK-0050](docs/issues/tasks/TASK-0050-candle-embedder-and-spike.md) Candle embedder and spike (8) | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-|  |  |  |  | [TASK-0051](docs/issues/tasks/TASK-0051-model-management.md) Model management (3) | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+|  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+|  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 |  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
 |  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
 |  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
@@ -55,6 +55,8 @@
 |  |  |  |  |  | [TASK-0047](docs/issues/tasks/TASK-0047-move-and-push-semantics.md) Move and push semantics (5) |
 |  |  |  |  |  | [TASK-0048](docs/issues/tasks/TASK-0048-board-view-with-drag-and-drop.md) Board view with drag and drop (5) |
 |  |  |  |  |  | [TASK-0049](docs/issues/tasks/TASK-0049-slm-runtime-trait.md) SlmRuntime trait (2) |
+|  |  |  |  |  | [TASK-0050](docs/issues/tasks/TASK-0050-candle-embedder-and-spike.md) Candle embedder and spike (8) |
+|  |  |  |  |  | [TASK-0051](docs/issues/tasks/TASK-0051-model-management.md) Model management (3) |
 |  |  |  |  |  | [TASK-0052](docs/issues/tasks/TASK-0052-score-functions.md) Score functions (3) |
 |  |  |  |  |  | [TASK-0053](docs/issues/tasks/TASK-0053-scoring-property-tests.md) Scoring property tests (2) |
 |  |  |  |  |  | [TASK-0054](docs/issues/tasks/TASK-0054-answer-input-in-rehearsal.md) Answer input in rehearsal (3) |
@@ -99,7 +101,7 @@
 | [STORY-0020](docs/issues/stories/STORY-0020-session-planning.md) Session planning (8) | done | 4/4 |
 | [STORY-0021](docs/issues/stories/STORY-0021-board-model.md) Board model (5) | done | 3/3 |
 | [STORY-0022](docs/issues/stories/STORY-0022-board-ui.md) Board UI (5) | done | 1/1 |
-| [STORY-0023](docs/issues/stories/STORY-0023-runtime-trait-and-implementation.md) Runtime trait and implementation (8) | in_progress | 1/3 |
+| [STORY-0023](docs/issues/stories/STORY-0023-runtime-trait-and-implementation.md) Runtime trait and implementation (8) | done | 3/3 |
 | [STORY-0024](docs/issues/stories/STORY-0024-scoring-contract.md) Scoring contract (5) | done | 2/2 |
 | [STORY-0025](docs/issues/stories/STORY-0025-ui-integration.md) UI integration (5) | done | 2/2 |
 | [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
@@ -120,6 +122,6 @@
 | [EPIC-009](docs/issues/epics/EPIC-009-editor-and-graph.md) Editor and graph | done | 2/2 |
 | [EPIC-010](docs/issues/epics/EPIC-010-calendar-and-planning.md) Calendar and planning | done | 1/1 |
 | [EPIC-011](docs/issues/epics/EPIC-011-scrum-kanban-board.md) Scrum/kanban board | done | 2/2 |
-| [EPIC-012](docs/issues/epics/EPIC-012-slm-runtime.md) SLM runtime | in_progress | 0/1 |
+| [EPIC-012](docs/issues/epics/EPIC-012-slm-runtime.md) SLM runtime | done | 1/1 |
 | [EPIC-013](docs/issues/epics/EPIC-013-comparison-scoring.md) Comparison scoring | done | 2/2 |
 | [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |

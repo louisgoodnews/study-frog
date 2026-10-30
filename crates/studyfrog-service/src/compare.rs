@@ -18,6 +18,8 @@ pub struct Scored {
     pub score: Score,
     /// What the verdict suggests; the user decides.
     pub rating: Rating,
+    /// Which runtime compared the texts.
+    pub engine: String,
 }
 
 /// The comparison for a document, or why it has none.
@@ -55,5 +57,9 @@ pub fn score_item_answer<R: SlmRuntime + ?Sized>(
     let score =
         score_answer(runtime, &comparison).map_err(|e| ServiceError::Invalid(e.to_string()))?;
     let rating = suggested_rating(score.verdict);
-    Ok(Scored { score, rating })
+    Ok(Scored {
+        score,
+        rating,
+        engine: runtime.name().to_owned(),
+    })
 }

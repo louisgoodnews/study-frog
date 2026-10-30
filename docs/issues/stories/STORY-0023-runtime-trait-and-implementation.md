@@ -2,7 +2,7 @@
 id: STORY-0023
 type: story
 title: Runtime trait and implementation
-status: in_progress
+status: done
 epic: EPIC-012
 parents: [EPIC-012]
 estimate: 8
@@ -20,9 +20,9 @@ ADR 0004 asks for a measured runtime choice.
 Runtime trait and implementation.
 
 ## Acceptance Criteria
-- [ ] `SlmRuntime` with a lexical implementation and a second one proving swappability
-- [ ] A semantic (candle) embedder is measured against the latency budget
-- [ ] Models are found, checked and reported when missing
+- [x] `SlmRuntime` with a lexical implementation and a second one proving swappability
+- [x] A semantic (candle) embedder is measured against the latency budget
+- [x] Models are found, checked and reported when missing
 
 ## Design Notes
 Children: TASK-0049 (done), TASK-0050 and TASK-0051 (blocked on the model download decision).

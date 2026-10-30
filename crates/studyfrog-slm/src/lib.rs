@@ -5,6 +5,7 @@
 //! logic (ADR 0004, [scoring spec](../../../docs/specs/scoring.md)).
 
 pub mod lexical;
+pub mod models;
 pub mod rating;
 pub mod runtime;
 pub mod score;

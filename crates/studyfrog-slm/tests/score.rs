@@ -28,6 +28,10 @@ fn lexical(reference: &str, answer: &str) -> Score {
 struct Table(HashMap<&'static str, Vec<f32>>);
 
 impl SlmRuntime for Table {
+    fn name(&self) -> &str {
+        "table"
+    }
+
     fn embed(&self, texts: &[&str]) -> Result<Vec<Vec<f32>>, SlmError> {
         texts
             .iter()
@@ -98,6 +102,10 @@ fn accepted_answers_and_rubric_points_change_the_score() {
 fn nothing_typed_scores_zero_and_asks_nothing_of_the_runtime() {
     struct Never;
     impl SlmRuntime for Never {
+        fn name(&self) -> &str {
+            "never"
+        }
+
         fn embed(&self, _: &[&str]) -> Result<Vec<Vec<f32>>, SlmError> {
             Err(SlmError::Unavailable("must not be called".into()))
         }

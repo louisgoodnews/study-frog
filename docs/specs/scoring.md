@@ -21,7 +21,11 @@ Score { value: f32 /* 0..=1 */, verdict: Correct|Partial|Incorrect, rubric_hits:
   word pairs and character trigrams, unit length. Offline, deterministic, about 20 µs per comparison. It
   measures shared wording, not meaning: a correct paraphrase can score low, and swapped word order only
   nudges the score. Use it as a guide, not a judge.
-- **Semantic** (planned, TASK-0050): a MiniLM-class embedding model behind the same trait.
+- **Semantic** (`studyfrog-candle` crate, linked by the app only): `all-MiniLM-L6-v2` via candle on the CPU, mean-pooled and
+  unit length. About 45 to 60 ms per comparison. Install it by putting `config.json`, `tokenizer.json` and
+  `model.safetensors` from `sentence-transformers/all-MiniLM-L6-v2` in
+  `$XDG_DATA_HOME/studyfrog/models/all-MiniLM-L6-v2/` (default `~/.local/share/studyfrog/...`). When the
+  model is missing or fails to load, the lexical runtime is used and the result line says why.
 
 Constants: partial band 0.2 below `min_score`; rubric point hit at cosine 0.5; similarity weight 0.6.
 

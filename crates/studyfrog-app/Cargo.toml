@@ -12,3 +12,5 @@ workspace = true
 
 [dependencies]
 studyfrog-ui.workspace = true
+studyfrog-slm.workspace = true
+studyfrog-candle.workspace = true

@@ -5,6 +5,7 @@ use eframe::egui;
 use crate::effect::Effect;
 use crate::model::{Model, apply, frame};
 use crate::runtime::{Runtime, spawn};
+use studyfrog_slm::models::Loader;
 
 /// The window's state.
 pub struct StudyFrogApp {
@@ -17,8 +18,12 @@ pub struct StudyFrogApp {
 }
 
 /// Create the app and ask the worker for the saved settings.
-pub fn app_new(ctx: egui::Context, smoke_frames: Option<u32>) -> StudyFrogApp {
-    let runtime = spawn(ctx);
+pub fn app_new(
+    ctx: egui::Context,
+    smoke_frames: Option<u32>,
+    loader: Option<Loader>,
+) -> StudyFrogApp {
+    let runtime = spawn(ctx, loader);
     let _ = runtime.effects.send(Effect::LoadAppSettings);
     StudyFrogApp {
         model: Model::default(),
@@ -59,7 +64,7 @@ impl eframe::App for StudyFrogApp {
 }
 
 /// Open the window and run until it is closed. `smoke_frames` closes it after that many frames.
-pub fn run(smoke_frames: Option<u32>) -> eframe::Result {
+pub fn run(smoke_frames: Option<u32>, loader: Option<Loader>) -> eframe::Result {
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_inner_size([960.0, 640.0])
@@ -69,6 +74,6 @@ pub fn run(smoke_frames: Option<u32>) -> eframe::Result {
     eframe::run_native(
         "StudyFrog",
         options,
-        Box::new(move |cc| Ok(Box::new(app_new(cc.egui_ctx.clone(), smoke_frames)))),
+        Box::new(move |cc| Ok(Box::new(app_new(cc.egui_ctx.clone(), smoke_frames, loader)))),
     )
 }

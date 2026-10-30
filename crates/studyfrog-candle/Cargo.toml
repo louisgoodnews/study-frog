@@ -1,0 +1,19 @@
+[package]
+name = "studyfrog-candle"
+description = "The semantic answer-comparison runtime: a MiniLM sentence embedder run by candle on the CPU."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-slm.workspace = true
+candle-core.workspace = true
+candle-nn.workspace = true
+candle-transformers.workspace = true
+tokenizers.workspace = true
+serde_json.workspace = true

@@ -25,6 +25,7 @@ fn scored(value: f32, verdict: Verdict, rating: Rating) -> Scored {
             rubric_hits: vec![true, false],
         },
         rating,
+        engine: "test".into(),
     }
 }
 

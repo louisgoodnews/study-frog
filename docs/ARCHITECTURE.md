@@ -26,13 +26,14 @@ Textual rules (also in [ADR 0001](adr/0001-workspace-and-crate-layout.md)):
 | `srs` | core | Scheduling functions. |
 | `rehearsal` | core, srs | Run state machine, latency capture. |
 | `slm` | core | Comparison trait and local runtime. |
+| `candle` | slm | The semantic runtime (MiniLM via candle); only `app` links it. |
 | `report` | core, srs | Retention, latency distributions, forecasts. |
 | `achieve` | core | Achievement rules and evaluation. |
 | `board` | core | Kanban/scrum model and moves. |
 | `calendar` | core | Session planning. |
 | `service` | core, md, config, calendar, board, store, srs, rehearsal, slm | Application layer: use cases that compose domain crates ([ADR 0006](adr/0006-application-service-layer.md)). |
 | `ui` | service, graph and domain crates | Rendering and event dispatch only. |
-| `app` | ui | `main`, wiring, configuration. |
+| `app` | ui, slm, candle | `main`, wiring, configuration. |
 
 Rules: no cycles; `service` is the only place that wires several domain crates into a use case; domain crates never import `ui`/`app`; domain crates other than `store` and
 `slm` do no I/O; sibling domain crates do not depend on each other except as listed.

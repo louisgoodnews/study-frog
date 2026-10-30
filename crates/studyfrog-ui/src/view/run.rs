@@ -142,6 +142,7 @@ fn score_line(scored: &crate::run_state::Scored, ui: &mut egui::Ui) {
         scored.score.value * 100.0,
         scored.rating
     ));
+    ui.weak(format!("Compared by: {}", scored.engine));
     let missed = scored.score.rubric_hits.iter().filter(|h| !**h).count();
     if missed > 0 {
         ui.label(format!("{missed} key point(s) were not covered."));

@@ -24,6 +24,9 @@ impl std::error::Error for SlmError {}
 ///
 /// One vector per input text, in order. Vectors from one runtime all have the same length.
 pub trait SlmRuntime {
+    /// A short name for the user: how answers were compared.
+    fn name(&self) -> &str;
+
     /// Embed the texts.
     fn embed(&self, texts: &[&str]) -> Result<Vec<Vec<f32>>, SlmError>;
 }
