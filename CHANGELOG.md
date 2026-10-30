@@ -8,6 +8,13 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- `studyfrog-store`: vault walker, in-house content hash, stack ownership by folder, non-fatal scanner
+  with duplicate-id detection, `Library` builder (inbox stack for orphans), incremental reindex
+  (stat-only for unchanged files, rename-safe, duplicate-healing), polling change detection with
+  settle window; 17 tests and a 10k-note benchmark (cold index 0.57 s). EPIC-006 and phase M2
+  complete (TASK-0027..0029).
+- `studyfrog-store`: SQLite schema v1 (derived index + authoritative history), transactional
+  migration runner, WAL/foreign-key pragmas, 6 tests (TASK-0025, TASK-0026).
 - `studyfrog-md`: in-house ULID and RFC 3339 codecs, front-matter fence/key-block splitter, typed
   parser and renderer for stack/note/card/question with verbatim unknown keys, `???` splitter,
   wikilink extraction, duplicate-id check; 25 tests incl. 1000-case round-trip property

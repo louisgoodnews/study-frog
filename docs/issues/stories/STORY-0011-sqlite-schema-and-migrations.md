@@ -2,7 +2,7 @@
 id: STORY-0011
 type: story
 title: SQLite schema and migrations
-status: backlog
+status: done
 epic: EPIC-006
 parents: [EPIC-006]
 estimate: 5
@@ -19,8 +19,8 @@ ADR 0003.
 SQLite schema and migrations.
 
 ## Acceptance Criteria
-- [ ] Initial schema for reviews, runs, events, index
-- [ ] Ordered migrations tracked with PRAGMA user_version
+- [x] Initial schema for reviews, runs, events, index
+- [x] Ordered migrations tracked with PRAGMA user_version
 
 ## Design Notes
 Children: TASK-0025, TASK-0026.

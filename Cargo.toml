@@ -41,6 +41,7 @@ studyfrog-ui = { path = "crates/studyfrog-ui" }
 # third party (added at first use)
 criterion = { version = "0.8", default-features = false }
 proptest = "1"
+rusqlite = { version = "0.41", features = ["bundled"] }
 serde = { version = "1", features = ["derive"] }
 serde-saphyr = "2"
 

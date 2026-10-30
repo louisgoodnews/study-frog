@@ -1,3 +1,4 @@
+#![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Golden test against the py-fsrs reference (`tests/test_basic.py::test_review_card`):
 //! `Scheduler(enable_fuzzing=False)`, default parameters, 13 ratings, each review taken when the
 //! card is due. Expected intervals are copied from that test.

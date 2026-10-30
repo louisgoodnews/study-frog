@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M1 complete; M2 (Markdown and storage) seeded and next. **Date:** 2026-10-30. **Branch:** `main`.
+**Phase:** M2 complete; M3 (Rehearsal engine) seeded and next. **Date:** 2026-10-30. **Branch:** `main`.
 
 ## What exists
 - Cargo workspace with 12 empty, documented crates (`crates/studyfrog-*`); `cargo check` passes.
@@ -26,8 +26,18 @@
   are taken from the reference implementation in TASK-0016/0017.
 
 ## Next task
-**M2:** start with TASK-0020 (front-matter schema structs and validation) and TASK-0021 (in-house
-fence splitter + serde-saphyr; spike whether it preserves key order). Live state: [BOARD.md](BOARD.md).
+**M3:** TASK-0030 (run input types, transition errors) then TASK-0031 (pure `step` state machine).
+Live state: [BOARD.md](BOARD.md).
+
+## M2 summary
+- `studyfrog-md`: in-house ULID and RFC 3339 codecs, fence/key-block splitter, typed parse and render for
+  all four kinds, unknown keys preserved verbatim, `???` splitter, wikilinks, duplicate-id check.
+  1000-case round-trip property.
+- `studyfrog-store`: SQLite schema v1 + migrations, vault scanner (non-fatal errors, duplicate ids),
+  library builder (inbox stack), incremental reindex (rename-safe), polling change detection.
+  10k notes: scan+parse 282 ms, cold index 571 ms, warm reindex 43 ms (budget 3 s).
+- Decisions: polling instead of a watcher crate; canonical key order with verbatim unknown keys;
+  orphans go to an implicit Inbox stack (uid 0).
 
 ## M1 summary
 - `studyfrog-core`: `Uid`, `Idx<T>`, `Arena<T>`, `Meta`, `Stack`, `Note`, `Card`, `Question`,

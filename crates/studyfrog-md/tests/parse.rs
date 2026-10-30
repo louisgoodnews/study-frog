@@ -1,3 +1,4 @@
+#![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Parsing: the spec examples, error locations and preservation of unknown keys.
 
 use studyfrog_core::uid::Uid;

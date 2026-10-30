@@ -1,0 +1,103 @@
+//! Schema as data. See `docs/specs/storage-schema.md`.
+
+use crate::migrate::Migration;
+
+/// All migrations, oldest first.
+pub const MIGRATIONS: &[Migration] = &[Migration {
+    version: 1,
+    name: "initial schema",
+    sql: V1,
+}];
+
+/// Derived index (rebuildable from the vault) followed by authoritative history. History tables
+/// have no foreign keys to `item`, so deleting or renaming a file never deletes history.
+const V1: &str = "
+CREATE TABLE file (
+    path     TEXT PRIMARY KEY,
+    size     INTEGER NOT NULL,
+    mtime_ns INTEGER NOT NULL,
+    hash     INTEGER NOT NULL,
+    uid      TEXT,
+    error    TEXT
+) WITHOUT ROWID;
+
+CREATE TABLE item (
+    uid        TEXT PRIMARY KEY,
+    path       TEXT NOT NULL UNIQUE REFERENCES file(path) ON DELETE CASCADE ON UPDATE CASCADE,
+    kind       TEXT NOT NULL CHECK (kind IN ('stack', 'note', 'card', 'question')),
+    title      TEXT NOT NULL,
+    stack_path TEXT,
+    created_ms INTEGER,
+    updated_ms INTEGER
+) WITHOUT ROWID;
+CREATE INDEX item_stack ON item(stack_path);
+CREATE INDEX item_title ON item(title COLLATE NOCASE);
+
+CREATE TABLE link (
+    src_uid TEXT NOT NULL REFERENCES item(uid) ON DELETE CASCADE,
+    seq     INTEGER NOT NULL,
+    target  TEXT NOT NULL,
+    heading TEXT,
+    label   TEXT,
+    line    INTEGER NOT NULL,
+    PRIMARY KEY (src_uid, seq)
+) WITHOUT ROWID;
+CREATE INDEX link_target ON link(target COLLATE NOCASE);
+
+CREATE TABLE tag (
+    uid TEXT NOT NULL REFERENCES item(uid) ON DELETE CASCADE,
+    tag TEXT NOT NULL,
+    PRIMARY KEY (uid, tag)
+) WITHOUT ROWID;
+CREATE INDEX tag_name ON tag(tag COLLATE NOCASE);
+
+CREATE TABLE review (
+    id           INTEGER PRIMARY KEY,
+    item_uid     TEXT NOT NULL,
+    rating       INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 4),
+    at_ms        INTEGER NOT NULL,
+    elapsed_days REAL NOT NULL
+);
+CREATE INDEX review_item ON review(item_uid, at_ms);
+
+CREATE TABLE mem_state (
+    item_uid       TEXT PRIMARY KEY,
+    stability      REAL NOT NULL,
+    difficulty     REAL NOT NULL,
+    due_ms         INTEGER NOT NULL,
+    last_review_ms INTEGER NOT NULL
+) WITHOUT ROWID;
+CREATE INDEX mem_state_due ON mem_state(due_ms);
+
+CREATE TABLE sm2_state (
+    item_uid      TEXT PRIMARY KEY,
+    ease          REAL NOT NULL,
+    repetitions   INTEGER NOT NULL,
+    interval_days INTEGER NOT NULL,
+    due_ms        INTEGER NOT NULL
+) WITHOUT ROWID;
+
+CREATE TABLE run (
+    uid           TEXT PRIMARY KEY,
+    mode          TEXT NOT NULL CHECK (mode IN ('flip', 'answer')),
+    state         TEXT NOT NULL CHECK (state IN ('idle', 'running', 'paused', 'finished', 'aborted')),
+    started_at_ms INTEGER
+) WITHOUT ROWID;
+
+CREATE TABLE run_queue (
+    run_uid  TEXT NOT NULL,
+    pos      INTEGER NOT NULL,
+    item_uid TEXT NOT NULL,
+    PRIMARY KEY (run_uid, pos)
+) WITHOUT ROWID;
+
+CREATE TABLE run_event (
+    run_uid  TEXT NOT NULL,
+    seq      INTEGER NOT NULL,
+    t_ms     INTEGER NOT NULL,
+    item_uid TEXT,
+    kind     TEXT NOT NULL,
+    payload  TEXT,
+    PRIMARY KEY (run_uid, seq)
+) WITHOUT ROWID;
+";

@@ -28,3 +28,8 @@ Schema changes use ordered SQL migrations tracked with `PRAGMA user_version`. WA
 + Deleting the DB loses only history, never content.
 - Two stores can disagree; the scanner reconciles by id and content hash (STORY-0012).
 - Only `studyfrog-store` touches the filesystem and SQLite.
+
+## Implementation notes (M2)
+- Schema, vault rules and reindex semantics: [storage-schema](../specs/storage-schema.md).
+- Change detection is **polling** (stat fingerprint + settle window), not a file-watcher dependency:
+  a 10k-file poll costs about 43 ms (TASK-0029).

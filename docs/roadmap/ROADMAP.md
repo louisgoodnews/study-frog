@@ -122,7 +122,7 @@ Headless rehearsal runs with latency capture and SRS updates.
 **Work breakdown:**
 - **EPIC-007** Rehearsal engine
   - **STORY-0013** Run state machine
-    - TASK-0030 Run event types
+    - TASK-0030 Run input types and transition errors
     - TASK-0031 Transition functions
   - **STORY-0014** Latency capture
     - TASK-0032 Injected monotonic clock

@@ -1,3 +1,4 @@
+#![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! SM-2 tests: a hand-computed sequence from the original rules, plus properties.
 
 use proptest::prelude::*;

@@ -1,3 +1,4 @@
+#![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Body scanners: `???` splitting and wikilink extraction.
 
 use proptest::prelude::*;

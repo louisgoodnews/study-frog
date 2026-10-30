@@ -13,3 +13,12 @@ workspace = true
 [dependencies]
 studyfrog-core.workspace = true
 studyfrog-md.workspace = true
+rusqlite.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+criterion.workspace = true
+
+[[bench]]
+name = "vault"
+harness = false

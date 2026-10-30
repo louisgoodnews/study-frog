@@ -1,3 +1,4 @@
+#![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! `parse(render(x)) == x` for generated documents of every kind (TASK-0022).
 
 use proptest::prelude::*;

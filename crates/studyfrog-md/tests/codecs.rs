@@ -1,3 +1,4 @@
+#![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Property tests for the ULID, RFC 3339 and fence codecs.
 
 use proptest::prelude::*;

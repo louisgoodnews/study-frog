@@ -143,3 +143,23 @@ pub fn known_keys(kind: Kind) -> Vec<&'static str> {
     };
     COMMON.iter().chain(own).copied().collect()
 }
+
+/// The common fields of any document.
+pub fn doc_meta(doc: &Doc) -> &Meta {
+    match doc {
+        Doc::Stack(d) => &d.stack.meta,
+        Doc::Note(d) => &d.meta,
+        Doc::Card(d) => &d.meta,
+        Doc::Question(d) => &d.meta,
+    }
+}
+
+/// The Markdown texts of a document, for link extraction and search.
+pub fn doc_texts(doc: &Doc) -> Vec<&str> {
+    match doc {
+        Doc::Stack(d) => vec![&d.body],
+        Doc::Note(d) => vec![&d.body],
+        Doc::Card(d) => vec![&d.front, &d.back],
+        Doc::Question(d) => vec![&d.prompt, &d.reference],
+    }
+}

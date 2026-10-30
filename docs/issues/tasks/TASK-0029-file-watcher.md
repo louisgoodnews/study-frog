@@ -2,7 +2,7 @@
 id: TASK-0029
 type: task
 title: File watcher
-status: backlog
+status: done
 epic: EPIC-006
 parents: [STORY-0012]
 estimate: 3
@@ -19,11 +19,11 @@ Keeps the index fresh while the app runs.
 File watcher.
 
 ## Acceptance Criteria
-- [ ] Create/modify/delete/rename events update the index
-- [ ] Burst of events coalesced
+- [x] Create/modify/delete/rename events update the index
+- [x] Burst of events coalesced
 
 ## Design Notes
-Evaluate `notify` vs inotify directly (P10); decide in the task.
+**Decision (P10): polling, no watcher dependency.** A stat-only poll of 10k files costs ~43 ms, bursts coalesce by construction, files modified within a settle window are deferred so half-written files are not indexed, and the clock is injected. inotify (via the `inotify` crate; our own code is `unsafe`-free) remains an option if a profile ever shows polling matters. `notify` was rejected: cross-platform weight we do not need.
 
 ## Dependencies
 TASK-0028.

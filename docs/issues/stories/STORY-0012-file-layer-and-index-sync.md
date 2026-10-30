@@ -2,7 +2,7 @@
 id: STORY-0012
 type: story
 title: File layer and index sync
-status: backlog
+status: done
 epic: EPIC-006
 parents: [EPIC-006]
 estimate: 8
@@ -20,9 +20,9 @@ Reconcile files and index by id and hash.
 File layer and index sync.
 
 ## Acceptance Criteria
-- [ ] Vault scan parses and indexes 10k notes under budget
-- [ ] Incremental reindex by content hash
-- [ ] File changes picked up by a watcher
+- [x] Vault scan parses and indexes 10k notes under budget
+- [x] Incremental reindex by content hash
+- [x] File changes picked up by a watcher
 
 ## Design Notes
 Children: TASK-0027, TASK-0028, TASK-0029.

@@ -2,7 +2,7 @@
 id: TASK-0027
 type: task
 title: Vault scanner
-status: backlog
+status: done
 epic: EPIC-006
 parents: [STORY-0012]
 estimate: 5
@@ -20,12 +20,12 @@ Single crate doing file I/O.
 Vault scanner.
 
 ## Acceptance Criteria
-- [ ] Walks the vault, parses every `.md`, returns items plus per-file errors
-- [ ] Corrupt files reported, not fatal
-- [ ] Duplicate ids reported on both files
+- [x] Walks the vault, parses every `.md`, returns items plus per-file errors
+- [x] Corrupt files reported, not fatal
+- [x] Duplicate ids reported on both files
 
 ## Design Notes
-Parallelism only if the benchmark demands it.
+Sequential: 10k notes parse in ~280 ms, so no parallelism. Stack ownership by nearest `_stack.md` folder; inbox stack (uid 0) for orphans; spec: docs/specs/storage-schema.md.
 
 ## Dependencies
 TASK-0020, TASK-0021, TASK-0025.

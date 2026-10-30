@@ -25,11 +25,11 @@
 
 ## Exit criteria
 
-- [ ] A fixture vault of 10k notes scans, parses and indexes under budget
-- [ ] `parse(render(x)) == x` property holds for all kinds
-- [ ] Renaming a file keeps history (id-based)
-- [ ] Corrupt files are reported, not fatal
-- [ ] Migrations apply on an empty DB and on the previous version
+- [x] A fixture vault of 10k notes scans, parses and indexes under budget
+- [x] `parse(render(x)) == x` property holds for all kinds
+- [x] Renaming a file keeps history (id-based)
+- [x] Corrupt files are reported, not fatal
+- [x] Migrations apply on an empty DB and on the previous version
 
 ## Out of scope
 

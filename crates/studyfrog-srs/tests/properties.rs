@@ -1,3 +1,4 @@
+#![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Property tests for FSRS-6 (see `docs/contributing/TESTING.md`).
 
 use proptest::prelude::*;
