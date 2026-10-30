@@ -6,6 +6,7 @@ use studyfrog_core::review::Rating;
 use studyfrog_core::run::Run;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::Action;
+use studyfrog_service::achievements::AchievementReport;
 use studyfrog_service::document::{LoadedDoc, Saved};
 use studyfrog_store::overview::LinkGraph;
 
@@ -132,6 +133,8 @@ pub enum Msg {
     GraphRestart,
     /// A node was clicked.
     GraphClick(usize),
+    /// The achievements were measured.
+    AchievementsChecked(Result<AchievementReport, String>),
     /// Something happened on the calendar screen.
     Plan(PlanMsg),
     /// Something happened on the board screen.

@@ -79,6 +79,7 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::CloseEditor
         | Msg::OpenLink(_)
         | Msg::LinkResolved(..)) => crate::editor::update(state, edit),
+        Msg::AchievementsChecked(result) => crate::achievements::checked(state, result),
         Msg::Plan(m) => crate::planner::update(state, m),
         Msg::Board(m) => crate::kanban::update(state, m),
         Msg::ReadingTest(m) => crate::reading_test::update(state, m),
@@ -176,6 +177,8 @@ fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
         (State { screen, ..state }, vec![Effect::LoadGraph])
     } else if allowed && screen == Screen::Calendar {
         (State { screen, ..state }, vec![Effect::LoadSessions])
+    } else if allowed && screen == Screen::Achievements {
+        (State { screen, ..state }, vec![Effect::CheckAchievements])
     } else if allowed && screen == Screen::Board {
         (State { screen, ..state }, vec![Effect::LoadBoard])
     } else if allowed && screen == Screen::Rehearse {

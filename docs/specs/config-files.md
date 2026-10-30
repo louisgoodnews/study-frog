@@ -26,6 +26,21 @@ Every key is optional; omitted keys use the vault defaults. A `_stack.toml` with
 folder is ignored. Daily limits count distinct items per day from the review history (see
 [storage-schema](storage-schema.md)); a stack switched from FSRS to SM-2 (or back) keeps its items scheduled.
 
+## `achievements.toml` (vault root, optional)
+```toml
+[[achievement]]
+id = "week"                   # one word, unique; remembers the unlock
+title = "A week in a row"
+description = "Review something on 7 days in a row."   # optional
+scope = "global"              # "global" or "stack" (unlocks separately for every stack)
+metric = "streak_days"        # runs_finished (global only), items_rated, easy_ratings, items_learned,
+                              # items_mastered, streak_days
+threshold = 7                 # at least 1
+```
+When the file exists it **replaces** the built-in set (an empty file means no achievements); an invalid file
+is reported and the built-in set is used. Mastered means scheduled 21 days or more ahead. Only runs that
+update the schedule write reviews, so practice runs do not count towards review-based metrics.
+
 ## `app.toml` (`$XDG_CONFIG_HOME/studyfrog/`, written by the app)
 ```toml
 vault = "/home/me/notes"       # the vault opened last

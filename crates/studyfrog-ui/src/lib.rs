@@ -3,6 +3,7 @@
 //! Structure (ADR 0002): `state`, `msg`, `effect` and `update` are the pure core and know nothing
 //! about egui; `exec` performs effects; `view` and `model` draw; `runtime` and `app` are the glue.
 
+pub mod achievements;
 pub mod app;
 pub mod browse;
 pub mod edit_form;

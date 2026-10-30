@@ -4106,6 +4106,7 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 name = "studyfrog-achieve"
 version = "0.1.0"
 dependencies = [
+ "proptest",
  "studyfrog-core",
 ]
 
@@ -4207,12 +4208,14 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "rusqlite",
+ "studyfrog-achieve",
  "studyfrog-board",
  "studyfrog-calendar",
  "studyfrog-config",
  "studyfrog-core",
  "studyfrog-md",
  "studyfrog-rehearsal",
+ "studyfrog-report",
  "studyfrog-slm",
  "studyfrog-srs",
  "studyfrog-store",

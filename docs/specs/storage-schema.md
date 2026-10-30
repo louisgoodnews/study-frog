@@ -54,6 +54,11 @@ turns runs left idle, running or paused into `aborted` and closes their log with
   stack_uid, points)`: one board per vault; cards keep their order by `position`. The whole board is
   replaced in one transaction on every change (boards are small).
 
+## Schema v5: achievement unlocks (M7)
+- `achievement_unlock(rule_id, scope_key, unlocked_ms)`, primary key (`rule_id`, `scope_key`): `scope_key` is
+  empty for a global achievement, else the stack's uid. History: no foreign keys, `INSERT OR IGNORE` so an
+  unlock keeps its first time.
+
 ## Vault rules (M2)
 - Only `.md` files are indexed; names starting with `.` (and everything inside such folders) are skipped, as are symlinks.
 - A **stack** is a folder containing `_stack.md`. An item belongs to the nearest ancestor folder that is a

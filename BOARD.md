@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (73) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (76) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
@@ -61,6 +61,9 @@
 |  |  |  |  |  | [TASK-0053](docs/issues/tasks/TASK-0053-scoring-property-tests.md) Scoring property tests (2) |
 |  |  |  |  |  | [TASK-0054](docs/issues/tasks/TASK-0054-answer-input-in-rehearsal.md) Answer input in rehearsal (3) |
 |  |  |  |  |  | [TASK-0055](docs/issues/tasks/TASK-0055-slm-benchmark.md) SLM benchmark (1) |
+|  |  |  |  |  | [TASK-0056](docs/issues/tasks/TASK-0056-rule-data-model.md) Rule data model (3) |
+|  |  |  |  |  | [TASK-0057](docs/issues/tasks/TASK-0057-achievement-evaluator.md) Evaluator and unlock memory (5) |
+|  |  |  |  |  | [TASK-0058](docs/issues/tasks/TASK-0058-achievements-screen.md) Achievements screen and announcements (3) |
 |  |  |  |  |  | [TASK-0068](docs/issues/tasks/TASK-0068-run-plan-types-in-core.md) Run plan types in core (3) |
 |  |  |  |  |  | [TASK-0069](docs/issues/tasks/TASK-0069-practice-orders.md) Practice orders (5) |
 |  |  |  |  |  | [TASK-0070](docs/issues/tasks/TASK-0070-queue-filters.md) Queue filters (3) |
@@ -109,6 +112,8 @@
 | [STORY-0023](docs/issues/stories/STORY-0023-runtime-trait-and-implementation.md) Runtime trait and implementation (8) | done | 3/3 |
 | [STORY-0024](docs/issues/stories/STORY-0024-scoring-contract.md) Scoring contract (5) | done | 2/2 |
 | [STORY-0025](docs/issues/stories/STORY-0025-ui-integration.md) UI integration (5) | done | 2/2 |
+| [STORY-0026](docs/issues/stories/STORY-0026-rule-engine.md) Rule engine (5) | done | 2/2 |
+| [STORY-0027](docs/issues/stories/STORY-0027-achievement-ui.md) Achievement UI (3) | done | 1/1 |
 | [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
 | [STORY-0034](docs/issues/stories/STORY-0034-stack-settings-sm-2-budgets-and-filter-persistence.md) Stack settings, SM-2, budgets and filter persistence (8) | done | 4/4 |
 | [STORY-0035](docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 5/5 |
@@ -130,5 +135,6 @@
 | [EPIC-011](docs/issues/epics/EPIC-011-scrum-kanban-board.md) Scrum/kanban board | done | 2/2 |
 | [EPIC-012](docs/issues/epics/EPIC-012-slm-runtime.md) SLM runtime | done | 1/1 |
 | [EPIC-013](docs/issues/epics/EPIC-013-comparison-scoring.md) Comparison scoring | done | 2/2 |
+| [EPIC-014](docs/issues/epics/EPIC-014-achievements.md) Achievements | done | 2/2 |
 | [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |
 | [EPIC-019](docs/issues/epics/EPIC-019-rehearsal-insights.md) Rehearsal insights | done | 1/1 |

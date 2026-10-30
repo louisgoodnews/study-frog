@@ -6,13 +6,14 @@ use studyfrog_core::run::RunMode;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::StepOutput;
+use studyfrog_service::achievements::check_achievements;
 use studyfrog_service::compare::score_item_answer;
 use studyfrog_service::content::load_item_content;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::rehearse::{StepContext, record_step, start_run};
 use studyfrog_service::rerate::rerate_latest;
 use studyfrog_service::session::current_settings;
-use studyfrog_service::timezone::local_day_window;
+use studyfrog_service::timezone::{local_day_window, local_offset_minutes};
 use studyfrog_slm::models::open_runtime;
 
 use crate::exec::Worker;
@@ -91,4 +92,16 @@ pub fn rerate(w: &mut Worker, item: Uid, expected: Rating, to: Rating) -> Msg {
         None => Err("no vault is open".to_owned()),
     };
     Msg::Rerated(item, result)
+}
+
+/// Measure the achievements at the current local time.
+pub fn achievements(w: &mut Worker, now_ns: i64) -> Msg {
+    let now = UnixMs(millis(now_ns));
+    let result = match &mut w.session {
+        Some(session) => {
+            check_achievements(session, now, local_offset_minutes(now)).map_err(|e| e.to_string())
+        }
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::AchievementsChecked(result)
 }

@@ -114,6 +114,9 @@ fn act(state: State, action: Action) -> (State, Vec<Effect>) {
             run.scored = None;
         }
         effects.extend(prefetch(&mut run));
+        if is_over(&run) {
+            effects.push(Effect::CheckAchievements);
+        }
         effects.push(Effect::RecordStep {
             ctx: step_context(&run.session),
             out,
@@ -173,10 +176,13 @@ fn rerated(
     result: Result<(), String>,
 ) -> (State, Vec<Effect>) {
     match result {
-        Ok(()) => with_run(state, |mut r| {
-            r.applied.insert(uid);
-            r
-        }),
+        Ok(()) => {
+            let (state, _) = with_run(state, |mut r| {
+                r.applied.insert(uid);
+                r
+            });
+            (state, vec![Effect::CheckAchievements])
+        }
         Err(e) => error(state, format!("Could not change the rating: {e}")),
     }
 }

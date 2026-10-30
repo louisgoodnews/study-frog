@@ -22,7 +22,7 @@
 
 ## Exit criteria
 
-- [ ] Stack and global achievements unlock from run data
+- [x] Stack and global achievements unlock from review history
 - [ ] Retention curve, latency distribution and review-load forecast are shown
 - [ ] Forecast backtest error reported on real or simulated history
 - [ ] Reports compute within budget on 100k reviews

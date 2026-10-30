@@ -1,1 +1,6 @@
-//! Achievement engine: stack-scoped and global unlock rules evaluated over event data.
+//! Achievement engine: rules evaluated over review history. Pure; the service layer reads the
+//! history and remembers which achievements were already unlocked.
+
+pub mod defaults;
+pub mod evaluate;
+pub mod stats;

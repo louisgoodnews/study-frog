@@ -5,10 +5,11 @@ use eframe::egui::{self, Panel};
 use crate::msg::Msg;
 use crate::state::{NoticeKind, Screen, State};
 
-const SCREENS: [(Screen, &str); 6] = [
+const SCREENS: [(Screen, &str); 7] = [
     (Screen::Library, "Library"),
     (Screen::Calendar, "Calendar"),
     (Screen::Board, "Board"),
+    (Screen::Achievements, "Achievements"),
     (Screen::Graph, "Graph"),
     (Screen::Rehearse, "Rehearse"),
     (Screen::Settings, "Settings"),

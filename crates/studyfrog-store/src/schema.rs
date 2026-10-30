@@ -24,6 +24,11 @@ pub const MIGRATIONS: &[Migration] = &[
         name: "sessions and board",
         sql: V4,
     },
+    Migration {
+        version: 5,
+        name: "achievement unlocks",
+        sql: V5,
+    },
 ];
 
 /// The run filter (list-valued parts in their own tables, with a position to keep their order),
@@ -185,6 +190,16 @@ CREATE TABLE run_event (
     kind     TEXT NOT NULL,
     payload  TEXT,
     PRIMARY KEY (run_uid, seq)
+) WITHOUT ROWID;
+";
+
+/// Achievement unlocks (history, no foreign keys); `scope_key` is empty when global, else a stack uid.
+const V5: &str = "
+CREATE TABLE achievement_unlock (
+    rule_id     TEXT NOT NULL,
+    scope_key   TEXT NOT NULL,
+    unlocked_ms INTEGER NOT NULL,
+    PRIMARY KEY (rule_id, scope_key)
 ) WITHOUT ROWID;
 ";
 

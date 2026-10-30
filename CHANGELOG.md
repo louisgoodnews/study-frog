@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Achievements: rules as data (built-in set or the vault's `achievements.toml`), statistics from the review
+  history including streaks, unlocks remembered once (schema v5), an Achievements screen with progress and
+  an announcement when something unlocks (TASK-0056, 0057, 0058).
 - Reading speed can be measured on the Settings screen (read a lorem ipsum text, press done) and is kept in
   `app.toml`; rehearsal uses it as the baseline. Reading much slower than expected now suggests a harder
   rating (Good to Hard, Easy to Good) (TASK-0084, 0085).

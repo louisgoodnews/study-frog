@@ -18,7 +18,7 @@ declare -A allowed=(
   [achieve]="core"
   [board]="core"
   [calendar]="core"
-  [service]="core md config calendar board store srs rehearsal slm"
+  [service]="core md config calendar board store srs rehearsal slm achieve report"
   [ui]="core md config graph store srs rehearsal slm report achieve board calendar service"
   [app]="ui slm candle"
 )

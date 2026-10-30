@@ -1,5 +1,6 @@
 //! Views: plain functions from `&State` to the messages the user's input produced.
 
+mod achievements;
 mod bars;
 mod board;
 mod calendar;
@@ -38,6 +39,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         Screen::Graph => graph::draw(state, ui, &mut out),
         Screen::Calendar => calendar::draw(state, ui, &mut out),
         Screen::Board => board::draw(state, ui, &mut out),
+        Screen::Achievements => achievements::draw(state, ui),
     });
     out
 }

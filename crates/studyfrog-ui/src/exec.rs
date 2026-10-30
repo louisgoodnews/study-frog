@@ -79,6 +79,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::SaveSession(s) => exec_plan::save(w, s, now_ns),
         Effect::DeleteSession(id) => exec_plan::delete(w, id),
         Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),
+        Effect::CheckAchievements => exec_run::achievements(w, now_ns),
         Effect::LoadBoard => exec_plan::load_board(w, now_ns),
         Effect::BoardCommand(op) => exec_plan::board_command(w, &op, now_ns),
         Effect::LoadDocument(uid) => load_document_msg(w, uid),
