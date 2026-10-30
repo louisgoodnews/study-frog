@@ -62,6 +62,16 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::AddCardClicked
         | Msg::Created(_)) => crate::browse::update(state, browse),
         setup @ (Msg::Setup(_) | Msg::PreviewReady(_)) => crate::setup::update(state, setup),
+        edit @ (Msg::OpenItem(_)
+        | Msg::DocumentLoaded(..)
+        | Msg::Edit(_)
+        | Msg::SaveClicked
+        | Msg::Saved(_)
+        | Msg::RevertClicked
+        | Msg::ReloadClicked
+        | Msg::CloseEditor
+        | Msg::OpenLink(_)
+        | Msg::LinkResolved(..)) => crate::editor::update(state, edit),
         run @ (Msg::StartRunClicked
         | Msg::RunReady(_)
         | Msg::RunAction(_)
@@ -147,7 +157,8 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
 }
 
 fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
-    let allowed = screen == Screen::Welcome || state.vault.is_some();
+    let allowed = (screen == Screen::Welcome || state.vault.is_some())
+        && (screen == Screen::Editor || !crate::editor::has_unsaved_changes(&state));
     if allowed && screen == Screen::Rehearse {
         crate::setup::refresh_preview(State { screen, ..state })
     } else if allowed {

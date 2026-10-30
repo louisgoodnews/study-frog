@@ -37,7 +37,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .num_columns(3)
                 .show(ui, |ui| {
                     for item in &shown {
-                        ui.label(&item.title);
+                        if ui.link(&item.title).clicked() {
+                            out.push(Msg::OpenItem(item.uid));
+                        }
                         ui.label(kind_text(item.kind));
                         ui.weak(&item.path);
                         ui.end_row();

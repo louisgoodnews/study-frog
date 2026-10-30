@@ -48,3 +48,9 @@ Stack: eframe/egui 0.37 with `glow`, `wayland`, `x11`, `accesskit`; `egui_kittes
 - **API note:** egui 0.37 moved to `App::ui(&mut Ui, ..)` with panels shown inside the root `Ui`.
 - **Decision stands:** egui/eframe.
 
+## Editor spike (M4, TASK-0040)
+- Multi-line text areas, undo/redo and a live preview work in egui 0.37; the editor is a form (title, tags, text
+  areas per kind) beside a preview, not a single raw Markdown buffer.
+- Still unverified without a person: IME composition and screen-reader output. Decision stands (egui); iced is the
+  fallback if IME turns out to be unusable.
+

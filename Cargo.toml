@@ -48,6 +48,7 @@ proptest = "1"
 rusqlite = { version = "0.41", features = ["bundled"] }
 serde = { version = "1", features = ["derive"] }
 serde-saphyr = "2"
+pulldown-cmark = { version = "0.13", default-features = false }
 toml = { version = "1", default-features = false, features = ["parse", "serde"] }
 eframe = { version = "0.37", default-features = false, features = ["accesskit", "clipboard", "default_fonts", "glow", "links", "wayland", "x11"] }
 egui_kittest = "0.37"

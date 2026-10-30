@@ -8,9 +8,11 @@ use studyfrog_core::run::RunMode;
 use studyfrog_core::settings::AppSettings;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
+use studyfrog_md::doc::Doc;
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 use studyfrog_service::create::{IdSource, create_card, create_stack, fresh_id_source};
 use studyfrog_service::day::day_from;
+use studyfrog_service::document::{load_document, resolve_link, save_document};
 use studyfrog_service::queue::{NewRun, preview_queue};
 use studyfrog_service::session::{
     ServiceError, VaultInfo, VaultSession, current_settings, open_vault, poll_vault,
@@ -49,6 +51,9 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::LoadItems(selection) => load_items(w, &selection),
         Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
         Effect::StartRun { plan, mode } => exec_run::start(w, plan, mode, now_ns),
+        Effect::LoadDocument(uid) => load_document_msg(w, uid),
+        Effect::SaveDocument { path, doc, hash } => save_document_msg(w, &path, &doc, hash, now_ns),
+        Effect::ResolveLink(target) => resolve_link_msg(w, target),
         Effect::LoadItem(uid) => exec_run::load_item(w, uid),
         Effect::RecordStep { ctx, out } => exec_run::record(w, &ctx, &out, now_ns),
         Effect::CreateStack(title) => create(w, now_ns, |s, ids| create_stack(s, &title, ids)),
@@ -150,4 +155,28 @@ fn preview(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
     Msg::PreviewReady(
         preview_queue(&session.conn, req, &current_settings(session)).map_err(|e| e.to_string()),
     )
+}
+
+fn load_document_msg(w: &Worker, uid: Uid) -> Msg {
+    match &w.session {
+        Some(s) => Msg::DocumentLoaded(uid, load_document(s, uid).map_err(|e| e.to_string())),
+        None => Msg::DocumentLoaded(uid, Err("no vault is open".to_owned())),
+    }
+}
+
+fn save_document_msg(w: &mut Worker, path: &str, doc: &Doc, hash: u64, now_ns: i64) -> Msg {
+    let Some(s) = &mut w.session else {
+        return Msg::Saved(Err("no vault is open".to_owned()));
+    };
+    Msg::Saved(
+        save_document(s, path, doc, hash, UnixMs(now_ns / 1_000_000)).map_err(|e| e.to_string()),
+    )
+}
+
+fn resolve_link_msg(w: &Worker, target: String) -> Msg {
+    let result = match &w.session {
+        Some(s) => resolve_link(s, &target).map_err(|e| e.to_string()),
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::LinkResolved(target, result)
 }

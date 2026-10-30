@@ -235,3 +235,16 @@ pub fn item_path(conn: &Connection, uid: Uid) -> Result<Option<String>, StoreErr
         Err(e) => Err(sql_err(e)),
     }
 }
+
+/// The first non-stack item whose title equals `target`, ignoring case (path order breaks ties).
+/// Aliases are not indexed yet, so only titles resolve.
+pub fn resolve_title(conn: &Connection, target: &str) -> Result<Option<Uid>, StoreError> {
+    let sql = "SELECT uid FROM item WHERE title = ?1 COLLATE NOCASE AND kind != 'stack' ORDER BY path LIMIT 1";
+    match conn.query_row(sql, [target.trim()], |r| r.get::<_, String>(0)) {
+        Ok(id) => parse_ulid(&id)
+            .map(Some)
+            .ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}"))),
+        Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+        Err(e) => Err(sql_err(e)),
+    }
+}

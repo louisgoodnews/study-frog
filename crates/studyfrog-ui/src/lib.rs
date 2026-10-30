@@ -5,6 +5,8 @@
 
 pub mod app;
 pub mod browse;
+pub mod edit_form;
+pub mod editor;
 pub mod effect;
 pub mod exec;
 pub mod exec_run;

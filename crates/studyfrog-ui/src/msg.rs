@@ -5,6 +5,7 @@ use studyfrog_core::settings::AppSettings;
 use studyfrog_core::run::Run;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::Action;
+use studyfrog_service::document::{LoadedDoc, Saved};
 
 use crate::run_state::ItemContent;
 use crate::setup::SetupEdit;
@@ -74,6 +75,37 @@ pub enum Msg {
     StepRecorded(Result<(), String>),
     /// "Back to setup" after a run.
     LeaveRun,
+    /// An item was chosen for editing.
+    OpenItem(Uid),
+    /// A document was read for editing.
+    DocumentLoaded(Uid, Result<LoadedDoc, String>),
+    /// A field of the editor changed.
+    Edit(EditAction),
+    /// "Save" was activated.
+    SaveClicked,
+    /// The document was saved (or not).
+    Saved(Result<Saved, String>),
+    /// "Revert" was activated.
+    RevertClicked,
+    /// "Reload from disk" was activated.
+    ReloadClicked,
+    /// "Back" was activated in the editor.
+    CloseEditor,
+    /// A wikilink in the preview was clicked.
+    OpenLink(String),
+    /// The item a wikilink points to (`None`: no item has that title).
+    LinkResolved(String, Result<Option<Uid>, String>),
+}
+
+/// A change in the editor.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum EditAction {
+    /// The title field.
+    Title(String),
+    /// The tags field.
+    Tags(String),
+    /// A text area, by index.
+    Field(usize, String),
 }
 
 /// Which field of the new-card form.

@@ -4,6 +4,7 @@ use studyfrog_core::plan::RunPlan;
 use studyfrog_core::run::RunMode;
 use studyfrog_core::settings::AppSettings;
 use studyfrog_core::uid::Uid;
+use studyfrog_md::doc::Doc;
 use studyfrog_rehearsal::input::StepOutput;
 use studyfrog_service::rehearse::StepContext;
 
@@ -45,6 +46,19 @@ pub enum Effect {
         /// What the step produced.
         out: StepOutput,
     },
+    /// Read a document for editing.
+    LoadDocument(Uid),
+    /// Write an edited document, if the file is unchanged since `hash`.
+    SaveDocument {
+        /// Vault-relative path.
+        path: String,
+        /// The document to write.
+        doc: Doc,
+        /// Fingerprint of the file when it was loaded.
+        hash: u64,
+    },
+    /// Find the item a wikilink points to.
+    ResolveLink(String),
     /// Create a stack with this title.
     CreateStack(String),
     /// Create a card in the stack at `folder`.

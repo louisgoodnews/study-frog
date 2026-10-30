@@ -90,3 +90,60 @@ fn split_once_opt(text: &str, sep: char) -> (&str, Option<&str>) {
         None => (text, None),
     }
 }
+
+/// A piece of inline text: plain, or a wikilink to show as a link.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Piece<'a> {
+    /// Plain text.
+    Text(&'a str),
+    /// A wikilink: what to look up and what to show.
+    Link {
+        /// Note title or alias.
+        target: &'a str,
+        /// The label if given, else the target.
+        shown: &'a str,
+    },
+}
+
+/// Split inline text (a single run, no code) into plain text and wikilinks, in order. Escaped
+/// `\[[` and malformed links stay plain text.
+pub fn split_wikilinks(text: &str) -> Vec<Piece<'_>> {
+    let mut pieces = Vec::new();
+    let (mut plain_from, mut i) = (0, 0);
+    let bytes = text.as_bytes();
+    while i < bytes.len() {
+        if bytes[i] == b'\\' {
+            i += 2;
+            continue;
+        }
+        let link = (bytes[i] == b'[' && bytes.get(i + 1) == Some(&b'['))
+            .then(|| inner_at(text, i))
+            .flatten();
+        match link {
+            Some((target, shown, end)) => {
+                if plain_from < i {
+                    pieces.push(Piece::Text(&text[plain_from..i]));
+                }
+                pieces.push(Piece::Link { target, shown });
+                (plain_from, i) = (end, end);
+            }
+            None => i += 1,
+        }
+    }
+    if plain_from < text.len() {
+        pieces.push(Piece::Text(&text[plain_from..]));
+    }
+    pieces
+}
+
+/// The link opening at `start`: (target, shown text, end offset), if well formed.
+fn inner_at(text: &str, start: usize) -> Option<(&str, &str, usize)> {
+    let len = text[start + 2..].find("]]")?;
+    let inner = &text[start + 2..start + 2 + len];
+    let link = parse_inner(inner, 0)?;
+    Some((
+        link.target,
+        link.label.unwrap_or(link.target),
+        start + 2 + len + 2,
+    ))
+}

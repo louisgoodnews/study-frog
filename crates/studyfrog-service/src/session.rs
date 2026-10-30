@@ -32,13 +32,15 @@ pub enum ServiceError {
     Store(StoreError),
     /// The request itself is not acceptable (empty title, not a stack, ...).
     Invalid(String),
+    /// A file changed on disk since it was loaded, so saving would overwrite someone else's edit.
+    Conflict(String),
 }
 
 /// Human-readable description.
 pub fn describe_service_error(e: &ServiceError) -> String {
     match e {
         ServiceError::NotAFolder(p) => format!("{p} is not a folder"),
-        ServiceError::Io(m) | ServiceError::Invalid(m) => m.clone(),
+        ServiceError::Io(m) | ServiceError::Invalid(m) | ServiceError::Conflict(m) => m.clone(),
         ServiceError::Store(e) => e.to_string(),
     }
 }

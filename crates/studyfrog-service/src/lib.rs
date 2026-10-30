@@ -3,6 +3,7 @@
 pub mod content;
 pub mod create;
 pub mod day;
+pub mod document;
 pub mod queue;
 pub mod queue_data;
 pub mod rehearse;

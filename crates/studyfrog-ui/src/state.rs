@@ -3,6 +3,7 @@
 use studyfrog_core::settings::AppSettings;
 pub use studyfrog_service::session::VaultInfo;
 
+use crate::editor::Editor;
 use crate::setup::Rehearse;
 pub use studyfrog_store::overview::ItemRow;
 
@@ -18,6 +19,8 @@ pub enum Screen {
     Rehearse,
     /// Vault and application settings.
     Settings,
+    /// A document open for editing.
+    Editor,
 }
 
 /// Severity of a notice.
@@ -100,4 +103,6 @@ pub struct State {
     /// Seconds on the shell's monotonic clock, refreshed every frame. Time enters the pure update
     /// only through this field.
     pub now: f64,
+    /// The document open for editing.
+    pub editor: Option<Editor>,
 }

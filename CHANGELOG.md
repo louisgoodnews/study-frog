@@ -8,6 +8,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Editor: open any item from the browser, edit title, tags and text areas with a live Markdown preview (headings,
+  emphasis, lists, task items, quotes, code, wikilinks and URL links), undo/redo, save with conflict detection
+  (a file changed elsewhere is never overwritten), revert/reload, unsaved-changes guards, clickable wikilinks.
+  `studyfrog-md::blocks` (preview model, pulldown-cmark), `studyfrog-service::document`, `resolve_title`
+  (TASK-0040, TASK-0041).
 - Rehearsal screen: keyboard-first (Space, 1-4, S, P, Esc), pause that hides the question, flip and type-answer
   modes, look-ahead content loading, end-of-run summary; every step saved through the service (spaced runs update
   the schedule, practice-only runs do not). Service `start_run`, `load_item_content`, `StepContext`; crashed runs

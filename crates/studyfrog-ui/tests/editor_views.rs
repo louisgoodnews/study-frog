@@ -1,0 +1,144 @@
+#![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
+//! The editor's real widgets, headless.
+
+mod common;
+
+use common::views::{assert_all_named, harness, open_model};
+use egui_kittest::kittest::Queryable;
+use studyfrog_core::uid::Uid;
+use studyfrog_md::parse::parse_doc;
+use studyfrog_service::document::LoadedDoc;
+use studyfrog_ui::effect::Effect;
+use studyfrog_ui::model::{Model, apply};
+use studyfrog_ui::msg::Msg;
+use studyfrog_ui::state::Screen;
+
+const NOTE: &str = "---\nid: 0000000000000000000000000A\nkind: note\ntitle: Alpha\n---\n# Heading\n\nSee [[Beta]] and **bold**.\n";
+
+fn editing() -> Model {
+    let mut m = open_model();
+    let doc = parse_doc(NOTE).unwrap();
+    apply(
+        &mut m,
+        Msg::DocumentLoaded(
+            Uid(0xA),
+            Ok(LoadedDoc {
+                path: "s/alpha.md".into(),
+                doc,
+                hash: 1,
+            }),
+        ),
+    );
+    assert_eq!(m.state.screen, Screen::Editor);
+    m
+}
+
+#[test]
+fn the_form_and_the_live_preview_show_side_by_side() {
+    let mut h = harness(editing());
+    h.run_steps(2);
+    for label in [
+        "Title",
+        "Tags (comma separated)",
+        "Body",
+        "Preview",
+        "Heading",
+        "Beta",
+        "bold",
+    ] {
+        assert!(
+            h.query_all_by_label(label).count() >= 1,
+            "missing {label:?}"
+        );
+    }
+    assert!(h.query_by_label("unsaved changes").is_none());
+}
+
+#[test]
+fn typing_marks_the_document_changed_updates_the_preview_and_enables_save() {
+    let mut h = harness(editing());
+    h.run_steps(2);
+    h.get_by_label("Title").focus();
+    h.get_by_label("Title").type_text(" v2");
+    h.run_steps(2);
+    assert!(h.query_by_label("unsaved changes").is_some());
+    assert_eq!(
+        h.state().0.state.editor.as_ref().unwrap().form.title,
+        "Alpha v2"
+    );
+
+    h.get_by_label("Save").click();
+    h.run_steps(2);
+    assert!(
+        h.state()
+            .1
+            .iter()
+            .any(|e| matches!(e, Effect::SaveDocument { path, .. } if path == "s/alpha.md"))
+    );
+}
+
+#[test]
+fn save_and_revert_are_disabled_until_there_is_something_to_save() {
+    let mut h = harness(editing());
+    h.run_steps(2);
+    h.get_by_label("Save").click();
+    h.get_by_label("Revert").click();
+    h.run_steps(2);
+    assert!(
+        !h.state()
+            .1
+            .iter()
+            .any(|e| matches!(e, Effect::SaveDocument { .. })),
+        "a disabled button does nothing"
+    );
+}
+
+#[test]
+fn a_wikilink_in_the_preview_is_clickable() {
+    let mut h = harness(editing());
+    h.run_steps(2);
+    h.get_by_label("Beta").click();
+    h.run_steps(2);
+    assert!(h.state().1.contains(&Effect::ResolveLink("Beta".into())));
+}
+
+#[test]
+fn back_asks_to_close_and_every_control_is_named() {
+    let mut h = harness(editing());
+    h.run_steps(2);
+    assert_all_named(&h, "editor");
+    h.get_by_label("Back").click();
+    h.run_steps(2);
+    assert_eq!(h.state().0.state.screen, Screen::Library);
+    assert!(h.state().0.state.editor.is_none());
+}
+
+#[test]
+fn undo_and_redo_work_in_the_text_areas() {
+    use eframe::egui::{Key, Modifiers};
+    let mut h = harness(editing());
+    h.run_steps(2);
+    let body = |h: &egui_kittest::Harness<'_, common::views::App>| {
+        h.state().0.state.editor.as_ref().unwrap().form.fields[0]
+            .text
+            .clone()
+    };
+    let before = body(&h);
+    let role = eframe::egui::accesskit::Role::MultilineTextInput;
+    h.get_by_role_and_label(role, "Body").focus();
+    h.get_by_role_and_label(role, "Body")
+        .type_text(" added words");
+    h.run_steps(2);
+    assert_ne!(body(&h), before);
+
+    h.key_press_modifiers(Modifiers::COMMAND, Key::Z);
+    h.run_steps(3);
+    assert_eq!(body(&h), before, "undo restores the earlier text");
+    h.key_press_modifiers(Modifiers::COMMAND | Modifiers::SHIFT, Key::Z);
+    h.run_steps(3);
+    assert!(
+        body(&h).ends_with(" added words"),
+        "redo brings it back: {:?}",
+        body(&h)
+    );
+}

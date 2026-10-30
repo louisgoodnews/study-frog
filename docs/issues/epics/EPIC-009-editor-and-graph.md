@@ -2,7 +2,7 @@
 id: EPIC-009
 type: epic
 title: Editor and graph
-status: backlog
+status: in_progress
 parents: []
 labels: [m4, ui]
 acceptance_criteria:
