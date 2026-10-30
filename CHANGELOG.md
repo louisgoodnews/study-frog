@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Rehearsal screen: keyboard-first (Space, 1-4, S, P, Esc), pause that hides the question, flip and type-answer
+  modes, look-ahead content loading, end-of-run summary; every step saved through the service (spaced runs update
+  the schedule, practice-only runs do not). Service `start_run`, `load_item_content`, `StepContext`; crashed runs
+  are recovered when a vault opens. 15 tests (TASK-0039). EPIC-008 (UI shell) complete.
 - Run setup screen: presets (spaced, everything in order, shuffled, hardest first, not seen for longest),
   all orders, filters (kind, stack, tags, state, difficulty), limit, requeue, and an explicit "update my
   schedule" switch; live count of matching items from the index. 6 tests (TASK-0073).

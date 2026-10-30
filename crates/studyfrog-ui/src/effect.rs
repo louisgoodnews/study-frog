@@ -3,6 +3,9 @@
 use studyfrog_core::plan::RunPlan;
 use studyfrog_core::run::RunMode;
 use studyfrog_core::settings::AppSettings;
+use studyfrog_core::uid::Uid;
+use studyfrog_rehearsal::input::StepOutput;
+use studyfrog_service::rehearse::StepContext;
 
 use crate::state::Selection;
 
@@ -25,6 +28,22 @@ pub enum Effect {
         plan: RunPlan,
         /// Presentation mode.
         mode: RunMode,
+    },
+    /// Create and store a run from this plan.
+    StartRun {
+        /// The plan.
+        plan: RunPlan,
+        /// Presentation mode.
+        mode: RunMode,
+    },
+    /// Read an item's content from its file.
+    LoadItem(Uid),
+    /// Save one engine step (events and, for scheduled runs, the schedule).
+    RecordStep {
+        /// The run and what it does to the schedule.
+        ctx: StepContext,
+        /// What the step produced.
+        out: StepOutput,
     },
     /// Create a stack with this title.
     CreateStack(String),

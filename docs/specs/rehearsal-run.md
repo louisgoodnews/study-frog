@@ -52,3 +52,25 @@ run are automatic. Inputs: Start, Flip, Skip, SubmitAnswer, Rate, Pause, Resume,
 Events are append-only rows in SQLite (`run_event`), written in one transaction per item.
 A run's aggregates (counts, median latency) are derived, not stored. A crashed run is
 recovered as `Aborted` on next start.
+
+## The rehearsal screen (M4)
+Distraction-free: the prompt, a progress counter and the time on the current item, nothing else.
+
+| Key | Effect | When |
+|---|---|---|
+| Space | reveal the answer | prompt shown |
+| 1 2 3 4 | rate Again, Hard, Good, Easy | answer revealed |
+| S | skip the item | prompt shown |
+| P | pause / resume (pausing hides the question and stops the item timer) | running / paused |
+| Esc | stop the run (it is saved as aborted) | any time |
+
+- Shortcuts are off while a text field has the keyboard (answer mode), so typing never triggers them.
+- Answer mode: type the answer and submit; the reference answer is then shown for comparison (SLM scoring arrives in M6).
+- The engine time is the egui time written into `State::now` each frame; the pure `update` calls the engine's `step`
+  with it, and every step is saved through `studyfrog-service::record_step`.
+- Item content is read from the file on demand, three items ahead of the current one; a file that cannot be read
+  shows a message and the run continues.
+- When a run is over the screen shows a summary (counts per rating, skips, median time to answer) and, for
+  practice-only runs, says the schedule was not changed.
+- Runs left open by a crash are recovered as aborted the next time the vault is opened.
+

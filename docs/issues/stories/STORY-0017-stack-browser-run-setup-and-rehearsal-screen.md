@@ -2,7 +2,7 @@
 id: STORY-0017
 type: story
 title: Stack browser, run setup and rehearsal screen
-status: in_progress
+status: done
 epic: EPIC-008
 parents: [EPIC-008]
 estimate: 8
@@ -20,9 +20,9 @@ Rehearsal is not only spaced repetition (see docs/specs/rehearsal-run.md).
 Stack browser, run setup and rehearsal screen.
 
 ## Acceptance Criteria
-- [ ] Browse stacks and items; create a stack and a card
-- [ ] Choose a run plan: order, filters, limit, requeue, schedule effect, then rehearse with keyboard-first controls
-- [ ] Ratings update the schedule only for runs that ask for it
+- [x] Browse stacks and items; create a stack and a card
+- [x] Choose a run plan: order, filters, limit, requeue, schedule effect, then rehearse with keyboard-first controls
+- [x] Ratings update the schedule only for runs that ask for it
 
 ## Design Notes
 Children: TASK-0038, TASK-0039, TASK-0073.

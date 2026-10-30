@@ -3,33 +3,12 @@
 
 mod common;
 
-use common::views::{App, harness, open_model};
+use common::views::{assert_all_named, harness, open_model};
 use eframe::egui::accesskit::Role;
-use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT, Queryable};
 use studyfrog_ui::model::{Model, apply};
 use studyfrog_ui::msg::Msg;
 use studyfrog_ui::state::{NoticeKind, Screen};
-
-/// Every control a screen offers must be reachable by a screen reader, so it needs a name.
-fn assert_all_named(h: &Harness<'_, App>, screen: &str) {
-    for role in [Role::Button, Role::TextInput, Role::Label] {
-        for node in h.query_all_by_role(role) {
-            // Static text carries its content as `value`; controls must have a real `label`.
-            let n = node.accesskit_node();
-            let name = if role == Role::Label {
-                n.label().or_else(|| n.value())
-            } else {
-                n.label()
-            };
-            let name = name.unwrap_or_default();
-            assert!(
-                !name.trim().is_empty(),
-                "{screen}: a {role:?} has no accessible name"
-            );
-        }
-    }
-}
 
 #[test]
 fn every_control_on_every_screen_has_an_accessible_name() {

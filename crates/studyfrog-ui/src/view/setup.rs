@@ -66,6 +66,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         schedule(form, ui, out);
         ui.separator();
         preview_line(preview, ui);
+        start_button(state, ui, out);
     });
 }
 
@@ -177,6 +178,20 @@ fn schedule(form: &SetupForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     if !update {
         ui.weak("Practice only: your ratings and timings are recorded, but the schedule does not change.");
+    }
+}
+
+fn start_button(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let any = matches!(state.rehearse.preview, Preview::Count(n) if n > 0);
+    let ready = any && !state.rehearse.starting;
+    if ui
+        .add_enabled(ready, egui::Button::new("Start rehearsal"))
+        .clicked()
+    {
+        out.push(Msg::StartRunClicked);
+    }
+    if state.rehearse.starting {
+        ui.spinner();
     }
 }
 

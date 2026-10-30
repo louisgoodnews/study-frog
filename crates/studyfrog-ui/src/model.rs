@@ -33,8 +33,9 @@ pub fn apply(model: &mut Model, msg: Msg) -> Vec<Effect> {
 /// Draw one frame: collect the user's messages from the views, add a tick when one is due, and
 /// apply everything. Returns the effects to execute.
 pub fn frame(model: &mut Model, ui: &mut egui::Ui) -> Vec<Effect> {
-    let mut msgs = view::draw(&model.state, ui);
     let now = ui.input(|i| i.time);
+    model.state.now = now;
+    let mut msgs = view::draw(&model.state, ui);
     if now - model.last_tick >= TICK_SECONDS {
         model.last_tick = now;
         msgs.push(Msg::Tick);

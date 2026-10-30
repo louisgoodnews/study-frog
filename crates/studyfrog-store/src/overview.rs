@@ -225,3 +225,13 @@ pub fn load_indexed_items(conn: &Connection) -> Result<Vec<IndexedItem>, StoreEr
     }
     Ok(out)
 }
+
+/// Vault-relative path of an indexed item, if it is (still) in the index.
+pub fn item_path(conn: &Connection, uid: Uid) -> Result<Option<String>, StoreError> {
+    let sql = "SELECT path FROM item WHERE uid = ?1";
+    match conn.query_row(sql, [studyfrog_md::ulid::format_ulid(uid)], |r| r.get(0)) {
+        Ok(path) => Ok(Some(path)),
+        Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+        Err(e) => Err(sql_err(e)),
+    }
+}

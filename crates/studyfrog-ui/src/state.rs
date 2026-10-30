@@ -97,4 +97,7 @@ pub struct State {
     pub browser: Browser,
     /// The rehearse screen.
     pub rehearse: Rehearse,
+    /// Seconds on the shell's monotonic clock, refreshed every frame. Time enters the pure update
+    /// only through this field.
+    pub now: f64,
 }

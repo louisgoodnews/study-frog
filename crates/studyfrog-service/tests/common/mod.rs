@@ -20,7 +20,7 @@ use studyfrog_rehearsal::session::{Session, session_new};
 use studyfrog_rehearsal::step::step;
 use studyfrog_service::day::day_from;
 use studyfrog_service::queue::{NewRun, new_run};
-use studyfrog_service::rehearse::{begin_run, record_step};
+use studyfrog_service::rehearse::{begin_run, record_step, step_context};
 use studyfrog_store::db::open_memory;
 use studyfrog_store::migrate::migrate;
 use studyfrog_store::reindex::reindex;
@@ -110,7 +110,14 @@ pub fn drive(
     let mut log = Vec::new();
     for (t_ms, action) in actions {
         let out = step(session, Input { t_ms, action }).unwrap();
-        record_step(&mut env.conn, session, &out, wall, &env.vault).unwrap();
+        record_step(
+            &mut env.conn,
+            &step_context(session),
+            &out,
+            wall,
+            &env.vault,
+        )
+        .unwrap();
         log.extend(out.events);
     }
     log

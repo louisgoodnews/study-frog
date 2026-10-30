@@ -19,6 +19,7 @@ use studyfrog_store::app_config::{read_app_settings, write_app_settings};
 use studyfrog_store::overview::list_items;
 
 use crate::effect::Effect;
+use crate::exec_run;
 use crate::msg::Msg;
 use crate::state::Selection;
 
@@ -47,6 +48,9 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::SaveAppSettings(settings) => save_settings(w, &settings),
         Effect::LoadItems(selection) => load_items(w, &selection),
         Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
+        Effect::StartRun { plan, mode } => exec_run::start(w, plan, mode, now_ns),
+        Effect::LoadItem(uid) => exec_run::load_item(w, uid),
+        Effect::RecordStep { ctx, out } => exec_run::record(w, &ctx, &out, now_ns),
         Effect::CreateStack(title) => create(w, now_ns, |s, ids| create_stack(s, &title, ids)),
         Effect::CreateCard {
             folder,

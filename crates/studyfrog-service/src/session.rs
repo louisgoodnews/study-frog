@@ -11,6 +11,7 @@ use studyfrog_store::migrate::migrate;
 use studyfrog_store::overview::{VaultOverview, load_overview};
 use studyfrog_store::poll::{PollOutcome, PollState, poll_changes, prime};
 use studyfrog_store::reindex::reindex;
+use studyfrog_store::runs::abort_unfinished_runs;
 use studyfrog_store::schema::MIGRATIONS;
 use studyfrog_store::vault_config::read_vault_settings;
 
@@ -113,6 +114,7 @@ pub fn open_vault(path: &str) -> Result<(VaultSession, VaultInfo), ServiceError>
     // Fingerprint first: a file that changes while indexing still shows up at the next poll.
     let poll = prime(&root).map_err(store)?;
     reindex(&mut conn, &root).map_err(store)?;
+    abort_unfinished_runs(&mut conn).map_err(store)?;
     let info = vault_info(&root, &conn)?;
     Ok((VaultSession { root, conn, poll }, info))
 }

@@ -64,3 +64,52 @@ pub fn open_model() -> Model {
     apply(&mut m, Msg::VaultOpened(Ok(info())));
     m
 }
+
+/// A model with a two-card run on screen (Paris / 7x8), content loaded, the first item shown.
+pub fn running_model(mode: studyfrog_core::run::RunMode) -> Model {
+    use studyfrog_core::plan::plan_spaced;
+    use studyfrog_core::run::{Run, RunState};
+    use studyfrog_service::content::ItemContent;
+    let run = Run {
+        uid: Uid(100),
+        mode,
+        plan: plan_spaced(),
+        queue: vec![Uid(1), Uid(2)],
+        state: RunState::Idle,
+        started_at: None,
+    };
+    let mut m = open_model();
+    apply(&mut m, Msg::Navigate(studyfrog_ui::state::Screen::Rehearse));
+    m.state.now = 0.0;
+    apply(&mut m, Msg::RunReady(Ok(run)));
+    for (uid, prompt, answer) in [(1, "Capital of France?", "Paris"), (2, "7 x 8?", "56")] {
+        let content = ItemContent {
+            title: prompt.into(),
+            prompt: prompt.into(),
+            answer: answer.into(),
+        };
+        apply(&mut m, Msg::ItemLoaded(Uid(uid), Ok(content)));
+    }
+    m
+}
+
+/// Every control must be reachable by a screen reader, so it needs a name.
+pub fn assert_all_named(h: &Harness<'_, App>, screen: &str) {
+    use eframe::egui::accesskit::Role;
+    use egui_kittest::kittest::{NodeT, Queryable};
+    for role in [Role::Button, Role::TextInput, Role::Label] {
+        for node in h.query_all_by_role(role) {
+            // Static text carries its content as `value`; controls must have a real `label`.
+            let n = node.accesskit_node();
+            let name = if role == Role::Label {
+                n.label().or_else(|| n.value())
+            } else {
+                n.label()
+            };
+            assert!(
+                !name.unwrap_or_default().trim().is_empty(),
+                "{screen}: a {role:?} has no accessible name"
+            );
+        }
+    }
+}

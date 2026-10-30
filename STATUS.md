@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M3 complete; M4 (UI shell) seeded and next. **Date:** 2026-10-30. **Branch:** `main`.
+**Phase:** M4 (UI shell) in progress: EPIC-008 done, EPIC-009 (editor, preview, graph) next. **Date:** 2026-10-30. **Branch:** `main`.
 
 ## What exists
 - Cargo workspace with 12 empty, documented crates (`crates/studyfrog-*`); `cargo check` passes.
@@ -37,11 +37,24 @@
   `toml_edit`); `studyfrog.toml` is read on demand (no hot reload yet); a day window is supplied by the caller
   (the UI must decide local midnight / rollover); after a scheduler switch `Review.elapsed_days` restarts for the
   new algorithm.
+- **UI limits to know:** the vault is chosen by typing a path (no native folder dialog yet; `rfd` would add GTK/portal
+  weight); the "day" for daily limits is the UTC day; answers are shown as plain text (Markdown preview is
+  TASK-0041); IME and real screen-reader behaviour are unverified (see ADR 0002).
 - Lowest-recall queue building is 3.9 ms for 10k items (a `powf` per comparison); cacheable later.
 
 ## Next task
-**M4:** TASK-0036 (eframe window and navigation; includes the egui accessibility/IME spike) and TASK-0037
-(pure Elm-style update loop and effects). Live state: [BOARD.md](BOARD.md).
+**EPIC-009:** TASK-0040 (Markdown editor widget) and TASK-0041 (preview renderer), then the link graph
+(TASK-0042 layout in SoA form, TASK-0043 render benchmark). Live state: [BOARD.md](BOARD.md).
+
+## Using the app now
+`cargo run -p studyfrog-app`: pick a vault folder, create a stack and cards, set up a run (any order or filter),
+rehearse from the keyboard. `--smoke-frames N` draws N frames and exits.
+
+## M4 so far
+- Window, navigation, vault chooser with remembered vault, library overview, stack browser (filter, create stack
+  and card), settings view, run setup with presets/filters/live count, rehearsal screen and summary.
+- Pure `update(State, Msg) -> (State, Vec<Effect>)`; effects run on a worker thread; vault use cases live in
+  `studyfrog-service`. About 70 UI tests, all headless (egui_kittest), plus an accessibility audit.
 
 ## M3 summary
 - `studyfrog-core`: `RunPlan` (order, filter, effect, seed, limit, requeue) and persisted names.

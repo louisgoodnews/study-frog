@@ -3,6 +3,7 @@
 
 use crate::effect::Effect;
 use crate::msg::Msg;
+use crate::run_state::RunView;
 use crate::state::State;
 
 pub use crate::setup_form::{
@@ -32,6 +33,10 @@ pub struct Rehearse {
     pub form: SetupForm,
     /// Items that would be rehearsed.
     pub preview: Preview,
+    /// A run is being created.
+    pub starting: bool,
+    /// The run on screen, if any.
+    pub run: Option<RunView>,
 }
 
 /// Ask for a fresh count (or show why the form is invalid).

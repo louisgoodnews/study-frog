@@ -62,6 +62,13 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::AddCardClicked
         | Msg::Created(_)) => crate::browse::update(state, browse),
         setup @ (Msg::Setup(_) | Msg::PreviewReady(_)) => crate::setup::update(state, setup),
+        run @ (Msg::StartRunClicked
+        | Msg::RunReady(_)
+        | Msg::RunAction(_)
+        | Msg::AnswerEdited(_)
+        | Msg::ItemLoaded(..)
+        | Msg::StepRecorded(_)
+        | Msg::LeaveRun) => crate::run_update::update(state, run),
     }
 }
 

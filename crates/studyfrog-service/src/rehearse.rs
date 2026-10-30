@@ -2,9 +2,9 @@
 
 use rusqlite::Connection;
 use studyfrog_core::event::EventKind;
-use studyfrog_core::plan::ScheduleEffect;
+use studyfrog_core::plan::{RunPlan, ScheduleEffect};
 use studyfrog_core::review::Rating;
-use studyfrog_core::run::{Run, RunState};
+use studyfrog_core::run::{Run, RunMode, RunState};
 use studyfrog_core::scheduler::Scheduler;
 use studyfrog_core::settings::VaultSettings;
 use studyfrog_core::time::UnixMs;
@@ -18,7 +18,14 @@ use studyfrog_store::schedule::{
 };
 use studyfrog_store::settings::item_home;
 
+use studyfrog_md::ulid::compose_ulid;
+use studyfrog_rehearsal::queue::candidate::budget_unlimited;
+
+use crate::create::IdSource;
+use crate::day::day_from;
+use crate::queue::{NewRun, new_run};
 use crate::schedule::{apply_rating, apply_rating_sm2};
+use crate::session::{ServiceError, VaultSession, current_settings};
 use crate::settings::{params_for, scheduler_for};
 
 /// Store a new run and its queue.
@@ -26,12 +33,33 @@ pub fn begin_run(conn: &Connection, run: &Run) -> Result<(), StoreError> {
     insert_run(conn, run)
 }
 
+/// What `record_step` needs to know about the run: its identity, what it does to the schedule and
+/// its lifecycle state after the step.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StepContext {
+    /// The run.
+    pub run: Uid,
+    /// Whether ratings change the schedule.
+    pub effect: ScheduleEffect,
+    /// Lifecycle state after the step.
+    pub state: RunState,
+}
+
+/// The context of a session after a step.
+pub fn step_context(session: &Session) -> StepContext {
+    StepContext {
+        run: session.run.uid,
+        effect: session.run.plan.effect,
+        state: session.run.state,
+    }
+}
+
 /// Persist one engine step in a single transaction: events, lifecycle state, and (for
 /// `UpdateSchedule` plans) a review plus new schedule state per rating, through each item's own
-/// scheduler. `now` is the wall-clock time of the step; `session` is the session after the step.
+/// scheduler. `now` is the wall-clock time of the step.
 pub fn record_step(
     conn: &mut Connection,
-    session: &Session,
+    ctx: &StepContext,
     out: &StepOutput,
     now: UnixMs,
     vault: &VaultSettings,
@@ -43,8 +71,8 @@ pub fn record_step(
         .iter()
         .any(|e| e.kind == EventKind::RunStarted)
         .then_some(now);
-    set_run_state(&tx, session.run.uid, session.run.state, started)?;
-    if session.run.plan.effect == ScheduleEffect::UpdateSchedule {
+    set_run_state(&tx, ctx.run, ctx.state, started)?;
+    if ctx.effect == ScheduleEffect::UpdateSchedule {
         for e in &out.events {
             if let (EventKind::ItemRated(rating), Some(item)) = (&e.kind, e.item) {
                 rate_item(&tx, item, *rating, now, vault)?;
@@ -94,3 +122,39 @@ pub fn recover_runs(conn: &mut Connection) -> Result<usize, StoreError> {
 pub fn is_over(run: &Run) -> bool {
     matches!(run.state, RunState::Finished | RunState::Aborted)
 }
+
+/// Create and store a run: the queue comes from the index, the run id from `ids`, and the shuffle
+/// seed from its random bytes (so a shuffled run can be reproduced from what is stored).
+pub fn start_run(
+    session: &VaultSession,
+    plan: RunPlan,
+    mode: RunMode,
+    now: UnixMs,
+    ids: IdSource,
+) -> Result<Run, ServiceError> {
+    let seed = u64::from_le_bytes([
+        ids.random[0],
+        ids.random[1],
+        ids.random[2],
+        ids.random[3],
+        ids.random[4],
+        ids.random[5],
+        ids.random[6],
+        ids.random[7],
+    ]);
+    let day = day_from(UnixMs(now.0 - now.0.rem_euclid(MS_PER_DAY)));
+    let req = NewRun {
+        plan: RunPlan { seed, ..plan },
+        mode,
+        uid: compose_ulid(ids.now_ms, ids.random),
+        now,
+        day,
+        global_budget: budget_unlimited(),
+    };
+    let vault = current_settings(session);
+    let run = new_run(&session.conn, req, &vault).map_err(ServiceError::Store)?;
+    begin_run(&session.conn, &run).map_err(ServiceError::Store)?;
+    Ok(run)
+}
+
+const MS_PER_DAY: i64 = 86_400_000;

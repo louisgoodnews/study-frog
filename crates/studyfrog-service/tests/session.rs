@@ -93,3 +93,29 @@ fn polling_reports_changes_once_and_waits_for_files_to_settle() {
         "reported once"
     );
 }
+
+#[test]
+fn opening_a_vault_recovers_runs_a_crash_left_open() {
+    use studyfrog_core::plan::plan_sequential;
+    use studyfrog_core::run::{Run, RunMode, RunState};
+    use studyfrog_core::uid::Uid;
+    use studyfrog_store::runs::{insert_run, load_run};
+    let d = vault("recover");
+    let (session, _) = open_vault(d.0.to_str().unwrap()).unwrap();
+    let run = Run {
+        uid: Uid(77),
+        mode: RunMode::Flip,
+        plan: plan_sequential(),
+        queue: vec![],
+        state: RunState::Running,
+        started_at: None,
+    };
+    insert_run(&session.conn, &run).unwrap();
+    drop(session); // the "crash"
+
+    let (session, _) = open_vault(d.0.to_str().unwrap()).unwrap();
+    assert_eq!(
+        load_run(&session.conn, Uid(77)).unwrap().unwrap().state,
+        RunState::Aborted
+    );
+}

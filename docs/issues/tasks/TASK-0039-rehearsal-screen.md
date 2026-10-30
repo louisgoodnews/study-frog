@@ -2,7 +2,7 @@
 id: TASK-0039
 type: task
 title: Rehearsal screen
-status: backlog
+status: done
 epic: EPIC-008
 parents: [STORY-0017]
 estimate: 5
@@ -20,12 +20,12 @@ docs/research/ui-guidelines.md.
 Rehearsal screen.
 
 ## Acceptance Criteria
-- [ ] Keyboard-first: space flips, 1-4 rate, s skips, p pauses
-- [ ] Shows prompt and timer only (distraction-free)
-- [ ] Every step goes through studyfrog-service::record_step
+- [x] Keyboard-first: space flips, 1-4 rate, s skips, p pauses
+- [x] Shows prompt and timer only (distraction-free)
+- [x] Every step goes through studyfrog-service::record_step
 
 ## Design Notes
-Latency measured from engine timestamps, not from UI frames.
+Latency is engine time: the shell writes the egui time into `State::now` each frame, `update` turns it into the engine's millisecond timestamps and calls the pure `step` itself, and each step becomes a `RecordStep` effect handled by `studyfrog-service`. Content is loaded lazily with a 3-item look-ahead. Key map and behaviour: docs/specs/rehearsal-run.md. 8 logic tests over a real vault (spaced run saved into the schedule, practice-only run leaves it alone, stray keys ignored, pause excluded from latency, abort, unreadable item), 7 headless widget tests including keyboard-only operation and an accessibility audit of every state.
 
 ## Dependencies
 TASK-0037, TASK-0073.
