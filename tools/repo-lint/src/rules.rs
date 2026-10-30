@@ -200,7 +200,7 @@ fn check_status(issue: &Issue, all: &[Issue]) -> Vec<String> {
     }
     let children: Vec<&Issue> = all
         .iter()
-        .filter(|c| c.front.parents.iter().any(|p| *p == issue.front.id))
+        .filter(|c| c.front.parents.contains(&issue.front.id))
         .collect();
     let all_done = !children.is_empty() && children.iter().all(|c| c.front.status == "done");
     if matches!(issue.front.kind.as_str(), "epic" | "story") && !children.is_empty() {
