@@ -16,6 +16,15 @@ Score { value: f32 /* 0..=1 */, verdict: Correct|Partial|Incorrect, rubric_hits:
    final `value = 0.6 * value + 0.4 * hit_ratio`.
 5. Verdict: `Correct` if `value >= min_score`; `Partial` if `value >= min_score - 0.2`; else `Incorrect`.
 
+## Runtimes
+- **Lexical** (built in, default): signed feature hashing (512 dimensions) of lowercase words, adjacent
+  word pairs and character trigrams, unit length. Offline, deterministic, about 20 µs per comparison. It
+  measures shared wording, not meaning: a correct paraphrase can score low, and swapped word order only
+  nudges the score. Use it as a guide, not a judge.
+- **Semantic** (planned, TASK-0050): a MiniLM-class embedding model behind the same trait.
+
+Constants: partial band 0.2 below `min_score`; rubric point hit at cosine 0.5; similarity weight 0.6.
+
 ## Properties (proptest)
 - Range: always in [0, 1]. Identity: `answer == reference` gives 1.0 (within epsilon).
 - Empty answer gives 0. Score does not depend on surrounding whitespace.

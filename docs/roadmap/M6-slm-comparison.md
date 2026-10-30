@@ -22,9 +22,9 @@
 ## Exit criteria
 
 - [ ] ADR 0004 Accepted with measured numbers
-- [ ] User types an answer and receives a score and verdict offline
-- [ ] Scoring proptests pass; p95 latency within budget
-- [ ] Runtime swappable behind `SlmRuntime` (second impl or test double proves it)
+- [x] User types an answer and receives a score and verdict offline (lexical runtime; semantic runtime pending)
+- [x] Scoring proptests pass; p95 latency within budget (lexical runtime: about 21 µs)
+- [x] Runtime swappable behind `SlmRuntime` (second impl or test double proves it)
 
 ## Out of scope
 

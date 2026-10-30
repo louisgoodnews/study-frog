@@ -5,6 +5,7 @@ use std::collections::{HashMap, HashSet};
 use studyfrog_core::event::{Latency, RunEvent};
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::session::Session;
+pub use studyfrog_service::compare::Scored;
 pub use studyfrog_service::content::ItemContent;
 
 /// How many items ahead of the current one are loaded.
@@ -25,6 +26,8 @@ pub struct RunView {
     pub latencies: Vec<Latency>,
     /// The answer being typed (answer mode).
     pub answer: String,
+    /// How the submitted answer compared with the reference, once scored.
+    pub scored: Option<Scored>,
     /// `State::now` when the run started; engine time is measured from here.
     pub started_time: f64,
 }
@@ -38,6 +41,7 @@ pub fn run_view_new(session: Session, started_time: f64) -> RunView {
         events: Vec::new(),
         latencies: Vec::new(),
         answer: String::new(),
+        scored: None,
         started_time,
     }
 }

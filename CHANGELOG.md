@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Answer comparison: `SlmRuntime` trait, scoring over embeddings (best of reference and accepted answers,
+  rubric points, verdict bands, suggested rating), an in-house offline lexical runtime, property tests and a
+  benchmark; typing an answer in rehearsal now shows the match, the verdict and a suggested rating
+  (TASK-0049, 0052, 0053, 0054, 0055).
 - Calendar screen: month grid with recurring sessions, day panel (edit, delete, skip a day, start a
   rehearsal for the session's stack) and a session form (TASK-0045).
 - Board screen: columns with WIP counts and over-limit marking, drag and drop plus push/pull/up/down buttons,

@@ -1,0 +1,59 @@
+//! Comparing a typed answer with the item's reference, through whichever runtime is given.
+
+use studyfrog_core::items::DEFAULT_MIN_SCORE;
+use studyfrog_core::review::Rating;
+use studyfrog_core::uid::Uid;
+use studyfrog_md::doc::Doc;
+use studyfrog_slm::rating::suggested_rating;
+use studyfrog_slm::runtime::SlmRuntime;
+use studyfrog_slm::score::{Comparison, Score, score_answer};
+
+use crate::content::load_doc;
+use crate::session::{ServiceError, VaultSession};
+
+/// A score and the rating it suggests.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Scored {
+    /// The comparison result.
+    pub score: Score,
+    /// What the verdict suggests; the user decides.
+    pub rating: Rating,
+}
+
+/// The comparison for a document, or why it has none.
+fn comparison_of<'a>(doc: &'a Doc, answer: &'a str) -> Result<Comparison<'a>, ServiceError> {
+    match doc {
+        Doc::Question(q) => Ok(Comparison {
+            reference: &q.reference,
+            answer,
+            accepted: &q.accepted,
+            rubric: &q.rubric,
+            min_score: q.min_score,
+        }),
+        Doc::Card(c) => Ok(Comparison {
+            reference: &c.back,
+            answer,
+            accepted: &[],
+            rubric: &[],
+            min_score: DEFAULT_MIN_SCORE,
+        }),
+        _ => Err(ServiceError::Invalid(
+            "only cards and questions have an answer to compare with".to_owned(),
+        )),
+    }
+}
+
+/// Score `answer` against the reference of item `uid`.
+pub fn score_item_answer<R: SlmRuntime + ?Sized>(
+    session: &VaultSession,
+    runtime: &R,
+    uid: Uid,
+    answer: &str,
+) -> Result<Scored, ServiceError> {
+    let doc = load_doc(session, uid)?;
+    let comparison = comparison_of(&doc, answer)?;
+    let score =
+        score_answer(runtime, &comparison).map_err(|e| ServiceError::Invalid(e.to_string()))?;
+    let rating = suggested_rating(score.verdict);
+    Ok(Scored { score, rating })
+}

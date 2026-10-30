@@ -33,5 +33,11 @@ Measure p50/p95 latency for a 30-word comparison, memory, and model download siz
 reference machine; compare against `ort` with the same model. If candle misses the budget
 (p95 > 150 ms CPU) switch to `ort`; only `studyfrog-slm` changes.
 
+## Progress (M6)
+The trait, the scoring functions and an in-house lexical runtime are implemented and benchmarked (about
+21 µs per comparison, so the budget is met trivially, but with no semantic understanding). The candle spike
+(TASK-0050) has **not** been run: it needs a model download, so the numbers for candle vs `ort` are still
+missing and this ADR stays Accepted-but-unconfirmed on that point.
+
 ## Consequences
 Models are downloaded/placed by the user into the app data dir; nothing is bundled.

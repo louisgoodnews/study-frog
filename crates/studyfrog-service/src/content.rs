@@ -48,12 +48,16 @@ fn content_of(doc: &Doc) -> ItemContent {
 }
 
 /// Read and parse the item's file. The path comes from the index, so a renamed file is found.
-pub fn load_item_content(session: &VaultSession, uid: Uid) -> Result<ItemContent, ServiceError> {
+pub fn load_doc(session: &VaultSession, uid: Uid) -> Result<Doc, ServiceError> {
     let rel = item_path(&session.conn, uid)
         .map_err(ServiceError::Store)?
         .ok_or_else(|| ServiceError::Invalid("that item is no longer in the vault".to_owned()))?;
     let path = session.root.join(&rel);
     let text = fs::read_to_string(&path).map_err(|e| ServiceError::Io(format!("{rel}: {e}")))?;
-    let doc = parse_doc(&text).map_err(|e| ServiceError::Invalid(format!("{rel}: {e}")))?;
-    Ok(content_of(&doc))
+    parse_doc(&text).map_err(|e| ServiceError::Invalid(format!("{rel}: {e}")))
+}
+
+/// What the rehearsal screen shows for an item.
+pub fn load_item_content(session: &VaultSession, uid: Uid) -> Result<ItemContent, ServiceError> {
+    load_doc(session, uid).map(|doc| content_of(&doc))
 }

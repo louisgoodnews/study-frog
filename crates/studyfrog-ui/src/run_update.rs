@@ -3,7 +3,7 @@
 
 use studyfrog_core::run::{Run, RunState};
 use studyfrog_rehearsal::input::{Action, Input};
-use studyfrog_rehearsal::session::{ItemPhase, session_new};
+use studyfrog_rehearsal::session::{ItemPhase, current_item, session_new};
 use studyfrog_rehearsal::step::step;
 use studyfrog_service::rehearse::step_context;
 
@@ -29,6 +29,7 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::RunAction(action) => act(state, action),
         Msg::AnswerEdited(text) => with_run(state, |r| RunView { answer: text, ..r }),
         Msg::ItemLoaded(uid, result) => item_loaded(state, uid, result),
+        Msg::AnswerScored(uid, result) => answer_scored(state, uid, result),
         Msg::StepRecorded(Err(e)) => error(state, format!("Could not save your progress: {e}")),
         Msg::LeaveRun => leave(state),
         _ => (state, Vec::new()),
@@ -91,11 +92,20 @@ fn act(state: State, action: Action) -> (State, Vec<Effect>) {
     let t_ms = engine_ms(state.now, run.started_time, run.session.last_t_ms);
     let clears_answer = matches!(action, Action::Rate(_) | Action::Skip);
     let mut effects = Vec::new();
+    let submitted = match &action {
+        Action::SubmitAnswer(text) => current_item(&run.session).map(|item| Effect::ScoreAnswer {
+            item,
+            answer: text.clone(),
+        }),
+        _ => None,
+    };
     if let Ok(out) = step(&mut run.session, Input { t_ms, action }) {
+        effects.extend(submitted);
         run.events.extend(out.events.iter().cloned());
         run.latencies.extend(out.latency);
         if clears_answer {
             run.answer.clear();
+            run.scored = None;
         }
         effects.extend(prefetch(&mut run));
         effects.push(Effect::RecordStep {
@@ -122,6 +132,33 @@ fn prefetch(run: &mut RunView) -> Vec<Effect> {
         .filter(|uid| run.requested.insert(*uid))
         .map(Effect::LoadItem)
         .collect()
+}
+
+/// Keep the score if it is for the item now on screen; a late answer for an item already rated is
+/// dropped. A failure is reported but never blocks rating: the user can always rate by hand.
+fn answer_scored(
+    state: State,
+    uid: studyfrog_core::uid::Uid,
+    result: Result<crate::run_state::Scored, String>,
+) -> (State, Vec<Effect>) {
+    let mut state = state;
+    let current = state
+        .rehearse
+        .run
+        .as_ref()
+        .and_then(|r| current_item(&r.session));
+    if current != Some(uid) {
+        return (state, Vec::new());
+    }
+    match result {
+        Ok(scored) => {
+            if let Some(run) = &mut state.rehearse.run {
+                run.scored = Some(scored);
+            }
+            (state, Vec::new())
+        }
+        Err(e) => error(state, format!("Could not compare your answer: {e}")),
+    }
 }
 
 fn item_loaded(

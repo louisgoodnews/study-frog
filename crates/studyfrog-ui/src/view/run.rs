@@ -116,6 +116,9 @@ fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.add_space(16.0);
         ui.separator();
         ui.label(RichText::new(&content.answer).size(20.0));
+        if let Some(scored) = &run.scored {
+            score_line(scored, ui);
+        }
         ui.add_space(16.0);
         ui.horizontal(|ui| {
             for (rating, label, _) in RATINGS {
@@ -124,6 +127,24 @@ fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 }
             }
         });
+    }
+}
+
+fn score_line(scored: &crate::run_state::Scored, ui: &mut egui::Ui) {
+    use studyfrog_slm::score::Verdict;
+    let verdict = match scored.score.verdict {
+        Verdict::Correct => "Correct",
+        Verdict::Partial => "Partly right",
+        Verdict::Incorrect => "Not quite",
+    };
+    ui.label(format!(
+        "Your answer matched {:.0} %: {verdict}. Suggested rating: {:?}.",
+        scored.score.value * 100.0,
+        scored.rating
+    ));
+    let missed = scored.score.rubric_hits.iter().filter(|h| !**h).count();
+    if missed > 0 {
+        ui.label(format!("{missed} key point(s) were not covered."));
     }
 }
 

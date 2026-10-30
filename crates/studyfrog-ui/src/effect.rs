@@ -49,6 +49,13 @@ pub enum Effect {
         /// What the step produced.
         out: StepOutput,
     },
+    /// Compare a typed answer with the item's reference.
+    ScoreAnswer {
+        /// The item answered.
+        item: Uid,
+        /// What the user typed.
+        answer: String,
+    },
     /// Read the link graph from the index.
     LoadGraph,
     /// Read all sessions and today's local date.

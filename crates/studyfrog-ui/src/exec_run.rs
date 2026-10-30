@@ -5,11 +5,13 @@ use studyfrog_core::run::RunMode;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::StepOutput;
+use studyfrog_service::compare::score_item_answer;
 use studyfrog_service::content::load_item_content;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::rehearse::{StepContext, record_step, start_run};
 use studyfrog_service::session::current_settings;
 use studyfrog_service::timezone::local_day_window;
+use studyfrog_slm::lexical::Lexical;
 
 use crate::exec::Worker;
 use crate::msg::Msg;
@@ -56,4 +58,15 @@ pub fn record(w: &mut Worker, ctx: &StepContext, out: &StepOutput, now_ns: i64) 
     let vault = current_settings(session);
     let result = record_step(&mut session.conn, ctx, out, UnixMs(millis(now_ns)), &vault);
     Msg::StepRecorded(result.map_err(|e| e.to_string()))
+}
+
+/// Compare a typed answer with the item's reference (offline, with the built-in lexical runtime).
+pub fn score(w: &Worker, uid: Uid, answer: &str) -> Msg {
+    let result = match &w.session {
+        Some(session) => {
+            score_item_answer(session, &Lexical, uid, answer).map_err(|e| e.to_string())
+        }
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::AnswerScored(uid, result)
 }

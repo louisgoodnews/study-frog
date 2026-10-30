@@ -30,7 +30,7 @@ Textual rules (also in [ADR 0001](adr/0001-workspace-and-crate-layout.md)):
 | `achieve` | core | Achievement rules and evaluation. |
 | `board` | core | Kanban/scrum model and moves. |
 | `calendar` | core | Session planning. |
-| `service` | core, md, config, calendar, board, store, srs, rehearsal | Application layer: use cases that compose domain crates ([ADR 0006](adr/0006-application-service-layer.md)). |
+| `service` | core, md, config, calendar, board, store, srs, rehearsal, slm | Application layer: use cases that compose domain crates ([ADR 0006](adr/0006-application-service-layer.md)). |
 | `ui` | service, graph and domain crates | Rendering and event dispatch only. |
 | `app` | ui | `main`, wiring, configuration. |
 

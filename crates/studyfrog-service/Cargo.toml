@@ -19,5 +19,6 @@ studyfrog-config.workspace = true
 studyfrog-store.workspace = true
 studyfrog-srs.workspace = true
 studyfrog-rehearsal.workspace = true
+studyfrog-slm.workspace = true
 chrono.workspace = true
 rusqlite.workspace = true

@@ -12,3 +12,12 @@ workspace = true
 
 [dependencies]
 studyfrog-core.workspace = true
+unicode-normalization.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+proptest.workspace = true
+
+[[bench]]
+name = "compare"
+harness = false

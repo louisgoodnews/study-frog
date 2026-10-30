@@ -10,7 +10,7 @@ use studyfrog_store::overview::LinkGraph;
 
 use crate::kanban::BoardMsg;
 use crate::planner::PlanMsg;
-use crate::run_state::ItemContent;
+use crate::run_state::{ItemContent, Scored};
 use crate::setup::SetupEdit;
 use crate::state::{ItemRow, Screen, Selection, VaultInfo};
 
@@ -74,6 +74,8 @@ pub enum Msg {
     AnswerEdited(String),
     /// An item's content was loaded.
     ItemLoaded(Uid, Result<ItemContent, String>),
+    /// A typed answer was compared with its reference.
+    AnswerScored(Uid, Result<Scored, String>),
     /// A step was saved (or not).
     StepRecorded(Result<(), String>),
     /// "Back to setup" after a run.

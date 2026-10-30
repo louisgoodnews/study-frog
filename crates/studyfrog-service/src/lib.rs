@@ -1,5 +1,6 @@
 //! Application services: composes the domain crates (store, srs, rehearsal) into use cases. No GUI, no business rules of its own beyond orchestration.
 
+pub mod compare;
 pub mod content;
 pub mod create;
 pub mod day;
