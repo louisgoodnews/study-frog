@@ -1,0 +1,78 @@
+//! Changing the rating of an item's latest review after the fact, and rebuilding its schedule.
+//!
+//! The schedule is a pure fold over the review history, so replacing one rating and folding again
+//! gives exactly the state a different rating would have produced at the time.
+
+use rusqlite::Connection;
+use studyfrog_core::review::{Rating, Review};
+use studyfrog_core::scheduler::Scheduler;
+use studyfrog_core::settings::VaultSettings;
+use studyfrog_core::uid::Uid;
+use studyfrog_srs::params::Params;
+use studyfrog_store::error::{StoreError, sql_err};
+use studyfrog_store::schedule::{
+    StoredMem, StoredSm2, load_reviews, save_mem_state, save_sm2_state, set_latest_review_rating,
+};
+use studyfrog_store::settings::item_home;
+
+use crate::schedule::{apply_rating, apply_rating_sm2};
+use crate::session::{ServiceError, VaultSession, current_settings};
+use crate::settings::{params_for, scheduler_for};
+
+/// The FSRS state after replaying `reviews` from the start.
+pub fn replay_fsrs(reviews: &[Review], params: &Params) -> Option<StoredMem> {
+    reviews.iter().fold(None, |prev, r| {
+        Some(apply_rating(prev.as_ref(), r.item, r.rating, r.at, params).1)
+    })
+}
+
+/// The SM-2 state after replaying `reviews` from the start.
+pub fn replay_sm2(reviews: &[Review], max_interval_days: u32) -> Option<StoredSm2> {
+    reviews.iter().fold(None, |prev, r| {
+        Some(apply_rating_sm2(prev.as_ref(), r.item, r.rating, r.at, max_interval_days).1)
+    })
+}
+
+fn rebuild(
+    conn: &Connection,
+    item: Uid,
+    reviews: &[Review],
+    vault: &VaultSettings,
+) -> Result<(), StoreError> {
+    let home = item_home(conn, item)?;
+    match scheduler_for(vault, home.as_ref()) {
+        Scheduler::Fsrs => {
+            let params = params_for(vault, home.and_then(|h| h.request_retention));
+            replay_fsrs(reviews, &params).map_or(Ok(()), |m| save_mem_state(conn, item, &m))
+        }
+        Scheduler::Sm2 => replay_sm2(reviews, vault.maximum_interval_days)
+            .map_or(Ok(()), |m| save_sm2_state(conn, item, &m)),
+    }
+}
+
+/// Replace the rating of `item`'s latest review, which must currently be `expected`, with `to`,
+/// and rebuild the item's schedule.
+pub fn rerate_latest(
+    session: &mut VaultSession,
+    item: Uid,
+    expected: Rating,
+    to: Rating,
+) -> Result<(), ServiceError> {
+    let vault = current_settings(session);
+    let tx = session
+        .conn
+        .transaction()
+        .map_err(|e| ServiceError::Store(sql_err(e)))?;
+    let mut reviews = load_reviews(&tx, item).map_err(ServiceError::Store)?;
+    match reviews.last_mut() {
+        Some(last) if last.rating == expected => last.rating = to,
+        _ => {
+            return Err(ServiceError::Invalid(
+                "that review has changed since the run; nothing was changed".to_owned(),
+            ));
+        }
+    }
+    set_latest_review_rating(&tx, item, to).map_err(ServiceError::Store)?;
+    rebuild(&tx, item, &reviews, &vault).map_err(ServiceError::Store)?;
+    tx.commit().map_err(|e| ServiceError::Store(sql_err(e)))
+}

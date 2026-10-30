@@ -12,6 +12,7 @@ mod run;
 mod session_form;
 mod settings;
 mod setup;
+mod summary;
 mod welcome;
 pub(crate) mod widgets;
 

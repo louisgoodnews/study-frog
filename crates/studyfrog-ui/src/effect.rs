@@ -4,6 +4,7 @@ use studyfrog_board::ops::BoardOp;
 use studyfrog_calendar::session::Session;
 use studyfrog_core::civil::Date;
 use studyfrog_core::plan::RunPlan;
+use studyfrog_core::review::Rating;
 use studyfrog_core::run::RunMode;
 use studyfrog_core::settings::AppSettings;
 use studyfrog_core::uid::Uid;
@@ -55,6 +56,15 @@ pub enum Effect {
         item: Uid,
         /// What the user typed.
         answer: String,
+    },
+    /// Replace the rating of an item's latest review and rebuild its schedule.
+    Rerate {
+        /// The item.
+        item: Uid,
+        /// The rating the review has now.
+        expected: Rating,
+        /// The rating it should have.
+        to: Rating,
     },
     /// Read the link graph from the index.
     LoadGraph,

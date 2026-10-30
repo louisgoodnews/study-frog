@@ -2,7 +2,7 @@
 
 use std::fmt;
 
-use studyfrog_core::event::{Latency, RunEvent};
+use studyfrog_core::event::{Difficulty, Latency, RunEvent};
 use studyfrog_core::review::Rating;
 
 /// What the user (or shell) did.
@@ -18,6 +18,8 @@ pub enum Action {
     SubmitAnswer(String),
     /// Rate the revealed item; the next item is shown automatically.
     Rate(Rating),
+    /// Mark how hard the item on screen is (before or after the answer is revealed).
+    Mark(Difficulty),
     /// Pause the timer.
     Pause,
     /// Resume after a pause.
@@ -61,6 +63,8 @@ pub enum StepError {
     NotAwaitingReveal,
     /// Rating needs a revealed item.
     NotRevealed,
+    /// There is no item on screen to mark.
+    NoItemShown,
     /// Free-text answers only exist in answer mode.
     WrongMode,
     /// The timestamp is earlier than the previous input's.
@@ -77,6 +81,7 @@ pub fn describe_step_error(e: StepError) -> &'static str {
         StepError::NotPaused => "the run is not paused",
         StepError::NotAwaitingReveal => "the item is not waiting to be revealed",
         StepError::NotRevealed => "the item has not been revealed yet",
+        StepError::NoItemShown => "there is no item on screen",
         StepError::WrongMode => "free-text answers need an answer-mode run",
         StepError::TimeWentBackwards => "input time is earlier than the previous input",
     }

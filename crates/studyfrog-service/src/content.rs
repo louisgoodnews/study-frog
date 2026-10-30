@@ -2,10 +2,12 @@
 
 use std::fs;
 
+use studyfrog_core::review::Rating;
 use studyfrog_core::uid::Uid;
 use studyfrog_md::doc::{Doc, doc_meta};
 use studyfrog_md::parse::parse_doc;
 use studyfrog_store::overview::item_path;
+use studyfrog_store::schedule::load_reviews;
 
 use crate::session::{ServiceError, VaultSession};
 
@@ -18,6 +20,8 @@ pub struct ItemContent {
     pub prompt: String,
     /// What is revealed: a card's back, a question's reference answer, a note's body.
     pub answer: String,
+    /// The rating of the item's latest review before now; `None` for an item never reviewed.
+    pub previous: Option<Rating>,
 }
 
 fn content_of(doc: &Doc) -> ItemContent {
@@ -28,21 +32,25 @@ fn content_of(doc: &Doc) -> ItemContent {
             title,
             prompt: shown(&c.front),
             answer: shown(&c.back),
+            previous: None,
         },
         Doc::Question(q) => ItemContent {
             title,
             prompt: shown(&q.prompt),
             answer: shown(&q.reference),
+            previous: None,
         },
         Doc::Note(n) => ItemContent {
             prompt: title.clone(),
             title,
             answer: shown(&n.body),
+            previous: None,
         },
         Doc::Stack(s) => ItemContent {
             prompt: title.clone(),
             title,
             answer: shown(&s.description),
+            previous: None,
         },
     }
 }
@@ -59,5 +67,12 @@ pub fn load_doc(session: &VaultSession, uid: Uid) -> Result<Doc, ServiceError> {
 
 /// What the rehearsal screen shows for an item.
 pub fn load_item_content(session: &VaultSession, uid: Uid) -> Result<ItemContent, ServiceError> {
-    load_doc(session, uid).map(|doc| content_of(&doc))
+    let previous = load_reviews(&session.conn, uid)
+        .map_err(ServiceError::Store)?
+        .last()
+        .map(|r| r.rating);
+    load_doc(session, uid).map(|doc| ItemContent {
+        previous,
+        ..content_of(&doc)
+    })
 }

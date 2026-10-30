@@ -30,6 +30,10 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::AnswerEdited(text) => with_run(state, |r| RunView { answer: text, ..r }),
         Msg::ItemLoaded(uid, result) => item_loaded(state, uid, result),
         Msg::AnswerScored(uid, result) => answer_scored(state, uid, result),
+        Msg::ApplySuggestion { item, expected, to } => {
+            (state, vec![Effect::Rerate { item, expected, to }])
+        }
+        Msg::Rerated(uid, result) => rerated(state, uid, result),
         Msg::StepRecorded(Err(e)) => error(state, format!("Could not save your progress: {e}")),
         Msg::LeaveRun => leave(state),
         _ => (state, Vec::new()),
@@ -161,6 +165,20 @@ fn answer_scored(
     }
 }
 
+fn rerated(
+    state: State,
+    uid: studyfrog_core::uid::Uid,
+    result: Result<(), String>,
+) -> (State, Vec<Effect>) {
+    match result {
+        Ok(()) => with_run(state, |mut r| {
+            r.applied.insert(uid);
+            r
+        }),
+        Err(e) => error(state, format!("Could not change the rating: {e}")),
+    }
+}
+
 fn item_loaded(
     state: State,
     uid: studyfrog_core::uid::Uid,
@@ -178,6 +196,7 @@ fn item_loaded(
                 title: String::new(),
                 prompt: format!("(this item could not be loaded: {e})"),
                 answer: String::new(),
+                previous: None,
             }
         }
     };

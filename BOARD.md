@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (68) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (71) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
@@ -74,6 +74,9 @@
 |  |  |  |  |  | [TASK-0078](docs/issues/tasks/TASK-0078-local-time-zone-and-local-day-windows.md) Local time zone and local-day windows (3) |
 |  |  |  |  |  | [TASK-0079](docs/issues/tasks/TASK-0079-persist-sessions.md) Persist sessions (3) |
 |  |  |  |  |  | [TASK-0080](docs/issues/tasks/TASK-0080-persist-the-board.md) Persist the board (3) |
+|  |  |  |  |  | [TASK-0081](docs/issues/tasks/TASK-0081-difficulty-marks.md) Difficulty marks during a run (3) |
+|  |  |  |  |  | [TASK-0082](docs/issues/tasks/TASK-0082-reading-speed-suggestion.md) Reading-speed rating suggestion (3) |
+|  |  |  |  |  | [TASK-0083](docs/issues/tasks/TASK-0083-post-run-review.md) Post-run review and applying a suggestion (5) |
 
 ## Stories
 
@@ -106,6 +109,7 @@
 | [STORY-0025](docs/issues/stories/STORY-0025-ui-integration.md) UI integration (5) | done | 2/2 |
 | [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
 | [STORY-0034](docs/issues/stories/STORY-0034-stack-settings-sm-2-budgets-and-filter-persistence.md) Stack settings, SM-2, budgets and filter persistence (8) | done | 4/4 |
+| [STORY-0035](docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 3/3 |
 
 ## Epics
 
@@ -124,4 +128,5 @@
 | [EPIC-011](docs/issues/epics/EPIC-011-scrum-kanban-board.md) Scrum/kanban board | done | 2/2 |
 | [EPIC-012](docs/issues/epics/EPIC-012-slm-runtime.md) SLM runtime | done | 1/1 |
 | [EPIC-013](docs/issues/epics/EPIC-013-comparison-scoring.md) Comparison scoring | done | 2/2 |
+| [EPIC-014](docs/issues/epics/EPIC-014-rehearsal-insights.md) Rehearsal insights | done | 1/1 |
 | [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |

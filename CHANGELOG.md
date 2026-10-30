@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Rehearsal: mark an item Easy, Medium or Difficult while it is on screen (buttons or E/M/D); reading speed
+  against a 238 words-per-minute baseline suggests a rating; the post-run review shows previous rating,
+  own mark and rating and the suggestion, and can apply it, rebuilding the item's schedule (TASK-0081,
+  0082, 0083).
 - Semantic answer comparison: a candle MiniLM runtime (`studyfrog-candle`, linked by the app only) used
   automatically when `all-MiniLM-L6-v2` is installed under the app data directory, with fallback to word
   matching and the reason shown; the result line says which engine compared the answer. Measured: p95

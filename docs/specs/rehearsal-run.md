@@ -74,3 +74,19 @@ Distraction-free: the prompt, a progress counter and the time on the current ite
   practice-only runs, says the schedule was not changed.
 - Runs left open by a crash are recovered as aborted the next time the vault is opened.
 
+
+## Marks, reading speed and the review
+- **Marks.** While an item is on screen (before or after the reveal) the user may mark it Easy, Medium or
+  Difficult (keys E, M, D). Each mark is an `item_marked` event; the last one counts. Marks are about how the
+  item felt and do not change the rating or the schedule.
+- **Reading time.** The time between revealing the answer and rating it, minus paused time. Baseline: 238
+  words per minute (average silent reading of non-fiction); words are whitespace-separated. Backs of fewer
+  than 8 words are ignored.
+- **Suggested rating.** Only a fast read (under 75 % of the expected time) suggests anything:
+  a known item rated Good is suggested Easy ("rather easy for you"); a new item rated Good or Easy is
+  suggested Hard (it went by too fast to have been read). Ratings of Again or Hard are never softened.
+- **Review.** After the run, each item shows its previous rating, the user's mark and rating, and the
+  suggestion with the reason and the reading time. In a schedule-updating run the user can apply a
+  suggestion: the rating of the item's latest review is replaced and its schedule rebuilt by replaying the
+  review history, which gives exactly the state the other rating would have produced then. The event log
+  keeps what the user pressed. Practice-only runs show suggestions but cannot apply them.

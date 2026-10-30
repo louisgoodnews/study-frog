@@ -6,6 +6,37 @@
 use crate::review::{Rating, rating_from_value, rating_value};
 use crate::uid::Uid;
 
+/// How hard the user found an item, marked while it is on screen. Separate from the rating, which
+/// is about recall; this is about how the item felt.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Difficulty {
+    /// Easy.
+    Easy,
+    /// Neither.
+    Medium,
+    /// Difficult.
+    Difficult,
+}
+
+/// Persisted and displayed name of a difficulty mark.
+pub fn difficulty_name(d: Difficulty) -> &'static str {
+    match d {
+        Difficulty::Easy => "easy",
+        Difficulty::Medium => "medium",
+        Difficulty::Difficult => "difficult",
+    }
+}
+
+/// Parse a persisted difficulty name.
+pub fn difficulty_from_name(name: &str) -> Option<Difficulty> {
+    match name {
+        "easy" => Some(Difficulty::Easy),
+        "medium" => Some(Difficulty::Medium),
+        "difficult" => Some(Difficulty::Difficult),
+        _ => None,
+    }
+}
+
 /// What happened. Payloads are only where the spec needs them.
 #[derive(Debug, Clone, PartialEq)]
 pub enum EventKind {
@@ -21,6 +52,8 @@ pub enum EventKind {
     AnswerSubmitted(String),
     /// Rating chosen; feeds SRS.
     ItemRated(Rating),
+    /// The user marked how hard the item on screen is (the last mark before leaving it counts).
+    ItemMarked(Difficulty),
     /// Run paused.
     RunPaused,
     /// Run resumed.
@@ -77,6 +110,7 @@ pub fn event_name(kind: &EventKind) -> &'static str {
         EventKind::ItemFlipped => "item_flipped",
         EventKind::AnswerSubmitted(_) => "answer_submitted",
         EventKind::ItemRated(_) => "item_rated",
+        EventKind::ItemMarked(_) => "item_marked",
         EventKind::RunPaused => "run_paused",
         EventKind::RunResumed => "run_resumed",
         EventKind::RunFinished => "run_finished",
@@ -93,6 +127,7 @@ pub fn is_item_event(kind: &EventKind) -> bool {
             | EventKind::ItemFlipped
             | EventKind::AnswerSubmitted(_)
             | EventKind::ItemRated(_)
+            | EventKind::ItemMarked(_)
     )
 }
 
@@ -101,6 +136,7 @@ pub fn event_payload(kind: &EventKind) -> Option<String> {
     match kind {
         EventKind::AnswerSubmitted(text) => Some(text.clone()),
         EventKind::ItemRated(rating) => Some(rating_value(*rating).to_string()),
+        EventKind::ItemMarked(d) => Some(difficulty_name(*d).to_owned()),
         _ => None,
     }
 }
@@ -118,6 +154,7 @@ pub fn event_from_parts(name: &str, payload: Option<&str>) -> Option<EventKind> 
             .ok()
             .and_then(rating_from_value)
             .map(EventKind::ItemRated),
+        ("item_marked", Some(v)) => difficulty_from_name(v).map(EventKind::ItemMarked),
         ("run_paused", None) => Some(EventKind::RunPaused),
         ("run_resumed", None) => Some(EventKind::RunResumed),
         ("run_finished", None) => Some(EventKind::RunFinished),

@@ -2,6 +2,7 @@
 
 use studyfrog_core::settings::AppSettings;
 
+use studyfrog_core::review::Rating;
 use studyfrog_core::run::Run;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::Action;
@@ -76,6 +77,17 @@ pub enum Msg {
     ItemLoaded(Uid, Result<ItemContent, String>),
     /// A typed answer was compared with its reference.
     AnswerScored(Uid, Result<Scored, String>),
+    /// "Apply" was activated for a suggested rating.
+    ApplySuggestion {
+        /// The item.
+        item: Uid,
+        /// The rating given in the run.
+        expected: Rating,
+        /// The suggested rating.
+        to: Rating,
+    },
+    /// A rating was replaced (or not).
+    Rerated(Uid, Result<(), String>),
     /// A step was saved (or not).
     StepRecorded(Result<(), String>),
     /// "Back to setup" after a run.

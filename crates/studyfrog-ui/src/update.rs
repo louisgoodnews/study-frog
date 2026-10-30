@@ -87,6 +87,8 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::AnswerEdited(_)
         | Msg::ItemLoaded(..)
         | Msg::AnswerScored(..)
+        | Msg::ApplySuggestion { .. }
+        | Msg::Rerated(..)
         | Msg::StepRecorded(_)
         | Msg::LeaveRun) => crate::run_update::update(state, run),
     }

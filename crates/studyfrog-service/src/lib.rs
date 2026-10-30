@@ -10,6 +10,7 @@ pub mod planning;
 pub mod queue;
 pub mod queue_data;
 pub mod rehearse;
+pub mod rerate;
 pub mod schedule;
 pub mod session;
 pub mod settings;

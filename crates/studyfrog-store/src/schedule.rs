@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use rusqlite::{Connection, params};
 use studyfrog_core::memory::{MemState, Sm2State};
-use studyfrog_core::review::{Review, rating_from_value, rating_value};
+use studyfrog_core::review::{Rating, Review, rating_from_value, rating_value};
 use studyfrog_core::scheduler::Scheduler;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
@@ -97,6 +97,21 @@ pub fn insert_review(conn: &Connection, r: &Review) -> Result<(), StoreError> {
         ])
     })
     .map(drop)
+    .map_err(sql_err)
+}
+
+/// Replace the rating of the item's latest review. Returns false when the item has no review.
+pub fn set_latest_review_rating(
+    conn: &Connection,
+    item: Uid,
+    rating: Rating,
+) -> Result<bool, StoreError> {
+    conn.execute(
+        "UPDATE review SET rating = ?1 WHERE id = \
+         (SELECT id FROM review WHERE item_uid = ?2 ORDER BY at_ms DESC, id DESC LIMIT 1)",
+        params![rating_value(rating), format_ulid(item)],
+    )
+    .map(|n| n > 0)
     .map_err(sql_err)
 }
 

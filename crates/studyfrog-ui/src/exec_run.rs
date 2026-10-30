@@ -1,6 +1,7 @@
 //! Effects of a rehearsal run: create it, load item content, save steps.
 
 use studyfrog_core::plan::RunPlan;
+use studyfrog_core::review::Rating;
 use studyfrog_core::run::RunMode;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
@@ -9,6 +10,7 @@ use studyfrog_service::compare::score_item_answer;
 use studyfrog_service::content::load_item_content;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::rehearse::{StepContext, record_step, start_run};
+use studyfrog_service::rerate::rerate_latest;
 use studyfrog_service::session::current_settings;
 use studyfrog_service::timezone::local_day_window;
 use studyfrog_slm::models::open_runtime;
@@ -80,4 +82,13 @@ pub fn score(w: &mut Worker, uid: Uid, answer: &str) -> Msg {
         None => Err("no vault is open".to_owned()),
     };
     Msg::AnswerScored(uid, result)
+}
+
+/// Replace the rating of an item's latest review and rebuild its schedule.
+pub fn rerate(w: &mut Worker, item: Uid, expected: Rating, to: Rating) -> Msg {
+    let result = match &mut w.session {
+        Some(session) => rerate_latest(session, item, expected, to).map_err(|e| e.to_string()),
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::Rerated(item, result)
 }

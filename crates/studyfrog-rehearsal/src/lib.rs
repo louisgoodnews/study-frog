@@ -3,5 +3,6 @@
 pub mod clock;
 pub mod input;
 pub mod queue;
+pub mod reading;
 pub mod session;
 pub mod step;

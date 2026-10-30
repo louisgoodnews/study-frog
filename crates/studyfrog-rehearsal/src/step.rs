@@ -35,6 +35,8 @@ fn validate(s: &Session, action: &Action) -> Result<(), StepError> {
         }
         (_, Action::SubmitAnswer(_)) => require_answer_mode(s),
         (_, Action::Rate(_)) => require_phase(s, ItemPhase::Revealed, StepError::NotRevealed),
+        (_, Action::Mark(_)) if s.phase == ItemPhase::NoItem => Err(StepError::NoItemShown),
+        (_, Action::Mark(_)) => Ok(()),
     }
 }
 
@@ -91,6 +93,7 @@ fn apply(s: &mut Session, input: Input) -> StepOutput {
         ),
         Action::Skip => skip(s, t, item, &mut out),
         Action::Rate(rating) => rate(s, t, item, rating, &mut out),
+        Action::Mark(d) => out.events.push(event(s, t, item, EventKind::ItemMarked(d))),
         Action::Pause => pause(s, t, &mut out),
         Action::Resume => resume(s, t, &mut out),
         Action::Abort => abort(s, t, &mut out),

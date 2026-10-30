@@ -26,6 +26,8 @@ pub struct RunView {
     pub latencies: Vec<Latency>,
     /// The answer being typed (answer mode).
     pub answer: String,
+    /// Items whose rating was replaced by the suggested one after the run.
+    pub applied: HashSet<Uid>,
     /// How the submitted answer compared with the reference, once scored.
     pub scored: Option<Scored>,
     /// `State::now` when the run started; engine time is measured from here.
@@ -41,6 +43,7 @@ pub fn run_view_new(session: Session, started_time: f64) -> RunView {
         events: Vec::new(),
         latencies: Vec::new(),
         answer: String::new(),
+        applied: HashSet::new(),
         scored: None,
         started_time,
     }

@@ -84,6 +84,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::LoadDocument(uid) => load_document_msg(w, uid),
         Effect::SaveDocument { path, doc, hash } => save_document_msg(w, &path, &doc, hash, now_ns),
         Effect::ResolveLink(target) => resolve_link_msg(w, target),
+        Effect::Rerate { item, expected, to } => exec_run::rerate(w, item, expected, to),
         Effect::LoadItem(uid) => exec_run::load_item(w, uid),
         Effect::ScoreAnswer { item, answer } => exec_run::score(w, item, &answer),
         Effect::RecordStep { ctx, out } => exec_run::record(w, &ctx, &out, now_ns),
