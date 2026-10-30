@@ -21,8 +21,9 @@ use studyfrog_ext::types::Registry;
 
 use crate::host::{FilePicker, FolderPicker, Host};
 use studyfrog_store::app_config::{read_app_settings, write_app_settings};
-use studyfrog_store::overview::list_items;
+use studyfrog_store::overview::{list_items, search_items};
 
+use crate::chrome::{ChromeMsg, MAX_RESULTS};
 use crate::effect::Effect;
 use crate::msg::Msg;
 use crate::state::Selection;
@@ -105,6 +106,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::SaveSession(s) => exec_plan::save(w, s, now_ns),
         Effect::DeleteSession(id) => exec_plan::delete(w, id),
         Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),
+        Effect::SearchItems(query) => search(w, query),
         Effect::BuildReports => exec_run::reports(w, now_ns),
         Effect::CheckAchievements => exec_run::achievements(w, now_ns),
         Effect::LoadBoard => exec_plan::load_board(w, now_ns),
@@ -220,4 +222,13 @@ fn preview(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
     Msg::PreviewReady(
         preview_queue(&session.conn, req, &current_settings(session)).map_err(|e| e.to_string()),
     )
+}
+
+/// Find items by title for the global search.
+fn search(w: &Worker, query: String) -> Msg {
+    let result = match &w.session {
+        Some(s) => search_items(&s.conn, &query, MAX_RESULTS).map_err(|e| e.to_string()),
+        None => Ok(Vec::new()),
+    };
+    Msg::Chrome(ChromeMsg::SearchResults(query, result))
 }

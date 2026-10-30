@@ -21,38 +21,58 @@ pub struct ItemRow {
     pub due: Option<studyfrog_core::time::UnixMs>,
 }
 
+type RawItem = (String, String, String, String, Option<i64>);
+
+fn raw_item(r: &rusqlite::Row<'_>) -> rusqlite::Result<RawItem> {
+    Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?))
+}
+
+fn item_row((id, title, kind, path, due): RawItem) -> Result<ItemRow, StoreError> {
+    let uid = parse_ulid(&id).ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}")))?;
+    let kind = studyfrog_core::plan::item_kind_from_name(&kind)
+        .ok_or_else(|| StoreError::Corrupt(format!("kind: {kind:?}")))?;
+    Ok(ItemRow {
+        uid,
+        title,
+        kind,
+        path,
+        due: due.map(studyfrog_core::time::UnixMs),
+    })
+}
+
 /// Items directly in `folder` (`None` for the inbox), without the stack file, ordered by path.
 pub fn list_items(conn: &Connection, folder: Option<&str>) -> Result<Vec<ItemRow>, StoreError> {
     let sql = "SELECT i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms)
                FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
                WHERE i.stack_path IS ?1 AND i.kind != 'stack' ORDER BY i.path";
     let mut stmt = conn.prepare(sql).map_err(sql_err)?;
-    let rows = stmt
-        .query_map([folder], |r| {
-            Ok((
-                r.get::<_, String>(0)?,
-                r.get::<_, String>(1)?,
-                r.get::<_, String>(2)?,
-                r.get::<_, String>(3)?,
-                r.get::<_, Option<i64>>(4)?,
-            ))
-        })
-        .map_err(sql_err)?;
-    let mut out = Vec::new();
-    for row in rows {
-        let (id, title, kind, path, due) = row.map_err(sql_err)?;
-        let uid = parse_ulid(&id).ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}")))?;
-        let kind = studyfrog_core::plan::item_kind_from_name(&kind)
-            .ok_or_else(|| StoreError::Corrupt(format!("kind: {kind:?}")))?;
-        out.push(ItemRow {
-            uid,
-            title,
-            kind,
-            path,
-            due: due.map(studyfrog_core::time::UnixMs),
-        });
+    let rows = stmt.query_map([folder], raw_item).map_err(sql_err)?;
+    rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
+}
+
+/// Items anywhere in the vault whose title contains `query` (case-insensitive; `%` and `_` are taken
+/// literally), titles that start with it first, at most `limit`. An empty query finds nothing.
+pub fn search_items(
+    conn: &Connection,
+    query: &str,
+    limit: usize,
+) -> Result<Vec<ItemRow>, StoreError> {
+    let needle = query.trim();
+    if needle.is_empty() {
+        return Ok(Vec::new());
     }
-    Ok(out)
+    let escaped = needle
+        .replace('\\', "\\\\")
+        .replace('%', "\\%")
+        .replace('_', "\\_");
+    let sql = "SELECT i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms)
+               FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
+               WHERE i.kind != 'stack' AND i.title LIKE ?1 ESCAPE '\\'
+               ORDER BY (i.title LIKE ?2 ESCAPE '\\') DESC, i.title COLLATE NOCASE, i.path LIMIT ?3";
+    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+    let params = (format!("%{escaped}%"), format!("{escaped}%"), limit as i64);
+    let rows = stmt.query_map(params, raw_item).map_err(sql_err)?;
+    rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
 }
 
 /// What queue building needs to know about an indexed item (no file content).

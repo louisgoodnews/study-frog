@@ -1,38 +1,9 @@
-//! The navigation bar and the status bar.
+//! The status bar.
 
 use eframe::egui::{self, Panel};
 
 use crate::msg::Msg;
-use crate::state::{NoticeKind, Screen, State};
-
-const SCREENS: [(Screen, &str); 8] = [
-    (Screen::Library, "Library"),
-    (Screen::Calendar, "Calendar"),
-    (Screen::Board, "Board"),
-    (Screen::Achievements, "Achievements"),
-    (Screen::Reports, "Reports"),
-    (Screen::Graph, "Graph"),
-    (Screen::Rehearse, "Rehearse"),
-    (Screen::Settings, "Settings"),
-];
-
-/// Screen buttons on the left, "Close vault" on the right.
-pub fn nav(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    Panel::top("nav").show(ui, |ui| {
-        ui.horizontal(|ui| {
-            for (screen, label) in SCREENS {
-                if ui.selectable_label(state.screen == screen, label).clicked() {
-                    out.push(Msg::Navigate(screen));
-                }
-            }
-            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                if ui.button("Close vault").clicked() {
-                    out.push(Msg::CloseVault);
-                }
-            });
-        });
-    });
-}
+use crate::state::{NoticeKind, State};
 
 /// The latest notice with a dismiss button, or the vault path when there is none.
 pub fn status(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {

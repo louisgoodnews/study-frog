@@ -6,6 +6,7 @@ pub use studyfrog_service::session::VaultInfo;
 use studyfrog_service::achievements::AchievementReport;
 use studyfrog_service::reports::ReportBundle;
 
+use crate::chrome::Chrome;
 use crate::editor::Editor;
 use crate::graph::GraphState;
 use crate::kanban::Kanban;
@@ -141,6 +142,8 @@ pub struct State {
     pub planner: Planner,
     /// The kanban board.
     pub kanban: Kanban,
+    /// Sidebar, menus, search and notifications.
+    pub chrome: Chrome,
     /// The registered importers and card types.
     pub extensions: Extensions,
     /// The latest reports.

@@ -13,8 +13,14 @@ fn notice(kind: NoticeKind, text: impl Into<String>) -> Option<Notice> {
     })
 }
 
-/// Advance the state by one message.
+/// Advance the state by one message. Every new notice also goes to the notification list.
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
+    let before = state.notice.clone();
+    let (next, effects) = step(state, msg);
+    (crate::chrome::track_notice(&before, next), effects)
+}
+
+fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
     match msg {
         Msg::Started { app, error } => started(state, app, error),
         Msg::PathEdited(text) => (
@@ -59,8 +65,8 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
             },
             Vec::new(),
         ),
-        Msg::Tick => tick(state),
-        Msg::VaultPolled(result) => vault_polled(state, result),
+        Msg::Tick => crate::poll_ui::tick(state),
+        Msg::VaultPolled(result) => crate::poll_ui::vault_polled(state, result),
         Msg::AppSettingsSaved(result) => settings_saved(state, result),
         browse @ (Msg::Select(_)
         | Msg::SearchEdited(_)
@@ -88,6 +94,7 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::CloseEditor
         | Msg::OpenLink(_)
         | Msg::LinkResolved(..)) => crate::editor::update(state, edit),
+        Msg::Chrome(m) => crate::chrome::update(state, m),
         Msg::ReportsBuilt(result) => crate::reports::built(state, result),
         Msg::AchievementsChecked(result) => crate::achievements::checked(state, result),
         Msg::Plan(m) => crate::planner::update(state, m),
@@ -183,50 +190,6 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
                 },
                 Vec::new(),
             )
-        }
-    }
-}
-
-fn tick(state: State) -> (State, Vec<Effect>) {
-    if state.vault.is_some() && !state.polling {
-        (
-            State {
-                polling: true,
-                ..state
-            },
-            vec![Effect::PollVault],
-        )
-    } else {
-        (state, Vec::new())
-    }
-}
-
-fn vault_polled(state: State, result: Result<Option<VaultInfo>, String>) -> (State, Vec<Effect>) {
-    let state = State {
-        polling: false,
-        ..state
-    };
-    match result {
-        Ok(Some(info)) if state.vault.is_some() => {
-            let mut effects = crate::browse::reload(&state.browser.selection);
-            let state = State {
-                vault: Some(info),
-                ..state
-            };
-            if state.screen == Screen::Graph {
-                effects.push(Effect::LoadGraph);
-            }
-            if state.screen != Screen::Rehearse {
-                return (state, effects);
-            }
-            let (state, preview) = crate::setup::refresh_preview(state);
-            effects.extend(preview);
-            (state, effects)
-        }
-        Ok(_) => (state, Vec::new()),
-        Err(e) => {
-            let notice = notice(NoticeKind::Error, format!("Checking the vault failed: {e}"));
-            (State { notice, ..state }, Vec::new())
         }
     }
 }

@@ -91,6 +91,8 @@ fn navigation_switches_screens_and_close_vault_returns_to_welcome() {
     h.run();
     assert_eq!(h.state().0.state.screen, Screen::Library);
 
+    h.get_by_label("Profile and vault").click();
+    h.run();
     h.get_by_label("Close vault").click();
     h.run();
     assert_eq!(

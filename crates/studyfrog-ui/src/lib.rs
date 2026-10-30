@@ -6,6 +6,7 @@
 pub mod achievements;
 pub mod app;
 pub mod browse;
+pub mod chrome;
 pub mod edit_form;
 pub mod editor;
 pub mod effect;
@@ -24,6 +25,7 @@ pub mod msg;
 pub mod nav;
 pub mod plan_msg;
 pub mod planner;
+pub mod poll_ui;
 pub mod reading_test;
 pub mod reports;
 pub mod review;

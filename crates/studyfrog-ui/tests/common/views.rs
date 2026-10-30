@@ -15,7 +15,7 @@ pub type App = (Model, Vec<Effect>);
 
 pub fn harness(model: Model) -> Harness<'static, App> {
     Harness::builder()
-        .with_size(eframe::egui::vec2(900.0, 600.0))
+        .with_size(eframe::egui::vec2(1000.0, 720.0))
         .build_ui_state(
             |ui, (model, effects): &mut App| effects.extend(frame(model, ui)),
             (model, Vec::new()),

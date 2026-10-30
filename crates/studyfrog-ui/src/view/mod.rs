@@ -6,14 +6,19 @@ mod board;
 mod calendar;
 mod editor;
 mod graph;
+mod icons;
 mod items;
 mod library;
+mod menus;
+mod navbar;
+mod popup;
 mod preview;
 mod reports;
 mod run;
 mod session_form;
 mod settings;
 mod setup;
+mod sidebar;
 mod summary;
 mod welcome;
 pub(crate) mod widgets;
@@ -26,9 +31,8 @@ use crate::state::{Screen, State};
 /// Draw the whole window for `state`.
 pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     let mut out = Vec::new();
-    if state.vault.is_some() {
-        bars::nav(state, ui, &mut out);
-    }
+    navbar::draw(state, ui, &mut out);
+    sidebar::draw(state, ui, &mut out);
     bars::status(state, ui, &mut out);
     egui::CentralPanel::default().show(ui, |ui| match state.screen {
         Screen::Welcome => welcome::draw(state, ui, &mut out),

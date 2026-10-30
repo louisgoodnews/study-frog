@@ -90,6 +90,8 @@ pub enum Effect {
         /// The rating it should have.
         to: Rating,
     },
+    /// Find items whose title contains this text (the global search).
+    SearchItems(String),
     /// Compute the reports from the history.
     BuildReports,
     /// Measure the achievements and remember new unlocks.

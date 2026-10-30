@@ -11,6 +11,7 @@ use studyfrog_service::document::{LoadedDoc, Saved};
 use studyfrog_service::reports::ReportBundle;
 use studyfrog_store::overview::LinkGraph;
 
+use crate::chrome::ChromeMsg;
 use crate::import_ui::ImportOutcome;
 use crate::kanban::BoardMsg;
 use crate::planner::PlanMsg;
@@ -151,6 +152,8 @@ pub enum Msg {
     GraphRestart,
     /// A node was clicked.
     GraphClick(usize),
+    /// Something happened in the window chrome (sidebar, menus, search).
+    Chrome(ChromeMsg),
     /// The reports were computed.
     ReportsBuilt(Result<ReportBundle, String>),
     /// The achievements were measured.

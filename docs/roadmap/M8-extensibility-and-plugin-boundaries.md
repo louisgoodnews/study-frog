@@ -17,6 +17,12 @@
     - TASK-0066 Profiling pass
     - TASK-0067 Linux packaging
 
+- **EPIC-020** UI rework (added after the owner tried the app)
+  - **STORY-0036** Top bar and sidebar
+    - TASK-0093 Top bar, sidebar and menus
+    - TASK-0094 Global search
+    - TASK-0095 Notification list
+
 ## Exit criteria
 
 - [x] Documented extension traits exist for card types and importers

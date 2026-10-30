@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- A top bar (sidebar toggle, vault switcher, brand, global search, Create menu, notifications, help, settings,
+  profile) and a foldable sidebar for the screens; global search over item titles; a notification list behind
+  the bell (TASK-0093, 0094, 0095).
 - Extensions: `studyfrog-ext` (importers and card types as plain data, a registry), an example extension
   (tab-separated importer, cloze card type) that changes no core crate, a card-type chooser and an "Import from
   a file" panel in the library, `docs/EXTENDING.md` and ADR 0008 (TASK-0063, 0064, 0065).
@@ -147,6 +150,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - `rustfmt.toml`, `clippy.toml`, `rust-toolchain.toml` (1.99.1), `.gitignore`.
 
 ### Changed
+- The screen buttons moved from the top row to a sidebar; "Close vault" moved into the profile menu.
 - The lowest-recall queue order is 7 times faster (recall computed once per item) (TASK-0066).
 - The application binary is called `studyfrog`.
 - Dev builds use line-table debug info only, so the many test binaries link much faster.
