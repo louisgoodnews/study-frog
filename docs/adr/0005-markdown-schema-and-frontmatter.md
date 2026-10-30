@@ -1,6 +1,6 @@
 # ADR 0005: Markdown schema and front-matter
 
-- Status: **Proposed**
+- Status: **Accepted** (2026-10-30)
 - Date: 2026-10-30
 
 ## Decision

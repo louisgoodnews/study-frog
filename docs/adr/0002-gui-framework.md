@@ -1,6 +1,6 @@
 # ADR 0002: GUI framework
 
-- Status: **Proposed** (needs owner acceptance)
+- Status: **Accepted** (2026-10-30)
 - Date: 2026-10-30
 
 ## Context

@@ -1,6 +1,6 @@
 # ADR 0004: SLM runtime
 
-- Status: **Proposed** (spike required in M6 before Accepted)
+- Status: **Accepted** (2026-10-30); the M6 spike (TASK-0050) must still confirm the latency budget
 - Date: 2026-10-30
 
 ## Context

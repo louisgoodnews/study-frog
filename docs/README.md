@@ -11,5 +11,4 @@
 | Research | [ui-guidelines](research/ui-guidelines.md) · [learning-science](research/learning-science.md) |
 | Contributing | [CODE_STYLE](contributing/CODE_STYLE.md) · [TESTING](contributing/TESTING.md) · [BENCHMARKING](contributing/BENCHMARKING.md) · [COMMIT_CONVENTIONS](contributing/COMMIT_CONVENTIONS.md) |
 
-ADR status values: `Proposed`, `Accepted`, `Superseded`. ADRs 0002 to 0005 are **Proposed**
-until the owner accepts them; see `STATUS.md`.
+ADR status values: `Proposed`, `Accepted`, `Superseded`. ADRs 0001 to 0005 are **Accepted**.
