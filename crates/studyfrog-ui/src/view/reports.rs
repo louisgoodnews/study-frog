@@ -7,6 +7,8 @@ use studyfrog_report::latency::{EDGES_MS, LatencyStats};
 use studyfrog_report::retention::{RetentionBucket, retention_rate};
 use studyfrog_service::reports::{BacktestReport, ReportBundle};
 
+use crate::explorer_ui::{ExplorerMsg, ReportTab};
+use crate::msg::Msg;
 use crate::state::State;
 
 fn seconds(ms: u32) -> String {
@@ -49,9 +51,30 @@ fn bar(ui: &mut egui::Ui, label: &str, fraction: f32, text: String) {
     });
 }
 
-/// All three reports.
-pub fn draw(state: &State, ui: &mut egui::Ui) {
+/// The tabs, then either the performance explorer or the three memory reports.
+pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.heading("Reports");
+    ui.horizontal(|ui| {
+        for (tab, label) in [
+            (ReportTab::Performance, "Performance"),
+            (ReportTab::Memory, "Memory and forecast"),
+        ] {
+            if ui
+                .selectable_label(state.explorer.tab == tab, label)
+                .clicked()
+            {
+                out.push(Msg::Explorer(ExplorerMsg::Tab(tab)));
+            }
+        }
+    });
+    match state.explorer.tab {
+        ReportTab::Performance => crate::view::explorer::draw(state, ui, out),
+        ReportTab::Memory => memory(state, ui),
+    }
+}
+
+/// All three memory reports.
+fn memory(state: &State, ui: &mut egui::Ui) {
     let Some(r) = &state.reports else {
         ui.label("Computing the reports…");
         return;

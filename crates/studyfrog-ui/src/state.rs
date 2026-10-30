@@ -160,6 +160,8 @@ pub struct State {
     pub subjects: crate::subjects_ui::SubjectsState,
     /// The latest reports.
     pub reports: Option<ReportBundle>,
+    /// The performance explorer of the reports screen.
+    pub explorer: crate::explorer_ui::ExplorerState,
     /// The latest achievement check.
     pub achievements: Option<AchievementReport>,
     /// The reading-speed test on the settings screen.

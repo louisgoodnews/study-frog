@@ -21,6 +21,8 @@ pub enum Link {
     Wiki(String),
     /// An ordinary URL.
     Url(String),
+    /// `![alt](path)`: a picture; the span's text is the description.
+    Image(String),
 }
 
 /// A run of text with one style and at most one link.

@@ -1,8 +1,9 @@
 //! The Markdown event walker behind [`parse_blocks`](crate::blocks::parse_blocks).
 
-use pulldown_cmark::{CodeBlockKind, Event, HeadingLevel, Options, Parser, Tag, TagEnd};
+use pulldown_cmark::{CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
 
 use crate::blocks::{Block, Link, ListItem, Span, Style};
+use crate::blocks_heading::level;
 use crate::links::{Piece, split_wikilinks};
 
 enum Frame {
@@ -38,17 +39,6 @@ fn style(b: &Builder) -> Style {
     }
 }
 
-fn level(l: HeadingLevel) -> u8 {
-    match l {
-        HeadingLevel::H1 => 1,
-        HeadingLevel::H2 => 2,
-        HeadingLevel::H3 => 3,
-        HeadingLevel::H4 => 4,
-        HeadingLevel::H5 => 5,
-        HeadingLevel::H6 => 6,
-    }
-}
-
 /// Turn the pending text into spans, splitting out wikilinks (never inside an explicit link).
 fn flush_text(b: &mut Builder) {
     if b.text.is_empty() {
@@ -78,6 +68,20 @@ fn flush_text(b: &mut Builder) {
         };
         b.spans.push(span);
     }
+}
+
+/// An image without a description still needs a span to carry its path.
+fn end_image(b: &mut Builder) {
+    flush_text(b);
+    if !b.spans.last().is_some_and(|s| s.link == b.link) {
+        let empty = Span {
+            text: String::new(),
+            style: style(b),
+            link: b.link.clone(),
+        };
+        b.spans.push(empty);
+    }
+    b.link = None;
 }
 
 fn push_block(b: &mut Builder, block: Block) {
@@ -124,6 +128,10 @@ fn start(b: &mut Builder, tag: Tag) {
         Tag::Emphasis => (flush_text(b), b.italic += 1).1,
         Tag::Strong => (flush_text(b), b.bold += 1).1,
         Tag::Strikethrough => (flush_text(b), b.strike += 1).1,
+        Tag::Image { dest_url, .. } => {
+            flush_text(b);
+            b.link = Some(Link::Image(dest_url.to_string()));
+        }
         Tag::Link { dest_url, .. } => {
             flush_text(b);
             b.link = Some(Link::Url(dest_url.to_string()));
@@ -180,6 +188,7 @@ fn end(b: &mut Builder, tag: TagEnd) {
         TagEnd::Emphasis => (flush_text(b), b.italic = b.italic.saturating_sub(1)).1,
         TagEnd::Strong => (flush_text(b), b.bold = b.bold.saturating_sub(1)).1,
         TagEnd::Strikethrough => (flush_text(b), b.strike = b.strike.saturating_sub(1)).1,
+        TagEnd::Image => end_image(b),
         TagEnd::Link => {
             flush_text(b);
             b.link = None;

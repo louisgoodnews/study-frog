@@ -70,3 +70,47 @@ pub fn count_reviews_between(
     )
     .map_err(sql_err)
 }
+
+/// What the report explorer needs to know about an item.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IndexRow {
+    /// The item.
+    pub uid: Uid,
+    /// Title.
+    pub title: String,
+    /// Note, card or question.
+    pub kind: studyfrog_core::plan::ItemKind,
+    /// The folder of the stack it is in; `None` for the inbox.
+    pub stack: Option<String>,
+}
+
+/// Every item except stacks, in path order.
+pub fn item_index(conn: &Connection) -> Result<Vec<IndexRow>, StoreError> {
+    let sql = "SELECT uid, title, kind, stack_path FROM item WHERE kind != 'stack' ORDER BY path";
+    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+    let rows = stmt
+        .query_map([], |r| {
+            Ok((
+                r.get::<_, String>(0)?,
+                r.get::<_, String>(1)?,
+                r.get::<_, String>(2)?,
+                r.get::<_, Option<String>>(3)?,
+            ))
+        })
+        .map_err(sql_err)?;
+    let mut out = Vec::new();
+    for row in rows {
+        let (id, title, kind, stack) = row.map_err(sql_err)?;
+        let uid = studyfrog_md::ulid::parse_ulid(&id)
+            .ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}")))?;
+        let kind = studyfrog_core::plan::item_kind_from_name(&kind)
+            .ok_or_else(|| StoreError::Corrupt(format!("kind: {kind:?}")))?;
+        out.push(IndexRow {
+            uid,
+            title,
+            kind,
+            stack,
+        });
+    }
+    Ok(out)
+}

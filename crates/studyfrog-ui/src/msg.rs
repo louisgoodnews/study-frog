@@ -66,6 +66,12 @@ pub enum Msg {
     Tick,
     /// The result of a change check: `None` when nothing changed.
     VaultPolled(Result<Option<VaultInfo>, String>),
+    /// A message of the performance explorer.
+    Explorer(crate::explorer_ui::ExplorerMsg),
+    /// The user asked to add a picture to a text area.
+    PickImage(crate::image_ui::ImageTarget),
+    /// A picture was copied into the vault (or the user cancelled).
+    ImageAdded(crate::image_ui::ImageTarget, crate::image_ui::Added),
     /// A message of the subjects section.
     Subjects(crate::subjects_ui::SubjectsMsg),
     /// The items that link to an open item.

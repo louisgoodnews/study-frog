@@ -160,3 +160,27 @@ pub fn home(w: &Worker, now_ns: i64) -> Msg {
     };
     Msg::Home(HomeMsg::Loaded(result))
 }
+
+/// Compute the performance explorer for a scope and period at the current local time.
+pub fn explorer(
+    w: &Worker,
+    (scope, period): (
+        studyfrog_service::explore::Scope,
+        studyfrog_service::explore::Period,
+    ),
+    now_ns: i64,
+) -> Msg {
+    let now = UnixMs(now_ns / 1_000_000);
+    let result = match &w.session {
+        Some(session) => studyfrog_service::explore::explore(
+            session,
+            (scope, period),
+            now,
+            local_offset_minutes(now),
+        )
+        .map(Box::new)
+        .map_err(|e| e.to_string()),
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::Explorer(crate::explorer_ui::ExplorerMsg::Loaded(result))
+}

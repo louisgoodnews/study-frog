@@ -7,6 +7,7 @@ use std::sync::Arc;
 use eframe::egui::{self, Id, Role, TextEdit, WidgetInfo, text::CCursor, text::CCursorRange};
 use studyfrog_md::blocks::{Block, parse_blocks};
 
+use crate::image_ui::ImageTarget;
 use crate::md_edit::{Cmd, apply_cmd};
 use crate::msg::Msg;
 use crate::theme::palette_of;
@@ -56,7 +57,7 @@ fn toolbar(
     (name, text_id): (&str, Id),
     mode_id: Id,
     mode: Mode,
-    text: &str,
+    (text, image, out): (&str, Option<ImageTarget>, &mut Vec<Msg>),
 ) -> Option<(String, (usize, usize))> {
     let mut edited = None;
     ui.horizontal_wrapped(|ui| {
@@ -93,6 +94,15 @@ fn toolbar(
                 edited = Some(apply_cmd(text, sel, cmd));
             }
         }
+        if let Some(target) = image {
+            let r = ui.small_button("Picture");
+            r.widget_info(|| {
+                WidgetInfo::labeled(Role::Button, true, format!("Add a picture to {name}"))
+            });
+            if r.on_hover_text("Add a picture from a file").clicked() {
+                out.push(Msg::PickImage(target));
+            }
+        }
     });
     edited
 }
@@ -114,6 +124,7 @@ pub fn md_editor(
     name: &str,
     text: &str,
     (rows, start): (usize, Mode),
+    image: Option<ImageTarget>,
     out: &mut Vec<Msg>,
 ) -> Option<String> {
     let id = ui.make_persistent_id(("md-editor", name));
@@ -122,7 +133,7 @@ pub fn md_editor(
     let label = ui.label(egui::RichText::new(name).strong());
     let mut current = text.to_owned();
     let mut changed = false;
-    if let Some((new, sel)) = toolbar(ui, (name, text_id), mode_id, mode, text) {
+    if let Some((new, sel)) = toolbar(ui, (name, text_id), mode_id, mode, (text, image, out)) {
         current = new;
         changed = true;
         ui.data_mut(|d| d.insert_temp(id.with("select"), sel));

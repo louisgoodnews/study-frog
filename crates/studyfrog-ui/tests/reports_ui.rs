@@ -68,7 +68,13 @@ fn opening_the_screen_computes_the_reports_and_failures_are_reported() {
     let mut m = open_model();
     assert_eq!(
         apply(&mut m, Msg::Navigate(Screen::Reports)),
-        [Effect::BuildReports]
+        [
+            Effect::BuildReports,
+            Effect::Explore {
+                scope: Default::default(),
+                period: Default::default()
+            }
+        ]
     );
     apply(&mut m, Msg::ReportsBuilt(Ok(bundle())));
     assert_eq!(m.state.reports.as_ref().unwrap().reviews, 120);
@@ -81,6 +87,7 @@ fn opening_the_screen_computes_the_reports_and_failures_are_reported() {
 fn the_three_reports_show_their_numbers_as_text() {
     let mut m = open_model();
     m.state.screen = Screen::Reports;
+    m.state.explorer.tab = studyfrog_ui::explorer_ui::ReportTab::Memory;
     apply(&mut m, Msg::ReportsBuilt(Ok(bundle())));
     let mut h = harness(m);
     h.run();
@@ -116,6 +123,7 @@ fn the_three_reports_show_their_numbers_as_text() {
 fn an_empty_history_says_so_and_still_draws() {
     let mut m = open_model();
     m.state.screen = Screen::Reports;
+    m.state.explorer.tab = studyfrog_ui::explorer_ui::ReportTab::Memory;
     let empty = ReportBundle {
         reviews: 0,
         retention: vec![],

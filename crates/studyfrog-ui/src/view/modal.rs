@@ -5,6 +5,7 @@
 use eframe::egui::{self, Align, Layout};
 use studyfrog_service::create_more::NewKind;
 
+use crate::image_ui::ImageTarget;
 use crate::modal::{CreateForm, Field, Modal, ModalMsg};
 use crate::msg::Msg;
 use crate::state::State;
@@ -94,11 +95,26 @@ fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         _ => (4, Mode::Write),
     };
     ui.weak(text_hint);
-    if let Some(t) = md_editor(ui, text_label, &f.text, (rows, mode), out) {
+    if let Some(t) = md_editor(
+        ui,
+        text_label,
+        &f.text,
+        (rows, mode),
+        Some(ImageTarget::Create(Field::Text)),
+        out,
+    ) {
         send(out, ModalMsg::Edit(Field::Text, t));
     }
-    let answer =
-        answer_label.and_then(|label| md_editor(ui, label, &f.answer, (3, Mode::Write), out));
+    let answer = answer_label.and_then(|label| {
+        md_editor(
+            ui,
+            label,
+            &f.answer,
+            (3, Mode::Write),
+            Some(ImageTarget::Create(Field::Answer)),
+            out,
+        )
+    });
     if let Some(t) = answer {
         send(out, ModalMsg::Edit(Field::Answer, t));
     }

@@ -4,6 +4,7 @@
 use eframe::egui::{self, RichText, TextEdit};
 
 use crate::editor::{Editor, is_dirty};
+use crate::image_ui::ImageTarget;
 use crate::msg::{EditAction, Msg};
 use crate::state::State;
 use crate::theme::palette_of;
@@ -72,7 +73,14 @@ fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     ui.add_space(8.0);
     for (i, f) in e.form.fields.iter().enumerate() {
-        if let Some(t) = md_editor(ui, f.label, &f.text, (f.rows, Mode::Split), out) {
+        if let Some(t) = md_editor(
+            ui,
+            f.label,
+            &f.text,
+            (f.rows, Mode::Split),
+            Some(ImageTarget::Item(i)),
+            out,
+        ) {
             out.push(Msg::Edit(EditAction::Field(i, t)));
         }
         ui.add_space(10.0);

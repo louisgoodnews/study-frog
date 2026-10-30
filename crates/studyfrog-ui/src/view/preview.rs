@@ -108,6 +108,7 @@ fn spans_line(ui: &mut egui::Ui, spans: &[Span], heading: Option<u8>, out: &mut 
                 Some(Link::Url(url)) => {
                     ui.hyperlink_to(text, url);
                 }
+                Some(Link::Image(path)) => crate::view::image::draw_image(ui, &span.text, path),
                 None => {
                     ui.label(text);
                 }

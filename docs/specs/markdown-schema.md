@@ -66,3 +66,12 @@ Body: prompt, `???`, reference answer.
   a card or question without one is an error. Wikilinks may combine forms:
   `[[Target#Heading|label]]`; empty targets are ignored. Links in code spans and fences are ignored.
 - **Stack body:** `_stack.md` may have a Markdown body; it is preserved.
+
+## Pictures
+`![description](assets/name.png)` shows a picture. The path is relative to the vault root and must stay inside it
+(no `..`, no absolute path, no web address); only png, jpg and gif are shown. The app copies pictures into
+`assets/` and names them after the file and a short hash of its content.
+
+## Front-matter keys the app writes
+Besides `id`, `kind`, `title`, `tags`, `aliases`, `created` and `updated`: `priority` (`lowest` to `highest`),
+`difficulty` (`easy`, `medium`, `difficult`) and, on a stack, `subjects` (comma-separated). Unknown keys are kept.

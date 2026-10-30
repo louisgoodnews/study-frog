@@ -2,6 +2,7 @@
 
 pub mod blocks;
 mod blocks_build;
+mod blocks_heading;
 pub mod build;
 pub mod codeblock;
 pub mod doc;

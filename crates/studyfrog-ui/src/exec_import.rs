@@ -139,3 +139,18 @@ pub fn create(
         .and_then(|ids| f(session, ids));
     Msg::Created(result.map_err(|e| e.to_string()))
 }
+
+/// Ask for a picture and copy it into the vault.
+pub fn add_image(w: &mut Worker, target: crate::image_ui::ImageTarget) -> Msg {
+    let picked = w
+        .file_picker
+        .and_then(|pick| pick(&crate::images::IMAGE_EXTENSIONS));
+    let result = match (&w.session, picked) {
+        (_, None) => Ok(None),
+        (None, _) => Err("no vault is open".to_owned()),
+        (Some(session), Some(path)) => studyfrog_service::images::add_image(session, &path)
+            .map(Some)
+            .map_err(|e| e.to_string()),
+    };
+    Msg::ImageAdded(target, result)
+}

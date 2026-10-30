@@ -7,10 +7,13 @@ mod calendar;
 mod calendar_grid;
 mod date_picker;
 mod editor;
+mod explorer;
+mod explorer_charts;
 mod graph;
 mod home;
 mod home_cards;
 mod icons;
+pub(crate) mod image;
 mod item_details;
 mod items;
 pub(crate) mod kit;
@@ -47,6 +50,7 @@ use crate::state::{Screen, State};
 /// Draw the whole window for `state`.
 pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     let mut out = Vec::new();
+    image::set_vault_root(ui.ctx(), state.vault.as_ref().map(|v| v.root.as_str()));
     navbar::draw(state, ui, &mut out);
     sidebar::draw(state, ui, &mut out);
     bars::status(state, ui, &mut out);
@@ -62,7 +66,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         Screen::Calendar => calendar::draw(state, ui, &mut out),
         Screen::Board => board::draw(state, ui, &mut out),
         Screen::Achievements => achievements::draw(state, ui),
-        Screen::Reports => reports::draw(state, ui),
+        Screen::Reports => reports::draw(state, ui, &mut out),
     });
     toast::draw(state, ui, &mut out);
     modal::draw(state, ui, &mut out);

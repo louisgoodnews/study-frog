@@ -2,7 +2,7 @@
 id: STORY-0044
 type: story
 title: Images in notes, cards and questions
-status: backlog
+status: done
 epic: EPIC-021
 parents: [EPIC-021]
 estimate: 5
@@ -18,10 +18,10 @@ The owner reviewed the app again and asked for a knowledge workspace: an item pa
 Images in notes, cards and questions.
 
 ## Acceptance Criteria
-- [ ] Images are copied into the vault, referenced from Markdown and shown in the editor, preview and rehearsal
+- [x] Images are copied into the vault, referenced from Markdown and shown in the editor, preview and rehearsal
 
 ## Design Notes
-Needs an image loader (egui_extras).
+Pictures live in the vault's assets folder (png, jpg, gif up to 20 MB), are referenced as ![alt](assets/name.png) and drawn by view/image.rs, which loads them itself because egui's image widget prints a warning sign the bundled fonts cannot draw. Needs an image loader (egui_extras).
 
 ## Dependencies
 None.

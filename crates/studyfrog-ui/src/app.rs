@@ -20,6 +20,7 @@ pub struct StudyFrogApp {
 /// Create the app and ask the worker for the saved settings.
 pub fn app_new(ctx: egui::Context, smoke_frames: Option<u32>, host: Host) -> StudyFrogApp {
     crate::theme::apply(&ctx);
+    egui_extras::install_image_loaders(&ctx);
     let mut model = Model::default();
     model.state.extensions = extensions_of(&host.registry);
     let runtime = spawn(ctx, host);

@@ -111,6 +111,8 @@ pub enum Effect {
     },
     /// Read what the home screen shows.
     LoadHome,
+    /// Choose a picture, copy it into the vault and report where it went.
+    AddImage(crate::image_ui::ImageTarget),
     /// Read the vault's teachers and subjects.
     LoadSubjects,
     /// Store the vault's teachers and subjects.
@@ -121,6 +123,13 @@ pub enum Effect {
     SearchItems(String),
     /// Compute the reports from the history.
     BuildReports,
+    /// Compute the performance of a scope over a period.
+    Explore {
+        /// What to look at.
+        scope: studyfrog_service::explore::Scope,
+        /// How far back.
+        period: studyfrog_service::explore::Period,
+    },
     /// Measure the achievements and remember new unlocks.
     CheckAchievements,
     /// Read the link graph from the index.

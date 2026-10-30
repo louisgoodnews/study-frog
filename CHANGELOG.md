@@ -8,6 +8,12 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Pictures in notes, cards, questions and answers: a Picture button in the Markdown toolbar copies a png, jpg or gif
+  into the vault's `assets/` folder and inserts `![alt](assets/name.png)`; pictures show in the editor preview, the
+  item page and while rehearsing, and only pictures inside the vault are loaded (STORY-0044).
+- A Performance tab on the reports screen: reviews, items reviewed, good-or-easy share, answer times, rating bars
+  and a 30-day chart for the whole vault, a stack, a subject or one item, over all time, 30 or 7 days, drilling
+  down by clicking (STORY-0048).
 - The item page: title, a Markdown editor for every text area (toolbar, Write, Split or Preview), and a side column
   with the kind, stack, subjects, priority, difficulty, tags, dates, the links to the item and the items that link
   to it (STORY-0042, STORY-0043). The Create dialog uses the same editor, wide for notes.

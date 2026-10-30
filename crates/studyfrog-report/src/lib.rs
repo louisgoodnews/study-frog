@@ -2,6 +2,7 @@
 //! backtest of that projection. All pure; the service layer reads the history and calls these.
 
 pub mod backtest;
+pub mod explore;
 pub mod forecast;
 pub mod latency;
 pub mod retention;
