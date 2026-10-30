@@ -1,6 +1,8 @@
 #![allow(dead_code, clippy::unwrap_used, clippy::expect_used)] // shared test helpers
 //! Helpers shared by the rehearsal integration tests.
 
+pub mod queue_gen;
+
 use studyfrog_core::event::event_name;
 use studyfrog_core::plan::RunPlan;
 use studyfrog_core::run::{Run, RunMode, RunState};

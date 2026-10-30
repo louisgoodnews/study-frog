@@ -2,7 +2,7 @@
 id: STORY-0015
 type: story
 title: Queue selection
-status: backlog
+status: done
 epic: EPIC-007
 parents: [EPIC-007]
 estimate: 5
@@ -19,8 +19,8 @@ Which items to show, in which order.
 Queue selection.
 
 ## Acceptance Criteria
-- [ ] Spaced queue honouring daily budgets; practice orders and filters (STORY-0033)
-- [ ] Step benchmark under budget
+- [x] Spaced queue honouring daily budgets; practice orders and filters (STORY-0033)
+- [x] Step benchmark under budget
 
 ## Design Notes
 Children: TASK-0034, TASK-0035.

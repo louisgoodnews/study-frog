@@ -2,7 +2,7 @@
 id: TASK-0034
 type: task
 title: Spaced (due-first) queue with daily budgets
-status: backlog
+status: done
 epic: EPIC-007
 parents: [STORY-0015]
 estimate: 3
@@ -20,9 +20,9 @@ Inputs: due list and new list as plain data.
 Spaced (due-first) queue with daily budgets.
 
 ## Acceptance Criteria
-- [ ] Spaced order: due items first (most overdue first), then new items; daily new and review budgets are inputs
-- [ ] Deterministic given a seed for any shuffling
-- [ ] proptest: respects limits, no duplicates
+- [x] Spaced order: due items first (most overdue first), then new items; daily new and review budgets are inputs
+- [x] Deterministic given a seed for any shuffling
+- [x] proptest: respects limits, no duplicates
 
 ## Design Notes
 SoA vs AoS decision for the event log is taken here with data (EPIC-003 open question).

@@ -2,7 +2,7 @@
 id: TASK-0070
 type: task
 title: Queue filters
-status: backlog
+status: done
 epic: EPIC-007
 parents: [STORY-0033]
 estimate: 3
@@ -20,9 +20,9 @@ Filters apply before ordering and the length cap.
 Queue filters.
 
 ## Acceptance Criteria
-- [ ] Filter by kind, stack, tags (any), state (new, learned, due, not due) and difficulty range
-- [ ] Empty list means no restriction; difficulty filter excludes items without memory state
-- [ ] proptest: filtered result is a subset and respects every predicate
+- [x] Filter by kind, stack, tags (any), state (new, learned, due, not due) and difficulty range
+- [x] Empty list means no restriction; difficulty filter excludes items without memory state
+- [x] proptest: filtered result is a subset and respects every predicate
 
 ## Design Notes
 Difficulty needs an FSRS memory state; SM-2 items have none and are excluded by a difficulty filter (documented).

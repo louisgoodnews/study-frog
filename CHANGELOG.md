@@ -8,6 +8,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Queue builders in `studyfrog-rehearsal`: filters (kind, stack, tags case-insensitive incl. non-ASCII,
+  state, difficulty), orders (spaced with daily budgets, sequential, seeded shuffle, hardest/easiest,
+  stalest, lowest predicted recall), length cap; in-house SplitMix64 shuffle; 13 tests incl. an
+  independent filter oracle; benchmark: engine step 23 ns, 10k-candidate queue 82 us to 3.9 ms
+  (TASK-0034, 0069, 0070, 0035).
 - Run plans in `studyfrog-core`: orders (due-first, sequential, shuffled, hardest/easiest, stalest,
   lowest predicted recall), filters, schedule effect (update vs practice-only), requeue-on-Again, limit
   (TASK-0068). Rehearsal is not only spaced repetition.
