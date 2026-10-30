@@ -8,6 +8,13 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- First desktop app (EPIC-008 so far): eframe/egui window with a vault chooser (remembers the last vault),
+  library overview (stacks, counts, inbox, problems), navigation and settings view; pure
+  `update(State, Msg) -> (State, Vec<Effect>)` with a worker-thread executor and 1 s change polling;
+  21 tests incl. headless egui view tests and an accessibility audit; `--smoke-frames N` for CI
+  (TASK-0036, TASK-0037).
+- `studyfrog-service::session` (open a vault, index it, poll it), `studyfrog-store::overview` (stacks, counts,
+  problems), per-user `app.toml` (`studyfrog-config`, `studyfrog-store::app_config`), `poll::prime`.
 - `studyfrog-config` (ADR 0007, Proposed): pure parsing and rendering of `studyfrog.toml` (vault defaults:
   scheduler, retention, interval cap, FSRS weights) and `_stack.toml` (scheduler, retention, daily limits);
   unknown keys are errors with line numbers (TASK-0075).

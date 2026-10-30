@@ -23,3 +23,7 @@ studyfrog-achieve.workspace = true
 studyfrog-board.workspace = true
 studyfrog-calendar.workspace = true
 studyfrog-service.workspace = true
+eframe.workspace = true
+
+[dev-dependencies]
+egui_kittest.workspace = true

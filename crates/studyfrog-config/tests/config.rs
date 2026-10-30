@@ -2,10 +2,13 @@
 //! Settings files: parsing, validation with line numbers, rendering.
 
 use proptest::prelude::*;
+use studyfrog_config::app::{parse_app_settings, render_app_settings};
 use studyfrog_config::stack::{parse_stack_settings, render_stack_settings};
 use studyfrog_config::vault::{parse_vault_settings, render_vault_settings};
 use studyfrog_core::scheduler::Scheduler;
-use studyfrog_core::settings::{StackSettings, VaultSettings, vault_settings_default};
+use studyfrog_core::settings::{
+    AppSettings, StackSettings, VaultSettings, vault_settings_default, with_opened_vault,
+};
 
 #[test]
 fn stack_settings_parse_with_comments_and_partial_keys() {
@@ -102,5 +105,40 @@ proptest! {
     ) {
         let s = VaultSettings { scheduler: sched, request_retention: retention, maximum_interval_days: max, weights };
         prop_assert_eq!(parse_vault_settings(&render_vault_settings(&s)), Ok(s));
+    }
+}
+
+#[test]
+fn app_settings_round_trip_awkward_paths_and_track_recent_vaults() {
+    let s = AppSettings {
+        vault: Some("/home/me/\"notes\" \\ tab\there \u{e9}".into()),
+        recent: vec!["/a".into(), "C:\\vault".into()],
+    };
+    assert_eq!(parse_app_settings(&render_app_settings(&s)), Ok(s));
+    assert_eq!(parse_app_settings("").unwrap(), AppSettings::default());
+    assert!(
+        parse_app_settings("theme = \"dark\"\n").is_err(),
+        "unknown keys are rejected"
+    );
+
+    let first = with_opened_vault(&AppSettings::default(), "/a");
+    let second = with_opened_vault(&first, "/b");
+    let again = with_opened_vault(&second, "/a");
+    assert_eq!(
+        (again.vault.as_deref(), again.recent.as_slice()),
+        (Some("/a"), ["/a".to_owned(), "/b".to_owned()].as_slice())
+    );
+    let many = (0..20).fold(AppSettings::default(), |s, i| {
+        with_opened_vault(&s, &format!("/v{i}"))
+    });
+    assert_eq!(many.recent.len(), 8);
+    assert_eq!(many.recent[0], "/v19");
+}
+
+proptest! {
+    #[test]
+    fn any_vault_path_round_trips(path in "\\PC{0,40}") {
+        let s = AppSettings { vault: Some(path.clone()), recent: vec![path] };
+        prop_assert_eq!(parse_app_settings(&render_app_settings(&s)), Ok(s));
     }
 }

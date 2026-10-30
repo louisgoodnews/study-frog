@@ -18,3 +18,11 @@ Written in Rust as a functional, data-oriented Cargo workspace (no OOP idioms).
 
 `studyfrog-app → studyfrog-ui → domain crates → studyfrog-core`. Domain crates never depend
 on the UI.
+
+## Run
+```
+cargo run -p studyfrog-app                 # opens the window
+cargo run -p studyfrog-app -- --smoke-frames 30   # draws 30 frames and exits (CI, under xvfb-run)
+scripts/check.sh                           # the full gate
+```
+

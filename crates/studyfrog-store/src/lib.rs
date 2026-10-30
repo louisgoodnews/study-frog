@@ -1,11 +1,13 @@
 //! Persistence: SQLite for structured data and a plain-file layer for Markdown content. The only crate that performs storage I/O.
 
+pub mod app_config;
 pub mod db;
 pub mod error;
 pub mod hash;
 pub mod index;
 pub mod library;
 pub mod migrate;
+pub mod overview;
 pub mod poll;
 pub mod reindex;
 pub mod run_load;

@@ -38,3 +38,33 @@ pub fn vault_settings_default() -> VaultSettings {
         weights: None,
     }
 }
+
+/// Most recent vaults remembered by the app.
+pub const MAX_RECENT_VAULTS: usize = 8;
+
+/// Per-user application settings (not part of any vault): where the app last worked.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct AppSettings {
+    /// The vault opened last; the app reopens it at start-up.
+    pub vault: Option<String>,
+    /// Recently opened vaults, newest first, without duplicates.
+    pub recent: Vec<String>,
+}
+
+/// `settings` after opening `path`: it becomes the current vault and moves to the front of the recent list.
+pub fn with_opened_vault(settings: &AppSettings, path: &str) -> AppSettings {
+    let mut recent: Vec<String> = std::iter::once(path.to_owned())
+        .chain(
+            settings
+                .recent
+                .iter()
+                .filter(|p| p.as_str() != path)
+                .cloned(),
+        )
+        .collect();
+    recent.truncate(MAX_RECENT_VAULTS);
+    AppSettings {
+        vault: Some(path.to_owned()),
+        recent,
+    }
+}

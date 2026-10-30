@@ -33,3 +33,18 @@ Tauri/Electron are rejected: a web runtime contradicts the performance and footp
 
 ## Review trigger
 Revisit if M4's editor spike fails the acceptance criteria in STORY-0018.
+
+## Spike results (M4, 2026-10-30)
+Stack: eframe/egui 0.37 with `glow`, `wayland`, `x11`, `accesskit`; `egui_kittest` 0.37 for tests.
+- **Builds:** cold build of the GUI dependency tree takes about 70 s; no extra system packages were needed.
+- **Real window:** `studyfrog --smoke-frames 30` opened a window, drew 30 frames and exited cleanly (exit 0, 0.74 s)
+  on the development machine (Linux, Wayland/X11 session). Run it under `xvfb-run` in CI.
+- **Headless testing works well:** `egui_kittest` drives the real views without a window. Tests click buttons,
+  type into the path field and read the accessibility tree.
+- **Accessibility (partial):** AccessKit is enabled. An automated audit asserts that every button and text input
+  on every screen has an accessible name; the path field is labelled via `labelled_by`.
+- **Not verified (needs a person at a keyboard):** IME composition, real screen-reader output (for example Orca),
+  focus order, high-DPI scaling. These remain the main risk for the editor (TASK-0040); the fallback stays iced.
+- **API note:** egui 0.37 moved to `App::ui(&mut Ui, ..)` with panels shown inside the root `Ui`.
+- **Decision stands:** egui/eframe.
+

@@ -76,3 +76,15 @@ pub fn poll_changes(
         PollOutcome::Reindexed(report),
     ))
 }
+
+/// The poll state for the vault as it is right now, without indexing anything. Take it *before*
+/// a reindex: a file that changes while indexing runs then still shows up as a difference.
+pub fn prime(root: &Path) -> Result<PollState, StoreError> {
+    let listed = list_markdown(root)?;
+    let configs = list_stack_configs(root, &stack_folders(&listed));
+    Ok(PollState {
+        indexed: Some(fingerprint(
+            &[listed.as_slice(), configs.as_slice()].concat(),
+        )),
+    })
+}

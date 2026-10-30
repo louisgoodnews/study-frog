@@ -2,7 +2,7 @@
 id: EPIC-008
 type: epic
 title: UI shell
-status: ready
+status: in_progress
 parents: []
 labels: [m4, ui]
 acceptance_criteria:
