@@ -2,7 +2,7 @@
 id: TASK-0013
 type: task
 title: Stack, Note, Card, Question structs
-status: in_progress
+status: done
 epic: EPIC-003
 parents: [STORY-0005]
 estimate: 3
@@ -20,15 +20,15 @@ Item kinds from the glossary.
 Stack, Note, Card, Question structs.
 
 ## Acceptance Criteria
-- [ ] Plain structs matching docs/specs/markdown-schema.md fields
-- [ ] Each has a `uid: Uid`; cross references use `Uid` (persisted) or `Idx<T>` (in memory)
-- [ ] No behaviour blocks
+- [x] Plain structs matching docs/specs/markdown-schema.md fields
+- [x] Each has a `uid: Uid`; cross references use `Uid` (persisted) or `Idx<T>` (in memory)
+- [x] No behaviour blocks
 
 ## Design Notes
-Data only; no parsing here.
+Data only; no parsing here. **Decision (owner, 2026-10-30): separate arenas per kind, no `Item` enum.** `Library` holds `Arena<Stack|Note|Card|Question>`; items point to their stack by `Idx<Stack>`. Common fields live in a `Meta` struct (composition). Timestamps are `UnixMs(i64)` so `core` stays dependency-free.
 
 ## Dependencies
 TASK-0012.
 
 ## Open Questions
-Is Item a sum type (enum) or three separate arenas? Prefer separate arenas (SoA); confirm during implementation.
+None. Remaining per-stack SRS overrides are added with the SRS parameter type (TASK-0016).

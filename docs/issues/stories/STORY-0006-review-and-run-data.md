@@ -2,7 +2,7 @@
 id: STORY-0006
 type: story
 title: Review and run data
-status: backlog
+status: ready
 epic: EPIC-003
 parents: [EPIC-003]
 estimate: 5

@@ -8,6 +8,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- `studyfrog-core`: `Meta`, `Stack`, `Note`, `Card`, `Question`, `UnixMs` and `Library` (one arena per
+  kind, no `Item` enum), plus a test (TASK-0013).
 - `BOARD.md`: Kanban view generated from issue front-matter by `scripts/board.sh`; WIP limit 3;
   `scripts/check.sh` fails when it is stale.
 - `CHANGELOG.md` and `CLAUDE.md` (working rules: keep board and changelog current).

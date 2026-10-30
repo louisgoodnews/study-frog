@@ -2,7 +2,7 @@
 id: STORY-0005
 type: story
 title: Identity and content types
-status: in_progress
+status: done
 epic: EPIC-003
 parents: [EPIC-003]
 estimate: 5
@@ -19,8 +19,8 @@ Everything else refers to items by id or arena index.
 Identity and content types.
 
 ## Acceptance Criteria
-- [ ] Stable `Uid` and typed arena index `Idx<T>` exist
-- [ ] Stack, Note, Card, Question are plain data structs
+- [x] Stable `Uid` and typed arena index `Idx<T>` exist
+- [x] Stack, Note, Card, Question are plain data structs
 
 ## Design Notes
 Children: TASK-0012, TASK-0013.

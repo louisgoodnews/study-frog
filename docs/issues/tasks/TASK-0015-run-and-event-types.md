@@ -2,7 +2,7 @@
 id: TASK-0015
 type: task
 title: Run and event types
-status: backlog
+status: ready
 epic: EPIC-003
 parents: [STORY-0006]
 estimate: 3

@@ -2,7 +2,7 @@
 id: TASK-0014
 type: task
 title: Review and Rating types
-status: backlog
+status: ready
 epic: EPIC-003
 parents: [STORY-0006]
 estimate: 2
@@ -29,4 +29,4 @@ Data only.
 TASK-0012.
 
 ## Open Questions
-Timestamp type: chrono vs time; ADR tech stack names both, pick one for core and record it.
+Resolved in TASK-0013: use `UnixMs(i64)` from `studyfrog-core::time`; no chrono/time in core.

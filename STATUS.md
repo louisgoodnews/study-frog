@@ -28,6 +28,7 @@
   are taken from the reference implementation in TASK-0016/0017.
 
 ## Next task
-**TASK-0013:** Stack, Note, Card, Question data structs in `studyfrog-core` (fields per
-`docs/specs/markdown-schema.md`). Done in M1 so far: M1 issues seeded; TASK-0012 (`Uid`,
-`Idx<T>`, `Arena<T>` with free functions, 7 tests incl. 5 proptests).
+**TASK-0014** (Review and Rating types) then **TASK-0015** (Run and event types), both `ready`.
+Done in M1 so far: TASK-0012 (`Uid`, `Idx<T>`, `Arena<T>`), TASK-0013 (`Meta`, `Stack`, `Note`,
+`Card`, `Question`, `Library` with one arena per kind, `UnixMs`). STORY-0005 is done.
+Live work state is always in [BOARD.md](BOARD.md).
