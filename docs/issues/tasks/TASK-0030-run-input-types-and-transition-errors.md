@@ -2,13 +2,13 @@
 id: TASK-0030
 type: task
 title: Run input types and transition errors
-status: ready
+status: done
 epic: EPIC-007
 parents: [STORY-0013]
 estimate: 2
 labels: [m3, rehearsal, core]
 acceptance_criteria:
-  - "Input enum (Start, Show, Flip, Skip, SubmitAnswer, Rate, Pause, Resume, Finish, Abort)"
+  - "Input enum with monotonic timestamp (Start, Flip, Skip, SubmitAnswer, Rate, Pause, Resume, Abort); showing the next item and finishing are automatic"
   - "Typed transition error for inputs invalid in the current state"
 ---
 
@@ -19,11 +19,11 @@ Event and run types already landed in core (TASK-0015); this task adds the engin
 Run input types and transition errors.
 
 ## Acceptance Criteria
-- [ ] Input enum (Start, Show, Flip, Skip, SubmitAnswer, Rate, Pause, Resume, Finish, Abort)
-- [ ] Typed transition error for inputs invalid in the current state
+- [x] Input enum with monotonic timestamp (Start, Flip, Skip, SubmitAnswer, Rate, Pause, Resume, Abort); showing the next item and finishing are automatic
+- [x] Typed transition error for inputs invalid in the current state
 
 ## Design Notes
-Data only; lives in studyfrog-rehearsal.
+`Action`/`Input` (timestamped), `StepOutput`, `StepError` (9 variants, hand-written Display delegating to a free function). `Session` holds the run, working queue, cursor, item phase and timers.
 
 ## Dependencies
 TASK-0015.

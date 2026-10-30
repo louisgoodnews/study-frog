@@ -16,7 +16,7 @@ acceptance_criteria:
 Rehearsal turns the queue of due items into timed, measured practice (docs/specs/rehearsal-run.md).
 
 ## Description
-Headless engine in `studyfrog-rehearsal`: state machine, latency capture, queue building, persistence of events.
+Headless engine (any queue order, not only spaced repetition) in `studyfrog-rehearsal`: state machine, latency capture, queue building, persistence of events.
 
 ## Acceptance Criteria
 - [ ] A scripted run produces the expected event log
@@ -25,7 +25,7 @@ Headless engine in `studyfrog-rehearsal`: state machine, latency capture, queue 
 - [ ] Crashed runs recover as aborted
 
 ## Design Notes
-Children: STORY-0013, STORY-0014, STORY-0015.
+Children: STORY-0013, STORY-0014, STORY-0015, STORY-0033.
 
 ## Dependencies
 M2 exit (parsing, storage). core run/event types exist (TASK-0015).

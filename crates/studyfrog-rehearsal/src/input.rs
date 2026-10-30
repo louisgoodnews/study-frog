@@ -1,0 +1,91 @@
+//! Engine inputs, outputs and errors.
+
+use std::fmt;
+
+use studyfrog_core::event::{Latency, RunEvent};
+use studyfrog_core::review::Rating;
+
+/// What the user (or shell) did.
+#[derive(Debug, Clone, PartialEq)]
+pub enum Action {
+    /// Begin the run; the first item is shown automatically.
+    Start,
+    /// Reveal the answer without typing one.
+    Flip,
+    /// Pass on the item without rating it.
+    Skip,
+    /// Submit a free-text answer (answer mode only).
+    SubmitAnswer(String),
+    /// Rate the revealed item; the next item is shown automatically.
+    Rate(Rating),
+    /// Pause the timer.
+    Pause,
+    /// Resume after a pause.
+    Resume,
+    /// Leave the run early.
+    Abort,
+}
+
+/// An action with the monotonic time (milliseconds since run start) at which it happened.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Input {
+    /// Monotonic milliseconds; must not decrease between inputs.
+    pub t_ms: u32,
+    /// What happened.
+    pub action: Action,
+}
+
+/// What a successful step produced.
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct StepOutput {
+    /// New events in order.
+    pub events: Vec<RunEvent>,
+    /// Latency of the item interaction this step completed, if any (paused time excluded).
+    pub latency: Option<Latency>,
+}
+
+/// Why an input was refused. The session is unchanged.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StepError {
+    /// The run has not been started.
+    NotStarted,
+    /// The run is already running.
+    AlreadyStarted,
+    /// The run is finished or aborted.
+    Ended,
+    /// The run is paused; resume first.
+    Paused,
+    /// The run is not paused.
+    NotPaused,
+    /// The item has not been shown or has already been revealed.
+    NotAwaitingReveal,
+    /// Rating needs a revealed item.
+    NotRevealed,
+    /// Free-text answers only exist in answer mode.
+    WrongMode,
+    /// The timestamp is earlier than the previous input's.
+    TimeWentBackwards,
+}
+
+/// Human-readable description.
+pub fn describe_step_error(e: StepError) -> &'static str {
+    match e {
+        StepError::NotStarted => "the run has not been started",
+        StepError::AlreadyStarted => "the run is already started",
+        StepError::Ended => "the run has ended",
+        StepError::Paused => "the run is paused",
+        StepError::NotPaused => "the run is not paused",
+        StepError::NotAwaitingReveal => "the item is not waiting to be revealed",
+        StepError::NotRevealed => "the item has not been revealed yet",
+        StepError::WrongMode => "free-text answers need an answer-mode run",
+        StepError::TimeWentBackwards => "input time is earlier than the previous input",
+    }
+}
+
+impl fmt::Display for StepError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(describe_step_error(*self))
+    }
+}
+
+impl std::error::Error for StepError {}

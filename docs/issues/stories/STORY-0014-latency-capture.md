@@ -2,7 +2,7 @@
 id: STORY-0014
 type: story
 title: Latency capture
-status: backlog
+status: in_progress
 epic: EPIC-007
 parents: [EPIC-007]
 estimate: 5

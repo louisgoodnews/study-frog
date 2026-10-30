@@ -1,5 +1,6 @@
 //! Rehearsal run data (see `docs/specs/rehearsal-run.md`). Transitions live in `studyfrog-rehearsal`.
 
+use crate::plan::RunPlan;
 use crate::time::UnixMs;
 use crate::uid::Uid;
 
@@ -34,6 +35,8 @@ pub struct Run {
     pub uid: Uid,
     /// Presentation mode.
     pub mode: RunMode,
+    /// How the queue was built and what the run does to the schedule.
+    pub plan: RunPlan,
     /// Items to rehearse, in order.
     pub queue: Vec<Uid>,
     /// Current lifecycle state.

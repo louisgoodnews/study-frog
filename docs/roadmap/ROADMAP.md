@@ -124,12 +124,18 @@ Headless rehearsal runs with latency capture and SRS updates.
   - **STORY-0013** Run state machine
     - TASK-0030 Run input types and transition errors
     - TASK-0031 Transition functions
+    - TASK-0071 Requeue on Again and schedule effect
   - **STORY-0014** Latency capture
     - TASK-0032 Injected monotonic clock
     - TASK-0033 Persist run events
   - **STORY-0015** Queue selection
-    - TASK-0034 Due-first queue builder
+    - TASK-0034 Spaced (due-first) queue with daily budgets
     - TASK-0035 Rehearsal benchmark
+  - **STORY-0033** Run plans, orders and filters
+    - TASK-0068 Run plan types in core
+    - TASK-0069 Practice orders
+    - TASK-0070 Queue filters
+    - TASK-0072 Persist run plan (schema v2)
 
 ## M4 UI shell
 

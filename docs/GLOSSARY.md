@@ -12,6 +12,9 @@
 | **Review** | One recorded recall attempt of an Item with a rating; input to scheduling. |
 | **Rating** | Again / Hard / Good / Easy (SRS input). |
 | **Run** | A timed rehearsal session over a queue of Items. |
+| **Run plan** | How a run is built: order, filter, limit, requeue-on-Again and schedule effect. |
+| **Order** | How the queue is sequenced: due-first, sequential, shuffled, hardest/easiest first, stalest first, lowest predicted recall. |
+| **Practice-only run** | A run whose ratings do not change the schedule (events and latency are still recorded). |
 | **Run event** | Timestamped record inside a Run (shown, flipped, skipped, answered). |
 | **Latency** | Time-to-skip, time-to-flip or time-to-answer for an Item in a Run. |
 | **SRS** | Spaced-repetition scheduling; computes the next due time. |

@@ -7,6 +7,7 @@ pub mod items;
 pub mod library;
 pub mod memory;
 pub mod meta;
+pub mod plan;
 pub mod review;
 pub mod run;
 pub mod stack;

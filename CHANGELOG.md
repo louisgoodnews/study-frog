@@ -8,6 +8,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Run plans in `studyfrog-core`: orders (due-first, sequential, shuffled, hardest/easiest, stalest,
+  lowest predicted recall), filters, schedule effect (update vs practice-only), requeue-on-Again, limit
+  (TASK-0068). Rehearsal is not only spaced repetition.
+- `studyfrog-rehearsal`: pure run state machine (`step`), injected clock, latency excluding paused
+  time, requeue with cap; 9 tests incl. an invariant property (TASK-0030, 0031, 0032, 0071).
 - `studyfrog-store`: vault walker, in-house content hash, stack ownership by folder, non-fatal scanner
   with duplicate-id detection, `Library` builder (inbox stack for orphans), incremental reindex
   (stat-only for unchanged files, rename-safe, duplicate-healing), polling change detection with

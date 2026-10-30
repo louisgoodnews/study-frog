@@ -1,14 +1,14 @@
 ---
 id: TASK-0034
 type: task
-title: Due-first queue builder
+title: Spaced (due-first) queue with daily budgets
 status: backlog
 epic: EPIC-007
 parents: [STORY-0015]
 estimate: 3
 labels: [m3, rehearsal]
 acceptance_criteria:
-  - "Pure builder: due items first (most overdue first), then new items up to the stack's daily limits"
+  - "Spaced order: due items first (most overdue first), then new items; daily new and review budgets are inputs"
   - "Deterministic given a seed for any shuffling"
   - "proptest: respects limits, no duplicates"
 ---
@@ -17,10 +17,10 @@ acceptance_criteria:
 Inputs: due list and new list as plain data.
 
 ## Description
-Due-first queue builder.
+Spaced (due-first) queue with daily budgets.
 
 ## Acceptance Criteria
-- [ ] Pure builder: due items first (most overdue first), then new items up to the stack's daily limits
+- [ ] Spaced order: due items first (most overdue first), then new items; daily new and review budgets are inputs
 - [ ] Deterministic given a seed for any shuffling
 - [ ] proptest: respects limits, no duplicates
 

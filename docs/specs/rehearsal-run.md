@@ -1,5 +1,29 @@
 # Rehearsal run
 
+## Run plan
+A run is built from a **plan**; rehearsal is not only spaced repetition. The plan is persisted with the run.
+
+| Part | Values |
+|---|---|
+| `order` | `Due` (spaced: most overdue first, then new items), `Sequential` (library order), `Shuffled` (seeded, reproducible), `HardestFirst`, `EasiestFirst` (by FSRS difficulty), `StalestFirst` (least recently reviewed, never-reviewed first), `LowestRetrievability` (predicted recall, lowest first) |
+| `filter` | kinds (note, card, question), stacks, tags (any of), state (`Any`, `New`, `Learned`, `Due`, `NotDue`), difficulty range |
+| `limit` | optional cap on the queue length |
+| `requeue_again` | an item rated Again returns to the end of the queue (at most 3 times per item per run) |
+| `effect` | `UpdateSchedule` (ratings feed SRS and write reviews) or `PracticeOnly` (events and latency are recorded, the schedule is untouched) |
+| `seed` | drives `Shuffled` (and tie-breaking where randomness is used) |
+
+Semantics:
+- Only `Due` order uses the daily new/review budgets and hides items that are not due. Every other order
+  goes through the **whole filtered list until it is exhausted**.
+- Defaults: spaced runs `UpdateSchedule` with `requeue_again`; sequential, shuffled and drill runs
+  `PracticeOnly`. The user can override `effect` (for example a sequential first pass over new material
+  that should start the schedule).
+- Rationale for `PracticeOnly`: cramming outside the scheduled spacing would distort the memory model's
+  inputs (design judgement, see learning-science notes); latency data is still valuable, so events are always recorded.
+- A difficulty filter or order needs an FSRS memory state; items without one (new items, SM-2 items) are
+  excluded by the filter and sorted last by the orders.
+- Queue building is a pure function of `(candidates, plan, now, budgets)`; ordering is deterministic.
+
 ## Events
 All events carry `run_id`, `item_id`, `t_ms` (monotonic ms since run start) and a sequence number.
 | Event | Meaning |
@@ -19,9 +43,10 @@ All events carry `run_id`, `item_id`, `t_ms` (monotonic ms since run start) and 
 - Stored as integer milliseconds.
 
 ## State machine
-`Idle → Running ⇄ Paused → Finished|Aborted`. Transition is a pure function
-`step(RunState, Input) -> (RunState, Vec<RunEvent>)`; invalid inputs return an error and leave
-state unchanged.
+`Idle → Running ⇄ Paused → Finished|Aborted`. A `Session` (run, queue, cursor, timers) is advanced by
+`step(&mut Session, Input) -> Result<StepOutput, StepError>`; `Input` carries the monotonic time.
+Invalid inputs return an error and leave the session unchanged. Showing the next item and finishing the
+run are automatic. Inputs: Start, Flip, Skip, SubmitAnswer, Rate, Pause, Resume, Abort.
 
 ## Persistence
 Events are append-only rows in SQLite (`run_event`), written in one transaction per item.

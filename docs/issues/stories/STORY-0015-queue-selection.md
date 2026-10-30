@@ -8,7 +8,7 @@ parents: [EPIC-007]
 estimate: 5
 labels: [m3, rehearsal, perf]
 acceptance_criteria:
-  - "Due-first queue honouring daily limits"
+  - "Spaced queue honouring daily budgets; practice orders and filters (STORY-0033)"
   - "Step benchmark under budget"
 ---
 
@@ -19,7 +19,7 @@ Which items to show, in which order.
 Queue selection.
 
 ## Acceptance Criteria
-- [ ] Due-first queue honouring daily limits
+- [ ] Spaced queue honouring daily budgets; practice orders and filters (STORY-0033)
 - [ ] Step benchmark under budget
 
 ## Design Notes

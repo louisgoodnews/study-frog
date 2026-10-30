@@ -2,7 +2,7 @@
 id: TASK-0032
 type: task
 title: Injected monotonic clock
-status: backlog
+status: done
 epic: EPIC-007
 parents: [STORY-0014]
 estimate: 3
@@ -20,12 +20,12 @@ Spec: latency capture.
 Injected monotonic clock.
 
 ## Acceptance Criteria
-- [ ] `Clock` trait (the one permitted seam) with a system implementation and a fake
-- [ ] Latency = event time - ItemShown - paused time within the item
-- [ ] Pause/resume property tests
+- [x] `Clock` trait (the one permitted seam) with a system implementation and a fake
+- [x] Latency = event time - ItemShown - paused time within the item
+- [x] Pause/resume property tests
 
 ## Design Notes
-Monotonic ms since run start as u32; use std::time::Instant at the edge.
+`Clock` trait (system and manual implementations; `input_now` stamps an action). Latency = t - shown_at - paused time within the item; tested with several pauses, a pause before rating, and no leakage into the next item. Time going backwards is refused.
 
 ## Dependencies
 TASK-0031.

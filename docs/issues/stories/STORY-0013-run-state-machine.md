@@ -2,7 +2,7 @@
 id: STORY-0013
 type: story
 title: Run state machine
-status: ready
+status: done
 epic: EPIC-007
 parents: [EPIC-007]
 estimate: 5
@@ -19,8 +19,8 @@ Spec: docs/specs/rehearsal-run.md (state machine).
 Run state machine.
 
 ## Acceptance Criteria
-- [ ] Pure `step(RunState, Input) -> Result<(RunState, events)>`
-- [ ] Invalid inputs leave state unchanged
+- [x] Pure `step(RunState, Input) -> Result<(RunState, events)>`
+- [x] Invalid inputs leave state unchanged
 
 ## Design Notes
 Children: TASK-0030, TASK-0031.
