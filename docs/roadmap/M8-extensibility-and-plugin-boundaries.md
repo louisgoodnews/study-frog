@@ -1,0 +1,33 @@
+# M8: Extensibility and plugin boundaries
+
+**Goal:** Explicit extension points and release readiness.
+
+**Entry criteria:** M1-M7 exit met.
+
+## Epics, stories, tasks
+
+- **EPIC-016** Plugin boundaries
+  - **STORY-0030** Extension traits
+    - TASK-0063 Define extension points
+    - TASK-0064 Registry as plain data
+  - **STORY-0031** Example extension
+    - TASK-0065 Example card type or importer
+- **EPIC-017** Release hardening
+  - **STORY-0032** Performance and packaging
+    - TASK-0066 Profiling pass
+    - TASK-0067 Linux packaging
+
+## Exit criteria
+
+- [ ] Documented extension traits exist for card types and importers
+- [ ] An example extension is built without modifying core crates
+- [ ] Profiling pass done; all benchmarks within budget
+- [ ] Linux package (AppImage or Flatpak) builds from CI
+
+## Out of scope
+
+Everything listed under later phases in [ROADMAP](ROADMAP.md).
+
+## Risks
+
+See ADRs and `STATUS.md` for open decisions affecting this phase.
