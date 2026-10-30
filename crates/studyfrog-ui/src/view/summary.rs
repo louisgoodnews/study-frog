@@ -1,19 +1,20 @@
-//! The end-of-run screen: counts, and the review of each item.
+//! The end-of-run screen: the counts as tiles and bars, and a scrollable card for every item.
 
-use eframe::egui::{self, Grid};
+use eframe::egui::{self, RichText};
 use studyfrog_core::event::{Difficulty, difficulty_name};
 use studyfrog_core::plan::ScheduleEffect;
 use studyfrog_core::review::Rating;
 use studyfrog_core::run::RunState;
-use studyfrog_rehearsal::reading::{Reason, Suggestion};
 use studyfrog_slm::score::Verdict;
 
 use crate::msg::Msg;
-use crate::review::{ReviewRow, review_rows};
+use crate::review::review_rows;
 use crate::run_state::RunView;
 use crate::summary::summarize;
+use crate::theme::palette_of;
+use crate::view::{kit, summary_items};
 
-fn rating_name(r: Rating) -> &'static str {
+pub(crate) fn rating_name(r: Rating) -> &'static str {
     match r {
         Rating::Again => "Again",
         Rating::Hard => "Hard",
@@ -22,11 +23,11 @@ fn rating_name(r: Rating) -> &'static str {
     }
 }
 
-fn mark_name(d: Option<Difficulty>) -> String {
+pub(crate) fn mark_name(d: Option<Difficulty>) -> String {
     d.map_or_else(|| "-".to_owned(), |d| difficulty_name(d).to_owned())
 }
 
-fn verdict_label(v: Verdict) -> &'static str {
+pub(crate) fn verdict_label(v: Verdict) -> &'static str {
     match v {
         Verdict::Correct => "Correct",
         Verdict::Partial => "Partly right",
@@ -34,27 +35,44 @@ fn verdict_label(v: Verdict) -> &'static str {
     }
 }
 
-fn rating_text(r: Option<Rating>) -> &'static str {
+pub(crate) fn rating_text(r: Option<Rating>) -> &'static str {
     r.map_or("-", rating_name)
 }
 
-/// Counts first, then one line per item, then the way back to the setup screen.
+/// Heading and the way back on top, the counts, then one card per item in a scrolling list.
 pub fn draw(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let stopped = run.session.run.state == RunState::Aborted;
-    ui.heading(if stopped {
-        "Run stopped"
-    } else {
-        "Run finished"
+    ui.horizontal(|ui| {
+        let title = if stopped {
+            "Run stopped"
+        } else {
+            "Run finished"
+        };
+        ui.label(RichText::new(title).size(26.0).strong());
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            if kit::primary_button(ui, "Back to setup").clicked() {
+                out.push(Msg::LeaveRun);
+            }
+        });
     });
     counts(run, ui);
     let updates = run.session.run.plan.effect == ScheduleEffect::UpdateSchedule;
     if !updates {
         ui.weak("Practice only: your schedule was not changed.");
     }
-    review_table(run, updates, ui, out);
-    if ui.button("Back to setup").clicked() {
-        out.push(Msg::LeaveRun);
+    let rows = review_rows(run);
+    if rows.is_empty() {
+        return;
     }
+    ui.add_space(8.0);
+    kit::section(ui, "Review");
+    egui::ScrollArea::vertical()
+        .auto_shrink([false, false])
+        .show(ui, |ui| {
+            for row in &rows {
+                summary_items::card(run, row, updates, ui, out);
+            }
+        });
 }
 
 fn counts(run: &RunView, ui: &mut egui::Ui) {
@@ -64,114 +82,44 @@ fn counts(run: &RunView, ui: &mut egui::Ui) {
         ui.label("There was nothing to rehearse.");
         return;
     }
-    ui.label(format!(
-        "{rated} rated, {} skipped, in {:.0} s",
-        s.skipped,
-        f64::from(s.total_ms) / 1000.0
-    ));
-    for (i, name) in ["Again", "Hard", "Good", "Easy"].into_iter().enumerate() {
-        ui.label(format!("{name}: {}", s.rated[i]));
-    }
-    if let Some(ms) = s.median_latency_ms {
-        ui.label(format!(
-            "Median time to answer: {:.1} s",
-            f64::from(ms) / 1000.0
-        ));
-    }
-}
-
-fn review_table(run: &RunView, updates: bool, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let rows = review_rows(run);
-    if rows.is_empty() {
-        return;
-    }
-    ui.add_space(8.0);
-    ui.heading("Review");
-    let scored = rows.iter().any(|r| r.answer_match.is_some());
-    Grid::new("review")
-        .striped(true)
-        .num_columns(5 + usize::from(scored))
-        .show(ui, |ui| {
-            let heads = ["Item", "Previous rating", "Your mark", "Your rating"];
-            heads.iter().for_each(|h| drop(ui.strong(*h)));
-            if scored {
-                ui.strong("Answer match");
-            }
-            ui.strong("Suggested rating");
-            ui.end_row();
-            for row in &rows {
-                review_row(run, row, (updates, scored), ui, out);
-                ui.end_row();
+    let p = palette_of(ui);
+    let colors = [p.danger, p.warning, p.success, p.accent];
+    kit::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        ui.horizontal(|ui| {
+            kit::stat(ui, &rated.to_string(), "rated");
+            ui.add_space(18.0);
+            kit::stat(ui, &s.skipped.to_string(), "skipped");
+            ui.add_space(18.0);
+            kit::stat(
+                ui,
+                &format!("{:.0} s", f64::from(s.total_ms) / 1000.0),
+                "in total",
+            );
+            if let Some(ms) = s.median_latency_ms {
+                ui.add_space(18.0);
+                kit::stat(
+                    ui,
+                    &format!("{:.1} s", f64::from(ms) / 1000.0),
+                    "median time to answer",
+                );
             }
         });
-}
-
-fn review_row(
-    run: &RunView,
-    row: &ReviewRow,
-    (updates, scored): (bool, bool),
-    ui: &mut egui::Ui,
-    out: &mut Vec<Msg>,
-) {
-    ui.label(&row.title);
-    ui.label(rating_text(row.previous));
-    ui.label(mark_name(row.marked));
-    ui.label(rating_text(row.rated));
-    if scored {
-        ui.label(row.answer_match.map_or_else(
-            || "-".to_owned(),
-            |(pct, v)| format!("{pct} % ({})", verdict_label(v)),
-        ));
-    }
-    ui.vertical(|ui| match (row.suggestion, row.rated) {
-        (Some(s), Some(rated)) => suggestion(run, row, (s, rated), updates, ui, out),
-        _ => {
-            ui.label("-");
+        ui.add_space(6.0);
+        for (i, name) in ["Again", "Hard", "Good", "Easy"].into_iter().enumerate() {
+            let share = if rated == 0 {
+                0.0
+            } else {
+                s.rated[i] as f32 / rated as f32
+            };
+            ui.horizontal(|ui| {
+                ui.colored_label(colors[i], format!("{name}: {}", s.rated[i]));
+                ui.add(
+                    egui::ProgressBar::new(share)
+                        .fill(colors[i])
+                        .desired_height(8.0),
+                );
+            });
         }
     });
-}
-
-fn suggestion(
-    run: &RunView,
-    row: &ReviewRow,
-    (s, rated): (Suggestion, Rating),
-    updates: bool,
-    ui: &mut egui::Ui,
-    out: &mut Vec<Msg>,
-) {
-    ui.label(rating_name(s.rating));
-    ui.label(match s.reason {
-        Reason::KnownAndFast => "This item was rather easy for you.",
-        Reason::NewAndFast => "This new item went by very fast: it may be harder than it looked.",
-        Reason::Slow => "This took you a long time to read: it may be harder than you rated it.",
-        Reason::MarkedDifficult => {
-            "You marked this item difficult, so it may be harder than you rated it."
-        }
-        Reason::MarkedEasy => "You marked this item easy, and it was rather easy for you.",
-    });
-    if let Some((words, tenths)) = row.reading {
-        ui.weak(format!(
-            "{words} words in {:.1} s",
-            f64::from(tenths) / 10.0
-        ));
-    }
-    if !updates {
-        return;
-    }
-    if run.applied.contains(&row.item) {
-        ui.label(format!("Changed to {}.", rating_name(s.rating)));
-    } else if ui
-        .button(format!(
-            "Change the rating of {} to {}",
-            row.title,
-            rating_name(s.rating)
-        ))
-        .clicked()
-    {
-        out.push(Msg::ApplySuggestion {
-            item: row.item,
-            expected: rated,
-            to: s.rating,
-        });
-    }
 }

@@ -4,10 +4,16 @@ use std::collections::{HashMap, HashSet};
 
 use studyfrog_core::event::{Latency, RunEvent};
 use studyfrog_core::uid::Uid;
+use studyfrog_md::blocks::{Block, parse_blocks};
 use studyfrog_rehearsal::reading::{ReadingParams, reading_params_default};
 use studyfrog_rehearsal::session::Session;
 pub use studyfrog_service::compare::Scored;
 pub use studyfrog_service::content::ItemContent;
+
+/// An item's prompt and answer as Markdown blocks.
+pub fn blocks_of(content: &ItemContent) -> (Vec<Block>, Vec<Block>) {
+    (parse_blocks(&content.prompt), parse_blocks(&content.answer))
+}
 
 /// How many items ahead of the current one are loaded.
 pub const LOOKAHEAD: usize = 3;
@@ -19,6 +25,8 @@ pub struct RunView {
     pub session: Session,
     /// Content of items loaded so far.
     pub content: HashMap<Uid, ItemContent>,
+    /// The prompt and the answer of each loaded item, parsed once as Markdown.
+    pub blocks: HashMap<Uid, (Vec<Block>, Vec<Block>)>,
     /// Items whose content was already requested.
     pub requested: HashSet<Uid>,
     /// Every event so far (for the summary).
@@ -44,6 +52,7 @@ pub fn run_view_new(session: Session, started_time: f64) -> RunView {
     RunView {
         session,
         content: HashMap::new(),
+        blocks: HashMap::new(),
         requested: HashSet::new(),
         events: Vec::new(),
         latencies: Vec::new(),

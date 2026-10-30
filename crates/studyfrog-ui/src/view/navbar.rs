@@ -108,9 +108,6 @@ fn brand_cluster(
     if state.vault.is_some() && brand.clicked() {
         out.push(Msg::Navigate(Screen::Home));
     }
-    if let Some(v) = &state.vault {
-        ui.weak(&v.name);
-    }
 }
 
 fn search_cluster(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f32) {

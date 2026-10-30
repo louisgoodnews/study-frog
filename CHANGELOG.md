@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- The end-of-run review is a summary with tiles and bars and a scrollable card for every item; prompts and answers
+  are drawn as Markdown while rehearsing (STORY-0040).
+- The vault's folder name and path no longer appear in the top bar, the home page, the status line or an "Opened"
+  notice; the status line shows the size of the vault instead (STORY-0041).
 - Calendar entries are now study sessions, tasks, appointments, exams or deadlines, each with up to five reminders
   that show once as a toast and a notification while the app is open; the month grid fills the window with
   coloured entries and a "Coming up" list (TASK-0105).

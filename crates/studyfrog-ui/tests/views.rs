@@ -59,7 +59,7 @@ fn library_lists_stacks_counts_inbox_and_problems() {
     let mut h = harness(open_model());
     h.run();
     for text in [
-        "notes",
+        "All stacks",
         "French",
         "Maths",
         "2 stacks, 11 items",
@@ -143,8 +143,8 @@ fn notices_show_in_the_status_bar_and_can_be_dismissed() {
     h.run();
     assert!(h.state().0.state.notice.is_none());
     assert!(
-        h.query_by_label("/v/notes").is_some(),
-        "the vault path is shown when there is no notice"
+        h.query_by_label_contains("2 stacks · 11 items").is_some(),
+        "the size of the vault is shown when there is no notice"
     );
 }
 

@@ -157,6 +157,16 @@
 | [STORY-0037](docs/issues/stories/STORY-0037-create-dialog-and-nested-stacks.md) Create dialog, nested stacks and a gentler first launch (8) | done | 4/4 |
 | [STORY-0038](docs/issues/stories/STORY-0038-theme-home-page-library-and-rehearsal-screen.md) Theme, home page, library and rehearsal screen (8) | done | 4/4 |
 | [STORY-0039](docs/issues/stories/STORY-0039-evidence-based-ux-pass-calendar-entries-and-board-tracking.md) Evidence-based UX pass, calendar entries and board tracking (8) | done | 5/5 |
+| [STORY-0040](docs/issues/stories/STORY-0040-run-review-cards-and-markdown-in-rehearsal.md) Run review cards and Markdown in rehearsal (3) | done | 0/0 |
+| [STORY-0041](docs/issues/stories/STORY-0041-no-vault-name-or-path-in-the-bar-status-line-or-notices.md) No vault name or path in the bar, status line or notices (1) | done | 0/0 |
+| [STORY-0042](docs/issues/stories/STORY-0042-item-page-like-an-issue-view.md) Item page like an issue view (8) | backlog | 0/0 |
+| [STORY-0043](docs/issues/stories/STORY-0043-visual-markdown-editor-and-note-links.md) Visual Markdown editor and note links (8) | backlog | 0/0 |
+| [STORY-0044](docs/issues/stories/STORY-0044-images-in-notes-cards-and-questions.md) Images in notes, cards and questions (5) | backlog | 0/0 |
+| [STORY-0045](docs/issues/stories/STORY-0045-subjects-and-teachers.md) Subjects and teachers (5) | backlog | 0/0 |
+| [STORY-0046](docs/issues/stories/STORY-0046-date-picker.md) Date picker (3) | backlog | 0/0 |
+| [STORY-0047](docs/issues/stories/STORY-0047-board-for-every-item-drag-and-drop-export.md) Board for every item, drag and drop, export (5) | backlog | 0/0 |
+| [STORY-0048](docs/issues/stories/STORY-0048-reports-explorer.md) Reports explorer (8) | backlog | 0/0 |
+| [STORY-0049](docs/issues/stories/STORY-0049-ai-agent-for-the-vault-and-interactive-exams.md) AI agent for the vault and interactive exams (8) | backlog | 0/0 |
 
 ## Epics
 
@@ -182,3 +192,4 @@
 | [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |
 | [EPIC-019](docs/issues/epics/EPIC-019-rehearsal-insights.md) Rehearsal insights | done | 1/1 |
 | [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 4/4 |
+| [EPIC-021](docs/issues/epics/EPIC-021-knowledge-workspace.md) Knowledge workspace | in_progress | 2/10 |

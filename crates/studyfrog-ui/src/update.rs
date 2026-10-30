@@ -190,7 +190,6 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
     match result {
         Ok(info) => {
             let app = with_opened_vault(&state.app, &info.root);
-            let text = format!("Opened {}", info.name);
             let state = State {
                 screen: Screen::Home,
                 home: None,
@@ -200,7 +199,7 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
                 vault: Some(info),
                 app: app.clone(),
                 opening: false,
-                notice: notice(NoticeKind::Info, text),
+                notice: None,
                 ..state
             };
             (state, vec![Effect::SaveAppSettings(app), Effect::LoadHome])

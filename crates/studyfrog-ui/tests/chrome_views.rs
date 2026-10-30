@@ -49,8 +49,8 @@ fn the_top_bar_has_every_control_named_and_the_sidebar_lists_the_screens() {
         assert!(h.query_by_label(screen).is_some(), "sidebar lacks {screen}");
     }
     assert!(
-        h.query_all_by_label("notes").count() >= 1,
-        "the vault name is shown"
+        h.query_by_label("notes").is_none(),
+        "the bar does not show the vault name"
     );
     assert_all_named(&h, "top bar");
 }

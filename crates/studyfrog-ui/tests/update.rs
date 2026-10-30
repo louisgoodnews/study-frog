@@ -101,7 +101,7 @@ fn a_successful_open_shows_the_library_remembers_the_vault_and_saves_it() {
     let (s, fx) = update(State::default(), Msg::VaultOpened(Ok(info("/v/a"))));
     assert_eq!((s.screen, s.opening), (Screen::Home, false));
     assert_eq!(s.app.vault.as_deref(), Some("/v/a"));
-    assert_eq!(s.notice.unwrap().kind, NoticeKind::Info);
+    assert!(s.notice.is_none(), "opening a vault is not announced");
     assert_eq!(fx.len(), 2);
     assert!(matches!(&fx[0], Effect::SaveAppSettings(a) if a.recent == ["/v/a"]));
     assert_eq!(

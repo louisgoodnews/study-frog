@@ -1,17 +1,19 @@
 //! The inside of the rehearsal card: the prompt, the answer, the marks and the rating buttons.
 
-use eframe::egui::{self, Button, Key, RichText, Stroke, vec2};
+use eframe::egui::{self, Button, Color32, FontId, Key, RichText, Stroke, TextStyle, vec2};
 use studyfrog_core::event::Difficulty;
 use studyfrog_core::review::Rating;
 use studyfrog_core::run::RunMode;
+use studyfrog_md::blocks::Block;
 use studyfrog_rehearsal::input::Action;
 use studyfrog_rehearsal::session::current_item;
 
 use crate::msg::Msg;
-use crate::run_state::RunView;
+use crate::run_state::{RunView, blocks_of};
 use crate::run_update::{awaiting_rating, awaiting_reveal};
 use crate::theme::{palette_of, tint};
 use crate::view::kit;
+use crate::view::preview::draw_blocks;
 use crate::view::widgets::text_field;
 
 pub(crate) const RATINGS: [(Rating, &str, Key); 4] = [
@@ -41,14 +43,38 @@ pub(crate) fn paused(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
+/// Markdown blocks at a larger size, optionally in one colour.
+fn markdown(
+    ui: &mut egui::Ui,
+    blocks: &[Block],
+    size: f32,
+    color: Option<Color32>,
+    out: &mut Vec<Msg>,
+) {
+    ui.scope(|ui| {
+        ui.style_mut()
+            .text_styles
+            .insert(TextStyle::Body, FontId::proportional(size));
+        ui.visuals_mut().override_text_color = color;
+        draw_blocks(ui, blocks, out);
+    });
+}
+
 pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let Some(content) = current_item(&run.session).and_then(|uid| run.content.get(&uid)) else {
+    let Some((uid, content)) =
+        current_item(&run.session).and_then(|uid| run.content.get(&uid).map(|c| (uid, c)))
+    else {
         ui.add_space(24.0);
         ui.label("Loading…");
         return;
     };
     ui.add_space(6.0);
-    ui.label(RichText::new(&content.prompt).size(26.0));
+    let (prompt, answer) = run
+        .blocks
+        .get(&uid)
+        .cloned()
+        .unwrap_or_else(|| blocks_of(content));
+    markdown(ui, &prompt, 24.0, None, out);
     ui.add_space(8.0);
     mark_row(run, ui, out);
     ui.add_space(12.0);
@@ -57,11 +83,7 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     } else if awaiting_rating(run) {
         ui.separator();
         ui.add_space(6.0);
-        ui.label(
-            RichText::new(&content.answer)
-                .size(22.0)
-                .color(palette_of(ui).accent),
-        );
+        markdown(ui, &answer, 21.0, Some(palette_of(ui).accent), out);
         if let Some(scored) = &run.scored {
             ui.add_space(8.0);
             score_line(scored, ui);

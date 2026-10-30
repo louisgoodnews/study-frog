@@ -76,14 +76,10 @@ fn the_review_shows_previous_own_and_suggested_rating() {
     h.run();
     assert_all_named(&h, "run review");
     for text in [
-        "Previous rating",
-        "Your mark",
-        "Your rating",
-        "Suggested rating",
-        "Hard",
-        "medium",
-        "Good",
-        "Easy",
+        "Previous rating: Hard",
+        "Your mark: medium",
+        "Your rating: Good",
+        "Suggested rating: Easy",
         "This item was rather easy for you.",
         "20 words in 2.0 s",
     ] {

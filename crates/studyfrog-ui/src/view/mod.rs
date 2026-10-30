@@ -29,6 +29,7 @@ mod setup_review;
 mod setup_what;
 mod sidebar;
 mod summary;
+mod summary_items;
 mod toast;
 mod welcome;
 pub(crate) mod widgets;

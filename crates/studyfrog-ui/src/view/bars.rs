@@ -5,7 +5,7 @@ use eframe::egui::{self, Panel};
 use crate::msg::Msg;
 use crate::state::{NoticeKind, State};
 
-/// The latest notice with a dismiss button, or the vault path when there is none.
+/// The latest notice with a dismiss button, or the size of the vault when there is none.
 pub fn status(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     Panel::bottom("status").show(ui, |ui| {
         ui.horizontal(|ui| match &state.notice {
@@ -23,7 +23,19 @@ pub fn status(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 let text = state
                     .vault
                     .as_ref()
-                    .map_or("No vault open", |v| v.root.as_str());
+                    .map_or("No vault open".to_owned(), |v| {
+                        let items: usize = v
+                            .overview
+                            .stacks
+                            .iter()
+                            .map(|s| s.notes + s.cards + s.questions)
+                            .sum();
+                        format!(
+                            "{} stacks · {} items",
+                            v.overview.stacks.len(),
+                            items + v.overview.inbox_items
+                        )
+                    });
                 ui.weak(text);
             }
         });

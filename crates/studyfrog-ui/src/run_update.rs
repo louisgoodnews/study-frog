@@ -171,6 +171,8 @@ fn item_loaded(
         }
     };
     if let Some(run) = &mut state.rehearse.run {
+        run.blocks
+            .insert(uid, crate::run_state::blocks_of(&content));
         run.content.insert(uid, content);
     }
     (state, Vec::new())

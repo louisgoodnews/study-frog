@@ -93,7 +93,7 @@ fn overview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .sum::<usize>()
         + o.inbox_items;
     egui::ScrollArea::vertical().show(ui, |ui| {
-        ui.label(RichText::new(&vault.name).size(26.0).strong());
+        ui.label(RichText::new("All stacks").size(26.0).strong());
         ui.label(
             RichText::new(format!("{} stacks, {items} items", o.stacks.len()))
                 .color(palette_of(ui).text_weak),

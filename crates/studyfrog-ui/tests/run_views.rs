@@ -92,7 +92,8 @@ fn the_whole_run_can_be_done_from_the_keyboard() {
     assert!(h.query_by_label("Run finished").is_some());
     assert!(
         h.query_by_label("Easy: 1").is_some()
-            && h.query_by_label_contains("1 rated, 1 skipped").is_some()
+            && h.query_by_label("rated").is_some()
+            && h.query_by_label("skipped").is_some()
     );
 }
 
