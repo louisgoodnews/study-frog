@@ -23,6 +23,13 @@ Status: implemented in `studyfrog-store` (`schema.rs`, migration v1). See [ADR 0
 | `sm2_state` | SM-2 state and due time per item | `item_uid` |
 | `run`, `run_queue`, `run_event` | rehearsal runs and their append-only event log | see `schema.rs` |
 
+## Run tables (schema v2)
+`run` stores the plan next to the run: `order_name`, `effect`, `seed`, `run_limit`, `requeue_again` (the item
+filter is not stored; the resulting queue is, in `run_queue`). `run_event` rows are `(run_uid, seq)`-unique and
+append-only; `payload` holds the answer text or the rating (1-4). On start-up `abort_unfinished_runs`
+turns runs left idle, running or paused into `aborted` and closes their log with a `run_aborted` event.
+`review` and `mem_state` are written by the service layer only for `update_schedule` runs.
+
 ## Vault rules (M2)
 - Only `.md` files are indexed; names starting with `.` (and everything inside such folders) are skipped, as are symlinks.
 - A **stack** is a folder containing `_stack.md`. An item belongs to the nearest ancestor folder that is a

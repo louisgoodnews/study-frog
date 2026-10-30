@@ -4,16 +4,16 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (3) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (37) |
+| Backlog (8) | Ready (2) | In progress (0/3) | Review (0) | Blocked (0) | Done (39) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-| [TASK-0033](docs/issues/tasks/TASK-0033-persist-run-events.md) Persist run events (3) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-| [TASK-0072](docs/issues/tasks/TASK-0072-persist-run-plan-schema-v2.md) Persist run plan (schema v2) (2) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-|  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
-|  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
-|  |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
-|  |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
-|  |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
+| [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) | [TASK-0036](docs/issues/tasks/TASK-0036-eframe-window-and-navigation.md) eframe window and navigation (3) |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+| [TASK-0038](docs/issues/tasks/TASK-0038-stack-browser.md) Stack browser (3) | [TASK-0037](docs/issues/tasks/TASK-0037-elm-style-update-loop-and-effects.md) Elm-style update loop and effects (5) |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+| [TASK-0039](docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+| [TASK-0040](docs/issues/tasks/TASK-0040-editor-widget.md) Editor widget (5) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+| [TASK-0041](docs/issues/tasks/TASK-0041-preview-renderer.md) Preview renderer (3) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
+| [TASK-0042](docs/issues/tasks/TASK-0042-force-directed-layout-soa.md) Force-directed layout (SoA) (5) |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
+| [TASK-0043](docs/issues/tasks/TASK-0043-graph-render-benchmark.md) Graph render benchmark (3) |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
+| [TASK-0073](docs/issues/tasks/TASK-0073-run-setup-screen-plan-picker.md) Run setup screen (plan picker) (3) |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
 |  |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
 |  |  |  |  |  | [TASK-0010](docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
 |  |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
@@ -37,12 +37,14 @@
 |  |  |  |  |  | [TASK-0030](docs/issues/tasks/TASK-0030-run-input-types-and-transition-errors.md) Run input types and transition errors (2) |
 |  |  |  |  |  | [TASK-0031](docs/issues/tasks/TASK-0031-transition-functions.md) Transition functions (5) |
 |  |  |  |  |  | [TASK-0032](docs/issues/tasks/TASK-0032-injected-monotonic-clock.md) Injected monotonic clock (3) |
+|  |  |  |  |  | [TASK-0033](docs/issues/tasks/TASK-0033-persist-run-events.md) Persist run events (3) |
 |  |  |  |  |  | [TASK-0034](docs/issues/tasks/TASK-0034-spaced-due-first-queue-with-daily-budgets.md) Spaced (due-first) queue with daily budgets (3) |
 |  |  |  |  |  | [TASK-0035](docs/issues/tasks/TASK-0035-rehearsal-benchmark.md) Rehearsal benchmark (2) |
 |  |  |  |  |  | [TASK-0068](docs/issues/tasks/TASK-0068-run-plan-types-in-core.md) Run plan types in core (3) |
 |  |  |  |  |  | [TASK-0069](docs/issues/tasks/TASK-0069-practice-orders.md) Practice orders (5) |
 |  |  |  |  |  | [TASK-0070](docs/issues/tasks/TASK-0070-queue-filters.md) Queue filters (3) |
 |  |  |  |  |  | [TASK-0071](docs/issues/tasks/TASK-0071-requeue-on-again-and-schedule-effect.md) Requeue on Again and schedule effect (3) |
+|  |  |  |  |  | [TASK-0072](docs/issues/tasks/TASK-0072-persist-run-plan-schema-v2.md) Persist run plan (schema v2) (2) |
 
 ## Stories
 
@@ -61,9 +63,13 @@
 | [STORY-0011](docs/issues/stories/STORY-0011-sqlite-schema-and-migrations.md) SQLite schema and migrations (5) | done | 2/2 |
 | [STORY-0012](docs/issues/stories/STORY-0012-file-layer-and-index-sync.md) File layer and index sync (8) | done | 3/3 |
 | [STORY-0013](docs/issues/stories/STORY-0013-run-state-machine.md) Run state machine (5) | done | 3/3 |
-| [STORY-0014](docs/issues/stories/STORY-0014-latency-capture.md) Latency capture (5) | in_progress | 1/2 |
+| [STORY-0014](docs/issues/stories/STORY-0014-latency-capture.md) Latency capture (5) | done | 2/2 |
 | [STORY-0015](docs/issues/stories/STORY-0015-queue-selection.md) Queue selection (5) | done | 2/2 |
-| [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | in_progress | 3/4 |
+| [STORY-0016](docs/issues/stories/STORY-0016-app-frame.md) App frame (5) | ready | 0/2 |
+| [STORY-0017](docs/issues/stories/STORY-0017-stack-browser-run-setup-and-rehearsal-screen.md) Stack browser, run setup and rehearsal screen (8) | backlog | 0/3 |
+| [STORY-0018](docs/issues/stories/STORY-0018-markdown-editor-and-preview.md) Markdown editor and preview (8) | backlog | 0/2 |
+| [STORY-0019](docs/issues/stories/STORY-0019-link-graph-view.md) Link graph view (8) | backlog | 0/2 |
+| [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
 
 ## Epics
 
@@ -75,4 +81,6 @@
 | [EPIC-004](docs/issues/epics/EPIC-004-srs-scheduling.md) SRS scheduling | backlog | 1/2 |
 | [EPIC-005](docs/issues/epics/EPIC-005-markdown-and-front-matter.md) Markdown and front-matter | done | 2/2 |
 | [EPIC-006](docs/issues/epics/EPIC-006-storage.md) Storage | done | 2/2 |
-| [EPIC-007](docs/issues/epics/EPIC-007-rehearsal-engine.md) Rehearsal engine | ready | 2/4 |
+| [EPIC-007](docs/issues/epics/EPIC-007-rehearsal-engine.md) Rehearsal engine | done | 4/4 |
+| [EPIC-008](docs/issues/epics/EPIC-008-ui-shell.md) UI shell | ready | 0/2 |
+| [EPIC-009](docs/issues/epics/EPIC-009-editor-and-graph.md) Editor and graph | backlog | 0/2 |

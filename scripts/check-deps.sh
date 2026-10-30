@@ -15,7 +15,8 @@ declare -A allowed=(
   [achieve]="core"
   [board]="core"
   [calendar]="core"
-  [ui]="core md store srs rehearsal slm report achieve board calendar"
+  [service]="core md store srs rehearsal"
+  [ui]="core md store srs rehearsal slm report achieve board calendar service"
   [app]="ui"
 )
 

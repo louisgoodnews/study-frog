@@ -3,7 +3,7 @@
 //! Events are stored as an array of structs for now; whether a struct-of-arrays layout pays off
 //! is decided by the M3 rehearsal benchmark (EPIC-003 open question).
 
-use crate::review::Rating;
+use crate::review::{Rating, rating_from_value, rating_value};
 use crate::uid::Uid;
 
 /// What happened. Payloads are only where the spec needs them.
@@ -94,4 +94,34 @@ pub fn is_item_event(kind: &EventKind) -> bool {
             | EventKind::AnswerSubmitted(_)
             | EventKind::ItemRated(_)
     )
+}
+
+/// The payload stored next to an event name, if the kind has one (answer text, or the rating as 1-4).
+pub fn event_payload(kind: &EventKind) -> Option<String> {
+    match kind {
+        EventKind::AnswerSubmitted(text) => Some(text.clone()),
+        EventKind::ItemRated(rating) => Some(rating_value(*rating).to_string()),
+        _ => None,
+    }
+}
+
+/// Rebuild an event kind from its persisted name and payload; `None` if they do not fit.
+pub fn event_from_parts(name: &str, payload: Option<&str>) -> Option<EventKind> {
+    match (name, payload) {
+        ("run_started", None) => Some(EventKind::RunStarted),
+        ("item_shown", None) => Some(EventKind::ItemShown),
+        ("item_skipped", None) => Some(EventKind::ItemSkipped),
+        ("item_flipped", None) => Some(EventKind::ItemFlipped),
+        ("answer_submitted", Some(text)) => Some(EventKind::AnswerSubmitted(text.to_owned())),
+        ("item_rated", Some(v)) => v
+            .parse()
+            .ok()
+            .and_then(rating_from_value)
+            .map(EventKind::ItemRated),
+        ("run_paused", None) => Some(EventKind::RunPaused),
+        ("run_resumed", None) => Some(EventKind::RunResumed),
+        ("run_finished", None) => Some(EventKind::RunFinished),
+        ("run_aborted", None) => Some(EventKind::RunAborted),
+        _ => None,
+    }
 }

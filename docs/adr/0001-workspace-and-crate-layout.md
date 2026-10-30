@@ -18,6 +18,9 @@ Dependency direction: `app → ui → domain crates → core`. Allowed domain ed
 `report→{core,srs}`, `achieve→core`, `board→core`, `calendar→core`.
 No domain crate depends on `ui` or `app`. `app` depends only on `ui`.
 
+> **Amended by [ADR 0006](0006-application-service-layer.md):** a thirteenth crate, `studyfrog-service`,
+> sits between `ui` and the domain crates (`app -> ui -> service -> domain -> core`).
+
 ## Consequences
 + Domain logic is testable without a GUI; the UI is replaceable.
 + Compile-time enforcement of layering (a forbidden edge needs a manifest change, visible in review).

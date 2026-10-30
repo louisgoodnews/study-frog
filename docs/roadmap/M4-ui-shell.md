@@ -13,6 +13,7 @@
   - **STORY-0017** Stack browser and rehearsal screen
     - TASK-0038 Stack browser
     - TASK-0039 Rehearsal screen
+    - TASK-0073 Run setup screen (plan picker)
 - **EPIC-009** Editor and graph
   - **STORY-0018** Markdown editor and preview
     - TASK-0040 Editor widget

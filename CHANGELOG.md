@@ -8,6 +8,13 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- `studyfrog-service` (application layer, ADR 0006 Proposed): `apply_rating` (pure), `record_step`,
+  `begin_run`, `recover_runs`, `new_run`/`candidates`; end-to-end tests over a real vault and database
+  (spaced run updates the schedule; practice-only run leaves it untouched; due items return most-overdue
+  first; crash recovery) (TASK-0033).
+- `studyfrog-store`: schema v2 (run plan columns, in-place upgrade tested), run and event persistence
+  with crash recovery, review and FSRS state storage, item positions (TASK-0072, TASK-0033).
+- `studyfrog-core`: event name/payload encode and decode. Phase M3 complete.
 - Queue builders in `studyfrog-rehearsal`: filters (kind, stack, tags case-insensitive incl. non-ASCII,
   state, difficulty), orders (spaced with daily budgets, sequential, seeded shuffle, hardest/easiest,
   stalest, lowest predicted recall), length cap; in-house SplitMix64 shuffle; 13 tests incl. an

@@ -11,6 +11,7 @@ members = [
     "crates/studyfrog-achieve",
     "crates/studyfrog-board",
     "crates/studyfrog-calendar",
+    "crates/studyfrog-service",
     "crates/studyfrog-ui",
     "crates/studyfrog-app",
 ]
@@ -36,6 +37,7 @@ studyfrog-report = { path = "crates/studyfrog-report" }
 studyfrog-achieve = { path = "crates/studyfrog-achieve" }
 studyfrog-board = { path = "crates/studyfrog-board" }
 studyfrog-calendar = { path = "crates/studyfrog-calendar" }
+studyfrog-service = { path = "crates/studyfrog-service" }
 studyfrog-ui = { path = "crates/studyfrog-ui" }
 
 # third party (added at first use)

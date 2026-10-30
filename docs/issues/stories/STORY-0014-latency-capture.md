@@ -2,7 +2,7 @@
 id: STORY-0014
 type: story
 title: Latency capture
-status: in_progress
+status: done
 epic: EPIC-007
 parents: [EPIC-007]
 estimate: 5
@@ -19,8 +19,8 @@ Latency is a core data source for reports (M7).
 Latency capture.
 
 ## Acceptance Criteria
-- [ ] Injected monotonic clock; paused time excluded
-- [ ] Run events persisted per item in one transaction; crash recovery
+- [x] Injected monotonic clock; paused time excluded
+- [x] Run events persisted per item in one transaction; crash recovery
 
 ## Design Notes
 Children: TASK-0032, TASK-0033.

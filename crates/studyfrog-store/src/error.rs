@@ -14,6 +14,8 @@ pub enum StoreError {
         /// The OS message.
         message: String,
     },
+    /// Stored data does not decode (for example an unknown name or a malformed id).
+    Corrupt(String),
     /// The database was written by a newer version of the app.
     SchemaTooNew {
         /// Version found in the database.
@@ -40,6 +42,7 @@ pub fn io_err(path: &std::path::Path, e: &std::io::Error) -> StoreError {
 pub fn describe_store_error(e: &StoreError) -> String {
     match e {
         StoreError::Sql(m) => format!("database error: {m}"),
+        StoreError::Corrupt(m) => format!("corrupt stored data: {m}"),
         StoreError::Io { path, message } => format!("{path}: {message}"),
         StoreError::SchemaTooNew { found, supported } => {
             format!("database schema v{found} is newer than this app supports (v{supported})")

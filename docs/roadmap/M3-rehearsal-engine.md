@@ -25,12 +25,12 @@
 
 ## Exit criteria
 
-- [ ] A scripted run (test harness) produces the expected event log
-- [ ] Latency excludes paused time (tested)
-- [ ] Run results update SRS state and persist
-- [ ] Crash recovery marks runs aborted
-- [ ] Rehearsal step bench under budget
-- [ ] Runs can be built with any order (due-first, sequential, shuffled, hardest/easiest, stalest, lowest recall) and filters; a practice-only run leaves the schedule untouched
+- [x] A scripted run (test harness) produces the expected event log
+- [x] Latency excludes paused time (tested)
+- [x] Run results update SRS state and persist
+- [x] Crash recovery marks runs aborted
+- [x] Rehearsal step bench under budget
+- [x] Runs can be built with any order (due-first, sequential, shuffled, hardest/easiest, stalest, lowest recall) and filters; a practice-only run leaves the schedule untouched
 
 ## Out of scope
 

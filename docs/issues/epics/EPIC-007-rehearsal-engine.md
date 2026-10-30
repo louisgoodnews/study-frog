@@ -2,7 +2,7 @@
 id: EPIC-007
 type: epic
 title: Rehearsal engine
-status: ready
+status: done
 parents: []
 labels: [m3, rehearsal]
 acceptance_criteria:
@@ -19,10 +19,10 @@ Rehearsal turns the queue of due items into timed, measured practice (docs/specs
 Headless engine (any queue order, not only spaced repetition) in `studyfrog-rehearsal`: state machine, latency capture, queue building, persistence of events.
 
 ## Acceptance Criteria
-- [ ] A scripted run produces the expected event log
-- [ ] Latency excludes paused time
-- [ ] Run results update SRS state and persist
-- [ ] Crashed runs recover as aborted
+- [x] A scripted run produces the expected event log
+- [x] Latency excludes paused time
+- [x] Run results update SRS state and persist
+- [x] Crashed runs recover as aborted
 
 ## Design Notes
 Children: STORY-0013, STORY-0014, STORY-0015, STORY-0033.

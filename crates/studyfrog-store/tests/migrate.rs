@@ -36,8 +36,9 @@ fn tables(conn: &Connection) -> Vec<String> {
 fn fresh_database_gets_every_table_and_is_idempotent() {
     let mut conn = open_memory().unwrap();
     assert_eq!(schema_version(&conn).unwrap(), 0);
-    assert_eq!(migrate(&mut conn, MIGRATIONS).unwrap(), 1);
-    assert_eq!(migrate(&mut conn, MIGRATIONS).unwrap(), 1);
+    let latest = MIGRATIONS.len() as u32;
+    assert_eq!(migrate(&mut conn, MIGRATIONS).unwrap(), latest);
+    assert_eq!(migrate(&mut conn, MIGRATIONS).unwrap(), latest);
     let have = tables(&conn);
     for t in TABLES {
         assert!(have.iter().any(|h| h == t), "missing {t}");
@@ -46,8 +47,8 @@ fn fresh_database_gets_every_table_and_is_idempotent() {
 
 #[test]
 fn upgrades_from_the_previous_version() {
-    const V2: Migration = Migration {
-        version: 2,
+    const V3: Migration = Migration {
+        version: 3,
         name: "extra",
         sql: "CREATE TABLE extra (x INTEGER);",
     };
@@ -58,8 +59,8 @@ fn upgrades_from_the_previous_version() {
         [],
     )
     .unwrap();
-    let both = [MIGRATIONS[0], V2];
-    assert_eq!(migrate(&mut conn, &both).unwrap(), 2);
+    let all = [MIGRATIONS[0], MIGRATIONS[1], V3];
+    assert_eq!(migrate(&mut conn, &all).unwrap(), 3);
     let kept: i64 = conn
         .query_row("SELECT COUNT(*) FROM review", [], |r| r.get(0))
         .unwrap();
@@ -76,7 +77,7 @@ fn newer_database_is_refused_untouched() {
         err,
         StoreError::SchemaTooNew {
             found: 99,
-            supported: 1
+            supported: MIGRATIONS.len() as u32,
         }
     );
     assert!(tables(&conn).is_empty());
@@ -147,4 +148,32 @@ fn file_database_uses_wal() {
         .query_row("PRAGMA journal_mode", [], |r| r.get(0))
         .unwrap();
     assert_eq!(mode, "wal");
+}
+
+#[test]
+fn v1_database_upgrades_in_place_keeping_runs() {
+    let mut conn = open_memory().unwrap();
+    assert_eq!(migrate(&mut conn, &MIGRATIONS[..1]).unwrap(), 1);
+    conn.execute(
+        "INSERT INTO run (uid, mode, state) VALUES ('R1', 'flip', 'finished')",
+        [],
+    )
+    .unwrap();
+    assert_eq!(migrate(&mut conn, MIGRATIONS).unwrap(), 2);
+    let (order, effect, seed, requeue): (String, String, i64, bool) = conn
+        .query_row(
+            "SELECT order_name, effect, seed, requeue_again FROM run WHERE uid = 'R1'",
+            [],
+            |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+        )
+        .unwrap();
+    assert_eq!(
+        (order.as_str(), effect.as_str(), seed, requeue),
+        ("due", "update_schedule", 0, true)
+    );
+    assert!(
+        conn.execute("UPDATE run SET order_name = 'bogus'", [])
+            .is_err(),
+        "CHECK on the new column"
+    );
 }

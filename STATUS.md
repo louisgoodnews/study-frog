@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M2 complete; M3 (Rehearsal engine) seeded and next. **Date:** 2026-10-30. **Branch:** `main`.
+**Phase:** M3 complete; M4 (UI shell) seeded and next. **Date:** 2026-10-30. **Branch:** `main`.
 
 ## What exists
 - Cargo workspace with 12 empty, documented crates (`crates/studyfrog-*`); `cargo check` passes.
@@ -25,9 +25,29 @@
 - FSRS-6 pinned in `docs/specs/srs-algorithm.md`; remaining update equations and golden vectors
   are taken from the reference implementation in TASK-0016/0017.
 
+## Flags (please review)
+- **ADR 0006 (Proposed):** new crate `studyfrog-service` (application layer between `ui` and the domain
+  crates). It was needed to finish M3 ("a rating updates the schedule" composes store + srs + rehearsal,
+  which ADR 0001 forbids in the domain crates and `ui` must not contain). Cheap to revert.
+- Rehearsal is not only spaced repetition (your requirement): run plans have orders, filters, a cap,
+  requeue-on-Again and a schedule effect. **Decision to confirm:** spaced runs default to
+  `UpdateSchedule`; sequential/shuffled/drill/stalest runs default to `PracticeOnly` (events and latency
+  are always recorded, the schedule is untouched). Overridable per run.
+- Service gaps to close later: SM-2 is not wired into `record_step` (FSRS only); daily budgets are a
+  parameter (`Budget`) not yet derived from the stack limits; the item filter is not persisted with a run.
+- Lowest-recall queue building is 3.9 ms for 10k items (a `powf` per comparison); fine now, cacheable later.
+
 ## Next task
-**M3:** TASK-0030 (run input types, transition errors) then TASK-0031 (pure `step` state machine).
-Live state: [BOARD.md](BOARD.md).
+**M4:** TASK-0036 (eframe window and navigation; includes the egui accessibility/IME spike) and TASK-0037
+(pure Elm-style update loop and effects). Live state: [BOARD.md](BOARD.md).
+
+## M3 summary
+- `studyfrog-core`: `RunPlan` (order, filter, effect, seed, limit, requeue) and persisted names.
+- `studyfrog-rehearsal`: pure `step` state machine (validate-then-mutate), injected clock, latency without
+  paused time, requeue with cap; queue builders for all orders and filters (seeded in-house shuffle).
+  Engine step 23 ns; 10k-candidate queues 82 us to 3.9 ms.
+- `studyfrog-store`: schema v2, run/event persistence, crash recovery, reviews and FSRS state.
+- `studyfrog-service`: end-to-end tests over a real vault and database.
 
 ## M2 summary
 - `studyfrog-md`: in-house ULID and RFC 3339 codecs, fence/key-block splitter, typed parse and render for

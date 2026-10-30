@@ -184,3 +184,23 @@ fn write_links(tx: &Transaction, uid: &str, doc: &Doc) -> Result<(), StoreError>
     }
     Ok(())
 }
+
+/// Position of every indexed item in path order (the library order used by sequential runs).
+pub fn item_positions(
+    conn: &Connection,
+) -> Result<HashMap<studyfrog_core::uid::Uid, u32>, StoreError> {
+    let mut stmt = conn
+        .prepare("SELECT uid FROM item ORDER BY path")
+        .map_err(sql_err)?;
+    let ids = stmt
+        .query_map([], |r| r.get::<_, String>(0))
+        .map_err(sql_err)?;
+    let mut out = HashMap::new();
+    for (pos, id) in ids.enumerate() {
+        let id = id.map_err(sql_err)?;
+        let uid = studyfrog_md::ulid::parse_ulid(&id)
+            .ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}")))?;
+        out.insert(uid, pos as u32);
+    }
+    Ok(out)
+}

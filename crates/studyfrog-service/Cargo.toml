@@ -1,0 +1,19 @@
+[package]
+name = "studyfrog-service"
+description = "Application services: composes the domain crates (store, srs, rehearsal) into use cases. No GUI, no business rules of its own beyond orchestration."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-core.workspace = true
+studyfrog-md.workspace = true
+studyfrog-store.workspace = true
+studyfrog-srs.workspace = true
+studyfrog-rehearsal.workspace = true
+rusqlite.workspace = true

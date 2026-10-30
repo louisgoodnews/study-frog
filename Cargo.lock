@@ -831,6 +831,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "studyfrog-service"
+version = "0.1.0"
+dependencies = [
+ "rusqlite",
+ "studyfrog-core",
+ "studyfrog-md",
+ "studyfrog-rehearsal",
+ "studyfrog-srs",
+ "studyfrog-store",
+]
+
+[[package]]
 name = "studyfrog-slm"
 version = "0.1.0"
 dependencies = [
@@ -868,6 +880,7 @@ dependencies = [
  "studyfrog-md",
  "studyfrog-rehearsal",
  "studyfrog-report",
+ "studyfrog-service",
  "studyfrog-slm",
  "studyfrog-srs",
  "studyfrog-store",

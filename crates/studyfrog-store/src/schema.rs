@@ -3,11 +3,31 @@
 use crate::migrate::Migration;
 
 /// All migrations, oldest first.
-pub const MIGRATIONS: &[Migration] = &[Migration {
-    version: 1,
-    name: "initial schema",
-    sql: V1,
-}];
+pub const MIGRATIONS: &[Migration] = &[
+    Migration {
+        version: 1,
+        name: "initial schema",
+        sql: V1,
+    },
+    Migration {
+        version: 2,
+        name: "run plan columns",
+        sql: V2,
+    },
+];
+
+/// The run plan is stored with the run. The item filter is not: the resulting queue is
+/// (`run_queue`). Defaults match the spaced plan so runs created before this step stay valid.
+const V2: &str = "
+ALTER TABLE run ADD COLUMN order_name TEXT NOT NULL DEFAULT 'due'
+    CHECK (order_name IN ('due', 'sequential', 'shuffled', 'hardest_first', 'easiest_first',
+                          'stalest_first', 'lowest_retrievability'));
+ALTER TABLE run ADD COLUMN effect TEXT NOT NULL DEFAULT 'update_schedule'
+    CHECK (effect IN ('update_schedule', 'practice_only'));
+ALTER TABLE run ADD COLUMN seed INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE run ADD COLUMN run_limit INTEGER;
+ALTER TABLE run ADD COLUMN requeue_again INTEGER NOT NULL DEFAULT 1 CHECK (requeue_again IN (0, 1));
+";
 
 /// Derived index (rebuildable from the vault) followed by authoritative history. History tables
 /// have no foreign keys to `item`, so deleting or renaming a file never deletes history.
