@@ -15,8 +15,6 @@
   blocks are the `Idx<T>` trait impls, each delegating to the raw index).
 
 ## Flags and known gaps
-- **Needs your decision:** ADR 0005 amendment (Proposed) to drop `gray_matter` in favour of an
-  own fence splitter plus `serde-saphyr` (YAML crate itself is decided and validated).
 - ADR 0004 is accepted but gated on the M6 latency spike (p95 <= 150 ms, else switch to `ort`).
 - Benchmark budgets are provisional (rationale documented); real baselines come with the first
   benchmark of each crate.
@@ -28,7 +26,7 @@
   are taken from the reference implementation in TASK-0016/0017.
 
 ## Next task
-**TASK-0014** (Review and Rating types) then **TASK-0015** (Run and event types), both `ready`.
-Done in M1 so far: TASK-0012 (`Uid`, `Idx<T>`, `Arena<T>`), TASK-0013 (`Meta`, `Stack`, `Note`,
-`Card`, `Question`, `Library` with one arena per kind, `UnixMs`). STORY-0005 is done.
-Live work state is always in [BOARD.md](BOARD.md).
+**TASK-0015** (Run and event types, `ready`), which completes STORY-0006. Then EPIC-004 starts with
+TASK-0016 (FSRS pure functions).
+Done in M1: TASK-0012 (`Uid`, `Idx<T>`, `Arena<T>`), TASK-0013 (`Meta`, `Stack`, `Note`, `Card`,
+`Question`, `Library`, `UnixMs`), TASK-0014 (`Rating`, `Review`). Live state: [BOARD.md](BOARD.md).

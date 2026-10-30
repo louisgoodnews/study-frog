@@ -4,10 +4,10 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (4) | Ready (2) | In progress (0/3) | Review (0) | Blocked (0) | Done (13) |
+| Backlog (4) | Ready (1) | In progress (0/3) | Review (0) | Blocked (0) | Done (14) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) | [TASK-0014](docs/issues/tasks/TASK-0014-review-and-rating-types.md) Review and Rating types (2) |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-| [TASK-0017](docs/issues/tasks/TASK-0017-fsrs-property-and-golden-tests.md) FSRS property and golden tests (3) | [TASK-0015](docs/issues/tasks/TASK-0015-run-and-event-types.md) Run and event types (3) |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+| [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) | [TASK-0015](docs/issues/tasks/TASK-0015-run-and-event-types.md) Run and event types (3) |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+| [TASK-0017](docs/issues/tasks/TASK-0017-fsrs-property-and-golden-tests.md) FSRS property and golden tests (3) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 | [TASK-0018](docs/issues/tasks/TASK-0018-sm-2-functions.md) SM-2 functions (3) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
 | [TASK-0019](docs/issues/tasks/TASK-0019-srs-criterion-benchmark.md) SRS criterion benchmark (2) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
 |  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
@@ -19,6 +19,7 @@
 |  |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
 |  |  |  |  |  | [TASK-0012](docs/issues/tasks/TASK-0012-id-newtypes-and-arena-indices.md) Id newtypes and arena indices (3) |
 |  |  |  |  |  | [TASK-0013](docs/issues/tasks/TASK-0013-stack-note-card-question-structs.md) Stack, Note, Card, Question structs (3) |
+|  |  |  |  |  | [TASK-0014](docs/issues/tasks/TASK-0014-review-and-rating-types.md) Review and Rating types (2) |
 
 ## Stories
 
@@ -29,7 +30,7 @@
 | [STORY-0003](docs/issues/stories/STORY-0003-core-docs-and-adrs.md) Core docs and ADRs (5) | done | 2/2 |
 | [STORY-0004](docs/issues/stories/STORY-0004-roadmap-and-issue-tracking.md) Roadmap and issue tracking (5) | done | 3/3 |
 | [STORY-0005](docs/issues/stories/STORY-0005-identity-and-content-types.md) Identity and content types (5) | done | 2/2 |
-| [STORY-0006](docs/issues/stories/STORY-0006-review-and-run-data.md) Review and run data (5) | ready | 0/2 |
+| [STORY-0006](docs/issues/stories/STORY-0006-review-and-run-data.md) Review and run data (5) | in_progress | 1/2 |
 | [STORY-0007](docs/issues/stories/STORY-0007-fsrs-implementation.md) FSRS implementation (8) | backlog | 0/2 |
 | [STORY-0008](docs/issues/stories/STORY-0008-sm-2-baseline.md) SM-2 baseline (5) | backlog | 0/2 |
 

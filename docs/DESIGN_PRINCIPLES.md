@@ -13,6 +13,7 @@ These constraints are binding. A change that violates one needs an ADR first.
 | P7 | **Performance.** No premature clone; borrow or use `Cow`. No allocation in render loops. `smallvec`, `ahash`, `bumpalo` only where a benchmark justifies them. Profile before optimising. | `criterion`, [BENCHMARKING](contributing/BENCHMARKING.md) |
 | P8 | **Dependency direction.** `app → ui → domain crates → core`. Domain crates never depend on `ui`. | ADR 0001, CI check |
 | P9 | **Safety.** `unsafe` is forbidden workspace-wide; lifting it for one crate needs an ADR. | `unsafe_code = "forbid"` |
+| P10 | **Build vs buy.** If we can write a better implementation than an external crate for our needs (smaller, faster, safer, or exactly fitted to our data model), we write it ourselves. A dependency must earn its place; record the comparison in an ADR or the task. Prefer well-maintained crates for hard, general problems (SQLite, GUI, ML runtimes, Markdown/CommonMark). | review, ADR |
 
 ## Trait boundaries
 

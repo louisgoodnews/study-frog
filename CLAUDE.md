@@ -13,6 +13,10 @@ functional free functions, nesting < 3, files <= 250 lines (aim ~150), performan
 4. Conventional commits with a `Refs: TASK-xxxx` footer (see `docs/contributing/COMMIT_CONVENTIONS.md`).
 5. Update `STATUS.md` (next task, open flags) when the active task changes.
 
+## Build vs buy (P10)
+If you can build a better implementation than an external crate for our needs, build it. Keep crates
+for hard general problems (SQLite, GUI, ML runtime, CommonMark). Note the comparison in the task.
+
 ## Where things are
 Roadmap `docs/roadmap/ROADMAP.md`; issues `docs/issues/` (format in its README); ADRs `docs/adr/`;
 specs `docs/specs/`.

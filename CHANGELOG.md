@@ -8,6 +8,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- `studyfrog-core`: `Rating` (persisted values 1-4), `Review`, `rating_value`/`rating_from_value`,
+  3 tests (TASK-0014).
 - `studyfrog-core`: `Meta`, `Stack`, `Note`, `Card`, `Question`, `UnixMs` and `Library` (one arena per
   kind, no `Item` enum), plus a test (TASK-0013).
 - `BOARD.md`: Kanban view generated from issue front-matter by `scripts/board.sh`; WIP limit 3;
@@ -27,6 +29,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - `rustfmt.toml`, `clippy.toml`, `rust-toolchain.toml` (1.99.1), `.gitignore`.
 
 ### Changed
+- ADR 0005 amendment accepted: no `gray_matter`; in-house fence splitter plus `serde-saphyr`
+  (TASK-0021 retitled). New design principle P10: build instead of buy when we can do better.
 - ADRs 0002-0005 accepted (GUI: egui/eframe; persistence: rusqlite + Markdown files;
   SLM: candle, gated on M6 spike; Markdown schema).
 - ADR 0005: YAML crate decided (`serde-saphyr`); amendment to drop `gray_matter` is Proposed.

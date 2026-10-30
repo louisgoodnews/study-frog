@@ -9,7 +9,7 @@
 - **EPIC-005** Markdown and front-matter
   - **STORY-0009** Front-matter parse and render
     - TASK-0020 Schema structs and validation
-    - TASK-0021 gray_matter parsing
+    - TASK-0021 Fence splitter and serde-saphyr parsing
     - TASK-0022 Round-trip property test
   - **STORY-0010** Body parsing
     - TASK-0023 Wikilink extraction
