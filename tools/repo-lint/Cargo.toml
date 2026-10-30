@@ -1,0 +1,24 @@
+[package]
+name = "repo-lint"
+description = "Repository lints that clippy cannot express: no inherent impl blocks (P1) and issue front-matter validation."
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+# Standalone: not a member of the studyfrog workspace.
+[workspace]
+
+[dependencies]
+proc-macro2 = { version = "1", features = ["span-locations"] }
+serde = { version = "1", features = ["derive"] }
+serde-saphyr = "2"
+syn = { version = "3", features = ["full", "visit"] }
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+too_many_lines = "warn"
+cognitive_complexity = "warn"
+unwrap_used = "warn"
+expect_used = "warn"
