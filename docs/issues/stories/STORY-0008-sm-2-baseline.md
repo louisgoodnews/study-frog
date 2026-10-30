@@ -2,7 +2,7 @@
 id: STORY-0008
 type: story
 title: SM-2 baseline
-status: backlog
+status: done
 epic: EPIC-004
 parents: [EPIC-004]
 estimate: 5
@@ -19,8 +19,8 @@ Baseline for comparison tests and a simple user mode.
 SM-2 baseline.
 
 ## Acceptance Criteria
-- [ ] SM-2 implemented as pure functions
-- [ ] criterion benchmark for 100k cards recorded
+- [x] SM-2 implemented as pure functions
+- [x] criterion benchmark for 100k cards recorded
 
 ## Design Notes
 Children: TASK-0018, TASK-0019.

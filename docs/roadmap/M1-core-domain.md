@@ -23,10 +23,10 @@
 
 ## Exit criteria
 
-- [ ] `studyfrog-core` defines ids, Stack, Note, Card, Question, Review, Run and event types, data only
-- [ ] FSRS and SM-2 pass proptests and golden vectors
-- [ ] `cargo bench -p studyfrog-srs` baseline recorded
-- [ ] No `impl` behaviour blocks (scan passes)
+- [x] `studyfrog-core` defines ids, Stack, Note, Card, Question, Review, Run and event types, data only
+- [x] FSRS and SM-2 pass proptests and golden vectors (FSRS: py-fsrs reference intervals; SM-2: hand-computed from the original rules)
+- [x] `cargo bench -p studyfrog-srs` baseline recorded
+- [x] No `impl` behaviour blocks (scan passes)
 
 ## Out of scope
 

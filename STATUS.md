@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M1 Core domain (in progress; M0 exit criteria met). **Date:** 2026-10-30. **Branch:** `main`.
+**Phase:** M1 complete; M2 (Markdown and storage) seeded and next. **Date:** 2026-10-30. **Branch:** `main`.
 
 ## What exists
 - Cargo workspace with 12 empty, documented crates (`crates/studyfrog-*`); `cargo check` passes.
@@ -11,8 +11,8 @@
   `linecount.sh`, `check-deps.sh`, `check-impls.sh`, `check-issues.sh`. Each check was shown to
   fail on a violation. `tools/repo-lint` (standalone, syn + serde-saphyr) backs the last two.
 - Config: `rustfmt.toml`, `clippy.toml`, `rust-toolchain.toml` (1.99.1), `.gitignore`.
-- Domain code so far: only `studyfrog-core` ids and arena (data + free functions; the sole `impl`
-  blocks are the `Idx<T>` trait impls, each delegating to the raw index).
+- Domain code: `studyfrog-core` (data + free functions; the only `impl` blocks are the `Idx<T>` trait
+  impls) and `studyfrog-srs` (free functions only).
 
 ## Flags and known gaps
 - ADR 0004 is accepted but gated on the M6 latency spike (p95 <= 150 ms, else switch to `ort`).
@@ -26,4 +26,12 @@
   are taken from the reference implementation in TASK-0016/0017.
 
 ## Next task
-**TASK-0016** (FSRS pure functions) starts EPIC-004; EPIC-003 is complete. Live state: [BOARD.md](BOARD.md).
+**M2:** start with TASK-0020 (front-matter schema structs and validation) and TASK-0021 (in-house
+fence splitter + serde-saphyr; spike whether it preserves key order). Live state: [BOARD.md](BOARD.md).
+
+## M1 summary
+- `studyfrog-core`: `Uid`, `Idx<T>`, `Arena<T>`, `Meta`, `Stack`, `Note`, `Card`, `Question`,
+  `Library` (one arena per kind), `Rating`, `Review`, `Run`, `RunEvent`, `Latency`, `MemState`,
+  `Sm2State`, `UnixMs`.
+- `studyfrog-srs`: FSRS-6 (golden test reproduces py-fsrs intervals; 7 properties), SM-2 (hand-computed
+  vectors + properties), deterministic fuzz. Benchmarks: FSRS 2.9 ms / 100k cards, SM-2 0.72 ms.

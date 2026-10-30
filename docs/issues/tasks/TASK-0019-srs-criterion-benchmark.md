@@ -2,7 +2,7 @@
 id: TASK-0019
 type: task
 title: SRS criterion benchmark
-status: backlog
+status: done
 epic: EPIC-004
 parents: [STORY-0008]
 estimate: 2
@@ -19,11 +19,11 @@ Replaces the provisional 50 ms budget with a measurement.
 SRS criterion benchmark.
 
 ## Acceptance Criteria
-- [ ] Bench: schedule 100k cards for FSRS and SM-2
-- [ ] Baseline saved; budget in BENCHMARKING.md updated
+- [x] Bench: schedule 100k cards for FSRS and SM-2
+- [x] Baseline saved; budget in BENCHMARKING.md updated
 
 ## Design Notes
-criterion in crate benches/.
+criterion 0.8 in `crates/studyfrog-srs/benches/scheduling.rs`, deterministic LCG data, no rand dependency. Baseline `m1` saved locally (`--save-baseline m1`, lives in target/, not committed); numbers recorded in docs/contributing/BENCHMARKING.md.
 
 ## Dependencies
 TASK-0016, TASK-0018.

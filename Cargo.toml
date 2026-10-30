@@ -39,6 +39,7 @@ studyfrog-calendar = { path = "crates/studyfrog-calendar" }
 studyfrog-ui = { path = "crates/studyfrog-ui" }
 
 # third party (added at first use)
+criterion = { version = "0.8", default-features = false }
 proptest = "1"
 
 [workspace.lints.rust]

@@ -17,8 +17,8 @@ Scheduling is the heart of the product and the first property-tested logic.
 Pure scheduling functions per docs/specs/srs-algorithm.md.
 
 ## Acceptance Criteria
-- [ ] FSRS-6 and SM-2 implemented as pure functions with property and golden tests
-- [ ] Benchmark baseline recorded
+- [x] FSRS-6 and SM-2 implemented as pure functions with property and golden tests
+- [x] Benchmark baseline recorded
 
 ## Design Notes
 Children: STORY-0007, STORY-0008.

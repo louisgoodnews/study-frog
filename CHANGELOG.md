@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- `studyfrog-srs`: SM-2 (`sm2_next`, ease/interval rules from the original), `Sm2State` in core, and a
+  criterion benchmark (100k cards: FSRS 2.9 ms, SM-2 0.72 ms); FSRS budget tightened to 10 ms
+  (TASK-0018, TASK-0019). EPIC-004 and phase M1 complete.
 - `studyfrog-srs`: FSRS-6 (`initial_state`, `next_state`, `retrievability`, intervals, Anki-style
   deterministic fuzz); `MemState` in core; golden test reproducing the py-fsrs reference intervals and
   7 property tests (TASK-0016, TASK-0017).
