@@ -2,6 +2,7 @@ use crate::arena::{arena_get, arena_len, arena_push};
 use crate::items::{Card, DEFAULT_MIN_SCORE, Question};
 use crate::library::library_new;
 use crate::meta::Meta;
+use crate::settings::StackSettings;
 use crate::stack::Stack;
 use crate::uid::Uid;
 
@@ -24,9 +25,7 @@ fn items_reference_their_stack_and_live_in_separate_arenas() {
         Stack {
             meta: meta(1, "French"),
             description: String::new(),
-            daily_new_limit: Some(20),
-            daily_review_limit: None,
-            request_retention: None,
+            settings: StackSettings::default(),
         },
     )
     .unwrap();

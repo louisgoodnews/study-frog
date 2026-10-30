@@ -7,7 +7,7 @@ use studyfrog_core::meta::Meta;
 
 use crate::doc::{Doc, Kind, RawEntry, kind_name};
 use crate::error::RenderError;
-use crate::raw::{RawFront, RawSrs};
+use crate::raw::RawFront;
 use crate::rfc3339::format_rfc3339;
 use crate::sections::{join_card_body, split_card_body};
 use crate::ulid::format_ulid;
@@ -51,16 +51,9 @@ type Parts<'a> = (RawFront, &'a [RawEntry], Cow<'a, str>);
 fn parts(doc: &Doc) -> Result<Parts<'_>, RenderError> {
     match doc {
         Doc::Stack(d) => {
-            let s = &d.stack;
-            let srs = s.request_retention.map(|r| RawSrs {
-                request_retention: Some(r),
-            });
             let raw = RawFront {
-                description: Some(s.description.clone()).filter(|x| !x.is_empty()),
-                daily_new_limit: s.daily_new_limit,
-                daily_review_limit: s.daily_review_limit,
-                srs,
-                ..raw_for(Kind::Stack, &s.meta)?
+                description: Some(d.description.clone()).filter(|x| !x.is_empty()),
+                ..raw_for(Kind::Stack, &d.meta)?
             };
             Ok((raw, &d.extra, Cow::Borrowed(&d.body)))
         }

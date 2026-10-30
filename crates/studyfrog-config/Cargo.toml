@@ -1,0 +1,19 @@
+[package]
+name = "studyfrog-config"
+description = "Settings files: parsing and rendering of studyfrog.toml (vault) and _stack.toml (stack). Pure; no file access."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-core.workspace = true
+serde.workspace = true
+toml.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true

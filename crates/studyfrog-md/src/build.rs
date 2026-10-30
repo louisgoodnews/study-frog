@@ -2,7 +2,6 @@
 
 use studyfrog_core::items::DEFAULT_MIN_SCORE;
 use studyfrog_core::meta::Meta;
-use studyfrog_core::stack::Stack;
 use studyfrog_core::time::UnixMs;
 
 use crate::doc::{CardDoc, Doc, Kind, NoteDoc, QuestionDoc, RawEntry, StackDoc};
@@ -103,29 +102,13 @@ fn unit_interval(blocks: &[Block], key: &str, value: f32, open: bool) -> Result<
     }
 }
 
-fn build_stack(
-    meta: Meta,
-    raw: RawFront,
-    extra: Vec<RawEntry>,
-    body: &str,
-    blocks: &[Block],
-) -> Result<Doc, ParseError> {
-    let retention = raw.srs.and_then(|s| s.request_retention);
-    let request_retention = retention
-        .map(|r| unit_interval(blocks, "srs", r, true))
-        .transpose()?;
-    let stack = Stack {
+fn build_stack(meta: Meta, raw: RawFront, extra: Vec<RawEntry>, body: &str) -> Doc {
+    Doc::Stack(StackDoc {
         meta,
         description: raw.description.unwrap_or_default(),
-        daily_new_limit: raw.daily_new_limit,
-        daily_review_limit: raw.daily_review_limit,
-        request_retention,
-    };
-    Ok(Doc::Stack(StackDoc {
-        stack,
         body: body.to_owned(),
         extra,
-    }))
+    })
 }
 
 fn build_question(
@@ -164,7 +147,7 @@ pub fn build_doc(
 ) -> Result<Doc, ParseError> {
     let meta = build_meta(&mut raw, blocks)?;
     match kind {
-        Kind::Stack => build_stack(meta, raw, extra, body, blocks),
+        Kind::Stack => Ok(build_stack(meta, raw, extra, body)),
         Kind::Question => build_question(meta, raw, extra, body, blocks),
         Kind::Note => Ok(Doc::Note(NoteDoc {
             meta,

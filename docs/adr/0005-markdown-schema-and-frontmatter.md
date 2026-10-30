@@ -36,3 +36,7 @@ dependency and one second YAML parser. TASK-0021 is retitled accordingly.
 ## Risks
 - `comrak` is the alternative to `pulldown-cmark` if GFM extensions prove insufficient.
 - `serde-saphyr` is younger than the libyaml-based crates; mitigated by golden and round-trip tests.
+
+## Amendment: settings are not front-matter
+Superseded in part by [ADR 0007](0007-settings-in-toml-files.md): stack settings (`daily_*`, `srs`) are no longer
+front-matter keys; they live in `_stack.toml`.

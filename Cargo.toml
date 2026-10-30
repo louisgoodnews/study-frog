@@ -2,6 +2,7 @@
 resolver = "3"
 members = [
     "crates/studyfrog-core",
+    "crates/studyfrog-config",
     "crates/studyfrog-md",
     "crates/studyfrog-store",
     "crates/studyfrog-srs",
@@ -28,6 +29,7 @@ authors = ["louisgoodnews"]
 [workspace.dependencies]
 # internal crates
 studyfrog-core = { path = "crates/studyfrog-core" }
+studyfrog-config = { path = "crates/studyfrog-config" }
 studyfrog-md = { path = "crates/studyfrog-md" }
 studyfrog-store = { path = "crates/studyfrog-store" }
 studyfrog-srs = { path = "crates/studyfrog-srs" }
@@ -46,6 +48,7 @@ proptest = "1"
 rusqlite = { version = "0.41", features = ["bundled"] }
 serde = { version = "1", features = ["derive"] }
 serde-saphyr = "2"
+toml = { version = "1", default-features = false, features = ["parse", "serde"] }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

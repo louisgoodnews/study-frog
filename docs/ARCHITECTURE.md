@@ -19,8 +19,9 @@ Textual rules (also in [ADR 0001](adr/0001-workspace-and-crate-layout.md)):
 | Crate | Depends on | Responsibility |
 |---|---|---|
 | `core` | none | Pure data types, ids, arenas. No I/O. |
+| `config` | core | Parse and render `studyfrog.toml` and `_stack.toml` ([ADR 0007](adr/0007-settings-in-toml-files.md)). |
 | `md` | core | Markdown and front-matter parse/render. |
-| `store` | core, md | SQLite and file layer; the only crate doing storage I/O. |
+| `store` | core, md, config | SQLite and file layer; the only crate doing storage I/O. |
 | `srs` | core | Scheduling functions. |
 | `rehearsal` | core, srs | Run state machine, latency capture. |
 | `slm` | core | Comparison trait and local runtime. |
@@ -28,7 +29,7 @@ Textual rules (also in [ADR 0001](adr/0001-workspace-and-crate-layout.md)):
 | `achieve` | core | Achievement rules and evaluation. |
 | `board` | core | Kanban/scrum model and moves. |
 | `calendar` | core | Session planning. |
-| `service` | core, md, store, srs, rehearsal | Application layer: use cases that compose domain crates ([ADR 0006](adr/0006-application-service-layer.md)). |
+| `service` | core, md, config, store, srs, rehearsal | Application layer: use cases that compose domain crates ([ADR 0006](adr/0006-application-service-layer.md)). |
 | `ui` | service and domain crates | Rendering and event dispatch only. |
 | `app` | ui | `main`, wiring, configuration. |
 

@@ -740,6 +740,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_spanned"
+version = "1.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4e7523beb55eece201a2356bee0bbca0d1ab466c14c07703b2e0ee6d42cb0c2c"
+dependencies = [
+ "serde_core",
+]
+
+[[package]]
 name = "shlex"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -796,6 +805,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "studyfrog-config"
+version = "0.1.0"
+dependencies = [
+ "proptest",
+ "serde",
+ "studyfrog-core",
+ "toml",
+]
+
+[[package]]
 name = "studyfrog-core"
 version = "0.1.0"
 dependencies = [
@@ -835,6 +854,7 @@ name = "studyfrog-service"
 version = "0.1.0"
 dependencies = [
  "rusqlite",
+ "studyfrog-config",
  "studyfrog-core",
  "studyfrog-md",
  "studyfrog-rehearsal",
@@ -865,6 +885,7 @@ dependencies = [
  "criterion",
  "proptest",
  "rusqlite",
+ "studyfrog-config",
  "studyfrog-core",
  "studyfrog-md",
 ]
@@ -876,6 +897,7 @@ dependencies = [
  "studyfrog-achieve",
  "studyfrog-board",
  "studyfrog-calendar",
+ "studyfrog-config",
  "studyfrog-core",
  "studyfrog-md",
  "studyfrog-rehearsal",
@@ -949,6 +971,19 @@ checksum = "be4d6b5f19ff7664e8c98d03e2139cb510db9b0a60b55f8e8709b689d939b6bc"
 dependencies = [
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "toml"
+version = "1.1.8+spec-1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "20489e00e4d8741d6be680764cc12e270655e375a20d1011e844a9c3379e678d"
+dependencies = [
+ "serde_core",
+ "serde_spanned",
+ "toml_datetime",
+ "toml_parser",
+ "winnow",
 ]
 
 [[package]]

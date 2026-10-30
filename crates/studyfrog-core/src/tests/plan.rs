@@ -1,6 +1,8 @@
 use crate::plan::{
-    Order, ScheduleEffect, effect_from_name, effect_name, order_from_name, order_name,
-    plan_hardest, plan_sequential, plan_shuffled, plan_spaced, plan_stalest,
+    ItemKind, Order, ScheduleEffect, StateFilter, effect_from_name, effect_name,
+    item_kind_from_name, item_kind_name, order_from_name, order_name, plan_hardest,
+    plan_sequential, plan_shuffled, plan_spaced, plan_stalest, state_filter_from_name,
+    state_filter_name,
 };
 
 const ORDERS: [Order; 7] = [
@@ -41,4 +43,32 @@ fn standard_plans_have_the_documented_defaults() {
     }
     assert_eq!(plan_shuffled(7).seed, 7);
     assert!(!plan_sequential().requeue_again && plan_hardest().requeue_again);
+}
+
+#[test]
+fn kind_state_and_scheduler_names_round_trip() {
+    use crate::scheduler::{Scheduler, scheduler_from_name, scheduler_name};
+    for k in [ItemKind::Note, ItemKind::Card, ItemKind::Question] {
+        assert_eq!(item_kind_from_name(item_kind_name(k)), Some(k));
+    }
+    for s in [
+        StateFilter::Any,
+        StateFilter::New,
+        StateFilter::Learned,
+        StateFilter::Due,
+        StateFilter::NotDue,
+    ] {
+        assert_eq!(state_filter_from_name(state_filter_name(s)), Some(s));
+    }
+    for s in [Scheduler::Fsrs, Scheduler::Sm2] {
+        assert_eq!(scheduler_from_name(scheduler_name(s)), Some(s));
+    }
+    assert_eq!(
+        (
+            item_kind_from_name("stack"),
+            state_filter_from_name("x"),
+            scheduler_from_name("x")
+        ),
+        (None, None, None)
+    );
 }

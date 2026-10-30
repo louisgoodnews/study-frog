@@ -21,6 +21,8 @@ No domain crate depends on `ui` or `app`. `app` depends only on `ui`.
 > **Amended by [ADR 0006](0006-application-service-layer.md):** a thirteenth crate, `studyfrog-service`,
 > sits between `ui` and the domain crates (`app -> ui -> service -> domain -> core`).
 
+> **Also amended by [ADR 0007](0007-settings-in-toml-files.md):** `studyfrog-config` (settings files; depends on `core` only).
+
 ## Consequences
 + Domain logic is testable without a GUI; the UI is replaceable.
 + Compile-time enforcement of layering (a forbidden edge needs a manifest change, visible in review).

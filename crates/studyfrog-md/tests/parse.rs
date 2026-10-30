@@ -38,7 +38,7 @@ fn spec_card_example_parses() {
 
 #[test]
 fn errors_are_typed_and_located() {
-    let cases: [Case; 8] = [
+    let cases: [Case; 7] = [
         ("no front matter".into(), None, |k| {
             matches!(k, MissingFrontMatter)
         }),
@@ -64,11 +64,6 @@ fn errors_are_typed_and_located() {
         (file("kind: card\ntitle: t\n", "front only"), None, |k| {
             matches!(k, MissingSeparator)
         }),
-        (
-            file("kind: stack\ntitle: t\nsrs:\n  bogus: 1\n", ""),
-            None,
-            |k| matches!(k, ParseErrorKind::InvalidYaml(_)),
-        ),
     ];
     for (text, line, check) in cases {
         let err = parse_doc(&text).unwrap_err();
@@ -212,4 +207,23 @@ mod nasty {
         });
         assert_eq!(parse_doc(&render_doc(&fine).unwrap()), Ok(fine));
     }
+}
+
+#[test]
+fn legacy_settings_keys_in_a_stack_are_preserved_as_unknown_keys() {
+    let text = format!(
+        "---\nid: {ID}\nkind: stack\ntitle: S\ndaily_new_limit: 5\nsrs:\n  scheduler: sm2\n---\n"
+    );
+    let Ok(Doc::Stack(d)) = parse_doc(&text) else {
+        panic!("not a stack")
+    };
+    let keys: Vec<_> = d.extra.iter().map(|e| e.key.as_str()).collect();
+    assert_eq!(
+        keys,
+        ["daily_new_limit", "srs"],
+        "settings moved to _stack.toml; old keys stay inert"
+    );
+    let again = render_doc(&Doc::Stack(d.clone())).unwrap();
+    assert!(again.contains("srs:\n  scheduler: sm2"), "{again}");
+    assert_eq!(parse_doc(&again), Ok(Doc::Stack(d)));
 }

@@ -6,7 +6,8 @@ Status: draft (see [ADR 0005](../adr/0005-markdown-schema-and-frontmatter.md)).
 ```
 vault/
   <stack-folder>/
-    _stack.md        # kind: stack
+    _stack.md        # kind: stack (identity, description, body)
+    _stack.toml      # optional settings of the stack, see config-files.md
     <anything>.md    # kind: note | card | question
 ```
 
@@ -21,8 +22,9 @@ vault/
 | `created`, `updated` | RFC 3339 datetime | no | set by app |
 
 ## Per kind
-**stack** (`_stack.md`): `description` (string), `srs` (override map, optional),
-`daily_new_limit` (int), `daily_review_limit` (int).
+**stack** (`_stack.md`): `description` (string). Stack *settings* (scheduler, retention, daily limits)
+are not front-matter: they live in `_stack.toml` ([config-files](config-files.md)). Old files that still carry
+`daily_new_limit`, `daily_review_limit` or `srs` keep them as verbatim unknown keys; they are ignored.
 
 **note**: no extra keys. Body is free Markdown with `[[wikilinks]]`.
 `rehearse_title: true|false` (default false): title is rehearsed against the body summary.
@@ -57,7 +59,8 @@ Body: prompt, `???`, reference answer.
   verbatim after them in their original relative order. Comments on known keys are not preserved.
 - **Single-line fields** (`title`, `tags`, `aliases`, `description`... entries) must be non-blank and
   contain no control or Unicode line-break characters.
-- **`srs:`** accepts only `request_retention` for now; any other override key is an error.
+- **Settings are not front-matter** (decided in [ADR 0007](../adr/0007-settings-in-toml-files.md)): front-matter
+  holds identity and per-item metadata only, so notes stay clean for other Markdown tools.
 - **Timestamps:** RFC 3339, years 0000-9999; written as UTC with milliseconds.
 - **`???` separator:** first line that is exactly `???` outside a fenced code block (``` or ~~~);
   a card or question without one is an error. Wikilinks may combine forms:

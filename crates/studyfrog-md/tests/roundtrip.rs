@@ -3,7 +3,6 @@
 
 use proptest::prelude::*;
 use studyfrog_core::meta::Meta;
-use studyfrog_core::stack::Stack;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_md::doc::{CardDoc, Doc, NoteDoc, QuestionDoc, RawEntry, StackDoc};
@@ -62,26 +61,14 @@ fn percent() -> impl Strategy<Value = f32> {
 }
 
 fn stack_doc() -> impl Strategy<Value = Doc> {
-    (
-        meta(),
-        line(),
-        prop::option::of(any::<u32>()),
-        prop::option::of(any::<u32>()),
-        prop::option::of(1_u32..100),
-        free_text(),
-        extras(),
-    )
-        .prop_map(|(meta, description, new, review, retention, body, extra)| {
-            let request_retention = retention.map(|r| r as f32 / 100.0);
-            let stack = Stack {
-                meta,
-                description,
-                daily_new_limit: new,
-                daily_review_limit: review,
-                request_retention,
-            };
-            Doc::Stack(StackDoc { stack, body, extra })
+    (meta(), line(), free_text(), extras()).prop_map(|(meta, description, body, extra)| {
+        Doc::Stack(StackDoc {
+            meta,
+            description,
+            body,
+            extra,
         })
+    })
 }
 
 fn note_doc() -> impl Strategy<Value = Doc> {

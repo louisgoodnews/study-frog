@@ -190,3 +190,40 @@ pub fn effect_from_name(name: &str) -> Option<ScheduleEffect> {
         _ => None,
     }
 }
+
+/// Persisted name of an item kind.
+pub fn item_kind_name(kind: ItemKind) -> &'static str {
+    match kind {
+        ItemKind::Note => "note",
+        ItemKind::Card => "card",
+        ItemKind::Question => "question",
+    }
+}
+
+/// Inverse of [`item_kind_name`].
+pub fn item_kind_from_name(name: &str) -> Option<ItemKind> {
+    [ItemKind::Note, ItemKind::Card, ItemKind::Question]
+        .into_iter()
+        .find(|k| item_kind_name(*k) == name)
+}
+
+const STATES: [(StateFilter, &str); 5] = [
+    (StateFilter::Any, "any"),
+    (StateFilter::New, "new"),
+    (StateFilter::Learned, "learned"),
+    (StateFilter::Due, "due"),
+    (StateFilter::NotDue, "not_due"),
+];
+
+/// Persisted name of a state filter.
+pub fn state_filter_name(state: StateFilter) -> &'static str {
+    STATES
+        .iter()
+        .find(|(s, _)| *s == state)
+        .map_or("any", |(_, n)| n)
+}
+
+/// Inverse of [`state_filter_name`].
+pub fn state_filter_from_name(name: &str) -> Option<StateFilter> {
+    STATES.iter().find(|(_, n)| *n == name).map(|(s, _)| *s)
+}

@@ -2,6 +2,7 @@
 
 | Term | Meaning |
 |---|---|
+| **Settings file** | `studyfrog.toml` (vault defaults) or `_stack.toml` (one stack); TOML, not Markdown. |
 | **Vault** | The root folder holding all Markdown content. |
 | **Stack** | A logical container of Items (a deck/notebook). Has its own settings and achievements. |
 | **Item** | Anything inside a stack that can be studied: a Note, Card or Question. |

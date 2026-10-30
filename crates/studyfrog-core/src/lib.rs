@@ -10,6 +10,8 @@ pub mod meta;
 pub mod plan;
 pub mod review;
 pub mod run;
+pub mod scheduler;
+pub mod settings;
 pub mod stack;
 pub mod time;
 pub mod uid;

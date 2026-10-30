@@ -2,7 +2,6 @@
 //! Stack membership comes from the folder, so docs carry no stack reference.
 
 use studyfrog_core::meta::Meta;
-use studyfrog_core::stack::Stack;
 
 /// An unknown top-level key kept verbatim so a rewrite never loses user data.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -13,11 +12,13 @@ pub struct RawEntry {
     pub text: String,
 }
 
-/// `_stack.md`.
+/// `_stack.md`: the stack's identity and description. Its settings live in `_stack.toml`.
 #[derive(Debug, Clone, PartialEq)]
 pub struct StackDoc {
-    /// The stack definition.
-    pub stack: Stack,
+    /// Common fields.
+    pub meta: Meta,
+    /// The `description` key; empty when absent.
+    pub description: String,
     /// Markdown body.
     pub body: String,
     /// Unknown keys.
@@ -131,12 +132,7 @@ const COMMON: [&str; 7] = [
 /// Keys this kind understands; every other top-level key is preserved as an unknown entry.
 pub fn known_keys(kind: Kind) -> Vec<&'static str> {
     let own: &[&str] = match kind {
-        Kind::Stack => &[
-            "description",
-            "daily_new_limit",
-            "daily_review_limit",
-            "srs",
-        ],
+        Kind::Stack => &["description"],
         Kind::Note => &["rehearse_title"],
         Kind::Card => &["reversible"],
         Kind::Question => &["accepted", "rubric", "min_score"],
@@ -147,7 +143,7 @@ pub fn known_keys(kind: Kind) -> Vec<&'static str> {
 /// The common fields of any document.
 pub fn doc_meta(doc: &Doc) -> &Meta {
     match doc {
-        Doc::Stack(d) => &d.stack.meta,
+        Doc::Stack(d) => &d.meta,
         Doc::Note(d) => &d.meta,
         Doc::Card(d) => &d.meta,
         Doc::Question(d) => &d.meta,
