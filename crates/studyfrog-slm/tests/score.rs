@@ -8,7 +8,7 @@ use studyfrog_core::review::Rating;
 use studyfrog_slm::lexical::Lexical;
 use studyfrog_slm::rating::suggested_rating;
 use studyfrog_slm::runtime::{SlmError, SlmRuntime};
-use studyfrog_slm::score::{Comparison, Score, Verdict, score_answer, verdict_for};
+use studyfrog_slm::score::{Comparison, Score, Verdict, calibrate, score_answer, verdict_for};
 
 fn cmp<'a>(reference: &'a str, answer: &'a str) -> Comparison<'a> {
     Comparison {
@@ -30,6 +30,10 @@ struct Table(HashMap<&'static str, Vec<f32>>);
 impl SlmRuntime for Table {
     fn name(&self) -> &str {
         "table"
+    }
+
+    fn pivot(&self) -> f32 {
+        0.7
     }
 
     fn embed(&self, texts: &[&str]) -> Result<Vec<Vec<f32>>, SlmError> {
@@ -106,6 +110,10 @@ fn nothing_typed_scores_zero_and_asks_nothing_of_the_runtime() {
             "never"
         }
 
+        fn pivot(&self) -> f32 {
+            0.7
+        }
+
         fn embed(&self, _: &[&str]) -> Result<Vec<Vec<f32>>, SlmError> {
             Err(SlmError::Unavailable("must not be called".into()))
         }
@@ -152,7 +160,32 @@ fn the_lexical_runtime_ranks_right_above_close_above_wrong() {
     assert!(swapped < 0.95 && swapped > 0.5, "{swapped}");
 }
 
+#[test]
+fn calibration_moves_the_pivot_to_point_seven_and_keeps_the_ends() {
+    for pivot in [0.3_f32, 0.44, 0.7, 0.9] {
+        assert_eq!(calibrate(0.0, pivot), 0.0);
+        assert!((calibrate(1.0, pivot) - 1.0).abs() < 1e-6);
+        assert!((calibrate(pivot, pivot) - 0.7).abs() < 1e-6);
+    }
+    assert!(
+        (calibrate(0.4, 0.7) - 0.4).abs() < 1e-6,
+        "a pivot of 0.7 changes nothing"
+    );
+    assert_eq!(
+        calibrate(-0.2, 0.5),
+        0.0,
+        "negative similarity is no similarity"
+    );
+}
+
 proptest! {
+    #[test]
+    fn calibration_is_monotone_and_stays_in_range(a in 0.0_f32..1.0, b in 0.0_f32..1.0, pivot in 0.05_f32..0.95) {
+        let (lo, hi) = if a <= b { (a, b) } else { (b, a) };
+        prop_assert!(calibrate(lo, pivot) <= calibrate(hi, pivot) + 1e-6);
+        prop_assert!((0.0..=1.0).contains(&calibrate(a, pivot)));
+    }
+
     #[test]
     fn scores_stay_in_range_and_are_deterministic(r in "\\PC{0,60}", a in "\\PC{0,60}") {
         let s1 = lexical(&r, &a);

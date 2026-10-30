@@ -88,7 +88,12 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::ResolveLink(target) => resolve_link_msg(w, target),
         Effect::Rerate { item, expected, to } => exec_run::rerate(w, item, expected, to),
         Effect::LoadItem(uid) => exec_run::load_item(w, uid),
-        Effect::ScoreAnswer { item, answer } => exec_run::score(w, item, &answer),
+        Effect::ScoreAnswer {
+            run,
+            item,
+            answer,
+            words_only,
+        } => exec_run::score(w, (run, item), &answer, words_only, now_ns),
         Effect::RecordStep { ctx, out } => exec_run::record(w, &ctx, &out, now_ns),
         Effect::CreateStack(title) => create(w, now_ns, |s, ids| create_stack(s, &title, ids)),
         Effect::CreateCard {

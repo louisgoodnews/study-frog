@@ -2,7 +2,8 @@
 
 use serde::Deserialize;
 use studyfrog_core::settings::{
-    AppSettings, MAX_READING_WPM as MAX_WPM, MIN_READING_WPM as MIN_WPM,
+    AnswerEngine, AppSettings, MAX_READING_WPM as MAX_WPM, MIN_READING_WPM as MIN_WPM,
+    ReadingTuning, answer_engine_from_name, answer_engine_name,
 };
 
 use crate::error::{ConfigError, config_error, from_toml, line_of_key};
@@ -18,6 +19,30 @@ struct RawApp {
     #[serde(default)]
     recent: Vec<String>,
     reading_wpm: Option<u32>,
+    answer_engine: Option<String>,
+    reading_fast_percent: Option<u32>,
+    reading_slow_percent: Option<u32>,
+    reading_min_words: Option<u32>,
+}
+
+/// `value` if it is inside `range`, else an error naming the key and its line.
+fn in_range(
+    text: &str,
+    key: &str,
+    value: Option<u32>,
+    range: std::ops::RangeInclusive<u32>,
+) -> Result<Option<u32>, ConfigError> {
+    match value {
+        Some(v) if !range.contains(&v) => Err(config_error(
+            line_of_key(text, key),
+            format!(
+                "{key} must be between {} and {}, not {v}",
+                range.start(),
+                range.end()
+            ),
+        )),
+        other => Ok(other),
+    }
 }
 
 /// Parse `app.toml`. Unknown keys are errors.
@@ -30,10 +55,36 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
             format!("reading_wpm must be between {MIN_WPM} and {MAX_WPM}, not {wpm}"),
         ));
     }
+    let answer_engine = match raw.answer_engine.as_deref() {
+        None => AnswerEngine::default(),
+        Some(name) => answer_engine_from_name(name).ok_or_else(|| {
+            config_error(
+                line_of_key(text, "answer_engine"),
+                format!("answer_engine must be \"auto\" or \"words\", not \"{name}\""),
+            )
+        })?,
+    };
+    let reading = ReadingTuning {
+        fast_percent: in_range(
+            text,
+            "reading_fast_percent",
+            raw.reading_fast_percent,
+            10..=100,
+        )?,
+        slow_percent: in_range(
+            text,
+            "reading_slow_percent",
+            raw.reading_slow_percent,
+            100..=1000,
+        )?,
+        min_words: in_range(text, "reading_min_words", raw.reading_min_words, 1..=200)?,
+    };
     Ok(AppSettings {
+        reading,
         vault: raw.vault,
         recent: raw.recent,
         reading_wpm: raw.reading_wpm,
+        answer_engine,
     })
 }
 
@@ -46,6 +97,21 @@ pub fn render_app_settings(s: &AppSettings) -> String {
     if !s.recent.is_empty() {
         let items: Vec<String> = s.recent.iter().map(|p| toml_string(p)).collect();
         out.push_str(&format!("recent = [{}]\n", items.join(", ")));
+    }
+    if s.answer_engine != AnswerEngine::default() {
+        out.push_str(&format!(
+            "answer_engine = \"{}\"\n",
+            answer_engine_name(s.answer_engine)
+        ));
+    }
+    for (key, value) in [
+        ("reading_fast_percent", s.reading.fast_percent),
+        ("reading_slow_percent", s.reading.slow_percent),
+        ("reading_min_words", s.reading.min_words),
+    ] {
+        if let Some(v) = value {
+            out.push_str(&format!("{key} = {v}\n"));
+        }
     }
     if let Some(w) = s.reading_wpm {
         out.push_str(&format!("reading_wpm = {w}\n"));

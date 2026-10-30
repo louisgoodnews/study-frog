@@ -52,10 +52,14 @@ pub enum Effect {
     },
     /// Compare a typed answer with the item's reference.
     ScoreAnswer {
+        /// The run the answer belongs to.
+        run: Uid,
         /// The item answered.
         item: Uid,
         /// What the user typed.
         answer: String,
+        /// Compare by word matching only, whatever is installed.
+        words_only: bool,
     },
     /// Replace the rating of an item's latest review and rebuild its schedule.
     Rerate {

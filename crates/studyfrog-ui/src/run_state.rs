@@ -31,6 +31,8 @@ pub struct RunView {
     pub reading: ReadingParams,
     /// Items whose rating was replaced by the suggested one after the run.
     pub applied: HashSet<Uid>,
+    /// The latest comparison of each item's answer, kept for the review after the run.
+    pub scores: HashMap<Uid, Scored>,
     /// How the submitted answer compared with the reference, once scored.
     pub scored: Option<Scored>,
     /// `State::now` when the run started; engine time is measured from here.
@@ -48,6 +50,7 @@ pub fn run_view_new(session: Session, started_time: f64) -> RunView {
         answer: String::new(),
         reading: reading_params_default(),
         applied: HashSet::new(),
+        scores: HashMap::new(),
         scored: None,
         started_time,
     }

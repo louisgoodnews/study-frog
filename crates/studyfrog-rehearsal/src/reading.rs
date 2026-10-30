@@ -7,7 +7,7 @@
 
 use studyfrog_core::event::{Difficulty, EventKind, RunEvent};
 use studyfrog_core::review::Rating;
-use studyfrog_core::settings::{MAX_READING_WPM, MIN_READING_WPM};
+use studyfrog_core::settings::{MAX_READING_WPM, MIN_READING_WPM, ReadingTuning};
 use studyfrog_core::uid::Uid;
 
 /// The assumed reading behaviour.
@@ -38,12 +38,15 @@ pub fn reading_params_default() -> ReadingParams {
 /// The default baseline speed.
 pub const DEFAULT_WPM: u32 = 238;
 
-/// The defaults with the user's measured speed, when there is one.
-pub fn reading_params(measured_wpm: Option<u32>) -> ReadingParams {
+/// The defaults with the user's measured speed and threshold overrides, when there are any.
+pub fn reading_params(measured_wpm: Option<u32>, tuning: &ReadingTuning) -> ReadingParams {
+    let d = reading_params_default();
     ReadingParams {
         words_per_minute: measured_wpm
             .map_or(DEFAULT_WPM, |w| w.clamp(MIN_READING_WPM, MAX_READING_WPM)),
-        ..reading_params_default()
+        fast_percent: tuning.fast_percent.unwrap_or(d.fast_percent),
+        slow_percent: tuning.slow_percent.unwrap_or(d.slow_percent),
+        min_words: tuning.min_words.map_or(d.min_words, |w| w as usize),
     }
 }
 
@@ -143,6 +146,10 @@ pub enum Reason {
     NewAndFast,
     /// Reading took much longer than the words should need: a sign of struggle.
     Slow,
+    /// The user marked the item difficult although the rating was good.
+    MarkedDifficult,
+    /// The user marked the item easy and rated it Good.
+    MarkedEasy,
 }
 
 /// A suggested rating.
@@ -187,4 +194,21 @@ pub fn suggest(
         };
     }
     None
+}
+
+/// The suggestion from the user's own mark: an item marked difficult but rated Good or Easy is
+/// suggested Hard; an item marked easy and rated Good is suggested Easy. A medium mark, an unmarked
+/// item and a low rating suggest nothing.
+pub fn suggest_from_mark(marked: Option<Difficulty>, rated: Rating) -> Option<Suggestion> {
+    match (marked, rated) {
+        (Some(Difficulty::Difficult), Rating::Good | Rating::Easy) => Some(Suggestion {
+            rating: Rating::Hard,
+            reason: Reason::MarkedDifficult,
+        }),
+        (Some(Difficulty::Easy), Rating::Good) => Some(Suggestion {
+            rating: Rating::Easy,
+            reason: Reason::MarkedEasy,
+        }),
+        _ => None,
+    }
 }

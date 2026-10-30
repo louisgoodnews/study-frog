@@ -4,7 +4,10 @@
 use studyfrog_core::event::{Difficulty, EventKind};
 use studyfrog_core::review::Rating;
 use studyfrog_core::uid::Uid;
-use studyfrog_rehearsal::reading::{Suggestion, item_records, suggest, word_count};
+use studyfrog_rehearsal::reading::{
+    Suggestion, item_records, suggest, suggest_from_mark, word_count,
+};
+use studyfrog_slm::score::Verdict;
 
 use crate::run_state::RunView;
 
@@ -23,8 +26,10 @@ pub struct ReviewRow {
     pub rated: Option<Rating>,
     /// Words on the back and seconds spent reading them, in tenths.
     pub reading: Option<(usize, u32)>,
-    /// The rating reading speed suggests instead.
+    /// The rating the item's reading time and the user's mark suggest instead.
     pub suggestion: Option<Suggestion>,
+    /// How the typed answer compared with the reference, as a score from 0 to 100 and its verdict.
+    pub answer_match: Option<(u32, Verdict)>,
 }
 
 /// Items that were rated or marked, in the order they first appeared.
@@ -37,10 +42,12 @@ pub fn review_rows(run: &RunView) -> Vec<ReviewRow> {
             let content = run.content.get(&r.item);
             let previous = content.and_then(|c| c.previous);
             let words = content.map_or(0, |c| word_count(&c.answer));
-            let suggestion = match (r.read_ms, r.rated) {
+            let by_reading = match (r.read_ms, r.rated) {
                 (Some(ms), Some(rated)) => suggest(words, ms, previous, rated, &params),
                 _ => None,
             };
+            let by_mark = r.rated.and_then(|rated| suggest_from_mark(r.marked, rated));
+            let suggestion = by_mark.or(by_reading);
             ReviewRow {
                 item: r.item,
                 title: content.map_or_else(String::new, |c| c.title.clone()),
@@ -49,6 +56,10 @@ pub fn review_rows(run: &RunView) -> Vec<ReviewRow> {
                 rated: r.rated,
                 reading: r.read_ms.map(|ms| (words, ms / 100)),
                 suggestion,
+                answer_match: run
+                    .scores
+                    .get(&r.item)
+                    .map(|s| ((s.score.value * 100.0).round() as u32, s.score.verdict)),
             }
         })
         .collect()

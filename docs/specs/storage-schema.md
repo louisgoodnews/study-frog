@@ -59,6 +59,11 @@ turns runs left idle, running or paused into `aborted` and closes their log with
   empty for a global achievement, else the stack's uid. History: no foreign keys, `INSERT OR IGNORE` so an
   unlock keeps its first time.
 
+## Schema v6: answer scores
+- `answer_score(id, run_uid, item_uid, value, verdict, engine, at_ms)`: how a typed answer compared with the
+  reference, written when the comparison finishes. `engine` names the runtime, because scores of different
+  runtimes are not interchangeable. History: no foreign keys.
+
 ## Vault rules (M2)
 - Only `.md` files are indexed; names starting with `.` (and everything inside such folders) are skipped, as are symlinks.
 - A **stack** is a folder containing `_stack.md`. An item belongs to the nearest ancestor folder that is a

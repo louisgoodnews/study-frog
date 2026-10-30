@@ -2,6 +2,7 @@
 //! supplies the time (`State::now`) and executes the effects that save progress.
 
 use studyfrog_core::run::{Run, RunState};
+use studyfrog_core::settings::AnswerEngine;
 use studyfrog_rehearsal::input::{Action, Input};
 use studyfrog_rehearsal::session::{ItemPhase, current_item, session_new};
 use studyfrog_rehearsal::step::step;
@@ -29,11 +30,11 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::RunAction(action) => act(state, action),
         Msg::AnswerEdited(text) => with_run(state, |r| RunView { answer: text, ..r }),
         Msg::ItemLoaded(uid, result) => item_loaded(state, uid, result),
-        Msg::AnswerScored(uid, result) => answer_scored(state, uid, result),
+        Msg::AnswerScored(uid, result) => crate::run_results::answer_scored(state, uid, result),
         Msg::ApplySuggestion { item, expected, to } => {
             (state, vec![Effect::Rerate { item, expected, to }])
         }
-        Msg::Rerated(uid, result) => rerated(state, uid, result),
+        Msg::Rerated(uid, result) => crate::run_results::rerated(state, uid, result),
         Msg::StepRecorded(Err(e)) => error(state, format!("Could not save your progress: {e}")),
         Msg::LeaveRun => leave(state),
         _ => (state, Vec::new()),
@@ -80,7 +81,10 @@ fn run_ready(state: State, result: Result<Run, String>) -> (State, Vec<Effect>) 
     match result {
         Ok(run) => {
             let mut view = run_view_new(session_new(run), state.now);
-            view.reading = studyfrog_rehearsal::reading::reading_params(state.app.reading_wpm);
+            view.reading = studyfrog_rehearsal::reading::reading_params(
+                state.app.reading_wpm,
+                &state.app.reading,
+            );
             state.rehearse.run = Some(view);
             act(state, Action::Start)
         }
@@ -100,8 +104,10 @@ fn act(state: State, action: Action) -> (State, Vec<Effect>) {
     let mut effects = Vec::new();
     let submitted = match &action {
         Action::SubmitAnswer(text) => current_item(&run.session).map(|item| Effect::ScoreAnswer {
+            run: run.session.run.uid,
             item,
             answer: text.clone(),
+            words_only: state.app.answer_engine == AnswerEngine::Words,
         }),
         _ => None,
     };
@@ -141,50 +147,6 @@ fn prefetch(run: &mut RunView) -> Vec<Effect> {
         .filter(|uid| run.requested.insert(*uid))
         .map(Effect::LoadItem)
         .collect()
-}
-
-/// Keep the score if it is for the item now on screen; a late answer for an item already rated is
-/// dropped. A failure is reported but never blocks rating: the user can always rate by hand.
-fn answer_scored(
-    state: State,
-    uid: studyfrog_core::uid::Uid,
-    result: Result<crate::run_state::Scored, String>,
-) -> (State, Vec<Effect>) {
-    let mut state = state;
-    let current = state
-        .rehearse
-        .run
-        .as_ref()
-        .and_then(|r| current_item(&r.session));
-    if current != Some(uid) {
-        return (state, Vec::new());
-    }
-    match result {
-        Ok(scored) => {
-            if let Some(run) = &mut state.rehearse.run {
-                run.scored = Some(scored);
-            }
-            (state, Vec::new())
-        }
-        Err(e) => error(state, format!("Could not compare your answer: {e}")),
-    }
-}
-
-fn rerated(
-    state: State,
-    uid: studyfrog_core::uid::Uid,
-    result: Result<(), String>,
-) -> (State, Vec<Effect>) {
-    match result {
-        Ok(()) => {
-            let (state, _) = with_run(state, |mut r| {
-                r.applied.insert(uid);
-                r
-            });
-            (state, vec![Effect::CheckAchievements])
-        }
-        Err(e) => error(state, format!("Could not change the rating: {e}")),
-    }
 }
 
 fn item_loaded(

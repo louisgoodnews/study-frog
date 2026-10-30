@@ -138,3 +138,28 @@ fn a_run_uses_the_speed_measured_when_it_started() {
         120
     );
 }
+
+#[test]
+fn the_answer_comparison_choice_is_kept_and_the_thresholds_are_explained() {
+    use studyfrog_core::settings::AnswerEngine;
+    let mut m = open_model();
+    apply(&mut m, Msg::Navigate(Screen::Settings));
+    let mut h = harness(m);
+    h.run();
+    assert!(h
+        .query_by_label("Reading suggestions: fast is under 75 % of the expected time, slow is over 200 %, answers under 8 words are ignored.")
+        .is_some());
+    assert!(
+        h.query_by_label(
+            "A high match means similar wording or meaning, not that the facts are right."
+        )
+        .is_some()
+    );
+    assert_all_named(&h, "settings");
+    h.get_by_label("Word matching only").click();
+    h.run();
+    assert_eq!(h.state().0.state.app.answer_engine, AnswerEngine::Words);
+    assert!(h.state().1.iter().any(
+        |e| matches!(e, Effect::SaveAppSettings(a) if a.answer_engine == AnswerEngine::Words)
+    ));
+}

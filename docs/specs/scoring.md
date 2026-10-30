@@ -27,6 +27,25 @@ Score { value: f32 /* 0..=1 */, verdict: Correct|Partial|Incorrect, rubric_hits:
   `$XDG_DATA_HOME/studyfrog/models/all-MiniLM-L6-v2/` (default `~/.local/share/studyfrog/...`). When the
   model is missing or fails to load, the lexical runtime is used and the result line says why.
 
+**Calibration.** Runtimes rate the same answer very differently, so each reports a *pivot*: the cosine
+that counts as a score of 0.7. Scores are stretched around it in two straight pieces (0 stays 0, the pivot
+becomes 0.7, 1 stays 1), which keeps the order of answers and makes an item's `min_score` mean the same thing
+whichever runtime compares the texts. Measured on a labelled set of 44 answers (11 facts, each with a
+paraphrase, a partial answer, an off-topic answer and a wrong-fact answer; the set is in
+`crates/studyfrog-candle/tests/calibration.rs`):
+
+| | paraphrase (cosine) | partial | off-topic | best pivot | three-way accuracy at the pivot |
+|---|---|---|---|---|---|
+| semantic | 0.65 to 0.98, mean 0.80 | 0.51 to 0.80 | 0.00 to 0.12 | 0.67 (0.7 used) | 26 of 33 (27 at 0.67) |
+| lexical | 0.14 to 0.69, mean 0.51 | 0.10 to 0.87 | 0.00 to 0.48 | 0.44 (used) | 20 of 33 (13 at 0.70) |
+
+(Three-way: paraphrase should be Correct, partial answers Partly right, off-topic answers Not quite.)
+
+**Limit: wrong facts.** Similarity is not truth. An answer that differs from the reference by one decisive
+word (lowers/raises, 1789/1889, nucleus/mitochondria) is about as similar as a correct paraphrase: 10 of 11
+such answers were accepted by the semantic runtime and all 11 by word matching. Rubric points and the user's
+own rating are the safeguards; the screen says that a high match is not a check of the facts.
+
 Constants: partial band 0.2 below `min_score`; rubric point hit at cosine 0.5; similarity weight 0.6.
 
 ## Properties (proptest)

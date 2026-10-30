@@ -35,8 +35,10 @@ fn submitting_an_answer_asks_for_a_comparison_and_the_result_is_kept_until_ratin
     let effects = apply(&mut m, Msg::RunAction(Action::SubmitAnswer("Paris".into())));
     assert!(
         effects.contains(&Effect::ScoreAnswer {
+            run: Uid(100),
             item: Uid(1),
-            answer: "Paris".into()
+            answer: "Paris".into(),
+            words_only: false,
         }),
         "{effects:?}"
     );
@@ -123,8 +125,10 @@ fn the_executor_scores_against_a_real_card_offline() {
     let msgs = execute(
         &mut worker,
         Effect::ScoreAnswer {
+            run: Uid(500),
             item: Uid(10),
             answer: "a".into(),
+            words_only: false,
         },
         NOW_NS,
     );
@@ -138,10 +142,61 @@ fn the_executor_scores_against_a_real_card_offline() {
     let none = execute(
         &mut worker,
         Effect::ScoreAnswer {
+            run: Uid(500),
             item: Uid(12),
             answer: "a".into(),
+            words_only: false,
         },
         NOW_NS,
     );
     assert!(matches!(&none[0], Msg::AnswerScored(_, Err(e)) if e.contains("cards and questions")));
+}
+
+#[test]
+fn the_comparison_is_stored_with_its_run_and_word_matching_can_be_forced() {
+    use studyfrog_store::answer_scores::load_answer_scores;
+    let vault = sample_vault("score-store");
+    let mut worker = worker_new(None);
+    execute(
+        &mut worker,
+        Effect::OpenVault(vault.path.display().to_string()),
+        NOW_NS,
+    );
+    let ask = |words_only| Effect::ScoreAnswer {
+        run: Uid(500),
+        item: Uid(10),
+        answer: "a".into(),
+        words_only,
+    };
+    execute(&mut worker, ask(false), NOW_NS);
+    let msgs = execute(&mut worker, ask(true), NOW_NS);
+    let Msg::AnswerScored(_, Ok(s)) = &msgs[0] else {
+        panic!("{:?}", msgs[0])
+    };
+    assert!(s.engine.contains("chosen in the settings"), "{}", s.engine);
+    let stored = load_answer_scores(&worker.session.as_ref().unwrap().conn, Uid(500)).unwrap();
+    assert_eq!(stored.len(), 2);
+    assert_eq!(
+        (stored[0].item, stored[0].verdict.as_str()),
+        (Uid(10), "correct")
+    );
+    assert!(stored[0].value > 0.99 && stored[0].engine.contains("word matching"));
+}
+
+#[test]
+fn the_review_shows_how_each_answer_matched() {
+    let mut m = running_model(RunMode::Answer);
+    apply(&mut m, Msg::RunAction(Action::SubmitAnswer("Paris".into())));
+    apply(
+        &mut m,
+        Msg::AnswerScored(Uid(1), Ok(scored(0.9, Verdict::Correct, Rating::Good))),
+    );
+    m.state.now = 4.0;
+    apply(&mut m, Msg::RunAction(Action::Rate(Rating::Good)));
+    apply(&mut m, Msg::RunAction(Action::Abort));
+    let rows = studyfrog_ui::review::review_rows(m.state.rehearse.run.as_ref().unwrap());
+    assert_eq!(rows[0].answer_match, Some((90, Verdict::Correct)));
+    let mut h = harness(m);
+    h.run();
+    assert!(h.query_by_label("90 % (Correct)").is_some());
 }

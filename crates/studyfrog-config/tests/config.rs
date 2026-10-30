@@ -114,6 +114,12 @@ fn app_settings_round_trip_awkward_paths_and_track_recent_vaults() {
         vault: Some("/home/me/\"notes\" \\ tab\there \u{e9}".into()),
         recent: vec!["/a".into(), "C:\\vault".into()],
         reading_wpm: Some(215),
+        answer_engine: studyfrog_core::settings::AnswerEngine::Words,
+        reading: studyfrog_core::settings::ReadingTuning {
+            fast_percent: Some(60),
+            slow_percent: Some(250),
+            min_words: Some(12),
+        },
     };
     assert_eq!(parse_app_settings(&render_app_settings(&s)), Ok(s));
     assert_eq!(parse_app_settings("").unwrap(), AppSettings::default());
@@ -139,7 +145,7 @@ fn app_settings_round_trip_awkward_paths_and_track_recent_vaults() {
 proptest! {
     #[test]
     fn any_vault_path_round_trips(path in "\\PC{0,40}") {
-        let s = AppSettings { vault: Some(path.clone()), recent: vec![path], reading_wpm: None };
+        let s = AppSettings { vault: Some(path.clone()), recent: vec![path], reading_wpm: None, answer_engine: Default::default(), reading: Default::default() };
         prop_assert_eq!(parse_app_settings(&render_app_settings(&s)), Ok(s));
     }
 }
@@ -164,54 +170,46 @@ fn reading_speed_is_stored_and_must_be_plausible() {
 }
 
 #[test]
-fn achievements_are_parsed_and_checked() {
-    use studyfrog_config::achievements::parse_achievements;
-    use studyfrog_core::achievement::{AchievementScope, Metric};
-    let text = "[[achievement]]\nid = \"week\"\ntitle = \"Week\"\nscope = \"global\"\nmetric = \"streak_days\"\nthreshold = 7\n\n\
-                [[achievement]]\nid = \"deck\"\ntitle = \"Deck\"\ndescription = \"x\"\nscope = \"stack\"\nmetric = \"items_learned\"\nthreshold = 10\n";
-    let rules = parse_achievements(text).unwrap();
+fn answer_engine_and_reading_thresholds_are_read_and_checked() {
+    use studyfrog_core::settings::AnswerEngine;
+    let ok = parse_app_settings("answer_engine = \"words\"\nreading_fast_percent = 60\nreading_slow_percent = 250\nreading_min_words = 12\n").unwrap();
+    assert_eq!(ok.answer_engine, AnswerEngine::Words);
     assert_eq!(
-        (rules[0].metric, rules[0].scope, rules[0].threshold),
-        (Metric::StreakDays, AchievementScope::Global, 7)
+        (
+            ok.reading.fast_percent,
+            ok.reading.slow_percent,
+            ok.reading.min_words
+        ),
+        (Some(60), Some(250), Some(12))
     );
     assert_eq!(
-        (rules[1].description.as_str(), rules[1].scope),
-        ("x", AchievementScope::Stack)
-    );
-    assert!(
-        parse_achievements("").unwrap().is_empty(),
-        "an empty file means no achievements"
+        parse_app_settings("").unwrap().answer_engine,
+        AnswerEngine::Auto
     );
     for (bad, needle) in [
+        ("answer_engine = \"magic\"\n", "\"auto\" or \"words\""),
         (
-            "[[achievement]]\nid = \"a\"\ntitle = \"A\"\nscope = \"galaxy\"\nmetric = \"streak_days\"\nthreshold = 1\n",
-            "scope must be",
+            "reading_fast_percent = 5\n",
+            "reading_fast_percent must be between 10 and 100",
+        ),
+        ("reading_fast_percent = 101\n", "between 10 and 100"),
+        (
+            "reading_slow_percent = 50\n",
+            "reading_slow_percent must be between 100 and 1000",
         ),
         (
-            "[[achievement]]\nid = \"a\"\ntitle = \"A\"\nscope = \"global\"\nmetric = \"vibes\"\nthreshold = 1\n",
-            "unknown metric",
-        ),
-        (
-            "[[achievement]]\nid = \"a\"\ntitle = \"A\"\nscope = \"global\"\nmetric = \"streak_days\"\nthreshold = 0\n",
-            "at least 1",
-        ),
-        (
-            "[[achievement]]\nid = \"a\"\ntitle = \"A\"\nscope = \"stack\"\nmetric = \"runs_finished\"\nthreshold = 1\n",
-            "global",
-        ),
-        (
-            "[[achievement]]\nid = \"a\"\ntitle = \"A\"\nscope = \"global\"\nmetric = \"streak_days\"\nthreshold = 1\ncolour = \"red\"\n",
-            "colour",
+            "reading_min_words = 0\n",
+            "reading_min_words must be between 1 and 200",
         ),
     ] {
-        let e = parse_achievements(bad).unwrap_err();
-        assert!(e.message.contains(needle), "{needle}: {e:?}");
+        let e = parse_app_settings(&format!("vault = \"/v\"\n{bad}")).unwrap_err();
+        assert!(
+            e.message.contains(needle) && e.line == Some(2),
+            "{needle}: {e:?}"
+        );
     }
-    let twice = "[[achievement]]\nid = \"a\"\ntitle = \"A\"\nscope = \"global\"\nmetric = \"streak_days\"\nthreshold = 1\n\n[[achievement]]\nid = \"a\"\ntitle = \"B\"\nscope = \"global\"\nmetric = \"streak_days\"\nthreshold = 2\n";
     assert!(
-        parse_achievements(twice)
-            .unwrap_err()
-            .message
-            .contains("used twice")
+        !render_app_settings(&Default::default()).contains("answer_engine"),
+        "defaults are not written"
     );
 }

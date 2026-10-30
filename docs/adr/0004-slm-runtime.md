@@ -51,7 +51,9 @@ Debug builds are far slower; judge latency on release builds only.
 The labelled set is tiny (5 paraphrases that should pass, 5 wrong answers). Correct paraphrases scored
 0.65 to 0.97 and wrong answers 0.01 to 0.43, so the schema default `min_score` of 0.7 is too strict for the
 semantic runtime (it would call some good paraphrases "partly right"); about 0.55 to 0.6 fits this sample.
-Calibrating properly needs a bigger set. The default is unchanged until then.
+A later labelled set of 44 answers (see the scoring spec) showed that 10 trivial pairs had misled this
+sample: with harder partial answers the best pivot for MiniLM is 0.67, so the default of 0.7 stays. Word
+matching, not MiniLM, needed calibrating (pivot 0.44).
 
 The runtime lives in its own crate, `studyfrog-candle`, which only the application binary depends on; the
 application passes its loader to the UI. This keeps the tensor library out of every other crate and test

@@ -3,6 +3,8 @@
 
 mod common;
 
+use common::runs::{act, finished_run, mark_of};
+
 use common::views::{assert_all_named, harness, running_model};
 use common::{NOW_NS, sample_vault};
 use egui_kittest::kittest::Queryable;
@@ -12,40 +14,11 @@ use studyfrog_core::review::Rating;
 use studyfrog_core::run::RunMode;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::Action;
-use studyfrog_service::content::ItemContent;
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::exec::{execute, worker_new};
-use studyfrog_ui::model::{Model, apply};
+use studyfrog_ui::model::apply;
 use studyfrog_ui::msg::Msg;
-use studyfrog_ui::review::{current_mark, review_rows};
-
-const TWENTY_WORDS: &str = "one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty";
-
-fn act(m: &mut Model, now: f64, action: Action) -> Vec<Effect> {
-    m.state.now = now;
-    apply(m, Msg::RunAction(action))
-}
-
-fn mark_of(m: &Model) -> Option<Difficulty> {
-    current_mark(m.state.rehearse.run.as_ref().unwrap())
-}
-
-/// Item 1 has a twenty-word back and was reviewed before; it is read for `read_s` seconds.
-fn finished_run(read_s: f64, previous: Option<Rating>, rating: Rating) -> Model {
-    let mut m = running_model(RunMode::Flip);
-    let content = ItemContent {
-        title: "Numbers".into(),
-        prompt: "Count".into(),
-        answer: TWENTY_WORDS.into(),
-        previous,
-    };
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
-    act(&mut m, 0.5, Action::Mark(Difficulty::Easy));
-    act(&mut m, 1.0, Action::Flip);
-    act(&mut m, 1.0 + read_s, Action::Rate(rating));
-    act(&mut m, 20.0, Action::Abort);
-    m
-}
+use studyfrog_ui::review::review_rows;
 
 #[test]
 fn marking_is_recorded_replaced_by_the_latest_mark_and_forgotten_for_the_next_item() {
@@ -92,7 +65,7 @@ fn the_review_shows_previous_own_and_suggested_rating() {
         (
             "Numbers",
             Some(Rating::Hard),
-            Some(Difficulty::Easy),
+            Some(Difficulty::Medium),
             Some(Rating::Good)
         )
     );
@@ -108,7 +81,7 @@ fn the_review_shows_previous_own_and_suggested_rating() {
         "Your rating",
         "Suggested rating",
         "Hard",
-        "easy",
+        "medium",
         "Good",
         "Easy",
         "This item was rather easy for you.",
@@ -200,26 +173,5 @@ fn the_executor_refuses_to_change_a_review_that_does_not_exist() {
         matches!(&msgs[0], Msg::Rerated(Uid(10), Err(e)) if e.contains("changed")),
         "{:?}",
         msgs[0]
-    );
-}
-
-#[test]
-fn a_slow_read_is_suggested_one_step_harder_with_its_reason() {
-    let m = finished_run(12.0, Some(Rating::Good), Rating::Good);
-    let r = &review_rows(m.state.rehearse.run.as_ref().unwrap())[0];
-    let s = r.suggestion.unwrap();
-    assert_eq!(
-        (s.rating, s.reason),
-        (Rating::Hard, studyfrog_rehearsal::reading::Reason::Slow)
-    );
-    let mut h = harness(m);
-    h.run();
-    assert!(
-        h.query_by_label("This took you a long time to read: it may be harder than you rated it.")
-            .is_some()
-    );
-    assert!(
-        h.query_by_label("Change the rating of Numbers to Hard")
-            .is_some()
     );
 }

@@ -26,6 +26,7 @@
     - TASK-0083 Post-run review and applying a suggestion
     - TASK-0084 Reading-speed test
     - TASK-0085 Slow reads suggest difficulty
+    - TASK-0086 to TASK-0090 Follow-ups from the open flags (calibration, stored answer scores, word-matching setting, mark suggestions, reading thresholds)
 
 ## Exit criteria
 

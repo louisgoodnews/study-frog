@@ -1,54 +1,45 @@
 # Status
 
-**Phase:** M0 to M7 complete (M7 is achievements and reporting). **Date:** 2026-10-30. **Branch:** `main`.
+**Phase:** M0 to M7 complete; M8 (extensibility and release) is next. **Date:** 2026-10-30. **Branch:** `main`.
+Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
-- Cargo workspace with 12 empty, documented crates (`crates/studyfrog-*`); `cargo check` passes.
-- `docs/`: vision, architecture, principles, glossary, ADRs 0001-0005 (all Accepted),
-  roadmap M0-M8 (17 epics, 32 stories, 67 tasks planned), specs, research, contributing guides.
-- `docs/issues/`: M0 seeded (EPIC-001/002, STORY-0001..0004, TASK-0001..0011).
-- Guardrails in `scripts/`: `check.sh` (fmt, clippy, test, line count, layering, no-OOP),
-  `linecount.sh`, `check-deps.sh`, `check-impls.sh`, `check-issues.sh`. Each check was shown to
-  fail on a violation. `tools/repo-lint` (standalone, syn + serde-saphyr) backs the last two.
-- Config: `rustfmt.toml`, `clippy.toml`, `rust-toolchain.toml` (1.99.1), `.gitignore`.
-- Domain code: `studyfrog-core` (data + free functions; the only `impl` blocks are the `Idx<T>` trait
-  impls) and `studyfrog-srs` (free functions only).
+- A Cargo workspace of 16 crates under `crates/` (layering enforced by `scripts/check-deps.sh`, ADR 0001):
+  `core`, `config`, `md`, `store`, `srs`, `rehearsal`, `calendar`, `board`, `graph`, `slm`, `candle`,
+  `report`, `achieve`, `service`, `ui`, `app`. No inherent `impl` blocks; files are at most 250 lines.
+- The app (`cargo run -p studyfrog-app`): vault of Markdown notes, cards and questions with links and a graph;
+  FSRS-6 and SM-2 scheduling per stack; rehearsal runs in any order with latency capture, difficulty marks, a
+  reading-speed baseline and a review after each run; typed answers compared offline (language model or word
+  matching); calendar and kanban board; achievements; retention, answer-time and forecast reports.
+- Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
-## Flags and known gaps
-- ADR 0004 is accepted but gated on the M6 latency spike (p95 <= 150 ms, else switch to `ort`).
-- Benchmark budgets are provisional (rationale documented); real baselines come with the first
-  benchmark of each crate.
-- Macro-generated impl detection in `repo-lint` is token-level and heuristic.
-- Unverified-from-memory citations remain marked `[u]` in `docs/research/` (Ebbinghaus, Bjork,
-  Wozniak, FSRS papers, Fitts, Hick, Nielsen, GNOME HIG).
-- No git remote is configured; the workspace `repository` field was removed until one exists.
-- FSRS-6 pinned in `docs/specs/srs-algorithm.md`; remaining update equations and golden vectors
-  are taken from the reference implementation in TASK-0016/0017.
-
-## Flags (please review)
+## Decisions waiting for you
 - **ADR 0006 (Proposed):** `studyfrog-service`, the application layer between `ui` and the domain crates.
-- **ADR 0007 (Proposed):** settings live in TOML (`studyfrog.toml`, `_stack.toml`), content in Markdown, per your
-  suggestion; new pure crate `studyfrog-config`. Reading of "point to Markdown files": config sits beside the
-  content and is keyed by folder (and id), not a manifest of paths. Say if you meant a manifest.
-- **Decision to confirm:** spaced runs default to `UpdateSchedule`; sequential/shuffled/drill/stalest runs default to
-  `PracticeOnly`. Overridable per run.
-- Service gaps from M3 are closed: SM-2 per stack, per-stack daily limits, persisted run filters.
-- Known limits: the settings renderer creates files and does not preserve comments (the settings UI should use
-  `toml_edit`); `studyfrog.toml` is read on demand (no hot reload yet); a day window is supplied by the caller
-  (the UI must decide local midnight / rollover); after a scheduler switch `Review.elapsed_days` restarts for the
-  new algorithm.
-- **UI limits to know:** the vault is chosen by typing a path (no native folder dialog yet; `rfd` would add GTK/portal
-  weight); the "day" for daily limits is the UTC day; answers are shown as plain text (Markdown preview is
-  TASK-0041); IME and real screen-reader behaviour are unverified (see ADR 0002).
-- Lowest-recall queue building is 3.9 ms for 10k items (a `powf` per comparison); cacheable later.
+- **ADR 0007 (Proposed):** settings live in TOML next to the Markdown content (`studyfrog.toml`, `_stack.toml`,
+  `achievements.toml`, `app.toml`). Config is keyed by folder and id, not a manifest of paths; say if you meant
+  a manifest.
+- **Run defaults:** spaced runs update the schedule; sequential, shuffled, drill and stalest runs are practice
+  only. Overridable per run. Confirm or change.
 
-## Next task
-**M8** extensibility and release hardening (see [ROADMAP](docs/roadmap/ROADMAP.md)). Live state: [BOARD.md](BOARD.md).
+## Known limits
+- **Answer comparison** measures similarity, not truth: a wrong answer that differs from the reference by one
+  decisive word usually scores as correct (10 of 11 in the labelled set). The language model is optional and
+  must be placed in `~/.local/share/studyfrog/models/all-MiniLM-L6-v2/`.
+- **Forecast** error (weekly totals off by 9 to 11 %) was measured on a simulated history only; the Reports
+  screen says which history it used.
+- **Marks** (easy/medium/difficult) are stored and used in reports and rating suggestions, but never change the
+  schedule by themselves.
+- **UI:** the vault is chosen by typing a path (no native folder dialog; `rfd` would add GTK/portal weight);
+  wikilinks resolve by title only; IME and real screen-reader behaviour are unverified (ADR 0002).
+- **Settings:** the renderer does not preserve comments (a settings UI should use `toml_edit`); `studyfrog.toml`
+  is read on demand, with no hot reload; after a scheduler switch `Review.elapsed_days` restarts for the new
+  algorithm.
+- **Performance:** lowest-recall queue building is 3.9 ms for 10k items (a `powf` per comparison).
+- Macro-generated impl detection in `repo-lint` is heuristic. Citations marked `[u]` in `docs/research/` are
+  unverified from memory. No git remote is configured.
 
-**Open flags:** the forecast has only been measured on a simulated history (weekly error 9 to 11 %); the
-default `min_score` (0.7) is too strict for the semantic answer runtime; answer scores are not stored with run
-events; "force word matching" is not a setting; marks feed reports but not scheduling; the fast/slow reading
-thresholds are defaults in code.
+## Next
+M8: extension points (card types, importers), an example extension, a profiling pass and a Linux package.
 
 ## Using the app now
 `cargo run -p studyfrog-app`: pick a vault folder, create a stack and cards, set up a run (any order or filter),

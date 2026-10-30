@@ -15,6 +15,10 @@ use tokenizers::{PaddingParams, Tokenizer, TruncationParams};
 use studyfrog_slm::runtime::{SlmError, SlmRuntime};
 use studyfrog_slm::vector::normalize;
 
+/// MiniLM rates acceptable answers from about 0.65 up; the best pivot on the labelled set is 0.67 and
+/// 0.7 is nearly as good (26 against 27 of 33), so no stretching is needed.
+pub const MINILM_PIVOT: f32 = 0.7;
+
 /// Longest input in tokens; longer texts are cut (answers are short).
 pub const MAX_TOKENS: usize = 256;
 
@@ -102,6 +106,10 @@ fn pooled(
 impl SlmRuntime for Minilm {
     fn name(&self) -> &str {
         "language model (MiniLM)"
+    }
+
+    fn pivot(&self) -> f32 {
+        MINILM_PIVOT
     }
 
     fn embed(&self, texts: &[&str]) -> Result<Vec<Vec<f32>>, SlmError> {

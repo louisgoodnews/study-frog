@@ -47,6 +47,13 @@ vault = "/home/me/notes"       # the vault opened last
 recent = ["/home/me/notes"]    # recently opened vaults, newest first
 reading_wpm = 215              # measured reading speed, 50 to 1000; absent = the default of 238
 ```
+Further keys, all optional:
+```toml
+answer_engine = "words"        # "auto" (default: language model when installed) or "words" (word matching only)
+reading_fast_percent = 75      # 10 to 100: reading under this share of the expected time is fast
+reading_slow_percent = 200     # 100 to 1000: reading over this share is slow
+reading_min_words = 8          # 1 to 200: shorter answers say too little about familiarity
+```
 `reading_wpm` is set by the reading-speed test on the Settings screen ("Use the default speed" removes it).
 A value outside 50 to 1000 is an error with its line.
 

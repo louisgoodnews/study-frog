@@ -1,6 +1,6 @@
 //! Everything that can happen: user input and results of effects.
 
-use studyfrog_core::settings::AppSettings;
+use studyfrog_core::settings::{AnswerEngine, AppSettings};
 
 use studyfrog_core::review::Rating;
 use studyfrog_core::run::Run;
@@ -142,6 +142,8 @@ pub enum Msg {
     Plan(PlanMsg),
     /// Something happened on the board screen.
     Board(BoardMsg),
+    /// The answer-comparison choice on the settings screen changed.
+    SetAnswerEngine(AnswerEngine),
     /// Something happened in the reading-speed test.
     ReadingTest(ReadingTestMsg),
 }

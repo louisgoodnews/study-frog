@@ -7,15 +7,16 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::StepOutput;
 use studyfrog_service::achievements::check_achievements;
-use studyfrog_service::compare::score_item_answer;
+use studyfrog_service::compare::{record_answer_score, score_item_answer};
 use studyfrog_service::content::load_item_content;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::rehearse::{StepContext, record_step, start_run};
 use studyfrog_service::reports::build_reports;
 use studyfrog_service::rerate::rerate_latest;
-use studyfrog_service::session::current_settings;
+use studyfrog_service::session::{VaultSession, current_settings};
 use studyfrog_service::timezone::{local_day_window, local_offset_minutes};
-use studyfrog_slm::models::open_runtime;
+use studyfrog_slm::lexical::Lexical;
+use studyfrog_slm::models::{Opened, open_runtime};
 
 use crate::exec::Worker;
 use crate::msg::Msg;
@@ -66,11 +67,21 @@ pub fn record(w: &mut Worker, ctx: &StepContext, out: &StepOutput, now_ns: i64) 
 }
 
 /// Compare a typed answer with the item's reference (offline, with the built-in lexical runtime).
-pub fn score(w: &mut Worker, uid: Uid, answer: &str) -> Msg {
+pub fn score(
+    w: &mut Worker,
+    (run, uid): (Uid, Uid),
+    answer: &str,
+    words_only: bool,
+    now_ns: i64,
+) -> Msg {
     let (models, loader) = (w.models_dir.clone(), w.loader);
-    let (runtime, why) = w
-        .slm
-        .get_or_insert_with(|| open_runtime(models.as_deref(), loader));
+    let chosen: Opened = (Box::new(Lexical), Some("chosen in the settings".to_owned()));
+    let (runtime, why) = if words_only {
+        &chosen
+    } else {
+        w.slm
+            .get_or_insert_with(|| open_runtime(models.as_deref(), loader))
+    };
     let result = match &w.session {
         Some(session) => score_item_answer(session, runtime.as_ref(), uid, answer)
             .map(|s| match why {
@@ -80,10 +91,22 @@ pub fn score(w: &mut Worker, uid: Uid, answer: &str) -> Msg {
                 },
                 None => s,
             })
+            .map(|s| remember(session, run, uid, s, now_ns))
             .map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
     };
     Msg::AnswerScored(uid, result)
+}
+
+/// Store the comparison with its run; a failure is noted in the engine text, never hidden.
+fn remember(session: &VaultSession, run: Uid, item: Uid, s: Scored, now_ns: i64) -> Scored {
+    match record_answer_score(session, run, item, &s, UnixMs(millis(now_ns))) {
+        Ok(()) => s,
+        Err(e) => Scored {
+            engine: format!("{} (not saved: {e})", s.engine),
+            ..s
+        },
+    }
 }
 
 /// Replace the rating of an item's latest review and rebuild its schedule.

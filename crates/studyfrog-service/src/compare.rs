@@ -2,11 +2,13 @@
 
 use studyfrog_core::items::DEFAULT_MIN_SCORE;
 use studyfrog_core::review::Rating;
+use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_md::doc::Doc;
 use studyfrog_slm::rating::suggested_rating;
 use studyfrog_slm::runtime::SlmRuntime;
-use studyfrog_slm::score::{Comparison, Score, score_answer};
+use studyfrog_slm::score::{Comparison, Score, score_answer, verdict_name};
+use studyfrog_store::answer_scores::{AnswerScoreRow, insert_answer_score};
 
 use crate::content::load_doc;
 use crate::session::{ServiceError, VaultSession};
@@ -62,4 +64,23 @@ pub fn score_item_answer<R: SlmRuntime + ?Sized>(
         rating,
         engine: runtime.name().to_owned(),
     })
+}
+
+/// Remember how an answer in a run compared with its reference.
+pub fn record_answer_score(
+    session: &VaultSession,
+    run: Uid,
+    item: Uid,
+    scored: &Scored,
+    now: UnixMs,
+) -> Result<(), ServiceError> {
+    let row = AnswerScoreRow {
+        run,
+        item,
+        value: scored.score.value,
+        verdict: verdict_name(scored.score.verdict).to_owned(),
+        engine: scored.engine.clone(),
+        at_ms: now.0,
+    };
+    insert_answer_score(&session.conn, &row).map_err(ServiceError::Store)
 }

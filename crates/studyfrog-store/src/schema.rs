@@ -1,6 +1,7 @@
 //! Schema as data. See `docs/specs/storage-schema.md`.
 
 use crate::migrate::Migration;
+use crate::schema_later::{V4, V5, V6};
 
 /// All migrations, oldest first.
 pub const MIGRATIONS: &[Migration] = &[
@@ -28,6 +29,11 @@ pub const MIGRATIONS: &[Migration] = &[
         version: 5,
         name: "achievement unlocks",
         sql: V5,
+    },
+    Migration {
+        version: 6,
+        name: "answer scores",
+        sql: V6,
     },
 ];
 
@@ -191,60 +197,4 @@ CREATE TABLE run_event (
     payload  TEXT,
     PRIMARY KEY (run_uid, seq)
 ) WITHOUT ROWID;
-";
-
-/// Achievement unlocks (history, no foreign keys); `scope_key` is empty when global, else a stack uid.
-const V5: &str = "
-CREATE TABLE achievement_unlock (
-    rule_id     TEXT NOT NULL,
-    scope_key   TEXT NOT NULL,
-    unlocked_ms INTEGER NOT NULL,
-    PRIMARY KEY (rule_id, scope_key)
-) WITHOUT ROWID;
-";
-
-/// Authoritative planning data (ADR 0003): the calendar's sessions and the kanban board. Dates are
-/// ISO `YYYY-MM-DD` text. Cards belong to a column and are ordered by `pos`; deleting a column
-/// would delete its cards, so the service moves them away first.
-const V4: &str = "
-CREATE TABLE session (
-    id            TEXT PRIMARY KEY,
-    title         TEXT NOT NULL,
-    stack_uid     TEXT,
-    start_date    TEXT NOT NULL,
-    start_minute  INTEGER NOT NULL CHECK (start_minute BETWEEN 0 AND 1439),
-    duration_min  INTEGER NOT NULL CHECK (duration_min BETWEEN 1 AND 1440),
-    repeat_kind   TEXT NOT NULL CHECK (repeat_kind IN ('never', 'daily', 'weekly', 'monthly')),
-    repeat_every  INTEGER NOT NULL DEFAULT 1 CHECK (repeat_every >= 1),
-    repeat_days   INTEGER NOT NULL DEFAULT 0 CHECK (repeat_days BETWEEN 0 AND 127),
-    ends_kind     TEXT NOT NULL CHECK (ends_kind IN ('forever', 'on', 'after')),
-    ends_date     TEXT,
-    ends_count    INTEGER,
-    notes         TEXT NOT NULL DEFAULT ''
-) WITHOUT ROWID;
-CREATE INDEX session_start ON session(start_date);
-
-CREATE TABLE session_cancelled (
-    session_id TEXT NOT NULL REFERENCES session(id) ON DELETE CASCADE,
-    date       TEXT NOT NULL,
-    PRIMARY KEY (session_id, date)
-) WITHOUT ROWID;
-
-CREATE TABLE board_column (
-    id        TEXT PRIMARY KEY,
-    pos       INTEGER NOT NULL,
-    name      TEXT NOT NULL,
-    wip_limit INTEGER CHECK (wip_limit IS NULL OR wip_limit >= 0)
-) WITHOUT ROWID;
-
-CREATE TABLE board_card (
-    id        TEXT PRIMARY KEY,
-    column_id TEXT NOT NULL REFERENCES board_column(id) ON DELETE CASCADE,
-    pos       INTEGER NOT NULL,
-    title     TEXT NOT NULL,
-    notes     TEXT NOT NULL DEFAULT '',
-    stack_uid TEXT,
-    points    INTEGER
-) WITHOUT ROWID;
-CREATE INDEX board_card_column ON board_card(column_id, pos);
 ";

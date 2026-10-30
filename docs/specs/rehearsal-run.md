@@ -91,6 +91,13 @@ Distraction-free: the prompt, a progress counter and the time on the current ite
   suggested Hard (it went by too fast to have been read). Slow (over 200 % of the expected time): a struggle
   shows even if the answer came, so Good is suggested Hard and Easy is suggested Good. Ratings of Again or
   Hard are never softened.
+- **The user's mark.** A mark also suggests a rating, and wins over reading speed when both apply: marked
+  difficult but rated Good or Easy suggests Hard; marked easy and rated Good suggests Easy. Medium or no mark
+  suggests nothing, and a low rating is never softened.
+- **Thresholds.** Fast, slow and the minimum word count can be changed in `app.toml` (see
+  [config-files](config-files.md)).
+- **Answer match.** In answer mode the review shows how each typed answer compared with the reference; the
+  comparison is stored per run (schema v6).
 - **Review.** After the run, each item shows its previous rating, the user's mark and rating, and the
   suggestion with the reason and the reading time. In a schedule-updating run the user can apply a
   suggestion: the rating of the item's latest review is replaced and its schedule rebuilt by replaying the

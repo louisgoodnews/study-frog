@@ -2,6 +2,7 @@
 //! Temporary vaults and a loop that runs effects until the UI is idle.
 
 pub mod flow;
+pub mod runs;
 pub mod views;
 
 use std::fs;

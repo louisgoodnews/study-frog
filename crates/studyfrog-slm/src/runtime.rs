@@ -27,6 +27,11 @@ pub trait SlmRuntime {
     /// A short name for the user: how answers were compared.
     fn name(&self) -> &str;
 
+    /// The cosine similarity that counts as a score of 0.7 (acceptable), found by calibrating the
+    /// runtime on labelled answers. Scores are stretched around it so an item's `min_score` means
+    /// the same thing whichever runtime compares the texts.
+    fn pivot(&self) -> f32;
+
     /// Embed the texts.
     fn embed(&self, texts: &[&str]) -> Result<Vec<Vec<f32>>, SlmError>;
 }

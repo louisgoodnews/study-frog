@@ -6,6 +6,7 @@ use studyfrog_core::plan::ScheduleEffect;
 use studyfrog_core::review::Rating;
 use studyfrog_core::run::RunState;
 use studyfrog_rehearsal::reading::{Reason, Suggestion};
+use studyfrog_slm::score::Verdict;
 
 use crate::msg::Msg;
 use crate::review::{ReviewRow, review_rows};
@@ -23,6 +24,14 @@ fn rating_name(r: Rating) -> &'static str {
 
 fn mark_name(d: Option<Difficulty>) -> String {
     d.map_or_else(|| "-".to_owned(), |d| difficulty_name(d).to_owned())
+}
+
+fn verdict_label(v: Verdict) -> &'static str {
+    match v {
+        Verdict::Correct => "Correct",
+        Verdict::Partial => "Partly right",
+        Verdict::Incorrect => "Not quite",
+    }
 }
 
 fn rating_text(r: Option<Rating>) -> &'static str {
@@ -78,22 +87,20 @@ fn review_table(run: &RunView, updates: bool, ui: &mut egui::Ui, out: &mut Vec<M
     }
     ui.add_space(8.0);
     ui.heading("Review");
+    let scored = rows.iter().any(|r| r.answer_match.is_some());
     Grid::new("review")
         .striped(true)
-        .num_columns(5)
+        .num_columns(5 + usize::from(scored))
         .show(ui, |ui| {
-            for head in [
-                "Item",
-                "Previous rating",
-                "Your mark",
-                "Your rating",
-                "Suggested rating",
-            ] {
-                ui.strong(head);
+            let heads = ["Item", "Previous rating", "Your mark", "Your rating"];
+            heads.iter().for_each(|h| drop(ui.strong(*h)));
+            if scored {
+                ui.strong("Answer match");
             }
+            ui.strong("Suggested rating");
             ui.end_row();
             for row in &rows {
-                review_row(run, row, updates, ui, out);
+                review_row(run, row, (updates, scored), ui, out);
                 ui.end_row();
             }
         });
@@ -102,7 +109,7 @@ fn review_table(run: &RunView, updates: bool, ui: &mut egui::Ui, out: &mut Vec<M
 fn review_row(
     run: &RunView,
     row: &ReviewRow,
-    updates: bool,
+    (updates, scored): (bool, bool),
     ui: &mut egui::Ui,
     out: &mut Vec<Msg>,
 ) {
@@ -110,6 +117,12 @@ fn review_row(
     ui.label(rating_text(row.previous));
     ui.label(mark_name(row.marked));
     ui.label(rating_text(row.rated));
+    if scored {
+        ui.label(row.answer_match.map_or_else(
+            || "-".to_owned(),
+            |(pct, v)| format!("{pct} % ({})", verdict_label(v)),
+        ));
+    }
     ui.vertical(|ui| match (row.suggestion, row.rated) {
         (Some(s), Some(rated)) => suggestion(run, row, (s, rated), updates, ui, out),
         _ => {
@@ -131,6 +144,10 @@ fn suggestion(
         Reason::KnownAndFast => "This item was rather easy for you.",
         Reason::NewAndFast => "This new item went by very fast: it may be harder than it looked.",
         Reason::Slow => "This took you a long time to read: it may be harder than you rated it.",
+        Reason::MarkedDifficult => {
+            "You marked this item difficult, so it may be harder than you rated it."
+        }
+        Reason::MarkedEasy => "You marked this item easy, and it was rather easy for you.",
     });
     if let Some((words, tenths)) = row.reading {
         ui.weak(format!(

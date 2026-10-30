@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (80) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (85) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
@@ -86,6 +86,11 @@
 |  |  |  |  |  | [TASK-0083](docs/issues/tasks/TASK-0083-post-run-review.md) Post-run review and applying a suggestion (5) |
 |  |  |  |  |  | [TASK-0084](docs/issues/tasks/TASK-0084-reading-speed-test.md) Reading-speed test (3) |
 |  |  |  |  |  | [TASK-0085](docs/issues/tasks/TASK-0085-slow-reads-suggest-difficulty.md) Slow reads suggest difficulty (3) |
+|  |  |  |  |  | [TASK-0086](docs/issues/tasks/TASK-0086-calibrate-answer-runtimes.md) Calibrate the answer runtimes (3) |
+|  |  |  |  |  | [TASK-0087](docs/issues/tasks/TASK-0087-store-answer-scores.md) Store answer scores with the run (3) |
+|  |  |  |  |  | [TASK-0088](docs/issues/tasks/TASK-0088-force-word-matching.md) Setting to compare answers by word matching only (3) |
+|  |  |  |  |  | [TASK-0089](docs/issues/tasks/TASK-0089-marks-suggest-ratings.md) The user marks suggest ratings (3) |
+|  |  |  |  |  | [TASK-0090](docs/issues/tasks/TASK-0090-reading-thresholds-in-settings.md) Reading thresholds in app.toml (3) |
 
 ## Stories
 
@@ -122,7 +127,7 @@
 | [STORY-0029](docs/issues/stories/STORY-0029-forecasting.md) Forecasting (8) | done | 2/2 |
 | [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
 | [STORY-0034](docs/issues/stories/STORY-0034-stack-settings-sm-2-budgets-and-filter-persistence.md) Stack settings, SM-2, budgets and filter persistence (8) | done | 4/4 |
-| [STORY-0035](docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 5/5 |
+| [STORY-0035](docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 10/10 |
 
 ## Epics
 

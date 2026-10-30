@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Open flags closed: answer runtimes are calibrated on a labelled set (word matching gets a pivot of 0.44;
+  the language model keeps 0.7); typed-answer scores are stored with their run (schema v6) and shown in the
+  review; `answer_engine = "words"` and a Settings choice force word matching; the user's easy/difficult mark
+  suggests a rating; the fast/slow/minimum-words thresholds are configurable in `app.toml` (TASK-0086 to 0090).
 - Reports: retention by time since the previous review, time to answer (percentiles, histogram, by the
   difficulty mark), and a 30-day review-load forecast with a backtest on real or simulated history; a Reports
   screen; each report computes in under 10 ms on 100,000 reviews (TASK-0059, 0060, 0061, 0062).

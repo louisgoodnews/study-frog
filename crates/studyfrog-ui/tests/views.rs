@@ -19,6 +19,8 @@ fn welcome_screen_opens_a_typed_path_and_lists_recent_vaults() {
         vault: None,
         recent: vec!["/v/old".into()],
         reading_wpm: None,
+        answer_engine: Default::default(),
+        reading: Default::default(),
     };
     let mut h = harness(model);
     h.run();

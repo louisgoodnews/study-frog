@@ -6,6 +6,9 @@
 use crate::runtime::{SlmError, SlmRuntime};
 use crate::vector::normalize;
 
+/// Word matching rates a good paraphrase around 0.5 (measured on a labelled set of 44 answers, see
+/// the scoring spec), so a cosine of 0.44 is what counts as acceptable.
+pub const LEXICAL_PIVOT: f32 = 0.44;
 /// Output dimensions: enough to keep collisions rare for short answers.
 pub const DIMS: usize = 512;
 const WORD_WEIGHT: f32 = 1.0;
@@ -73,6 +76,10 @@ pub fn lexical_embed(texts: &[&str]) -> Vec<Vec<f32>> {
 impl SlmRuntime for Lexical {
     fn name(&self) -> &str {
         "word matching (built in)"
+    }
+
+    fn pivot(&self) -> f32 {
+        LEXICAL_PIVOT
     }
 
     fn embed(&self, texts: &[&str]) -> Result<Vec<Vec<f32>>, SlmError> {

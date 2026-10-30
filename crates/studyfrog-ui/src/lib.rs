@@ -23,6 +23,7 @@ pub mod planner;
 pub mod reading_test;
 pub mod reports;
 pub mod review;
+pub mod run_results;
 pub mod run_state;
 pub mod run_update;
 pub mod runtime;

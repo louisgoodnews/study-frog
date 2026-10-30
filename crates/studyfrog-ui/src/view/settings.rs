@@ -2,6 +2,7 @@
 
 use eframe::egui::{self, Grid};
 use studyfrog_core::scheduler::scheduler_name;
+use studyfrog_core::settings::AnswerEngine;
 
 use crate::msg::Msg;
 use crate::reading_test::{ReadingTestMsg, TEXT, TestPhase, current_wpm};
@@ -11,6 +12,8 @@ use crate::state::State;
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.heading("Settings");
     reading_speed(state, ui, out);
+    ui.separator();
+    answer_comparison(state, ui, out);
     ui.separator();
     let Some(vault) = &state.vault else { return };
     if let Some(e) = &vault.settings_error {
@@ -97,4 +100,29 @@ fn idle(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             test_msg(out, ReadingTestMsg::Reset);
         }
     });
+}
+
+/// How typed answers are compared, and the thresholds that turn reading time into suggestions.
+fn answer_comparison(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.heading("Answer comparison");
+    ui.horizontal(|ui| {
+        for (engine, label) in [
+            (AnswerEngine::Auto, "Language model when installed"),
+            (AnswerEngine::Words, "Word matching only"),
+        ] {
+            if ui
+                .selectable_label(state.app.answer_engine == engine, label)
+                .clicked()
+            {
+                out.push(Msg::SetAnswerEngine(engine));
+            }
+        }
+    });
+    ui.weak("A high match means similar wording or meaning, not that the facts are right.");
+    let p = studyfrog_rehearsal::reading::reading_params(state.app.reading_wpm, &state.app.reading);
+    ui.label(format!(
+        "Reading suggestions: fast is under {} % of the expected time, slow is over {} %, answers under {} words are ignored.",
+        p.fast_percent, p.slow_percent, p.min_words
+    ));
+    ui.weak("Change reading_fast_percent, reading_slow_percent and reading_min_words in app.toml.");
 }

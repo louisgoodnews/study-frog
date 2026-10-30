@@ -25,7 +25,7 @@ Marks, reading speed and the post-run review.
 - [x] The review compares previous, own and suggested ratings and can apply the suggestion
 
 ## Design Notes
-Children: TASK-0081, TASK-0082, TASK-0083, TASK-0084, TASK-0085.
+Children: TASK-0081, TASK-0082, TASK-0083, TASK-0084, TASK-0085, TASK-0086, TASK-0087, TASK-0088, TASK-0089, TASK-0090.
 
 ## Dependencies
 TASK-0054.

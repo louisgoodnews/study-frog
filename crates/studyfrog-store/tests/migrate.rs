@@ -9,7 +9,7 @@ use studyfrog_store::error::StoreError;
 use studyfrog_store::migrate::{Migration, migrate, schema_version};
 use studyfrog_store::schema::MIGRATIONS;
 
-const TABLES: [&str; 20] = [
+const TABLES: [&str; 21] = [
     "file",
     "item",
     "link",
@@ -30,6 +30,7 @@ const TABLES: [&str; 20] = [
     "board_column",
     "board_card",
     "achievement_unlock",
+    "answer_score",
 ];
 
 fn tables(conn: &Connection) -> Vec<String> {
@@ -57,8 +58,8 @@ fn fresh_database_gets_every_table_and_is_idempotent() {
 
 #[test]
 fn upgrades_from_the_previous_version() {
-    const V6: Migration = Migration {
-        version: 6,
+    const V7: Migration = Migration {
+        version: 7,
         name: "extra",
         sql: "CREATE TABLE extra (x INTEGER);",
     };
@@ -70,8 +71,8 @@ fn upgrades_from_the_previous_version() {
     )
     .unwrap();
     let mut all = MIGRATIONS.to_vec();
-    all.push(V6);
-    assert_eq!(migrate(&mut conn, &all).unwrap(), 6);
+    all.push(V7);
+    assert_eq!(migrate(&mut conn, &all).unwrap(), 7);
     let kept: i64 = conn
         .query_row("SELECT COUNT(*) FROM review", [], |r| r.get(0))
         .unwrap();

@@ -15,6 +15,15 @@ pub enum Verdict {
     Incorrect,
 }
 
+/// Persisted name of a verdict.
+pub fn verdict_name(v: Verdict) -> &'static str {
+    match v {
+        Verdict::Correct => "correct",
+        Verdict::Partial => "partial",
+        Verdict::Incorrect => "incorrect",
+    }
+}
+
 /// How far below the minimum score still counts as partly right.
 pub const PARTIAL_MARGIN: f32 = 0.2;
 /// Cosine at which a rubric point counts as covered.
@@ -59,22 +68,34 @@ pub fn verdict_for(value: f32, min_score: f32) -> Verdict {
     }
 }
 
+/// Stretch a cosine similarity so that `pivot` becomes 0.7, 0 stays 0 and 1 stays 1 (two straight
+/// pieces). Monotone, so the order of answers never changes.
+pub fn calibrate(cosine: f32, pivot: f32) -> f32 {
+    let (c, p) = (cosine.clamp(0.0, 1.0), pivot.clamp(0.05, 0.95));
+    if c <= p {
+        c / p * 0.7
+    } else {
+        0.7 + (c - p) / (1.0 - p) * 0.3
+    }
+}
+
 /// Combine embeddings into a score. `candidates` are the reference and the accepted answers,
 /// `points` the rubric; each slice holds vectors already computed for those texts.
 pub fn score_from_embeddings(
     answer: &[f32],
     candidates: &[Vec<f32>],
     points: &[Vec<f32>],
-    min_score: f32,
+    (min_score, pivot): (f32, f32),
 ) -> Score {
+    let similarity = |other: &Vec<f32>| calibrate(cosine(answer, other), pivot);
     let best = candidates
         .iter()
-        .map(|c| cosine(answer, c))
+        .map(similarity)
         .fold(0.0_f32, f32::max)
         .clamp(0.0, 1.0);
     let rubric_hits: Vec<bool> = points
         .iter()
-        .map(|p| cosine(answer, p) >= POINT_THRESHOLD)
+        .map(|p| similarity(p) >= POINT_THRESHOLD)
         .collect();
     let value = if rubric_hits.is_empty() {
         best
@@ -125,6 +146,6 @@ pub fn score_answer<R: SlmRuntime + ?Sized>(
         &answer_vec,
         &vectors,
         &points,
-        c.min_score,
+        (c.min_score, runtime.pivot()),
     ))
 }
