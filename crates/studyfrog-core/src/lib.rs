@@ -5,6 +5,7 @@ pub mod event;
 pub mod idx;
 pub mod items;
 pub mod library;
+pub mod memory;
 pub mod meta;
 pub mod review;
 pub mod run;

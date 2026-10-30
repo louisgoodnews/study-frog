@@ -12,3 +12,6 @@ workspace = true
 
 [dependencies]
 studyfrog-core.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true

@@ -404,6 +404,7 @@ dependencies = [
 name = "studyfrog-srs"
 version = "0.1.0"
 dependencies = [
+ "proptest",
  "studyfrog-core",
 ]
 

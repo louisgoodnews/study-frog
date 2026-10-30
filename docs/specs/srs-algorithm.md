@@ -29,19 +29,29 @@ wiki page during TASK-0016 and covered by golden vectors from the reference impl
 | `weights` | FSRS-6 defaults above | later: optimiser fitting on user history (post-M7) |
 | `enable_fuzz` | true | deterministic given a seed argument |
 
-## Interface (free functions in `studyfrog-srs`)
+## Interface (free functions in `studyfrog-srs`; `MemState` lives in `studyfrog-core`)
 ```
-next_state(card: &MemState, rating: Rating, elapsed_days: f32, p: &Params) -> MemState
-interval_days(state: &MemState, p: &Params) -> f32
-retrievability(state: &MemState, elapsed_days: f32) -> f32
+initial_state(rating, &Params) -> MemState
+next_state(&MemState, rating, elapsed_days: f32, &Params) -> MemState   // elapsed < 1.0: same-day rules
+retrievability(&MemState, elapsed_days, &Params) -> f32
+interval_exact(&MemState, &Params) -> f32          // days to reach request_retention
+interval_days(&MemState, &Params) -> u32           // rounded, >= 1, <= maximum_interval_days
+fuzz_interval(interval, unit /* [0,1) */, maximum) -> u32
 ```
-No clock or RNG inside: elapsed time and fuzz seed are arguments.
+No clock or RNG inside: elapsed time and the fuzz `unit` (derived from a seed by the caller) are
+arguments. Learning steps (minutes-scale re-presentation inside a session) belong to the
+rehearsal engine, not to these functions.
+
+Equations implemented (FSRS-6): D0, linear damping with mean reversion, S0, same-day stability,
+recall stability (hard penalty w15, easy bonus w16), forget stability (min of long-term and
+`S / e^(w17 w18)`). Implemented in `difficulty.rs` and `stability.rs`.
 
 ## Baseline
 SM-2 is implemented alongside as a baseline for tests and as a user-selectable simple mode.
 
 ## Verification
-- proptest: intervals are monotonic in rating; stability never negative; retrievability in
-  [0, 1] and decreasing in elapsed time.
-- Reference vectors from the published implementation as golden tests.
+- proptest: stability >= minimum and difficulty in [1, 10] over any sequence; stability monotonic in
+  rating; retrievability in [0, 1], decreasing, 0.9 at t = S; interval monotonic in stability; fuzz
+  stays in its window.
+- Golden test: py-fsrs `test_review_card` (13 ratings, default parameters, no fuzz) reproduced exactly.
 - criterion bench: scheduling 100k cards.

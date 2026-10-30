@@ -19,11 +19,11 @@ Spec pins FSRS-6.
 FSRS pure functions.
 
 ## Acceptance Criteria
-- [ ] next_state, interval_days, retrievability per spec (FSRS-6, 21 weights)
-- [ ] No clock or RNG inside; fuzz seed is an argument
+- [x] next_state, interval_days, retrievability per spec (FSRS-6, 21 weights)
+- [x] No clock or RNG inside; fuzz seed is an argument
 
 ## Design Notes
-Take remaining equations from the reference implementation.
+Equations follow the FSRS-6 wiki and the py-fsrs scheduler (cross-checked: the golden test reproduces its intervals). `MemState` lives in `core` because the store persists it. Elapsed days are whole days; `< 1` selects the short-term path. f32 throughout. Weights are not range-validated yet (optimiser work, post-M7).
 
 ## Dependencies
 TASK-0014.

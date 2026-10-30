@@ -19,8 +19,8 @@ Spec: docs/specs/srs-algorithm.md.
 FSRS implementation.
 
 ## Acceptance Criteria
-- [ ] FSRS-6 next_state, interval, retrievability as pure functions
-- [ ] Golden vectors match the reference implementation; proptests pass
+- [x] FSRS-6 next_state, interval, retrievability as pure functions
+- [x] Golden vectors match the reference implementation; proptests pass
 
 ## Design Notes
 Children: TASK-0016, TASK-0017.

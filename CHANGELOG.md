@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- `studyfrog-srs`: FSRS-6 (`initial_state`, `next_state`, `retrievability`, intervals, Anki-style
+  deterministic fuzz); `MemState` in core; golden test reproducing the py-fsrs reference intervals and
+  7 property tests (TASK-0016, TASK-0017).
 - `studyfrog-core`: `Run`, `RunMode`, `RunState`, `RunEvent`, `EventKind`, `Latency` and persisted-name
   functions, 2 tests (TASK-0015). EPIC-003 (core domain types) complete.
 - `studyfrog-core`: `Rating` (persisted values 1-4), `Review`, `rating_value`/`rating_from_value`,

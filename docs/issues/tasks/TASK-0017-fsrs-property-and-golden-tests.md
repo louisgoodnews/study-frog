@@ -2,7 +2,7 @@
 id: TASK-0017
 type: task
 title: FSRS property and golden tests
-status: backlog
+status: done
 epic: EPIC-004
 parents: [STORY-0007]
 estimate: 3
@@ -19,11 +19,11 @@ Verification for TASK-0016.
 FSRS property and golden tests.
 
 ## Acceptance Criteria
-- [ ] Golden vectors from the reference implementation
-- [ ] proptests: interval monotonic in rating, stability non-negative, retrievability in [0,1] and decreasing
+- [x] Golden vectors from the reference implementation
+- [x] proptests: interval monotonic in rating, stability non-negative, retrievability in [0,1] and decreasing
 
 ## Design Notes
-proptest regressions committed.
+Golden source: py-fsrs `tests/test_basic.py::test_review_card` (intervals `[0,2,11,46,163,498,0,0,2,4,7,12,21]`). The harness emulates learning steps (1m, 10m) as plain data. Reference code was not executed: running the external package was blocked by the sandbox policy, so expected values come from the reference test file.
 
 ## Dependencies
 TASK-0016.
