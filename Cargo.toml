@@ -38,6 +38,9 @@ studyfrog-board = { path = "crates/studyfrog-board" }
 studyfrog-calendar = { path = "crates/studyfrog-calendar" }
 studyfrog-ui = { path = "crates/studyfrog-ui" }
 
+# third party (added at first use)
+proptest = "1"
+
 [workspace.lints.rust]
 unsafe_code = "forbid"
 missing_docs = "warn"
