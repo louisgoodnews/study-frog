@@ -99,11 +99,16 @@ fn opening_needs_a_path_and_ignores_double_clicks() {
 #[test]
 fn a_successful_open_shows_the_library_remembers_the_vault_and_saves_it() {
     let (s, fx) = update(State::default(), Msg::VaultOpened(Ok(info("/v/a"))));
-    assert_eq!((s.screen, s.opening), (Screen::Library, false));
+    assert_eq!((s.screen, s.opening), (Screen::Home, false));
     assert_eq!(s.app.vault.as_deref(), Some("/v/a"));
     assert_eq!(s.notice.unwrap().kind, NoticeKind::Info);
-    assert_eq!(fx.len(), 1);
+    assert_eq!(fx.len(), 2);
     assert!(matches!(&fx[0], Effect::SaveAppSettings(a) if a.recent == ["/v/a"]));
+    assert_eq!(
+        fx[1],
+        Effect::LoadHome,
+        "the home screen asks what is ready"
+    );
 }
 
 #[test]

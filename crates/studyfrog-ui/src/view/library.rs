@@ -1,13 +1,14 @@
 //! The library screen: stack list on the left, overview or the selected stack on the right.
 
-use eframe::egui::{self, Grid, Panel};
+use eframe::egui::{self, Panel, RichText};
 use studyfrog_core::scheduler::{Scheduler, scheduler_name};
 use studyfrog_store::overview::{StackRow, VaultOverview};
 
 use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::state::{Selection, State};
-use crate::view::items;
+use crate::theme::palette_of;
+use crate::view::{items, kit};
 
 fn limit(n: Option<u32>) -> String {
     n.map_or_else(|| "–".to_owned(), |v| v.to_string())
@@ -29,7 +30,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .default_size(220.0)
         .show(ui, |ui| stack_list(state, ui, out));
     match &state.browser.selection {
-        Selection::Nothing => overview(state, ui),
+        Selection::Nothing => overview(state, ui, out),
         _ => items::draw(state, ui, out),
     }
 }
@@ -81,10 +82,9 @@ fn stack_list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-/// Title, counts and a table of stacks; any problems below it.
-fn overview(state: &State, ui: &mut egui::Ui) {
+/// Title, counts and a grid of stack cards; any problems below it.
+fn overview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(vault) = &state.vault else { return };
-    ui.heading(&vault.name);
     let o = &vault.overview;
     let items: usize = o
         .stacks
@@ -92,55 +92,77 @@ fn overview(state: &State, ui: &mut egui::Ui) {
         .map(|s| s.notes + s.cards + s.questions)
         .sum::<usize>()
         + o.inbox_items;
-    ui.label(format!("{} stacks, {items} items", o.stacks.len()));
-    ui.add_space(8.0);
-    if o.stacks.is_empty() {
-        ui.label("No stacks yet. Create one on the left, or add a folder with a _stack.md file to the vault.");
-    } else {
-        stack_table(o, vault.settings.scheduler, ui);
-    }
-    if o.inbox_items > 0 {
-        ui.label(format!("Inbox: {} items outside any stack", o.inbox_items));
-    }
-    problems(o, ui);
+    egui::ScrollArea::vertical().show(ui, |ui| {
+        ui.label(RichText::new(&vault.name).size(26.0).strong());
+        ui.label(
+            RichText::new(format!("{} stacks, {items} items", o.stacks.len()))
+                .color(palette_of(ui).text_weak),
+        );
+        ui.add_space(8.0);
+        if o.stacks.is_empty() {
+            ui.label(
+                "No stacks yet. Use Create, or add a folder with a _stack.md file to the vault.",
+            );
+        }
+        stack_cards(o, vault.settings.scheduler, ui, out);
+        if o.inbox_items > 0 {
+            ui.add_space(6.0);
+            ui.label(format!("Inbox: {} items outside any stack", o.inbox_items));
+        }
+        problems(o, ui);
+    });
 }
 
-fn stack_table(o: &VaultOverview, default: Scheduler, ui: &mut egui::Ui) {
-    Grid::new("stacks")
-        .striped(true)
-        .num_columns(7)
-        .show(ui, |ui| {
-            for head in [
-                "Stack",
-                "Folder",
-                "Notes",
-                "Cards",
-                "Questions",
-                "Scheduler",
-                "Daily new / reviews",
-            ] {
-                ui.strong(head);
-            }
-            ui.end_row();
-            for s in &o.stacks {
-                ui.label(&s.title);
-                ui.label(if s.folder.is_empty() {
-                    "(vault root)"
-                } else {
-                    s.folder.as_str()
-                });
-                ui.label(s.notes.to_string());
-                ui.label(s.cards.to_string());
-                ui.label(s.questions.to_string());
-                ui.label(scheduler_text(s, default));
-                ui.label(format!(
-                    "{} / {}",
-                    limit(s.daily_new_limit),
-                    limit(s.daily_review_limit)
-                ));
-                ui.end_row();
+const COLUMNS: usize = 3;
+
+fn stack_cards(o: &VaultOverview, default: Scheduler, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    for row in o.stacks.chunks(COLUMNS) {
+        ui.columns(COLUMNS, |cols| {
+            for (col, s) in cols.iter_mut().zip(row) {
+                let id = format!("stack-card-{}", s.folder);
+                if kit::card_button(col, &id, |ui| stack_card(o, s, default, ui)) {
+                    out.push(Msg::Select(Selection::Stack(s.folder.clone())));
+                }
             }
         });
+        ui.add_space(4.0);
+    }
+}
+
+fn stack_card(o: &VaultOverview, s: &StackRow, default: Scheduler, ui: &mut egui::Ui) {
+    let p = palette_of(ui);
+    ui.set_min_height(86.0);
+    ui.label(RichText::new(&s.title).strong().size(17.0));
+    let place = match &s.parent {
+        Some(f) => o
+            .stacks
+            .iter()
+            .find(|x| x.folder == *f)
+            .map_or("inside another stack", |x| x.title.as_str()),
+        None => "",
+    };
+    if !place.is_empty() {
+        ui.label(
+            RichText::new(format!("in {place}"))
+                .small()
+                .color(p.text_weak),
+        );
+    }
+    ui.horizontal_wrapped(|ui| {
+        kit::pill(ui, &format!("{} cards", s.cards), p.accent);
+        kit::pill(ui, &format!("{} notes", s.notes), p.text_weak);
+        kit::pill(ui, &format!("{} questions", s.questions), p.text_weak);
+    });
+    ui.label(
+        RichText::new(format!(
+            "{} · {} new / {} reviews a day",
+            scheduler_text(s, default),
+            limit(s.daily_new_limit),
+            limit(s.daily_review_limit)
+        ))
+        .small()
+        .color(p.text_weak),
+    );
 }
 
 fn problems(o: &VaultOverview, ui: &mut egui::Ui) {

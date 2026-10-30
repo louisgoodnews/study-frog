@@ -1,31 +1,18 @@
 //! The rehearsal screen: prompt and timer only, keyboard first. Space reveals, 1-4 rate, S skips,
 //! P pauses, Esc stops. Shortcuts are off while a text field has the keyboard.
 
-use eframe::egui::{self, Button, Key, RichText};
-use studyfrog_core::event::Difficulty;
-use studyfrog_core::review::Rating;
+use eframe::egui::{self, Align, Key, Layout, RichText};
 use studyfrog_core::run::{RunMode, RunState};
 use studyfrog_rehearsal::input::Action;
-use studyfrog_rehearsal::session::{ItemPhase, current_item};
+use studyfrog_rehearsal::session::ItemPhase;
 
 use crate::msg::Msg;
 use crate::run_state::{RunView, engine_ms};
 use crate::run_update::{awaiting_rating, awaiting_reveal, is_over};
 use crate::state::State;
-use crate::view::widgets::text_field;
-
-const RATINGS: [(Rating, &str, Key); 4] = [
-    (Rating::Again, "Again (1)", Key::Num1),
-    (Rating::Hard, "Hard (2)", Key::Num2),
-    (Rating::Good, "Good (3)", Key::Num3),
-    (Rating::Easy, "Easy (4)", Key::Num4),
-];
-
-const MARKS: [(Difficulty, &str, Key); 3] = [
-    (Difficulty::Easy, "Easy (E)", Key::E),
-    (Difficulty::Medium, "Medium (M)", Key::M),
-    (Difficulty::Difficult, "Difficult (D)", Key::D),
-];
+use crate::theme::palette_of;
+use crate::view::kit;
+use crate::view::run_card::{MARKS, RATINGS, item, paused};
 
 fn act(out: &mut Vec<Msg>, action: Action) {
     out.push(Msg::RunAction(action));
@@ -41,21 +28,30 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     shortcuts(run, ui, out);
-    header(state, run, ui);
-    if run.session.run.state == RunState::Paused {
-        ui.add_space(24.0);
-        ui.heading("Paused");
-        ui.label("The timer is stopped and the question is hidden.");
-        if ui.button("Resume (P)").clicked() {
-            act(out, Action::Resume);
-        }
-    } else {
-        item(run, ui, out);
-    }
-    ui.add_space(16.0);
-    ui.separator();
-    footer(run, ui, out);
+    top_strip(state, run, ui, out);
+    ui.add_space(14.0);
+    ui.vertical_centered(|ui| {
+        ui.set_max_width(CARD_WIDTH);
+        kit::card(ui, |ui| {
+            ui.set_width(ui.available_width());
+            if run.session.run.state == RunState::Paused {
+                paused(ui, out);
+            } else {
+                item(run, ui, out);
+            }
+        });
+        ui.add_space(10.0);
+        ui.label(
+            RichText::new(HINTS)
+                .color(palette_of(ui).text_weak)
+                .size(12.5),
+        );
+    });
 }
+
+const CARD_WIDTH: f32 = 760.0;
+const HINTS: &str =
+    "Space shows the answer  ·  1 2 3 4 rate  ·  E M D mark  ·  S skip  ·  P pause  ·  Esc stop";
 
 fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
     if ui.ctx().egui_wants_keyboard_input() {
@@ -94,123 +90,43 @@ fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-fn header(state: &State, run: &RunView, ui: &mut egui::Ui) {
+/// Position, mode, timer and the pause and stop buttons, with the progress bar under them.
+fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let s = &run.session;
+    let weak = palette_of(ui).text_weak;
+    let position = (s.cursor + 1).min(s.queue.len());
     ui.horizontal(|ui| {
-        ui.label(format!(
-            "{} / {}",
-            (s.cursor + 1).min(s.queue.len()),
-            s.queue.len()
-        ));
+        ui.label(
+            RichText::new(format!("{position} / {}", s.queue.len()))
+                .size(18.0)
+                .strong(),
+        );
+        let mode = if s.run.mode == RunMode::Answer {
+            "Type answers"
+        } else {
+            "Flip cards"
+        };
+        kit::pill(ui, mode, weak);
         if s.run.state == RunState::Running && s.phase != ItemPhase::NoItem {
             let now = engine_ms(state.now, run.started_time, s.last_t_ms);
             let on_item = now
                 .saturating_sub(s.shown_at_ms)
                 .saturating_sub(s.paused_in_item_ms);
-            ui.label(format!("{:.1} s", f64::from(on_item) / 1000.0));
+            kit::pill(ui, &format!("{:.1} s", f64::from(on_item) / 1000.0), weak);
         }
-    });
-}
-
-fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let Some(content) = current_item(&run.session).and_then(|uid| run.content.get(&uid)) else {
-        ui.add_space(24.0);
-        ui.label("Loading…");
-        return;
-    };
-    ui.add_space(24.0);
-    ui.label(RichText::new(&content.prompt).size(24.0));
-    mark_row(run, ui, out);
-    if awaiting_reveal(run) {
-        ui.add_space(16.0);
-        reveal_controls(run, ui, out);
-    } else if awaiting_rating(run) {
-        ui.add_space(16.0);
-        ui.separator();
-        ui.label(RichText::new(&content.answer).size(20.0));
-        if let Some(scored) = &run.scored {
-            score_line(scored, ui);
-        }
-        ui.add_space(16.0);
-        ui.horizontal(|ui| {
-            for (rating, label, _) in RATINGS {
-                if ui.button(label).clicked() {
-                    act(out, Action::Rate(rating));
-                }
+        ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+            if ui.button("Stop (Esc)").clicked() {
+                act(out, Action::Abort);
+            }
+            if s.run.state == RunState::Running && ui.button("Pause (P)").clicked() {
+                act(out, Action::Pause);
             }
         });
-    }
-}
-
-fn score_line(scored: &crate::run_state::Scored, ui: &mut egui::Ui) {
-    use studyfrog_slm::score::Verdict;
-    let verdict = match scored.score.verdict {
-        Verdict::Correct => "Correct",
-        Verdict::Partial => "Partly right",
-        Verdict::Incorrect => "Not quite",
-    };
-    ui.label(format!(
-        "Your answer matched {:.0} %: {verdict}. Suggested rating: {:?}.",
-        scored.score.value * 100.0,
-        scored.rating
-    ));
-    ui.weak(format!("Compared by: {}", scored.engine));
-    let missed = scored.score.rubric_hits.iter().filter(|h| !**h).count();
-    if missed > 0 {
-        ui.label(format!("{missed} key point(s) were not covered."));
-    }
-}
-
-fn reveal_controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    if run.session.run.mode == RunMode::Answer {
-        if let Some(text) = text_field(ui, "Your answer", &run.answer, "type your answer", 3) {
-            out.push(Msg::AnswerEdited(text));
-        }
-        if ui
-            .add_enabled(!run.answer.trim().is_empty(), Button::new("Submit answer"))
-            .clicked()
-        {
-            act(out, Action::SubmitAnswer(run.answer.clone()));
-        }
-    }
-    ui.horizontal(|ui| {
-        let label = if run.session.run.mode == RunMode::Answer {
-            "Show answer without answering (Space)"
-        } else {
-            "Show answer (Space)"
-        };
-        if ui.button(label).clicked() {
-            act(out, Action::Flip);
-        }
-        if ui.button("Skip (S)").clicked() {
-            act(out, Action::Skip);
-        }
     });
-}
-
-fn footer(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.horizontal(|ui| {
-        if run.session.run.state == RunState::Running && ui.button("Pause (P)").clicked() {
-            act(out, Action::Pause);
-        }
-        if ui.button("Stop (Esc)").clicked() {
-            act(out, Action::Abort);
-        }
-    });
-}
-
-/// How hard does this item feel? The chosen mark is highlighted; the last one pressed counts.
-fn mark_row(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let chosen = crate::review::current_mark(run);
-    ui.horizontal(|ui| {
-        ui.weak("This item is:");
-        for (difficulty, label, _) in MARKS {
-            if ui
-                .selectable_label(chosen == Some(difficulty), label)
-                .clicked()
-            {
-                act(out, Action::Mark(difficulty));
-            }
-        }
-    });
+    let done = position.saturating_sub(1) + usize::from(s.phase == ItemPhase::Revealed);
+    kit::progress(
+        ui,
+        done as f32 / s.queue.len().max(1) as f32,
+        "Run progress",
+    );
 }

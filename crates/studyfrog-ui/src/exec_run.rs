@@ -10,6 +10,7 @@ use studyfrog_service::achievements::check_achievements;
 use studyfrog_service::compare::{record_answer_score, score_item_answer};
 use studyfrog_service::content::load_item_content;
 use studyfrog_service::create::fresh_id_source;
+use studyfrog_service::home::home_summary;
 use studyfrog_service::rehearse::{StepContext, record_step, start_run};
 use studyfrog_service::reports::build_reports;
 use studyfrog_service::rerate::rerate_latest;
@@ -19,6 +20,7 @@ use studyfrog_slm::lexical::Lexical;
 use studyfrog_slm::models::{Opened, open_runtime};
 
 use crate::exec::Worker;
+use crate::home_ui::HomeMsg;
 use crate::msg::Msg;
 use crate::run_state::Scored;
 
@@ -140,4 +142,21 @@ pub fn reports(w: &Worker, now_ns: i64) -> Msg {
         None => Err("no vault is open".to_owned()),
     };
     Msg::ReportsBuilt(result)
+}
+
+/// Read the home screen's numbers at the current local time.
+pub fn home(w: &Worker, now_ns: i64) -> Msg {
+    let now = UnixMs(millis(now_ns));
+    let result = match &w.session {
+        Some(session) => home_summary(
+            session,
+            now,
+            local_offset_minutes(now),
+            local_day_window(now),
+        )
+        .map(Box::new)
+        .map_err(|e| e.to_string()),
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::Home(HomeMsg::Loaded(result))
 }

@@ -16,6 +16,7 @@ pub mod exec_import;
 pub mod exec_plan;
 pub mod exec_run;
 pub mod graph;
+pub mod home_ui;
 pub mod host;
 pub mod import_ui;
 pub mod kanban;
@@ -40,6 +41,7 @@ pub mod setup;
 pub mod setup_form;
 pub mod state;
 pub mod summary;
+pub mod theme;
 pub mod update;
 pub mod view;
 

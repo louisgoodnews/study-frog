@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (98) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (102) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
@@ -104,6 +104,10 @@
 |  |  |  |  |  | [TASK-0097](docs/issues/tasks/TASK-0097-create-dialog.md) Create dialog (5) |
 |  |  |  |  |  | [TASK-0098](docs/issues/tasks/TASK-0098-first-launch-toast.md) A clickable notification on first launch (3) |
 |  |  |  |  |  | [TASK-0099](docs/issues/tasks/TASK-0099-stack-tree-in-the-ui.md) Stack tree in the library and in run setup (3) |
+|  |  |  |  |  | [TASK-0100](docs/issues/tasks/TASK-0100-theme-and-shared-widgets.md) Theme and shared widgets (3) |
+|  |  |  |  |  | [TASK-0101](docs/issues/tasks/TASK-0101-home-page.md) Home page (5) |
+|  |  |  |  |  | [TASK-0102](docs/issues/tasks/TASK-0102-library-cards-and-item-rows.md) Library cards and item rows (3) |
+|  |  |  |  |  | [TASK-0103](docs/issues/tasks/TASK-0103-rehearsal-card-layout-and-progress-bar.md) Rehearsal card layout and progress bar (3) |
 
 ## Stories
 
@@ -146,6 +150,7 @@
 | [STORY-0035](docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 12/12 |
 | [STORY-0036](docs/issues/stories/STORY-0036-top-bar-and-sidebar.md) Top bar and sidebar (8) | done | 3/3 |
 | [STORY-0037](docs/issues/stories/STORY-0037-create-dialog-and-nested-stacks.md) Create dialog, nested stacks and a gentler first launch (8) | done | 4/4 |
+| [STORY-0038](docs/issues/stories/STORY-0038-theme-home-page-library-and-rehearsal-screen.md) Theme, home page, library and rehearsal screen (8) | done | 4/4 |
 
 ## Epics
 
@@ -170,4 +175,4 @@
 | [EPIC-017](docs/issues/epics/EPIC-017-release-hardening.md) Release hardening | in_progress | 0/1 |
 | [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |
 | [EPIC-019](docs/issues/epics/EPIC-019-rehearsal-insights.md) Rehearsal insights | done | 1/1 |
-| [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 2/2 |
+| [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 3/3 |

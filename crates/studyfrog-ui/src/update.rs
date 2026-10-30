@@ -92,6 +92,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::CloseEditor
         | Msg::OpenLink(_)
         | Msg::LinkResolved(..)) => crate::editor::update(state, edit),
+        Msg::Home(m) => crate::home_ui::update(state, m),
         Msg::Modal(m) => crate::modal::update(state, m),
         Msg::Chrome(m) => crate::chrome::update(state, m),
         Msg::ReportsBuilt(result) => crate::reports::built(state, result),
@@ -183,7 +184,8 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
             let app = with_opened_vault(&state.app, &info.root);
             let text = format!("Opened {}", info.name);
             let state = State {
-                screen: Screen::Library,
+                screen: Screen::Home,
+                home: None,
                 modal: None,
                 toasts: Vec::new(),
                 vault: Some(info),
@@ -192,7 +194,7 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
                 notice: notice(NoticeKind::Info, text),
                 ..state
             };
-            (state, vec![Effect::SaveAppSettings(app)])
+            (state, vec![Effect::SaveAppSettings(app), Effect::LoadHome])
         }
         Err(e) => {
             let notice = notice(NoticeKind::Error, format!("Could not open the vault: {e}"));

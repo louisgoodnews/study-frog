@@ -7,6 +7,7 @@ pub mod board_store;
 pub mod db;
 pub mod error;
 pub mod hash;
+pub mod home;
 pub mod index;
 pub mod items;
 pub mod library;

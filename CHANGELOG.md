@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- A home page (greeting, items ready today, streak, stacks waiting with a Rehearse button, planned sessions,
+  recent items and runs) that a vault opens on; a shared theme (palette, text sizes, spacing) for every screen;
+  stacks as cards and items as rows in the library; a card layout, progress bar and coloured rating buttons in
+  the rehearsal screen (TASK-0100 to 0103).
 - A Create dialog (modal) for stacks, cards, notes and questions with a parent-stack picker, tags and "Create
   another"; stacks can sit inside other stacks (shown as a tree in the library, and run setup includes the stacks
   inside a ticked one); first launch shows a welcome page and a clickable in-app notification that opens the

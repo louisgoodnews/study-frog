@@ -36,6 +36,7 @@ fn the_top_bar_has_every_control_named_and_the_sidebar_lists_the_screens() {
         assert!(h.query_by_label(name).is_some(), "missing {name}");
     }
     for screen in [
+        "Home",
         "Library",
         "Calendar",
         "Board",

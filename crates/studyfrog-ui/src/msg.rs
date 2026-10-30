@@ -12,6 +12,7 @@ use studyfrog_service::reports::ReportBundle;
 use studyfrog_store::overview::LinkGraph;
 
 use crate::chrome::ChromeMsg;
+use crate::home_ui::HomeMsg;
 use crate::import_ui::ImportOutcome;
 use crate::kanban::BoardMsg;
 use crate::modal::ModalMsg;
@@ -149,6 +150,8 @@ pub enum Msg {
     GraphRestart,
     /// A node was clicked.
     GraphClick(usize),
+    /// Something happened on the home screen or in the stack browser's shortcuts.
+    Home(HomeMsg),
     /// Something happened in a dialog or a toast.
     Modal(ModalMsg),
     /// Something happened in the window chrome (sidebar, menus, search).

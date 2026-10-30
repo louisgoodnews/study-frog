@@ -6,8 +6,10 @@ mod board;
 mod calendar;
 mod editor;
 mod graph;
+mod home;
 mod icons;
 mod items;
+pub(crate) mod kit;
 mod library;
 mod menus;
 mod modal;
@@ -16,6 +18,7 @@ mod popup;
 mod preview;
 mod reports;
 mod run;
+mod run_card;
 mod session_form;
 mod settings;
 mod setup;
@@ -38,6 +41,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     bars::status(state, ui, &mut out);
     egui::CentralPanel::default().show(ui, |ui| match state.screen {
         Screen::Welcome => welcome::draw(state, ui, &mut out),
+        Screen::Home => home::draw(state, ui, &mut out),
         Screen::Library => library::draw(state, ui, &mut out),
         Screen::Rehearse if state.rehearse.run.is_some() => run::draw(state, ui, &mut out),
         Screen::Rehearse => setup::draw(state, ui, &mut out),

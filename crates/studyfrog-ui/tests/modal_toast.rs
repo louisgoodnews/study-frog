@@ -81,7 +81,7 @@ fn opening_a_vault_closes_the_dialog_and_clears_the_toasts() {
     modal(&mut m, ModalMsg::OpenVault);
     apply(&mut m, Msg::VaultOpened(Ok(common::views::info())));
     assert!(m.state.modal.is_none() && m.state.toasts.is_empty());
-    assert_eq!(m.state.screen, Screen::Library);
+    assert_eq!(m.state.screen, Screen::Home);
 }
 
 fn stack(title: &str, folder: &str, parent: Option<&str>) -> StackRow {

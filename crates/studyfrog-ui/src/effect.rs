@@ -105,6 +105,8 @@ pub enum Effect {
         /// The stack it goes into.
         parent: Option<String>,
     },
+    /// Read what the home screen shows.
+    LoadHome,
     /// Find items whose title contains this text (the global search).
     SearchItems(String),
     /// Compute the reports from the history.

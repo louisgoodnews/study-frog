@@ -162,3 +162,14 @@ pub fn resolve_title(conn: &Connection, target: &str) -> Result<Option<Uid>, Sto
         Err(e) => Err(sql_err(e)),
     }
 }
+
+/// The items edited most recently (by the time in their front matter, else when they were created),
+/// newest first.
+pub fn recent_items(conn: &Connection, limit: usize) -> Result<Vec<ItemRow>, StoreError> {
+    let sql = "SELECT i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms)
+               FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
+               WHERE i.kind != 'stack' ORDER BY COALESCE(i.updated_ms, i.created_ms, 0) DESC, i.path LIMIT ?1";
+    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+    let rows = stmt.query_map([limit as i64], raw_item).map_err(sql_err)?;
+    rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
+}

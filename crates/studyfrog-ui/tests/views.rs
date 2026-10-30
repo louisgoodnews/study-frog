@@ -62,20 +62,21 @@ fn library_lists_stacks_counts_inbox_and_problems() {
         "notes",
         "French",
         "Maths",
-        "french",
         "2 stacks, 11 items",
         "Inbox: 3 items outside any stack",
-        "sm2",
-        "fsrs (default)",
         "Problems (1)",
     ] {
         assert!(h.query_all_by_label(text).count() >= 1, "missing {text:?}");
     }
-    assert_eq!(
-        h.query_all_by_label("20 / –").count(),
-        2,
-        "both stacks show their limits"
-    );
+    for text in [
+        "sm2 · 20 new / – reviews a day",
+        "fsrs (default) · 20 new / – reviews a day",
+    ] {
+        assert!(
+            h.query_by_label_contains(text).is_some(),
+            "missing {text:?}"
+        );
+    }
 }
 
 #[test]

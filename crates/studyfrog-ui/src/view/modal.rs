@@ -2,13 +2,14 @@
 //! kind choice and close button on top, a big title, the text fields, the stack it goes into, and a
 //! footer with "Create another" and the primary button.
 
-use eframe::egui::{self, Align, Color32, ComboBox, Layout, RichText, Role, WidgetInfo};
+use eframe::egui::{self, Align, ComboBox, Layout, Role, WidgetInfo};
 use studyfrog_service::create_more::NewKind;
 
 use crate::modal::{CreateForm, Field, Modal, ModalMsg, stack_labels};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::view::icons::{Glyph, icon_button};
+use crate::view::kit;
 use crate::view::widgets::text_field;
 
 const WIDTH: f32 = 560.0;
@@ -105,7 +106,7 @@ fn parent_picker(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec
         .unwrap_or_default();
     let is_stack = f.kind == NewKind::Stack;
     if stacks.is_empty() && !is_stack {
-        ui.colored_label(Color32::from_rgb(230, 170, 60), "There is no stack yet. Every card, note and question lives in a stack: create a stack first.");
+        ui.colored_label(crate::theme::palette_of(ui).warning, "There is no stack yet. Every card, note and question lives in a stack: create a stack first.");
         return;
     }
     let none = "None (top level)";
@@ -150,9 +151,10 @@ fn footer(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
             let label = if f.busy { "Creating…" } else { "Create" };
-            let button = egui::Button::new(RichText::new(label).color(Color32::BLACK))
-                .fill(Color32::from_rgb(110, 160, 245));
-            if ui.add_enabled(!f.busy, button).clicked() {
+            let create = ui
+                .add_enabled_ui(!f.busy, |ui| kit::primary_button(ui, label))
+                .inner;
+            if create.clicked() {
                 send(out, ModalMsg::Submit);
             }
             if ui.button("Cancel").clicked() {

@@ -13,7 +13,7 @@ use studyfrog_ui::msg::Msg;
 use studyfrog_ui::state::{NoticeKind, Screen};
 
 #[test]
-fn startup_reopens_the_remembered_vault_and_shows_the_library() {
+fn startup_reopens_the_remembered_vault_and_lands_on_home() {
     let vault = sample_vault("restore");
     let cfg = temp_dir("cfg");
     fs::write(
@@ -31,7 +31,7 @@ fn startup_reopens_the_remembered_vault_and_shows_the_library() {
     run_to_idle(&mut model, &mut worker, vec![Effect::LoadAppSettings]);
 
     let s = &model.state;
-    assert_eq!(s.screen, Screen::Library);
+    assert_eq!(s.screen, Screen::Home);
     let v = s.vault.as_ref().unwrap();
     let rows: Vec<_> = v
         .overview
@@ -100,7 +100,7 @@ fn opening_a_missing_folder_reports_it_and_a_real_one_works_afterwards() {
     );
     let fx = apply(&mut model, Msg::OpenVaultClicked);
     run_to_idle(&mut model, &mut worker, fx);
-    assert_eq!(model.state.screen, Screen::Library);
+    assert_eq!(model.state.screen, Screen::Home);
     assert_eq!(model.state.app.recent, [vault.path.display().to_string()]);
 }
 

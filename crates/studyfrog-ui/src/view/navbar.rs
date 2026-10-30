@@ -10,6 +10,7 @@ use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::state::{Screen, State};
 use crate::view::icons::{Glyph, icon_button};
+use crate::view::kit;
 use crate::view::menus;
 
 const HEIGHT: f32 = 40.0;
@@ -105,7 +106,7 @@ fn brand_cluster(
     let brand =
         ui.add(egui::Label::new(RichText::new("StudyFrog").strong()).sense(egui::Sense::click()));
     if state.vault.is_some() && brand.clicked() {
-        out.push(Msg::Navigate(Screen::Library));
+        out.push(Msg::Navigate(Screen::Home));
     }
     if let Some(v) = &state.vault {
         ui.weak(&v.name);
@@ -132,10 +133,7 @@ fn search_cluster(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f
         chrome(out, ChromeMsg::SearchClear);
     }
     menus::search_results(state, ui, field.rect, out);
-    let create = ui.add(
-        egui::Button::new(RichText::new("+ Create").color(Color32::BLACK))
-            .fill(Color32::from_rgb(160, 200, 255)),
-    );
+    let create = kit::primary_button(ui, "+ Create");
     if create.clicked() {
         out.push(Msg::Modal(ModalMsg::OpenCreate));
     }

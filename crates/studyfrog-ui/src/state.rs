@@ -4,6 +4,7 @@ use studyfrog_core::settings::AppSettings;
 pub use studyfrog_service::session::VaultInfo;
 
 use studyfrog_service::achievements::AchievementReport;
+use studyfrog_service::home::HomeSummary;
 use studyfrog_service::reports::ReportBundle;
 
 use crate::chrome::Chrome;
@@ -22,6 +23,8 @@ pub enum Screen {
     /// Choose a vault.
     #[default]
     Welcome,
+    /// What is ready today and what happened lately.
+    Home,
     /// Stacks and items of the open vault.
     Library,
     /// Set up and run a rehearsal.
@@ -149,6 +152,8 @@ pub struct State {
     pub chrome: Chrome,
     /// The registered importers and card types.
     pub extensions: Extensions,
+    /// The home screen's numbers (also the stack badges in the library).
+    pub home: Option<HomeSummary>,
     /// The latest reports.
     pub reports: Option<ReportBundle>,
     /// The latest achievement check.

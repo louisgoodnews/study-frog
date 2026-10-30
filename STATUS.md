@@ -13,6 +13,10 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   matching); calendar and kanban board; achievements; retention, answer-time and forecast reports.
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
+## Latest
+- Home page, theme, library cards and rehearsal card layout are in (STORY-0038). The home summary reloads when the
+  home or library screen opens, not on every vault change.
+
 ## Decisions
 - **Accepted by the owner:** ADR 0006 (service layer); run defaults (spaced runs update the schedule, the
   presets that go through everything and the drill presets are practice-only), with shuffling as a separate

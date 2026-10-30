@@ -1,13 +1,16 @@
 //! The items of the selected stack (or the inbox), with a title filter and the new-card form.
 
-use eframe::egui::{self, Grid};
+use eframe::egui::{self, RichText};
 use studyfrog_core::plan::{ItemKind, item_kind_name};
 use studyfrog_core::time::UnixMs;
 use studyfrog_md::rfc3339::format_rfc3339;
+use studyfrog_store::overview::ItemRow;
 
 use crate::browse::filter_items;
 use crate::msg::{DraftField, Msg};
 use crate::state::{Selection, State};
+use crate::theme::palette_of;
+use crate::view::kit;
 use crate::view::widgets::text_field;
 
 /// "new" for an item never reviewed, else the UTC date it is next due.
@@ -22,6 +25,23 @@ fn kind_text(kind: ItemKind) -> &'static str {
     item_kind_name(kind)
 }
 
+fn item_row(item: &ItemRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let p = palette_of(ui);
+    ui.horizontal(|ui| {
+        kit::pill(ui, kind_text(item.kind), p.text_weak);
+        if ui.link(&item.title).clicked() {
+            out.push(Msg::OpenItem(item.uid));
+        }
+        let color = if item.due.is_none() {
+            p.accent
+        } else {
+            p.text_weak
+        };
+        ui.label(RichText::new(due_text(item.due)).small().color(color));
+        ui.label(RichText::new(&item.path).small().color(p.text_weak));
+    });
+}
+
 /// Heading, filter, item list, and the card form for a stack.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let b = &state.browser;
@@ -33,7 +53,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .map_or_else(|| folder.clone(), |s| s.title.clone()),
         _ => "Inbox".to_owned(),
     };
-    ui.heading(heading);
+    ui.label(RichText::new(heading).size(26.0).strong());
     child_stacks(state, ui, out);
     if let Some(text) = text_field(ui, "Search titles", &b.search, "type to filter", 1) {
         out.push(Msg::SearchEdited(text));
@@ -43,20 +63,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     egui::ScrollArea::vertical()
         .max_height(ui.available_height() * 0.5)
         .show(ui, |ui| {
-            Grid::new("items")
-                .striped(true)
-                .num_columns(4)
-                .show(ui, |ui| {
-                    for item in &shown {
-                        if ui.link(&item.title).clicked() {
-                            out.push(Msg::OpenItem(item.uid));
-                        }
-                        ui.label(kind_text(item.kind));
-                        ui.label(due_text(item.due));
-                        ui.weak(&item.path);
-                        ui.end_row();
-                    }
-                });
+            for item in &shown {
+                item_row(item, ui, out);
+            }
         });
     if matches!(b.selection, Selection::Stack(_)) {
         card_form(state, ui, out);
