@@ -26,7 +26,4 @@
   are taken from the reference implementation in TASK-0016/0017.
 
 ## Next task
-**TASK-0015** (Run and event types, `ready`), which completes STORY-0006. Then EPIC-004 starts with
-TASK-0016 (FSRS pure functions).
-Done in M1: TASK-0012 (`Uid`, `Idx<T>`, `Arena<T>`), TASK-0013 (`Meta`, `Stack`, `Note`, `Card`,
-`Question`, `Library`, `UnixMs`), TASK-0014 (`Rating`, `Review`). Live state: [BOARD.md](BOARD.md).
+**TASK-0016** (FSRS pure functions) starts EPIC-004; EPIC-003 is complete. Live state: [BOARD.md](BOARD.md).

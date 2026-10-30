@@ -2,7 +2,7 @@
 id: STORY-0006
 type: story
 title: Review and run data
-status: in_progress
+status: done
 epic: EPIC-003
 parents: [EPIC-003]
 estimate: 5
@@ -19,8 +19,8 @@ SRS and rehearsal consume these types.
 Review and run data.
 
 ## Acceptance Criteria
-- [ ] Review and Rating types exist
-- [ ] Run and RunEvent types match docs/specs/rehearsal-run.md
+- [x] Review and Rating types exist
+- [x] Run and RunEvent types match docs/specs/rehearsal-run.md
 
 ## Design Notes
 Children: TASK-0014, TASK-0015.

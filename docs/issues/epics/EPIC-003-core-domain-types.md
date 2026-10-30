@@ -2,7 +2,7 @@
 id: EPIC-003
 type: epic
 title: Core domain types
-status: in_progress
+status: done
 parents: []
 labels: [m1, core]
 acceptance_criteria:
@@ -17,8 +17,8 @@ Domain data model is the root of the dependency graph and must be stable before 
 Data-only domain types for the whole product.
 
 ## Acceptance Criteria
-- [ ] `studyfrog-core` defines ids, arenas, Stack, Note, Card, Question, Review, Run and event types as data only
-- [ ] No inherent impl blocks (repo-lint passes)
+- [x] `studyfrog-core` defines ids, arenas, Stack, Note, Card, Question, Review, Run and event types as data only
+- [x] No inherent impl blocks (repo-lint passes)
 
 ## Design Notes
 Children: STORY-0005, STORY-0006. SoA/arena layouts per P3.
