@@ -66,6 +66,8 @@ pub enum Effect {
         /// The rating it should have.
         to: Rating,
     },
+    /// Compute the reports from the history.
+    BuildReports,
     /// Measure the achievements and remember new unlocks.
     CheckAchievements,
     /// Read the link graph from the index.

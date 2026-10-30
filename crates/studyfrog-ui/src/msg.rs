@@ -8,6 +8,7 @@ use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::Action;
 use studyfrog_service::achievements::AchievementReport;
 use studyfrog_service::document::{LoadedDoc, Saved};
+use studyfrog_service::reports::ReportBundle;
 use studyfrog_store::overview::LinkGraph;
 
 use crate::kanban::BoardMsg;
@@ -133,6 +134,8 @@ pub enum Msg {
     GraphRestart,
     /// A node was clicked.
     GraphClick(usize),
+    /// The reports were computed.
+    ReportsBuilt(Result<ReportBundle, String>),
     /// The achievements were measured.
     AchievementsChecked(Result<AchievementReport, String>),
     /// Something happened on the calendar screen.

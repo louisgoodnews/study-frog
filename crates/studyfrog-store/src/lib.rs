@@ -14,6 +14,7 @@ pub mod migrate;
 pub mod overview;
 pub mod poll;
 pub mod reindex;
+pub mod reports;
 pub mod run_load;
 pub mod runs;
 pub mod scan;

@@ -11,7 +11,7 @@
     - TASK-0056 Rule data model
     - TASK-0057 Evaluator
   - **STORY-0027** Achievement UI
-    - TASK-0058 Achievements screen and toasts
+    - TASK-0058 Achievements screen and announcements
 - **EPIC-015** Reporting and forecasting
   - **STORY-0028** Retention and latency reports
     - TASK-0059 Retention curves
@@ -23,9 +23,9 @@
 ## Exit criteria
 
 - [x] Stack and global achievements unlock from review history
-- [ ] Retention curve, latency distribution and review-load forecast are shown
-- [ ] Forecast backtest error reported on real or simulated history
-- [ ] Reports compute within budget on 100k reviews
+- [x] Retention curve, latency distribution and review-load forecast are shown
+- [x] Forecast backtest error reported on real or simulated history
+- [x] Reports compute within budget on 100k reviews
 
 ## Out of scope
 

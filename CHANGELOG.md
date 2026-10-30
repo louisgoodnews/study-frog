@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Reports: retention by time since the previous review, time to answer (percentiles, histogram, by the
+  difficulty mark), and a 30-day review-load forecast with a backtest on real or simulated history; a Reports
+  screen; each report computes in under 10 ms on 100,000 reviews (TASK-0059, 0060, 0061, 0062).
 - Achievements: rules as data (built-in set or the vault's `achievements.toml`), statistics from the review
   history including streaks, unlocks remembered once (schema v5), an Achievements screen with progress and
   an announcement when something unlocks (TASK-0056, 0057, 0058).

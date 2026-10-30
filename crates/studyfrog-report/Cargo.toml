@@ -13,3 +13,11 @@ workspace = true
 [dependencies]
 studyfrog-core.workspace = true
 studyfrog-srs.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+proptest.workspace = true
+
+[[bench]]
+name = "reports"
+harness = false

@@ -52,6 +52,17 @@ Graph (`cargo bench -p studyfrog-graph --bench layout -- --baseline m4`; 5,000 n
 | 2026-10-30 | `layout_step` | 3.98 ms |
 | 2026-10-30 | `project` | 1.8 us |
 
+Reports (`cargo bench -p studyfrog-report`; a simulated history of 103,596 reviews; budget: each under 50 ms):
+
+| Date | Bench | Result |
+|---|---|---|
+| 2026-10-30 | retention curve over all reviews | 0.38 ms |
+| 2026-10-30 | latency percentiles and histogram, one sample per review | 1.3 ms |
+| 2026-10-30 | backtest: replay 103k reviews, estimate the model, forecast, compare | 6.6 ms |
+
+Answer comparison (`cargo bench -p studyfrog-slm`): 21 us per comparison with the lexical runtime; the semantic
+runtime is measured by `cargo test --release -p studyfrog-candle -- --nocapture` (p95 about 75 ms, budget 150 ms).
+
 Allocation: `crates/studyfrog-graph/tests/allocs.rs` uses `dhat` as the test binary's global allocator and asserts
 0 allocations over 50 frames. This is the safe way to count allocations (no `unsafe` in our code).
 

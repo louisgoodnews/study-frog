@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M4 (UI shell) complete; M5 complete; M6 (SLM comparison) complete. **Date:** 2026-10-30. **Branch:** `main`.
+**Phase:** M0 to M7 complete (M7 is achievements and reporting). **Date:** 2026-10-30. **Branch:** `main`.
 
 ## What exists
 - Cargo workspace with 12 empty, documented crates (`crates/studyfrog-*`); `cargo check` passes.
@@ -43,10 +43,12 @@
 - Lowest-recall queue building is 3.9 ms for 10k items (a `powf` per comparison); cacheable later.
 
 ## Next task
-**M7** achievements and reporting (see [ROADMAP](docs/roadmap/ROADMAP.md)). Live state: [BOARD.md](BOARD.md).
+**M8** extensibility and release hardening (see [ROADMAP](docs/roadmap/ROADMAP.md)). Live state: [BOARD.md](BOARD.md).
 
-**Open flags:** the fast/slow thresholds (75 %, 200 %) and the 8-word minimum are defaults in code; the speed itself is measured; marks are stored but not yet aggregated; the default `min_score` (0.7) is too strict for the semantic runtime on a 10-pair sample;
-answer scores are not stored with run events; the "force word matching" setting does not exist yet.
+**Open flags:** the forecast has only been measured on a simulated history (weekly error 9 to 11 %); the
+default `min_score` (0.7) is too strict for the semantic answer runtime; answer scores are not stored with run
+events; "force word matching" is not a setting; marks feed reports but not scheduling; the fast/slow reading
+thresholds are defaults in code.
 
 ## Using the app now
 `cargo run -p studyfrog-app`: pick a vault folder, create a stack and cards, set up a run (any order or filter),

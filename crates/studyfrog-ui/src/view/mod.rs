@@ -9,6 +9,7 @@ mod graph;
 mod items;
 mod library;
 mod preview;
+mod reports;
 mod run;
 mod session_form;
 mod settings;
@@ -40,6 +41,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         Screen::Calendar => calendar::draw(state, ui, &mut out),
         Screen::Board => board::draw(state, ui, &mut out),
         Screen::Achievements => achievements::draw(state, ui),
+        Screen::Reports => reports::draw(state, ui),
     });
     out
 }

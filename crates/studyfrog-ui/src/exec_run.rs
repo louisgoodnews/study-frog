@@ -11,6 +11,7 @@ use studyfrog_service::compare::score_item_answer;
 use studyfrog_service::content::load_item_content;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::rehearse::{StepContext, record_step, start_run};
+use studyfrog_service::reports::build_reports;
 use studyfrog_service::rerate::rerate_latest;
 use studyfrog_service::session::current_settings;
 use studyfrog_service::timezone::{local_day_window, local_offset_minutes};
@@ -104,4 +105,16 @@ pub fn achievements(w: &mut Worker, now_ns: i64) -> Msg {
         None => Err("no vault is open".to_owned()),
     };
     Msg::AchievementsChecked(result)
+}
+
+/// Compute the reports at the current local time.
+pub fn reports(w: &Worker, now_ns: i64) -> Msg {
+    let now = UnixMs(millis(now_ns));
+    let result = match &w.session {
+        Some(session) => {
+            build_reports(session, now, local_offset_minutes(now)).map_err(|e| e.to_string())
+        }
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::ReportsBuilt(result)
 }

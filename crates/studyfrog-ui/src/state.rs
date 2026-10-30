@@ -4,6 +4,7 @@ use studyfrog_core::settings::AppSettings;
 pub use studyfrog_service::session::VaultInfo;
 
 use studyfrog_service::achievements::AchievementReport;
+use studyfrog_service::reports::ReportBundle;
 
 use crate::editor::Editor;
 use crate::graph::GraphState;
@@ -35,6 +36,8 @@ pub enum Screen {
     Board,
     /// Achievements and their progress.
     Achievements,
+    /// Retention, answer times and the review forecast.
+    Reports,
 }
 
 /// Severity of a notice.
@@ -125,6 +128,8 @@ pub struct State {
     pub planner: Planner,
     /// The kanban board.
     pub kanban: Kanban,
+    /// The latest reports.
+    pub reports: Option<ReportBundle>,
     /// The latest achievement check.
     pub achievements: Option<AchievementReport>,
     /// The reading-speed test on the settings screen.
