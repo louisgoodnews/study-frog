@@ -179,3 +179,35 @@ fn each_reminder_comes_once_when_its_time_has_come() {
     assert!(take_due_reminders(&s, after, 0).unwrap().is_empty());
     let _ = utc_to_local(after, 0);
 }
+
+#[test]
+fn imported_cards_and_the_library_card_form_get_board_cards_with_a_cap() {
+    use studyfrog_ext::types::ImportedCard;
+    use studyfrog_service::import::import_cards;
+    use studyfrog_service::track::{MAX_BOARD_CARDS_PER_IMPORT, create_card_tracked, track_cards};
+    let (_d, mut s) = vault("import");
+    let cards: Vec<ImportedCard> = (0..30)
+        .map(|n| ImportedCard {
+            front: format!("front {n}"),
+            back: "b".into(),
+            ..ImportedCard::default()
+        })
+        .collect();
+    let (info, report) = import_cards(&mut s, "deck", &cards, ids(9)).unwrap();
+    assert_eq!(report.titles.len(), 30);
+    assert!(track_cards(&mut s, &info, ("deck", &report.titles), ids(10)).is_empty());
+    let board = board_or_default(&mut s, ids(11)).unwrap();
+    let col = &board.columns[0].cards;
+    assert_eq!(col.len(), MAX_BOARD_CARDS_PER_IMPORT + 1);
+    assert_eq!(col.last().unwrap().title, "5 more cards in Deck");
+    assert_eq!(col[0].stack, Some(Uid(1)));
+
+    create_card_tracked(&mut s, ("deck", "", "Capital of Peru?", "Lima"), ids(12)).unwrap();
+    let board = board_or_default(&mut s, ids(13)).unwrap();
+    assert!(
+        board.columns[0]
+            .cards
+            .iter()
+            .any(|c| c.title.starts_with("Card: Capital of Peru"))
+    );
+}

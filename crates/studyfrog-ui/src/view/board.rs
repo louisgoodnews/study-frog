@@ -1,14 +1,17 @@
 //! The kanban board: columns side by side with WIP counts, draggable cards, and button
 //! alternatives to every drag so the board works from the keyboard and with a screen reader.
 
-use eframe::egui::{self, Frame, Id, RichText};
+use eframe::egui::{self, CornerRadius, Frame, Id, Margin, RichText, Stroke};
 use studyfrog_board::model::{Card, Column, over_limit};
 use studyfrog_core::uid::Uid;
 
 use crate::kanban::{BoardMsg, CardEdit};
 use crate::msg::Msg;
 use crate::state::State;
+use crate::theme::{palette_of, tint};
 use crate::view::widgets::text_field;
+
+const MIN_COLUMN_HEIGHT: f32 = 320.0;
 
 fn send(out: &mut Vec<Msg>, m: BoardMsg) {
     out.push(Msg::Board(m));
@@ -83,8 +86,23 @@ fn column(state: &State, col: &Column, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.colored_label(ui.visuals().error_fg_color, "Over the WIP limit");
     }
     let mut rects = Vec::new();
-    let (_, dropped) = ui.dnd_drop_zone::<Uid, ()>(Frame::group(ui.style()), |ui| {
-        ui.set_min_height(60.0);
+    let pal = palette_of(ui);
+    let dragging = egui::DragAndDrop::has_payload_of_type::<Uid>(ui.ctx());
+    let fill = if dragging {
+        tint(pal.accent, 24)
+    } else {
+        pal.panel
+    };
+    let zone = Frame::new()
+        .fill(fill)
+        .stroke(Stroke::new(
+            1.0,
+            if dragging { pal.accent } else { pal.border },
+        ))
+        .corner_radius(CornerRadius::same(10))
+        .inner_margin(Margin::same(8));
+    let (_, dropped) = ui.dnd_drop_zone::<Uid, ()>(zone, |ui| {
+        ui.set_min_height(MIN_COLUMN_HEIGHT);
         ui.set_width(ui.available_width());
         for card in &col.cards {
             rects.push(card_view(state, card, ui, out).rect);
@@ -117,22 +135,32 @@ fn stack_name(state: &State, uid: Option<Uid>) -> Option<String> {
 }
 
 fn card_view(state: &State, card: &Card, ui: &mut egui::Ui, out: &mut Vec<Msg>) -> egui::Response {
-    ui.scope(|ui| {
-        ui.dnd_drag_source(Id::unique(("card", card.id)), card.id, |ui| {
-            ui.label(RichText::new(&card.title).strong());
-        });
-        let extra = [
-            stack_name(state, card.stack),
-            card.points.map(|p| format!("{p} pts")),
-        ];
-        let line: Vec<String> = extra.into_iter().flatten().collect();
-        if !line.is_empty() {
-            ui.weak(line.join(" · "));
-        }
-        ui.horizontal_wrapped(|ui| card_buttons(card, ui, out));
-        ui.separator();
-    })
-    .response
+    let pal = palette_of(ui);
+    Frame::new()
+        .fill(pal.surface)
+        .stroke(Stroke::new(1.0, pal.border))
+        .corner_radius(CornerRadius::same(8))
+        .inner_margin(Margin::same(10))
+        .show(ui, |ui| {
+            ui.set_width(ui.available_width());
+            let face = ui.dnd_drag_source(Id::unique(("card", card.id)), card.id, |ui| {
+                ui.set_width(ui.available_width());
+                ui.label(RichText::new(&card.title).strong());
+                let extra = [
+                    stack_name(state, card.stack),
+                    card.points.map(|p| format!("{p} pts")),
+                ];
+                let line: Vec<String> = extra.into_iter().flatten().collect();
+                if !line.is_empty() {
+                    ui.label(RichText::new(line.join(" · ")).small().color(pal.text_weak));
+                }
+            });
+            if face.response.hovered() {
+                ui.ctx().set_cursor_icon(egui::CursorIcon::Grab);
+            }
+            ui.horizontal_wrapped(|ui| card_buttons(card, ui, out));
+        })
+        .response
 }
 
 fn card_buttons(card: &Card, ui: &mut egui::Ui, out: &mut Vec<Msg>) {

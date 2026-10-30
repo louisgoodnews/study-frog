@@ -21,7 +21,7 @@ Knowledge workspace.
 - [ ] An agent can work the vault and examine the user
 
 ## Design Notes
-Stories STORY-0040 to STORY-0051.
+Stories STORY-0040 to STORY-0053.
 
 ## Dependencies
 None.

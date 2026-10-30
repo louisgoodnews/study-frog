@@ -12,7 +12,10 @@ pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
     } else if allowed && screen == Screen::Calendar {
         (State { screen, ..state }, vec![Effect::LoadSessions])
     } else if allowed && (screen == Screen::Home || screen == Screen::Library) {
-        (State { screen, ..state }, vec![Effect::LoadHome])
+        (
+            State { screen, ..state },
+            vec![Effect::LoadHome, Effect::LoadSessions],
+        )
     } else if allowed && screen == Screen::Reports {
         (State { screen, ..state }, vec![Effect::BuildReports])
     } else if allowed && screen == Screen::Achievements {

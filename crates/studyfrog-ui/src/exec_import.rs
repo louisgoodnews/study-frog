@@ -7,8 +7,8 @@ use studyfrog_ext::types::{Faces, ImportedCard};
 use studyfrog_service::create::{IdSource, fresh_id_source};
 use studyfrog_service::create_more::{NewItem, NewKind};
 use studyfrog_service::import::import_cards;
-use studyfrog_service::session::ServiceError;
-use studyfrog_service::track::{DueDate, create_tracked};
+use studyfrog_service::session::{ServiceError, VaultInfo, VaultSession};
+use studyfrog_service::track::{DueDate, create_tracked, track_cards};
 
 use crate::exec::Worker;
 use crate::import_ui::ImportOutcome;
@@ -35,7 +35,11 @@ fn write(w: &mut Worker, folder: &str, cards: &[ImportedCard], now_ns: i64) -> M
         return Msg::Imported(Err("no vault is open".to_owned()));
     };
     let result = ids(now_ns)
-        .and_then(|ids| import_cards(session, folder, cards, ids))
+        .and_then(|ids| {
+            let (info, report) = import_cards(session, folder, cards, ids)?;
+            track_cards(session, &info, (folder, &report.titles), ids);
+            Ok((info, report))
+        })
         .map(|(info, report)| ImportOutcome { info, report })
         .map_err(|e| e.to_string());
     Msg::Imported(result)
@@ -120,4 +124,18 @@ pub fn create_item(
         })
         .map_err(|e| e.to_string());
     Msg::Modal(ModalMsg::Created(result))
+}
+
+/// Run a creating use case with fresh ids and report the refreshed vault.
+pub fn create(
+    w: &mut Worker,
+    now_ns: i64,
+    f: impl FnOnce(&mut VaultSession, IdSource) -> Result<VaultInfo, ServiceError>,
+) -> Msg {
+    let Some(session) = &mut w.session else {
+        return Msg::Created(Err("no vault is open".to_owned()));
+    };
+    let result = fresh_id_source(u64::try_from(now_ns / 1_000_000).unwrap_or(0))
+        .and_then(|ids| f(session, ids));
+    Msg::Created(result.map_err(|e| e.to_string()))
 }

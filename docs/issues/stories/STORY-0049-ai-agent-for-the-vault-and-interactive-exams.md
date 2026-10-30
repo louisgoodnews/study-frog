@@ -21,7 +21,7 @@ AI agent for the vault and interactive exams.
 - [ ] A local or remote model can read and maintain the vault like an LLM wiki and examine the user in a session
 
 ## Design Notes
-Needs an ADR: providers, keys, consent, what leaves the machine.
+Decided in ADR 0009 (accepted).
 
 ## Dependencies
 None.

@@ -7,6 +7,7 @@ pub mod create;
 pub mod create_more;
 pub mod day;
 pub mod document;
+pub mod expiry;
 pub mod home;
 pub mod import;
 pub mod kanban;

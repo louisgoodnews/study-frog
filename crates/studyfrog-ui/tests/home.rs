@@ -22,6 +22,7 @@ const DAY: i64 = 86_400_000;
 fn summary(ready: usize) -> HomeSummary {
     HomeSummary {
         now_ms: 10 * DAY,
+        today: studyfrog_core::civil::date_new(2026, 10, 30).unwrap(),
         hour: 9,
         ready_today: ready,
         due_now: ready.saturating_sub(1),

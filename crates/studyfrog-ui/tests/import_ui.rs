@@ -69,6 +69,7 @@ fn the_outcome_is_reported_and_the_stack_is_reloaded() {
         info: info.clone(),
         report: ImportReport {
             created: 3,
+            titles: Vec::new(),
             skipped: vec!["card 2: bad".into()],
         },
     };
@@ -83,6 +84,7 @@ fn the_outcome_is_reported_and_the_stack_is_reloaded() {
         info,
         report: ImportReport {
             created: 0,
+            titles: Vec::new(),
             skipped: vec!["card 1: bad".into()],
         },
     };

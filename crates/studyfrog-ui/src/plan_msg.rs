@@ -35,4 +35,6 @@ pub enum PlanMsg {
     Changed(Result<Vec<Session>, String>),
     /// Rehearse the stack of a session.
     Rehearse(Uid),
+    /// Set or change the due date of a stack.
+    StackDeadline(Uid),
 }

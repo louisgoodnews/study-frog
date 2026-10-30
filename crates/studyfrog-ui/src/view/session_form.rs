@@ -8,6 +8,7 @@ use crate::msg::Msg;
 use crate::planner::PlanMsg;
 use crate::session_form::{EndsKind, FormEdit, REMINDER_CHOICES, RepeatKind, SessionForm};
 use crate::state::State;
+use crate::view::date_picker::{date_field, today_of};
 use crate::view::widgets::text_field;
 
 const DAY_NAMES: [&str; 7] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -37,7 +38,9 @@ pub fn draw(state: &State, f: &SessionForm, ui: &mut egui::Ui, out: &mut Vec<Msg
     });
     kind_row(f, ui, out);
     field(ui, out, "Title", &f.title, FormEdit::Title);
-    field(ui, out, "Date (YYYY-MM-DD)", &f.date, FormEdit::Date);
+    if let Some(text) = date_field(ui, "Date (YYYY-MM-DD)", &f.date, today_of(state)) {
+        edit(out, FormEdit::Date(text));
+    }
     field(ui, out, "Time (HH:MM)", &f.time, FormEdit::Time);
     field(
         ui,

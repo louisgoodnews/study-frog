@@ -5,6 +5,7 @@ mod bars;
 mod board;
 mod calendar;
 mod calendar_grid;
+mod date_picker;
 mod editor;
 mod graph;
 mod home;

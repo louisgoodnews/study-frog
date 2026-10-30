@@ -1,13 +1,16 @@
 //! The items of the selected stack (or the inbox), with a title filter and the new-card form.
 
 use eframe::egui::{self, RichText};
+use studyfrog_core::civil::format_date;
 use studyfrog_core::plan::{ItemKind, item_kind_name};
 use studyfrog_core::time::UnixMs;
 use studyfrog_md::rfc3339::format_rfc3339;
 use studyfrog_store::overview::ItemRow;
 
 use crate::browse::filter_items;
+use crate::deadline_ui::deadline_of;
 use crate::msg::{DraftField, Msg};
+use crate::planner::PlanMsg;
 use crate::state::{Selection, State};
 use crate::theme::palette_of;
 use crate::view::kit;
@@ -54,6 +57,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         _ => "Inbox".to_owned(),
     };
     ui.label(RichText::new(heading).size(26.0).strong());
+    due_row(state, ui, out);
     child_stacks(state, ui, out);
     if let Some(text) = text_field(ui, "Search titles", &b.search, "type to filter", 1) {
         out.push(Msg::SearchEdited(text));
@@ -165,6 +169,31 @@ fn import_panel(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         if ui.button("Import cards").clicked() {
             out.push(Msg::ImportClicked);
+        }
+    });
+}
+
+/// The stack's due date and the button to set or change it.
+fn due_row(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let (Selection::Stack(open), Some(vault)) = (&state.browser.selection, &state.vault) else {
+        return;
+    };
+    let Some(stack) = vault.overview.stacks.iter().find(|s| s.folder == *open) else {
+        return;
+    };
+    let deadline = deadline_of(&state.planner.sessions, stack.uid);
+    let weak = palette_of(ui).text_weak;
+    ui.horizontal(|ui| {
+        let (text, button) = match deadline {
+            Some(s) => (
+                format!("Due {}", format_date(s.start.date)),
+                "Change due date",
+            ),
+            None => ("No due date".to_owned(), "Set due date"),
+        };
+        ui.label(RichText::new(text).color(weak));
+        if ui.small_button(button).clicked() {
+            out.push(Msg::Plan(PlanMsg::StackDeadline(stack.uid)));
         }
     });
 }

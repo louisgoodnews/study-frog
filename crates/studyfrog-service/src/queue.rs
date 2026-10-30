@@ -16,6 +16,7 @@ use studyfrog_store::schedule::load_schedules;
 use studyfrog_store::settings::{daily_counts, item_homes, stack_limits};
 
 use crate::day::DayWindow;
+use crate::expiry::{expired_stacks, today_of, without_expired};
 use crate::queue_data::Schedules;
 use crate::settings::{params_for, scheduler_for};
 
@@ -85,7 +86,11 @@ pub fn new_run(conn: &Connection, req: NewRun, vault: &VaultSettings) -> Result<
         global: req.global_budget,
         per_stack: stack_budgets(conn, req.day)?,
     };
-    let items = load_indexed_items(conn)?;
+    let mut items = load_indexed_items(conn)?;
+    if req.plan.filter.stacks.is_empty() {
+        let expired = expired_stacks(conn, today_of(req.day))?;
+        items = without_expired(items, &expired);
+    }
     let queue = build_queue(
         &candidates(&items, &sched),
         &req.plan,

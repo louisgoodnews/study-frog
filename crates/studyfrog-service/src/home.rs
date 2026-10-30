@@ -3,6 +3,7 @@
 
 use std::collections::{BTreeSet, HashMap};
 
+use rusqlite::Connection;
 use studyfrog_achieve::stats::streak_days;
 use studyfrog_calendar::recurrence::occurrences_all;
 use studyfrog_calendar::session::{EventKind, Session};
@@ -15,12 +16,13 @@ use studyfrog_rehearsal::queue::candidate::{Budgets, budget_unlimited};
 use studyfrog_store::achievements::load_review_rows;
 use studyfrog_store::home::{RunRow, count_reviews_between, recent_runs};
 use studyfrog_store::overview::{
-    ItemRow, due_items, load_indexed_items, load_overview, recent_items,
+    IndexedItem, ItemRow, due_items, load_indexed_items, load_overview, recent_items,
 };
 use studyfrog_store::schedule::load_schedules;
 use studyfrog_store::settings::item_homes;
 
 use crate::day::DayWindow;
+use crate::expiry::{expired_stacks, today_of, without_expired};
 use crate::planning::list_sessions;
 use crate::queue::{candidates, stack_budgets};
 use crate::session::{ServiceError, VaultSession, current_settings};
@@ -77,6 +79,8 @@ pub struct TodaySession {
 pub struct HomeSummary {
     /// The moment it was computed, in Unix milliseconds (for "2 days ago").
     pub now_ms: i64,
+    /// The local date.
+    pub today: Date,
     /// Local hour of the day, 0 to 23 (for the greeting).
     pub hour: u8,
     /// Items in today's spaced run: what is due plus the new ones the daily limits allow.
@@ -101,6 +105,19 @@ pub struct HomeSummary {
     pub due_items: Vec<ItemRow>,
     /// Calendar entries of the next days (not today).
     pub upcoming: Vec<Upcoming>,
+}
+
+/// The most overdue items, leaving out those of expired stacks.
+fn kept_due_items(
+    conn: &Connection,
+    now: UnixMs,
+    kept: &[IndexedItem],
+) -> Result<Vec<ItemRow>, ServiceError> {
+    let keep: BTreeSet<Uid> = kept.iter().map(|i| i.uid).collect();
+    let mut rows = due_items(conn, now.0, 64).map_err(ServiceError::Store)?;
+    rows.retain(|r| keep.contains(&r.uid));
+    rows.truncate(8);
+    Ok(rows)
 }
 
 fn upcoming(sessions: &[Session], today: Date) -> Vec<Upcoming> {
@@ -134,7 +151,8 @@ pub fn home_summary(
     let homes = item_homes(conn).map_err(store)?;
     let sched =
         load_schedules(conn, |uid| scheduler_for(&vault, homes.get(&uid))).map_err(store)?;
-    let items = load_indexed_items(conn).map_err(ServiceError::Store)?;
+    let expired = expired_stacks(conn, today_of(day)).map_err(store)?;
+    let items = without_expired(load_indexed_items(conn).map_err(store)?, &expired);
     let cands = candidates(&items, &sched);
     let overview = load_overview(conn).map_err(ServiceError::Store)?;
 
@@ -203,6 +221,7 @@ pub fn home_summary(
         .collect();
     Ok(HomeSummary {
         now_ms: now.0,
+        today: local_now.date,
         hour: (local_now.minute / 60) as u8,
         ready_today: ready,
         due_now: stacks.iter().map(|s| s.due).sum(),
@@ -214,7 +233,7 @@ pub fn home_summary(
         recent_items: recent_items(conn, 6).map_err(ServiceError::Store)?,
         recent_runs: recent_runs(conn, 5).map_err(ServiceError::Store)?,
         sessions_today,
-        due_items: due_items(conn, now.0, 8).map_err(ServiceError::Store)?,
+        due_items: kept_due_items(conn, now, &items)?,
         upcoming: upcoming(&sessions, local_now.date),
     })
 }

@@ -180,3 +180,39 @@ fn the_calendar_form_chooses_a_kind_and_reminders() {
     assert_eq!(form.reminders, vec![15, 1440]);
     assert_all_named(&h, "calendar form");
 }
+
+#[test]
+fn the_date_picker_fills_the_due_date_and_pages_through_months() {
+    let mut m = open_model();
+    apply(&mut m, Msg::Modal(ModalMsg::OpenCreateStack));
+    let mut h = harness(m);
+    h.run();
+    assert!(
+        h.query_by_label("2026-01-15").is_none(),
+        "closed until asked for"
+    );
+    h.get_by_label("Pick date").click();
+    h.run();
+    h.get_by_label("Later month").click();
+    h.run();
+    assert!(
+        h.query_by_label("2026-02-14").is_some(),
+        "February is showing"
+    );
+    h.get_by_label("Earlier month").click();
+    h.run();
+    h.get_by_label("2026-01-15").click();
+    h.run();
+    let Some(Modal::Create(f)) = &h.state().0.state.modal else {
+        panic!()
+    };
+    assert_eq!(f.due, "2026-01-15");
+    assert!(
+        h.query_by_label("2026-01-15").is_none(),
+        "the picker closes after a choice"
+    );
+    assert!(
+        h.query_by_label("1 day before").is_some(),
+        "reminders appear once there is a date"
+    );
+}

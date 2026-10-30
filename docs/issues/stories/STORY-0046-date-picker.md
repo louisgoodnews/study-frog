@@ -2,7 +2,7 @@
 id: STORY-0046
 type: story
 title: Date picker
-status: backlog
+status: done
 epic: EPIC-021
 parents: [EPIC-021]
 estimate: 3
@@ -18,7 +18,7 @@ The owner reviewed the app again and asked for a knowledge workspace: an item pa
 Date picker.
 
 ## Acceptance Criteria
-- [ ] A month-grid date picker replaces typed dates in the Create dialog and the calendar form
+- [x] A month-grid date picker replaces typed dates in the Create dialog and the calendar form
 
 ## Design Notes
 A widget in view/kit.

@@ -59,11 +59,21 @@ pub fn add_to_board(
     (kind, created, parent): (NewKind, &Created, Option<&str>),
     ids: IdSource,
 ) -> Result<(), ServiceError> {
+    let title = format!("{}: {}", kind_word(kind), created.title);
+    let stack = folder_of(kind, created, parent).and_then(|f| stack_uid(info, &f));
+    put_on_board(session, (title, stack), ids)
+}
+
+/// Put a card with this title (and stack link) on the first column of the board.
+fn put_on_board(
+    session: &mut VaultSession,
+    (title, stack): (String, Option<Uid>),
+    ids: IdSource,
+) -> Result<(), ServiceError> {
     let board = board_or_default(session, ids)?;
     let Some(first) = board.columns.first() else {
         return Ok(());
     };
-    let title = format!("{}: {}", kind_word(kind), created.title);
     let board = apply_board_op(
         session,
         &BoardOp::AddCard {
@@ -72,7 +82,6 @@ pub fn add_to_board(
         },
         ids,
     )?;
-    let stack = folder_of(kind, created, parent).and_then(|f| stack_uid(info, &f));
     let card = board.columns[0].cards.last().filter(|c| c.title == title);
     match (card, stack) {
         (Some(c), Some(stack)) => apply_board_op(
@@ -161,4 +170,76 @@ pub fn create_tracked(
         created,
         warnings,
     })
+}
+
+/// Most cards of one import that get a board card each; the rest share one summary card.
+pub const MAX_BOARD_CARDS_PER_IMPORT: usize = 25;
+
+fn nth_ids(ids: IdSource, n: usize) -> IdSource {
+    let [hi, lo] = u16::try_from(n).unwrap_or(u16::MAX).to_be_bytes();
+    let mut random = ids.random;
+    random[0] ^= hi;
+    random[1] ^= lo;
+    IdSource { random, ..ids }
+}
+
+/// Board cards for cards made outside the Create dialog (an import or the library's card form). The
+/// first [`MAX_BOARD_CARDS_PER_IMPORT`] get a card each and the rest one summary card, so a big import
+/// does not bury the board. Returns what could not be added, in words.
+pub fn track_cards(
+    session: &mut VaultSession,
+    info: &VaultInfo,
+    (folder, titles): (&str, &[String]),
+    ids: IdSource,
+) -> Vec<String> {
+    let mut warnings = Vec::new();
+    for (i, title) in titles.iter().take(MAX_BOARD_CARDS_PER_IMPORT).enumerate() {
+        let created = Created {
+            title: title.clone(),
+            path: format!("{folder}/{title}.md"),
+        };
+        if let Err(e) = add_to_board(
+            session,
+            info,
+            (NewKind::Card, &created, Some(folder)),
+            nth_ids(ids, i),
+        ) {
+            warnings.push(format!("a card was not added to the board: {e}"));
+            return warnings;
+        }
+    }
+    let more = titles.len().saturating_sub(MAX_BOARD_CARDS_PER_IMPORT);
+    if more > 0 {
+        let stack = info
+            .overview
+            .stacks
+            .iter()
+            .find(|s| s.folder == folder)
+            .map_or(folder, |s| s.title.as_str());
+        let title = format!("{more} more cards in {stack}");
+        let link = stack_uid(info, folder);
+        if let Err(e) = put_on_board(
+            session,
+            (title, link),
+            nth_ids(ids, MAX_BOARD_CARDS_PER_IMPORT),
+        ) {
+            warnings.push(format!("the import was not added to the board: {e}"));
+        }
+    }
+    warnings
+}
+
+/// [`crate::create::create_card`] plus a board card. A board failure does not undo the card.
+pub fn create_card_tracked(
+    session: &mut VaultSession,
+    (folder, title, front, back): (&str, &str, &str, &str),
+    ids: IdSource,
+) -> Result<VaultInfo, ServiceError> {
+    let info = crate::create::create_card(session, folder, title, front, back, ids)?;
+    let shown = match title.trim() {
+        "" => crate::create::default_card_title(front),
+        given => given.to_owned(),
+    };
+    track_cards(session, &info, (folder, &[shown]), ids);
+    Ok(info)
 }

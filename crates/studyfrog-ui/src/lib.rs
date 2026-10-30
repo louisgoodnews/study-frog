@@ -7,6 +7,7 @@ pub mod achievements;
 pub mod app;
 pub mod browse;
 pub mod chrome;
+pub mod deadline_ui;
 pub mod edit_form;
 pub mod editor;
 pub mod effect;

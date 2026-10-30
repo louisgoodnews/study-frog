@@ -9,6 +9,7 @@ use crate::modal::{CreateForm, Field, Modal, ModalMsg, stack_labels};
 use crate::msg::Msg;
 use crate::session_form::REMINDER_CHOICES;
 use crate::state::State;
+use crate::view::date_picker::{date_field, today_of};
 use crate::view::icons::{Glyph, icon_button};
 use crate::view::kit;
 use crate::view::widgets::text_field;
@@ -91,7 +92,7 @@ fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     }
     parent_picker(state, f, ui, out);
     if f.kind == NewKind::Stack {
-        due_fields(f, ui, out);
+        due_fields(state, f, ui, out);
     }
     if let Some(t) = text_field(ui, "Tags", &f.tags, "comma separated", 1) {
         send(out, ModalMsg::Edit(Field::Tags, t));
@@ -103,8 +104,8 @@ fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
 }
 
 /// A stack's optional due date and the reminders before it.
-fn due_fields(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    if let Some(t) = text_field(ui, "Due date (optional)", &f.due, "2026-12-31", 1) {
+fn due_fields(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if let Some(t) = date_field(ui, "Due date (optional)", &f.due, today_of(state)) {
         send(out, ModalMsg::Edit(Field::Due, t));
     }
     if f.due.trim().is_empty() {

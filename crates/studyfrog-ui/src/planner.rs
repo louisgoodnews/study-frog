@@ -208,6 +208,7 @@ pub fn update(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
                 ..p
             },
         ),
+        PlanMsg::StackDeadline(stack) => crate::deadline_ui::open(state, stack),
         PlanMsg::Edit(id) => {
             let form = p.sessions.iter().find(|s| s.id == id).map(form_from);
             with(state, Planner { form, ..p })

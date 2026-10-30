@@ -9,12 +9,10 @@ use studyfrog_core::settings::AppSettings;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
-use studyfrog_service::create::{IdSource, create_card, fresh_id_source};
 use studyfrog_service::queue::{NewRun, preview_queue};
-use studyfrog_service::session::{
-    ServiceError, VaultInfo, VaultSession, current_settings, open_vault, poll_vault,
-};
+use studyfrog_service::session::{VaultSession, current_settings, open_vault, poll_vault};
 use studyfrog_service::timezone::local_day_window;
+use studyfrog_service::track::create_card_tracked;
 use studyfrog_slm::models::Opened;
 
 use studyfrog_ext::types::Registry;
@@ -147,8 +145,8 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             title,
             front,
             back,
-        } => create(w, now_ns, |s, ids| {
-            create_card(s, &folder, &title, &front, &back, ids)
+        } => exec_import::create(w, now_ns, |s, i| {
+            create_card_tracked(s, (&folder, &title, &front, &back), i)
         }),
     };
     vec![msg]
@@ -204,20 +202,6 @@ fn load_items(w: &Worker, selection: &Selection) -> Msg {
         Some(s) => Msg::ItemsLoaded(list_items(&s.conn, folder).map_err(|e| e.to_string())),
         None => Msg::ItemsLoaded(Ok(Vec::new())),
     }
-}
-
-/// Run a creating use case with fresh ids and report the refreshed vault.
-fn create(
-    w: &mut Worker,
-    now_ns: i64,
-    f: impl FnOnce(&mut VaultSession, IdSource) -> Result<VaultInfo, ServiceError>,
-) -> Msg {
-    let Some(session) = &mut w.session else {
-        return Msg::Created(Err("no vault is open".to_owned()));
-    };
-    let result = fresh_id_source(u64::try_from(now_ns / 1_000_000).unwrap_or(0))
-        .and_then(|ids| f(session, ids));
-    Msg::Created(result.map_err(|e| e.to_string()))
 }
 
 /// Count the items a run would contain. Daily limits count from the start of the local day.

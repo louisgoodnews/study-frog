@@ -2,7 +2,7 @@
 
 use studyfrog_ext::types::ImportedCard;
 
-use crate::create::{IdSource, NewCard, refresh, write_card};
+use crate::create::{IdSource, NewCard, default_card_title, refresh, write_card};
 use crate::session::{ServiceError, VaultInfo, VaultSession};
 
 /// Most cards one import may create (ids are made from one source and one counter).
@@ -13,6 +13,8 @@ pub const MAX_IMPORT: usize = 5_000;
 pub struct ImportReport {
     /// Cards written.
     pub created: usize,
+    /// The titles of the cards written, in order.
+    pub titles: Vec<String>,
     /// Cards that could not be written, each with the reason; the rest were still written.
     pub skipped: Vec<String>,
 }
@@ -24,6 +26,14 @@ fn nth(ids: IdSource, n: usize) -> IdSource {
     random[7] ^= hi;
     random[8] ^= lo;
     IdSource { random, ..ids }
+}
+
+/// The title a written card got: the given one, else one made from its front.
+fn card_title(c: &ImportedCard) -> String {
+    match c.title.trim() {
+        "" => default_card_title(&c.front),
+        given => given.to_owned(),
+    }
 }
 
 /// Write every card into the stack at `folder`, then reindex once. A card that cannot be written
@@ -49,7 +59,10 @@ pub fn import_cards(
             tags: &c.tags,
         };
         match write_card(session, folder, &card, nth(ids, i)) {
-            Ok(()) => report.created += 1,
+            Ok(()) => {
+                report.created += 1;
+                report.titles.push(card_title(c));
+            }
             Err(ServiceError::Invalid(why)) => {
                 report.skipped.push(format!("card {}: {why}", i + 1))
             }

@@ -8,6 +8,15 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- A date picker (a month grid under the date field) in the Create dialog and the calendar form; a stack's due date
+  can be set or changed from its Library page (STORY-0046, STORY-0052).
+- Stacks whose due date has passed are left out of the suggested run and the home page's counts; choosing such a
+  stack by hand in the run setup still works (STORY-0052).
+- Cards made by an import or by the Library card form also get a board card (the first 25 of an import, then one
+  summary card); board cards are draggable by their whole face and columns light up as drop targets (STORY-0047).
+- ADR 0009 (accepted): how an AI agent will work the vault, where its keys and logs live, and that it only
+  proposes changes (STORY-0049). New backlog stories for backups, profiles, priority and difficulty
+  (STORY-0050, 0051, 0053).
 - The end-of-run review is a summary with tiles and bars and a scrollable card for every item; prompts and answers
   are drawn as Markdown while rehearsing (STORY-0040).
 - The vault's folder name and path no longer appear in the top bar, the home page, the status line or an "Opened"
