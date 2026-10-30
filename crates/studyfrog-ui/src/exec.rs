@@ -3,9 +3,18 @@
 
 use std::path::PathBuf;
 
+use studyfrog_core::plan::RunPlan;
+use studyfrog_core::run::RunMode;
 use studyfrog_core::settings::AppSettings;
+use studyfrog_core::time::UnixMs;
+use studyfrog_core::uid::Uid;
+use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 use studyfrog_service::create::{IdSource, create_card, create_stack, fresh_id_source};
-use studyfrog_service::session::{ServiceError, VaultInfo, VaultSession, open_vault, poll_vault};
+use studyfrog_service::day::day_from;
+use studyfrog_service::queue::{NewRun, preview_queue};
+use studyfrog_service::session::{
+    ServiceError, VaultInfo, VaultSession, current_settings, open_vault, poll_vault,
+};
 use studyfrog_store::app_config::{read_app_settings, write_app_settings};
 use studyfrog_store::overview::list_items;
 
@@ -37,6 +46,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::PollVault => poll(w, now_ns),
         Effect::SaveAppSettings(settings) => save_settings(w, &settings),
         Effect::LoadItems(selection) => load_items(w, &selection),
+        Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
         Effect::CreateStack(title) => create(w, now_ns, |s, ids| create_stack(s, &title, ids)),
         Effect::CreateCard {
             folder,
@@ -114,4 +124,26 @@ fn create(
     let result = fresh_id_source(u64::try_from(now_ns / 1_000_000).unwrap_or(0))
         .and_then(|ids| f(session, ids));
     Msg::Created(result.map_err(|e| e.to_string()))
+}
+
+const MS_PER_DAY: i64 = 86_400_000;
+
+/// Count the items a run would contain. The day is the UTC day: daily limits count from its start.
+fn preview(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
+    let Some(session) = &w.session else {
+        return Msg::PreviewReady(Err("no vault is open".to_owned()));
+    };
+    let now_ms = now_ns / 1_000_000;
+    let day = day_from(UnixMs(now_ms - now_ms.rem_euclid(MS_PER_DAY)));
+    let req = NewRun {
+        plan,
+        mode,
+        uid: Uid(0),
+        now: UnixMs(now_ms),
+        day,
+        global_budget: budget_unlimited(),
+    };
+    Msg::PreviewReady(
+        preview_queue(&session.conn, req, &current_settings(session)).map_err(|e| e.to_string()),
+    )
 }

@@ -136,3 +136,9 @@ pub fn poll_vault(
         PollOutcome::Unchanged | PollOutcome::Settling => Ok(None),
     }
 }
+
+/// The vault's current `studyfrog.toml` settings, or the defaults when it is absent or invalid
+/// (an invalid file is reported by [`vault_info`]).
+pub fn current_settings(session: &VaultSession) -> VaultSettings {
+    read_vault_settings(&session.root).unwrap_or_else(|_| vault_settings_default())
+}

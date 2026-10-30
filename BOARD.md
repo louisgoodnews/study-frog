@@ -4,14 +4,14 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (6) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (47) |
+| Backlog (5) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (48) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0039](docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 | [TASK-0040](docs/issues/tasks/TASK-0040-editor-widget.md) Editor widget (5) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 | [TASK-0041](docs/issues/tasks/TASK-0041-preview-renderer.md) Preview renderer (3) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
 | [TASK-0042](docs/issues/tasks/TASK-0042-force-directed-layout-soa.md) Force-directed layout (SoA) (5) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
 | [TASK-0043](docs/issues/tasks/TASK-0043-graph-render-benchmark.md) Graph render benchmark (3) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
-| [TASK-0073](docs/issues/tasks/TASK-0073-run-setup-screen-plan-picker.md) Run setup screen (plan picker) (3) |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
+|  |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
 |  |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
 |  |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
 |  |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
@@ -49,6 +49,7 @@
 |  |  |  |  |  | [TASK-0070](docs/issues/tasks/TASK-0070-queue-filters.md) Queue filters (3) |
 |  |  |  |  |  | [TASK-0071](docs/issues/tasks/TASK-0071-requeue-on-again-and-schedule-effect.md) Requeue on Again and schedule effect (3) |
 |  |  |  |  |  | [TASK-0072](docs/issues/tasks/TASK-0072-persist-run-plan-schema-v2.md) Persist run plan (schema v2) (2) |
+|  |  |  |  |  | [TASK-0073](docs/issues/tasks/TASK-0073-run-setup-screen-plan-picker.md) Run setup screen (plan picker) (3) |
 |  |  |  |  |  | [TASK-0074](docs/issues/tasks/TASK-0074-persist-the-run-filter.md) Persist the run filter (2) |
 |  |  |  |  |  | [TASK-0075](docs/issues/tasks/TASK-0075-stack-settings-in-the-index.md) Stack settings in the index (5) |
 |  |  |  |  |  | [TASK-0076](docs/issues/tasks/TASK-0076-sm-2-in-the-service.md) SM-2 in the service (5) |
@@ -74,7 +75,7 @@
 | [STORY-0014](docs/issues/stories/STORY-0014-latency-capture.md) Latency capture (5) | done | 2/2 |
 | [STORY-0015](docs/issues/stories/STORY-0015-queue-selection.md) Queue selection (5) | done | 2/2 |
 | [STORY-0016](docs/issues/stories/STORY-0016-app-frame.md) App frame (5) | done | 2/2 |
-| [STORY-0017](docs/issues/stories/STORY-0017-stack-browser-run-setup-and-rehearsal-screen.md) Stack browser, run setup and rehearsal screen (8) | in_progress | 1/3 |
+| [STORY-0017](docs/issues/stories/STORY-0017-stack-browser-run-setup-and-rehearsal-screen.md) Stack browser, run setup and rehearsal screen (8) | in_progress | 2/3 |
 | [STORY-0018](docs/issues/stories/STORY-0018-markdown-editor-and-preview.md) Markdown editor and preview (8) | backlog | 0/2 |
 | [STORY-0019](docs/issues/stories/STORY-0019-link-graph-view.md) Link graph view (8) | backlog | 0/2 |
 | [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |

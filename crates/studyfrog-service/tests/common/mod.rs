@@ -7,7 +7,6 @@ use std::sync::atomic::{AtomicU32, Ordering};
 
 use rusqlite::Connection;
 use studyfrog_core::event::RunEvent;
-use studyfrog_core::library::Library;
 use studyfrog_core::plan::RunPlan;
 use studyfrog_core::review::Rating;
 use studyfrog_core::run::{Run, RunMode};
@@ -23,10 +22,8 @@ use studyfrog_service::day::day_from;
 use studyfrog_service::queue::{NewRun, new_run};
 use studyfrog_service::rehearse::{begin_run, record_step};
 use studyfrog_store::db::open_memory;
-use studyfrog_store::library::build_library;
 use studyfrog_store::migrate::migrate;
 use studyfrog_store::reindex::reindex;
-use studyfrog_store::scan::scan_vault;
 use studyfrog_store::schema::MIGRATIONS;
 
 pub const DAY: i64 = 86_400_000;
@@ -38,7 +35,6 @@ static COUNTER: AtomicU32 = AtomicU32::new(0);
 pub struct Env {
     pub dir: PathBuf,
     pub conn: Connection,
-    pub lib: Library,
     pub vault: VaultSettings,
 }
 
@@ -76,7 +72,6 @@ pub fn env_with(stack_toml: Option<&str>) -> Env {
     let mut env = Env {
         dir,
         conn,
-        lib: studyfrog_core::library::library_new(),
         vault: vault_settings_default(),
     };
     reload(&mut env);
@@ -87,10 +82,9 @@ pub fn env() -> Env {
     env_with(None)
 }
 
-/// Re-read the vault after files were edited: reindex and rebuild the library.
+/// Re-read the vault after files were edited.
 pub fn reload(env: &mut Env) {
     reindex(&mut env.conn, &env.dir).unwrap();
-    env.lib = build_library(&scan_vault(&env.dir).unwrap());
 }
 
 pub fn build(env: &Env, plan: RunPlan, run: u128, now: UnixMs) -> Run {
@@ -103,7 +97,7 @@ pub fn build(env: &Env, plan: RunPlan, run: u128, now: UnixMs) -> Run {
         day,
         global_budget: budget_unlimited(),
     };
-    new_run(&env.conn, &env.lib, req, &env.vault).unwrap()
+    new_run(&env.conn, req, &env.vault).unwrap()
 }
 
 /// Drive a session: every action is stepped and recorded; returns all events in order.

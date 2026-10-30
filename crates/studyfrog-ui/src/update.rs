@@ -61,6 +61,7 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::DraftEdited(..)
         | Msg::AddCardClicked
         | Msg::Created(_)) => crate::browse::update(state, browse),
+        setup @ (Msg::Setup(_) | Msg::PreviewReady(_)) => crate::setup::update(state, setup),
     }
 }
 
@@ -140,7 +141,9 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
 
 fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
     let allowed = screen == Screen::Welcome || state.vault.is_some();
-    if allowed {
+    if allowed && screen == Screen::Rehearse {
+        crate::setup::refresh_preview(State { screen, ..state })
+    } else if allowed {
         (State { screen, ..state }, Vec::new())
     } else {
         (state, Vec::new())
@@ -168,14 +171,17 @@ fn vault_polled(state: State, result: Result<Option<VaultInfo>, String>) -> (Sta
     };
     match result {
         Ok(Some(info)) if state.vault.is_some() => {
-            let reload = crate::browse::reload(&state.browser.selection);
-            (
-                State {
-                    vault: Some(info),
-                    ..state
-                },
-                reload,
-            )
+            let mut effects = crate::browse::reload(&state.browser.selection);
+            let state = State {
+                vault: Some(info),
+                ..state
+            };
+            if state.screen != Screen::Rehearse {
+                return (state, effects);
+            }
+            let (state, preview) = crate::setup::refresh_preview(state);
+            effects.extend(preview);
+            (state, effects)
         }
         Ok(_) => (state, Vec::new()),
         Err(e) => {

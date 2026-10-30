@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Run setup screen: presets (spaced, everything in order, shuffled, hardest first, not seen for longest),
+  all orders, filters (kind, stack, tags, state, difficulty), limit, requeue, and an explicit "update my
+  schedule" switch; live count of matching items from the index. 6 tests (TASK-0073).
 - Stack browser: choose a stack or the inbox, filter its items by title, create stacks and cards from the UI.
   Service use cases `create_stack`/`create_card` (never overwrite, validated, reindexed at once), in-house ULID
   composition with OS randomness, `list_items`; 14 new tests incl. a real-vault build-a-stack flow
@@ -86,6 +89,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - `rustfmt.toml`, `clippy.toml`, `rust-toolchain.toml` (1.99.1), `.gitignore`.
 
 ### Changed
+- Queues are built from the index (`studyfrog_store::overview::load_indexed_items`) instead of a parsed
+  `Library`; `new_run` no longer takes a library.
 - Stack settings (`daily_*`, `srs`) are no longer `_stack.md` front-matter; they moved to `_stack.toml`
   (ADR 0007). `StackDoc` now carries only identity, description and body; core `Stack` has `settings`.
 - ADR 0005 amendment accepted: no `gray_matter`; in-house fence splitter plus `serde-saphyr`

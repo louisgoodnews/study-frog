@@ -10,6 +10,8 @@ pub mod exec;
 pub mod model;
 pub mod msg;
 pub mod runtime;
+pub mod setup;
+pub mod setup_form;
 pub mod state;
 pub mod update;
 pub mod view;

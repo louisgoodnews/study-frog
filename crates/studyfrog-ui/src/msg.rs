@@ -2,6 +2,7 @@
 
 use studyfrog_core::settings::AppSettings;
 
+use crate::setup::SetupEdit;
 use crate::state::{ItemRow, Screen, Selection, VaultInfo};
 
 /// An event for [`update`](crate::update::update).
@@ -50,6 +51,10 @@ pub enum Msg {
     AddCardClicked,
     /// A stack or card was created (or not); carries the refreshed vault.
     Created(Result<VaultInfo, String>),
+    /// A field of the run setup form changed.
+    Setup(SetupEdit),
+    /// The number of items a run would contain (or why that could not be counted).
+    PreviewReady(Result<usize, String>),
 }
 
 /// Which field of the new-card form.

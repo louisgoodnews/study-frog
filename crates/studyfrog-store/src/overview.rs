@@ -160,3 +160,68 @@ pub fn list_items(conn: &Connection, folder: Option<&str>) -> Result<Vec<ItemRow
     }
     Ok(out)
 }
+
+/// What queue building needs to know about an indexed item (no file content).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IndexedItem {
+    /// Item identity.
+    pub uid: Uid,
+    /// Note, card or question.
+    pub kind: studyfrog_core::plan::ItemKind,
+    /// Owning stack, `Uid(0)` for the inbox.
+    pub stack: Uid,
+    /// Tags.
+    pub tags: Vec<String>,
+    /// Position in path order, the base order of sequential runs.
+    pub position: u32,
+}
+
+fn tags_by_item(
+    conn: &Connection,
+) -> Result<std::collections::HashMap<String, Vec<String>>, StoreError> {
+    let mut stmt = conn
+        .prepare("SELECT uid, tag FROM tag ORDER BY uid, tag")
+        .map_err(sql_err)?;
+    let rows = stmt
+        .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))
+        .map_err(sql_err)?;
+    let mut map: std::collections::HashMap<String, Vec<String>> = std::collections::HashMap::new();
+    for row in rows {
+        let (uid, tag) = row.map_err(sql_err)?;
+        map.entry(uid).or_default().push(tag);
+    }
+    Ok(map)
+}
+
+/// Every studiable item (stacks excluded) in path order, with its stack and tags.
+pub fn load_indexed_items(conn: &Connection) -> Result<Vec<IndexedItem>, StoreError> {
+    let mut tags = tags_by_item(conn)?;
+    let sql = "SELECT i.uid, i.kind, s.uid FROM item i LEFT JOIN stack_setting s ON s.folder = i.stack_path
+               WHERE i.kind != 'stack' ORDER BY i.path";
+    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+    let rows = stmt
+        .query_map([], |r| {
+            Ok((
+                r.get::<_, String>(0)?,
+                r.get::<_, String>(1)?,
+                r.get::<_, Option<String>>(2)?,
+            ))
+        })
+        .map_err(sql_err)?;
+    let mut out = Vec::new();
+    for (position, row) in rows.enumerate() {
+        let (id, kind, stack) = row.map_err(sql_err)?;
+        let corrupt = |what: &str, v: &str| StoreError::Corrupt(format!("{what}: {v:?}"));
+        out.push(IndexedItem {
+            uid: parse_ulid(&id).ok_or_else(|| corrupt("ulid", &id))?,
+            kind: studyfrog_core::plan::item_kind_from_name(&kind)
+                .ok_or_else(|| corrupt("kind", &kind))?,
+            stack: stack.as_deref().map_or(Ok(Uid(0)), |s| {
+                parse_ulid(s).ok_or_else(|| corrupt("ulid", s))
+            })?,
+            tags: tags.remove(&id).unwrap_or_default(),
+            position: position as u32,
+        });
+    }
+    Ok(out)
+}

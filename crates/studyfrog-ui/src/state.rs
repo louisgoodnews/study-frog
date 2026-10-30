@@ -2,6 +2,8 @@
 
 use studyfrog_core::settings::AppSettings;
 pub use studyfrog_service::session::VaultInfo;
+
+use crate::setup::Rehearse;
 pub use studyfrog_store::overview::ItemRow;
 
 /// Which screen is showing.
@@ -93,4 +95,6 @@ pub struct State {
     pub polling: bool,
     /// The stack browser.
     pub browser: Browser,
+    /// The rehearse screen.
+    pub rehearse: Rehearse,
 }

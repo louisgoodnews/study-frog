@@ -4,6 +4,7 @@ mod bars;
 mod items;
 mod library;
 mod settings;
+mod setup;
 mod welcome;
 pub(crate) mod widgets;
 
@@ -22,9 +23,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     egui::CentralPanel::default().show(ui, |ui| match state.screen {
         Screen::Welcome => welcome::draw(state, ui, &mut out),
         Screen::Library => library::draw(state, ui, &mut out),
-        Screen::Rehearse => {
-            ui.heading("Rehearse");
-        }
+        Screen::Rehearse => setup::draw(state, ui, &mut out),
         Screen::Settings => settings::draw(state, ui),
     });
     out

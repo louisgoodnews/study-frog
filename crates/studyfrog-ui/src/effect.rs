@@ -1,5 +1,7 @@
 //! Side effects `update` asks for, as plain data. The executor performs them and answers with a `Msg`.
 
+use studyfrog_core::plan::RunPlan;
+use studyfrog_core::run::RunMode;
 use studyfrog_core::settings::AppSettings;
 
 use crate::state::Selection;
@@ -17,6 +19,13 @@ pub enum Effect {
     SaveAppSettings(AppSettings),
     /// List the items of a stack (or the inbox).
     LoadItems(Selection),
+    /// Count the items a run built from this plan would contain.
+    PreviewQueue {
+        /// The plan.
+        plan: RunPlan,
+        /// Presentation mode.
+        mode: RunMode,
+    },
     /// Create a stack with this title.
     CreateStack(String),
     /// Create a card in the stack at `folder`.
