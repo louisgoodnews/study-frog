@@ -11,4 +11,7 @@
 | Avoid layout shift and per-frame allocation in render loop | Perceived performance; ADR 0002. | Project constraint P7. |
 | Distraction-free review screen | Retrieval needs focus; show only prompt and timer. | Project judgement; validate in user tests. |
 
-All external references should be re-checked when the UI milestone starts (M4).
+Verification (2026-10-30): WCAG 2.2 SC 1.4.3 (AA, 4.5:1 normal text, 3:1 large text) and SC 2.5.8
+(AA, 24x24 CSS px, with exceptions) confirmed on w3.org. Fitts (1954), Hick (1952), Nielsen (1994)
+and the GNOME HIG are from memory and unverified; re-check when the UI milestone starts (M4).
+Note: 24 px is the WCAG *minimum*; prefer larger targets for primary rehearsal controls.

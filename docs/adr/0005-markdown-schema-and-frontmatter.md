@@ -13,7 +13,25 @@
 - Unknown front-matter keys are preserved on round-trip (stored as a remainder map).
 - The parser never rewrites a file unless the app changes it; rewrites preserve key order.
 
+## YAML crate decision (resolved 2026-10-30)
+**`serde-saphyr` 2.0.0** (pure Rust, no libyaml/unsafe, MIT OR Apache-2.0, MSRV 1.89) for typed
+deserialisation and serialisation of front-matter.
+- Validated: `tools/repo-lint` parses all issue front-matter with it, including
+  `deny_unknown_fields` and error positions.
+- Rejected: `serde_yaml` (archived 2024), `serde_yml` (archived after unsoundness reports),
+  `serde_yaml_ng` (RUSTSEC lists its libyaml backend as unmaintained). `serde_norway` and
+  `yaml_serde` are drop-in forks; not evaluated further because `serde-saphyr` avoids the
+  libyaml lineage altogether.
+- The crate stays isolated inside `studyfrog-md`, so a later swap is local.
+
+## Amendment (Proposed, needs owner approval): drop `gray_matter`
+`gray_matter` 0.3.2 was last released 2025-07-10, parses via an optional `yaml-rust2` into a
+generic value, and cannot write front-matter. The round-trip requirement (`parse(render(x)) == x`)
+needs serialisation anyway, and splitting on the `---` fences is about ten lines
+(`split_front_matter` in `tools/repo-lint/src/issues.rs` is the prototype). Proposal: own the
+fence splitter in `studyfrog-md` and use `serde-saphyr` in both directions, removing one
+dependency and one second YAML parser. Until approved, TASK-0021 keeps its title unchanged.
+
 ## Risks
-- `serde_yaml` is archived/unmaintained. Decide at M2 between `serde_yaml`, a maintained fork,
-  or the YAML backend `gray_matter` uses. The choice is isolated inside `studyfrog-md`.
 - `comrak` is the alternative to `pulldown-cmark` if GFM extensions prove insufficient.
+- `serde-saphyr` is younger than the libyaml-based crates; mitigated by golden and round-trip tests.

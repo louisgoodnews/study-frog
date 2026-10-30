@@ -23,10 +23,10 @@ impl-block scan for P1.
 - [x] Trait impls pass; `// allow-impl: reason` exempts one block
 
 ## Design Notes
-Line-based awk scan; known limit: misses impls split across lines or in macros.
+Implemented with syn in `tools/repo-lint` (v1 was a line-based awk scan; replaced 2026-10-30). Detects inherent impls anywhere in the AST and in macro bodies (heuristic: `impl` token without `for`). Exemption marker: `// allow-impl: reason` on the line above.
 
 ## Dependencies
 Parent story STORY-0002.
 
 ## Open Questions
-Replace with a syn-based check if false negatives appear.
+Macro detection is token-level and heuristic; revisit if a macro-heavy crate appears.
