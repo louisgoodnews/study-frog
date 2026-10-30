@@ -8,6 +8,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Planning foundations: `studyfrog-calendar` (sessions, recurrence checked against a day-by-day oracle) and
+  `studyfrog-board` (columns, WIP limits, strict/forced moves, push/pull, commands; property-tested); schema v4
+  (sessions, board); service use cases for both; `core::civil` (dates, weekdays, month grid, local time); a
+  local time-zone provider so daily limits and run previews use the local day (TASK-0044, 0046, 0047, 0078,
+  0079, 0080).
 - Link graph screen: the wikilink graph as a force-directed picture with pan, zoom, hover, click-to-open, a
   re-run button, an accessible item list, and live refresh that keeps node positions. New pure crate
   `studyfrog-graph` (SoA layout, uniform-grid repulsion, deterministic, zero allocation per step): 5k nodes /
@@ -103,6 +108,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - `rustfmt.toml`, `clippy.toml`, `rust-toolchain.toml` (1.99.1), `.gitignore`.
 
 ### Changed
+- `md`'s RFC 3339 codec shares `core::civil` instead of carrying its own date arithmetic.
+- Daily limits and run creation use the local day (was the UTC day).
 - Queues are built from the index (`studyfrog_store::overview::load_indexed_items`) instead of a parsed
   `Library`; `new_run` no longer takes a library.
 - Stack settings (`daily_*`, `srs`) are no longer `_stack.md` front-matter; they moved to `_stack.toml`

@@ -153,7 +153,7 @@ fn split_wikilinks_handles_escapes_and_junk() {
 
 proptest! {
     #[test]
-    fn parsing_never_panics_and_keeps_the_visible_text(text in "[a-zA-Z .,\n#*_`>\\[\\]()-]{0,120}") {
+    fn parsing_never_panics_and_keeps_the_visible_text(text in "[a-zA-Z .,\n#*_`>\\[\\]-]{0,120}") {
         let blocks = parse_blocks(&text);
         fn collect(blocks: &[Block], out: &mut String) {
             for b in blocks {
@@ -169,6 +169,7 @@ proptest! {
         let mut seen = String::new();
         collect(&blocks, &mut seen);
         let letters = |s: &str| s.chars().filter(|c| c.is_alphanumeric()).collect::<Vec<_>>();
+        // (No parentheses in the alphabet: a link destination such as `[](a)` is not visible text.)
         // Everything alphanumeric the author wrote is still on screen, in order.
         prop_assert_eq!(letters(&seen), letters(&text));
     }

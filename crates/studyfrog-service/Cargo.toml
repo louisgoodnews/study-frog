@@ -13,8 +13,11 @@ workspace = true
 [dependencies]
 studyfrog-core.workspace = true
 studyfrog-md.workspace = true
+studyfrog-board.workspace = true
+studyfrog-calendar.workspace = true
 studyfrog-config.workspace = true
 studyfrog-store.workspace = true
 studyfrog-srs.workspace = true
 studyfrog-rehearsal.workspace = true
+chrono.workspace = true
 rusqlite.workspace = true

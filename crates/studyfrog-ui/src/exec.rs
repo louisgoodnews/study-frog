@@ -11,12 +11,12 @@ use studyfrog_core::uid::Uid;
 use studyfrog_md::doc::Doc;
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 use studyfrog_service::create::{IdSource, create_card, create_stack, fresh_id_source};
-use studyfrog_service::day::day_from;
 use studyfrog_service::document::{load_document, resolve_link, save_document};
 use studyfrog_service::queue::{NewRun, preview_queue};
 use studyfrog_service::session::{
     ServiceError, VaultInfo, VaultSession, current_settings, open_vault, poll_vault,
 };
+use studyfrog_service::timezone::local_day_window;
 use studyfrog_store::app_config::{read_app_settings, write_app_settings};
 use studyfrog_store::overview::list_items;
 
@@ -136,15 +136,13 @@ fn create(
     Msg::Created(result.map_err(|e| e.to_string()))
 }
 
-const MS_PER_DAY: i64 = 86_400_000;
-
-/// Count the items a run would contain. The day is the UTC day: daily limits count from its start.
+/// Count the items a run would contain. Daily limits count from the start of the local day.
 fn preview(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
     let Some(session) = &w.session else {
         return Msg::PreviewReady(Err("no vault is open".to_owned()));
     };
     let now_ms = now_ns / 1_000_000;
-    let day = day_from(UnixMs(now_ms - now_ms.rem_euclid(MS_PER_DAY)));
+    let day = local_day_window(UnixMs(now_ms));
     let req = NewRun {
         plan,
         mode,

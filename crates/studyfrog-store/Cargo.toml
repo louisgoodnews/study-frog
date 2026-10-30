@@ -13,6 +13,8 @@ workspace = true
 [dependencies]
 studyfrog-core.workspace = true
 studyfrog-md.workspace = true
+studyfrog-board.workspace = true
+studyfrog-calendar.workspace = true
 studyfrog-config.workspace = true
 rusqlite.workspace = true
 

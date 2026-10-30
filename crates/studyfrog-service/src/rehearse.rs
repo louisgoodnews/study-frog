@@ -22,7 +22,7 @@ use studyfrog_md::ulid::compose_ulid;
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 
 use crate::create::IdSource;
-use crate::day::day_from;
+use crate::day::DayWindow;
 use crate::queue::{NewRun, new_run};
 use crate::schedule::{apply_rating, apply_rating_sm2};
 use crate::session::{ServiceError, VaultSession, current_settings};
@@ -130,6 +130,7 @@ pub fn start_run(
     plan: RunPlan,
     mode: RunMode,
     now: UnixMs,
+    day: DayWindow,
     ids: IdSource,
 ) -> Result<Run, ServiceError> {
     let seed = u64::from_le_bytes([
@@ -142,7 +143,6 @@ pub fn start_run(
         ids.random[6],
         ids.random[7],
     ]);
-    let day = day_from(UnixMs(now.0 - now.0.rem_euclid(MS_PER_DAY)));
     let req = NewRun {
         plan: RunPlan { seed, ..plan },
         mode,
@@ -156,5 +156,3 @@ pub fn start_run(
     begin_run(&session.conn, &run).map_err(ServiceError::Store)?;
     Ok(run)
 }
-
-const MS_PER_DAY: i64 = 86_400_000;

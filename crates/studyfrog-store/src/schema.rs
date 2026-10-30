@@ -19,6 +19,11 @@ pub const MIGRATIONS: &[Migration] = &[
         name: "run filter, stack identity and settings, sm2 last review",
         sql: V3,
     },
+    Migration {
+        version: 4,
+        name: "sessions and board",
+        sql: V4,
+    },
 ];
 
 /// The run filter (list-valued parts in their own tables, with a position to keep their order),
@@ -181,4 +186,50 @@ CREATE TABLE run_event (
     payload  TEXT,
     PRIMARY KEY (run_uid, seq)
 ) WITHOUT ROWID;
+";
+
+/// Authoritative planning data (ADR 0003): the calendar's sessions and the kanban board. Dates are
+/// ISO `YYYY-MM-DD` text. Cards belong to a column and are ordered by `pos`; deleting a column
+/// would delete its cards, so the service moves them away first.
+const V4: &str = "
+CREATE TABLE session (
+    id            TEXT PRIMARY KEY,
+    title         TEXT NOT NULL,
+    stack_uid     TEXT,
+    start_date    TEXT NOT NULL,
+    start_minute  INTEGER NOT NULL CHECK (start_minute BETWEEN 0 AND 1439),
+    duration_min  INTEGER NOT NULL CHECK (duration_min BETWEEN 1 AND 1440),
+    repeat_kind   TEXT NOT NULL CHECK (repeat_kind IN ('never', 'daily', 'weekly', 'monthly')),
+    repeat_every  INTEGER NOT NULL DEFAULT 1 CHECK (repeat_every >= 1),
+    repeat_days   INTEGER NOT NULL DEFAULT 0 CHECK (repeat_days BETWEEN 0 AND 127),
+    ends_kind     TEXT NOT NULL CHECK (ends_kind IN ('forever', 'on', 'after')),
+    ends_date     TEXT,
+    ends_count    INTEGER,
+    notes         TEXT NOT NULL DEFAULT ''
+) WITHOUT ROWID;
+CREATE INDEX session_start ON session(start_date);
+
+CREATE TABLE session_cancelled (
+    session_id TEXT NOT NULL REFERENCES session(id) ON DELETE CASCADE,
+    date       TEXT NOT NULL,
+    PRIMARY KEY (session_id, date)
+) WITHOUT ROWID;
+
+CREATE TABLE board_column (
+    id        TEXT PRIMARY KEY,
+    pos       INTEGER NOT NULL,
+    name      TEXT NOT NULL,
+    wip_limit INTEGER CHECK (wip_limit IS NULL OR wip_limit >= 0)
+) WITHOUT ROWID;
+
+CREATE TABLE board_card (
+    id        TEXT PRIMARY KEY,
+    column_id TEXT NOT NULL REFERENCES board_column(id) ON DELETE CASCADE,
+    pos       INTEGER NOT NULL,
+    title     TEXT NOT NULL,
+    notes     TEXT NOT NULL DEFAULT '',
+    stack_uid TEXT,
+    points    INTEGER
+) WITHOUT ROWID;
+CREATE INDEX board_card_column ON board_card(column_id, pos);
 ";

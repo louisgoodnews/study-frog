@@ -189,11 +189,14 @@ Planning and task management.
 - **EPIC-010** Calendar and planning
   - **STORY-0020** Session planning
     - TASK-0044 Session model and recurrence
+    - TASK-0078 Local time zone and local-day windows
+    - TASK-0079 Persist sessions
     - TASK-0045 Calendar view
 - **EPIC-011** Scrum/kanban board
   - **STORY-0021** Board model
     - TASK-0046 Columns and WIP limits
     - TASK-0047 Move and push semantics
+    - TASK-0080 Persist the board
   - **STORY-0022** Board UI
     - TASK-0048 Board view with drag and drop
 

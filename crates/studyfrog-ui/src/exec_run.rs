@@ -9,6 +9,7 @@ use studyfrog_service::content::load_item_content;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::rehearse::{StepContext, record_step, start_run};
 use studyfrog_service::session::current_settings;
+use studyfrog_service::timezone::local_day_window;
 
 use crate::exec::Worker;
 use crate::msg::Msg;
@@ -23,8 +24,16 @@ pub fn start(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
         return Msg::RunReady(Err("no vault is open".to_owned()));
     };
     let now_ms = millis(now_ns);
-    let result = fresh_id_source(u64::try_from(now_ms).unwrap_or(0))
-        .and_then(|ids| start_run(session, plan, mode, UnixMs(now_ms), ids));
+    let result = fresh_id_source(u64::try_from(now_ms).unwrap_or(0)).and_then(|ids| {
+        start_run(
+            session,
+            plan,
+            mode,
+            UnixMs(now_ms),
+            local_day_window(UnixMs(now_ms)),
+            ids,
+        )
+    });
     Msg::RunReady(result.map_err(|e| e.to_string()))
 }
 

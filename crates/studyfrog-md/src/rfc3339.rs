@@ -1,42 +1,10 @@
-//! RFC 3339 timestamps to and from [`UnixMs`], years 0000 to 9999. In-house calendar arithmetic
-//! (Hinnant's civil-date algorithms) so `md` needs no date crate.
+//! RFC 3339 timestamps to and from [`UnixMs`], years 0000 to 9999. Calendar arithmetic is shared
+//! with `studyfrog_core::civil`, so `md` needs no date crate.
 
+use studyfrog_core::civil::{civil_from_days, days_from_civil, days_in_month};
 use studyfrog_core::time::UnixMs;
 
 const MS_PER_DAY: i64 = 86_400_000;
-
-/// Days since 1970-01-01 for a proleptic Gregorian date.
-fn days_from_civil(y: i64, m: i64, d: i64) -> i64 {
-    let y = if m <= 2 { y - 1 } else { y };
-    let era = y.div_euclid(400);
-    let yoe = y - era * 400;
-    let doy = (153 * (if m > 2 { m - 3 } else { m + 9 }) + 2) / 5 + d - 1;
-    let doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
-    era * 146_097 + doe - 719_468
-}
-
-/// Inverse of [`days_from_civil`].
-fn civil_from_days(z: i64) -> (i64, i64, i64) {
-    let z = z + 719_468;
-    let era = z.div_euclid(146_097);
-    let doe = z - era * 146_097;
-    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365;
-    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
-    let mp = (5 * doy + 2) / 153;
-    let d = doy - (153 * mp + 2) / 5 + 1;
-    let m = if mp < 10 { mp + 3 } else { mp - 9 };
-    (yoe + era * 400 + i64::from(m <= 2), m, d)
-}
-
-fn days_in_month(y: i64, m: i64) -> i64 {
-    let leap = (y % 4 == 0 && y % 100 != 0) || y % 400 == 0;
-    match m {
-        2 if leap => 29,
-        2 => 28,
-        4 | 6 | 9 | 11 => 30,
-        _ => 31,
-    }
-}
 
 /// Read `len` ASCII digits at `*pos`, advancing it.
 fn number(bytes: &[u8], pos: &mut usize, len: usize) -> Option<i64> {
