@@ -1,0 +1,24 @@
+[package]
+name = "studyfrog-ui"
+description = "GUI layer. Thin: renders state and dispatches to the domain crates; contains no business logic."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-core.workspace = true
+studyfrog-md.workspace = true
+studyfrog-store.workspace = true
+studyfrog-srs.workspace = true
+studyfrog-rehearsal.workspace = true
+studyfrog-slm.workspace = true
+studyfrog-report.workspace = true
+studyfrog-achieve.workspace = true
+studyfrog-board.workspace = true
+studyfrog-calendar.workspace = true

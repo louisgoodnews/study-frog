@@ -1,0 +1,16 @@
+[package]
+name = "studyfrog-rehearsal"
+description = "Rehearsal run engine: event stream, per-item latency capture and outcomes, as pure state transitions."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-core.workspace = true
+studyfrog-srs.workspace = true

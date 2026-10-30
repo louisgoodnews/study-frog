@@ -1,0 +1,15 @@
+[package]
+name = "studyfrog-calendar"
+description = "Calendar and planning: scheduled learning sessions linked to stacks."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-core.workspace = true

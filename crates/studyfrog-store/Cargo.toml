@@ -1,0 +1,16 @@
+[package]
+name = "studyfrog-store"
+description = "Persistence: SQLite for structured data and a plain-file layer for Markdown content. The only crate that performs storage I/O."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-core.workspace = true
+studyfrog-md.workspace = true

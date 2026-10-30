@@ -1,0 +1,10 @@
+/target
+**/*.rs.bk
+*.sqlite
+*.sqlite-journal
+*.db
+.idea/
+.vscode/
+.DS_Store
+perf.data*
+flamegraph.svg

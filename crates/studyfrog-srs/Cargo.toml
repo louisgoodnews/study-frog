@@ -1,0 +1,15 @@
+[package]
+name = "studyfrog-srs"
+description = "Spaced-repetition scheduling: pure functions from review history to next due date."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-core.workspace = true

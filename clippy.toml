@@ -1,0 +1,12 @@
+# Thresholds. Lints themselves are enabled in [workspace.lints] in Cargo.toml.
+too-many-lines-threshold = 250
+cognitive-complexity-threshold = 15
+too-many-arguments-threshold = 6
+type-complexity-threshold = 200
+
+# Hidden global state and panics are not allowed in domain code.
+disallowed-methods = [
+    { path = "std::env::set_var", reason = "hidden global state" },
+    { path = "std::process::exit", reason = "return errors to the caller instead" },
+    { path = "std::thread::sleep", reason = "inject time via a clock parameter; no blocking in domain code" },
+]

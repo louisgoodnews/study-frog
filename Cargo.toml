@@ -1,0 +1,56 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/studyfrog-core",
+    "crates/studyfrog-md",
+    "crates/studyfrog-store",
+    "crates/studyfrog-srs",
+    "crates/studyfrog-rehearsal",
+    "crates/studyfrog-slm",
+    "crates/studyfrog-report",
+    "crates/studyfrog-achieve",
+    "crates/studyfrog-board",
+    "crates/studyfrog-calendar",
+    "crates/studyfrog-ui",
+    "crates/studyfrog-app",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/louisgoodnews/study-frog"
+authors = ["louisgoodnews"]
+
+# Shared third-party dependencies. Crates opt in with `dep.workspace = true`.
+# Nothing is consumed yet (M0 is scaffolding only); versions are pinned at first use.
+[workspace.dependencies]
+# internal crates
+studyfrog-core = { path = "crates/studyfrog-core" }
+studyfrog-md = { path = "crates/studyfrog-md" }
+studyfrog-store = { path = "crates/studyfrog-store" }
+studyfrog-srs = { path = "crates/studyfrog-srs" }
+studyfrog-rehearsal = { path = "crates/studyfrog-rehearsal" }
+studyfrog-slm = { path = "crates/studyfrog-slm" }
+studyfrog-report = { path = "crates/studyfrog-report" }
+studyfrog-achieve = { path = "crates/studyfrog-achieve" }
+studyfrog-board = { path = "crates/studyfrog-board" }
+studyfrog-calendar = { path = "crates/studyfrog-calendar" }
+studyfrog-ui = { path = "crates/studyfrog-ui" }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+
+[workspace.lints.clippy]
+too_many_lines = "warn"
+cognitive_complexity = "warn"
+disallowed_methods = "deny"
+unwrap_used = "warn"
+expect_used = "warn"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+debug = "line-tables-only"
