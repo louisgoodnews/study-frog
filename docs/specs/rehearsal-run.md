@@ -5,18 +5,23 @@ A run is built from a **plan**; rehearsal is not only spaced repetition. The pla
 
 | Part | Values |
 |---|---|
-| `order` | `Due` (spaced: most overdue first, then new items), `Sequential` (library order), `Shuffled` (seeded, reproducible), `HardestFirst`, `EasiestFirst` (by FSRS difficulty), `StalestFirst` (least recently reviewed, never-reviewed first), `LowestRetrievability` (predicted recall, lowest first) |
+| `order` | `Due` (spaced: most overdue first, then new items), `Sequential` (library order), `HardestFirst`, `EasiestFirst` (by FSRS difficulty), `StalestFirst` (least recently reviewed, never-reviewed first), `LowestRetrievability` (predicted recall, lowest first) |
 | `filter` | kinds (note, card, question), stacks, tags (any of), state (`Any`, `New`, `Learned`, `Due`, `NotDue`), difficulty range |
 | `limit` | optional cap on the queue length |
 | `requeue_again` | an item rated Again returns to the end of the queue (at most 3 times per item per run) |
 | `effect` | `UpdateSchedule` (ratings feed SRS and write reviews) or `PracticeOnly` (events and latency are recorded, the schedule is untouched) |
-| `seed` | drives `Shuffled` (and tie-breaking where randomness is used) |
+| `shuffle` | put the chosen items in a random order (seeded, reproducible); independent of `order` and `effect` |
+| `seed` | drives `shuffle` (and tie-breaking where randomness is used) |
 
 Semantics:
 - Only `Due` order uses the daily new/review budgets and hides items that are not due. Every other order
   goes through the **whole filtered list until it is exhausted**.
-- Defaults: spaced runs `UpdateSchedule` with `requeue_again`; sequential, shuffled and drill runs
-  `PracticeOnly`. The user can override `effect` (for example a sequential first pass over new material
+- Shuffling only randomises the sequence of the items the order chose. It works with every order, spaced
+  included, and never changes the effect: a shuffled spaced run still updates the schedule. The limit cuts by
+  the order's priority first and the cut items are then shuffled; a sequential run has no priority, so there
+  the shuffle comes first and the limit picks a random sample.
+- Defaults (confirmed by the owner): spaced runs `UpdateSchedule` with `requeue_again`; the presets that go
+  through everything (in order, shuffled) and the drill presets are `PracticeOnly`. The user can override `effect` (for example a sequential first pass over new material
   that should start the schedule).
 - Rationale for `PracticeOnly`: cramming outside the scheduled spacing would distort the memory model's
   inputs (design judgement, see learning-science notes); latency data is still valuable, so events are always recorded.

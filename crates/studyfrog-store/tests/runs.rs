@@ -213,3 +213,25 @@ fn the_full_filter_round_trips_in_order() {
     insert_run(&conn, &stored).unwrap();
     assert_eq!(load_run(&conn, Uid(1)).unwrap(), Some(stored));
 }
+
+#[test]
+fn the_shuffle_switch_is_stored_with_any_order() {
+    let conn = db();
+    for (n, (order, shuffle)) in [
+        (Order::Due, true),
+        (Order::Due, false),
+        (Order::HardestFirst, true),
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let plan = RunPlan {
+            order,
+            shuffle,
+            ..plan_shuffled(3)
+        };
+        let stored = run(10 + n as u128, plan);
+        insert_run(&conn, &stored).unwrap();
+        assert_eq!(load_run(&conn, stored.uid).unwrap(), Some(stored));
+    }
+}

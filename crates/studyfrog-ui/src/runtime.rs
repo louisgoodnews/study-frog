@@ -5,11 +5,12 @@ use std::thread;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use eframe::egui;
-use studyfrog_slm::models::{Loader, models_dir};
+use studyfrog_slm::models::models_dir;
 use studyfrog_store::app_config::app_config_dir;
 
 use crate::effect::Effect;
-use crate::exec::{execute, worker_with_models};
+use crate::exec::{execute, worker_with_host};
+use crate::host::Host;
 use crate::msg::Msg;
 
 /// Channels to and from the worker.
@@ -33,7 +34,7 @@ fn config_dir() -> Option<std::path::PathBuf> {
 }
 
 /// Start the worker. It repaints the window whenever it has produced messages.
-pub fn spawn(ctx: egui::Context, loader: Option<Loader>) -> Runtime {
+pub fn spawn(ctx: egui::Context, host: Host) -> Runtime {
     let (effects, effect_rx) = channel::<Effect>();
     let (msg_tx, msgs) = channel::<Msg>();
     thread::spawn(move || {
@@ -42,7 +43,7 @@ pub fn spawn(ctx: egui::Context, loader: Option<Loader>) -> Runtime {
             let home = std::env::var("HOME").ok();
             models_dir(xdg.as_deref(), home.as_deref())
         };
-        let mut worker = worker_with_models(config_dir(), models, loader);
+        let mut worker = worker_with_host(config_dir(), models, host);
         while let Ok(effect) = effect_rx.recv() {
             for msg in execute(&mut worker, effect, now_ns()) {
                 if msg_tx.send(msg).is_err() {

@@ -21,8 +21,6 @@ pub enum Order {
     Due,
     /// Library order, every filtered item once.
     Sequential,
-    /// Seeded, reproducible shuffle of every filtered item.
-    Shuffled,
     /// Highest FSRS difficulty first.
     HardestFirst,
     /// Lowest FSRS difficulty first.
@@ -90,6 +88,10 @@ pub struct RunPlan {
     pub filter: ItemFilter,
     /// Effect on the schedule.
     pub effect: ScheduleEffect,
+    /// Put the chosen items in a random order (seeded, reproducible). Independent of the order: a
+    /// spaced run can be shuffled too, and the shuffle never changes which items are chosen, except
+    /// for a sequential run with a limit, where it picks a random sample.
+    pub shuffle: bool,
     /// Seed for shuffling and random tie-breaks.
     pub seed: u64,
     /// Cap on the queue length.
@@ -117,6 +119,7 @@ fn plan(order: Order, effect: ScheduleEffect, requeue_again: bool) -> RunPlan {
         order,
         filter: filter_all(),
         effect,
+        shuffle: false,
         seed: 0,
         limit: None,
         requeue_again,
@@ -137,7 +140,8 @@ pub fn plan_sequential() -> RunPlan {
 pub fn plan_shuffled(seed: u64) -> RunPlan {
     RunPlan {
         seed,
-        ..plan(Order::Shuffled, ScheduleEffect::PracticeOnly, false)
+        shuffle: true,
+        ..plan(Order::Sequential, ScheduleEffect::PracticeOnly, false)
     }
 }
 
@@ -151,10 +155,9 @@ pub fn plan_stalest() -> RunPlan {
     plan(Order::StalestFirst, ScheduleEffect::PracticeOnly, false)
 }
 
-const ORDERS: [(Order, &str); 7] = [
+const ORDERS: [(Order, &str); 6] = [
     (Order::Due, "due"),
     (Order::Sequential, "sequential"),
-    (Order::Shuffled, "shuffled"),
     (Order::HardestFirst, "hardest_first"),
     (Order::EasiestFirst, "easiest_first"),
     (Order::StalestFirst, "stalest_first"),
@@ -169,9 +172,14 @@ pub fn order_name(order: Order) -> &'static str {
         .map_or("due", |(_, n)| n)
 }
 
-/// Inverse of [`order_name`].
+/// Inverse of [`order_name`]. The old name `shuffled` (before shuffling became a separate switch)
+/// means a sequential order.
 pub fn order_from_name(name: &str) -> Option<Order> {
-    ORDERS.iter().find(|(_, n)| *n == name).map(|(o, _)| *o)
+    ORDERS
+        .iter()
+        .find(|(_, n)| *n == name)
+        .map(|(o, _)| *o)
+        .or_else(|| (name == "shuffled").then_some(Order::Sequential))
 }
 
 /// Persisted name of an effect.

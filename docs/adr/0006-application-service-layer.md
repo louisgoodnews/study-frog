@@ -1,6 +1,6 @@
 # ADR 0006: Application service layer
 
-- Status: **Proposed** (implemented provisionally in M3; owner review requested)
+- Status: **Accepted** (2026-10-30, by the owner; implemented in M3)
 - Date: 2026-10-30
 - Amends: [ADR 0001](0001-workspace-and-crate-layout.md)
 

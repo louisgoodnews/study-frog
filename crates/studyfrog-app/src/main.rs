@@ -12,7 +12,7 @@ fn smoke_frames(args: &[String]) -> Option<u32> {
 
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().collect();
-    match studyfrog_ui::run(smoke_frames(&args), Some(studyfrog_candle::minilm_loader)) {
+    match studyfrog_ui::run(smoke_frames(&args), studyfrog_app::host()) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
             eprintln!("studyfrog: {e}");

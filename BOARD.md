@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (85) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (87) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
@@ -91,6 +91,8 @@
 |  |  |  |  |  | [TASK-0088](docs/issues/tasks/TASK-0088-force-word-matching.md) Setting to compare answers by word matching only (3) |
 |  |  |  |  |  | [TASK-0089](docs/issues/tasks/TASK-0089-marks-suggest-ratings.md) The user marks suggest ratings (3) |
 |  |  |  |  |  | [TASK-0090](docs/issues/tasks/TASK-0090-reading-thresholds-in-settings.md) Reading thresholds in app.toml (3) |
+|  |  |  |  |  | [TASK-0091](docs/issues/tasks/TASK-0091-shuffle-switch.md) Shuffling is a switch of its own (3) |
+|  |  |  |  |  | [TASK-0092](docs/issues/tasks/TASK-0092-folder-dialog.md) Native folder dialog for the vault (3) |
 
 ## Stories
 
@@ -127,7 +129,7 @@
 | [STORY-0029](docs/issues/stories/STORY-0029-forecasting.md) Forecasting (8) | done | 2/2 |
 | [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
 | [STORY-0034](docs/issues/stories/STORY-0034-stack-settings-sm-2-budgets-and-filter-persistence.md) Stack settings, SM-2, budgets and filter persistence (8) | done | 4/4 |
-| [STORY-0035](docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 10/10 |
+| [STORY-0035](docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 12/12 |
 
 ## Epics
 

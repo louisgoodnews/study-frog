@@ -17,7 +17,9 @@ use studyfrog_service::session::{
     ServiceError, VaultInfo, VaultSession, current_settings, open_vault, poll_vault,
 };
 use studyfrog_service::timezone::local_day_window;
-use studyfrog_slm::models::{Loader, Opened};
+use studyfrog_slm::models::Opened;
+
+use crate::host::{FolderPicker, Host};
 use studyfrog_store::app_config::{read_app_settings, write_app_settings};
 use studyfrog_store::overview::list_items;
 
@@ -37,7 +39,9 @@ pub struct Worker {
     /// The answer-comparison runtime, opened on first use, and why it is not the semantic one.
     pub slm: Option<Opened>,
     /// How to open the semantic runtime; `None` for a build without one.
-    pub loader: Option<Loader>,
+    pub loader: Option<studyfrog_slm::models::Loader>,
+    /// The native folder dialog, if the host has one.
+    pub folder_picker: Option<FolderPicker>,
 }
 
 /// A worker with nothing open.
@@ -48,18 +52,20 @@ pub fn worker_new(config_dir: Option<PathBuf>) -> Worker {
         models_dir: None,
         slm: None,
         loader: None,
+        folder_picker: None,
     }
 }
 
-/// A worker that looks for language models in `models_dir`.
-pub fn worker_with_models(
+/// A worker that looks for language models in `models_dir` and uses what the host provides.
+pub fn worker_with_host(
     config_dir: Option<PathBuf>,
     models_dir: Option<PathBuf>,
-    loader: Option<Loader>,
+    host: Host,
 ) -> Worker {
     Worker {
         models_dir,
-        loader,
+        loader: host.model_loader,
+        folder_picker: host.folder_picker,
         ..worker_new(config_dir)
     }
 }
@@ -68,6 +74,11 @@ pub fn worker_with_models(
 pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
     let msg = match effect {
         Effect::LoadAppSettings => load_settings(w),
+        Effect::PickVaultFolder => Msg::VaultFolderPicked(
+            w.folder_picker
+                .and_then(|pick| pick())
+                .map(|p| p.display().to_string()),
+        ),
         Effect::OpenVault(path) => open(w, &path),
         Effect::PollVault => poll(w, now_ns),
         Effect::SaveAppSettings(settings) => save_settings(w, &settings),

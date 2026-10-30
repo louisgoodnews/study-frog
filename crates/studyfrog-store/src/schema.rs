@@ -1,7 +1,7 @@
 //! Schema as data. See `docs/specs/storage-schema.md`.
 
 use crate::migrate::Migration;
-use crate::schema_later::{V4, V5, V6};
+use crate::schema_later::{V4, V5, V6, V7};
 
 /// All migrations, oldest first.
 pub const MIGRATIONS: &[Migration] = &[
@@ -34,6 +34,11 @@ pub const MIGRATIONS: &[Migration] = &[
         version: 6,
         name: "answer scores",
         sql: V6,
+    },
+    Migration {
+        version: 7,
+        name: "run shuffle switch",
+        sql: V7,
     },
 ];
 

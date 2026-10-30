@@ -120,7 +120,7 @@ fn a_started_run_is_stored_with_a_seed_a_queue_and_the_idle_state() {
     );
 
     let clash = RunPlan {
-        order: Order::Shuffled,
+        order: Order::HardestFirst,
         ..plan_shuffled(0)
     };
     let again = start_run(&session, clash, RunMode::Flip, now, day_of(now), ids(1));

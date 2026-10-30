@@ -23,12 +23,18 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         out.push(Msg::PathEdited(text));
     }
     let enter = field.lost_focus() && ui.input(|i| i.key_pressed(Key::Enter));
-    let clicked = ui
-        .add_enabled(!state.opening, egui::Button::new("Open vault"))
-        .clicked();
-    if enter || clicked {
-        out.push(Msg::OpenVaultClicked);
-    }
+    ui.horizontal(|ui| {
+        let open = ui.add_enabled(!state.opening, egui::Button::new("Open vault"));
+        if enter || open.clicked() {
+            out.push(Msg::OpenVaultClicked);
+        }
+        if ui
+            .add_enabled(!state.opening, egui::Button::new("Choose folder…"))
+            .clicked()
+        {
+            out.push(Msg::BrowseVaultClicked);
+        }
+    });
     if state.opening {
         ui.horizontal(|ui| {
             ui.spinner();

@@ -24,6 +24,15 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
             },
             Vec::new(),
         ),
+        Msg::BrowseVaultClicked => (state, vec![Effect::PickVaultFolder]),
+        Msg::VaultFolderPicked(Some(path)) => open(
+            State {
+                path_input: path.clone(),
+                ..state
+            },
+            path,
+        ),
+        Msg::VaultFolderPicked(None) => (state, Vec::new()),
         Msg::OpenVaultClicked => open_typed_path(state),
         Msg::OpenRecent(path) => open(
             State {

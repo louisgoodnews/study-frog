@@ -36,6 +36,8 @@ pub enum SetupEdit {
     Effect(ScheduleEffect),
     /// Repeat items rated Again.
     Requeue(bool),
+    /// Put the chosen items in a random order.
+    Shuffle(bool),
     /// Maximum number of items (empty: no limit).
     Limit(String),
     /// Include or exclude a kind.
@@ -65,6 +67,8 @@ pub struct SetupForm {
     pub effect: ScheduleEffect,
     /// Repeat items rated Again.
     pub requeue_again: bool,
+    /// Shuffle the chosen items.
+    pub shuffle: bool,
     /// Limit as typed.
     pub limit: String,
     /// Accepted kinds (empty: all).
@@ -89,6 +93,7 @@ fn plan_to_form(plan: &RunPlan, mode: RunMode) -> SetupForm {
         order: plan.order,
         effect: plan.effect,
         requeue_again: plan.requeue_again,
+        shuffle: plan.shuffle,
         limit: plan.limit.map(|l| l.to_string()).unwrap_or_default(),
         kinds: plan.filter.kinds.clone(),
         stacks: plan.filter.stacks.clone(),
@@ -168,6 +173,7 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
         order: f.order,
         filter,
         effect: f.effect,
+        shuffle: f.shuffle,
         seed,
         limit: limit(f)?,
         requeue_again: f.requeue_again,
@@ -190,6 +196,7 @@ pub fn apply_edit(f: SetupForm, edit: SetupEdit) -> SetupForm {
         SetupEdit::Order(order) => SetupForm { order, ..f },
         SetupEdit::Effect(effect) => SetupForm { effect, ..f },
         SetupEdit::Requeue(requeue_again) => SetupForm { requeue_again, ..f },
+        SetupEdit::Shuffle(shuffle) => SetupForm { shuffle, ..f },
         SetupEdit::Limit(limit) => SetupForm { limit, ..f },
         SetupEdit::Kind(kind, on) => SetupForm {
             kinds: toggle(f.kinds.clone(), kind, on),

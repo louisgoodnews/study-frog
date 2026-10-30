@@ -56,7 +56,8 @@ fn presets_follow_the_documented_defaults() {
 #[test]
 fn edits_build_the_expected_plan() {
     let f = form(vec![
-        SetupEdit::Order(Order::Shuffled),
+        SetupEdit::Order(Order::HardestFirst),
+        SetupEdit::Shuffle(true),
         SetupEdit::Limit(" 25 ".into()),
         SetupEdit::Kind(ItemKind::Card, true),
         SetupEdit::Kind(ItemKind::Note, true),
@@ -71,8 +72,14 @@ fn edits_build_the_expected_plan() {
     ]);
     let plan = plan_from_form(&f, 99).unwrap();
     assert_eq!(
-        (plan.order, plan.limit, plan.seed, plan.requeue_again),
-        (Order::Shuffled, Some(25), 99, false)
+        (
+            plan.order,
+            plan.shuffle,
+            plan.limit,
+            plan.seed,
+            plan.requeue_again
+        ),
+        (Order::HardestFirst, true, Some(25), 99, false)
     );
     assert_eq!(plan.filter.kinds, [ItemKind::Card]);
     assert_eq!(plan.filter.stacks, [Uid(5)]);
@@ -115,9 +122,9 @@ fn entering_the_screen_and_every_edit_ask_for_a_fresh_count() {
     let fx = apply(&mut m, Msg::Navigate(Screen::Rehearse));
     assert!(matches!(&fx[..], [Effect::PreviewQueue { .. }]));
     assert_eq!(m.state.rehearse.preview, Preview::Counting);
-    let fx = apply(&mut m, Msg::Setup(SetupEdit::Order(Order::Shuffled)));
+    let fx = apply(&mut m, Msg::Setup(SetupEdit::Shuffle(true)));
     assert!(
-        matches!(&fx[..], [Effect::PreviewQueue { plan, .. }] if plan.order == Order::Shuffled)
+        matches!(&fx[..], [Effect::PreviewQueue { plan, .. }] if plan.shuffle && plan.order == Order::Due)
     );
 
     let fx = apply(&mut m, Msg::Setup(SetupEdit::Limit("abc".into())));
@@ -196,9 +203,10 @@ fn the_real_widgets_send_edits_and_show_the_count_and_practice_note() {
     assert_eq!(
         (
             model.state.rehearse.form.order,
+            model.state.rehearse.form.shuffle,
             model.state.rehearse.form.effect
         ),
-        (Order::Shuffled, ScheduleEffect::PracticeOnly)
+        (Order::Sequential, true, ScheduleEffect::PracticeOnly)
     );
     assert!(
         h.query_by_label_contains("Practice only").is_some(),
@@ -219,5 +227,24 @@ fn the_real_widgets_send_edits_and_show_the_count_and_practice_note() {
     assert_eq!(
         (f.kinds.as_slice(), f.limit.as_str()),
         ([ItemKind::Card].as_slice(), "5")
+    );
+}
+
+#[test]
+fn shuffling_a_spaced_run_keeps_it_updating_the_schedule() {
+    let mut m = open_model();
+    apply(&mut m, Msg::Navigate(Screen::Rehearse));
+    let fx = apply(&mut m, Msg::Setup(SetupEdit::Shuffle(true)));
+    let [Effect::PreviewQueue { plan, .. }] = &fx[..] else {
+        panic!("{fx:?}")
+    };
+    assert_eq!(
+        (plan.order, plan.shuffle, plan.effect),
+        (Order::Due, true, ScheduleEffect::UpdateSchedule)
+    );
+    apply(&mut m, Msg::Setup(SetupEdit::Preset(Preset::Hardest)));
+    assert!(
+        !m.state.rehearse.form.shuffle,
+        "a preset starts from its own plan"
     );
 }

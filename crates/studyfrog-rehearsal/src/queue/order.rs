@@ -9,7 +9,6 @@ use studyfrog_srs::fsrs::retrievability;
 use studyfrog_srs::params::Params;
 
 use crate::queue::candidate::Candidate;
-use crate::queue::shuffle::shuffle;
 
 const MS_PER_DAY: f32 = 86_400_000.0;
 
@@ -41,11 +40,10 @@ fn recall(c: &Candidate, now: UnixMs, p: &Params) -> Option<f32> {
 }
 
 /// Sort `items` into the sequence the order asks for. `Order::Due` is handled by `spaced`.
-pub fn sort_by_order(items: &mut [&Candidate], order: Order, seed: u64, now: UnixMs, p: &Params) {
+pub fn sort_by_order(items: &mut [&Candidate], order: Order, now: UnixMs, p: &Params) {
     items.sort_by(|a, b| base(a, b));
     match order {
         Order::Due | Order::Sequential => {}
-        Order::Shuffled => shuffle(items, seed),
         Order::HardestFirst => {
             items.sort_by(|a, b| {
                 keyed(difficulty(a), difficulty(b), |x, y| y.total_cmp(x)).then_with(|| base(a, b))

@@ -5,10 +5,9 @@ use crate::plan::{
     state_filter_name,
 };
 
-const ORDERS: [Order; 7] = [
+const ORDERS: [Order; 6] = [
     Order::Due,
     Order::Sequential,
-    Order::Shuffled,
     Order::HardestFirst,
     Order::EasiestFirst,
     Order::StalestFirst,
@@ -24,6 +23,11 @@ fn names_round_trip() {
         assert_eq!(effect_from_name(effect_name(e)), Some(e));
     }
     assert_eq!(order_from_name("nope"), None);
+    assert_eq!(
+        order_from_name("shuffled"),
+        Some(Order::Sequential),
+        "runs stored before shuffling became a switch"
+    );
 }
 
 #[test]
@@ -70,5 +74,26 @@ fn kind_state_and_scheduler_names_round_trip() {
             scheduler_from_name("x")
         ),
         (None, None, None)
+    );
+}
+
+#[test]
+fn shuffling_is_a_switch_that_leaves_the_order_and_effect_alone() {
+    let p = plan_shuffled(3);
+    assert_eq!((p.order, p.shuffle, p.seed), (Order::Sequential, true, 3));
+    assert_eq!(
+        p.effect,
+        ScheduleEffect::PracticeOnly,
+        "everything-shuffled is a practice run"
+    );
+    assert!(!plan_spaced().shuffle && !plan_sequential().shuffle);
+    let shuffled_spaced = crate::plan::RunPlan {
+        shuffle: true,
+        ..plan_spaced()
+    };
+    assert_eq!(
+        shuffled_spaced.effect,
+        ScheduleEffect::UpdateSchedule,
+        "a shuffled spaced run still updates the schedule"
     );
 }

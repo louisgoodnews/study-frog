@@ -17,10 +17,9 @@ const PRESETS: [(Preset, &str); 5] = [
     (Preset::Stalest, "Not seen for longest"),
 ];
 
-const ORDERS: [(Order, &str); 7] = [
+const ORDERS: [(Order, &str); 6] = [
     (Order::Due, "Due first"),
     (Order::Sequential, "In order"),
-    (Order::Shuffled, "Shuffled"),
     (Order::HardestFirst, "Hardest first"),
     (Order::EasiestFirst, "Easiest first"),
     (Order::StalestFirst, "Not seen for longest"),
@@ -90,6 +89,13 @@ fn how(form: &SetupForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
     });
+    let mut shuffle = form.shuffle;
+    if ui
+        .checkbox(&mut shuffle, "Shuffle the order of the chosen items")
+        .changed()
+    {
+        edit(out, SetupEdit::Shuffle(shuffle));
+    }
     if let Some(text) = text_field(ui, "Maximum number of items", &form.limit, "no limit", 1) {
         edit(out, SetupEdit::Limit(text));
     }

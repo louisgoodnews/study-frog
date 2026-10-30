@@ -13,6 +13,7 @@ pub mod exec;
 pub mod exec_plan;
 pub mod exec_run;
 pub mod graph;
+pub mod host;
 pub mod kanban;
 pub mod kanban_msg;
 pub mod model;

@@ -2,6 +2,13 @@
 
 /// How typed answers compared with the reference (history, no foreign keys). `engine` names the
 /// runtime that compared them, because scores of different runtimes are not interchangeable.
+/// Shuffling is a switch of its own: it can go with any order. Runs stored with the old order
+/// `shuffled` become sequential runs with the switch on.
+pub(crate) const V7: &str = "
+ALTER TABLE run ADD COLUMN shuffle INTEGER NOT NULL DEFAULT 0 CHECK (shuffle IN (0, 1));
+UPDATE run SET shuffle = 1, order_name = 'sequential' WHERE order_name = 'shuffled';
+";
+
 pub(crate) const V6: &str = "
 CREATE TABLE answer_score (
     id       INTEGER PRIMARY KEY,

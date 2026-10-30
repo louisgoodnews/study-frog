@@ -58,8 +58,8 @@ fn fresh_database_gets_every_table_and_is_idempotent() {
 
 #[test]
 fn upgrades_from_the_previous_version() {
-    const V7: Migration = Migration {
-        version: 7,
+    const V8: Migration = Migration {
+        version: 8,
         name: "extra",
         sql: "CREATE TABLE extra (x INTEGER);",
     };
@@ -71,8 +71,8 @@ fn upgrades_from_the_previous_version() {
     )
     .unwrap();
     let mut all = MIGRATIONS.to_vec();
-    all.push(V7);
-    assert_eq!(migrate(&mut conn, &all).unwrap(), 7);
+    all.push(V8);
+    assert_eq!(migrate(&mut conn, &all).unwrap(), 8);
     let kept: i64 = conn
         .query_row("SELECT COUNT(*) FROM review", [], |r| r.get(0))
         .unwrap();
@@ -210,7 +210,11 @@ fn v2_database_upgrades_to_v3_keeping_runs_and_gaining_the_filter_and_view() {
             |r| Ok((r.get(0)?, r.get(1)?)),
         )
         .unwrap();
-    assert_eq!((order.as_str(), state.as_str()), ("shuffled", "any"));
+    assert_eq!(
+        (order.as_str(), state.as_str()),
+        ("sequential", "any"),
+        "the old order `shuffled` is now sequential plus the shuffle switch"
+    );
     let last: i64 = conn
         .query_row(
             "SELECT last_review_ms FROM sm2_state WHERE item_uid = 'A'",

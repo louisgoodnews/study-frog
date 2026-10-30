@@ -16,9 +16,8 @@ use studyfrog_rehearsal::queue::candidate::{Budget, Budgets, budget_unlimited};
 use studyfrog_srs::fsrs::retrievability;
 use studyfrog_srs::params::params_default;
 
-const PRACTICE: [Order; 6] = [
+const PRACTICE: [Order; 5] = [
     Order::Sequential,
-    Order::Shuffled,
     Order::HardestFirst,
     Order::EasiestFirst,
     Order::StalestFirst,
@@ -29,7 +28,15 @@ fn plan(order: Order, seed: u64) -> RunPlan {
     RunPlan {
         order,
         seed,
+        shuffle: false,
         ..plan_shuffled(seed)
+    }
+}
+
+fn shuffled(order: Order, seed: u64) -> RunPlan {
+    RunPlan {
+        shuffle: true,
+        ..plan(order, seed)
     }
 }
 
@@ -149,14 +156,14 @@ fn shuffle_is_reproducible_and_seed_dependent() {
             last_review: None,
         })
         .collect();
-    let a = queue(&items, &plan(Order::Shuffled, 1), budget_unlimited());
+    let a = queue(&items, &shuffled(Order::Sequential, 1), budget_unlimited());
     assert_eq!(
         a,
-        queue(&items, &plan(Order::Shuffled, 1), budget_unlimited())
+        queue(&items, &shuffled(Order::Sequential, 1), budget_unlimited())
     );
     assert_ne!(
         a,
-        queue(&items, &plan(Order::Shuffled, 2), budget_unlimited())
+        queue(&items, &shuffled(Order::Sequential, 2), budget_unlimited())
     );
     assert_ne!(
         a,

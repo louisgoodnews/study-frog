@@ -8,6 +8,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Choose the vault folder with the native dialog (through the desktop portal; the app binary supplies it, the
+  UI crate does not link the dialog library) (TASK-0092).
+- Shuffling is its own switch: any order, spaced repetition included, can be shuffled without changing which
+  items are chosen or whether the schedule is updated (schema v7; runs stored as `shuffled` become sequential
+  with the switch on) (TASK-0091).
 - Open flags closed: answer runtimes are calibrated on a labelled set (word matching gets a pivot of 0.44;
   the language model keeps 0.7); typed-answer scores are stored with their run (schema v6) and shown in the
   review; `answer_engine = "words"` and a Settings choice force word matching; the user's easy/difficult mark

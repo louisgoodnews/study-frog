@@ -19,6 +19,8 @@ use crate::state::Selection;
 pub enum Effect {
     /// Read the per-user app settings.
     LoadAppSettings,
+    /// Ask the user for a vault folder with the native dialog.
+    PickVaultFolder,
     /// Open (and index) a vault folder.
     OpenVault(String),
     /// Check the open vault for changed files.

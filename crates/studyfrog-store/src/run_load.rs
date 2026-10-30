@@ -26,12 +26,13 @@ struct RunRow {
     requeue: bool,
     filter_state: String,
     diff: (Option<f32>, Option<f32>),
+    shuffle: bool,
 }
 
 fn read_run_row(conn: &Connection, uid: Uid) -> Result<Option<RunRow>, StoreError> {
     let sql =
         "SELECT mode, state, started_at_ms, order_name, effect, seed, run_limit, requeue_again,
-                      filter_state, filter_diff_min, filter_diff_max FROM run WHERE uid = ?1";
+                      filter_state, filter_diff_min, filter_diff_max, shuffle FROM run WHERE uid = ?1";
     let found = conn.query_row(sql, [format_ulid(uid)], |r| {
         Ok(RunRow {
             mode: r.get(0)?,
@@ -44,6 +45,7 @@ fn read_run_row(conn: &Connection, uid: Uid) -> Result<Option<RunRow>, StoreErro
             requeue: r.get(7)?,
             filter_state: r.get(8)?,
             diff: (r.get(9)?, r.get(10)?),
+            shuffle: r.get(11)?,
         })
     });
     match found {
@@ -74,6 +76,7 @@ pub fn load_run(conn: &Connection, uid: Uid) -> Result<Option<Run>, StoreError> 
         order: order_from_name(&row.order).ok_or_else(|| corrupt("order", &row.order))?,
         filter,
         effect: effect_from_name(&row.effect).ok_or_else(|| corrupt("effect", &row.effect))?,
+        shuffle: row.shuffle,
         seed: row.seed as u64,
         limit: row.limit,
         requeue_again: row.requeue,

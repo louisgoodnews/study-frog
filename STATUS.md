@@ -13,13 +13,13 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   matching); calendar and kanban board; achievements; retention, answer-time and forecast reports.
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
-## Decisions waiting for you
-- **ADR 0006 (Proposed):** `studyfrog-service`, the application layer between `ui` and the domain crates.
-- **ADR 0007 (Proposed):** settings live in TOML next to the Markdown content (`studyfrog.toml`, `_stack.toml`,
-  `achievements.toml`, `app.toml`). Config is keyed by folder and id, not a manifest of paths; say if you meant
-  a manifest.
-- **Run defaults:** spaced runs update the schedule; sequential, shuffled, drill and stalest runs are practice
-  only. Overridable per run. Confirm or change.
+## Decisions
+- **Accepted by the owner:** ADR 0006 (service layer); run defaults (spaced runs update the schedule, the
+  presets that go through everything and the drill presets are practice-only), with shuffling as a separate
+  switch that works for every order; a native folder dialog for choosing the vault.
+- **Still open:** ADR 0007 (Proposed): settings live in TOML next to the Markdown content (`studyfrog.toml`,
+  `_stack.toml`, `achievements.toml`, `app.toml`), keyed by folder and id rather than a manifest of paths. Say
+  if you meant a manifest.
 
 ## Known limits
 - **Answer comparison** measures similarity, not truth: a wrong answer that differs from the reference by one
@@ -29,7 +29,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   screen says which history it used.
 - **Marks** (easy/medium/difficult) are stored and used in reports and rating suggestions, but never change the
   schedule by themselves.
-- **UI:** the vault is chosen by typing a path (no native folder dialog; `rfd` would add GTK/portal weight);
+- **UI:** the folder dialog goes through the desktop portal and has not been tried on a real desktop session;
   wikilinks resolve by title only; IME and real screen-reader behaviour are unverified (ADR 0002).
 - **Settings:** the renderer does not preserve comments (a settings UI should use `toml_edit`); `studyfrog.toml`
   is read on demand, with no hot reload; after a scheduler switch `Review.elapsed_days` restarts for the new

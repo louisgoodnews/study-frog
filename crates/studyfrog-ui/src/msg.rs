@@ -30,6 +30,10 @@ pub enum Msg {
     },
     /// The vault path field changed.
     PathEdited(String),
+    /// "Choose folder" was activated.
+    BrowseVaultClicked,
+    /// The folder dialog closed: the chosen folder, or `None` when cancelled or unavailable.
+    VaultFolderPicked(Option<String>),
     /// "Open vault" was activated.
     OpenVaultClicked,
     /// A recent vault was chosen.

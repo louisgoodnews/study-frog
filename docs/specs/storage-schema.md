@@ -64,6 +64,10 @@ turns runs left idle, running or paused into `aborted` and closes their log with
   reference, written when the comparison finishes. `engine` names the runtime, because scores of different
   runtimes are not interchangeable. History: no foreign keys.
 
+## Schema v7: the shuffle switch
+- `run.shuffle` (0 or 1). Shuffling became a switch of its own instead of an order; runs stored with the order
+  `shuffled` were converted to `sequential` with the switch on.
+
 ## Vault rules (M2)
 - Only `.md` files are indexed; names starting with `.` (and everything inside such folders) are skipped, as are symlinks.
 - A **stack** is a folder containing `_stack.md`. An item belongs to the nearest ancestor folder that is a
