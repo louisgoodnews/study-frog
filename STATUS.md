@@ -17,9 +17,8 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 - **Accepted by the owner:** ADR 0006 (service layer); run defaults (spaced runs update the schedule, the
   presets that go through everything and the drill presets are practice-only), with shuffling as a separate
   switch that works for every order; a native folder dialog for choosing the vault.
-- **Still open:** ADR 0007 (Proposed): settings live in TOML next to the Markdown content (`studyfrog.toml`,
-  `_stack.toml`, `achievements.toml`, `app.toml`), keyed by folder and id rather than a manifest of paths. Say
-  if you meant a manifest.
+- **ADR 0007 accepted by the owner:** settings live in TOML next to the Markdown content (`studyfrog.toml`,
+  `_stack.toml`, `achievements.toml`, `app.toml`), keyed by folder and id.
 
 ## Known limits
 - **Answer comparison** measures similarity, not truth: a wrong answer that differs from the reference by one

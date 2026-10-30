@@ -1,6 +1,6 @@
 # ADR 0007: Settings in TOML files, content in Markdown
 
-- Status: **Proposed** (implemented provisionally; owner review requested)
+- Status: **Accepted** (2026-10-30, by the owner; implemented)
 - Date: 2026-10-30
 - Amends: [ADR 0005](0005-markdown-schema-and-frontmatter.md) and [ADR 0001](0001-workspace-and-crate-layout.md)
 
