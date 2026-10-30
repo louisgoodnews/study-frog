@@ -17,6 +17,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 - **Accepted by the owner:** ADR 0006 (service layer); run defaults (spaced runs update the schedule, the
   presets that go through everything and the drill presets are practice-only), with shuffling as a separate
   switch that works for every order; a native folder dialog for choosing the vault.
+- **ADR 0008 accepted by the owner:** extensions are records of function pointers in a registry, compiled in.
 - **ADR 0007 accepted by the owner:** settings live in TOML next to the Markdown content (`studyfrog.toml`,
   `_stack.toml`, `achievements.toml`, `app.toml`), keyed by folder and id.
 
@@ -45,8 +46,8 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   last session refused that download, so run `scripts/package-appimage.sh` yourself, or allow it. The CI
   workflow (`.github/workflows/ci.yml`) runs the gate and the same script; it passes `actionlint` but has never
   run (no git remote).
-- **ADR 0008 (extensions as plain data) is Proposed:** please accept or change it.
-- After that: release notes and a version bump are the only M8 work left.
+- Then cut the release by the steps in [RELEASING](docs/contributing/RELEASING.md); the notes are drafted in
+  [RELEASE_NOTES_0.1.0](docs/RELEASE_NOTES_0.1.0.md). The version is already 0.1.0, so there is no bump.
 
 ## Using the app now
 `cargo run -p studyfrog-app`: pick a vault folder, create a stack and cards, set up a run (any order or filter),

@@ -1,6 +1,6 @@
 # ADR 0008: Extensions as plain data
 
-- Status: **Proposed** (implemented in M8; owner review requested)
+- Status: **Accepted** (2026-10-30, by the owner; implemented in M8)
 - Date: 2026-10-30
 
 ## Context
