@@ -2,6 +2,9 @@
 
 use std::fs;
 
+use std::collections::{HashMap, HashSet};
+
+use studyfrog_core::settings::StackSettings;
 use studyfrog_md::doc::{Doc, doc_meta};
 use studyfrog_md::error::{ParseError, ParseErrorKind};
 use studyfrog_md::parse::parse_doc;
@@ -10,7 +13,8 @@ use studyfrog_md::validate::find_duplicate_ids;
 
 use crate::error::StoreError;
 use crate::hash::hash_bytes;
-use crate::stackmap::{owning_stack, stack_folders};
+use crate::stackcfg::{list_stack_configs, read_stack_settings};
+use crate::stackmap::{owning_stack, parent_folder, stack_folders};
 use crate::vault::{VaultFile, list_markdown};
 
 /// One file after reading: its hash and either a parsed document or the reason it failed.
@@ -31,6 +35,10 @@ pub struct ScannedFile {
 pub struct Scan {
     /// Every Markdown file, sorted by relative path.
     pub files: Vec<ScannedFile>,
+    /// Settings of each stack folder that has a valid `_stack.toml`.
+    pub stack_settings: HashMap<String, StackSettings>,
+    /// Stack settings files that could not be used: (relative path, message).
+    pub config_errors: Vec<(String, String)>,
 }
 
 /// The error recorded for a file that could not be read.
@@ -120,5 +128,26 @@ pub fn scan_vault(root: &std::path::Path) -> Result<Scan, StoreError> {
         })
         .collect();
     mark_duplicates(&mut files);
-    Ok(Scan { files })
+    let (stack_settings, config_errors) = read_stack_configs(root, &folders);
+    Ok(Scan {
+        files,
+        stack_settings,
+        config_errors,
+    })
+}
+
+type StackConfigs = (HashMap<String, StackSettings>, Vec<(String, String)>);
+
+fn read_stack_configs(root: &std::path::Path, folders: &HashSet<String>) -> StackConfigs {
+    let mut settings = HashMap::new();
+    let mut errors = Vec::new();
+    for file in list_stack_configs(root, folders) {
+        match read_stack_settings(&file) {
+            Ok(s) => {
+                settings.insert(parent_folder(&file.rel).to_owned(), s);
+            }
+            Err(message) => errors.push((file.rel.clone(), message)),
+        }
+    }
+    (settings, errors)
 }

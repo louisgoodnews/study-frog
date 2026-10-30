@@ -191,3 +191,25 @@ fn memory_state_and_reviews_round_trip() {
     assert_eq!(load_reviews(&conn, Uid(6)).unwrap(), []);
     assert_eq!(plan_spaced().effect, ScheduleEffect::UpdateSchedule);
 }
+
+#[test]
+fn the_full_filter_round_trips_in_order() {
+    use studyfrog_core::plan::{DifficultyRange, ItemFilter, ItemKind, StateFilter};
+    let conn = db();
+    let filter = ItemFilter {
+        kinds: vec![ItemKind::Card, ItemKind::Note],
+        stacks: vec![Uid(3), Uid(1)],
+        tags_any: vec!["Ünï".into(), "a,b".into(), "x\ty".into()],
+        state: StateFilter::NotDue,
+        difficulty: Some(DifficultyRange { min: 2.5, max: 7.5 }),
+    };
+    let stored = run(
+        1,
+        RunPlan {
+            filter,
+            ..plan_spaced()
+        },
+    );
+    insert_run(&conn, &stored).unwrap();
+    assert_eq!(load_run(&conn, Uid(1)).unwrap(), Some(stored));
+}

@@ -1,5 +1,7 @@
 //! Queue-builder input: what the shell knows about each studiable item. Plain data.
 
+use std::collections::HashMap;
+
 use studyfrog_core::memory::MemState;
 use studyfrog_core::plan::ItemKind;
 use studyfrog_core::time::UnixMs;
@@ -26,20 +28,37 @@ pub struct Candidate<'a> {
     pub last_review: Option<UnixMs>,
 }
 
-/// Daily allowances for the spaced order; `None` means unlimited.
+/// An allowance for the spaced order; `None` means unlimited.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Budget {
-    /// New items still allowed today.
+    /// New items allowed.
     pub new_items: Option<u32>,
-    /// Due reviews still allowed today.
+    /// Due reviews allowed.
     pub reviews: Option<u32>,
 }
 
-/// No daily limits.
+/// No limit.
 pub fn budget_unlimited() -> Budget {
     Budget {
         new_items: None,
         reviews: None,
+    }
+}
+
+/// Allowances for a spaced run: one per stack, plus an optional global cap on top.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Budgets {
+    /// Cap across all stacks.
+    pub global: Budget,
+    /// Remaining allowance of each stack that has a limit, keyed by stack uid.
+    pub per_stack: HashMap<Uid, Budget>,
+}
+
+/// No limits anywhere.
+pub fn budgets_unlimited() -> Budgets {
+    Budgets {
+        global: budget_unlimited(),
+        per_stack: HashMap::new(),
     }
 }
 

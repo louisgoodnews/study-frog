@@ -10,6 +10,7 @@ use studyfrog_md::ulid::format_ulid;
 
 use crate::error::{StoreError, sql_err};
 use crate::scan::ScannedFile;
+use crate::stackmap::parent_folder;
 
 /// What the index remembers about a file.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -82,6 +83,7 @@ pub fn touch_file(tx: &Transaction, rel: &str, size: u64, mtime_ns: i64) -> Resu
 /// Turn an indexed file into an error entry (for example a duplicate id).
 pub fn demote_file(tx: &Transaction, rel: &str, reason: &str) -> Result<(), StoreError> {
     run(tx, "DELETE FROM item WHERE path = ?1", [rel])?;
+    run(tx, "DELETE FROM stack_identity WHERE path = ?1", [rel])?;
     run(
         tx,
         "UPDATE file SET uid = NULL, error = ?2 WHERE path = ?1",
@@ -122,6 +124,11 @@ pub fn write_scanned(tx: &Transaction, f: &ScannedFile) -> Result<(), StoreError
         })
         .map_err(sql_err)?;
     run(tx, "DELETE FROM item WHERE path = ?1", [&file.rel])?;
+    run(
+        tx,
+        "DELETE FROM stack_identity WHERE path = ?1",
+        [&file.rel],
+    )?;
     match &f.outcome {
         Ok(doc) => write_item(tx, &file.rel, f.stack.as_deref(), doc),
         Err(_) => Ok(()),
@@ -152,6 +159,13 @@ fn write_item(
         ],
     )?;
     write_tags(tx, &uid, &meta.tags)?;
+    if matches!(doc, Doc::Stack(_)) {
+        run(
+            tx,
+            "INSERT INTO stack_identity (path, uid, folder) VALUES (?1, ?2, ?3)",
+            params![rel, uid, parent_folder(rel)],
+        )?;
+    }
     write_links(tx, &uid, doc)
 }
 

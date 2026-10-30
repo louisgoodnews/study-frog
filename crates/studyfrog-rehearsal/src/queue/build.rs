@@ -5,18 +5,18 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_srs::params::Params;
 
-use crate::queue::candidate::{Budget, Candidate};
+use crate::queue::candidate::{Budgets, Candidate};
 use crate::queue::filter::admits;
 use crate::queue::order::sort_by_order;
 use crate::queue::spaced::spaced_queue;
 
 /// Build the queue for `plan`. Every order except `Due` goes through the whole filtered list;
-/// `Due` also applies the daily `budget`. The result is capped at `plan.limit`.
+/// `Due` also applies the daily `budgets`. The result is capped at `plan.limit`.
 pub fn build_queue(
     candidates: &[Candidate],
     plan: &RunPlan,
     now: UnixMs,
-    budget: Budget,
+    budgets: &Budgets,
     params: &Params,
 ) -> Vec<Uid> {
     let admitted: Vec<&Candidate> = candidates
@@ -24,7 +24,7 @@ pub fn build_queue(
         .filter(|c| admits(&plan.filter, c, now))
         .collect();
     let mut ordered = match plan.order {
-        Order::Due => spaced_queue(&admitted, now, budget),
+        Order::Due => spaced_queue(&admitted, now, budgets),
         other => {
             let mut items = admitted;
             sort_by_order(&mut items, other, plan.seed, now, params);

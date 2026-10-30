@@ -98,3 +98,8 @@ pub fn candidates() -> impl Strategy<Value = Vec<Owned>> {
         })
     })
 }
+
+/// The candidate with `uid`; panics if absent (tests only).
+pub fn find(items: &[Owned], uid: Uid) -> &Owned {
+    items.iter().find(|o| Uid(o.uid) == uid).unwrap()
+}

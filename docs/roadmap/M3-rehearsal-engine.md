@@ -22,6 +22,12 @@
     - TASK-0069 Practice orders
     - TASK-0070 Queue filters
     - TASK-0072 Persist run plan (schema v2)
+- **EPIC-018** Service layer completion (M3 follow-up)
+  - **STORY-0034** Stack settings, SM-2, budgets and filter persistence
+    - TASK-0074 Persist the run filter
+    - TASK-0075 Stack settings in the index
+    - TASK-0076 SM-2 in the service
+    - TASK-0077 Per-stack daily budgets
 
 ## Exit criteria
 

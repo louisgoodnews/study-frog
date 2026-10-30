@@ -7,9 +7,10 @@ use studyfrog_core::idx::Idx;
 use studyfrog_core::items::{Card, Note, Question};
 use studyfrog_core::library::{Library, library_new};
 use studyfrog_core::meta::Meta;
+use studyfrog_core::settings::StackSettings;
 use studyfrog_core::stack::Stack;
 use studyfrog_core::uid::Uid;
-use studyfrog_md::doc::{CardDoc, Doc, NoteDoc, QuestionDoc};
+use studyfrog_md::doc::{CardDoc, Doc, NoteDoc, QuestionDoc, StackDoc};
 
 use crate::scan::Scan;
 
@@ -27,9 +28,16 @@ fn inbox() -> Stack {
             updated: None,
         },
         description: "Items outside any stack".to_owned(),
-        daily_new_limit: None,
-        daily_review_limit: None,
-        request_retention: None,
+        settings: StackSettings::default(),
+    }
+}
+
+/// A core stack from its `_stack.md` and (optional) settings.
+fn stack_from(doc: &StackDoc, settings: Option<&StackSettings>) -> Stack {
+    Stack {
+        meta: doc.meta.clone(),
+        description: doc.description.clone(),
+        settings: settings.copied().unwrap_or_default(),
     }
 }
 
@@ -39,7 +47,10 @@ fn push_stacks(scan: &Scan, lib: &mut Library) -> StackIndex {
     let mut index = StackIndex::new();
     for f in &scan.files {
         if let (Some(folder), Ok(Doc::Stack(doc))) = (&f.stack, &f.outcome)
-            && let Ok(idx) = arena_push(&mut lib.stacks, doc.stack.clone())
+            && let Ok(idx) = arena_push(
+                &mut lib.stacks,
+                stack_from(doc, scan.stack_settings.get(folder)),
+            )
         {
             index.insert(folder.clone(), idx);
         }

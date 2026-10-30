@@ -10,7 +10,7 @@ use studyfrog_core::plan::{
 };
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::queue::build::build_queue;
-use studyfrog_rehearsal::queue::candidate::budget_unlimited;
+use studyfrog_rehearsal::queue::candidate::budgets_unlimited;
 use studyfrog_srs::params::params_default;
 
 fn run(items: &[Owned], filter: ItemFilter) -> Vec<u128> {
@@ -23,7 +23,7 @@ fn run(items: &[Owned], filter: ItemFilter) -> Vec<u128> {
         &borrow(items),
         &plan,
         NOW,
-        budget_unlimited(),
+        &budgets_unlimited(),
         &params_default(),
     )
     .iter()

@@ -30,6 +30,20 @@ append-only; `payload` holds the answer text or the rating (1-4). On start-up `a
 turns runs left idle, running or paused into `aborted` and closes their log with a `run_aborted` event.
 `review` and `mem_state` are written by the service layer only for `update_schedule` runs.
 
+## Schema v3: run filter, stack identity and settings
+- **Run filter:** `run.filter_state`, `filter_diff_min/max`, and ordered list tables `run_filter_kind`,
+  `run_filter_stack`, `run_filter_tag` (one row per entry with its position, so order survives and tags may contain
+  any character). `load_run` returns the exact plan that was stored.
+- **Stack identity:** `stack_identity(path, uid, folder)` is written from `_stack.md` and cascades with its file.
+- **Stack settings:** `stack_config(folder, size, mtime_ns, scheduler, request_retention, daily_*_limit, error)` is
+  synced from the sibling `_stack.toml` (one `stat` per stack folder, re-read only when size or mtime moved). An
+  invalid file stores its `error` and the stack falls back to the vault defaults. The view `stack_setting` joins
+  identity and config by folder.
+- **SM-2:** `sm2_state.last_review_ms` was added so SM-2 items can be ordered and filtered like FSRS items.
+- **Daily counts** come from `review`: per stack, distinct items whose first review ever falls in the day window are
+  "new", distinct items reviewed in the window whose first review was earlier are "reviews". Practice-only runs
+  write no reviews and never count. The day window is injected by the shell.
+
 ## Vault rules (M2)
 - Only `.md` files are indexed; names starting with `.` (and everything inside such folders) are skipped, as are symlinks.
 - A **stack** is a folder containing `_stack.md`. An item belongs to the nearest ancestor folder that is a

@@ -26,16 +26,18 @@
   are taken from the reference implementation in TASK-0016/0017.
 
 ## Flags (please review)
-- **ADR 0006 (Proposed):** new crate `studyfrog-service` (application layer between `ui` and the domain
-  crates). It was needed to finish M3 ("a rating updates the schedule" composes store + srs + rehearsal,
-  which ADR 0001 forbids in the domain crates and `ui` must not contain). Cheap to revert.
-- Rehearsal is not only spaced repetition (your requirement): run plans have orders, filters, a cap,
-  requeue-on-Again and a schedule effect. **Decision to confirm:** spaced runs default to
-  `UpdateSchedule`; sequential/shuffled/drill/stalest runs default to `PracticeOnly` (events and latency
-  are always recorded, the schedule is untouched). Overridable per run.
-- Service gaps to close later: SM-2 is not wired into `record_step` (FSRS only); daily budgets are a
-  parameter (`Budget`) not yet derived from the stack limits; the item filter is not persisted with a run.
-- Lowest-recall queue building is 3.9 ms for 10k items (a `powf` per comparison); fine now, cacheable later.
+- **ADR 0006 (Proposed):** `studyfrog-service`, the application layer between `ui` and the domain crates.
+- **ADR 0007 (Proposed):** settings live in TOML (`studyfrog.toml`, `_stack.toml`), content in Markdown, per your
+  suggestion; new pure crate `studyfrog-config`. Reading of "point to Markdown files": config sits beside the
+  content and is keyed by folder (and id), not a manifest of paths. Say if you meant a manifest.
+- **Decision to confirm:** spaced runs default to `UpdateSchedule`; sequential/shuffled/drill/stalest runs default to
+  `PracticeOnly`. Overridable per run.
+- Service gaps from M3 are closed: SM-2 per stack, per-stack daily limits, persisted run filters.
+- Known limits: the settings renderer creates files and does not preserve comments (the settings UI should use
+  `toml_edit`); `studyfrog.toml` is read on demand (no hot reload yet); a day window is supplied by the caller
+  (the UI must decide local midnight / rollover); after a scheduler switch `Review.elapsed_days` restarts for the
+  new algorithm.
+- Lowest-recall queue building is 3.9 ms for 10k items (a `powf` per comparison); cacheable later.
 
 ## Next task
 **M4:** TASK-0036 (eframe window and navigation; includes the egui accessibility/IME spike) and TASK-0037

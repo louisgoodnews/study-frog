@@ -5,12 +5,14 @@ mod common;
 
 use std::collections::HashSet;
 
-use common::queue_gen::{NOW, Owned, borrow, candidates};
+use common::queue_gen::{NOW, Owned, borrow, candidates, find};
 use proptest::prelude::*;
+use std::collections::HashMap;
 use studyfrog_core::plan::{Order, RunPlan, plan_shuffled, plan_spaced};
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::queue::build::build_queue;
-use studyfrog_rehearsal::queue::candidate::{Budget, budget_unlimited};
+
+use studyfrog_rehearsal::queue::candidate::{Budget, Budgets, budget_unlimited};
 use studyfrog_srs::fsrs::retrievability;
 use studyfrog_srs::params::params_default;
 
@@ -32,11 +34,16 @@ fn plan(order: Order, seed: u64) -> RunPlan {
 }
 
 fn queue(items: &[Owned], plan: &RunPlan, budget: Budget) -> Vec<Uid> {
-    build_queue(&borrow(items), plan, NOW, budget, &params_default())
-}
-
-fn find(items: &[Owned], uid: Uid) -> &Owned {
-    items.iter().find(|o| Uid(o.uid) == uid).unwrap()
+    build_queue(
+        &borrow(items),
+        plan,
+        NOW,
+        &Budgets {
+            global: budget,
+            per_stack: HashMap::new(),
+        },
+        &params_default(),
+    )
 }
 
 proptest! {

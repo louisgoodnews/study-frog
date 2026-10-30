@@ -9,7 +9,7 @@ use studyfrog_store::error::StoreError;
 use studyfrog_store::migrate::{Migration, migrate, schema_version};
 use studyfrog_store::schema::MIGRATIONS;
 
-const TABLES: [&str; 10] = [
+const TABLES: [&str; 15] = [
     "file",
     "item",
     "link",
@@ -20,6 +20,11 @@ const TABLES: [&str; 10] = [
     "run",
     "run_queue",
     "run_event",
+    "run_filter_kind",
+    "run_filter_stack",
+    "run_filter_tag",
+    "stack_identity",
+    "stack_config",
 ];
 
 fn tables(conn: &Connection) -> Vec<String> {
@@ -47,8 +52,8 @@ fn fresh_database_gets_every_table_and_is_idempotent() {
 
 #[test]
 fn upgrades_from_the_previous_version() {
-    const V3: Migration = Migration {
-        version: 3,
+    const V4: Migration = Migration {
+        version: 4,
         name: "extra",
         sql: "CREATE TABLE extra (x INTEGER);",
     };
@@ -59,8 +64,9 @@ fn upgrades_from_the_previous_version() {
         [],
     )
     .unwrap();
-    let all = [MIGRATIONS[0], MIGRATIONS[1], V3];
-    assert_eq!(migrate(&mut conn, &all).unwrap(), 3);
+    let mut all = MIGRATIONS.to_vec();
+    all.push(V4);
+    assert_eq!(migrate(&mut conn, &all).unwrap(), 4);
     let kept: i64 = conn
         .query_row("SELECT COUNT(*) FROM review", [], |r| r.get(0))
         .unwrap();
@@ -159,7 +165,10 @@ fn v1_database_upgrades_in_place_keeping_runs() {
         [],
     )
     .unwrap();
-    assert_eq!(migrate(&mut conn, MIGRATIONS).unwrap(), 2);
+    assert_eq!(
+        migrate(&mut conn, MIGRATIONS).unwrap(),
+        MIGRATIONS.len() as u32
+    );
     let (order, effect, seed, requeue): (String, String, i64, bool) = conn
         .query_row(
             "SELECT order_name, effect, seed, requeue_again FROM run WHERE uid = 'R1'",
@@ -176,4 +185,36 @@ fn v1_database_upgrades_in_place_keeping_runs() {
             .is_err(),
         "CHECK on the new column"
     );
+}
+
+#[test]
+fn v2_database_upgrades_to_v3_keeping_runs_and_gaining_the_filter_and_view() {
+    let mut conn = open_memory().unwrap();
+    migrate(&mut conn, &MIGRATIONS[..2]).unwrap();
+    conn.execute("INSERT INTO run (uid, mode, state, order_name) VALUES ('R1', 'flip', 'finished', 'shuffled')", []).unwrap();
+    conn.execute("INSERT INTO sm2_state (item_uid, ease, repetitions, interval_days, due_ms) VALUES ('A', 2.5, 1, 1, 5)", []).unwrap();
+    assert_eq!(
+        migrate(&mut conn, MIGRATIONS).unwrap(),
+        MIGRATIONS.len() as u32
+    );
+    let (order, state): (String, String) = conn
+        .query_row(
+            "SELECT order_name, filter_state FROM run WHERE uid = 'R1'",
+            [],
+            |r| Ok((r.get(0)?, r.get(1)?)),
+        )
+        .unwrap();
+    assert_eq!((order.as_str(), state.as_str()), ("shuffled", "any"));
+    let last: i64 = conn
+        .query_row(
+            "SELECT last_review_ms FROM sm2_state WHERE item_uid = 'A'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap();
+    assert_eq!(last, 0, "existing SM-2 rows get a default last review");
+    let view: i64 = conn
+        .query_row("SELECT COUNT(*) FROM stack_setting", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(view, 0);
 }

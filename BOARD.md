@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (7) | Ready (2) | In progress (0/3) | Review (0) | Blocked (0) | Done (40) |
+| Backlog (7) | Ready (2) | In progress (0/3) | Review (0) | Blocked (0) | Done (44) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0038](docs/issues/tasks/TASK-0038-stack-browser.md) Stack browser (3) | [TASK-0036](docs/issues/tasks/TASK-0036-eframe-window-and-navigation.md) eframe window and navigation (3) |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 | [TASK-0039](docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) | [TASK-0037](docs/issues/tasks/TASK-0037-elm-style-update-loop-and-effects.md) Elm-style update loop and effects (5) |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
@@ -46,6 +46,10 @@
 |  |  |  |  |  | [TASK-0070](docs/issues/tasks/TASK-0070-queue-filters.md) Queue filters (3) |
 |  |  |  |  |  | [TASK-0071](docs/issues/tasks/TASK-0071-requeue-on-again-and-schedule-effect.md) Requeue on Again and schedule effect (3) |
 |  |  |  |  |  | [TASK-0072](docs/issues/tasks/TASK-0072-persist-run-plan-schema-v2.md) Persist run plan (schema v2) (2) |
+|  |  |  |  |  | [TASK-0074](docs/issues/tasks/TASK-0074-persist-the-run-filter.md) Persist the run filter (2) |
+|  |  |  |  |  | [TASK-0075](docs/issues/tasks/TASK-0075-stack-settings-in-the-index.md) Stack settings in the index (5) |
+|  |  |  |  |  | [TASK-0076](docs/issues/tasks/TASK-0076-sm-2-in-the-service.md) SM-2 in the service (5) |
+|  |  |  |  |  | [TASK-0077](docs/issues/tasks/TASK-0077-per-stack-daily-budgets.md) Per-stack daily budgets (5) |
 
 ## Stories
 
@@ -71,6 +75,7 @@
 | [STORY-0018](docs/issues/stories/STORY-0018-markdown-editor-and-preview.md) Markdown editor and preview (8) | backlog | 0/2 |
 | [STORY-0019](docs/issues/stories/STORY-0019-link-graph-view.md) Link graph view (8) | backlog | 0/2 |
 | [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
+| [STORY-0034](docs/issues/stories/STORY-0034-stack-settings-sm-2-budgets-and-filter-persistence.md) Stack settings, SM-2, budgets and filter persistence (8) | done | 4/4 |
 
 ## Epics
 
@@ -85,3 +90,4 @@
 | [EPIC-007](docs/issues/epics/EPIC-007-rehearsal-engine.md) Rehearsal engine | done | 4/4 |
 | [EPIC-008](docs/issues/epics/EPIC-008-ui-shell.md) UI shell | ready | 0/2 |
 | [EPIC-009](docs/issues/epics/EPIC-009-editor-and-graph.md) Editor and graph | backlog | 0/2 |
+| [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |

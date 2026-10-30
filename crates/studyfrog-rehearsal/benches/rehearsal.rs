@@ -12,7 +12,7 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::{Action, Input};
 use studyfrog_rehearsal::queue::build::build_queue;
-use studyfrog_rehearsal::queue::candidate::{Candidate, budget_unlimited};
+use studyfrog_rehearsal::queue::candidate::{Candidate, budgets_unlimited};
 use studyfrog_rehearsal::session::{Session, session_new};
 use studyfrog_rehearsal::step::step;
 use studyfrog_srs::params::params_default;
@@ -129,7 +129,7 @@ fn bench_rehearsal(c: &mut Criterion) {
     ];
     for (name, plan) in &plans {
         group.bench_function(format!("build_queue_10k_{name}"), |b| {
-            b.iter(|| build_queue(black_box(&cands), plan, NOW, budget_unlimited(), &p))
+            b.iter(|| build_queue(black_box(&cands), plan, NOW, &budgets_unlimited(), &p))
         });
     }
     group.finish();

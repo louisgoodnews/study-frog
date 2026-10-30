@@ -17,6 +17,7 @@ use crate::index::{
     FileRow, delete_files, demote_file, load_rows, restack_item, touch_file, write_scanned,
 };
 use crate::scan::{ScannedFile, duplicate_error, parse_bytes, read_error, read_file};
+use crate::stackcfg::{list_stack_configs, sync_stack_configs};
 use crate::stackmap::{owning_stack, stack_folders};
 use crate::vault::{VaultFile, list_markdown};
 
@@ -37,6 +38,10 @@ pub struct ReindexReport {
     pub removed: usize,
     /// Items moved to another stack because a `_stack.md` appeared or vanished.
     pub restacked: usize,
+    /// `_stack.toml` files read again.
+    pub configs_updated: usize,
+    /// Of those, how many were invalid (their stack falls back to the vault defaults).
+    pub configs_invalid: usize,
 }
 
 enum Processed {
@@ -120,12 +125,13 @@ fn clashes(ids: &[(String, Uid)]) -> HashMap<String, String> {
 
 /// Bring the index in line with the vault.
 pub fn reindex(conn: &mut Connection, root: &Path) -> Result<ReindexReport, StoreError> {
-    reindex_files(conn, &list_markdown(root)?)
+    reindex_files(conn, root, &list_markdown(root)?)
 }
 
 /// Like [`reindex`] for a vault listing the caller already has (see `poll`).
 pub fn reindex_files(
     conn: &mut Connection,
+    root: &Path,
     listed: &[VaultFile],
 ) -> Result<ReindexReport, StoreError> {
     let rows = load_rows(conn)?;
@@ -136,7 +142,12 @@ pub fn reindex_files(
         .map(|f| process(f, rows.get(&f.rel), &folders))
         .collect();
     let clash = clashes(&live_ids(listed, &rows, &processed));
-    apply(conn, listed, &rows, processed, &clash, &folders)
+    let mut report = apply(conn, listed, &rows, processed, &clash, &folders)?;
+    let tx = conn.transaction().map_err(sql_err)?;
+    let sync = sync_stack_configs(&tx, &list_stack_configs(root, &folders))?;
+    tx.commit().map_err(sql_err)?;
+    (report.configs_updated, report.configs_invalid) = (sync.updated, sync.invalid);
+    Ok(report)
 }
 
 fn apply(

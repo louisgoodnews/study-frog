@@ -16,6 +16,13 @@ pub enum StoreError {
     },
     /// Stored data does not decode (for example an unknown name or a malformed id).
     Corrupt(String),
+    /// A settings file is invalid.
+    Config {
+        /// The file.
+        path: String,
+        /// What is wrong.
+        message: String,
+    },
     /// The database was written by a newer version of the app.
     SchemaTooNew {
         /// Version found in the database.
@@ -43,6 +50,7 @@ pub fn describe_store_error(e: &StoreError) -> String {
     match e {
         StoreError::Sql(m) => format!("database error: {m}"),
         StoreError::Corrupt(m) => format!("corrupt stored data: {m}"),
+        StoreError::Config { path, message } => format!("{path}: {message}"),
         StoreError::Io { path, message } => format!("{path}: {message}"),
         StoreError::SchemaTooNew { found, supported } => {
             format!("database schema v{found} is newer than this app supports (v{supported})")

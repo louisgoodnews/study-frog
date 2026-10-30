@@ -24,7 +24,7 @@ wiki page during TASK-0016 and covered by golden vectors from the reference impl
 ## Parameters
 | Name | Default | Notes |
 |---|---|---|
-| `request_retention` | 0.90 | per-stack override |
+| `request_retention` | 0.90 | vault default in `studyfrog.toml`, per-stack override in `_stack.toml` |
 | `maximum_interval_days` | 36500 | |
 | `weights` | FSRS-6 defaults above | later: optimiser fitting on user history (post-M7) |
 | `enable_fuzz` | true | deterministic given a seed argument |
@@ -55,3 +55,10 @@ SM-2 is implemented alongside as a baseline for tests and as a user-selectable s
   stays in its window.
 - Golden test: py-fsrs `test_review_card` (13 ratings, default parameters, no fuzz) reproduced exactly.
 - criterion bench: scheduling 100k cards.
+
+## Choosing the algorithm
+FSRS-6 is the default; SM-2 is selectable per stack (`scheduler = "sm2"` in `_stack.toml`) or for the whole
+vault (`[srs] scheduler` in `studyfrog.toml`). Both write to the same `review` history; their state lives in
+`mem_state` (FSRS) and `sm2_state` (SM-2). When a stack is switched, items keep their old due date until the
+next review, which starts fresh state in the new algorithm. Custom FSRS weights, the retention default and the
+maximum interval come from `studyfrog.toml` (see [config-files](config-files.md)).

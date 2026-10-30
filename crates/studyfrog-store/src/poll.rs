@@ -11,6 +11,8 @@ use rusqlite::Connection;
 use crate::error::StoreError;
 use crate::hash::{combine, hash_bytes};
 use crate::reindex::{ReindexReport, reindex_files};
+use crate::stackcfg::list_stack_configs;
+use crate::stackmap::stack_folders;
 use crate::vault::{VaultFile, list_markdown};
 
 /// Hash of every file's path, size and mtime.
@@ -58,14 +60,15 @@ pub fn poll_changes(
     settle_ns: i64,
 ) -> Result<(PollState, PollOutcome), StoreError> {
     let listed = list_markdown(root)?;
-    let current = fingerprint(&listed);
+    let configs = list_stack_configs(root, &stack_folders(&listed));
+    let current = fingerprint(&[listed.as_slice(), configs.as_slice()].concat());
     if state.indexed == Some(current) {
         return Ok((state, PollOutcome::Unchanged));
     }
     if now_ns.saturating_sub(newest_mtime(&listed)) < settle_ns {
         return Ok((state, PollOutcome::Settling));
     }
-    let report = reindex_files(conn, &listed)?;
+    let report = reindex_files(conn, root, &listed)?;
     Ok((
         PollState {
             indexed: Some(current),

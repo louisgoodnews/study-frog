@@ -8,6 +8,16 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- `studyfrog-config` (ADR 0007, Proposed): pure parsing and rendering of `studyfrog.toml` (vault defaults:
+  scheduler, retention, interval cap, FSRS weights) and `_stack.toml` (scheduler, retention, daily limits);
+  unknown keys are errors with line numbers (TASK-0075).
+- Settings pipeline: `_stack.toml` is indexed (`stack_identity`, `stack_config`, view `stack_setting`), loaded into
+  the library, and included in polling; schema v3 (TASK-0075).
+- SM-2 in the service: each item is scheduled by its stack's scheduler (default from `studyfrog.toml`),
+  stack retention overrides apply to FSRS, switching a stack keeps items scheduled (TASK-0076).
+- Per-stack daily new/review limits for spaced runs, counted from the review history with an injected day window;
+  practice-only runs do not count (TASK-0077).
+- Run filters are persisted with the run and round-trip exactly (TASK-0074). EPIC-018 complete.
 - `studyfrog-service` (application layer, ADR 0006 Proposed): `apply_rating` (pure), `record_step`,
   `begin_run`, `recover_runs`, `new_run`/`candidates`; end-to-end tests over a real vault and database
   (spaced run updates the schedule; practice-only run leaves it untouched; due items return most-overdue
@@ -65,6 +75,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - `rustfmt.toml`, `clippy.toml`, `rust-toolchain.toml` (1.99.1), `.gitignore`.
 
 ### Changed
+- Stack settings (`daily_*`, `srs`) are no longer `_stack.md` front-matter; they moved to `_stack.toml`
+  (ADR 0007). `StackDoc` now carries only identity, description and body; core `Stack` has `settings`.
 - ADR 0005 amendment accepted: no `gray_matter`; in-house fence splitter plus `serde-saphyr`
   (TASK-0021 retitled). New design principle P10: build instead of buy when we can do better.
 - ADRs 0002-0005 accepted (GUI: egui/eframe; persistence: rusqlite + Markdown files;
