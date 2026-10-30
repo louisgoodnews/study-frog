@@ -26,12 +26,12 @@
 
 ## Exit criteria
 
-- [ ] `cargo check --workspace` passes with all 12 crates
-- [ ] `scripts/check.sh` runs fmt, clippy, test, line-count and exits 0 on the tree
-- [ ] `scripts/check.sh` fails when a `.rs` file exceeds 250 lines (demonstrated)
-- [ ] Dependency-direction check fails on a forbidden edge (demonstrated)
-- [ ] All docs in the required tree exist; ADRs 0001-0005 written
-- [ ] M0 issues seeded in `docs/issues/`
+- [x] `cargo check --workspace` passes with all 12 crates
+- [x] `scripts/check.sh` runs fmt, clippy, test, line-count and exits 0 on the tree
+- [x] `scripts/check.sh` fails when a `.rs` file exceeds 250 lines (demonstrated)
+- [x] Dependency-direction check fails on a forbidden edge (demonstrated)
+- [x] All docs in the required tree exist; ADRs 0001-0005 written
+- [x] M0 issues seeded in `docs/issues/`
 
 ## Out of scope
 
