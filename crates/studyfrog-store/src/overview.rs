@@ -16,6 +16,8 @@ pub struct StackRow {
     pub title: String,
     /// Vault-relative folder (empty for the vault root).
     pub folder: String,
+    /// The folder of the stack this one sits inside, if any.
+    pub parent: Option<String>,
     /// Notes in the stack.
     pub notes: usize,
     /// Cards in the stack.
@@ -42,7 +44,7 @@ pub struct Problem {
 /// The whole picture.
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct VaultOverview {
-    /// Stacks, ordered by folder.
+    /// Stacks in tree order: a stack comes right before the stacks inside it.
     pub stacks: Vec<StackRow>,
     /// Items outside every stack.
     pub inbox_items: usize,
@@ -65,6 +67,7 @@ fn stack_row(r: &rusqlite::Row) -> rusqlite::Result<(String, StackRow)> {
         uid: Uid(0),
         title: r.get(1)?,
         folder: r.get(2)?,
+        parent: None,
         notes: count(6)?,
         cards: count(7)?,
         questions: count(8)?,
@@ -84,7 +87,21 @@ fn stacks(conn: &Connection) -> Result<Vec<StackRow>, StoreError> {
         stack.uid = parse_ulid(&id).ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}")))?;
         out.push(stack);
     }
+    set_parents(&mut out);
+    out.sort_by(|a, b| a.folder.split('/').cmp(b.folder.split('/')));
     Ok(out)
+}
+
+/// Each stack's parent is the stack with the longest folder that contains it.
+fn set_parents(stacks: &mut [StackRow]) {
+    let folders: Vec<String> = stacks.iter().map(|s| s.folder.clone()).collect();
+    for s in stacks.iter_mut() {
+        s.parent = folders
+            .iter()
+            .filter(|f| **f != s.folder && (f.is_empty() || s.folder.starts_with(&format!("{f}/"))))
+            .max_by_key(|f| f.len())
+            .cloned();
+    }
 }
 
 fn problems(conn: &Connection) -> Result<Vec<Problem>, StoreError> {

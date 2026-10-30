@@ -62,16 +62,9 @@ fn the_title_filter_narrows_the_list_as_you_type() {
 }
 
 #[test]
-fn the_new_stack_and_new_card_forms_send_their_requests() {
+fn the_new_card_form_sends_its_request() {
     let mut h = harness(stack_open());
     h.run();
-    h.get_by_label("New stack title").focus();
-    h.get_by_label("New stack title").type_text("Maths");
-    h.run();
-    h.get_by_label("Create stack").click();
-    h.run();
-    assert!(h.state().1.contains(&Effect::CreateStack("Maths".into())));
-
     h.get_by_label("Card front").focus();
     h.get_by_label("Card front").type_text("2+2?");
     h.get_by_label("Card back").focus();
@@ -89,6 +82,23 @@ fn the_new_stack_and_new_card_forms_send_their_requests() {
 }
 
 #[test]
+fn the_new_stack_button_opens_the_dialog_for_a_stack() {
+    let mut h = harness(stack_open());
+    h.run();
+    h.get_by_label("New stack…").click();
+    h.run();
+    assert!(
+        matches!(&h.state().0.state.modal, Some(studyfrog_ui::modal::Modal::Create(f)) if f.kind == studyfrog_service::create_more::NewKind::Stack),
+        "the button opens the dialog for a stack"
+    );
+    apply(
+        &mut h.state_mut().0,
+        Msg::Modal(studyfrog_ui::modal::ModalMsg::Close),
+    );
+    h.run();
+}
+
+#[test]
 fn the_card_form_only_appears_inside_a_stack_not_in_the_inbox() {
     let mut m = open_model();
     apply(&mut m, Msg::Select(Selection::Inbox));
@@ -96,7 +106,7 @@ fn the_card_form_only_appears_inside_a_stack_not_in_the_inbox() {
     h.run();
     assert!(h.query_by_label("Add card").is_none());
     assert!(
-        h.query_by_label("New stack title").is_some(),
+        h.query_by_label("New stack…").is_some(),
         "the stack list stays available"
     );
 }

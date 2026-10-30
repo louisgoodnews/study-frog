@@ -4,9 +4,10 @@ use eframe::egui::{self, Grid, Panel};
 use studyfrog_core::scheduler::{Scheduler, scheduler_name};
 use studyfrog_store::overview::{StackRow, VaultOverview};
 
+use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::state::{Selection, State};
-use crate::view::{items, widgets::text_field};
+use crate::view::items;
 
 fn limit(n: Option<u32>) -> String {
     n.map_or_else(|| "–".to_owned(), |v| v.to_string())
@@ -33,15 +34,32 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
+/// Nesting depth of each stack: how many stacks it sits inside.
+fn depth(stacks: &[StackRow], s: &StackRow) -> usize {
+    let mut n = 0;
+    let mut up = s.parent.as_deref();
+    while let Some(p) = up {
+        n += 1;
+        up = stacks
+            .iter()
+            .find(|x| x.folder == p)
+            .and_then(|x| x.parent.as_deref());
+    }
+    n
+}
+
 fn stack_list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(vault) = &state.vault else { return };
     ui.heading("Stacks");
     let current = &state.browser.selection;
     for s in &vault.overview.stacks {
         let target = Selection::Stack(s.folder.clone());
-        if ui.selectable_label(*current == target, &s.title).clicked() {
-            out.push(Msg::Select(target));
-        }
+        ui.horizontal(|ui| {
+            ui.add_space(14.0 * depth(&vault.overview.stacks, s) as f32);
+            if ui.selectable_label(*current == target, &s.title).clicked() {
+                out.push(Msg::Select(target));
+            }
+        });
     }
     let inbox = vault.overview.inbox_items;
     if inbox > 0
@@ -58,17 +76,8 @@ fn stack_list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         out.push(Msg::Select(Selection::Nothing));
     }
     ui.separator();
-    if let Some(text) = text_field(
-        ui,
-        "New stack title",
-        &state.browser.new_stack,
-        "e.g. French verbs",
-        1,
-    ) {
-        out.push(Msg::NewStackEdited(text));
-    }
-    if ui.button("Create stack").clicked() {
-        out.push(Msg::CreateStackClicked);
+    if ui.button("New stack…").clicked() {
+        out.push(Msg::Modal(ModalMsg::OpenCreateStack));
     }
 }
 

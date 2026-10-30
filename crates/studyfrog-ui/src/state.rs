@@ -10,6 +10,7 @@ use crate::chrome::Chrome;
 use crate::editor::Editor;
 use crate::graph::GraphState;
 use crate::kanban::Kanban;
+use crate::modal::{Modal, Toast};
 use crate::planner::Planner;
 use crate::reading_test::ReadingTest;
 use crate::setup::Rehearse;
@@ -91,8 +92,6 @@ pub struct Browser {
     pub items: Vec<ItemRow>,
     /// Title filter.
     pub search: String,
-    /// Title for a stack about to be created.
-    pub new_stack: String,
     /// Card being written.
     pub draft: CardDraft,
     /// The card type of the new-card form (`None`: an ordinary front and back).
@@ -142,6 +141,10 @@ pub struct State {
     pub planner: Planner,
     /// The kanban board.
     pub kanban: Kanban,
+    /// The open dialog.
+    pub modal: Option<Modal>,
+    /// Clickable in-app notifications.
+    pub toasts: Vec<Toast>,
     /// Sidebar, menus, search and notifications.
     pub chrome: Chrome,
     /// The registered importers and card types.

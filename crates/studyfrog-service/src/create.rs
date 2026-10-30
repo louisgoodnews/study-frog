@@ -36,12 +36,12 @@ pub fn fresh_id_source(now_ms: u64) -> Result<IdSource, ServiceError> {
     Ok(IdSource { now_ms, random })
 }
 
-fn invalid(message: &str) -> ServiceError {
+pub(crate) fn invalid(message: &str) -> ServiceError {
     ServiceError::Invalid(message.to_owned())
 }
 
 /// A title usable in front-matter: not blank, one line, no control characters.
-fn check_title(title: &str) -> Result<(), ServiceError> {
+pub(crate) fn check_title(title: &str) -> Result<(), ServiceError> {
     if title.trim().is_empty() {
         return Err(invalid("the title must not be empty"));
     }
@@ -76,7 +76,7 @@ pub fn slug(title: &str) -> String {
 }
 
 /// `base` plus `suffix`, or `base-2`, `base-3`, ... until `exists` says the name is free.
-fn unique_name(base: &str, suffix: &str, exists: impl Fn(&str) -> bool) -> String {
+pub(crate) fn unique_name(base: &str, suffix: &str, exists: impl Fn(&str) -> bool) -> String {
     let base = if base.is_empty() { "item" } else { base };
     let first = format!("{base}{suffix}");
     if !exists(&first) {
@@ -89,7 +89,7 @@ fn unique_name(base: &str, suffix: &str, exists: impl Fn(&str) -> bool) -> Strin
 }
 
 /// Write `text` as a new file, via a temporary file so a crash cannot leave half a file.
-fn write_new(path: &Path, text: &str) -> Result<(), ServiceError> {
+pub(crate) fn write_new(path: &Path, text: &str) -> Result<(), ServiceError> {
     let io = |e: std::io::Error| ServiceError::Io(format!("{}: {e}", path.display()));
     let dir = path.parent().ok_or_else(|| invalid("no parent folder"))?;
     fs::create_dir_all(dir).map_err(io)?;
@@ -102,7 +102,7 @@ fn write_new(path: &Path, text: &str) -> Result<(), ServiceError> {
     fs::rename(&temp, path).map_err(io)
 }
 
-fn meta(title: &str, tags: &[String], ids: IdSource) -> Meta {
+pub(crate) fn meta(title: &str, tags: &[String], ids: IdSource) -> Meta {
     Meta {
         uid: compose_ulid(ids.now_ms, ids.random),
         title: title.to_owned(),
@@ -113,7 +113,7 @@ fn meta(title: &str, tags: &[String], ids: IdSource) -> Meta {
     }
 }
 
-fn render_error(e: RenderError) -> ServiceError {
+pub(crate) fn render_error(e: RenderError) -> ServiceError {
     match e {
         RenderError::AmbiguousSeparator => {
             invalid("the front must not contain a line with only ???")

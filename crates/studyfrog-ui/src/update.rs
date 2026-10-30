@@ -71,8 +71,6 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         browse @ (Msg::Select(_)
         | Msg::SearchEdited(_)
         | Msg::ItemsLoaded(_)
-        | Msg::NewStackEdited(_)
-        | Msg::CreateStackClicked
         | Msg::DraftEdited(..)
         | Msg::AddCardClicked
         | Msg::Created(_)) => crate::browse::update(state, browse),
@@ -94,6 +92,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::CloseEditor
         | Msg::OpenLink(_)
         | Msg::LinkResolved(..)) => crate::editor::update(state, edit),
+        Msg::Modal(m) => crate::modal::update(state, m),
         Msg::Chrome(m) => crate::chrome::update(state, m),
         Msg::ReportsBuilt(result) => crate::reports::built(state, result),
         Msg::AchievementsChecked(result) => crate::achievements::checked(state, result),
@@ -120,6 +119,15 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
     }
 }
 
+/// The in-app invitation to choose a vault, shown instead of asking for a path up front.
+fn vault_toast() -> crate::modal::Toast {
+    crate::modal::Toast {
+        title: "Set up your vault".to_owned(),
+        detail: "Choose the folder StudyFrog keeps your notes in.".to_owned(),
+        action: crate::modal::ToastAction::OpenVaultDialog,
+    }
+}
+
 fn started(
     state: State,
     app: studyfrog_core::settings::AppSettings,
@@ -136,7 +144,13 @@ fn started(
     };
     match last {
         Some(path) => open(state, path),
-        None => (state, Vec::new()),
+        None => (
+            State {
+                toasts: vec![vault_toast()],
+                ..state
+            },
+            Vec::new(),
+        ),
     }
 }
 
@@ -170,6 +184,8 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
             let text = format!("Opened {}", info.name);
             let state = State {
                 screen: Screen::Library,
+                modal: None,
+                toasts: Vec::new(),
                 vault: Some(info),
                 app: app.clone(),
                 opening: false,

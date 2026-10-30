@@ -4,8 +4,7 @@
 use studyfrog_store::overview::ItemRow;
 
 use crate::effect::Effect;
-use crate::nav::navigate;
-use crate::state::{Notice, NoticeKind, Screen, State};
+use crate::state::{Notice, NoticeKind, State};
 
 /// Most notices kept in the notification list.
 pub const MAX_NOTIFICATIONS: usize = 30;
@@ -17,29 +16,12 @@ pub const MAX_RESULTS: usize = 10;
 pub enum Menu {
     /// Switch to another vault.
     Vaults,
-    /// Make something new.
-    Create,
     /// Recent notices.
     Notifications,
     /// Shortcuts and where things are.
     Help,
     /// About, and closing the vault.
     Profile,
-}
-
-/// Something the Create menu can make.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Creatable {
-    /// A stack of cards.
-    Stack,
-    /// A card in the open stack.
-    Card,
-    /// A planned study session.
-    Session,
-    /// A card on the board.
-    BoardCard,
-    /// Cards from a file.
-    Import,
 }
 
 /// What the chrome shows.
@@ -74,20 +56,10 @@ pub enum ChromeMsg {
     SearchResults(String, Result<Vec<ItemRow>, String>),
     /// Clear the search.
     SearchClear,
-    /// An entry of the Create menu was chosen.
-    Create(Creatable),
 }
 
 fn with(state: State, chrome: Chrome) -> (State, Vec<Effect>) {
     (State { chrome, ..state }, Vec::new())
-}
-
-fn hint(state: State, text: &str) -> (State, Vec<Effect>) {
-    let notice = Some(Notice {
-        kind: NoticeKind::Info,
-        text: text.to_owned(),
-    });
-    (State { notice, ..state }, Vec::new())
 }
 
 fn toggle_menu(state: State, menu: Menu) -> (State, Vec<Effect>) {
@@ -154,39 +126,6 @@ fn search_results(
     }
 }
 
-/// Go where the Create menu entry leads, telling the user what to do next.
-fn create(state: State, what: Creatable) -> (State, Vec<Effect>) {
-    let state = State {
-        chrome: Chrome {
-            menu: None,
-            ..state.chrome.clone()
-        },
-        ..state
-    };
-    match what {
-        Creatable::Stack => navigate(state, Screen::Library),
-        Creatable::Card | Creatable::Import => {
-            let (state, effects) = navigate(state, Screen::Library);
-            let stack_open = matches!(state.browser.selection, crate::state::Selection::Stack(_));
-            if stack_open {
-                return (state, effects);
-            }
-            let text =
-                "Open a stack in the library first: cards are added to the stack you have open.";
-            let (state, _) = hint(state, text);
-            (state, effects)
-        }
-        Creatable::Session => {
-            let planner = crate::planner::Planner {
-                pending_new: true,
-                ..state.planner.clone()
-            };
-            navigate(State { planner, ..state }, Screen::Calendar)
-        }
-        Creatable::BoardCard => navigate(state, Screen::Board),
-    }
-}
-
 /// Handle the chrome's messages.
 pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
     match msg {
@@ -215,7 +154,6 @@ pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
             };
             with(state, c)
         }
-        ChromeMsg::Create(what) => create(state, what),
     }
 }
 

@@ -22,6 +22,11 @@
     - TASK-0093 Top bar, sidebar and menus
     - TASK-0094 Global search
     - TASK-0095 Notification list
+  - **STORY-0037** Create dialog, nested stacks and a gentler first launch
+    - TASK-0096 Nested stacks and one creation use case
+    - TASK-0097 Create dialog
+    - TASK-0098 A clickable notification on first launch
+    - TASK-0099 Stack tree in the library and in run setup
 
 ## Exit criteria
 

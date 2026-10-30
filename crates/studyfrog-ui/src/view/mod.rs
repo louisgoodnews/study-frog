@@ -10,6 +10,7 @@ mod icons;
 mod items;
 mod library;
 mod menus;
+mod modal;
 mod navbar;
 mod popup;
 mod preview;
@@ -20,6 +21,7 @@ mod settings;
 mod setup;
 mod sidebar;
 mod summary;
+mod toast;
 mod welcome;
 pub(crate) mod widgets;
 
@@ -47,5 +49,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         Screen::Achievements => achievements::draw(state, ui),
         Screen::Reports => reports::draw(state, ui),
     });
+    toast::draw(state, ui, &mut out);
+    modal::draw(state, ui, &mut out);
     out
 }

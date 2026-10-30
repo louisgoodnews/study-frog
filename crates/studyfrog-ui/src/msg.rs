@@ -14,6 +14,7 @@ use studyfrog_store::overview::LinkGraph;
 use crate::chrome::ChromeMsg;
 use crate::import_ui::ImportOutcome;
 use crate::kanban::BoardMsg;
+use crate::modal::ModalMsg;
 use crate::planner::PlanMsg;
 use crate::reading_test::ReadingTestMsg;
 use crate::run_state::{ItemContent, Scored};
@@ -72,10 +73,6 @@ pub enum Msg {
     SearchEdited(String),
     /// The items of the selection were loaded.
     ItemsLoaded(Result<Vec<ItemRow>, String>),
-    /// The new-stack title changed.
-    NewStackEdited(String),
-    /// "Create stack" was activated.
-    CreateStackClicked,
     /// A field of the new-card form changed.
     DraftEdited(DraftField, String),
     /// "Add card" was activated.
@@ -152,6 +149,8 @@ pub enum Msg {
     GraphRestart,
     /// A node was clicked.
     GraphClick(usize),
+    /// Something happened in a dialog or a toast.
+    Modal(ModalMsg),
     /// Something happened in the window chrome (sidebar, menus, search).
     Chrome(ChromeMsg),
     /// The reports were computed.

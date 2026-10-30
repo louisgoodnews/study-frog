@@ -70,7 +70,10 @@ turns runs left idle, running or paused into `aborted` and closes their log with
 
 ## Vault rules (M2)
 - Only `.md` files are indexed; names starting with `.` (and everything inside such folders) are skipped, as are symlinks.
-- A **stack** is a folder containing `_stack.md`. An item belongs to the nearest ancestor folder that is a
+- A **stack** is a folder containing `_stack.md`. **Stacks nest**: a stack folder inside another stack folder is a
+  child stack (`StackRow.parent` is the nearest enclosing stack folder), and its items belong to it, not to the
+  parent. The app creates every note, card and question inside a stack; files outside any stack still work (Inbox).
+  An item belongs to the nearest ancestor folder that is a
   stack; `_stack.md` belongs to its own folder. Items outside any stack (or whose `_stack.md` failed to
   parse) go to the implicit **Inbox** stack (uid 0) when a library is built.
 - A file that fails to parse is recorded in `file.error` and has no `item` row; it never aborts a scan.

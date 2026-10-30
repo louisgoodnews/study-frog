@@ -19,6 +19,8 @@ pub enum Glyph {
     Person,
     /// A question mark.
     Help,
+    /// A cross.
+    Close,
 }
 
 const SIZE: f32 = 32.0;
@@ -51,6 +53,17 @@ fn paint(ui: &egui::Ui, rect: Rect, glyph: Glyph, color: Color32) {
             p.circle_stroke(Pos2::new(c.x, c.y - 4.0), 4.0, stroke);
             let shoulders: Vec<Pos2> = arc(Pos2::new(c.x, c.y + 8.0), 8.0, 6.5, 180.0, 360.0);
             p.add(egui::Shape::line(shoulders, stroke));
+        }
+        Glyph::Close => {
+            let d = 5.0;
+            p.line_segment(
+                [Pos2::new(c.x - d, c.y - d), Pos2::new(c.x + d, c.y + d)],
+                stroke,
+            );
+            p.line_segment(
+                [Pos2::new(c.x - d, c.y + d), Pos2::new(c.x + d, c.y - d)],
+                stroke,
+            );
         }
         Glyph::Help => {
             p.text(

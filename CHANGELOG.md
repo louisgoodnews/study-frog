@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- A Create dialog (modal) for stacks, cards, notes and questions with a parent-stack picker, tags and "Create
+  another"; stacks can sit inside other stacks (shown as a tree in the library, and run setup includes the stacks
+  inside a ticked one); first launch shows a welcome page and a clickable in-app notification that opens the
+  vault dialog, instead of a path field (TASK-0096 to 0099).
 - A top bar (sidebar toggle, vault switcher, brand, global search, Create menu, notifications, help, settings,
   profile) and a foldable sidebar for the screens; global search over item titles; a notification list behind
   the bell (TASK-0093, 0094, 0095).
@@ -150,6 +154,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - `rustfmt.toml`, `clippy.toml`, `rust-toolchain.toml` (1.99.1), `.gitignore`.
 
 ### Changed
+- The Create button opens the dialog (the dropdown with study session, board card and import entries is gone;
+  those are made on their own screens). The inline "new stack" form in the library is replaced by "New stack…".
 - The screen buttons moved from the top row to a sidebar; "Close vault" moved into the profile menu.
 - The lowest-recall queue order is 7 times faster (recall computed once per item) (TASK-0066).
 - The application binary is called `studyfrog`.

@@ -6,6 +6,7 @@ use eframe::egui::{
 };
 
 use crate::chrome::{ChromeMsg, Menu, unread};
+use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::state::{Screen, State};
 use crate::view::icons::{Glyph, icon_button};
@@ -48,7 +49,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 if signed_in {
                     let search_w = (middle_w * 0.8 - 90.0).clamp(160.0, 560.0);
                     ui.add_space(((middle_w - search_w - 90.0) / 2.0).max(0.0));
-                    search_cluster(state, ui, out, search_w, &mut anchors);
+                    search_cluster(state, ui, out, search_w);
                 }
             });
             section(
@@ -111,13 +112,7 @@ fn brand_cluster(
     }
 }
 
-fn search_cluster(
-    state: &State,
-    ui: &mut egui::Ui,
-    out: &mut Vec<Msg>,
-    width: f32,
-    anchors: &mut Vec<(Menu, Rect)>,
-) {
+fn search_cluster(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f32) {
     let mut text = state.chrome.search.clone();
     let field = ui.add(
         TextEdit::singleline(&mut text)
@@ -142,9 +137,8 @@ fn search_cluster(
             .fill(Color32::from_rgb(160, 200, 255)),
     );
     if create.clicked() {
-        toggle(out, Menu::Create);
+        out.push(Msg::Modal(ModalMsg::OpenCreate));
     }
-    anchors.push((Menu::Create, create.rect));
 }
 
 fn help_button(

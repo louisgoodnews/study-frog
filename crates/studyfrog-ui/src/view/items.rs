@@ -34,6 +34,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         _ => "Inbox".to_owned(),
     };
     ui.heading(heading);
+    child_stacks(state, ui, out);
     if let Some(text) = text_field(ui, "Search titles", &b.search, "type to filter", 1) {
         out.push(Msg::SearchEdited(text));
     }
@@ -155,6 +156,30 @@ fn import_panel(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         if ui.button("Import cards").clicked() {
             out.push(Msg::ImportClicked);
+        }
+    });
+}
+
+/// Buttons for the stacks inside the open stack.
+fn child_stacks(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let (Selection::Stack(open), Some(vault)) = (&state.browser.selection, &state.vault) else {
+        return;
+    };
+    let children: Vec<_> = vault
+        .overview
+        .stacks
+        .iter()
+        .filter(|s| s.parent.as_deref() == Some(open.as_str()))
+        .collect();
+    if children.is_empty() {
+        return;
+    }
+    ui.horizontal_wrapped(|ui| {
+        ui.weak("Stacks inside:");
+        for c in children {
+            if ui.button(&c.title).clicked() {
+                out.push(Msg::Select(Selection::Stack(c.folder.clone())));
+            }
         }
     });
 }

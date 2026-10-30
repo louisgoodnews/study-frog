@@ -9,7 +9,7 @@ use studyfrog_core::settings::AppSettings;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
-use studyfrog_service::create::{IdSource, create_card, create_stack, fresh_id_source};
+use studyfrog_service::create::{IdSource, create_card, fresh_id_source};
 use studyfrog_service::queue::{NewRun, preview_queue};
 use studyfrog_service::session::{
     ServiceError, VaultInfo, VaultSession, current_settings, open_vault, poll_vault,
@@ -107,6 +107,20 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::DeleteSession(id) => exec_plan::delete(w, id),
         Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),
         Effect::SearchItems(query) => search(w, query),
+        Effect::CreateItem {
+            kind,
+            title,
+            text,
+            answer,
+            tags,
+            parent,
+        } => exec_import::create_item(
+            w,
+            kind,
+            [&title, &text, &answer],
+            (&tags, parent.as_deref()),
+            now_ns,
+        ),
         Effect::BuildReports => exec_run::reports(w, now_ns),
         Effect::CheckAchievements => exec_run::achievements(w, now_ns),
         Effect::LoadBoard => exec_plan::load_board(w, now_ns),
@@ -125,7 +139,6 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             words_only,
         } => exec_run::score(w, (run, item), &answer, words_only, now_ns),
         Effect::RecordStep { ctx, out } => exec_run::record(w, &ctx, &out, now_ns),
-        Effect::CreateStack(title) => create(w, now_ns, |s, ids| create_stack(s, &title, ids)),
         Effect::CreateCard {
             folder,
             title,

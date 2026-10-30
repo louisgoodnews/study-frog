@@ -12,6 +12,7 @@ use studyfrog_store::overview::ItemRow;
 use studyfrog_ui::chrome::{ChromeMsg, Menu};
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::exec::{execute, worker_new};
+use studyfrog_ui::modal::Modal;
 use studyfrog_ui::model::{Model, apply};
 use studyfrog_ui::msg::Msg;
 use studyfrog_ui::state::Screen;
@@ -116,28 +117,15 @@ fn the_bell_shows_a_badge_and_a_list_of_notices_and_clicking_elsewhere_closes_it
 }
 
 #[test]
-fn the_create_menu_lists_what_can_be_made_and_goes_there() {
+fn the_create_button_opens_the_create_dialog() {
     let mut h = harness(open_model());
     h.run();
     h.get_by_label("+ Create").click();
     h.run();
-    for entry in [
-        "New stack",
-        "New card",
-        "New study session",
-        "New board card",
-        "Import cards from a file",
-    ] {
-        assert!(h.query_by_label(entry).is_some(), "missing {entry}");
-    }
-    h.get_by_label("New board card").click();
-    h.run();
-    assert_eq!(h.state().0.state.screen, Screen::Board);
-    assert!(h.state().1.contains(&Effect::LoadBoard));
-    assert_eq!(
-        h.state().0.state.chrome.menu,
-        None,
-        "choosing closes the menu"
+    assert!(matches!(h.state().0.state.modal, Some(Modal::Create(_))));
+    assert!(
+        h.query_by_label("Title").is_some(),
+        "the dialog is on screen"
     );
 }
 

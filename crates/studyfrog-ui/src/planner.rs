@@ -35,8 +35,6 @@ pub struct Planner {
     pub form: Option<SessionForm>,
     /// Why the last save was refused.
     pub form_error: Option<String>,
-    /// Open the form for a new session as soon as the sessions are loaded.
-    pub pending_new: bool,
 }
 
 impl Default for Planner {
@@ -55,7 +53,6 @@ impl Default for Planner {
             shown: Vec::new(),
             form: None,
             form_error: None,
-            pending_new: false,
         }
     }
 }
@@ -125,16 +122,7 @@ fn loaded(p: Planner, sessions: Vec<Session>, today: Date) -> Planner {
     } else {
         p
     };
-    let p = with_sessions(p, sessions);
-    if p.pending_new {
-        return Planner {
-            form: Some(form_new(p.selected)),
-            form_error: None,
-            pending_new: false,
-            ..p
-        };
-    }
-    p
+    with_sessions(p, sessions)
 }
 
 fn save(state: State) -> (State, Vec<Effect>) {

@@ -17,6 +17,14 @@ fn every_control_on_every_screen_has_an_accessible_name() {
     let mut h = harness(welcome);
     h.run();
     assert_all_named(&h, "welcome");
+
+    // The vault dialog is where the path field lives now.
+    let mut dialog = Model::default();
+    dialog.state.app.recent = vec!["/v/old".into()];
+    dialog.state.modal = Some(studyfrog_ui::modal::Modal::Vault);
+    let mut h = harness(dialog);
+    h.run();
+    assert_all_named(&h, "vault dialog");
     let field = h.get_by_role(Role::TextInput);
     assert_eq!(
         field.accesskit_node().label().as_deref(),

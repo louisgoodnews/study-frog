@@ -23,6 +23,8 @@ fn the_choose_folder_button_asks_for_the_dialog_and_a_chosen_folder_is_opened() 
     let mut h = harness(Model::default());
     h.run();
     assert_all_named(&h, "welcome");
+    h.get_by_label("Open or create a vault…").click();
+    h.run();
     h.get_by_label("Choose folder…").click();
     h.run();
     assert!(h.state().1.contains(&Effect::PickVaultFolder));

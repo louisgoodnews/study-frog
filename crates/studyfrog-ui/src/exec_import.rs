@@ -5,11 +5,13 @@ use std::path::Path;
 use studyfrog_ext::registry::{find_card_type, importable_extensions, importer_for_file};
 use studyfrog_ext::types::{Faces, ImportedCard};
 use studyfrog_service::create::{IdSource, fresh_id_source};
+use studyfrog_service::create_more::{NewItem, NewKind, create_item as create_one};
 use studyfrog_service::import::import_cards;
 use studyfrog_service::session::ServiceError;
 
 use crate::exec::Worker;
 use crate::import_ui::ImportOutcome;
+use crate::modal::{CreateOutcome, ModalMsg};
 use crate::msg::Msg;
 
 fn ids(now_ns: i64) -> Result<IdSource, ServiceError> {
@@ -85,4 +87,30 @@ pub fn from_card_type(
         }
         Err(e) => Msg::Imported(Err(format!("{}: {e}", card_type.name))),
     }
+}
+
+/// Create one item from the create dialog.
+pub fn create_item(
+    w: &mut Worker,
+    kind: NewKind,
+    [title, text, answer]: [&str; 3],
+    (tags, parent): (&[String], Option<&str>),
+    now_ns: i64,
+) -> Msg {
+    let Some(session) = &mut w.session else {
+        return Msg::Modal(ModalMsg::Created(Err("no vault is open".to_owned())));
+    };
+    let item = NewItem {
+        kind,
+        title,
+        text,
+        answer,
+        tags,
+        parent,
+    };
+    let result = ids(now_ns)
+        .and_then(|ids| create_one(session, &item, ids))
+        .map(|(info, created)| Box::new(CreateOutcome { info, created }))
+        .map_err(|e| e.to_string());
+    Msg::Modal(ModalMsg::Created(result))
 }

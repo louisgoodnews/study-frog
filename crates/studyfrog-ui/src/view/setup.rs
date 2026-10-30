@@ -116,11 +116,28 @@ fn filters(state: &State, form: &SetupForm, ui: &mut egui::Ui, out: &mut Vec<Msg
         ui.horizontal_wrapped(|ui| {
             for s in &vault.overview.stacks {
                 let mut on = form.stacks.contains(&s.uid);
-                if ui
-                    .checkbox(&mut on, format!("Stack: {}", s.title))
-                    .changed()
-                {
-                    edit(out, SetupEdit::Stack(s.uid, on));
+                let nested = vault
+                    .overview
+                    .stacks
+                    .iter()
+                    .filter(|x| inside(&x.folder, &s.folder))
+                    .count();
+                let label = if nested > 0 {
+                    format!("Stack: {} (and the {nested} inside it)", s.title)
+                } else {
+                    format!("Stack: {}", s.title)
+                };
+                if ui.checkbox(&mut on, label).changed() {
+                    let mut uids = vec![s.uid];
+                    uids.extend(
+                        vault
+                            .overview
+                            .stacks
+                            .iter()
+                            .filter(|x| inside(&x.folder, &s.folder))
+                            .map(|x| x.uid),
+                    );
+                    edit(out, SetupEdit::Stacks(uids, on));
                 }
             }
         });
@@ -219,4 +236,9 @@ fn preview_line(preview: &Preview, ui: &mut egui::Ui) {
             );
         }
     }
+}
+
+/// Whether `folder` is somewhere inside `outer`.
+fn inside(folder: &str, outer: &str) -> bool {
+    folder.starts_with(&format!("{outer}/")) && folder != outer
 }

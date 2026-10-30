@@ -13,7 +13,7 @@ use studyfrog_ui::msg::Msg;
 use studyfrog_ui::state::{NoticeKind, Screen};
 
 #[test]
-fn welcome_screen_opens_a_typed_path_and_lists_recent_vaults() {
+fn the_vault_dialog_opens_a_typed_path_and_the_welcome_page_lists_recent_vaults() {
     let mut model = Model::default();
     model.state.app = AppSettings {
         vault: None,
@@ -23,6 +23,12 @@ fn welcome_screen_opens_a_typed_path_and_lists_recent_vaults() {
         reading: Default::default(),
     };
     let mut h = harness(model);
+    h.run();
+    assert!(
+        h.query_by_label("Vault folder").is_none(),
+        "the path is not the first thing asked"
+    );
+    h.get_by_label("Open or create a vault…").click();
     h.run();
     h.get_by_label("Vault folder").focus();
     h.get_by_label("Vault folder").type_text("/v/new");

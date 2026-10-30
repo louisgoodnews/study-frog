@@ -9,6 +9,7 @@ use studyfrog_core::uid::Uid;
 use studyfrog_ui::browse::filter_items;
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::exec::worker_new;
+use studyfrog_ui::modal::{Field, Modal, ModalMsg};
 use studyfrog_ui::model::{Model, apply};
 use studyfrog_ui::msg::{DraftField, Msg};
 use studyfrog_ui::state::{ItemRow, NoticeKind, Selection};
@@ -64,14 +65,6 @@ fn selecting_loads_items_and_resets_the_filter() {
 #[test]
 fn the_forms_validate_before_asking_for_anything() {
     let mut m = Model::default();
-    assert!(apply(&mut m, Msg::CreateStackClicked).is_empty());
-    assert!(m.state.notice.as_ref().unwrap().text.contains("title"));
-    apply(&mut m, Msg::NewStackEdited("  Maths ".into()));
-    assert_eq!(
-        apply(&mut m, Msg::CreateStackClicked),
-        [Effect::CreateStack("Maths".into())]
-    );
-
     assert!(
         apply(&mut m, Msg::AddCardClicked).is_empty(),
         "no stack open"
@@ -98,15 +91,14 @@ fn the_forms_validate_before_asking_for_anything() {
 fn creating_succeeds_clears_the_forms_and_refreshes_the_open_stack() {
     let mut m = Model::default();
     apply(&mut m, Msg::Select(Selection::Stack("maths".into())));
-    apply(&mut m, Msg::NewStackEdited("X".into()));
     apply(&mut m, Msg::DraftEdited(DraftField::Front, "f".into()));
     let info = studyfrog_service_info();
     let (state, fx) = update(m.state.clone(), Msg::Created(Ok(info)));
-    assert!(state.browser.new_stack.is_empty() && state.browser.draft.front.is_empty());
+    assert!(state.browser.draft.front.is_empty());
     assert_eq!(fx, [Effect::LoadItems(Selection::Stack("maths".into()))]);
     let (state, fx) = update(m.state, Msg::Created(Err("exists".into())));
     assert!(
-        fx.is_empty() && state.browser.new_stack == "X",
+        fx.is_empty() && state.browser.draft.front == "f",
         "a failure keeps what the user typed"
     );
 }
@@ -130,12 +122,21 @@ fn a_user_can_build_a_stack_with_cards_from_an_empty_vault() {
     run_to_idle(&mut m, &mut worker, fx);
     assert!(m.state.vault.as_ref().unwrap().overview.stacks.is_empty());
 
-    apply(&mut m, Msg::NewStackEdited("Spanish".into()));
-    let fx = apply(&mut m, Msg::CreateStackClicked);
+    apply(&mut m, Msg::Modal(ModalMsg::OpenCreateStack));
+    apply(
+        &mut m,
+        Msg::Modal(ModalMsg::Edit(Field::Title, "Spanish".into())),
+    );
+    let fx = apply(&mut m, Msg::Modal(ModalMsg::Submit));
     run_to_idle(&mut m, &mut worker, fx);
     let stacks = &m.state.vault.as_ref().unwrap().overview.stacks;
     assert_eq!((stacks.len(), stacks[0].folder.as_str()), (1, "spanish"));
-    assert!(m.state.browser.new_stack.is_empty());
+    assert!(m.state.modal.is_none(), "the dialog closes when it is done");
+    assert_eq!(
+        m.state.browser.selection,
+        Selection::Stack("spanish".into()),
+        "the new stack is opened"
+    );
 
     let fx = apply(&mut m, Msg::Select(Selection::Stack("spanish".into())));
     run_to_idle(&mut m, &mut worker, fx);
@@ -165,16 +166,23 @@ fn creating_with_a_bad_title_reports_the_reason_and_keeps_the_form() {
     let mut m = Model::default();
     let fx = apply(&mut m, Msg::OpenRecent(vault.path.display().to_string()));
     run_to_idle(&mut m, &mut worker, fx);
-    apply(&mut m, Msg::NewStackEdited("line one\nline two".into()));
-    let fx = apply(&mut m, Msg::CreateStackClicked);
-    run_to_idle(&mut m, &mut worker, fx);
-    assert!(
-        m.state
-            .notice
-            .as_ref()
-            .unwrap()
-            .text
-            .contains("single line")
+    apply(&mut m, Msg::Modal(ModalMsg::OpenCreateStack));
+    apply(
+        &mut m,
+        Msg::Modal(ModalMsg::Edit(Field::Title, "line one\nline two".into())),
     );
-    assert!(m.state.browser.new_stack.contains("line one"));
+    let fx = apply(&mut m, Msg::Modal(ModalMsg::Submit));
+    run_to_idle(&mut m, &mut worker, fx);
+    let Some(Modal::Create(form)) = &m.state.modal else {
+        panic!("the dialog stays open")
+    };
+    assert!(
+        form.error.as_deref().unwrap().contains("single line"),
+        "{:?}",
+        form.error
+    );
+    assert!(
+        form.title.contains("line one") && !form.busy,
+        "what was typed is kept"
+    );
 }

@@ -90,6 +90,21 @@ pub enum Effect {
         /// The rating it should have.
         to: Rating,
     },
+    /// Create a stack, note, card or question.
+    CreateItem {
+        /// What to create.
+        kind: studyfrog_service::create_more::NewKind,
+        /// Title (may be empty for cards and questions).
+        title: String,
+        /// Description, body, front or prompt.
+        text: String,
+        /// Back or reference answer.
+        answer: String,
+        /// Tags.
+        tags: Vec<String>,
+        /// The stack it goes into.
+        parent: Option<String>,
+    },
     /// Find items whose title contains this text (the global search).
     SearchItems(String),
     /// Compute the reports from the history.
@@ -123,8 +138,6 @@ pub enum Effect {
     },
     /// Find the item a wikilink points to.
     ResolveLink(String),
-    /// Create a stack with this title.
-    CreateStack(String),
     /// Create a card in the stack at `folder`.
     CreateCard {
         /// Vault-relative stack folder.

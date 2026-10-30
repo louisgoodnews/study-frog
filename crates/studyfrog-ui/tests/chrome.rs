@@ -7,12 +7,10 @@ use common::views::open_model;
 use studyfrog_core::plan::ItemKind;
 use studyfrog_core::uid::Uid;
 use studyfrog_store::overview::ItemRow;
-use studyfrog_ui::chrome::{ChromeMsg, Creatable, MAX_NOTIFICATIONS, Menu, unread};
+use studyfrog_ui::chrome::{ChromeMsg, MAX_NOTIFICATIONS, Menu, unread};
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::model::{Model, apply};
 use studyfrog_ui::msg::Msg;
-use studyfrog_ui::planner::PlanMsg;
-use studyfrog_ui::state::{Screen, Selection};
 
 fn chrome(m: &mut Model, msg: ChromeMsg) -> Vec<Effect> {
     apply(m, Msg::Chrome(msg))
@@ -47,8 +45,8 @@ fn the_sidebar_folds_away_and_comes_back() {
 #[test]
 fn one_menu_is_open_at_a_time_and_opening_the_bell_marks_notices_seen() {
     let mut m = open_model();
-    chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Create));
-    assert_eq!(m.state.chrome.menu, Some(Menu::Create));
+    chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Profile));
+    assert_eq!(m.state.chrome.menu, Some(Menu::Profile));
     chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Help));
     assert_eq!(
         m.state.chrome.menu,
@@ -140,62 +138,5 @@ fn searching_asks_for_matches_and_ignores_stale_answers() {
     assert!(
         chrome(&mut none, ChromeMsg::SearchEdited("x".into())).is_empty(),
         "no vault, no search"
-    );
-}
-
-#[test]
-fn the_create_menu_goes_where_the_new_thing_is_made() {
-    let mut m = open_model();
-    chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Create));
-    chrome(&mut m, ChromeMsg::Create(Creatable::Stack));
-    assert_eq!(
-        (m.state.screen, m.state.chrome.menu),
-        (Screen::Library, None)
-    );
-
-    m.state.notice = None;
-    chrome(&mut m, ChromeMsg::Create(Creatable::Card));
-    assert!(
-        m.state
-            .notice
-            .as_ref()
-            .unwrap()
-            .text
-            .contains("Open a stack"),
-        "a card needs a stack"
-    );
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
-    m.state.notice = None;
-    chrome(&mut m, ChromeMsg::Create(Creatable::Import));
-    assert!(m.state.notice.is_none(), "an open stack needs no hint");
-
-    assert_eq!(
-        chrome(&mut m, ChromeMsg::Create(Creatable::BoardCard)),
-        [Effect::LoadBoard]
-    );
-    assert_eq!(m.state.screen, Screen::Board);
-}
-
-#[test]
-fn a_new_session_from_the_create_menu_opens_its_form_once_the_calendar_is_loaded() {
-    let mut m = open_model();
-    let fx = chrome(&mut m, ChromeMsg::Create(Creatable::Session));
-    assert_eq!(
-        (m.state.screen, fx),
-        (Screen::Calendar, vec![Effect::LoadSessions])
-    );
-    let today = studyfrog_core::civil::date_new(2026, 10, 30).unwrap();
-    apply(&mut m, Msg::Plan(PlanMsg::Loaded(Ok((vec![], today)))));
-    let p = &m.state.planner;
-    assert!(
-        p.form.is_some() && !p.pending_new,
-        "the form is open and the request is used up"
-    );
-    assert_eq!(p.form.as_ref().unwrap().date, "2026-10-30");
-    apply(&mut m, Msg::Plan(PlanMsg::CloseForm));
-    apply(&mut m, Msg::Plan(PlanMsg::Loaded(Ok((vec![], today)))));
-    assert!(
-        m.state.planner.form.is_none(),
-        "a later reload does not reopen it"
     );
 }

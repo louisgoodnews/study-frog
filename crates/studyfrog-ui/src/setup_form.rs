@@ -44,6 +44,8 @@ pub enum SetupEdit {
     Kind(ItemKind, bool),
     /// Include or exclude a stack.
     Stack(Uid, bool),
+    /// Include or exclude several stacks at once (a stack and the stacks inside it).
+    Stacks(Vec<Uid>, bool),
     /// Comma-separated tags (any of).
     Tags(String),
     /// Learning-state filter.
@@ -204,6 +206,12 @@ pub fn apply_edit(f: SetupForm, edit: SetupEdit) -> SetupForm {
         },
         SetupEdit::Stack(uid, on) => SetupForm {
             stacks: toggle(f.stacks.clone(), uid, on),
+            ..f
+        },
+        SetupEdit::Stacks(uids, on) => SetupForm {
+            stacks: uids
+                .into_iter()
+                .fold(f.stacks.clone(), |l, u| toggle(l, u, on)),
             ..f
         },
         SetupEdit::Tags(tags) => SetupForm { tags, ..f },

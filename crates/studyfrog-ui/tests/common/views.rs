@@ -27,6 +27,7 @@ pub fn stack(title: &str, folder: &str, notes: usize, cards: usize) -> StackRow 
         uid: Uid(1),
         title: title.into(),
         folder: folder.into(),
+        parent: None,
         notes,
         cards,
         questions: 0,

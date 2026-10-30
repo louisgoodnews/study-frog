@@ -41,11 +41,6 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Select(sel) => select(state, sel),
         Msg::SearchEdited(text) => with_browser(state, |b| Browser { search: text, ..b }),
         Msg::ItemsLoaded(result) => items_loaded(state, result),
-        Msg::NewStackEdited(text) => with_browser(state, |b| Browser {
-            new_stack: text,
-            ..b
-        }),
-        Msg::CreateStackClicked => create_stack(state),
         Msg::DraftEdited(field, text) => with_browser(state, |b| edit_draft(b, field, text)),
         Msg::AddCardClicked => add_card(state),
         Msg::Created(result) => created(state, result),
@@ -100,26 +95,6 @@ fn items_loaded(state: State, result: Result<Vec<ItemRow>, String>) -> (State, V
     }
 }
 
-fn create_stack(state: State) -> (State, Vec<Effect>) {
-    let title = state.browser.new_stack.trim().to_owned();
-    if title.is_empty() {
-        return (
-            State {
-                notice: error("Enter a title for the new stack."),
-                ..state
-            },
-            Vec::new(),
-        );
-    }
-    (
-        State {
-            notice: None,
-            ..state
-        },
-        vec![Effect::CreateStack(title)],
-    )
-}
-
 fn add_card(state: State) -> (State, Vec<Effect>) {
     if state.browser.card_type.is_some() {
         return crate::import_ui::add_from_type(state);
@@ -162,7 +137,6 @@ fn created(state: State, result: Result<crate::state::VaultInfo, String>) -> (St
     match result {
         Ok(info) => {
             let browser = Browser {
-                new_stack: String::new(),
                 draft: CardDraft::default(),
                 ..state.browser.clone()
             };

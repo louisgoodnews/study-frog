@@ -20,6 +20,8 @@ pub mod host;
 pub mod import_ui;
 pub mod kanban;
 pub mod kanban_msg;
+pub mod modal;
+pub mod modal_types;
 pub mod model;
 pub mod msg;
 pub mod nav;
