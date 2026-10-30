@@ -20,6 +20,7 @@ Textual rules (also in [ADR 0001](adr/0001-workspace-and-crate-layout.md)):
 |---|---|---|
 | `core` | none | Pure data types, ids, arenas. No I/O. |
 | `config` | core | Parse and render `studyfrog.toml` and `_stack.toml` ([ADR 0007](adr/0007-settings-in-toml-files.md)). |
+| `graph` | none | Force-directed layout in struct-of-arrays form; pure, allocation-free per step. |
 | `md` | core | Markdown and front-matter parse/render. |
 | `store` | core, md, config | SQLite and file layer; the only crate doing storage I/O. |
 | `srs` | core | Scheduling functions. |
@@ -30,7 +31,7 @@ Textual rules (also in [ADR 0001](adr/0001-workspace-and-crate-layout.md)):
 | `board` | core | Kanban/scrum model and moves. |
 | `calendar` | core | Session planning. |
 | `service` | core, md, config, store, srs, rehearsal | Application layer: use cases that compose domain crates ([ADR 0006](adr/0006-application-service-layer.md)). |
-| `ui` | service and domain crates | Rendering and event dispatch only. |
+| `ui` | service, graph and domain crates | Rendering and event dispatch only. |
 | `app` | ui | `main`, wiring, configuration. |
 
 Rules: no cycles; `service` is the only place that wires several domain crates into a use case; domain crates never import `ui`/`app`; domain crates other than `store` and

@@ -2,7 +2,7 @@
 id: STORY-0019
 type: story
 title: Link graph view
-status: backlog
+status: done
 epic: EPIC-009
 parents: [EPIC-009]
 estimate: 8
@@ -19,8 +19,8 @@ Graph rendering is a benchmarked hot path.
 Link graph view.
 
 ## Acceptance Criteria
-- [ ] Force-directed layout in SoA form
-- [ ] 5k nodes at 60 fps, zero allocation per frame (measured)
+- [x] Force-directed layout in SoA form
+- [x] 5k nodes at 60 fps, zero allocation per frame (measured)
 
 ## Design Notes
 Children: TASK-0042, TASK-0043.

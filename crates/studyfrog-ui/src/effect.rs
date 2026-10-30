@@ -46,6 +46,8 @@ pub enum Effect {
         /// What the step produced.
         out: StepOutput,
     },
+    /// Read the link graph from the index.
+    LoadGraph,
     /// Read a document for editing.
     LoadDocument(Uid),
     /// Write an edited document, if the file is unchanged since `hash`.

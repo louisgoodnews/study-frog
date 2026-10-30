@@ -6,6 +6,7 @@ use studyfrog_core::run::Run;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::Action;
 use studyfrog_service::document::{LoadedDoc, Saved};
+use studyfrog_store::overview::LinkGraph;
 
 use crate::run_state::ItemContent;
 use crate::setup::SetupEdit;
@@ -95,6 +96,25 @@ pub enum Msg {
     OpenLink(String),
     /// The item a wikilink points to (`None`: no item has that title).
     LinkResolved(String, Result<Option<Uid>, String>),
+    /// The link graph was read from the index.
+    GraphLoaded(Result<LinkGraph, String>),
+    /// A frame of the graph canvas of this size (pixels) is being drawn.
+    GraphFrame {
+        /// Canvas width.
+        width: f32,
+        /// Canvas height.
+        height: f32,
+    },
+    /// The canvas was dragged by this many pixels.
+    GraphPan(f32, f32),
+    /// The canvas was scrolled; multiply the zoom by this factor.
+    GraphZoom(f32),
+    /// The pointer is over this node (or none).
+    GraphHover(Option<usize>),
+    /// "Re-run layout" was activated.
+    GraphRestart,
+    /// A node was clicked.
+    GraphClick(usize),
 }
 
 /// A change in the editor.

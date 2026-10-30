@@ -4,6 +4,7 @@ use studyfrog_core::settings::AppSettings;
 pub use studyfrog_service::session::VaultInfo;
 
 use crate::editor::Editor;
+use crate::graph::GraphState;
 use crate::setup::Rehearse;
 pub use studyfrog_store::overview::ItemRow;
 
@@ -21,6 +22,8 @@ pub enum Screen {
     Settings,
     /// A document open for editing.
     Editor,
+    /// The wikilink graph.
+    Graph,
 }
 
 /// Severity of a notice.
@@ -105,4 +108,6 @@ pub struct State {
     pub now: f64,
     /// The document open for editing.
     pub editor: Option<Editor>,
+    /// The link graph.
+    pub graph: Option<GraphState>,
 }

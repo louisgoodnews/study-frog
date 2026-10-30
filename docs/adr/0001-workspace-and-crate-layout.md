@@ -23,6 +23,8 @@ No domain crate depends on `ui` or `app`. `app` depends only on `ui`.
 
 > **Also amended by [ADR 0007](0007-settings-in-toml-files.md):** `studyfrog-config` (settings files; depends on `core` only).
 
+> **Also amended (M4):** `studyfrog-graph`, a pure layout crate with no dependencies, used by `ui`.
+
 ## Consequences
 + Domain logic is testable without a GUI; the UI is replaceable.
 + Compile-time enforcement of layering (a forbidden edge needs a manifest change, visible in review).

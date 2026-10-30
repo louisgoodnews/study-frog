@@ -2,6 +2,7 @@
 
 mod bars;
 mod editor;
+mod graph;
 mod items;
 mod library;
 mod preview;
@@ -30,6 +31,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         Screen::Rehearse => setup::draw(state, ui, &mut out),
         Screen::Settings => settings::draw(state, ui),
         Screen::Editor => editor::draw(state, ui, &mut out),
+        Screen::Graph => graph::draw(state, ui, &mut out),
     });
     out
 }

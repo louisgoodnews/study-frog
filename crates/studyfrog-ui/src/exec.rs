@@ -51,6 +51,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::LoadItems(selection) => load_items(w, &selection),
         Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
         Effect::StartRun { plan, mode } => exec_run::start(w, plan, mode, now_ns),
+        Effect::LoadGraph => load_graph_msg(w),
         Effect::LoadDocument(uid) => load_document_msg(w, uid),
         Effect::SaveDocument { path, doc, hash } => save_document_msg(w, &path, &doc, hash, now_ns),
         Effect::ResolveLink(target) => resolve_link_msg(w, target),
@@ -179,4 +180,13 @@ fn resolve_link_msg(w: &Worker, target: String) -> Msg {
         None => Err("no vault is open".to_owned()),
     };
     Msg::LinkResolved(target, result)
+}
+
+fn load_graph_msg(w: &Worker) -> Msg {
+    match &w.session {
+        Some(s) => Msg::GraphLoaded(
+            studyfrog_store::overview::load_link_graph(&s.conn).map_err(|e| e.to_string()),
+        ),
+        None => Msg::GraphLoaded(Err("no vault is open".to_owned())),
+    }
 }

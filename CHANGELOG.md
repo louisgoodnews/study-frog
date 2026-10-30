@@ -8,6 +8,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Link graph screen: the wikilink graph as a force-directed picture with pan, zoom, hover, click-to-open, a
+  re-run button, an accessible item list, and live refresh that keeps node positions. New pure crate
+  `studyfrog-graph` (SoA layout, uniform-grid repulsion, deterministic, zero allocation per step): 5k nodes /
+  10k edges step in 4.0 ms; verified allocation-free with dhat. Items now show when they are next due
+  (TASK-0042, TASK-0043). EPIC-009 and phase M4 complete.
 - Editor: open any item from the browser, edit title, tags and text areas with a live Markdown preview (headings,
   emphasis, lists, task items, quotes, code, wikilinks and URL links), undo/redo, save with conflict detection
   (a file changed elsewhere is never overwritten), revert/reload, unsaved-changes guards, clickable wikilinks.
@@ -116,6 +121,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - Placeholder hello-world package and the unverified `repository` manifest field.
 
 ### Fixed
+- Graph layout never came to rest because the repulsion jumped to zero at its cutoff (nodes flickered in and out of
+  range); a smooth window fixes it. Found by measuring energy, not by a failing test.
 - Board/issue bookkeeping: TASK-0016, STORY-0007 and EPIC-004 were still `backlog` after M1. `repo-lint`
   now rejects a parent whose children are all done but is not, a done parent with open children, and a
   done item with unchecked acceptance criteria.

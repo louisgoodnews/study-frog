@@ -3,6 +3,7 @@ resolver = "3"
 members = [
     "crates/studyfrog-core",
     "crates/studyfrog-config",
+    "crates/studyfrog-graph",
     "crates/studyfrog-md",
     "crates/studyfrog-store",
     "crates/studyfrog-srs",
@@ -30,6 +31,7 @@ authors = ["louisgoodnews"]
 # internal crates
 studyfrog-core = { path = "crates/studyfrog-core" }
 studyfrog-config = { path = "crates/studyfrog-config" }
+studyfrog-graph = { path = "crates/studyfrog-graph" }
 studyfrog-md = { path = "crates/studyfrog-md" }
 studyfrog-store = { path = "crates/studyfrog-store" }
 studyfrog-srs = { path = "crates/studyfrog-srs" }
@@ -50,6 +52,7 @@ serde = { version = "1", features = ["derive"] }
 serde-saphyr = "2"
 pulldown-cmark = { version = "0.13", default-features = false }
 toml = { version = "1", default-features = false, features = ["parse", "serde"] }
+dhat = "0.3"
 eframe = { version = "0.37", default-features = false, features = ["accesskit", "clipboard", "default_fonts", "glow", "links", "wayland", "x11"] }
 egui_kittest = "0.37"
 

@@ -7,6 +7,7 @@ cd "$(dirname "$0")/.."
 declare -A allowed=(
   [core]=""
   [config]="core"
+  [graph]=""
   [md]="core"
   [store]="core md config"
   [srs]="core"
@@ -17,7 +18,7 @@ declare -A allowed=(
   [board]="core"
   [calendar]="core"
   [service]="core md config store srs rehearsal"
-  [ui]="core md config store srs rehearsal slm report achieve board calendar service"
+  [ui]="core md config graph store srs rehearsal slm report achieve board calendar service"
   [app]="ui"
 )
 

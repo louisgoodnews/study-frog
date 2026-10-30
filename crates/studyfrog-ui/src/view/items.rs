@@ -2,11 +2,21 @@
 
 use eframe::egui::{self, Grid};
 use studyfrog_core::plan::{ItemKind, item_kind_name};
+use studyfrog_core::time::UnixMs;
+use studyfrog_md::rfc3339::format_rfc3339;
 
 use crate::browse::filter_items;
 use crate::msg::{DraftField, Msg};
 use crate::state::{Selection, State};
 use crate::view::widgets::text_field;
+
+/// "new" for an item never reviewed, else the UTC date it is next due.
+fn due_text(due: Option<UnixMs>) -> String {
+    match due.and_then(format_rfc3339) {
+        Some(text) => format!("due {}", &text[..10]),
+        None => "new".to_owned(),
+    }
+}
 
 fn kind_text(kind: ItemKind) -> &'static str {
     item_kind_name(kind)
@@ -34,13 +44,14 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .show(ui, |ui| {
             Grid::new("items")
                 .striped(true)
-                .num_columns(3)
+                .num_columns(4)
                 .show(ui, |ui| {
                     for item in &shown {
                         if ui.link(&item.title).clicked() {
                             out.push(Msg::OpenItem(item.uid));
                         }
                         ui.label(kind_text(item.kind));
+                        ui.label(due_text(item.due));
                         ui.weak(&item.path);
                         ui.end_row();
                     }

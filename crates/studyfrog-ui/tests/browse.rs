@@ -20,6 +20,7 @@ fn row(n: u128, title: &str) -> ItemRow {
         title: title.into(),
         kind: ItemKind::Card,
         path: format!("s/{n}.md"),
+        due: None,
     }
 }
 

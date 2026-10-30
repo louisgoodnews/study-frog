@@ -107,3 +107,43 @@ fn app_settings_persist_and_a_missing_file_means_defaults() {
     std::fs::write(cfg.join("app.toml"), "vault = 5\n").unwrap();
     assert!(read_app_settings(&cfg).is_err());
 }
+
+#[test]
+fn the_link_graph_resolves_titles_once_per_pair_and_drops_junk() {
+    use studyfrog_store::overview::load_link_graph;
+    let dir = common::temp_dir("graph");
+    let r = &dir.path;
+    write(r, "s/_stack.md", &stack(1, "S"));
+    write(
+        r,
+        "s/a.md",
+        &note(
+            10,
+            "Alpha",
+            "to [[beta]] and [[GAMMA]], again [[Beta]], itself [[Alpha]], nothing [[Nowhere]]\n",
+        ),
+    );
+    write(r, "s/b.md", &note(11, "Beta", "back to [[Alpha]]\n"));
+    write(r, "s/c.md", &note(12, "Gamma", "no links\n"));
+    write(
+        r,
+        "s/code.md",
+        &note(13, "Quiet", "`[[Alpha]]` is only code\n"),
+    );
+    let mut conn = open_memory().unwrap();
+    migrate(&mut conn, MIGRATIONS).unwrap();
+    reindex(&mut conn, r).unwrap();
+
+    let g = load_link_graph(&conn).unwrap();
+    let titles: Vec<_> = g.nodes.iter().map(|n| n.title.as_str()).collect();
+    assert_eq!(
+        titles,
+        ["Alpha", "Beta", "Gamma", "Quiet"],
+        "stacks are not nodes"
+    );
+    assert_eq!(
+        g.edges,
+        [(0, 1), (0, 2)],
+        "Alpha-Beta once although linked both ways and twice; Alpha-Gamma; nothing else"
+    );
+}

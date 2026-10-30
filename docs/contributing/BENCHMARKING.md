@@ -11,7 +11,7 @@ replaced by a measured baseline when its crate gets its first benchmark (the own
 | FSRS scheduling | srs | 100k cards < 10 ms (was 50 ms) | a full-vault reschedule should not be perceptible; tightened after measuring | TASK-0019 (done) |
 | Markdown parse + index | md/store | 10k notes cold index < 3 s (measured 0.57 s) | startup on a large vault stays under a few seconds | TASK-0028 (done) |
 | SLM comparison | slm | p95 < 150 ms for 30 words (CPU) | interactive feedback threshold (about 100-200 ms feels immediate to a user) | TASK-0050 |
-| Graph layout/render | ui | 5k nodes at 60 fps, zero allocation per frame | 60 fps = 16.6 ms frame budget | TASK-0043 |
+| Graph layout + projection | graph | 5k nodes, 10k edges: < 8 ms per frame, zero allocation (measured 4.0 ms, 0 allocs) | half of the 16.6 ms frame budget, leaving the rest for painting | TASK-0043 (done) |
 
 Rules: commit baselines with `--save-baseline`; PRs touching a hot path report the diff;
 introduce `smallvec`/`ahash`/`bumpalo` only with a before/after number in the commit message.
@@ -44,3 +44,14 @@ Rehearsal (`cargo bench -p studyfrog-rehearsal --bench rehearsal -- --baseline m
 | 2026-10-30 | `build_queue` 10k candidates, shuffled | 82 us |
 | 2026-10-30 | `build_queue` 10k candidates, hardest first | 1.08 ms |
 | 2026-10-30 | `build_queue` 10k candidates, lowest retrievability | 3.9 ms |
+
+Graph (`cargo bench -p studyfrog-graph --bench layout -- --baseline m4`; 5,000 nodes, 10,000 edges):
+
+| Date | Bench | Result |
+|---|---|---|
+| 2026-10-30 | `layout_step` | 3.98 ms |
+| 2026-10-30 | `project` | 1.8 us |
+
+Allocation: `crates/studyfrog-graph/tests/allocs.rs` uses `dhat` as the test binary's global allocator and asserts
+0 allocations over 50 frames. This is the safe way to count allocations (no `unsafe` in our code).
+

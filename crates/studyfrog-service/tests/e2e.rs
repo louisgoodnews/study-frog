@@ -149,3 +149,30 @@ fn a_run_left_open_by_a_crash_is_recovered_as_aborted() {
         "closed with run_aborted after started + shown"
     );
 }
+
+#[test]
+fn the_browser_listing_shows_when_each_item_is_next_due() {
+    use studyfrog_store::overview::list_items;
+    let mut env = env();
+    let before: Vec<_> = list_items(&env.conn, Some("deck"))
+        .unwrap()
+        .into_iter()
+        .map(|i| i.due)
+        .collect();
+    assert_eq!(before, [None, None, None], "nothing has been reviewed yet");
+    let mut run = started(&env, build(&env, plan_spaced(), 100, NOW));
+    drive(&mut env, &mut run, NOW, script(&[Good, Easy, Again, Good]));
+    let dues: Vec<_> = list_items(&env.conn, Some("deck"))
+        .unwrap()
+        .into_iter()
+        .map(|i| i.due)
+        .collect();
+    assert_eq!(
+        dues,
+        [
+            Some(UnixMs(NOW.0 + 2 * DAY)),
+            Some(UnixMs(NOW.0 + 8 * DAY)),
+            Some(UnixMs(NOW.0 + DAY))
+        ]
+    );
+}

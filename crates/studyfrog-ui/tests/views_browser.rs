@@ -18,6 +18,7 @@ fn item(n: u128, title: &str) -> ItemRow {
         title: title.into(),
         kind: ItemKind::Card,
         path: format!("french/{n}.md"),
+        due: None,
     }
 }
 
@@ -97,5 +98,23 @@ fn the_card_form_only_appears_inside_a_stack_not_in_the_inbox() {
     assert!(
         h.query_by_label("New stack title").is_some(),
         "the stack list stays available"
+    );
+}
+
+#[test]
+fn the_item_list_says_when_each_item_is_next_due() {
+    use studyfrog_core::time::UnixMs;
+    let mut m = stack_open();
+    m.state.browser.items[0].due = Some(UnixMs(1_800_000_000_000)); // 2027-01-15 UTC
+    let mut h = harness(m);
+    h.run_steps(2);
+    assert!(
+        h.query_by_label("due 2027-01-15").is_some(),
+        "a reviewed item shows its date"
+    );
+    assert_eq!(
+        h.query_all_by_label("new").count(),
+        1,
+        "the other was never reviewed"
     );
 }

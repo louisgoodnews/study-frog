@@ -62,6 +62,13 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::AddCardClicked
         | Msg::Created(_)) => crate::browse::update(state, browse),
         setup @ (Msg::Setup(_) | Msg::PreviewReady(_)) => crate::setup::update(state, setup),
+        graph @ (Msg::GraphLoaded(_)
+        | Msg::GraphFrame { .. }
+        | Msg::GraphPan(..)
+        | Msg::GraphZoom(_)
+        | Msg::GraphHover(_)
+        | Msg::GraphRestart
+        | Msg::GraphClick(_)) => crate::graph::update(state, graph),
         edit @ (Msg::OpenItem(_)
         | Msg::DocumentLoaded(..)
         | Msg::Edit(_)
@@ -159,7 +166,9 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
 fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
     let allowed = (screen == Screen::Welcome || state.vault.is_some())
         && (screen == Screen::Editor || !crate::editor::has_unsaved_changes(&state));
-    if allowed && screen == Screen::Rehearse {
+    if allowed && screen == Screen::Graph {
+        (State { screen, ..state }, vec![Effect::LoadGraph])
+    } else if allowed && screen == Screen::Rehearse {
         crate::setup::refresh_preview(State { screen, ..state })
     } else if allowed {
         (State { screen, ..state }, Vec::new())
@@ -194,6 +203,9 @@ fn vault_polled(state: State, result: Result<Option<VaultInfo>, String>) -> (Sta
                 vault: Some(info),
                 ..state
             };
+            if state.screen == Screen::Graph {
+                effects.push(Effect::LoadGraph);
+            }
             if state.screen != Screen::Rehearse {
                 return (state, effects);
             }

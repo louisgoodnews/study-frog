@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M4 (UI shell) in progress: EPIC-008 done, EPIC-009 (editor, preview, graph) next. **Date:** 2026-10-30. **Branch:** `main`.
+**Phase:** M4 (UI shell) complete; M5 (calendar and board) next. **Date:** 2026-10-30. **Branch:** `main`.
 
 ## What exists
 - Cargo workspace with 12 empty, documented crates (`crates/studyfrog-*`); `cargo check` passes.
@@ -43,15 +43,15 @@
 - Lowest-recall queue building is 3.9 ms for 10k items (a `powf` per comparison); cacheable later.
 
 ## Next task
-**EPIC-009:** TASK-0040 (Markdown editor widget) and TASK-0041 (preview renderer), then the link graph
-(TASK-0042 layout in SoA form, TASK-0043 render benchmark). Live state: [BOARD.md](BOARD.md).
+**M5:** calendar and planning (EPIC-010) and the kanban board (EPIC-011); the issue files still have to be
+seeded from the roadmap. Live state: [BOARD.md](BOARD.md).
 
 ## Using the app now
 `cargo run -p studyfrog-app`: pick a vault folder, create a stack and cards, set up a run (any order or filter),
 rehearse from the keyboard. `--smoke-frames N` draws N frames and exits.
 
-## M4 so far
-- Window, navigation, vault chooser with remembered vault, library overview, stack browser (filter, create stack
+## M4 summary
+- Link graph (pan/zoom/click, 5k nodes in ~4 ms per frame, zero allocation) and a Markdown editor with live preview and conflict-safe saving. Window, navigation, vault chooser with remembered vault, library overview, stack browser (filter, create stack
   and card), settings view, run setup with presets/filters/live count, rehearsal screen and summary.
 - Pure `update(State, Msg) -> (State, Vec<Effect>)`; effects run on a worker thread; vault use cases live in
   `studyfrog-service`. About 70 UI tests, all headless (egui_kittest), plus an accessibility audit.

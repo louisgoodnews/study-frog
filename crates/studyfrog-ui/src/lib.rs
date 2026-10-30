@@ -10,6 +10,7 @@ pub mod editor;
 pub mod effect;
 pub mod exec;
 pub mod exec_run;
+pub mod graph;
 pub mod model;
 pub mod msg;
 pub mod run_state;
