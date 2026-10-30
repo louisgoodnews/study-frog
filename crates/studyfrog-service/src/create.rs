@@ -102,11 +102,11 @@ fn write_new(path: &Path, text: &str) -> Result<(), ServiceError> {
     fs::rename(&temp, path).map_err(io)
 }
 
-fn meta(title: &str, ids: IdSource) -> Meta {
+fn meta(title: &str, tags: &[String], ids: IdSource) -> Meta {
     Meta {
         uid: compose_ulid(ids.now_ms, ids.random),
         title: title.to_owned(),
-        tags: Vec::new(),
+        tags: tags.to_vec(),
         aliases: Vec::new(),
         created: Some(UnixMs(i64::try_from(ids.now_ms).unwrap_or(i64::MAX))),
         updated: None,
@@ -123,7 +123,7 @@ fn render_error(e: RenderError) -> ServiceError {
 }
 
 /// Bring the index up to date after a write and describe the vault.
-fn refresh(session: &mut VaultSession) -> Result<VaultInfo, ServiceError> {
+pub(crate) fn refresh(session: &mut VaultSession) -> Result<VaultInfo, ServiceError> {
     reindex(&mut session.conn, &session.root).map_err(ServiceError::Store)?;
     session.poll = prime(&session.root).map_err(ServiceError::Store)?;
     vault_info(&session.root, &session.conn)
@@ -138,7 +138,7 @@ pub fn create_stack(
     check_title(title)?;
     let folder = unique_name(&slug(title), "", |n| session.root.join(n).exists());
     let doc = Doc::Stack(StackDoc {
-        meta: meta(title, ids),
+        meta: meta(title, &[], ids),
         description: String::new(),
         body: String::new(),
         extra: Vec::new(),
@@ -158,6 +158,51 @@ pub fn default_card_title(front: &str) -> String {
     line.chars().take(60).collect()
 }
 
+/// What a new card holds.
+pub struct NewCard<'a> {
+    /// Title; empty means "derive it from the front".
+    pub title: &'a str,
+    /// Prompt side.
+    pub front: &'a str,
+    /// Answer side.
+    pub back: &'a str,
+    /// Tags.
+    pub tags: &'a [String],
+}
+
+/// Write one card file into the stack at `folder` without reindexing; the caller reindexes once
+/// after writing any number of cards.
+pub fn write_card(
+    session: &VaultSession,
+    folder: &str,
+    card: &NewCard<'_>,
+    ids: IdSource,
+) -> Result<(), ServiceError> {
+    if card.front.trim().is_empty() || card.back.trim().is_empty() {
+        return Err(invalid("a card needs both a front and a back"));
+    }
+    let title = if card.title.trim().is_empty() {
+        default_card_title(card.front)
+    } else {
+        card.title.trim().to_owned()
+    };
+    check_title(&title)?;
+    let dir: PathBuf = session.root.join(folder);
+    if !dir.join(STACK_FILE).is_file() {
+        return Err(invalid("that folder is not a stack"));
+    }
+    let name = unique_name(&slug(&title), ".md", |n| dir.join(n).exists());
+    let doc = Doc::Card(CardDoc {
+        meta: meta(&title, card.tags, ids),
+        reversible: false,
+        front: card.front.trim_end().to_owned(),
+        back: card.back.trim_end().to_owned(),
+        extra: Vec::new(),
+    });
+    let text = render_doc(&doc).map_err(render_error)?;
+    write_new(&dir.join(name), &text)
+}
+
 /// Create a card in the stack at `folder` (vault-relative). An empty title is derived from the front.
 pub fn create_card(
     session: &mut VaultSession,
@@ -167,28 +212,12 @@ pub fn create_card(
     back: &str,
     ids: IdSource,
 ) -> Result<VaultInfo, ServiceError> {
-    if front.trim().is_empty() || back.trim().is_empty() {
-        return Err(invalid("a card needs both a front and a back"));
-    }
-    let title = if title.trim().is_empty() {
-        default_card_title(front)
-    } else {
-        title.trim().to_owned()
+    let card = NewCard {
+        title,
+        front,
+        back,
+        tags: &[],
     };
-    check_title(&title)?;
-    let dir: PathBuf = session.root.join(folder);
-    if !dir.join(STACK_FILE).is_file() {
-        return Err(invalid("that folder is not a stack"));
-    }
-    let name = unique_name(&slug(&title), ".md", |n| dir.join(n).exists());
-    let doc = Doc::Card(CardDoc {
-        meta: meta(&title, ids),
-        reversible: false,
-        front: front.trim_end().to_owned(),
-        back: back.trim_end().to_owned(),
-        extra: Vec::new(),
-    });
-    let text = render_doc(&doc).map_err(render_error)?;
-    write_new(&dir.join(name), &text)?;
+    write_card(session, folder, &card, ids)?;
     refresh(session)
 }

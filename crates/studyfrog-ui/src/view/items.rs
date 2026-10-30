@@ -63,20 +63,98 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 fn card_form(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let d = &state.browser.draft;
+    let (b, d) = (&state.browser, &state.browser.draft);
     ui.separator();
     ui.heading("New card");
-    let fields = [
-        (DraftField::Title, "Card title (optional)", &d.title, 1),
-        (DraftField::Front, "Card front", &d.front, 3),
-        (DraftField::Back, "Card back", &d.back, 3),
-    ];
+    card_types(state, ui, out);
+    let hint = b
+        .card_type
+        .as_deref()
+        .and_then(|id| state.extensions.card_types.iter().find(|t| t.0 == id))
+        .map(|t| t.2.clone());
+    let fields: Vec<(DraftField, &str, &String, usize)> = match &hint {
+        Some(_) => vec![(DraftField::Front, "Source text", &d.front, 4)],
+        None => vec![
+            (DraftField::Title, "Card title (optional)", &d.title, 1),
+            (DraftField::Front, "Card front", &d.front, 3),
+            (DraftField::Back, "Card back", &d.back, 3),
+        ],
+    };
+    if let Some(h) = &hint {
+        ui.weak(h);
+    }
     for (field, label, current, rows) in fields {
         if let Some(text) = text_field(ui, label, current, "", rows) {
             out.push(Msg::DraftEdited(field, text));
         }
     }
-    if ui.button("Add card").clicked() {
+    if ui
+        .button(if hint.is_some() {
+            "Add cards"
+        } else {
+            "Add card"
+        })
+        .clicked()
+    {
         out.push(Msg::AddCardClicked);
     }
+    import_panel(state, ui, out);
+}
+
+/// "Basic" and every registered card type, as a row of choices (only when extensions added some).
+fn card_types(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if state.extensions.card_types.is_empty() {
+        return;
+    }
+    let chosen = &state.browser.card_type;
+    ui.horizontal_wrapped(|ui| {
+        ui.label("Card type:");
+        if ui
+            .selectable_label(chosen.is_none(), "Basic (front and back)")
+            .clicked()
+        {
+            out.push(Msg::CardTypeChosen(None));
+        }
+        for (id, name, _) in &state.extensions.card_types {
+            if ui
+                .selectable_label(chosen.as_deref() == Some(id), name)
+                .clicked()
+            {
+                out.push(Msg::CardTypeChosen(Some(id.clone())));
+            }
+        }
+    });
+}
+
+/// Import cards from a file with one of the registered importers.
+fn import_panel(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if state.extensions.importers.is_empty() {
+        return;
+    }
+    ui.separator();
+    ui.heading("Import from a file");
+    let kinds: Vec<String> = state
+        .extensions
+        .importers
+        .iter()
+        .map(|i| i.1.clone())
+        .collect();
+    ui.weak(format!("Reads: {}", kinds.join("; ")));
+    if let Some(text) = text_field(
+        ui,
+        "File to import",
+        &state.browser.import_path,
+        "/path/to/file.tsv",
+        1,
+    ) {
+        out.push(Msg::ImportPathEdited(text));
+    }
+    ui.horizontal(|ui| {
+        if ui.button("Browse…").clicked() {
+            out.push(Msg::BrowseImportClicked);
+        }
+        if ui.button("Import cards").clicked() {
+            out.push(Msg::ImportClicked);
+        }
+    });
 }

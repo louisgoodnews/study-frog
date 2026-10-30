@@ -11,6 +11,7 @@ use studyfrog_service::document::{LoadedDoc, Saved};
 use studyfrog_service::reports::ReportBundle;
 use studyfrog_store::overview::LinkGraph;
 
+use crate::import_ui::ImportOutcome;
 use crate::kanban::BoardMsg;
 use crate::planner::PlanMsg;
 use crate::reading_test::ReadingTestMsg;
@@ -30,6 +31,18 @@ pub enum Msg {
     },
     /// The vault path field changed.
     PathEdited(String),
+    /// A card type was chosen in the new-card form (`None`: an ordinary card).
+    CardTypeChosen(Option<String>),
+    /// The path of the file to import changed.
+    ImportPathEdited(String),
+    /// "Browse" was activated next to the import path.
+    BrowseImportClicked,
+    /// The file dialog closed: the chosen file, or `None`.
+    ImportFilePicked(Option<String>),
+    /// "Import cards" was activated.
+    ImportClicked,
+    /// Cards were made by an import or a card type (or not).
+    Imported(Result<ImportOutcome, String>),
     /// "Choose folder" was activated.
     BrowseVaultClicked,
     /// The folder dialog closed: the chosen folder, or `None` when cancelled or unavailable.

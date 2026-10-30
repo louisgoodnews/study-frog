@@ -1,6 +1,7 @@
 #![allow(dead_code, clippy::unwrap_used, clippy::expect_used)] // shared test helpers
 //! Temporary vaults and a loop that runs effects until the UI is idle.
 
+pub mod ext;
 pub mod flow;
 pub mod runs;
 pub mod views;

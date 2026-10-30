@@ -14,4 +14,10 @@ workspace = true
 studyfrog-ui.workspace = true
 studyfrog-slm.workspace = true
 studyfrog-candle.workspace = true
+studyfrog-ext.workspace = true
+studyfrog-ext-example.workspace = true
 rfd.workspace = true
+
+[[bin]]
+name = "studyfrog"
+path = "src/main.rs"

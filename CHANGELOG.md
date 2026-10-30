@@ -8,6 +8,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Extensions: `studyfrog-ext` (importers and card types as plain data, a registry), an example extension
+  (tab-separated importer, cloze card type) that changes no core crate, a card-type chooser and an "Import from
+  a file" panel in the library, `docs/EXTENDING.md` and ADR 0008 (TASK-0063, 0064, 0065).
+- Packaging: `scripts/package-appimage.sh`, a desktop entry and icon, and a CI workflow that runs the gate and
+  builds the AppImage (TASK-0067; the AppImage itself is not built yet, see STATUS).
 - Choose the vault folder with the native dialog (through the desktop portal; the app binary supplies it, the
   UI crate does not link the dialog library) (TASK-0092).
 - Shuffling is its own switch: any order, spaced repetition included, can be shuffled without changing which
@@ -142,6 +147,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - `rustfmt.toml`, `clippy.toml`, `rust-toolchain.toml` (1.99.1), `.gitignore`.
 
 ### Changed
+- The lowest-recall queue order is 7 times faster (recall computed once per item) (TASK-0066).
+- The application binary is called `studyfrog`.
 - Dev builds use line-table debug info only, so the many test binaries link much faster.
 - `md`'s RFC 3339 codec shares `core::civil` instead of carrying its own date arithmetic.
 - Daily limits and run creation use the local day (was the UTC day).

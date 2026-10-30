@@ -92,6 +92,12 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::AchievementsChecked(result) => crate::achievements::checked(state, result),
         Msg::Plan(m) => crate::planner::update(state, m),
         Msg::Board(m) => crate::kanban::update(state, m),
+        import @ (Msg::CardTypeChosen(_)
+        | Msg::ImportPathEdited(_)
+        | Msg::BrowseImportClicked
+        | Msg::ImportFilePicked(_)
+        | Msg::ImportClicked
+        | Msg::Imported(_)) => crate::import_ui::update(state, import),
         Msg::SetAnswerEngine(engine) => crate::reading_test::set_answer_engine(state, engine),
         Msg::ReadingTest(m) => crate::reading_test::update(state, m),
         run @ (Msg::StartRunClicked

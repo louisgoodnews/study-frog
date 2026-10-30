@@ -58,9 +58,15 @@ pub fn sort_by_order(items: &mut [&Candidate], order: Order, now: UnixMs, p: &Pa
             items.sort_by(|a, b| a.last_review.cmp(&b.last_review).then_with(|| base(a, b)))
         }
         Order::LowestRetrievability => {
-            items.sort_by(|a, b| {
-                keyed(recall(a, now, p), recall(b, now, p), f32::total_cmp).then_with(|| base(a, b))
+            // The recall of an item costs a `powf`; compute it once per item, not once per comparison.
+            let mut keyed_items: Vec<(Option<f32>, &Candidate)> =
+                items.iter().map(|c| (recall(c, now, p), *c)).collect();
+            keyed_items.sort_by(|(ka, a), (kb, b)| {
+                keyed(*ka, *kb, f32::total_cmp).then_with(|| base(a, b))
             });
+            for (slot, (_, c)) in items.iter_mut().zip(keyed_items) {
+                *slot = c;
+            }
         }
     }
 }

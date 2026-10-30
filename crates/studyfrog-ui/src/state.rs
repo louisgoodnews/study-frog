@@ -94,6 +94,19 @@ pub struct Browser {
     pub new_stack: String,
     /// Card being written.
     pub draft: CardDraft,
+    /// The card type of the new-card form (`None`: an ordinary front and back).
+    pub card_type: Option<String>,
+    /// The file to import cards from, as typed.
+    pub import_path: String,
+}
+
+/// What the user can pick from the registered extensions.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct Extensions {
+    /// Card types: (id, name, hint).
+    pub card_types: Vec<(String, String, String)>,
+    /// Importers: (id, name, file extensions).
+    pub importers: Vec<(String, String, Vec<String>)>,
 }
 
 /// Everything the views render.
@@ -128,6 +141,8 @@ pub struct State {
     pub planner: Planner,
     /// The kanban board.
     pub kanban: Kanban,
+    /// The registered importers and card types.
+    pub extensions: Extensions,
     /// The latest reports.
     pub reports: Option<ReportBundle>,
     /// The latest achievement check.

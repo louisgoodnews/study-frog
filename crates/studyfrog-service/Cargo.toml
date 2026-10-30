@@ -21,6 +21,7 @@ studyfrog-srs.workspace = true
 studyfrog-rehearsal.workspace = true
 studyfrog-slm.workspace = true
 studyfrog-achieve.workspace = true
+studyfrog-ext.workspace = true
 studyfrog-report.workspace = true
 chrono.workspace = true
 rusqlite.workspace = true

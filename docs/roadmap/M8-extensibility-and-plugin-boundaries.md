@@ -19,9 +19,9 @@
 
 ## Exit criteria
 
-- [ ] Documented extension traits exist for card types and importers
-- [ ] An example extension is built without modifying core crates
-- [ ] Profiling pass done; all benchmarks within budget
+- [x] Documented extension traits exist for card types and importers
+- [x] An example extension is built without modifying core crates
+- [x] Profiling pass done; all benchmarks within budget
 - [ ] Linux package (AppImage or Flatpak) builds from CI
 
 ## Out of scope

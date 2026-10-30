@@ -121,6 +121,9 @@ fn create_stack(state: State) -> (State, Vec<Effect>) {
 }
 
 fn add_card(state: State) -> (State, Vec<Effect>) {
+    if state.browser.card_type.is_some() {
+        return crate::import_ui::add_from_type(state);
+    }
     let Selection::Stack(folder) = &state.browser.selection else {
         return (
             State {

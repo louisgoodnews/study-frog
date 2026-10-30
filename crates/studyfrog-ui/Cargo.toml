@@ -24,6 +24,7 @@ studyfrog-board.workspace = true
 studyfrog-calendar.workspace = true
 studyfrog-graph.workspace = true
 studyfrog-service.workspace = true
+studyfrog-ext.workspace = true
 eframe.workspace = true
 
 [dev-dependencies]

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=StudyFrog
+Comment=Notes, flashcards and rehearsal with spaced repetition
+Exec=studyfrog
+Icon=studyfrog
+Categories=Education;Utility;
+Terminal=false
+StartupWMClass=StudyFrog

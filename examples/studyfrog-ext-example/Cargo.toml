@@ -1,0 +1,17 @@
+[package]
+name = "studyfrog-ext-example"
+description = "Example extension: a tab-separated importer and a cloze card type. Depends only on studyfrog-ext."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-ext.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true

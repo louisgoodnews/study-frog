@@ -4,9 +4,9 @@
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
-- A Cargo workspace of 16 crates under `crates/` (layering enforced by `scripts/check-deps.sh`, ADR 0001):
+- A Cargo workspace of 17 crates under `crates/` plus an example extension under `examples/` (layering enforced by `scripts/check-deps.sh`, ADR 0001):
   `core`, `config`, `md`, `store`, `srs`, `rehearsal`, `calendar`, `board`, `graph`, `slm`, `candle`,
-  `report`, `achieve`, `service`, `ui`, `app`. No inherent `impl` blocks; files are at most 250 lines.
+  `report`, `achieve`, `ext`, `service`, `ui`, `app`. No inherent `impl` blocks; files are at most 250 lines.
 - The app (`cargo run -p studyfrog-app`): vault of Markdown notes, cards and questions with links and a graph;
   FSRS-6 and SM-2 scheduling per stack; rehearsal runs in any order with latency capture, difficulty marks, a
   reading-speed baseline and a review after each run; typed answers compared offline (language model or word
@@ -34,11 +34,19 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   is read on demand, with no hot reload; after a scheduler switch `Review.elapsed_days` restarts for the new
   algorithm.
 - **Performance:** lowest-recall queue building is 3.9 ms for 10k items (a `powf` per comparison).
+- **Extensions** are compiled in (no plugin loading, no sandbox); an extension cannot keep settings or state.
 - Macro-generated impl detection in `repo-lint` is heuristic. Citations marked `[u]` in `docs/research/` are
   unverified from memory. No git remote is configured.
 
 ## Next
-M8: extension points (card types, importers), an example extension, a profiling pass and a Linux package.
+- **Build the AppImage.** `scripts/package-appimage.sh --appdir-only` assembles and verifies the package contents
+  (a 23 MB stripped binary that starts; it links only libc and loads OpenGL, X11, Wayland and xkbcommon from
+  the host). Packing needs `appimagetool`, which the script downloads and runs; the permission check in the
+  last session refused that download, so run `scripts/package-appimage.sh` yourself, or allow it. The CI
+  workflow (`.github/workflows/ci.yml`) runs the gate and the same script; it passes `actionlint` but has never
+  run (no git remote).
+- **ADR 0008 (extensions as plain data) is Proposed:** please accept or change it.
+- After that: release notes and a version bump are the only M8 work left.
 
 ## Using the app now
 `cargo run -p studyfrog-app`: pick a vault folder, create a stack and cards, set up a run (any order or filter),

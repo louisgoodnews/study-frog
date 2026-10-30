@@ -3,7 +3,7 @@
 use eframe::egui;
 
 use crate::effect::Effect;
-use crate::host::Host;
+use crate::host::{Host, extensions_of};
 use crate::model::{Model, apply, frame};
 use crate::runtime::{Runtime, spawn};
 
@@ -19,10 +19,12 @@ pub struct StudyFrogApp {
 
 /// Create the app and ask the worker for the saved settings.
 pub fn app_new(ctx: egui::Context, smoke_frames: Option<u32>, host: Host) -> StudyFrogApp {
+    let mut model = Model::default();
+    model.state.extensions = extensions_of(&host.registry);
     let runtime = spawn(ctx, host);
     let _ = runtime.effects.send(Effect::LoadAppSettings);
     StudyFrogApp {
-        model: Model::default(),
+        model,
         runtime,
         smoke_frames,
     }

@@ -18,9 +18,10 @@ declare -A allowed=(
   [achieve]="core"
   [board]="core"
   [calendar]="core"
-  [service]="core md config calendar board store srs rehearsal slm achieve report"
-  [ui]="core md config graph store srs rehearsal slm report achieve board calendar service"
-  [app]="ui slm candle"
+  [ext]=""
+  [service]="core md config calendar board store srs rehearsal slm achieve report ext"
+  [ui]="core md config graph store srs rehearsal slm report achieve board calendar service ext"
+  [app]="ui slm candle ext"
 )
 
 status=0
@@ -34,6 +35,15 @@ for crate in "${!allowed[@]}"; do
       *" $dep "*) ;;
       *) echo "forbidden dependency: studyfrog-$crate -> studyfrog-$dep"; status=1 ;;
     esac
+  done
+done
+# Example extensions may depend on studyfrog-ext and nothing else from this workspace.
+for manifest in examples/*/Cargo.toml; do
+  [ -f "$manifest" ] || continue
+  deps=$(sed -n '/^\[\(dev-\|build-\)\?dependencies\]/,/^\[/p' "$manifest" \
+    | grep -oE '^studyfrog-[a-z]+(-[a-z]+)*' | sed 's/^studyfrog-//' || true)
+  for dep in $deps; do
+    [ "$dep" = "ext" ] || { echo "forbidden dependency: $manifest -> studyfrog-$dep (examples use studyfrog-ext only)"; status=1; }
   done
 done
 [ $status -eq 0 ] && echo "check-deps: ok"

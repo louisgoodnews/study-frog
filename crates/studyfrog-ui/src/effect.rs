@@ -19,6 +19,24 @@ use crate::state::Selection;
 pub enum Effect {
     /// Read the per-user app settings.
     LoadAppSettings,
+    /// Ask the user for a file to import cards from.
+    PickImportFile,
+    /// Read a file and import its cards into a stack with the importer for its extension.
+    ImportFile {
+        /// Vault-relative stack folder.
+        folder: String,
+        /// Absolute path of the file.
+        path: String,
+    },
+    /// Make cards from one source text with a registered card type.
+    CreateFromType {
+        /// Vault-relative stack folder.
+        folder: String,
+        /// The card type's id.
+        type_id: String,
+        /// The text the user wrote.
+        source: String,
+    },
     /// Ask the user for a vault folder with the native dialog.
     PickVaultFolder,
     /// Open (and index) a vault folder.

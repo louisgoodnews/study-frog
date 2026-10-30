@@ -1,0 +1,88 @@
+//! Performing the import effects: read the file, run the extension, write the cards.
+
+use std::path::Path;
+
+use studyfrog_ext::registry::{find_card_type, importable_extensions, importer_for_file};
+use studyfrog_ext::types::{Faces, ImportedCard};
+use studyfrog_service::create::{IdSource, fresh_id_source};
+use studyfrog_service::import::import_cards;
+use studyfrog_service::session::ServiceError;
+
+use crate::exec::Worker;
+use crate::import_ui::ImportOutcome;
+use crate::msg::Msg;
+
+fn ids(now_ns: i64) -> Result<IdSource, ServiceError> {
+    fresh_id_source(u64::try_from(now_ns / 1_000_000).unwrap_or(0))
+}
+
+/// Ask for a file an importer can read.
+pub fn pick_file(w: &Worker) -> Msg {
+    let extensions = importable_extensions(&w.registry);
+    Msg::ImportFilePicked(
+        w.file_picker
+            .and_then(|pick| pick(&extensions))
+            .map(|p| p.display().to_string()),
+    )
+}
+
+/// Write cards into a stack and report; `Msg::Imported` either way.
+fn write(w: &mut Worker, folder: &str, cards: &[ImportedCard], now_ns: i64) -> Msg {
+    let Some(session) = &mut w.session else {
+        return Msg::Imported(Err("no vault is open".to_owned()));
+    };
+    let result = ids(now_ns)
+        .and_then(|ids| import_cards(session, folder, cards, ids))
+        .map(|(info, report)| ImportOutcome { info, report })
+        .map_err(|e| e.to_string());
+    Msg::Imported(result)
+}
+
+/// Read `path`, convert it with the importer for its extension, and write the cards.
+pub fn import_file(w: &mut Worker, folder: &str, path: &str, now_ns: i64) -> Msg {
+    let name = Path::new(path)
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or(path);
+    let Some(importer) = importer_for_file(&w.registry, name).copied() else {
+        let known = importable_extensions(&w.registry).join(", ");
+        return Msg::Imported(Err(format!(
+            "no importer reads that kind of file (known: {known})"
+        )));
+    };
+    let text = match std::fs::read_to_string(path) {
+        Ok(t) => t,
+        Err(e) => return Msg::Imported(Err(format!("{path}: {e}"))),
+    };
+    match (importer.import)(&text) {
+        Ok(cards) => write(w, folder, &cards, now_ns),
+        Err(e) => Msg::Imported(Err(format!("{}: {e}", importer.name))),
+    }
+}
+
+/// Expand one source text with a card type and write the cards.
+pub fn from_card_type(
+    w: &mut Worker,
+    folder: &str,
+    type_id: &str,
+    source: &str,
+    now_ns: i64,
+) -> Msg {
+    let Some(card_type) = find_card_type(&w.registry, type_id).copied() else {
+        return Msg::Imported(Err(format!("card type \"{type_id}\" is not available")));
+    };
+    match (card_type.expand)(source) {
+        Ok(faces) => {
+            let cards: Vec<ImportedCard> = faces
+                .into_iter()
+                .map(|Faces { front, back }| ImportedCard {
+                    front,
+                    back,
+                    ..ImportedCard::default()
+                })
+                .collect();
+            write(w, folder, &cards, now_ns)
+        }
+        Err(e) => Msg::Imported(Err(format!("{}: {e}", card_type.name))),
+    }
+}

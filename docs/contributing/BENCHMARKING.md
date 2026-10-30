@@ -63,6 +63,25 @@ Reports (`cargo bench -p studyfrog-report`; a simulated history of 103,596 revie
 Answer comparison (`cargo bench -p studyfrog-slm`): 21 us per comparison with the lexical runtime; the semantic
 runtime is measured by `cargo test --release -p studyfrog-candle -- --nocapture` (p95 about 75 ms, budget 150 ms).
 
+### Profiling pass (M8, 2026-10-30)
+Every benchmark of the workspace, run alone on the reference machine (`cargo bench --workspace`):
+
+| Bench | Result | Budget |
+|---|---|---|
+| rehearsal: 1000 items flipped and rated (2001 steps) | 39 us (about 20 ns per step) | under 10 us per step |
+| rehearsal: `build_queue` 10k spaced / shuffled / hardest first | 0.29 ms / 0.08 ms / 0.69 ms | none set |
+| rehearsal: `build_queue` 10k lowest recall | 3.39 ms before, **0.47 ms after** | none set |
+| srs: FSRS 100k cards / SM-2 100k cards | 3.4 ms / 0.85 ms | under 10 ms |
+| store: scan+parse / cold index / warm re-index, 10k notes | 205 ms / 437 ms / 36 ms | cold index under 3 s |
+| graph: layout step / projection, 5k nodes | 4.9 ms / 2 us | under 8 ms |
+| slm: lexical comparison of 30 words | 15 us | semantic p95 under 150 ms (measured 75 ms) |
+| report: retention / latency / backtest, 103k reviews | 0.44 / 1.5 / 8.2 ms | under 50 ms |
+
+All inside their budgets. The one hot spot was the lowest-recall order, whose comparator computed a `powf` twice
+per comparison; computing the recall once per item made it 7 times faster. Numbers wobble by 10 to 25 % between
+runs on this shared machine (the graph step read 4.0 ms in M4 and 4.9 ms now). `perf` is not installed here, so
+the pass used the benchmarks and the structure of the code, not a sampling profile.
+
 Allocation: `crates/studyfrog-graph/tests/allocs.rs` uses `dhat` as the test binary's global allocator and asserts
 0 allocations over 50 frames. This is the safe way to count allocations (no `unsafe` in our code).
 

@@ -4,9 +4,9 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (87) |
+| Backlog (0) | Ready (0) | In progress (1/3) | Review (0) | Blocked (0) | Done (91) |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+|  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 |  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
 |  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
@@ -68,6 +68,10 @@
 |  |  |  |  |  | [TASK-0060](docs/issues/tasks/TASK-0060-latency-distributions.md) Latency distributions (3) |
 |  |  |  |  |  | [TASK-0061](docs/issues/tasks/TASK-0061-review-load-forecast.md) Review-load forecast and backtest (5) |
 |  |  |  |  |  | [TASK-0062](docs/issues/tasks/TASK-0062-report-screens.md) Report screens and benchmark (3) |
+|  |  |  |  |  | [TASK-0063](docs/issues/tasks/TASK-0063-define-extension-points.md) Define extension points (3) |
+|  |  |  |  |  | [TASK-0064](docs/issues/tasks/TASK-0064-registry-as-plain-data.md) Registry as plain data (2) |
+|  |  |  |  |  | [TASK-0065](docs/issues/tasks/TASK-0065-example-extension-crate.md) Example card type and importer (5) |
+|  |  |  |  |  | [TASK-0066](docs/issues/tasks/TASK-0066-profiling-pass.md) Profiling pass (3) |
 |  |  |  |  |  | [TASK-0068](docs/issues/tasks/TASK-0068-run-plan-types-in-core.md) Run plan types in core (3) |
 |  |  |  |  |  | [TASK-0069](docs/issues/tasks/TASK-0069-practice-orders.md) Practice orders (5) |
 |  |  |  |  |  | [TASK-0070](docs/issues/tasks/TASK-0070-queue-filters.md) Queue filters (3) |
@@ -127,6 +131,9 @@
 | [STORY-0027](docs/issues/stories/STORY-0027-achievement-ui.md) Achievement UI (3) | done | 1/1 |
 | [STORY-0028](docs/issues/stories/STORY-0028-retention-and-latency-reports.md) Retention and latency reports (5) | done | 2/2 |
 | [STORY-0029](docs/issues/stories/STORY-0029-forecasting.md) Forecasting (8) | done | 2/2 |
+| [STORY-0030](docs/issues/stories/STORY-0030-extension-traits.md) Extension points (5) | done | 2/2 |
+| [STORY-0031](docs/issues/stories/STORY-0031-example-extension.md) Example extension (5) | done | 1/1 |
+| [STORY-0032](docs/issues/stories/STORY-0032-performance-and-packaging.md) Performance and packaging (5) | in_progress | 1/2 |
 | [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
 | [STORY-0034](docs/issues/stories/STORY-0034-stack-settings-sm-2-budgets-and-filter-persistence.md) Stack settings, SM-2, budgets and filter persistence (8) | done | 4/4 |
 | [STORY-0035](docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 12/12 |
@@ -150,5 +157,7 @@
 | [EPIC-013](docs/issues/epics/EPIC-013-comparison-scoring.md) Comparison scoring | done | 2/2 |
 | [EPIC-014](docs/issues/epics/EPIC-014-achievements.md) Achievements | done | 2/2 |
 | [EPIC-015](docs/issues/epics/EPIC-015-reporting-and-forecasting.md) Reporting and forecasting | done | 2/2 |
+| [EPIC-016](docs/issues/epics/EPIC-016-plugin-boundaries.md) Plugin boundaries | done | 2/2 |
+| [EPIC-017](docs/issues/epics/EPIC-017-release-hardening.md) Release hardening | in_progress | 0/1 |
 | [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |
 | [EPIC-019](docs/issues/epics/EPIC-019-rehearsal-insights.md) Rehearsal insights | done | 1/1 |

@@ -4151,6 +4151,8 @@ version = "0.1.0"
 dependencies = [
  "rfd",
  "studyfrog-candle",
+ "studyfrog-ext",
+ "studyfrog-ext-example",
  "studyfrog-slm",
  "studyfrog-ui",
 ]
@@ -4198,6 +4200,21 @@ name = "studyfrog-core"
 version = "0.1.0"
 dependencies = [
  "proptest",
+]
+
+[[package]]
+name = "studyfrog-ext"
+version = "0.1.0"
+dependencies = [
+ "proptest",
+]
+
+[[package]]
+name = "studyfrog-ext-example"
+version = "0.1.0"
+dependencies = [
+ "proptest",
+ "studyfrog-ext",
 ]
 
 [[package]]
@@ -4251,6 +4268,7 @@ dependencies = [
  "studyfrog-calendar",
  "studyfrog-config",
  "studyfrog-core",
+ "studyfrog-ext",
  "studyfrog-md",
  "studyfrog-rehearsal",
  "studyfrog-report",
@@ -4303,6 +4321,7 @@ dependencies = [
  "studyfrog-calendar",
  "studyfrog-config",
  "studyfrog-core",
+ "studyfrog-ext",
  "studyfrog-graph",
  "studyfrog-md",
  "studyfrog-rehearsal",

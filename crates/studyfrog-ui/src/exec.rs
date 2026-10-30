@@ -8,10 +8,8 @@ use studyfrog_core::run::RunMode;
 use studyfrog_core::settings::AppSettings;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
-use studyfrog_md::doc::Doc;
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 use studyfrog_service::create::{IdSource, create_card, create_stack, fresh_id_source};
-use studyfrog_service::document::{load_document, resolve_link, save_document};
 use studyfrog_service::queue::{NewRun, preview_queue};
 use studyfrog_service::session::{
     ServiceError, VaultInfo, VaultSession, current_settings, open_vault, poll_vault,
@@ -19,14 +17,16 @@ use studyfrog_service::session::{
 use studyfrog_service::timezone::local_day_window;
 use studyfrog_slm::models::Opened;
 
-use crate::host::{FolderPicker, Host};
+use studyfrog_ext::types::Registry;
+
+use crate::host::{FilePicker, FolderPicker, Host};
 use studyfrog_store::app_config::{read_app_settings, write_app_settings};
 use studyfrog_store::overview::list_items;
 
 use crate::effect::Effect;
 use crate::msg::Msg;
 use crate::state::Selection;
-use crate::{exec_plan, exec_run};
+use crate::{exec_doc, exec_import, exec_plan, exec_run};
 
 /// Executor state: where per-user settings live and which vault is open.
 pub struct Worker {
@@ -42,6 +42,10 @@ pub struct Worker {
     pub loader: Option<studyfrog_slm::models::Loader>,
     /// The native folder dialog, if the host has one.
     pub folder_picker: Option<FolderPicker>,
+    /// The native file dialog, if the host has one.
+    pub file_picker: Option<FilePicker>,
+    /// The importers and card types extensions registered.
+    pub registry: Registry,
 }
 
 /// A worker with nothing open.
@@ -53,6 +57,8 @@ pub fn worker_new(config_dir: Option<PathBuf>) -> Worker {
         slm: None,
         loader: None,
         folder_picker: None,
+        file_picker: None,
+        registry: Registry::default(),
     }
 }
 
@@ -66,6 +72,8 @@ pub fn worker_with_host(
         models_dir,
         loader: host.model_loader,
         folder_picker: host.folder_picker,
+        file_picker: host.file_picker,
+        registry: host.registry,
         ..worker_new(config_dir)
     }
 }
@@ -74,6 +82,13 @@ pub fn worker_with_host(
 pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
     let msg = match effect {
         Effect::LoadAppSettings => load_settings(w),
+        Effect::PickImportFile => exec_import::pick_file(w),
+        Effect::ImportFile { folder, path } => exec_import::import_file(w, &folder, &path, now_ns),
+        Effect::CreateFromType {
+            folder,
+            type_id,
+            source,
+        } => exec_import::from_card_type(w, &folder, &type_id, &source, now_ns),
         Effect::PickVaultFolder => Msg::VaultFolderPicked(
             w.folder_picker
                 .and_then(|pick| pick())
@@ -85,7 +100,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::LoadItems(selection) => load_items(w, &selection),
         Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
         Effect::StartRun { plan, mode } => exec_run::start(w, plan, mode, now_ns),
-        Effect::LoadGraph => load_graph_msg(w),
+        Effect::LoadGraph => exec_doc::load_graph_msg(w),
         Effect::LoadSessions => exec_plan::load_sessions(w, now_ns),
         Effect::SaveSession(s) => exec_plan::save(w, s, now_ns),
         Effect::DeleteSession(id) => exec_plan::delete(w, id),
@@ -94,9 +109,11 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::CheckAchievements => exec_run::achievements(w, now_ns),
         Effect::LoadBoard => exec_plan::load_board(w, now_ns),
         Effect::BoardCommand(op) => exec_plan::board_command(w, &op, now_ns),
-        Effect::LoadDocument(uid) => load_document_msg(w, uid),
-        Effect::SaveDocument { path, doc, hash } => save_document_msg(w, &path, &doc, hash, now_ns),
-        Effect::ResolveLink(target) => resolve_link_msg(w, target),
+        Effect::LoadDocument(uid) => exec_doc::load_document_msg(w, uid),
+        Effect::SaveDocument { path, doc, hash } => {
+            exec_doc::save_document_msg(w, &path, &doc, hash, now_ns)
+        }
+        Effect::ResolveLink(target) => exec_doc::resolve_link_msg(w, target),
         Effect::Rerate { item, expected, to } => exec_run::rerate(w, item, expected, to),
         Effect::LoadItem(uid) => exec_run::load_item(w, uid),
         Effect::ScoreAnswer {
@@ -203,37 +220,4 @@ fn preview(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
     Msg::PreviewReady(
         preview_queue(&session.conn, req, &current_settings(session)).map_err(|e| e.to_string()),
     )
-}
-
-fn load_document_msg(w: &Worker, uid: Uid) -> Msg {
-    match &w.session {
-        Some(s) => Msg::DocumentLoaded(uid, load_document(s, uid).map_err(|e| e.to_string())),
-        None => Msg::DocumentLoaded(uid, Err("no vault is open".to_owned())),
-    }
-}
-
-fn save_document_msg(w: &mut Worker, path: &str, doc: &Doc, hash: u64, now_ns: i64) -> Msg {
-    let Some(s) = &mut w.session else {
-        return Msg::Saved(Err("no vault is open".to_owned()));
-    };
-    Msg::Saved(
-        save_document(s, path, doc, hash, UnixMs(now_ns / 1_000_000)).map_err(|e| e.to_string()),
-    )
-}
-
-fn resolve_link_msg(w: &Worker, target: String) -> Msg {
-    let result = match &w.session {
-        Some(s) => resolve_link(s, &target).map_err(|e| e.to_string()),
-        None => Err("no vault is open".to_owned()),
-    };
-    Msg::LinkResolved(target, result)
-}
-
-fn load_graph_msg(w: &Worker) -> Msg {
-    match &w.session {
-        Some(s) => Msg::GraphLoaded(
-            studyfrog_store::overview::load_link_graph(&s.conn).map_err(|e| e.to_string()),
-        ),
-        None => Msg::GraphLoaded(Err("no vault is open".to_owned())),
-    }
 }
