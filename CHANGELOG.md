@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- `studyfrog-md`: in-house ULID and RFC 3339 codecs, front-matter fence/key-block splitter, typed
+  parser and renderer for stack/note/card/question with verbatim unknown keys, `???` splitter,
+  wikilink extraction, duplicate-id check; 25 tests incl. 1000-case round-trip property
+  (TASK-0020..0024). EPIC-005 complete.
 - `studyfrog-srs`: SM-2 (`sm2_next`, ease/interval rules from the original), `Sm2State` in core, and a
   criterion benchmark (100k cards: FSRS 2.9 ms, SM-2 0.72 ms); FSRS budget tightened to 10 ms
   (TASK-0018, TASK-0019). EPIC-004 and phase M1 complete.

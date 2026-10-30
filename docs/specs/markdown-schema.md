@@ -50,3 +50,16 @@ Body: prompt, `???`, reference answer.
   scanner skips the file and reports it rather than aborting.
 - Duplicate `id` across files is an error reported on both files.
 - Wikilink forms: `[[Title]]`, `[[Title|label]]`, `[[Title#Heading]]`; resolved by title or alias.
+
+## Implementation notes (M2)
+- **Key order on rewrite:** known keys are written in canonical order (common keys, then the
+  kind's own keys), defaults omitted. Unknown keys, and keys that belong to another kind, are kept
+  verbatim after them in their original relative order. Comments on known keys are not preserved.
+- **Single-line fields** (`title`, `tags`, `aliases`, `description`... entries) must be non-blank and
+  contain no control or Unicode line-break characters.
+- **`srs:`** accepts only `request_retention` for now; any other override key is an error.
+- **Timestamps:** RFC 3339, years 0000-9999; written as UTC with milliseconds.
+- **`???` separator:** first line that is exactly `???` outside a fenced code block (``` or ~~~);
+  a card or question without one is an error. Wikilinks may combine forms:
+  `[[Target#Heading|label]]`; empty targets are ignored. Links in code spans and fences are ignored.
+- **Stack body:** `_stack.md` may have a Markdown body; it is preserved.

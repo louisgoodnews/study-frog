@@ -10,8 +10,9 @@
 - Required keys on every item: `id` (ULID), `kind` (`note|card|question`), `title`.
 - Body is CommonMark parsed by `pulldown-cmark`; `[[wikilinks]]` are extracted by a small
   scanner over text events. A card or question body splits front/back on a line `???`.
-- Unknown front-matter keys are preserved on round-trip (stored as a remainder map).
-- The parser never rewrites a file unless the app changes it; rewrites preserve key order.
+- Unknown front-matter keys are preserved on round-trip as verbatim text blocks.
+- The parser never rewrites a file unless the app changes it. When it does, known keys are written
+  in canonical order and unknown keys follow verbatim (decided in M2; see the markdown-schema spec).
 
 ## YAML crate decision (resolved 2026-10-30)
 **`serde-saphyr` 2.0.0** (pure Rust, no libyaml/unsafe, MIT OR Apache-2.0, MSRV 1.89) for typed

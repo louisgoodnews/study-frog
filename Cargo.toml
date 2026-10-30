@@ -41,6 +41,8 @@ studyfrog-ui = { path = "crates/studyfrog-ui" }
 # third party (added at first use)
 criterion = { version = "0.8", default-features = false }
 proptest = "1"
+serde = { version = "1", features = ["derive"] }
+serde-saphyr = "2"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

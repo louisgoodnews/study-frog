@@ -2,7 +2,7 @@
 id: STORY-0010
 type: story
 title: Body parsing
-status: backlog
+status: done
 epic: EPIC-005
 parents: [EPIC-005]
 estimate: 5
@@ -19,8 +19,8 @@ Link graph and card content depend on it.
 Body parsing.
 
 ## Acceptance Criteria
-- [ ] Wikilinks extracted in all three forms
-- [ ] Card/question body split on a `???` line
+- [x] Wikilinks extracted in all three forms
+- [x] Card/question body split on a `???` line
 
 ## Design Notes
 Children: TASK-0023, TASK-0024.

@@ -2,7 +2,7 @@
 id: STORY-0009
 type: story
 title: Front-matter parse and render
-status: ready
+status: done
 epic: EPIC-005
 parents: [EPIC-005]
 estimate: 8
@@ -19,8 +19,8 @@ ADR 0005 (serde-saphyr, in-house splitter).
 Front-matter parse and render.
 
 ## Acceptance Criteria
-- [ ] Fence splitter and typed front-matter structs per docs/specs/markdown-schema.md
-- [ ] Round-trip property holds
+- [x] Fence splitter and typed front-matter structs per docs/specs/markdown-schema.md
+- [x] Round-trip property holds
 
 ## Design Notes
 Children: TASK-0020, TASK-0021, TASK-0022.
