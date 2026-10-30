@@ -9,3 +9,6 @@ Scope is the crate short name (`srs`, `md`, `ui`) or `docs`/`repo`.
 - Reference work items in the footer: `Refs: TASK-0016`, `Closes: STORY-0007`.
 - Breaking changes: `!` after the type and a `BREAKING CHANGE:` footer.
 - Performance commits include before/after numbers.
+- Every commit that changes behaviour, tooling or docs content adds a `CHANGELOG.md` line under
+  `Unreleased`; commits that change an issue's status also regenerate `BOARD.md`
+  (`scripts/board.sh`).

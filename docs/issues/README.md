@@ -49,3 +49,9 @@ and must name the blocker under Dependencies.
 - Commits reference items in the footer (`Refs: TASK-0004`), see
   [COMMIT_CONVENTIONS](../contributing/COMMIT_CONVENTIONS.md).
 - Phase scope and the full planned tree live in [ROADMAP](../roadmap/ROADMAP.md).
+
+## Board and changelog
+- [`BOARD.md`](../../BOARD.md) is **generated** from the `status:` of every issue
+  (`scripts/board.sh`). Change the status in the issue file, regenerate, commit both together.
+  `scripts/check.sh` fails if the board is stale. WIP limit: 3 items `in_progress`.
+- [`CHANGELOG.md`](../../CHANGELOG.md) gets an entry for every visible change.

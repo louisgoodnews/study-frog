@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Full local gate: format, lints, tests, file size, layering, no-OOP scan.
+# Full local gate: format, lints, tests, file size, layering, no-OOP scan, issues, board.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -15,5 +15,6 @@ step "line count (max 250)";         scripts/linecount.sh 250
 step "dependency direction";         scripts/check-deps.sh
 step "no inherent impl blocks";      scripts/check-impls.sh
 step "issue front-matter";           scripts/check-issues.sh
+step "BOARD.md is current + WIP";    scripts/board.sh --check
 
 printf '\ncheck: all gates passed\n'

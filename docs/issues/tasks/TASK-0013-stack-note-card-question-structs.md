@@ -2,7 +2,7 @@
 id: TASK-0013
 type: task
 title: Stack, Note, Card, Question structs
-status: ready
+status: in_progress
 epic: EPIC-003
 parents: [STORY-0005]
 estimate: 3
