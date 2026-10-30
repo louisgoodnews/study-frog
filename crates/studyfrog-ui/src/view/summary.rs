@@ -130,6 +130,7 @@ fn suggestion(
     ui.label(match s.reason {
         Reason::KnownAndFast => "This item was rather easy for you.",
         Reason::NewAndFast => "This new item went by very fast: it may be harder than it looked.",
+        Reason::Slow => "This took you a long time to read: it may be harder than you rated it.",
     });
     if let Some((words, tenths)) = row.reading {
         ui.weak(format!(

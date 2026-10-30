@@ -4,9 +4,7 @@
 use studyfrog_core::event::{Difficulty, EventKind};
 use studyfrog_core::review::Rating;
 use studyfrog_core::uid::Uid;
-use studyfrog_rehearsal::reading::{
-    Suggestion, item_records, reading_params_default, suggest, word_count,
-};
+use studyfrog_rehearsal::reading::{Suggestion, item_records, suggest, word_count};
 
 use crate::run_state::RunView;
 
@@ -31,7 +29,7 @@ pub struct ReviewRow {
 
 /// Items that were rated or marked, in the order they first appeared.
 pub fn review_rows(run: &RunView) -> Vec<ReviewRow> {
-    let params = reading_params_default();
+    let params = run.reading;
     item_records(&run.events)
         .into_iter()
         .filter(|r| r.rated.is_some() || r.marked.is_some())

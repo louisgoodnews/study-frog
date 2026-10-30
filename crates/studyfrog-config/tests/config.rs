@@ -113,6 +113,7 @@ fn app_settings_round_trip_awkward_paths_and_track_recent_vaults() {
     let s = AppSettings {
         vault: Some("/home/me/\"notes\" \\ tab\there \u{e9}".into()),
         recent: vec!["/a".into(), "C:\\vault".into()],
+        reading_wpm: Some(215),
     };
     assert_eq!(parse_app_settings(&render_app_settings(&s)), Ok(s));
     assert_eq!(parse_app_settings("").unwrap(), AppSettings::default());
@@ -138,7 +139,26 @@ fn app_settings_round_trip_awkward_paths_and_track_recent_vaults() {
 proptest! {
     #[test]
     fn any_vault_path_round_trips(path in "\\PC{0,40}") {
-        let s = AppSettings { vault: Some(path.clone()), recent: vec![path] };
+        let s = AppSettings { vault: Some(path.clone()), recent: vec![path], reading_wpm: None };
         prop_assert_eq!(parse_app_settings(&render_app_settings(&s)), Ok(s));
     }
+}
+
+#[test]
+fn reading_speed_is_stored_and_must_be_plausible() {
+    assert_eq!(
+        parse_app_settings("reading_wpm = 215\n")
+            .unwrap()
+            .reading_wpm,
+        Some(215)
+    );
+    assert_eq!(parse_app_settings("").unwrap().reading_wpm, None);
+    for bad in ["reading_wpm = 10\n", "reading_wpm = 5000\n"] {
+        let e = parse_app_settings(&format!("vault = \"/v\"\n{bad}")).unwrap_err();
+        assert!(
+            e.message.contains("between 50 and 1000") && e.line == Some(2),
+            "{e:?}"
+        );
+    }
+    assert!(parse_app_settings("reading_wpm = \"fast\"\n").is_err());
 }

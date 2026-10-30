@@ -19,11 +19,13 @@
     - TASK-0054 Answer input in rehearsal
     - TASK-0055 SLM benchmark
 
-- **EPIC-014** Rehearsal insights (added during M6)
+- **EPIC-019** Rehearsal insights (added during M6)
   - **STORY-0035** Marks, reading speed and the post-run review
     - TASK-0081 Difficulty marks during a run
     - TASK-0082 Reading-speed rating suggestion
     - TASK-0083 Post-run review and applying a suggestion
+    - TASK-0084 Reading-speed test
+    - TASK-0085 Slow reads suggest difficulty
 
 ## Exit criteria
 

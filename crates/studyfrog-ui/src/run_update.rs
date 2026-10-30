@@ -79,7 +79,9 @@ fn run_ready(state: State, result: Result<Run, String>) -> (State, Vec<Effect>) 
     state.rehearse.starting = false;
     match result {
         Ok(run) => {
-            state.rehearse.run = Some(run_view_new(session_new(run), state.now));
+            let mut view = run_view_new(session_new(run), state.now);
+            view.reading = studyfrog_rehearsal::reading::reading_params(state.app.reading_wpm);
+            state.rehearse.run = Some(view);
             act(state, Action::Start)
         }
         Err(e) => error(state, format!("Could not start the run: {e}")),

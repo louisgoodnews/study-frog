@@ -82,9 +82,15 @@ Distraction-free: the prompt, a progress counter and the time on the current ite
 - **Reading time.** The time between revealing the answer and rating it, minus paused time. Baseline: 238
   words per minute (average silent reading of non-fiction); words are whitespace-separated. Backs of fewer
   than 8 words are ignored.
-- **Suggested rating.** Only a fast read (under 75 % of the expected time) suggests anything:
-  a known item rated Good is suggested Easy ("rather easy for you"); a new item rated Good or Easy is
-  suggested Hard (it went by too fast to have been read). Ratings of Again or Hard are never softened.
+- **Reading speed.** The baseline is the user's measured speed (`reading_wpm` in `app.toml`) or 238. The
+  Settings screen measures it: the user reads a lorem ipsum text of about 120 words, says when finished, and
+  the speed is words divided by time; a result outside 50 to 1000 words per minute is rejected as not being
+  reading. A run uses the speed in force when it started.
+- **Suggested rating.** Only a clearly fast or slow read suggests anything. Fast (under 75 % of the expected
+  time): a known item rated Good is suggested Easy ("rather easy for you"); a new item rated Good or Easy is
+  suggested Hard (it went by too fast to have been read). Slow (over 200 % of the expected time): a struggle
+  shows even if the answer came, so Good is suggested Hard and Easy is suggested Good. Ratings of Again or
+  Hard are never softened.
 - **Review.** After the run, each item shows its previous rating, the user's mark and rating, and the
   suggestion with the reason and the reading time. In a schedule-updating run the user can apply a
   suggestion: the rating of the item's latest review is replaced and its schedule rebuilt by replaying the

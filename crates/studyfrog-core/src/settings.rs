@@ -42,6 +42,11 @@ pub fn vault_settings_default() -> VaultSettings {
 /// Most recent vaults remembered by the app.
 pub const MAX_RECENT_VAULTS: usize = 8;
 
+/// Slowest accepted reading speed, in words per minute.
+pub const MIN_READING_WPM: u32 = 50;
+/// Fastest accepted reading speed, in words per minute.
+pub const MAX_READING_WPM: u32 = 1000;
+
 /// Per-user application settings (not part of any vault): where the app last worked.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct AppSettings {
@@ -49,6 +54,8 @@ pub struct AppSettings {
     pub vault: Option<String>,
     /// Recently opened vaults, newest first, without duplicates.
     pub recent: Vec<String>,
+    /// Measured reading speed in words per minute; `None` means the built-in default is used.
+    pub reading_wpm: Option<u32>,
 }
 
 /// `settings` after opening `path`: it becomes the current vault and moves to the front of the recent list.
@@ -66,5 +73,6 @@ pub fn with_opened_vault(settings: &AppSettings, path: &str) -> AppSettings {
     AppSettings {
         vault: Some(path.to_owned()),
         recent,
+        ..settings.clone()
     }
 }

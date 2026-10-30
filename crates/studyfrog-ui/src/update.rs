@@ -81,6 +81,7 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::LinkResolved(..)) => crate::editor::update(state, edit),
         Msg::Plan(m) => crate::planner::update(state, m),
         Msg::Board(m) => crate::kanban::update(state, m),
+        Msg::ReadingTest(m) => crate::reading_test::update(state, m),
         run @ (Msg::StartRunClicked
         | Msg::RunReady(_)
         | Msg::RunAction(_)

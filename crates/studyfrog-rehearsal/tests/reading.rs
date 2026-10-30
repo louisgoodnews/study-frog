@@ -8,7 +8,8 @@ use studyfrog_core::event::{
 use studyfrog_core::review::Rating;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::reading::{
-    ItemRecord, Reason, expected_ms, item_records, reading_params_default, suggest, word_count,
+    ItemRecord, Reason, expected_ms, item_records, measured_wpm, reading_params,
+    reading_params_default, suggest, word_count,
 };
 
 fn ev(seq: u32, t_ms: u32, item: Option<u128>, kind: EventKind) -> RunEvent {
@@ -141,6 +142,60 @@ fn an_item_that_comes_back_is_judged_by_its_last_showing() {
     );
 }
 
+#[test]
+fn a_slow_read_suggests_one_step_harder_but_never_softens_a_low_rating() {
+    let p = reading_params_default();
+    let slow = |rated, ms| suggest(20, ms, Some(Rating::Good), rated, &p);
+    let good = slow(Rating::Good, 12_000).unwrap();
+    assert_eq!((good.rating, good.reason), (Rating::Hard, Reason::Slow));
+    assert_eq!(slow(Rating::Easy, 12_000).unwrap().rating, Rating::Good);
+    assert_eq!(slow(Rating::Hard, 12_000), None);
+    assert_eq!(slow(Rating::Again, 12_000), None);
+    assert_eq!(
+        suggest(7, 60_000, None, Rating::Good, &p),
+        None,
+        "short texts say nothing"
+    );
+    assert_eq!(
+        suggest(20, 12_000, None, Rating::Good, &p).unwrap().reason,
+        Reason::Slow,
+        "new or not"
+    );
+}
+
+#[test]
+fn a_measured_speed_moves_the_baseline() {
+    let slow_reader = reading_params(Some(120));
+    assert_eq!(expected_ms(20, &slow_reader), 10_000);
+    assert_eq!(
+        suggest(20, 5000, Some(Rating::Good), Rating::Good, &slow_reader)
+            .unwrap()
+            .rating,
+        Rating::Easy
+    );
+    assert_eq!(
+        suggest(
+            20,
+            9000,
+            Some(Rating::Good),
+            Rating::Good,
+            &reading_params(None)
+        ),
+        None
+    );
+    assert_eq!(reading_params(Some(5)).words_per_minute, 50, "clamped");
+    assert_eq!(reading_params(None), reading_params_default());
+}
+
+#[test]
+fn a_timed_reading_gives_words_per_minute_only_when_plausible() {
+    assert_eq!(measured_wpm(120, 30_000), Some(240));
+    assert_eq!(measured_wpm(120, 0), None);
+    assert_eq!(measured_wpm(0, 30_000), None);
+    assert_eq!(measured_wpm(120, 1_000), None, "7200 wpm is not reading");
+    assert_eq!(measured_wpm(10, 600_000), None, "1 wpm is not reading");
+}
+
 proptest! {
     #[test]
     fn a_suggestion_never_repeats_or_softens_the_given_rating(
@@ -153,7 +208,11 @@ proptest! {
             prop_assert!(s.rating != rated);
             prop_assert!(words >= p.min_words);
             prop_assert!(rated >= Rating::Good, "a low rating is never overridden");
-            prop_assert_eq!(s.rating == Rating::Easy, previous.is_some());
+            match s.reason {
+                Reason::Slow => prop_assert!(s.rating < rated, "slow means harder"),
+                Reason::KnownAndFast => prop_assert!(s.rating == Rating::Easy && previous.is_some()),
+                Reason::NewAndFast => prop_assert!(s.rating == Rating::Hard && previous.is_none()),
+            }
         }
     }
 }

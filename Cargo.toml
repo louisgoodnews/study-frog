@@ -76,6 +76,10 @@ disallowed_methods = "deny"
 unwrap_used = "warn"
 expect_used = "warn"
 
+# Smaller debug info: much faster linking of the many test binaries, backtraces keep line numbers.
+[profile.dev]
+debug = "line-tables-only"
+
 [profile.release]
 lto = "thin"
 codegen-units = 1

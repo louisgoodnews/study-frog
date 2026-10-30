@@ -33,7 +33,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         Screen::Library => library::draw(state, ui, &mut out),
         Screen::Rehearse if state.rehearse.run.is_some() => run::draw(state, ui, &mut out),
         Screen::Rehearse => setup::draw(state, ui, &mut out),
-        Screen::Settings => settings::draw(state, ui),
+        Screen::Settings => settings::draw(state, ui, &mut out),
         Screen::Editor => editor::draw(state, ui, &mut out),
         Screen::Graph => graph::draw(state, ui, &mut out),
         Screen::Calendar => calendar::draw(state, ui, &mut out),

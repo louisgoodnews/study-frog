@@ -202,3 +202,24 @@ fn the_executor_refuses_to_change_a_review_that_does_not_exist() {
         msgs[0]
     );
 }
+
+#[test]
+fn a_slow_read_is_suggested_one_step_harder_with_its_reason() {
+    let m = finished_run(12.0, Some(Rating::Good), Rating::Good);
+    let r = &review_rows(m.state.rehearse.run.as_ref().unwrap())[0];
+    let s = r.suggestion.unwrap();
+    assert_eq!(
+        (s.rating, s.reason),
+        (Rating::Hard, studyfrog_rehearsal::reading::Reason::Slow)
+    );
+    let mut h = harness(m);
+    h.run();
+    assert!(
+        h.query_by_label("This took you a long time to read: it may be harder than you rated it.")
+            .is_some()
+    );
+    assert!(
+        h.query_by_label("Change the rating of Numbers to Hard")
+            .is_some()
+    );
+}

@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Reading speed can be measured on the Settings screen (read a lorem ipsum text, press done) and is kept in
+  `app.toml`; rehearsal uses it as the baseline. Reading much slower than expected now suggests a harder
+  rating (Good to Hard, Easy to Good) (TASK-0084, 0085).
 - Rehearsal: mark an item Easy, Medium or Difficult while it is on screen (buttons or E/M/D); reading speed
   against a 238 words-per-minute baseline suggests a rating; the post-run review shows previous rating,
   own mark and rating and the suggestion, and can apply it, rebuilding the item's schedule (TASK-0081,
@@ -124,6 +127,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - `rustfmt.toml`, `clippy.toml`, `rust-toolchain.toml` (1.99.1), `.gitignore`.
 
 ### Changed
+- Dev builds use line-table debug info only, so the many test binaries link much faster.
 - `md`'s RFC 3339 codec shares `core::civil` instead of carrying its own date arithmetic.
 - Daily limits and run creation use the local day (was the UTC day).
 - Queues are built from the index (`studyfrog_store::overview::load_indexed_items`) instead of a parsed

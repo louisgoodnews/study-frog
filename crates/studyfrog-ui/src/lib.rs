@@ -18,6 +18,7 @@ pub mod model;
 pub mod msg;
 pub mod plan_msg;
 pub mod planner;
+pub mod reading_test;
 pub mod review;
 pub mod run_state;
 pub mod run_update;

@@ -45,7 +45,7 @@
 ## Next task
 **M7** achievements and reporting (see [ROADMAP](docs/roadmap/ROADMAP.md)). Live state: [BOARD.md](BOARD.md).
 
-**Open flags:** reading-speed constants (238 wpm, 75 %, 8 words) are defaults in code, not settings; marks are stored but not yet aggregated; the default `min_score` (0.7) is too strict for the semantic runtime on a 10-pair sample;
+**Open flags:** the fast/slow thresholds (75 %, 200 %) and the 8-word minimum are defaults in code; the speed itself is measured; marks are stored but not yet aggregated; the default `min_score` (0.7) is too strict for the semantic runtime on a 10-pair sample;
 answer scores are not stored with run events; the "force word matching" setting does not exist yet.
 
 ## Using the app now

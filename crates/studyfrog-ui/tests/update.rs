@@ -36,6 +36,7 @@ fn starting_with_a_remembered_vault_opens_it() {
     let app = AppSettings {
         vault: Some("/v/notes".into()),
         recent: vec!["/v/notes".into()],
+        reading_wpm: None,
     };
     let (s, fx) = update(State::default(), Msg::Started { app, error: None });
     assert_eq!((s.path_input.as_str(), s.opening), ("/v/notes", true));

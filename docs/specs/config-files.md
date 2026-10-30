@@ -26,6 +26,15 @@ Every key is optional; omitted keys use the vault defaults. A `_stack.toml` with
 folder is ignored. Daily limits count distinct items per day from the review history (see
 [storage-schema](storage-schema.md)); a stack switched from FSRS to SM-2 (or back) keeps its items scheduled.
 
+## `app.toml` (`$XDG_CONFIG_HOME/studyfrog/`, written by the app)
+```toml
+vault = "/home/me/notes"       # the vault opened last
+recent = ["/home/me/notes"]    # recently opened vaults, newest first
+reading_wpm = 215              # measured reading speed, 50 to 1000; absent = the default of 238
+```
+`reading_wpm` is set by the reading-speed test on the Settings screen ("Use the default speed" removes it).
+A value outside 50 to 1000 is an error with its line.
+
 ## Not configuration
 Per-item properties stay in front-matter ([markdown-schema](markdown-schema.md)): `id`, `kind`, `title`, `tags`,
 `aliases`, timestamps, `reversible`, `rehearse_title`, `accepted`, `rubric`, `min_score`.

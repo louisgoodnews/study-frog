@@ -7,6 +7,7 @@ use crate::editor::Editor;
 use crate::graph::GraphState;
 use crate::kanban::Kanban;
 use crate::planner::Planner;
+use crate::reading_test::ReadingTest;
 use crate::setup::Rehearse;
 pub use studyfrog_store::overview::ItemRow;
 
@@ -120,4 +121,6 @@ pub struct State {
     pub planner: Planner,
     /// The kanban board.
     pub kanban: Kanban,
+    /// The reading-speed test on the settings screen.
+    pub reading_test: ReadingTest,
 }

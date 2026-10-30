@@ -4,6 +4,7 @@ use std::collections::{HashMap, HashSet};
 
 use studyfrog_core::event::{Latency, RunEvent};
 use studyfrog_core::uid::Uid;
+use studyfrog_rehearsal::reading::{ReadingParams, reading_params_default};
 use studyfrog_rehearsal::session::Session;
 pub use studyfrog_service::compare::Scored;
 pub use studyfrog_service::content::ItemContent;
@@ -26,6 +27,8 @@ pub struct RunView {
     pub latencies: Vec<Latency>,
     /// The answer being typed (answer mode).
     pub answer: String,
+    /// The reading speed assumptions in force when the run started.
+    pub reading: ReadingParams,
     /// Items whose rating was replaced by the suggested one after the run.
     pub applied: HashSet<Uid>,
     /// How the submitted answer compared with the reference, once scored.
@@ -43,6 +46,7 @@ pub fn run_view_new(session: Session, started_time: f64) -> RunView {
         events: Vec::new(),
         latencies: Vec::new(),
         answer: String::new(),
+        reading: reading_params_default(),
         applied: HashSet::new(),
         scored: None,
         started_time,

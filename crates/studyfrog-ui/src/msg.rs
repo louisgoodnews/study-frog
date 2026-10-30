@@ -11,6 +11,7 @@ use studyfrog_store::overview::LinkGraph;
 
 use crate::kanban::BoardMsg;
 use crate::planner::PlanMsg;
+use crate::reading_test::ReadingTestMsg;
 use crate::run_state::{ItemContent, Scored};
 use crate::setup::SetupEdit;
 use crate::state::{ItemRow, Screen, Selection, VaultInfo};
@@ -135,6 +136,8 @@ pub enum Msg {
     Plan(PlanMsg),
     /// Something happened on the board screen.
     Board(BoardMsg),
+    /// Something happened in the reading-speed test.
+    ReadingTest(ReadingTestMsg),
 }
 
 /// A change in the editor.

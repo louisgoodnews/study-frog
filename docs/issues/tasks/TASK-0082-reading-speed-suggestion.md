@@ -3,7 +3,7 @@ id: TASK-0082
 type: task
 title: Reading-speed rating suggestion
 status: done
-epic: EPIC-014
+epic: EPIC-019
 parents: [STORY-0035]
 estimate: 3
 labels: [m6, rehearsal]
