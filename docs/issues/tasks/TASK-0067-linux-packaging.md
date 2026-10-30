@@ -2,7 +2,7 @@
 id: TASK-0067
 type: task
 title: Linux packaging (AppImage)
-status: in_progress
+status: review
 epic: EPIC-017
 parents: [STORY-0032]
 estimate: 5
@@ -20,12 +20,12 @@ AppImage was chosen over Flatpak: one self-contained file, no runtime or sandbox
 Linux packaging (AppImage).
 
 ## Acceptance Criteria
-- [ ] `scripts/package-appimage.sh` assembles an AppDir and packs an AppImage
+- [x] `scripts/package-appimage.sh` assembles an AppDir and packs an AppImage
 - [ ] A CI workflow checks the repository and builds the AppImage as an artifact
-- [ ] The AppImage was built and started
+- [x] The AppImage was built and started
 
 ## Design Notes
-The AppDir is assembled and verified here; packing needs `appimagetool`, which the script downloads, and downloading and running that tool was refused by the auto-mode permission check in this session, so the AppImage itself has not been built, and the workflow has been linted (`actionlint`) but not run.
+Built on 2026-10-30 with the owner's one-off permission to download the pinned `appimagetool` 1.9.0: `StudyFrog-0.1.0-x86_64.AppImage`, 9.5 MB, SHA-256 `40721ef05693a763941ae10d4599ffb8583ece40ae324dda24e7933e2e6825fd`. It starts directly (FUSE) and with `APPIMAGE_EXTRACT_AND_RUN=1`; `--smoke-frames 30` opened a window on the reference desktop and exited 0. Still open: the CI workflow has been linted with `actionlint` but never run (no git remote), so "builds from CI" is unverified; this item stays in review until it has run once.
 
 ## Dependencies
 TASK-0066.

@@ -40,12 +40,10 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   unverified from memory. No git remote is configured.
 
 ## Next
-- **Build the AppImage.** `scripts/package-appimage.sh --appdir-only` assembles and verifies the package contents
-  (a 23 MB stripped binary that starts; it links only libc and loads OpenGL, X11, Wayland and xkbcommon from
-  the host). Packing needs `appimagetool`, which the script downloads and runs; the permission check in the
-  last session refused that download, so run `scripts/package-appimage.sh` yourself, or allow it. The CI
-  workflow (`.github/workflows/ci.yml`) runs the gate and the same script; it passes `actionlint` but has never
-  run (no git remote).
+- **The AppImage builds and starts** (`scripts/package-appimage.sh`: 9.5 MB, SHA-256 `40721ef0...6825fd`, stripped
+  binary, no libraries beyond libc; OpenGL, X11, Wayland and xkbcommon come from the host). The CI workflow
+  (`.github/workflows/ci.yml`) passes `actionlint` but has never run because there is no git remote: that is the
+  one unmet M8 exit criterion ("builds from CI").
 - Then cut the release by the steps in [RELEASING](docs/contributing/RELEASING.md); the notes are drafted in
   [RELEASE_NOTES_0.1.0](docs/RELEASE_NOTES_0.1.0.md). The version is already 0.1.0, so there is no bump.
 

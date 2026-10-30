@@ -22,7 +22,7 @@
 - [x] Documented extension traits exist for card types and importers
 - [x] An example extension is built without modifying core crates
 - [x] Profiling pass done; all benchmarks within budget
-- [ ] Linux package (AppImage or Flatpak) builds from CI
+- [ ] Linux package (AppImage or Flatpak) builds from CI (the AppImage builds and starts locally; the CI workflow has not run yet)
 
 ## Out of scope
 

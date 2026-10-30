@@ -12,7 +12,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   (tab-separated importer, cloze card type) that changes no core crate, a card-type chooser and an "Import from
   a file" panel in the library, `docs/EXTENDING.md` and ADR 0008 (TASK-0063, 0064, 0065).
 - Packaging: `scripts/package-appimage.sh`, a desktop entry and icon, and a CI workflow that runs the gate and
-  builds the AppImage (TASK-0067; the AppImage itself is not built yet, see STATUS).
+  builds the AppImage (TASK-0067). The 0.1.0 AppImage builds and starts locally; the workflow has not run yet.
 - Choose the vault folder with the native dialog (through the desktop portal; the app binary supplies it, the
   UI crate does not link the dialog library) (TASK-0092).
 - Shuffling is its own switch: any order, spaced repetition included, can be shuffled without changing which
