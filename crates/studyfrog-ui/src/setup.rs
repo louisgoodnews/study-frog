@@ -26,11 +26,25 @@ pub enum Preview {
     Failed(String),
 }
 
+/// The three steps of the setup: what to rehearse, how, and a last look before starting.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum SetupStep {
+    /// Choose the stacks (and kinds, tags).
+    #[default]
+    What,
+    /// Configure the run.
+    How,
+    /// Review the settings and begin.
+    Review,
+}
+
 /// State of the rehearse screen's setup.
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct Rehearse {
     /// The form.
     pub form: SetupForm,
+    /// The step on screen.
+    pub step: SetupStep,
     /// Items that would be rehearsed.
     pub preview: Preview,
     /// A run is being created.
@@ -77,6 +91,16 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
                 ..state
             })
         }
+        Msg::SetupStep(step) => (
+            State {
+                rehearse: Rehearse {
+                    step,
+                    ..state.rehearse.clone()
+                },
+                ..state
+            },
+            Vec::new(),
+        ),
         Msg::PreviewReady(result) => {
             let preview = match result {
                 Ok(n) => Preview::Count(n),

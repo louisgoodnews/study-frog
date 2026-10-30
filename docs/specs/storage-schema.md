@@ -68,6 +68,12 @@ turns runs left idle, running or paused into `aborted` and closes their log with
 - `run.shuffle` (0 or 1). Shuffling became a switch of its own instead of an order; runs stored with the order
   `shuffled` were converted to `sequential` with the switch on.
 
+## Schema v8: calendar entry kinds and reminders
+- `session.kind` (`study`, `task`, `appointment`, `exam`, `deadline`; existing rows are `study`).
+- `session_reminder(session_id, minutes_before)`: when to remind, ascending; at most five, none beyond four weeks.
+- `reminder_fired(session_id, date, minutes_before)`: which reminder was shown for which occurrence, so it shows
+  once. A reminder missed while the app was closed still shows once, until its occurrence has ended.
+
 ## Vault rules (M2)
 - Only `.md` files are indexed; names starting with `.` (and everything inside such folders) are skipped, as are symlinks.
 - A **stack** is a folder containing `_stack.md`. **Stacks nest**: a stack folder inside another stack folder is a

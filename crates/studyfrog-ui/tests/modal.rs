@@ -30,6 +30,7 @@ fn outcome(path: &str, title: &str, m: &Model) -> Result<Box<CreateOutcome>, Str
             title: title.into(),
             path: path.into(),
         },
+        warnings: Vec::new(),
     }))
 }
 
@@ -120,6 +121,7 @@ fn submitting_sends_one_request_with_clean_values_and_a_second_press_waits() {
             answer: "Hello".into(),
             tags: vec!["geo".into(), "easy".into()],
             parent: Some("french".into()),
+            due: None,
         }]
     );
     assert!(form(&m).busy);
@@ -142,7 +144,7 @@ fn a_finished_creation_closes_the_dialog_or_keeps_it_for_the_next_one() {
         let o = outcome("french/q.md", "Q?", &m);
         modal(&mut m, ModalMsg::Created(o))
     };
-    assert!(matches!(&fx[..], [Effect::LoadItems(_)]) || fx.is_empty());
+    assert!(fx.contains(&Effect::LoadBoard) && fx.contains(&Effect::LoadSessions));
     let f = form(&m);
     assert_eq!(
         (f.text.as_str(), f.answer.as_str(), f.title.as_str(), f.busy),
@@ -198,6 +200,10 @@ fn a_new_stack_is_opened_and_a_refusal_keeps_the_form_with_its_reason() {
     assert_eq!(m.state.screen, Screen::Library);
     assert_eq!(
         fx,
-        [Effect::LoadItems(Selection::Stack("french/verbs".into()))]
+        [
+            Effect::LoadItems(Selection::Stack("french/verbs".into())),
+            Effect::LoadBoard,
+            Effect::LoadSessions
+        ]
     );
 }

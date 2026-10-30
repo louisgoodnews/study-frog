@@ -6,7 +6,9 @@ use crate::effect::Effect;
 use crate::msg::Msg;
 use crate::nav::navigate;
 use crate::run_update;
-use crate::setup::{Preset, Rehearse, SetupEdit, apply_edit, form_for_preset, refresh_preview};
+use crate::setup::{
+    Preset, Rehearse, SetupEdit, SetupStep, apply_edit, form_for_preset, refresh_preview,
+};
 use crate::state::{Notice, NoticeKind, Screen, State};
 
 /// Messages of the home screen.
@@ -71,6 +73,7 @@ fn rehearse_stack(state: State, folder: &str) -> (State, Vec<Effect>) {
             rehearse: Rehearse {
                 form,
                 run: None,
+                step: SetupStep::How,
                 ..state.rehearse.clone()
             },
             ..state

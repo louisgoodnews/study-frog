@@ -1,11 +1,20 @@
 //! The session form: its data, edits, and the validated conversion to a calendar [`Session`].
 //! Pure: no egui, no I/O.
 
-use studyfrog_calendar::session::{Ends, Repeat, Session};
+use studyfrog_calendar::session::{Ends, EventKind, Repeat, Session};
 use studyfrog_core::civil::{
     Date, LocalTime, format_date, format_minute, parse_date, parse_minute,
 };
 use studyfrog_core::uid::Uid;
+
+/// The reminder lead times the forms offer, in minutes before the start.
+pub const REMINDER_CHOICES: [(u32, &str); 5] = [
+    (0, "At the time"),
+    (15, "15 minutes before"),
+    (60, "1 hour before"),
+    (1440, "1 day before"),
+    (10080, "1 week before"),
+];
 
 /// How the session repeats, without the numbers.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -58,6 +67,10 @@ pub struct SessionForm {
     pub ends_value: String,
     /// Notes.
     pub notes: String,
+    /// What kind of entry it is.
+    pub kind: EventKind,
+    /// Reminder lead times in minutes.
+    pub reminders: Vec<u32>,
     /// Dates already cancelled (kept when editing).
     pub cancelled: Vec<Date>,
 }
@@ -87,6 +100,10 @@ pub enum FormEdit {
     EndsValue(String),
     /// The notes field.
     Notes(String),
+    /// The kind of entry.
+    Kind(EventKind),
+    /// A reminder lead time (minutes) on or off.
+    Reminder(u32),
 }
 
 /// A blank form for a session starting on `date`.
@@ -104,6 +121,8 @@ pub fn form_new(date: Date) -> SessionForm {
         ends: EndsKind::Forever,
         ends_value: String::new(),
         notes: String::new(),
+        kind: EventKind::default(),
+        reminders: vec![15],
         cancelled: Vec::new(),
     }
 }
@@ -134,6 +153,8 @@ pub fn form_from(s: &Session) -> SessionForm {
         ends,
         ends_value,
         notes: s.notes.clone(),
+        kind: s.kind,
+        reminders: s.reminders.clone(),
         cancelled: s.cancelled.clone(),
     }
 }
@@ -159,6 +180,11 @@ pub fn apply_form_edit(f: SessionForm, edit: FormEdit) -> SessionForm {
         FormEdit::Ends(ends) => SessionForm { ends, ..f },
         FormEdit::EndsValue(ends_value) => SessionForm { ends_value, ..f },
         FormEdit::Notes(notes) => SessionForm { notes, ..f },
+        FormEdit::Kind(kind) => SessionForm { kind, ..f },
+        FormEdit::Reminder(m) => SessionForm {
+            reminders: crate::modal_form::toggled(&f.reminders, m),
+            ..f
+        },
     }
 }
 
@@ -214,5 +240,7 @@ pub fn session_from_form(f: &SessionForm) -> Result<Session, String> {
         },
         cancelled: f.cancelled.clone(),
         notes: f.notes.clone(),
+        kind: f.kind,
+        reminders: f.reminders.clone(),
     })
 }

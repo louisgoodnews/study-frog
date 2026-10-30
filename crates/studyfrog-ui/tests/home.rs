@@ -5,9 +5,10 @@ mod common;
 
 use common::views::{assert_all_named, harness, open_model};
 use egui_kittest::kittest::Queryable;
+use studyfrog_calendar::session::EventKind;
 use studyfrog_core::plan::ItemKind;
 use studyfrog_core::uid::Uid;
-use studyfrog_service::home::{HomeSummary, StackDue, TodaySession};
+use studyfrog_service::home::{HomeSummary, StackDue, TodaySession, Upcoming};
 use studyfrog_store::home::RunRow;
 use studyfrog_store::overview::ItemRow;
 use studyfrog_ui::effect::Effect;
@@ -48,6 +49,19 @@ fn summary(ready: usize) -> HomeSummary {
             started_ms: 8 * DAY,
             rated: 5,
             skipped: 1,
+        }],
+        due_items: vec![ItemRow {
+            uid: Uid(8),
+            title: "Merci".into(),
+            kind: ItemKind::Card,
+            path: "french/b.md".into(),
+            due: Some(studyfrog_core::time::UnixMs(7 * DAY)),
+        }],
+        upcoming: vec![Upcoming {
+            title: "Final exam".into(),
+            kind: EventKind::Exam,
+            date: studyfrog_core::civil::date_new(2026, 11, 3).unwrap(),
+            start_minute: 600,
         }],
         sessions_today: vec![TodaySession {
             title: "Vocabulary".into(),
@@ -90,10 +104,16 @@ fn the_home_view_shows_what_is_due_and_what_happened_recently() {
         "Reviews today",
         "Rehearse French",
         "Bonjour",
+        "Merci",
     ] {
         assert!(h.query_all_by_label(text).count() >= 1, "missing {text:?}");
     }
     assert!(h.query_by_label_contains("2 days ago").is_some());
+    assert!(h.query_by_label_contains("3 days overdue").is_some());
+    assert!(
+        h.query_by_label_contains("2026-11-03 10:00  Final exam")
+            .is_some()
+    );
     assert!(h.query_by_label_contains("10:00–10:30").is_some());
     assert_all_named(&h, "home");
 }

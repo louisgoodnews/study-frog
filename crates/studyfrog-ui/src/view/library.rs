@@ -149,9 +149,18 @@ fn stack_card(o: &VaultOverview, s: &StackRow, default: Scheduler, ui: &mut egui
         );
     }
     ui.horizontal_wrapped(|ui| {
-        kit::pill(ui, &format!("{} cards", s.cards), p.accent);
-        kit::pill(ui, &format!("{} notes", s.notes), p.text_weak);
-        kit::pill(ui, &format!("{} questions", s.questions), p.text_weak);
+        for (n, word, color) in [
+            (s.cards, "cards", p.accent),
+            (s.notes, "notes", p.text_weak),
+            (s.questions, "questions", p.text_weak),
+        ] {
+            if n > 0 {
+                kit::pill(ui, &format!("{n} {word}"), color);
+            }
+        }
+        if s.cards + s.notes + s.questions == 0 {
+            kit::pill(ui, "empty", p.text_weak);
+        }
     });
     ui.label(
         RichText::new(format!(

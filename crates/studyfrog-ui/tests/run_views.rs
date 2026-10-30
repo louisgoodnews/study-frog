@@ -12,6 +12,7 @@ use studyfrog_core::run::{RunMode, RunState};
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::model::apply;
 use studyfrog_ui::msg::Msg;
+use studyfrog_ui::setup::SetupStep;
 use studyfrog_ui::state::Screen;
 
 fn session_state(h: &egui_kittest::Harness<'_, common::views::App>) -> RunState {
@@ -109,7 +110,10 @@ fn escape_stops_the_run_and_the_summary_offers_the_way_back() {
     h.get_by_label("Back to setup").click();
     h.run_steps(2);
     assert!(h.state().0.state.rehearse.run.is_none());
-    assert!(h.query_by_label("Start rehearsal").is_some());
+    assert!(
+        h.query_by_label("Next: configure").is_some(),
+        "back at the first step"
+    );
 }
 
 #[test]
@@ -165,6 +169,7 @@ fn the_start_button_needs_items_and_asks_for_a_run() {
     let mut m = open_model();
     apply(&mut m, Msg::Navigate(Screen::Rehearse));
     apply(&mut m, Msg::PreviewReady(Ok(0)));
+    apply(&mut m, Msg::SetupStep(SetupStep::Review));
     let mut h = harness(m);
     h.run();
     h.get_by_label("Start rehearsal").click();

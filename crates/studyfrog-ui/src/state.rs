@@ -129,6 +129,8 @@ pub struct State {
     pub opening: bool,
     /// A change check is running in the background.
     pub polling: bool,
+    /// Ticks since the vault opened, to space out the reminder checks.
+    pub reminder_ticks: u32,
     /// The stack browser.
     pub browser: Browser,
     /// The rehearse screen.

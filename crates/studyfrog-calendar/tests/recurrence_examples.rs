@@ -24,6 +24,8 @@ fn session(start: Date, repeat: Repeat, ends: Ends) -> Session {
         ends,
         cancelled: Vec::new(),
         notes: String::new(),
+        kind: Default::default(),
+        reminders: Vec::new(),
     }
 }
 

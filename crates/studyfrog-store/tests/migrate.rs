@@ -58,8 +58,8 @@ fn fresh_database_gets_every_table_and_is_idempotent() {
 
 #[test]
 fn upgrades_from_the_previous_version() {
-    const V8: Migration = Migration {
-        version: 8,
+    const V9: Migration = Migration {
+        version: 9,
         name: "extra",
         sql: "CREATE TABLE extra (x INTEGER);",
     };
@@ -71,8 +71,8 @@ fn upgrades_from_the_previous_version() {
     )
     .unwrap();
     let mut all = MIGRATIONS.to_vec();
-    all.push(V8);
-    assert_eq!(migrate(&mut conn, &all).unwrap(), 8);
+    all.push(V9);
+    assert_eq!(migrate(&mut conn, &all).unwrap(), 9);
     let kept: i64 = conn
         .query_row("SELECT COUNT(*) FROM review", [], |r| r.get(0))
         .unwrap();

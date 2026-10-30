@@ -1,5 +1,6 @@
 //! The data of the dialogs and toasts, and the small pure functions about it.
 
+use studyfrog_core::civil::parse_date;
 use studyfrog_service::create_more::{Created, NewKind};
 use studyfrog_store::overview::VaultOverview;
 
@@ -35,6 +36,10 @@ pub struct CreateForm {
     pub error: Option<String>,
     /// Waiting for the vault to write it.
     pub busy: bool,
+    /// For a stack: the date it is due, `YYYY-MM-DD`, or empty.
+    pub due: String,
+    /// For a stack with a due date: minutes before it at which to remind.
+    pub reminders: Vec<u32>,
 }
 
 /// A field of the create dialog.
@@ -48,6 +53,8 @@ pub enum Field {
     Answer,
     /// The tags.
     Tags,
+    /// The due date.
+    Due,
 }
 
 /// An in-app notification that can be clicked.
@@ -66,6 +73,8 @@ pub struct Toast {
 pub enum ToastAction {
     /// Open the vault dialog.
     OpenVaultDialog,
+    /// Open the calendar.
+    OpenCalendar,
 }
 
 /// What a create request produced.
@@ -75,6 +84,8 @@ pub struct CreateOutcome {
     pub info: VaultInfo,
     /// The new item.
     pub created: Created,
+    /// What could not be added to the board or the calendar.
+    pub warnings: Vec<String>,
 }
 
 /// Messages of the modals and toasts.
@@ -96,6 +107,8 @@ pub enum ModalMsg {
     SetParent(Option<String>),
     /// "Create another" changed.
     SetAnother(bool),
+    /// A reminder lead time was switched on or off.
+    ToggleReminder(u32),
     /// "Create" was activated.
     Submit,
     /// The vault answered.
@@ -143,6 +156,9 @@ pub fn problem(f: &CreateForm) -> Option<&'static str> {
         }
         NewKind::Question if blank(&f.text) || blank(&f.answer) => {
             Some("A question needs a prompt and a reference answer.")
+        }
+        NewKind::Stack if !blank(&f.due) && parse_date(f.due.trim()).is_none() => {
+            Some("The due date must look like 2026-12-31.")
         }
         NewKind::Stack => None,
         _ if f.parent.is_none() => Some("Choose the stack it goes into."),

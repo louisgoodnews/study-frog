@@ -121,6 +121,8 @@ fn todays_sessions_are_listed_with_their_stack_in_time_order() {
         ends: Ends::Forever,
         cancelled: Vec::new(),
         notes: String::new(),
+        kind: Default::default(),
+        reminders: Vec::new(),
     };
     save_session_checked(&mut s, make(1, "Evening", 19 * 60, None)).unwrap();
     save_session_checked(&mut s, make(2, "Morning drills", 8 * 60 + 30, Some(Uid(1)))).unwrap();
@@ -136,6 +138,48 @@ fn todays_sessions_are_listed_with_their_stack_in_time_order() {
             ("Morning drills", 510, Some("Deck")),
             ("Evening", 1140, None)
         ]
+    );
+}
+
+#[test]
+fn due_items_come_most_overdue_first_and_the_next_week_lists_other_days_only() {
+    let (_d, mut s) = vault("due-items");
+    review(&s, 10, NOON - 30 * DAY);
+    review(&s, 11, NOON - 20 * DAY);
+    review(&s, 12, NOON - 100); // not due yet
+    let today = utc_to_local(UnixMs(NOON), 0).date;
+    let on = |n: i64, id: u128, title: &str, kind| Session {
+        id: Uid(id),
+        title: title.into(),
+        stack: None,
+        start: LocalTime {
+            date: studyfrog_core::civil::add_days(today, n),
+            minute: 600,
+        },
+        duration_min: 30,
+        repeat: Repeat::Never,
+        ends: Ends::Forever,
+        cancelled: Vec::new(),
+        notes: String::new(),
+        kind,
+        reminders: Vec::new(),
+    };
+    use studyfrog_calendar::session::EventKind;
+    save_session_checked(&mut s, on(0, 1, "Today", EventKind::Task)).unwrap();
+    save_session_checked(&mut s, on(3, 2, "Exam", EventKind::Exam)).unwrap();
+    save_session_checked(&mut s, on(9, 3, "Far away", EventKind::Deadline)).unwrap();
+    let h = home_summary(&s, UnixMs(NOON), 0, day_from(UnixMs(NOON - 12 * 3_600_000))).unwrap();
+    let due: Vec<&str> = h.due_items.iter().map(|i| i.title.as_str()).collect();
+    assert_eq!(due, ["C10", "C11"]);
+    let next: Vec<(&str, EventKind)> = h
+        .upcoming
+        .iter()
+        .map(|u| (u.title.as_str(), u.kind))
+        .collect();
+    assert_eq!(
+        next,
+        [("Exam", EventKind::Exam)],
+        "not today, not beyond a week"
     );
 }
 

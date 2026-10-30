@@ -31,6 +31,8 @@ fn session(id: u128, title: &str, repeat: Repeat) -> Session {
         ends: Ends::Forever,
         cancelled: Vec::new(),
         notes: String::new(),
+        kind: Default::default(),
+        reminders: Vec::new(),
     }
 }
 
@@ -117,7 +119,7 @@ fn the_day_panel_offers_edit_delete_skip_and_rehearse() {
 fn the_session_form_sends_a_session_to_be_saved() {
     let mut h = harness(calendar_model());
     h.run();
-    h.get_by_label("Add session").click();
+    h.get_by_label("Add to calendar").click();
     h.run();
     h.get_by_label("Title").focus();
     h.get_by_label("Title").type_text("Maths");
@@ -125,7 +127,7 @@ fn the_session_form_sends_a_session_to_be_saved() {
     h.get_by_label("Weekly").click();
     h.run();
     assert!(h.query_by_label("Repeat every (interval)").is_some());
-    h.get_by_label("Save session").click();
+    h.get_by_label("Save entry").click();
     h.run();
     let saved = h.state().1.iter().find_map(|e| match e {
         Effect::SaveSession(s) => Some(s.clone()),

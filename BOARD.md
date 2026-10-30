@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (102) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (107) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
@@ -108,6 +108,11 @@
 |  |  |  |  |  | [TASK-0101](docs/issues/tasks/TASK-0101-home-page.md) Home page (5) |
 |  |  |  |  |  | [TASK-0102](docs/issues/tasks/TASK-0102-library-cards-and-item-rows.md) Library cards and item rows (3) |
 |  |  |  |  |  | [TASK-0103](docs/issues/tasks/TASK-0103-rehearsal-card-layout-and-progress-bar.md) Rehearsal card layout and progress bar (3) |
+|  |  |  |  |  | [TASK-0104](docs/issues/tasks/TASK-0104-ux-evidence-and-design-rules.md) UX evidence and design rules (2) |
+|  |  |  |  |  | [TASK-0105](docs/issues/tasks/TASK-0105-calendar-entry-kinds-and-reminders.md) Calendar entry kinds and reminders (5) |
+|  |  |  |  |  | [TASK-0106](docs/issues/tasks/TASK-0106-stack-due-date-and-new-items-on-the-board.md) Stack due date and new items on the board (3) |
+|  |  |  |  |  | [TASK-0107](docs/issues/tasks/TASK-0107-three-step-rehearsal-setup.md) Three-step rehearsal setup (3) |
+|  |  |  |  |  | [TASK-0108](docs/issues/tasks/TASK-0108-home-and-calendar-fill-the-window.md) Home and calendar fill the window (3) |
 
 ## Stories
 
@@ -151,6 +156,7 @@
 | [STORY-0036](docs/issues/stories/STORY-0036-top-bar-and-sidebar.md) Top bar and sidebar (8) | done | 3/3 |
 | [STORY-0037](docs/issues/stories/STORY-0037-create-dialog-and-nested-stacks.md) Create dialog, nested stacks and a gentler first launch (8) | done | 4/4 |
 | [STORY-0038](docs/issues/stories/STORY-0038-theme-home-page-library-and-rehearsal-screen.md) Theme, home page, library and rehearsal screen (8) | done | 4/4 |
+| [STORY-0039](docs/issues/stories/STORY-0039-evidence-based-ux-pass-calendar-entries-and-board-tracking.md) Evidence-based UX pass, calendar entries and board tracking (8) | done | 5/5 |
 
 ## Epics
 
@@ -175,4 +181,4 @@
 | [EPIC-017](docs/issues/epics/EPIC-017-release-hardening.md) Release hardening | in_progress | 0/1 |
 | [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |
 | [EPIC-019](docs/issues/epics/EPIC-019-rehearsal-insights.md) Rehearsal insights | done | 1/1 |
-| [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 3/3 |
+| [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 4/4 |

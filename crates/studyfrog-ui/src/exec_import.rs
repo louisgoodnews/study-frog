@@ -5,9 +5,10 @@ use std::path::Path;
 use studyfrog_ext::registry::{find_card_type, importable_extensions, importer_for_file};
 use studyfrog_ext::types::{Faces, ImportedCard};
 use studyfrog_service::create::{IdSource, fresh_id_source};
-use studyfrog_service::create_more::{NewItem, NewKind, create_item as create_one};
+use studyfrog_service::create_more::{NewItem, NewKind};
 use studyfrog_service::import::import_cards;
 use studyfrog_service::session::ServiceError;
+use studyfrog_service::track::{DueDate, create_tracked};
 
 use crate::exec::Worker;
 use crate::import_ui::ImportOutcome;
@@ -94,7 +95,7 @@ pub fn create_item(
     w: &mut Worker,
     kind: NewKind,
     [title, text, answer]: [&str; 3],
-    (tags, parent): (&[String], Option<&str>),
+    (tags, parent, due): (&[String], Option<&str>, Option<&DueDate>),
     now_ns: i64,
 ) -> Msg {
     let Some(session) = &mut w.session else {
@@ -109,8 +110,14 @@ pub fn create_item(
         parent,
     };
     let result = ids(now_ns)
-        .and_then(|ids| create_one(session, &item, ids))
-        .map(|(info, created)| Box::new(CreateOutcome { info, created }))
+        .and_then(|ids| create_tracked(session, &item, due, ids))
+        .map(|t| {
+            Box::new(CreateOutcome {
+                info: t.info,
+                created: t.created,
+                warnings: t.warnings,
+            })
+        })
         .map_err(|e| e.to_string());
     Msg::Modal(ModalMsg::Created(result))
 }

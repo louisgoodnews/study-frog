@@ -141,7 +141,7 @@ fn ticks_poll_once_at_a_time_and_only_with_a_vault() {
     assert_eq!(update(State::default(), Msg::Tick).1, []);
     let s = open_vault("/v/a");
     let (s, fx) = update(s, Msg::Tick);
-    assert_eq!(fx, [Effect::PollVault]);
+    assert_eq!(fx, [Effect::PollVault, Effect::CheckReminders]);
     assert!(s.polling);
     assert_eq!(
         update(s.clone(), Msg::Tick).1,

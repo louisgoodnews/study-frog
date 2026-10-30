@@ -10,6 +10,7 @@ use studyfrog_service::kanban::{apply_board_op, board_or_default};
 use studyfrog_service::planning::{
     cancel_occurrence, delete_session_checked, list_sessions, new_session_id, save_session_checked,
 };
+use studyfrog_service::reminders::take_due_reminders;
 use studyfrog_service::session::{ServiceError, VaultSession};
 use studyfrog_service::timezone::local_offset_minutes;
 
@@ -25,6 +26,18 @@ fn ids(now_ns: i64) -> Result<IdSource, ServiceError> {
 }
 
 /// Today's date on the user's clock.
+/// Reminders that came due; each is marked shown, so it is returned once.
+pub fn reminders(w: &Worker, now_ns: i64) -> Msg {
+    let now = UnixMs(now_ns / 1_000_000);
+    let result = match &w.session {
+        Some(session) => {
+            take_due_reminders(session, now, local_offset_minutes(now)).map_err(|e| e.to_string())
+        }
+        None => Ok(Vec::new()),
+    };
+    Msg::RemindersDue(result)
+}
+
 fn today(now_ns: i64) -> Date {
     let now = UnixMs(now_ns / 1_000_000);
     utc_to_local(now, local_offset_minutes(now)).date

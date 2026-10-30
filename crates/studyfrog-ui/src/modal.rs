@@ -4,6 +4,7 @@ use studyfrog_service::create_more::NewKind;
 
 use crate::browse::reload;
 use crate::effect::Effect;
+use crate::modal_form::{due_of, tags_of, toggled};
 use crate::state::{Notice, NoticeKind, Screen, Selection, State};
 
 pub use crate::modal_types::{
@@ -39,15 +40,9 @@ fn form_new(state: &State, kind: Option<NewKind>) -> CreateForm {
         another: false,
         error: None,
         busy: false,
+        due: String::new(),
+        reminders: vec![1440],
     }
-}
-
-fn tags_of(text: &str) -> Vec<String> {
-    text.split(',')
-        .map(str::trim)
-        .filter(|t| !t.is_empty())
-        .map(str::to_owned)
-        .collect()
 }
 
 fn with_form(state: State, f: impl FnOnce(CreateForm) -> CreateForm) -> (State, Vec<Effect>) {
@@ -78,6 +73,7 @@ fn submit(state: State) -> (State, Vec<Effect>) {
         answer: form.answer.clone(),
         tags: tags_of(&form.tags),
         parent: form.parent.clone(),
+        due: due_of(&form),
     };
     let (state, _) = with_form(state, |f| CreateForm {
         busy: true,
@@ -98,10 +94,20 @@ fn created(state: State, result: Result<Box<CreateOutcome>, String>) -> (State, 
             ..f
         }),
         Ok(outcome) => {
-            let CreateOutcome { info, created } = *outcome;
-            let notice = Some(Notice {
-                kind: NoticeKind::Info,
-                text: format!("Created \"{}\".", created.title),
+            let CreateOutcome {
+                info,
+                created,
+                warnings,
+            } = *outcome;
+            let notice = Some(match warnings.first() {
+                Some(w) => Notice {
+                    kind: NoticeKind::Error,
+                    text: format!("Created \"{}\", but {w}", created.title),
+                },
+                None => Notice {
+                    kind: NoticeKind::Info,
+                    text: format!("Created \"{}\".", created.title),
+                },
             });
             let new_stack = (form.kind == NewKind::Stack && !form.another)
                 .then(|| created.path.trim_end_matches("/_stack.md").to_owned());
@@ -127,7 +133,8 @@ fn created(state: State, result: Result<Box<CreateOutcome>, String>) -> (State, 
                 state.browser.selection = Selection::Stack(folder);
                 state.screen = Screen::Library;
             }
-            let effects = reload(&state.browser.selection);
+            let mut effects = reload(&state.browser.selection);
+            effects.extend([Effect::LoadBoard, Effect::LoadSessions]);
             (state, effects)
         }
     }
@@ -141,6 +148,7 @@ fn click_toast(state: State, i: usize) -> (State, Vec<Effect>) {
     state.toasts.remove(i);
     match toast.action {
         ToastAction::OpenVaultDialog => state.modal = Some(Modal::Vault),
+        ToastAction::OpenCalendar => return crate::nav::navigate(state, Screen::Calendar),
     }
     (state, Vec::new())
 }
@@ -192,6 +200,11 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
                 ..f
             },
             Field::Tags => CreateForm { tags: text, ..f },
+            Field::Due => CreateForm {
+                due: text,
+                error: None,
+                ..f
+            },
         }),
         ModalMsg::SetParent(parent) => with_form(state, |f| CreateForm {
             parent,
@@ -199,6 +212,10 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             ..f
         }),
         ModalMsg::SetAnother(another) => with_form(state, |f| CreateForm { another, ..f }),
+        ModalMsg::ToggleReminder(m) => with_form(state, |f| CreateForm {
+            reminders: toggled(&f.reminders, m),
+            ..f
+        }),
         ModalMsg::Submit => submit(state),
         ModalMsg::Created(result) => created(state, result),
         ModalMsg::ToastClicked(i) => click_toast(state, i),

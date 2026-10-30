@@ -27,6 +27,7 @@ fn the_executor_creates_nested_stacks_and_items_and_reports_refusals() {
             answer: answer.into(),
             tags: vec![],
             parent: parent.map(str::to_owned),
+            due: None,
         };
     let msgs = execute(
         &mut w,

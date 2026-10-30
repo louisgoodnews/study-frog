@@ -1,216 +1,117 @@
-//! The run setup screen: presets, order, filters, effect on the schedule, and a live item count.
+//! The run setup as three steps: choose what to rehearse, configure how, review and begin. The
+//! step bar lets anyone jump to any step; the Next and Back buttons are the guided route.
 
-use eframe::egui;
-use studyfrog_core::plan::{ItemKind, Order, ScheduleEffect, StateFilter};
-use studyfrog_core::run::RunMode;
+use eframe::egui::{self, RichText};
 
 use crate::msg::Msg;
-use crate::setup::{Preset, Preview, SetupEdit, SetupForm};
+use crate::setup::{Preview, SetupStep};
 use crate::state::State;
-use crate::view::widgets::text_field;
+use crate::theme::palette_of;
+use crate::view::{kit, setup_how, setup_review, setup_what};
 
-const PRESETS: [(Preset, &str); 5] = [
-    (Preset::Spaced, "Spaced repetition"),
-    (Preset::EverythingInOrder, "Everything, in order"),
-    (Preset::Shuffled, "Everything, shuffled"),
-    (Preset::Hardest, "Hardest first"),
-    (Preset::Stalest, "Not seen for longest"),
+const STEPS: [(SetupStep, &str, &str); 3] = [
+    (SetupStep::What, "1  What", "Choose the stacks"),
+    (SetupStep::How, "2  How", "Configure your run"),
+    (SetupStep::Review, "3  Review", "Check and begin"),
 ];
 
-const ORDERS: [(Order, &str); 6] = [
-    (Order::Due, "Due first"),
-    (Order::Sequential, "In order"),
-    (Order::HardestFirst, "Hardest first"),
-    (Order::EasiestFirst, "Easiest first"),
-    (Order::StalestFirst, "Not seen for longest"),
-    (Order::LowestRetrievability, "Most likely forgotten"),
-];
-
-const STATES: [(StateFilter, &str); 5] = [
-    (StateFilter::Any, "Any"),
-    (StateFilter::New, "New only"),
-    (StateFilter::Learned, "Already learned"),
-    (StateFilter::Due, "Due now"),
-    (StateFilter::NotDue, "Not due yet"),
-];
-
-const KINDS: [(ItemKind, &str); 3] = [
-    (ItemKind::Note, "Notes"),
-    (ItemKind::Card, "Cards"),
-    (ItemKind::Question, "Questions"),
-];
-
-fn edit(out: &mut Vec<Msg>, e: SetupEdit) {
-    out.push(Msg::Setup(e));
+fn go(out: &mut Vec<Msg>, step: SetupStep) {
+    out.push(Msg::SetupStep(step));
 }
 
 /// The whole screen.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let (form, preview) = (&state.rehearse.form, &state.rehearse.preview);
+    let step = state.rehearse.step;
     egui::ScrollArea::vertical().show(ui, |ui| {
-        ui.heading("Rehearse");
-        ui.label("Start from a preset, then adjust anything below.");
-        ui.horizontal_wrapped(|ui| {
-            for (preset, label) in PRESETS {
-                if ui.button(label).clicked() {
-                    edit(out, SetupEdit::Preset(preset));
-                }
-            }
-        });
-        ui.separator();
-        how(form, ui, out);
-        ui.separator();
-        filters(state, form, ui, out);
-        ui.separator();
-        schedule(form, ui, out);
-        ui.separator();
-        preview_line(preview, ui);
-        start_button(state, ui, out);
-    });
-}
-
-fn how(form: &SetupForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.strong("How");
-    ui.horizontal(|ui| {
-        for (mode, label) in [
-            (RunMode::Flip, "Flip cards"),
-            (RunMode::Answer, "Type answers"),
-        ] {
-            if ui.selectable_label(form.mode == mode, label).clicked() {
-                edit(out, SetupEdit::Mode(mode));
-            }
-        }
-    });
-    ui.label("Order");
-    ui.horizontal_wrapped(|ui| {
-        for (order, label) in ORDERS {
-            if ui.selectable_label(form.order == order, label).clicked() {
-                edit(out, SetupEdit::Order(order));
-            }
-        }
-    });
-    let mut shuffle = form.shuffle;
-    if ui
-        .checkbox(&mut shuffle, "Shuffle the order of the chosen items")
-        .changed()
-    {
-        edit(out, SetupEdit::Shuffle(shuffle));
-    }
-    if let Some(text) = text_field(ui, "Maximum number of items", &form.limit, "no limit", 1) {
-        edit(out, SetupEdit::Limit(text));
-    }
-}
-
-fn filters(state: &State, form: &SetupForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.strong("Which items");
-    ui.horizontal(|ui| {
-        for (kind, label) in KINDS {
-            let mut on = form.kinds.contains(&kind);
-            if ui.checkbox(&mut on, label).changed() {
-                edit(out, SetupEdit::Kind(kind, on));
-            }
-        }
-    });
-    ui.weak("Nothing ticked means all kinds.");
-    if let Some(vault) = &state.vault {
-        ui.horizontal_wrapped(|ui| {
-            for s in &vault.overview.stacks {
-                let mut on = form.stacks.contains(&s.uid);
-                let nested = vault
-                    .overview
-                    .stacks
-                    .iter()
-                    .filter(|x| inside(&x.folder, &s.folder))
-                    .count();
-                let label = if nested > 0 {
-                    format!("Stack: {} (and the {nested} inside it)", s.title)
-                } else {
-                    format!("Stack: {}", s.title)
-                };
-                if ui.checkbox(&mut on, label).changed() {
-                    let mut uids = vec![s.uid];
-                    uids.extend(
-                        vault
-                            .overview
-                            .stacks
-                            .iter()
-                            .filter(|x| inside(&x.folder, &s.folder))
-                            .map(|x| x.uid),
-                    );
-                    edit(out, SetupEdit::Stacks(uids, on));
-                }
-            }
-        });
-    }
-    if let Some(text) = text_field(
-        ui,
-        "Tags (any of, comma separated)",
-        &form.tags,
-        "e.g. grammar, verbs",
-        1,
-    ) {
-        edit(out, SetupEdit::Tags(text));
-    }
-    ui.horizontal_wrapped(|ui| {
-        for (s, label) in STATES {
-            if ui.selectable_label(form.state == s, label).clicked() {
-                edit(out, SetupEdit::State(s));
-            }
-        }
-    });
-    let mut on = form.difficulty_on;
-    if ui
-        .checkbox(&mut on, "Only items within a difficulty range")
-        .changed()
-    {
-        edit(out, SetupEdit::DifficultyOn(on));
-    }
-    if form.difficulty_on {
-        if let Some(text) = text_field(ui, "Lowest difficulty (1-10)", &form.diff_min, "", 1) {
-            edit(out, SetupEdit::DiffMin(text));
-        }
-        if let Some(text) = text_field(ui, "Highest difficulty (1-10)", &form.diff_max, "", 1) {
-            edit(out, SetupEdit::DiffMax(text));
-        }
-    }
-}
-
-fn schedule(form: &SetupForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.strong("Afterwards");
-    let mut requeue = form.requeue_again;
-    if ui
-        .checkbox(
-            &mut requeue,
-            "Show items I rate Again once more in this run",
-        )
-        .changed()
-    {
-        edit(out, SetupEdit::Requeue(requeue));
-    }
-    let mut update = form.effect == ScheduleEffect::UpdateSchedule;
-    if ui
-        .checkbox(&mut update, "Update my review schedule with these ratings")
-        .changed()
-    {
-        let effect = if update {
-            ScheduleEffect::UpdateSchedule
-        } else {
-            ScheduleEffect::PracticeOnly
+        ui.label(RichText::new("Rehearse").size(26.0).strong());
+        step_bar(step, ui, out);
+        ui.add_space(8.0);
+        let (title, hint) = match step {
+            SetupStep::What => (
+                "What do you want to rehearse?",
+                "Pick stacks, or leave all unticked for everything.",
+            ),
+            SetupStep::How => (
+                "How do you want to rehearse?",
+                "Start from a preset, then adjust.",
+            ),
+            SetupStep::Review => ("Ready?", "Check your choices, then begin."),
         };
-        edit(out, SetupEdit::Effect(effect));
-    }
-    if !update {
-        ui.weak("Practice only: your ratings and timings are recorded, but the schedule does not change.");
-    }
+        ui.label(RichText::new(title).size(19.0).strong());
+        ui.label(RichText::new(hint).color(palette_of(ui).text_weak));
+        ui.add_space(6.0);
+        match step {
+            SetupStep::What => setup_what::draw(state, ui, out),
+            SetupStep::How => setup_how::draw(state, ui, out),
+            SetupStep::Review => setup_review::draw(state, ui, out),
+        }
+        ui.add_space(10.0);
+        navigation(state, ui, out);
+    });
+}
+
+fn step_bar(current: SetupStep, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.horizontal(|ui| {
+        for (step, label, _) in STEPS {
+            if ui.selectable_label(step == current, label).clicked() {
+                go(out, step);
+            }
+        }
+        let n = STEPS
+            .iter()
+            .position(|s| s.0 == current)
+            .map_or(1, |i| i + 1);
+        ui.label(RichText::new(format!("Step {n} of 3")).color(palette_of(ui).text_weak));
+    });
+}
+
+fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let step = state.rehearse.step;
+    ui.horizontal(|ui| {
+        match step {
+            SetupStep::What => {}
+            SetupStep::How => {
+                if ui.button("Back").clicked() {
+                    go(out, SetupStep::What);
+                }
+            }
+            SetupStep::Review => {
+                if ui.button("Back").clicked() {
+                    go(out, SetupStep::How);
+                }
+            }
+        }
+        match step {
+            SetupStep::What => {
+                if kit::primary_button(ui, "Next: configure").clicked() {
+                    go(out, SetupStep::How);
+                }
+            }
+            SetupStep::How => {
+                if kit::primary_button(ui, "Next: review").clicked() {
+                    go(out, SetupStep::Review);
+                }
+            }
+            SetupStep::Review => start_button(state, ui, out),
+        }
+        count_hint(&state.rehearse.preview, ui);
+    });
 }
 
 fn start_button(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let any = matches!(state.rehearse.preview, Preview::Count(n) if n > 0);
     let ready = any && !state.rehearse.starting;
-    if ui
-        .add_enabled(ready, egui::Button::new("Start rehearsal"))
-        .clicked()
-    {
+    let label = "Start rehearsal";
+    let response = ui.add_enabled(
+        ready,
+        egui::Button::new(
+            RichText::new(label)
+                .strong()
+                .color(palette_of(ui).on_accent),
+        )
+        .fill(palette_of(ui).accent),
+    );
+    if response.clicked() {
         out.push(Msg::StartRunClicked);
     }
     if state.rehearse.starting {
@@ -218,27 +119,18 @@ fn start_button(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-fn preview_line(preview: &Preview, ui: &mut egui::Ui) {
+/// The live count, shown beside the buttons on every step.
+fn count_hint(preview: &Preview, ui: &mut egui::Ui) {
+    let weak = palette_of(ui).text_weak;
     match preview {
         Preview::Unknown | Preview::Counting => {
-            ui.label("Counting matching items…");
+            ui.label(RichText::new("Counting matching items…").color(weak))
         }
-        Preview::Count(n) => {
-            ui.strong(format!("{n} items match"));
-        }
-        Preview::Invalid(reason) => {
-            ui.colored_label(ui.visuals().error_fg_color, reason);
-        }
-        Preview::Failed(reason) => {
-            ui.colored_label(
-                ui.visuals().error_fg_color,
-                format!("Could not count: {reason}"),
-            );
-        }
-    }
-}
-
-/// Whether `folder` is somewhere inside `outer`.
-fn inside(folder: &str, outer: &str) -> bool {
-    folder.starts_with(&format!("{outer}/")) && folder != outer
+        Preview::Count(n) => ui.label(RichText::new(format!("{n} items match")).color(weak)),
+        Preview::Invalid(reason) => ui.colored_label(ui.visuals().error_fg_color, reason),
+        Preview::Failed(reason) => ui.colored_label(
+            ui.visuals().error_fg_color,
+            format!("Could not count: {reason}"),
+        ),
+    };
 }

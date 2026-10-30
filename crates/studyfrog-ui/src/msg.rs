@@ -66,6 +66,8 @@ pub enum Msg {
     Tick,
     /// The result of a change check: `None` when nothing changed.
     VaultPolled(Result<Option<VaultInfo>, String>),
+    /// Reminders that came due (each is reported once).
+    RemindersDue(Result<Vec<studyfrog_calendar::reminders::DueReminder>, String>),
     /// The app settings were saved (or not).
     AppSettingsSaved(Result<(), String>),
     /// A stack (or the inbox) was chosen in the browser.
@@ -82,6 +84,8 @@ pub enum Msg {
     Created(Result<VaultInfo, String>),
     /// A field of the run setup form changed.
     Setup(SetupEdit),
+    /// Another step of the run setup.
+    SetupStep(crate::setup::SetupStep),
     /// The number of items a run would contain (or why that could not be counted).
     PreviewReady(Result<usize, String>),
     /// "Start rehearsal" was activated.

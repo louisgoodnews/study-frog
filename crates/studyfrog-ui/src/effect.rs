@@ -43,6 +43,8 @@ pub enum Effect {
     OpenVault(String),
     /// Check the open vault for changed files.
     PollVault,
+    /// Look for calendar reminders that have come due.
+    CheckReminders,
     /// Persist the per-user app settings.
     SaveAppSettings(AppSettings),
     /// List the items of a stack (or the inbox).
@@ -104,6 +106,8 @@ pub enum Effect {
         tags: Vec<String>,
         /// The stack it goes into.
         parent: Option<String>,
+        /// For a stack: when it is due and when to remind.
+        due: Option<studyfrog_service::track::DueDate>,
     },
     /// Read what the home screen shows.
     LoadHome,

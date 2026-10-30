@@ -39,6 +39,54 @@ pub enum Ends {
     After(u32),
 }
 
+/// What a calendar entry is. Only study sessions are rehearsed; the others are plans to remember.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum EventKind {
+    /// A time set aside to study (optionally a stack to rehearse).
+    #[default]
+    Study,
+    /// Something to do.
+    Task,
+    /// A meeting or lesson at a time.
+    Appointment,
+    /// An exam or test.
+    Exam,
+    /// A date something is due, such as a stack.
+    Deadline,
+}
+
+/// Every kind, in the order the form offers them.
+pub const EVENT_KINDS: [EventKind; 5] = [
+    EventKind::Study,
+    EventKind::Task,
+    EventKind::Appointment,
+    EventKind::Exam,
+    EventKind::Deadline,
+];
+
+/// The word stored and shown for a kind.
+pub fn event_kind_name(k: EventKind) -> &'static str {
+    match k {
+        EventKind::Study => "study",
+        EventKind::Task => "task",
+        EventKind::Appointment => "appointment",
+        EventKind::Exam => "exam",
+        EventKind::Deadline => "deadline",
+    }
+}
+
+/// The kind with this stored name.
+pub fn event_kind_from_name(name: &str) -> Option<EventKind> {
+    EVENT_KINDS
+        .into_iter()
+        .find(|k| event_kind_name(*k) == name)
+}
+
+/// Most reminders one entry can have.
+pub const MAX_REMINDERS: usize = 5;
+/// Furthest ahead a reminder can fire (four weeks), in minutes.
+pub const MAX_REMINDER_MIN: u32 = 40_320;
+
 /// A planned study session.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Session {
@@ -60,6 +108,10 @@ pub struct Session {
     pub cancelled: Vec<Date>,
     /// Free-form notes.
     pub notes: String,
+    /// What kind of entry it is.
+    pub kind: EventKind,
+    /// How many minutes before the start each reminder fires, ascending, without repeats.
+    pub reminders: Vec<u32>,
 }
 
 /// One concrete occurrence of a session.
@@ -101,6 +153,11 @@ pub fn validate_session(s: &Session) -> Result<(), String> {
     }
     if matches!(s.repeat, Repeat::Weekly { days, .. } if days >= 128) {
         return Err("weekdays are Monday to Sunday".to_owned());
+    }
+    if s.reminders.len() > MAX_REMINDERS || s.reminders.iter().any(|m| *m > MAX_REMINDER_MIN) {
+        return Err(format!(
+            "at most {MAX_REMINDERS} reminders, none more than four weeks ahead"
+        ));
     }
     match s.ends {
         Ends::On(last) if last < s.start.date => Err("the end date is before the start".to_owned()),

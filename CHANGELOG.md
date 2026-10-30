@@ -8,6 +8,15 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Calendar entries are now study sessions, tasks, appointments, exams or deadlines, each with up to five reminders
+  that show once as a toast and a notification while the app is open; the month grid fills the window with
+  coloured entries and a "Coming up" list (TASK-0105).
+- A stack can be given a due date and reminders in the Create dialog, which puts a deadline on the calendar; every
+  item made in the dialog also gets a card in the first board column (TASK-0106).
+- The run setup is three steps: What, How, Review (TASK-0107). The home page lists the items due now and the next
+  seven days and fills the window (TASK-0108).
+- `docs/specs/UX_EVIDENCE.md`: the usability research behind these changes, with how strong each finding is
+  (TASK-0104).
 - A home page (greeting, items ready today, streak, stacks waiting with a Rehearse button, planned sessions,
   recent items and runs) that a vault opens on; a shared theme (palette, text sizes, spacing) for every screen;
   stacks as cards and items as rows in the library; a card layout, progress bar and coloured rating buttons in

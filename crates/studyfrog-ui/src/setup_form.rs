@@ -193,7 +193,13 @@ fn toggle<T: PartialEq>(mut list: Vec<T>, item: T, on: bool) -> Vec<T> {
 /// Apply one edit to the form.
 pub fn apply_edit(f: SetupForm, edit: SetupEdit) -> SetupForm {
     match edit {
-        SetupEdit::Preset(p) => form_for_preset(p, f.mode),
+        // A preset sets how to rehearse; what to rehearse was chosen before and stays.
+        SetupEdit::Preset(p) => SetupForm {
+            stacks: f.stacks.clone(),
+            kinds: f.kinds.clone(),
+            tags: f.tags.clone(),
+            ..form_for_preset(p, f.mode)
+        },
         SetupEdit::Mode(mode) => SetupForm { mode, ..f },
         SetupEdit::Order(order) => SetupForm { order, ..f },
         SetupEdit::Effect(effect) => SetupForm { effect, ..f },

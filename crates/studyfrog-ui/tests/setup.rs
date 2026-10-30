@@ -192,6 +192,10 @@ fn the_real_widgets_send_edits_and_show_the_count_and_practice_note() {
     let mut h = harness(m);
     h.run();
     assert!(h.query_by_label("7 items match").is_some());
+    h.get_by_label("Cards").click();
+    h.run();
+    h.get_by_label("Next: configure").click();
+    h.run();
     assert!(
         h.query_by_label_contains("Practice only").is_none(),
         "spaced updates the schedule"
@@ -219,7 +223,6 @@ fn the_real_widgets_send_edits_and_show_the_count_and_practice_note() {
             .any(|e| matches!(e, Effect::PreviewQueue { .. }))
     );
 
-    h.get_by_label("Cards").click();
     h.get_by_label("Maximum number of items").focus();
     h.get_by_label("Maximum number of items").type_text("5");
     h.run();
@@ -227,24 +230,5 @@ fn the_real_widgets_send_edits_and_show_the_count_and_practice_note() {
     assert_eq!(
         (f.kinds.as_slice(), f.limit.as_str()),
         ([ItemKind::Card].as_slice(), "5")
-    );
-}
-
-#[test]
-fn shuffling_a_spaced_run_keeps_it_updating_the_schedule() {
-    let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
-    let fx = apply(&mut m, Msg::Setup(SetupEdit::Shuffle(true)));
-    let [Effect::PreviewQueue { plan, .. }] = &fx[..] else {
-        panic!("{fx:?}")
-    };
-    assert_eq!(
-        (plan.order, plan.shuffle, plan.effect),
-        (Order::Due, true, ScheduleEffect::UpdateSchedule)
-    );
-    apply(&mut m, Msg::Setup(SetupEdit::Preset(Preset::Hardest)));
-    assert!(
-        !m.state.rehearse.form.shuffle,
-        "a preset starts from its own plan"
     );
 }

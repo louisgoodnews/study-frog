@@ -163,6 +163,18 @@ pub fn resolve_title(conn: &Connection, target: &str) -> Result<Option<Uid>, Sto
     }
 }
 
+/// The items due at `now_ms` or earlier, the most overdue first, at most `limit`.
+pub fn due_items(conn: &Connection, now_ms: i64, limit: usize) -> Result<Vec<ItemRow>, StoreError> {
+    let sql = "SELECT i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms) AS due
+               FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
+               WHERE i.kind != 'stack' AND COALESCE(m.due_ms, s.due_ms) <= ?1 ORDER BY due, i.path LIMIT ?2";
+    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+    let rows = stmt
+        .query_map((now_ms, limit as i64), raw_item)
+        .map_err(sql_err)?;
+    rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
+}
+
 /// The items edited most recently (by the time in their front matter, else when they were created),
 /// newest first.
 pub fn recent_items(conn: &Connection, limit: usize) -> Result<Vec<ItemRow>, StoreError> {

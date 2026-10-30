@@ -65,7 +65,13 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
             },
             Vec::new(),
         ),
-        Msg::Tick => crate::poll_ui::tick(state),
+        Msg::Tick => {
+            let (state, mut effects) = crate::poll_ui::tick(state);
+            let (state, more) = crate::reminder_ui::tick(state);
+            effects.extend(more);
+            (state, effects)
+        }
+        Msg::RemindersDue(r) => crate::reminder_ui::arrived(state, r),
         Msg::VaultPolled(result) => crate::poll_ui::vault_polled(state, result),
         Msg::AppSettingsSaved(result) => settings_saved(state, result),
         browse @ (Msg::Select(_)
@@ -74,7 +80,9 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::DraftEdited(..)
         | Msg::AddCardClicked
         | Msg::Created(_)) => crate::browse::update(state, browse),
-        setup @ (Msg::Setup(_) | Msg::PreviewReady(_)) => crate::setup::update(state, setup),
+        setup @ (Msg::Setup(_) | Msg::SetupStep(_) | Msg::PreviewReady(_)) => {
+            crate::setup::update(state, setup)
+        }
         graph @ (Msg::GraphLoaded(_)
         | Msg::GraphFrame { .. }
         | Msg::GraphPan(..)
@@ -186,6 +194,7 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
             let state = State {
                 screen: Screen::Home,
                 home: None,
+                reminder_ticks: 0,
                 modal: None,
                 toasts: Vec::new(),
                 vault: Some(info),

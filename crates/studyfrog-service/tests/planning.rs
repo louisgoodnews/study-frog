@@ -89,6 +89,8 @@ fn session(id: u128) -> Session {
         ends: Ends::Forever,
         cancelled: vec![],
         notes: String::new(),
+        kind: Default::default(),
+        reminders: Vec::new(),
     }
 }
 

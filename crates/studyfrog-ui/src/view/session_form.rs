@@ -1,11 +1,12 @@
 //! The session form of the calendar.
 
 use eframe::egui::{self, ComboBox};
+use studyfrog_calendar::session::{EVENT_KINDS, event_kind_name};
 use studyfrog_core::uid::Uid;
 
 use crate::msg::Msg;
 use crate::planner::PlanMsg;
-use crate::session_form::{EndsKind, FormEdit, RepeatKind, SessionForm};
+use crate::session_form::{EndsKind, FormEdit, REMINDER_CHOICES, RepeatKind, SessionForm};
 use crate::state::State;
 use crate::view::widgets::text_field;
 
@@ -30,10 +31,11 @@ fn field(
 /// Draw the form for a new or existing session.
 pub fn draw(state: &State, f: &SessionForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.heading(if f.editing.is_some() {
-        "Edit session"
+        "Edit entry"
     } else {
-        "New session"
+        "New entry"
     });
+    kind_row(f, ui, out);
     field(ui, out, "Title", &f.title, FormEdit::Title);
     field(ui, out, "Date (YYYY-MM-DD)", &f.date, FormEdit::Date);
     field(ui, out, "Time (HH:MM)", &f.time, FormEdit::Time);
@@ -46,16 +48,42 @@ pub fn draw(state: &State, f: &SessionForm, ui: &mut egui::Ui, out: &mut Vec<Msg
     );
     stack_picker(state, f.stack, ui, out);
     repeat_rows(f, ui, out);
+    reminder_row(f, ui, out);
     field(ui, out, "Notes", &f.notes, FormEdit::Notes);
     if let Some(e) = &state.planner.form_error {
         ui.colored_label(ui.visuals().error_fg_color, e);
     }
     ui.horizontal(|ui| {
-        if ui.button("Save session").clicked() {
+        if ui.button("Save entry").clicked() {
             out.push(Msg::Plan(PlanMsg::Save));
         }
         if ui.button("Cancel").clicked() {
             out.push(Msg::Plan(PlanMsg::CloseForm));
+        }
+    });
+}
+
+fn kind_row(f: &SessionForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.horizontal_wrapped(|ui| {
+        for kind in EVENT_KINDS {
+            let name = event_kind_name(kind);
+            if ui.selectable_label(f.kind == kind, name).clicked() {
+                edit(out, FormEdit::Kind(kind));
+            }
+        }
+    });
+}
+
+fn reminder_row(f: &SessionForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.label("Remind me");
+    ui.horizontal_wrapped(|ui| {
+        for (minutes, label) in REMINDER_CHOICES {
+            if ui
+                .selectable_label(f.reminders.contains(&minutes), label)
+                .clicked()
+            {
+                edit(out, FormEdit::Reminder(minutes));
+            }
         }
     });
 }

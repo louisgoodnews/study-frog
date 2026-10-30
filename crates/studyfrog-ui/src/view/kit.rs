@@ -13,7 +13,10 @@ pub fn card<R>(ui: &mut egui::Ui, add: impl FnOnce(&mut egui::Ui) -> R) -> R {
         .stroke(Stroke::new(1.0, p.border))
         .corner_radius(CornerRadius::same(12))
         .inner_margin(Margin::same(16))
-        .show(ui, add)
+        .show(ui, |ui| {
+            ui.with_layout(egui::Layout::top_down(egui::Align::Min), add)
+                .inner
+        })
         .inner
 }
 
@@ -27,7 +30,11 @@ pub fn card_button(ui: &mut egui::Ui, id: &str, add: impl FnOnce(&mut egui::Ui))
         .corner_radius(CornerRadius::same(12))
         .inner_margin(Margin::same(16));
     let mut prepared = frame.begin(ui);
-    add(&mut prepared.content_ui);
+    let width = prepared.content_ui.available_width();
+    prepared.content_ui.set_width(width);
+    prepared
+        .content_ui
+        .with_layout(egui::Layout::top_down(egui::Align::Min), add);
     let response = prepared.allocate_space(ui);
     let response = ui.interact(response.rect, outer, egui::Sense::click());
     if response.hovered() {

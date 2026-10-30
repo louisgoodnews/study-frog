@@ -37,6 +37,8 @@ fn session(id: u128, repeat: Repeat, ends: Ends) -> Session {
             date_new(2026, 11, 17).unwrap(),
         ],
         notes: "bring the deck\nand coffee".into(),
+        kind: Default::default(),
+        reminders: Vec::new(),
     }
 }
 

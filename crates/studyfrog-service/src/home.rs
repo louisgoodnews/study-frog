@@ -5,7 +5,8 @@ use std::collections::{BTreeSet, HashMap};
 
 use studyfrog_achieve::stats::streak_days;
 use studyfrog_calendar::recurrence::occurrences_all;
-use studyfrog_core::civil::utc_to_local;
+use studyfrog_calendar::session::{EventKind, Session};
+use studyfrog_core::civil::{Date, add_days, utc_to_local};
 use studyfrog_core::plan::plan_spaced;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
@@ -13,7 +14,9 @@ use studyfrog_rehearsal::queue::build::build_queue;
 use studyfrog_rehearsal::queue::candidate::{Budgets, budget_unlimited};
 use studyfrog_store::achievements::load_review_rows;
 use studyfrog_store::home::{RunRow, count_reviews_between, recent_runs};
-use studyfrog_store::overview::{ItemRow, load_indexed_items, load_overview, recent_items};
+use studyfrog_store::overview::{
+    ItemRow, due_items, load_indexed_items, load_overview, recent_items,
+};
 use studyfrog_store::schedule::load_schedules;
 use studyfrog_store::settings::item_homes;
 
@@ -39,6 +42,22 @@ pub struct StackDue {
     /// Items never reviewed.
     pub new: usize,
 }
+
+/// A calendar entry in the coming days.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Upcoming {
+    /// Title.
+    pub title: String,
+    /// What kind of entry.
+    pub kind: EventKind,
+    /// Local date.
+    pub date: Date,
+    /// Local start, minutes since midnight.
+    pub start_minute: u16,
+}
+
+/// How many days ahead the home page looks.
+pub const UPCOMING_DAYS: i64 = 7;
 
 /// A study session happening today.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -78,6 +97,28 @@ pub struct HomeSummary {
     pub recent_runs: Vec<RunRow>,
     /// Sessions planned for today, in time order.
     pub sessions_today: Vec<TodaySession>,
+    /// The items that are due now, the most overdue first.
+    pub due_items: Vec<ItemRow>,
+    /// Calendar entries of the next days (not today).
+    pub upcoming: Vec<Upcoming>,
+}
+
+fn upcoming(sessions: &[Session], today: Date) -> Vec<Upcoming> {
+    let (from, to) = (add_days(today, 1), add_days(today, UPCOMING_DAYS));
+    let mut list: Vec<Upcoming> = occurrences_all(sessions, from, to)
+        .into_iter()
+        .filter_map(|o| {
+            let s = sessions.iter().find(|s| s.id == o.session)?;
+            Some(Upcoming {
+                title: s.title.clone(),
+                kind: s.kind,
+                date: o.date,
+                start_minute: o.start_minute,
+            })
+        })
+        .collect();
+    list.sort_by_key(|u| (u.date, u.start_minute));
+    list
 }
 
 /// Compute the summary at `now`; `offset_minutes` is the local UTC offset and `day` the local day.
@@ -173,5 +214,7 @@ pub fn home_summary(
         recent_items: recent_items(conn, 6).map_err(ServiceError::Store)?,
         recent_runs: recent_runs(conn, 5).map_err(ServiceError::Store)?,
         sessions_today,
+        due_items: due_items(conn, now.0, 8).map_err(ServiceError::Store)?,
+        upcoming: upcoming(&sessions, local_now.date),
     })
 }

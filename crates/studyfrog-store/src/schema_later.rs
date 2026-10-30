@@ -4,6 +4,24 @@
 /// runtime that compared them, because scores of different runtimes are not interchangeable.
 /// Shuffling is a switch of its own: it can go with any order. Runs stored with the old order
 /// `shuffled` become sequential runs with the switch on.
+/// Calendar entries get a kind and reminders; `reminder_fired` remembers which reminder was shown
+/// for which occurrence so it shows once.
+pub(crate) const V8: &str = "
+ALTER TABLE session ADD COLUMN kind TEXT NOT NULL DEFAULT 'study'
+    CHECK (kind IN ('study', 'task', 'appointment', 'exam', 'deadline'));
+CREATE TABLE session_reminder (
+    session_id     TEXT NOT NULL REFERENCES session(id) ON DELETE CASCADE,
+    minutes_before INTEGER NOT NULL CHECK (minutes_before >= 0),
+    PRIMARY KEY (session_id, minutes_before)
+) WITHOUT ROWID;
+CREATE TABLE reminder_fired (
+    session_id     TEXT NOT NULL REFERENCES session(id) ON DELETE CASCADE,
+    date           TEXT NOT NULL,
+    minutes_before INTEGER NOT NULL,
+    PRIMARY KEY (session_id, date, minutes_before)
+) WITHOUT ROWID;
+";
+
 pub(crate) const V7: &str = "
 ALTER TABLE run ADD COLUMN shuffle INTEGER NOT NULL DEFAULT 0 CHECK (shuffle IN (0, 1));
 UPDATE run SET shuffle = 1, order_name = 'sequential' WHERE order_name = 'shuffled';
