@@ -8,6 +8,8 @@ use studyfrog_rehearsal::input::Action;
 use studyfrog_service::document::{LoadedDoc, Saved};
 use studyfrog_store::overview::LinkGraph;
 
+use crate::kanban::BoardMsg;
+use crate::planner::PlanMsg;
 use crate::run_state::ItemContent;
 use crate::setup::SetupEdit;
 use crate::state::{ItemRow, Screen, Selection, VaultInfo};
@@ -115,6 +117,10 @@ pub enum Msg {
     GraphRestart,
     /// A node was clicked.
     GraphClick(usize),
+    /// Something happened on the calendar screen.
+    Plan(PlanMsg),
+    /// Something happened on the board screen.
+    Board(BoardMsg),
 }
 
 /// A change in the editor.

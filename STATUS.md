@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M4 (UI shell) complete; M5 domain/persistence done, calendar and board screens next. **Date:** 2026-10-30. **Branch:** `main`.
+**Phase:** M4 (UI shell) complete; M5 (calendar and board) complete; M6 next. **Date:** 2026-10-30. **Branch:** `main`.
 
 ## What exists
 - Cargo workspace with 12 empty, documented crates (`crates/studyfrog-*`); `cargo check` passes.
@@ -43,8 +43,7 @@
 - Lowest-recall queue building is 3.9 ms for 10k items (a `powf` per comparison); cacheable later.
 
 ## Next task
-**M5 UI:** TASK-0045 (calendar screen) and TASK-0048 (board screen). The domain, persistence and service
-layers for both are done and tested. Live state: [BOARD.md](BOARD.md).
+**M6** (see [ROADMAP](docs/roadmap/ROADMAP.md)). Live state: [BOARD.md](BOARD.md).
 
 ## Using the app now
 `cargo run -p studyfrog-app`: pick a vault folder, create a stack and cards, set up a run (any order or filter),

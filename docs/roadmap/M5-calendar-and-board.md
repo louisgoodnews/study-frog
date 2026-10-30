@@ -22,10 +22,10 @@
 
 ## Exit criteria
 
-- [ ] Sessions can be scheduled, linked to stacks, and recur
-- [ ] Board enforces WIP limits (property-tested)
-- [ ] Drag and push semantics work in the UI
-- [ ] Calendar and board persist across restarts
+- [x] Sessions can be scheduled, linked to stacks, and recur
+- [x] Board enforces WIP limits (property-tested)
+- [x] Drag and push semantics work in the UI
+- [x] Calendar and board persist across restarts
 
 ## Out of scope
 

@@ -5,6 +5,8 @@ pub use studyfrog_service::session::VaultInfo;
 
 use crate::editor::Editor;
 use crate::graph::GraphState;
+use crate::kanban::Kanban;
+use crate::planner::Planner;
 use crate::setup::Rehearse;
 pub use studyfrog_store::overview::ItemRow;
 
@@ -24,6 +26,10 @@ pub enum Screen {
     Editor,
     /// The wikilink graph.
     Graph,
+    /// Planned study sessions.
+    Calendar,
+    /// The kanban board.
+    Board,
 }
 
 /// Severity of a notice.
@@ -110,4 +116,8 @@ pub struct State {
     pub editor: Option<Editor>,
     /// The link graph.
     pub graph: Option<GraphState>,
+    /// The calendar.
+    pub planner: Planner,
+    /// The kanban board.
+    pub kanban: Kanban,
 }

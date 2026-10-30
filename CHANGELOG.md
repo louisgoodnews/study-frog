@@ -8,6 +8,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Calendar screen: month grid with recurring sessions, day panel (edit, delete, skip a day, start a
+  rehearsal for the session's stack) and a session form (TASK-0045).
+- Board screen: columns with WIP counts and over-limit marking, drag and drop plus push/pull/up/down buttons,
+  card editor with stack link, optional forcing past WIP limits (TASK-0048).
 - Planning foundations: `studyfrog-calendar` (sessions, recurrence checked against a day-by-day oracle) and
   `studyfrog-board` (columns, WIP limits, strict/forced moves, push/pull, commands; property-tested); schema v4
   (sessions, board); service use cases for both; `core::civil` (dates, weekdays, month grid, local time); a

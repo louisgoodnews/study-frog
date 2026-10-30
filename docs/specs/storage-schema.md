@@ -44,6 +44,16 @@ turns runs left idle, running or paused into `aborted` and closes their log with
   "new", distinct items reviewed in the window whose first review was earlier are "reviews". Practice-only runs
   write no reviews and never count. The day window is injected by the shell.
 
+## Schema v4: sessions and the board (M5)
+- `session(id, title, stack_uid, start_date, start_minute, duration_min, repeat_kind, repeat_every,
+  repeat_days, ends_kind, ends_value, notes)`: planned study sessions; local civil date and minute, no time
+  zone stored (the offset is applied when a session is turned into an instant). `stack_uid` has no foreign
+  key: removing a stack never deletes sessions.
+- `session_cancelled(session_id, date)`: skipped occurrences of a repeating session (cascade).
+- `board_column(id, position, name, wip_limit)` and `board_card(id, column_id, position, title, notes,
+  stack_uid, points)`: one board per vault; cards keep their order by `position`. The whole board is
+  replaced in one transaction on every change (boards are small).
+
 ## Vault rules (M2)
 - Only `.md` files are indexed; names starting with `.` (and everything inside such folders) are skipped, as are symlinks.
 - A **stack** is a folder containing `_stack.md`. An item belongs to the nearest ancestor folder that is a

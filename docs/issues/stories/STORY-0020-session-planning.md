@@ -2,7 +2,7 @@
 id: STORY-0020
 type: story
 title: Session planning
-status: in_progress
+status: done
 epic: EPIC-010
 parents: [EPIC-010]
 estimate: 8
@@ -20,9 +20,9 @@ The calendar is a planning tool, not a reminder service.
 Session planning.
 
 ## Acceptance Criteria
-- [ ] Sessions with date, time, duration, stack link and recurrence (daily, weekly on chosen weekdays, monthly)
-- [ ] Occurrences for any date range, in the user's local time
-- [ ] Month calendar view; sessions persist; a session can start a rehearsal
+- [x] Sessions with date, time, duration, stack link and recurrence (daily, weekly on chosen weekdays, monthly)
+- [x] Occurrences for any date range, in the user's local time
+- [x] Month calendar view; sessions persist; a session can start a rehearsal
 
 ## Design Notes
 Children: TASK-0044, TASK-0078, TASK-0079, TASK-0045.

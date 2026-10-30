@@ -79,6 +79,8 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::CloseEditor
         | Msg::OpenLink(_)
         | Msg::LinkResolved(..)) => crate::editor::update(state, edit),
+        Msg::Plan(m) => crate::planner::update(state, m),
+        Msg::Board(m) => crate::kanban::update(state, m),
         run @ (Msg::StartRunClicked
         | Msg::RunReady(_)
         | Msg::RunAction(_)
@@ -168,6 +170,10 @@ fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
         && (screen == Screen::Editor || !crate::editor::has_unsaved_changes(&state));
     if allowed && screen == Screen::Graph {
         (State { screen, ..state }, vec![Effect::LoadGraph])
+    } else if allowed && screen == Screen::Calendar {
+        (State { screen, ..state }, vec![Effect::LoadSessions])
+    } else if allowed && screen == Screen::Board {
+        (State { screen, ..state }, vec![Effect::LoadBoard])
     } else if allowed && screen == Screen::Rehearse {
         crate::setup::refresh_preview(State { screen, ..state })
     } else if allowed {

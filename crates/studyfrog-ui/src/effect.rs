@@ -1,5 +1,8 @@
 //! Side effects `update` asks for, as plain data. The executor performs them and answers with a `Msg`.
 
+use studyfrog_board::ops::BoardOp;
+use studyfrog_calendar::session::Session;
+use studyfrog_core::civil::Date;
 use studyfrog_core::plan::RunPlan;
 use studyfrog_core::run::RunMode;
 use studyfrog_core::settings::AppSettings;
@@ -48,6 +51,18 @@ pub enum Effect {
     },
     /// Read the link graph from the index.
     LoadGraph,
+    /// Read all sessions and today's local date.
+    LoadSessions,
+    /// Store a session; id `0` means a new one.
+    SaveSession(Session),
+    /// Delete a session.
+    DeleteSession(Uid),
+    /// Skip one occurrence of a session.
+    CancelOccurrence(Uid, Date),
+    /// Read the board (creating the default one on first use).
+    LoadBoard,
+    /// Apply a board command and store the result.
+    BoardCommand(BoardOp),
     /// Read a document for editing.
     LoadDocument(Uid),
     /// Write an edited document, if the file is unchanged since `hash`.

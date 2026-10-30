@@ -2,7 +2,7 @@
 id: STORY-0022
 type: story
 title: Board UI
-status: backlog
+status: done
 epic: EPIC-011
 parents: [EPIC-011]
 estimate: 5
@@ -20,9 +20,9 @@ Drag and drop alone is not accessible; buttons are the baseline.
 Board UI.
 
 ## Acceptance Criteria
-- [ ] Cards can be dragged between and within columns, and also moved with buttons
-- [ ] WIP counts and over-limit columns are visible
-- [ ] Everything is reachable without a mouse
+- [x] Cards can be dragged between and within columns, and also moved with buttons
+- [x] WIP counts and over-limit columns are visible
+- [x] Everything is reachable without a mouse
 
 ## Design Notes
 Children: TASK-0048.

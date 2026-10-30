@@ -21,9 +21,9 @@ use studyfrog_store::app_config::{read_app_settings, write_app_settings};
 use studyfrog_store::overview::list_items;
 
 use crate::effect::Effect;
-use crate::exec_run;
 use crate::msg::Msg;
 use crate::state::Selection;
+use crate::{exec_plan, exec_run};
 
 /// Executor state: where per-user settings live and which vault is open.
 pub struct Worker {
@@ -52,6 +52,12 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
         Effect::StartRun { plan, mode } => exec_run::start(w, plan, mode, now_ns),
         Effect::LoadGraph => load_graph_msg(w),
+        Effect::LoadSessions => exec_plan::load_sessions(w, now_ns),
+        Effect::SaveSession(s) => exec_plan::save(w, s, now_ns),
+        Effect::DeleteSession(id) => exec_plan::delete(w, id),
+        Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),
+        Effect::LoadBoard => exec_plan::load_board(w, now_ns),
+        Effect::BoardCommand(op) => exec_plan::board_command(w, &op, now_ns),
         Effect::LoadDocument(uid) => load_document_msg(w, uid),
         Effect::SaveDocument { path, doc, hash } => save_document_msg(w, &path, &doc, hash, now_ns),
         Effect::ResolveLink(target) => resolve_link_msg(w, target),

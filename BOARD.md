@@ -4,10 +4,10 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (2) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (59) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (61) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0045](docs/issues/tasks/TASK-0045-calendar-view.md) Calendar view (5) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-| [TASK-0048](docs/issues/tasks/TASK-0048-board-view-with-drag-and-drop.md) Board view with drag and drop (5) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+|  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+|  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 |  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
 |  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
 |  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
@@ -50,8 +50,10 @@
 |  |  |  |  |  | [TASK-0042](docs/issues/tasks/TASK-0042-force-directed-layout-soa.md) Force-directed layout (SoA) (5) |
 |  |  |  |  |  | [TASK-0043](docs/issues/tasks/TASK-0043-graph-render-benchmark.md) Graph render benchmark (3) |
 |  |  |  |  |  | [TASK-0044](docs/issues/tasks/TASK-0044-session-model-and-recurrence.md) Session model and recurrence (5) |
+|  |  |  |  |  | [TASK-0045](docs/issues/tasks/TASK-0045-calendar-view.md) Calendar view (5) |
 |  |  |  |  |  | [TASK-0046](docs/issues/tasks/TASK-0046-columns-and-wip-limits.md) Columns and WIP limits (3) |
 |  |  |  |  |  | [TASK-0047](docs/issues/tasks/TASK-0047-move-and-push-semantics.md) Move and push semantics (5) |
+|  |  |  |  |  | [TASK-0048](docs/issues/tasks/TASK-0048-board-view-with-drag-and-drop.md) Board view with drag and drop (5) |
 |  |  |  |  |  | [TASK-0068](docs/issues/tasks/TASK-0068-run-plan-types-in-core.md) Run plan types in core (3) |
 |  |  |  |  |  | [TASK-0069](docs/issues/tasks/TASK-0069-practice-orders.md) Practice orders (5) |
 |  |  |  |  |  | [TASK-0070](docs/issues/tasks/TASK-0070-queue-filters.md) Queue filters (3) |
@@ -89,9 +91,9 @@
 | [STORY-0017](docs/issues/stories/STORY-0017-stack-browser-run-setup-and-rehearsal-screen.md) Stack browser, run setup and rehearsal screen (8) | done | 3/3 |
 | [STORY-0018](docs/issues/stories/STORY-0018-markdown-editor-and-preview.md) Markdown editor and preview (8) | done | 2/2 |
 | [STORY-0019](docs/issues/stories/STORY-0019-link-graph-view.md) Link graph view (8) | done | 2/2 |
-| [STORY-0020](docs/issues/stories/STORY-0020-session-planning.md) Session planning (8) | in_progress | 3/4 |
+| [STORY-0020](docs/issues/stories/STORY-0020-session-planning.md) Session planning (8) | done | 4/4 |
 | [STORY-0021](docs/issues/stories/STORY-0021-board-model.md) Board model (5) | done | 3/3 |
-| [STORY-0022](docs/issues/stories/STORY-0022-board-ui.md) Board UI (5) | backlog | 0/1 |
+| [STORY-0022](docs/issues/stories/STORY-0022-board-ui.md) Board UI (5) | done | 1/1 |
 | [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
 | [STORY-0034](docs/issues/stories/STORY-0034-stack-settings-sm-2-budgets-and-filter-persistence.md) Stack settings, SM-2, budgets and filter persistence (8) | done | 4/4 |
 
@@ -108,6 +110,6 @@
 | [EPIC-007](docs/issues/epics/EPIC-007-rehearsal-engine.md) Rehearsal engine | done | 4/4 |
 | [EPIC-008](docs/issues/epics/EPIC-008-ui-shell.md) UI shell | done | 2/2 |
 | [EPIC-009](docs/issues/epics/EPIC-009-editor-and-graph.md) Editor and graph | done | 2/2 |
-| [EPIC-010](docs/issues/epics/EPIC-010-calendar-and-planning.md) Calendar and planning | in_progress | 0/1 |
-| [EPIC-011](docs/issues/epics/EPIC-011-scrum-kanban-board.md) Scrum/kanban board | backlog | 1/2 |
+| [EPIC-010](docs/issues/epics/EPIC-010-calendar-and-planning.md) Calendar and planning | done | 1/1 |
+| [EPIC-011](docs/issues/epics/EPIC-011-scrum-kanban-board.md) Scrum/kanban board | done | 2/2 |
 | [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |

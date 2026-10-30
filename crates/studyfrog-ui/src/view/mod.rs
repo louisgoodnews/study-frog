@@ -1,12 +1,15 @@
 //! Views: plain functions from `&State` to the messages the user's input produced.
 
 mod bars;
+mod board;
+mod calendar;
 mod editor;
 mod graph;
 mod items;
 mod library;
 mod preview;
 mod run;
+mod session_form;
 mod settings;
 mod setup;
 mod welcome;
@@ -32,6 +35,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         Screen::Settings => settings::draw(state, ui),
         Screen::Editor => editor::draw(state, ui, &mut out),
         Screen::Graph => graph::draw(state, ui, &mut out),
+        Screen::Calendar => calendar::draw(state, ui, &mut out),
+        Screen::Board => board::draw(state, ui, &mut out),
     });
     out
 }

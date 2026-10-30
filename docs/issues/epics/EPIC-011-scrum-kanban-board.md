@@ -2,7 +2,7 @@
 id: EPIC-011
 type: epic
 title: Scrum/kanban board
-status: backlog
+status: done
 parents: []
 labels: [m5, board]
 acceptance_criteria:
@@ -18,9 +18,9 @@ Task tracking inside the learning app.
 Pure board model in `studyfrog-board`, persisted in SQLite (ADR 0003).
 
 ## Acceptance Criteria
-- [ ] Columns with WIP limits; WIP is enforced (property-tested)
-- [ ] Drag and push semantics work in the UI
-- [ ] The board persists across restarts
+- [x] Columns with WIP limits; WIP is enforced (property-tested)
+- [x] Drag and push semantics work in the UI
+- [x] The board persists across restarts
 
 ## Design Notes
 Children: STORY-0021, STORY-0022.
