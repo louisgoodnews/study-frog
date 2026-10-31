@@ -7,6 +7,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-31
+
 ### Added
 - The Assistant screen: connect a local model (Ollama and similar) or a remote one (OpenAI-compatible, Anthropic),
   let it read chosen stacks and propose changes like an LLM wiki editor (new notes, cards, questions, edits, an

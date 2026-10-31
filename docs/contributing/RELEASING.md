@@ -14,7 +14,8 @@ The workspace version (`[workspace.package] version`) is the application version
 6. **Package.** `scripts/package-appimage.sh` (downloads a pinned `appimagetool`); start the resulting
    `target/appimage/StudyFrog-x.y.z-x86_64.AppImage` on a desktop session and open a vault. Record its
    SHA-256 (`sha256sum`) next to the file. (0.1.0 was packed and started this way on 2026-10-30.)
-7. **Tag.** `git tag -a vx.y.z -m "StudyFrog x.y.z"`. Push the tag, and attach the AppImage and its checksum to
+7. **Tag.** (The `release` workflow in `.github/workflows/release.yml` does the publishing below when a `v*` tag is pushed:
+   it runs the gate, builds the AppImage and creates the GitHub release from `docs/RELEASE_NOTES_x.y.z.md`.) `git tag -a vx.y.z -m "StudyFrog x.y.z"`. Push the tag, and attach the AppImage and its checksum to
    the release, once a remote exists (CI in `.github/workflows/ci.yml` builds the same image on every push to
    `main` as an artifact).
 

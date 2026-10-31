@@ -1,0 +1,31 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - name: System libraries
+        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libwayland-dev libx11-dev libgl1-mesa-dev pkg-config
+      - name: Gate
+        run: scripts/check.sh
+      - name: Build the AppImage
+        run: scripts/package-appimage.sh
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="${TAG#v}"
+          notes="docs/RELEASE_NOTES_${version}.md"
+          test -f "$notes"
+          gh release create "$TAG" --title "StudyFrog $version" --notes-file "$notes" \
+            target/appimage/StudyFrog-${version}-x86_64.AppImage target/appimage/StudyFrog-${version}-x86_64.AppImage.sha256

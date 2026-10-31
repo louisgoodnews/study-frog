@@ -17,6 +17,24 @@ Rules: commit baselines with `--save-baseline`; PRs touching a hot path report t
 introduce `smallvec`/`ahash`/`bumpalo` only with a before/after number in the commit message.
 Allocation counting is not automated: a counting global allocator needs `unsafe`, which is forbidden workspace-wide. Use `dhat` (heap profiling) when a profile points at the allocator.
 
+## Release 0.1.0 check (2026-10-31)
+Run on the same machine (i9-11900K), release profile, each crate's benchmark on its own at low priority (running
+`cargo bench --workspace` at once overloaded the machine). Every hot path is within its budget:
+
+| Bench | Result | Budget |
+|---|---|---|
+| `fsrs_schedule_100k` | 2.86 ms | < 10 ms |
+| `sm2_schedule_100k` | 0.69 ms | n/a |
+| `vault_10k` scan + parse | 120 ms | n/a |
+| `vault_10k` cold reindex | 247 ms | < 3 s |
+| `vault_10k` warm reindex | 18.6 ms | n/a |
+| `graph_5k` layout step | 4.0 ms | < 8 ms |
+| `graph_5k` projection | 1.7 us | n/a |
+| comparison latency (language model, release test) | p50 30.2 ms, p95 33.9 ms | p95 < 150 ms |
+
+The rehearsal and report benchmarks ran to completion (rehearsal steps 33 us to 570 us per case, reports 0.36 ms to
+6.2 ms); their cases are named in the crates' `benches/`.
+
 ## Recorded baselines
 Machine: Intel i9-11900K @ 3.5 GHz, 16 threads, Linux, rustc 1.99.1, release profile (criterion `--save-baseline m1`).
 
