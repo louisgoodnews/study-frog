@@ -75,6 +75,13 @@ fn labels(kind: NewKind) -> ((&'static str, &'static str), Option<&'static str>)
 fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     header(ui, out, |ui, out| {
         ui.strong("New item");
+        if ui.button("Add PDF ...").clicked() {
+            let folder = f.parent.clone().unwrap_or_default();
+            out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Library(
+                crate::pdf_library_types::LibraryMsg::AddTo(folder),
+            )));
+            send(out, ModalMsg::Close);
+        }
         for (kind, label) in KINDS {
             if ui.selectable_label(f.kind == kind, label).clicked() {
                 send(out, ModalMsg::SetKind(kind));

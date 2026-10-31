@@ -42,6 +42,7 @@ pub fn finished_run_marked(
         prompt: "Count".into(),
         answer: TWENTY_WORDS.into(),
         previous,
+        source: None,
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     act(&mut m, 0.5, Action::Mark(mark));

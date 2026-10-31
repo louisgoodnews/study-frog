@@ -45,6 +45,8 @@ pub enum Side {
     Pages,
     /// The highlights and notes.
     Notes,
+    /// Making notes from the text.
+    Extract,
     /// Folded away.
     Closed,
 }
@@ -72,6 +74,8 @@ pub struct PdfView {
     pub failed: Vec<PageKey>,
     /// What the search box holds.
     pub query: String,
+    /// Pages (0-based) that are only pictures, without text.
+    pub scanned: Vec<usize>,
     /// Pages (0-based) the query was found on.
     pub found: Vec<usize>,
     /// Indexes of the selected words on the shown page.
@@ -88,6 +92,12 @@ pub struct PdfView {
     pub color: String,
     /// The next click places a note.
     pub placing_note: bool,
+    /// The card or question being written.
+    pub draft: Option<crate::pdf_draft_types::Draft>,
+    /// The "make a note" form.
+    pub extract: crate::pdf_extract_types::ExtractForm,
+    /// Items made from this PDF.
+    pub sourced: Vec<studyfrog_store::pdf_notes::SourcedItem>,
     /// The new file being planned, if any.
     pub arrange: Option<crate::pdf_arrange_types::Arrange>,
 }
@@ -131,8 +141,16 @@ pub enum PdfMsg {
     Select(Vec<usize>),
     /// Show another side panel.
     ShowSide(Side),
+    /// The pages without text arrived.
+    Scanned(String, Result<Vec<usize>, String>),
     /// Highlights and notes.
     Marks(crate::pdf_mark_types::MarkMsg),
+    /// The PDFs in the library list.
+    Library(crate::pdf_library_types::LibraryMsg),
+    /// A card or question being written.
+    Draft(crate::pdf_draft_types::DraftMsg),
+    /// Making notes from the text.
+    Extract(crate::pdf_extract_types::ExtractMsg),
     /// Rearranging into a new file.
     Arrange(crate::pdf_arrange_types::ArrangeMsg),
 }
@@ -176,6 +194,47 @@ pub enum PdfEffect {
         /// 0-based first and last page of each range.
         ranges: Vec<(usize, usize)>,
     },
+    /// Make a note from pages or a selection.
+    MakeNote {
+        /// Vault-relative path of the PDF.
+        path: String,
+        /// First page (0-based).
+        first: usize,
+        /// Last page (0-based).
+        last: usize,
+        /// The selected text, if that is what to use.
+        selection: Option<String>,
+        /// The stack folder.
+        folder: String,
+        /// The title, or empty.
+        title: String,
+        /// Pictures to put at the end.
+        pictures: Vec<String>,
+    },
+    /// Save the pictures of a page.
+    SavePictures {
+        /// Vault-relative path.
+        path: String,
+        /// The page (0-based).
+        page: usize,
+    },
+    /// Save a rectangle of a page as a picture.
+    SaveRegion {
+        /// Vault-relative path.
+        path: String,
+        /// The page (0-based).
+        page: usize,
+        /// The rectangle.
+        rect: studyfrog_pdf::render::PageRect,
+    },
+    /// Adding, listing and renaming PDFs.
+    Library(crate::pdf_library_types::LibraryJob),
+    /// Make a card or a question from a passage.
+    MakeItem(crate::pdf_draft_types::ItemJob),
+    /// List the items made from a PDF.
+    LoadSourced(String),
+    /// List the pages of a PDF that have no text.
+    LoadScanned(String),
     /// Read the highlights and notes of a PDF.
     LoadMarks(String),
     /// Write the highlights and notes of a PDF.

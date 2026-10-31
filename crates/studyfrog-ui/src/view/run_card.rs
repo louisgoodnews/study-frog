@@ -9,7 +9,7 @@ use studyfrog_rehearsal::input::Action;
 use studyfrog_rehearsal::session::current_item;
 
 use crate::msg::Msg;
-use crate::run_state::{RunView, blocks_of};
+use crate::run_state::{ItemContent, RunView, blocks_of};
 use crate::run_update::{awaiting_rating, awaiting_reveal};
 use crate::theme::{palette_of, tint};
 use crate::view::kit;
@@ -75,6 +75,7 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .cloned()
         .unwrap_or_else(|| blocks_of(content));
     markdown(ui, &prompt, 24.0, None, out);
+    source_link(content, ui, out);
     ui.add_space(8.0);
     mark_row(run, ui, out);
     ui.add_space(12.0);
@@ -183,4 +184,22 @@ fn mark_row(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
     });
+}
+
+/// A small link to the PDF page an item was made from.
+fn source_link(content: &ItemContent, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let Some(source) = &content.source else {
+        return;
+    };
+    let (path, page) = studyfrog_store::pdf_notes::split_source(source);
+    if !path.to_lowercase().ends_with(".pdf") {
+        return;
+    }
+    let label = page.map_or("Source".to_owned(), |p| format!("Source, page {}", p + 1));
+    if ui.small_button(label).clicked() {
+        out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Open(
+            path.to_owned(),
+            page.unwrap_or(0),
+        )));
+    }
 }

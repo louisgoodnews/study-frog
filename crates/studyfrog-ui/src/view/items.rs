@@ -71,7 +71,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 item_row(item, ui, out);
             }
         });
-    if matches!(b.selection, Selection::Stack(_)) {
+    if let Selection::Stack(folder) = &b.selection {
+        crate::view::library_pdfs::stack_section(state, folder, ui, out);
         card_form(state, ui, out);
     }
 }

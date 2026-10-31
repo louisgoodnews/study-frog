@@ -8,6 +8,7 @@ use studyfrog_config::pdf_marks::MarkKind;
 use studyfrog_pdf::render::{PageRect, Pixels};
 
 use crate::msg::Msg;
+use crate::pdf_extract_types::ExtractMsg;
 use crate::pdf_mark_types::MarkMsg;
 use crate::pdf_select::{matching_words, words_in_rect};
 use crate::pdf_types::{PageKey, PdfMsg, PdfView, Zoom};
@@ -116,6 +117,37 @@ fn place(
     true
 }
 
+/// In snapshot mode a dragged rectangle is shown and, when let go, saved as a picture.
+fn snapshot(
+    view: &PdfView,
+    ui: &egui::Ui,
+    response: &egui::Response,
+    rect: Rect,
+    logical: f32,
+    out: &mut Vec<Msg>,
+) -> bool {
+    if !view.extract.snapshot_mode {
+        return false;
+    }
+    let drag = response
+        .interact_pointer_pos()
+        .zip(ui.input(|i| i.pointer.press_origin()));
+    let Some((now, start)) = drag.filter(|_| response.dragged() || response.drag_stopped()) else {
+        return true;
+    };
+    let area = page_rect_of(rect, start, now, logical);
+    ui.painter().rect_stroke(
+        Rect::from_two_pos(start, now),
+        0.0,
+        ui.visuals().selection.stroke,
+        egui::StrokeKind::Outside,
+    );
+    if response.drag_stopped() {
+        out.push(Msg::Pdf(PdfMsg::Extract(ExtractMsg::Snapshot(area))));
+    }
+    true
+}
+
 fn select(view: &PdfView, response: &egui::Response, rect: Rect, logical: f32, out: &mut Vec<Msg>) {
     let Some(text) = &view.text else { return };
     let drag = response
@@ -185,7 +217,9 @@ pub fn draw(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
             paint_marks(view, ui, rect, logical);
             paint_words(view, ui, rect, logical);
-            if !place(view, &response, rect, logical, out) {
+            if !place(view, &response, rect, logical, out)
+                && !snapshot(view, ui, &response, rect, logical, out)
+            {
                 select(view, &response, rect, logical, out);
             }
             page_text(view, ui);

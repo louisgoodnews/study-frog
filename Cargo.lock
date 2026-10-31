@@ -5274,6 +5274,7 @@ dependencies = [
 name = "studyfrog-pdf"
 version = "0.1.0"
 dependencies = [
+ "criterion",
  "hayro",
  "image",
  "lopdf",
@@ -5305,6 +5306,7 @@ name = "studyfrog-service"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "image",
  "lopdf",
  "rusqlite",
  "studyfrog-achieve",

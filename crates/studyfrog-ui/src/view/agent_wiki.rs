@@ -4,7 +4,7 @@ use eframe::egui::{self, RichText};
 use studyfrog_agent::provider::{host_of, is_local};
 use studyfrog_agent::wiki::Change;
 
-use crate::agent_types::{AgentMsg, AgentState, selected_provider};
+use crate::agent_types::{AgentMsg, AgentState, Pending, selected_provider};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
@@ -54,7 +54,9 @@ fn describe(c: &Change) -> (String, String) {
         Change::CreateNote { stack, title, body } => {
             (format!("New note \"{title}\" in {stack}"), body.clone())
         }
-        Change::CreateCard { stack, front, back } => (
+        Change::CreateCard {
+            stack, front, back, ..
+        } => (
             format!("New card in {stack}: {front}"),
             format!("Front: {front}\nBack: {back}"),
         ),
@@ -62,6 +64,7 @@ fn describe(c: &Change) -> (String, String) {
             stack,
             prompt,
             reference,
+            ..
         } => (
             format!("New question in {stack}: {prompt}"),
             format!("Prompt: {prompt}\nReference answer: {reference}"),
@@ -81,6 +84,7 @@ fn describe(c: &Change) -> (String, String) {
 pub fn wiki(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let a = &state.agent;
     scope(state, ui, out);
+    pdf_scope(state, ui, out);
     if let Some(t) = text_field(ui, "What should the assistant do?", &a.instruction, "", 3) {
         send(out, AgentMsg::Instruction(t));
     }
@@ -94,7 +98,7 @@ pub fn wiki(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         busy(a, ui);
     });
     if let Some(p) = &a.pending {
-        pending(state, p.items.len(), (p.chars, p.left_out), ui, out);
+        pending(state, p, ui, out);
     }
     if let Some(r) = &a.reviewing {
         review(r, ui, out);
@@ -110,13 +114,8 @@ pub fn wiki(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-fn pending(
-    state: &State,
-    items: usize,
-    (chars, left_out): (usize, usize),
-    ui: &mut egui::Ui,
-    out: &mut Vec<Msg>,
-) {
+fn pending(state: &State, p: &Pending, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let (items, chars, left_out) = (p.items.len(), p.chars, p.left_out);
     let host = selected_provider(&state.agent).map_or_else(String::new, |p| {
         if is_local(&p) {
             "this computer".to_owned()
@@ -137,6 +136,12 @@ fn pending(
                 "{left_out} more items do not fit and are left out."
             ));
         }
+        egui::CollapsingHeader::new("Show the text that will be sent").show(ui, |ui| {
+            for i in &p.items {
+                ui.strong(&i.title);
+                ui.label(&i.text);
+            }
+        });
         ui.horizontal(|ui| {
             if kit::primary_button(ui, "Send").clicked() {
                 send(out, AgentMsg::SendWiki);
@@ -184,6 +189,20 @@ fn review(r: &crate::agent_types::Reviewing, ui: &mut egui::Ui, out: &mut Vec<Ms
         }
         if ui.button("Discard proposal").clicked() {
             send(out, AgentMsg::Discard);
+        }
+    });
+}
+
+/// The PDF pages chosen as extra reading, with a way to drop them.
+fn pdf_scope(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let Some((path, first, last)) = &state.agent.pdf_pages else {
+        return;
+    };
+    ui.horizontal(|ui| {
+        let pages = if first == last { format!("page {}", first + 1) } else { format!("pages {} to {}", first + 1, last + 1) };
+        ui.label(format!("Also reading {path}, {pages}. The cards and questions it proposes keep a link to the page."));
+        if ui.small_button("Stop reading it").clicked() {
+            send(out, AgentMsg::ClearPdfPages);
         }
     });
 }

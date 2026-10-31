@@ -7,7 +7,8 @@ use studyfrog_agent::provider::{Message, Provider};
 use studyfrog_agent::wiki::Change;
 use studyfrog_core::time::UnixMs;
 use studyfrog_service::agent::{Ask, ask, load_connections, save_providers, set_key};
-use studyfrog_service::agent_vault::{apply_changes, exam_items, record_exam, wiki_context};
+use studyfrog_service::agent_pdf::wiki_context_with_pdf;
+use studyfrog_service::agent_vault::{apply_changes, exam_items, record_exam};
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::session::vault_info;
 
@@ -79,9 +80,9 @@ pub fn allow(w: &Worker, name: &str, on: bool) -> Msg {
 }
 
 /// What a wiki request over these stacks would send.
-pub fn prepare_wiki(w: &Worker, folders: &[String]) -> Msg {
+pub fn prepare_wiki(w: &Worker, folders: &[String], pdf: Option<&(String, usize, usize)>) -> Msg {
     let result = match &w.session {
-        Some(s) => wiki_context(s, folders)
+        Some(s) => wiki_context_with_pdf(s, folders, pdf.map(|(p, a, b)| (p.as_str(), *a, *b)))
             .map(Box::new)
             .map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
@@ -159,7 +160,7 @@ pub fn run(w: &mut Worker, effect: Effect, now_ns: i64) -> Msg {
         Effect::SaveConnection { provider, key } => save(w, provider, key),
         Effect::RemoveConnection(name) => remove(w, &name),
         Effect::AllowConnection(name, on) => allow(w, &name, on),
-        Effect::PrepareWiki(folders) => prepare_wiki(w, &folders),
+        Effect::PrepareWiki { folders, pdf } => prepare_wiki(w, &folders, pdf.as_ref()),
         Effect::AgentChat {
             provider,
             system,

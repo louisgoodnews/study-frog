@@ -162,3 +162,15 @@ fn mark_hits(
     }
     Ok(hits)
 }
+
+/// The pages (0-based) of one PDF that hold only pictures and no text, from the index.
+pub fn scanned_pages(conn: &Connection, path: &str) -> Result<Vec<usize>, StoreError> {
+    let mut stmt = conn
+        .prepare("SELECT page FROM pdf_page WHERE path = ?1 AND image_only = 1 ORDER BY page")
+        .map_err(sql_err)?;
+    let rows = stmt
+        .query_map([path], |r| r.get::<_, i64>(0))
+        .map_err(sql_err)?;
+    rows.map(|r| r.map(|p| p as usize).map_err(sql_err))
+        .collect()
+}

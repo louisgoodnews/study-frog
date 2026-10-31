@@ -167,6 +167,7 @@ fn item_loaded(
                 prompt: format!("(this item could not be loaded: {e})"),
                 answer: String::new(),
                 previous: None,
+                source: None,
             }
         }
     };

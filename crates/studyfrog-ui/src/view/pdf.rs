@@ -84,6 +84,7 @@ fn side_buttons(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         (Side::Outline, "Outline"),
         (Side::Pages, "Pages"),
         (Side::Notes, "Notes"),
+        (Side::Extract, "Extract"),
         (Side::Closed, "Hide"),
     ] {
         if ui
@@ -132,6 +133,10 @@ fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 /// Draw the viewer for the open PDF.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let stacks = state
+        .vault
+        .as_ref()
+        .map_or(&[][..], |v| v.overview.stacks.as_slice());
     let Some(view) = &state.pdf else {
         ui.weak("No PDF is open. Choose one from the search or the library.");
         return;
@@ -151,10 +156,19 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         return;
     }
+    if !view.scanned.is_empty() {
+        let n = view.scanned.len();
+        ui.weak(format!(
+            "{n} {} of this PDF only {} pictures, without text. {} cannot be searched, selected or turned into notes (reading text from pictures is not part of StudyFrog yet).",
+            if n == 1 { "page" } else { "pages" },
+            if n == 1 { "holds" } else { "hold" },
+            if n == 1 { "It" } else { "They" },
+        ));
+    }
     if view.side != Side::Closed {
         Panel::left("pdf-side")
             .default_size(170.0)
-            .show(ui, |ui| pdf_side::draw(view, ui, out));
+            .show(ui, |ui| pdf_side::draw(view, stacks, ui, out));
     }
     egui::CentralPanel::default().show(ui, |ui| match &view.arrange {
         Some(a) => pdf_arrange::draw(view, a, ui, out),

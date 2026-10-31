@@ -63,7 +63,14 @@ fn the_worker_runs_a_whole_wiki_session_with_a_fake_model() {
         now,
     );
     assert!(matches!(&saved[0], Msg::Agent(AgentMsg::Saved(Ok(c))) if c.providers.len() == 1));
-    let prepared = execute(&mut w, Effect::PrepareWiki(vec!["deck".into()]), now);
+    let prepared = execute(
+        &mut w,
+        Effect::PrepareWiki {
+            folders: vec!["deck".into()],
+            pdf: None,
+        },
+        now,
+    );
     let Msg::Agent(AgentMsg::WikiPrepared(Ok(ctx))) = &prepared[0] else {
         panic!("{:?}", prepared[0])
     };

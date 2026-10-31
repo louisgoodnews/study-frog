@@ -4,14 +4,14 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (6) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (115) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (121) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0117](docs/issues/tasks/TASK-0117-extract-text-into-markdown-notes-with-a-link-back-to-the-page.md) Extract text into Markdown notes with a link back to the page (5) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-| [TASK-0118](docs/issues/tasks/TASK-0118-detect-scanned-pages-and-say-so.md) Detect scanned pages and say so (2) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-| [TASK-0119](docs/issues/tasks/TASK-0119-extract-pictures-and-page-snapshots-into-the-vault.md) Extract pictures and page snapshots into the vault (3) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-| [TASK-0120](docs/issues/tasks/TASK-0120-cards-and-questions-from-highlighted-passages-with-the-assistant-s-help.md) Cards and questions from highlighted passages, with the assistant's help (5) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
-| [TASK-0121](docs/issues/tasks/TASK-0121-add-link-and-organise-pdfs.md) Add, link and organise PDFs (3) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
-| [TASK-0122](docs/issues/tasks/TASK-0122-documentation-tests-accessibility-and-release-notes-for-pdf-support.md) Documentation, tests, accessibility and release notes for PDF support (3) |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
+|  |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+|  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+|  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+|  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+|  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
+|  |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
 |  |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
 |  |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
 |  |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
@@ -121,6 +121,12 @@
 |  |  |  |  |  | [TASK-0114](docs/issues/tasks/TASK-0114-annotations-as-highlights-and-notes-in-a-sidecar-file.md) Annotations as highlights and notes in a sidecar file (5) |
 |  |  |  |  |  | [TASK-0115](docs/issues/tasks/TASK-0115-page-operations-to-rotate-delete-reorder-merge-and-split-into-a-new-pdf.md) Page operations to rotate, delete, reorder, merge and split into a new PDF (5) |
 |  |  |  |  |  | [TASK-0116](docs/issues/tasks/TASK-0116-export-an-annotated-copy-and-edit-document-properties.md) Export an annotated copy and edit document properties (3) |
+|  |  |  |  |  | [TASK-0117](docs/issues/tasks/TASK-0117-extract-text-into-markdown-notes-with-a-link-back-to-the-page.md) Extract text into Markdown notes with a link back to the page (5) |
+|  |  |  |  |  | [TASK-0118](docs/issues/tasks/TASK-0118-detect-scanned-pages-and-say-so.md) Detect scanned pages and say so (2) |
+|  |  |  |  |  | [TASK-0119](docs/issues/tasks/TASK-0119-extract-pictures-and-page-snapshots-into-the-vault.md) Extract pictures and page snapshots into the vault (3) |
+|  |  |  |  |  | [TASK-0120](docs/issues/tasks/TASK-0120-cards-and-questions-from-highlighted-passages-with-the-assistant-s-help.md) Cards and questions from highlighted passages, with the assistant's help (5) |
+|  |  |  |  |  | [TASK-0121](docs/issues/tasks/TASK-0121-add-link-and-organise-pdfs.md) Add, link and organise PDFs (3) |
+|  |  |  |  |  | [TASK-0122](docs/issues/tasks/TASK-0122-documentation-tests-accessibility-and-release-notes-for-pdf-support.md) Documentation, tests, accessibility and release notes for PDF support (3) |
 
 ## Stories
 
@@ -179,7 +185,7 @@
 | [STORY-0051](docs/issues/stories/STORY-0051-user-profiles.md) User profiles (5) | done | 0/0 |
 | [STORY-0052](docs/issues/stories/STORY-0052-stack-due-dates-that-pass-and-can-change.md) Stack due dates that pass and can change (3) | done | 0/0 |
 | [STORY-0053](docs/issues/stories/STORY-0053-priority-and-difficulty-with-inheritance.md) Priority and difficulty with inheritance (8) | done | 0/0 |
-| [STORY-0054](docs/issues/stories/STORY-0054-pdf-files-in-the-vault-to-view-edit-and-extract.md) PDF files in the vault to view, edit and extract (8) | backlog | 8/14 |
+| [STORY-0054](docs/issues/stories/STORY-0054-pdf-files-in-the-vault-to-view-edit-and-extract.md) PDF files in the vault to view, edit and extract (8) | done | 14/14 |
 
 ## Epics
 
@@ -206,4 +212,4 @@
 | [EPIC-019](docs/issues/epics/EPIC-019-rehearsal-insights.md) Rehearsal insights | done | 1/1 |
 | [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 4/4 |
 | [EPIC-021](docs/issues/epics/EPIC-021-knowledge-workspace.md) Knowledge workspace | done | 14/14 |
-| [EPIC-022](docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | backlog | 0/1 |
+| [EPIC-022](docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | done | 1/1 |

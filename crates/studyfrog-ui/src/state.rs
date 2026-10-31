@@ -176,6 +176,8 @@ pub struct State {
     pub achievements: Option<AchievementReport>,
     /// The reading-speed test on the settings screen.
     pub reading_test: ReadingTest,
+    /// The PDFs of the vault, for the library list.
+    pub pdf_library: crate::pdf_library_types::PdfLibrary,
     /// The PDF open in the viewer.
     pub pdf: Option<crate::pdf_types::PdfView>,
 }

@@ -2,7 +2,7 @@
 id: TASK-0118
 type: task
 title: Detect scanned pages and say so
-status: backlog
+status: done
 epic: EPIC-022
 parents: [STORY-0054]
 estimate: 2
@@ -20,9 +20,9 @@ The owner asked for PDF support on 2026-10-31: PDF files are integral to how Stu
 A cheap check on the extracted text and the page's pictures.
 
 ## Acceptance Criteria
-- [ ] A page with no extractable text is marked as an image-only page in the viewer and the index
-- [ ] Extraction and search say that such pages have no text instead of silently finding nothing
-- [ ] The docs state that OCR is deferred and not part of this story
+- [x] A page with no extractable text is marked as an image-only page in the viewer and the index
+- [x] Extraction and search say that such pages have no text instead of silently finding nothing
+- [x] The docs state that OCR is deferred and not part of this story
 
 ## Design Notes
 OCR is deferred by the owner (see EPIC-022); a later story can feed the same pages to an OCR engine.

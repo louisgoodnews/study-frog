@@ -37,12 +37,26 @@ pub fn add_image(session: &VaultSession, source: &Path) -> Result<String, Servic
         .file_stem()
         .and_then(|s| s.to_str())
         .unwrap_or("picture");
-    let name = format!("{}-{:08x}.{ext}", slug(stem), hash_bytes(&bytes) as u32);
+    store_image(session, stem, &ext, &bytes)
+}
+
+/// Store picture bytes in the vault's `assets/` folder under a name made from `stem` and the content;
+/// the same bytes reuse the same file. Returns the vault-relative path.
+pub fn store_image(
+    session: &VaultSession,
+    stem: &str,
+    ext: &str,
+    bytes: &[u8],
+) -> Result<String, ServiceError> {
+    if bytes.len() as u64 > MAX_IMAGE_BYTES {
+        return Err(invalid("that picture is larger than 20 MB"));
+    }
+    let name = format!("{}-{:08x}.{ext}", slug(stem), hash_bytes(bytes) as u32);
     let dir = session.root.join(ASSETS_DIR);
     fs::create_dir_all(&dir).map_err(|e| ServiceError::Io(format!("{}: {e}", dir.display())))?;
     let target = dir.join(&name);
     if !target.exists() {
-        fs::write(&target, &bytes)
+        fs::write(&target, bytes)
             .map_err(|e| ServiceError::Io(format!("{}: {e}", target.display())))?;
     }
     Ok(format!("{ASSETS_DIR}/{name}"))

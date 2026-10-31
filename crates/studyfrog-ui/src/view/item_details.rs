@@ -41,6 +41,7 @@ pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         subject_rows(state, e, ui, out);
         priority_row(e, ui, out);
         difficulty_row(e, ui, out);
+        source_link(e, ui, out);
         let meta = studyfrog_md::doc::doc_meta(&e.doc);
         for (word, at) in [("Created", meta.created), ("Updated", meta.updated)] {
             if let Some(ms) = at.and_then(studyfrog_md::rfc3339::format_rfc3339) {
@@ -196,4 +197,25 @@ fn links(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
     });
+}
+
+/// An item made from a PDF page links back to it.
+fn source_link(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let Some(source) = studyfrog_md::extra::extra_value(&e.doc, "source") else {
+        return;
+    };
+    let (path, page) = studyfrog_store::pdf_notes::split_source(&source);
+    if !path.to_lowercase().ends_with(".pdf") {
+        ui.label(format!("Source: {source}"));
+        return;
+    }
+    let label = page.map_or(format!("Open source ({path})"), |p| {
+        format!("Open source ({path}, page {})", p + 1)
+    });
+    if ui.link(label).clicked() {
+        out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Open(
+            path.to_owned(),
+            page.unwrap_or(0),
+        )));
+    }
 }

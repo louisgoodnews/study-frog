@@ -62,7 +62,9 @@ fn opened(
                 .filter(|t| !t.trim().is_empty())
                 .unwrap_or(view.title.clone());
             let page = view.page.min(info.page_count.saturating_sub(1));
+            let view_path = path.clone();
             let marks = Effect::Pdf(PdfEffect::LoadMarks(path.clone()));
+            let sourced = crate::pdf_extract_ui::ask_sourced(&path);
             let ask = Effect::Pdf(PdfEffect::Text { path, page });
             (
                 with(
@@ -75,7 +77,12 @@ fn opened(
                         ..view
                     },
                 ),
-                vec![ask, marks],
+                vec![
+                    ask,
+                    marks,
+                    sourced,
+                    Effect::Pdf(PdfEffect::LoadScanned(view_path)),
+                ],
             )
         }
         Err(e) => (
@@ -177,6 +184,10 @@ pub fn update(state: State, msg: PdfMsg) -> (State, Vec<Effect>) {
             },
             Vec::new(),
         ),
+        PdfMsg::Scanned(path, r) => scanned(state, path, r),
+        PdfMsg::Library(m) => crate::pdf_library_ui::update(state, m),
+        PdfMsg::Draft(m) => crate::pdf_draft_ui::update(state, m),
+        PdfMsg::Extract(m) => crate::pdf_extract_ui::update(state, m),
         PdfMsg::Arrange(m) => crate::pdf_arrange_ui::update(state, m),
         PdfMsg::Marks(m) => crate::pdf_marks_ui::update(state, m),
         PdfMsg::ShowSide(side) => (
@@ -187,4 +198,13 @@ pub fn update(state: State, msg: PdfMsg) -> (State, Vec<Effect>) {
             Vec::new(),
         ),
     }
+}
+
+fn scanned(state: State, path: String, result: Result<Vec<usize>, String>) -> (State, Vec<Effect>) {
+    let Some(view) = state.pdf.clone().filter(|v| v.path == path) else {
+        return (state, Vec::new());
+    };
+    // An unreadable index only means no note about scans is shown.
+    let scanned = result.unwrap_or_default();
+    (with(state, PdfView { scanned, ..view }), Vec::new())
 }

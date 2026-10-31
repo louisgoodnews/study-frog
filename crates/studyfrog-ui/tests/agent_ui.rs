@@ -129,7 +129,13 @@ fn a_wiki_request_needs_a_connection_stacks_and_permission_and_a_remote_one_asks
     );
     m.state.agent.connections.providers = vec![cloud(true)];
     let fx = agent(&mut m, AgentMsg::PrepareWiki);
-    assert_eq!(fx, [Effect::PrepareWiki(vec!["french".into()])]);
+    assert_eq!(
+        fx,
+        [Effect::PrepareWiki {
+            folders: vec!["french".into()],
+            pdf: None
+        }]
+    );
     let ctx = studyfrog_service::agent_vault::WikiContext {
         stacks: vec![("french".into(), "French".into())],
         chars: 40,
@@ -167,6 +173,7 @@ fn a_local_model_is_asked_without_a_second_click_and_proposals_are_reviewed_then
                 stack: "french".into(),
                 front: "f".into(),
                 back: "b".into(),
+                source: None,
             },
         ],
         rejected: vec!["Change 3: nope".into()],

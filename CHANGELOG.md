@@ -8,6 +8,21 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Documentation, tests and benchmarks for PDF support: `docs/specs/pdf.md`, headless view tests with the accessibility
+  audit, a 500-page benchmark with budgets, and draft release notes `docs/RELEASE_NOTES_0.2.0.md` (TASK-0122).
+- PDFs in the library: the stack page lists its PDFs with page counts, 'Add PDF ...' (also in the Create dialog) copies a
+  file into the stack under a safe name, renaming a PDF moves its notes file and rewrites every note, card and link that
+  names it, `[text](file.pdf#page=3)` and `![](file.pdf#page=3)` open the viewer at that page, and the home page lists the
+  PDFs that changed most recently (TASK-0121).
+- Cards and questions from PDFs: a highlighted passage or the selected words become a card or a question with a link to
+  the page, shown as a 'Source' link while rehearsing; the assistant can read chosen PDF pages (shown first, sent only
+  after Send) and propose cards and questions that name the page they come from (TASK-0120).
+- Pictures from PDFs: save the pictures of a page or a dragged rectangle of a page (figures, formulas) into the vault's
+  assets folder under the usual picture rules, and put them at the end of a note made from the page (TASK-0119).
+- Notes from PDF text: the text of pages or of a selection becomes a Markdown note in a stack, with a `source` key that
+  leads back to the page; the item page offers 'Open source' and the viewer lists the notes made from the file
+  (TASK-0117). Pages that are only pictures are flagged in the index and the viewer, and notes made from them say so
+  (TASK-0118). `docs/specs/pdf.md` describes the formats and limits.
 - Highlights and notes on PDFs: choose a colour, highlight the selected words or place a note, edit and delete them in a
   list, jump to each; stored in plain text in `name.pdf.notes.toml` next to the PDF, searchable, included in backups, and
   followed to the right page if the PDF is replaced by a revision (TASK-0114).

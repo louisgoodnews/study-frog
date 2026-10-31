@@ -2,10 +2,12 @@
 
 use eframe::egui::{self, ScrollArea, Sense, Vec2};
 
+use studyfrog_store::overview::StackRow;
+
 use crate::msg::Msg;
 use crate::pdf_types::{PageKey, PdfMsg, PdfView, Side};
-use crate::view::pdf_notes;
 use crate::view::pdf_page::{picture_for, texture};
+use crate::view::{pdf_extract, pdf_notes};
 
 const THUMB_WIDTH: f32 = 120.0;
 const THUMB_SCALE_MILLI: u32 = 250;
@@ -73,7 +75,7 @@ fn thumbnail(view: &PdfView, page: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>)
 }
 
 /// Draw the panel that `view.side` names.
-pub fn draw(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+pub fn draw(view: &PdfView, stacks: &[StackRow], ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ScrollArea::vertical()
         .id_salt("pdf-side-scroll")
         .show(ui, |ui| match view.side {
@@ -85,6 +87,7 @@ pub fn draw(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 }
             }
             Side::Notes => pdf_notes::list(view, ui, out),
+            Side::Extract => pdf_extract::draw(view, stacks, ui, out),
             Side::Closed => {}
         });
 }

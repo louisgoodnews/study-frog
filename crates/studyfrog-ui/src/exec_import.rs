@@ -106,6 +106,7 @@ pub fn create_item(
         return Msg::Modal(ModalMsg::Created(Err("no vault is open".to_owned())));
     };
     let item = NewItem {
+        source: None,
         kind,
         title,
         text,

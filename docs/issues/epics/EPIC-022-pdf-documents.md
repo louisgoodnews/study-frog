@@ -2,7 +2,7 @@
 id: EPIC-022
 type: epic
 title: PDF documents
-status: backlog
+status: done
 parents: []
 labels: [m9, pdf]
 acceptance_criteria:
@@ -16,7 +16,7 @@ The owner asked for PDF support on 2026-10-31: PDF files are integral to how Stu
 Make PDFs first-class vault content: find them, read them in the app, mark them up, change their pages, and turn what they say into notes, flashcards and questions that point back to the page they came from.
 
 ## Acceptance Criteria
-- [ ] PDF files in the vault can be viewed, annotated and rearranged, and their text and pictures can be extracted into notes and cards
+- [x] PDF files in the vault can be viewed, annotated and rearranged, and their text and pictures can be extracted into notes and cards
 
 ## Design Notes
 Out of scope for now: OCR (deferred), form filling, redaction, signing, and editing the text inside a PDF.

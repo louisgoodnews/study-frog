@@ -22,6 +22,8 @@ pub struct ItemContent {
     pub answer: String,
     /// The rating of the item's latest review before now; `None` for an item never reviewed.
     pub previous: Option<Rating>,
+    /// Where the item was made from (such as `bio/cells.pdf#page=3`), if it says.
+    pub source: Option<String>,
 }
 
 fn content_of(doc: &Doc) -> ItemContent {
@@ -33,24 +35,28 @@ fn content_of(doc: &Doc) -> ItemContent {
             prompt: shown(&c.front),
             answer: shown(&c.back),
             previous: None,
+            source: None,
         },
         Doc::Question(q) => ItemContent {
             title,
             prompt: shown(&q.prompt),
             answer: shown(&q.reference),
             previous: None,
+            source: None,
         },
         Doc::Note(n) => ItemContent {
             prompt: title.clone(),
             title,
             answer: shown(&n.body),
             previous: None,
+            source: None,
         },
         Doc::Stack(s) => ItemContent {
             prompt: title.clone(),
             title,
             answer: shown(&s.description),
             previous: None,
+            source: None,
         },
     }
 }
@@ -73,6 +79,7 @@ pub fn load_item_content(session: &VaultSession, uid: Uid) -> Result<ItemContent
         .map(|r| r.rating);
     load_doc(session, uid).map(|doc| ItemContent {
         previous,
+        source: studyfrog_md::extra::extra_value(&doc, "source"),
         ..content_of(&doc)
     })
 }

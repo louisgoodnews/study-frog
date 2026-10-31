@@ -1,6 +1,6 @@
 //! Applying the changes of a proposal the user accepted.
 
-use studyfrog_agent::wiki::Change;
+use studyfrog_agent::wiki::{Change, PDF_PREFIX};
 use studyfrog_core::time::UnixMs;
 use studyfrog_md::doc::Doc;
 use studyfrog_md::ulid::parse_ulid;
@@ -63,27 +63,46 @@ fn update(
 }
 
 fn create(session: &mut VaultSession, change: &Change, ids: IdSource) -> Result<(), ServiceError> {
-    let (kind, stack, title, text, answer) = match change {
-        Change::CreateNote { stack, title, body } => {
-            (NewKind::Note, stack, title.as_str(), body.as_str(), "")
-        }
-        Change::CreateCard { stack, front, back } => {
-            (NewKind::Card, stack, "", front.as_str(), back.as_str())
-        }
+    let (kind, stack, title, text, answer, from) = match change {
+        Change::CreateNote { stack, title, body } => (
+            NewKind::Note,
+            stack,
+            title.as_str(),
+            body.as_str(),
+            "",
+            None,
+        ),
+        Change::CreateCard {
+            stack,
+            front,
+            back,
+            source,
+        } => (
+            NewKind::Card,
+            stack,
+            "",
+            front.as_str(),
+            back.as_str(),
+            source.as_deref(),
+        ),
         Change::CreateQuestion {
             stack,
             prompt,
             reference,
+            source,
         } => (
             NewKind::Question,
             stack,
             "",
             prompt.as_str(),
             reference.as_str(),
+            source.as_deref(),
         ),
         Change::UpdateItem { .. } => return Ok(()),
     };
+    let source = from.and_then(|s| s.strip_prefix(PDF_PREFIX));
     let item = NewItem {
+        source,
         kind,
         title,
         text,

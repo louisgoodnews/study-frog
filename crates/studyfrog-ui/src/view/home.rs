@@ -9,7 +9,7 @@ use crate::home_ui::HomeMsg;
 use crate::msg::Msg;
 use crate::state::{Screen, State};
 use crate::theme::palette_of;
-use crate::view::{home_cards, kit};
+use crate::view::{home_cards, kit, library_pdfs};
 
 const DAY_MS: i64 = 86_400_000;
 const MIN_COLUMN_HEIGHT: f32 = 240.0;
@@ -74,6 +74,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 home_cards::ahead_column(h, fill, &mut c[1]);
                 home_cards::recent_column(h, fill, &mut c[2], out);
             });
+            ui.add_space(10.0);
+            library_pdfs::recent_card(state, ui, out);
         });
 }
 

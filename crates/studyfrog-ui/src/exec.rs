@@ -129,7 +129,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         | Effect::SaveConnection { .. }
         | Effect::RemoveConnection(_)
         | Effect::AllowConnection(..)
-        | Effect::PrepareWiki(_)
+        | Effect::PrepareWiki { .. }
         | Effect::AgentChat { .. }
         | Effect::ApplyChanges(_)
         | Effect::PrepareExam { .. }
@@ -159,7 +159,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             (&tags, parent.as_deref(), due.as_ref()),
             now_ns,
         ),
-        Effect::Pdf(e) => exec_pdf::run(w, e),
+        Effect::Pdf(e) => exec_pdf::run(w, e, now_ns),
         Effect::BuildReports => exec_run::reports(w, now_ns),
         Effect::Explore { scope, period } => exec_run::explorer(w, (scope, period), now_ns),
         Effect::CheckAchievements => exec_run::achievements(w, now_ns),

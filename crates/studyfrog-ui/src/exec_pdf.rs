@@ -14,12 +14,18 @@ use crate::chrome::{ChromeMsg, MAX_RESULTS};
 use crate::exec::Worker;
 use crate::msg::Msg;
 use crate::pdf_arrange_types::ArrangeMsg;
+use crate::pdf_extract_types::ExtractMsg;
 use crate::pdf_mark_types::MarkMsg;
 use crate::pdf_types::{PageKey, PdfEffect, PdfMsg};
 use studyfrog_config::pdf_marks::PdfMark;
+use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::pdf_marks::{load_marks, mark_pages_now, save_marks};
+use studyfrog_service::pdf_notes::{NoteRequest, note_from_pdf};
 use studyfrog_service::pdf_ops::{pdf_page_total, save_pdf_copy, split_pdf};
+use studyfrog_service::pdf_pictures::{save_page_pictures, save_page_region};
 use studyfrog_service::session::ServiceError;
+use studyfrog_store::pdf_notes::items_made_from;
+use studyfrog_store::pdf_search::scanned_pages;
 
 /// A path inside the vault: relative, no `..`, ends in `.pdf`.
 fn is_vault_pdf(rel: &str) -> bool {
@@ -90,13 +96,56 @@ pub fn search(w: &Worker, query: String) -> Msg {
 }
 
 /// Perform one of the viewer's effects.
-pub fn run(w: &mut Worker, effect: PdfEffect) -> Msg {
+pub fn run(w: &mut Worker, effect: PdfEffect, now_ns: i64) -> Msg {
     match effect {
         PdfEffect::Open(path) => open(w, &path),
         PdfEffect::Render { path, key } => render(w, &path, key),
         PdfEffect::Text { path, page } => text(w, &path, page),
         PdfEffect::Find { path, query } => find(w, &path, &query),
         PdfEffect::Search(query) => search(w, query),
+        PdfEffect::MakeNote {
+            path,
+            first,
+            last,
+            selection,
+            folder,
+            title,
+            pictures,
+        } => make_note(
+            w,
+            now_ns,
+            &path,
+            (first, last),
+            (selection.as_deref(), &folder, &title, &pictures),
+        ),
+        PdfEffect::SavePictures { path, page } => {
+            Msg::Pdf(PdfMsg::Extract(ExtractMsg::PicturesSaved(
+                w.session
+                    .as_ref()
+                    .ok_or("no vault is open".to_owned())
+                    .and_then(|s| save_page_pictures(s, &path, page).map_err(|e| e.to_string())),
+            )))
+        }
+        PdfEffect::SaveRegion { path, page, rect } => {
+            Msg::Pdf(PdfMsg::Extract(ExtractMsg::SnapshotSaved(
+                w.session
+                    .as_ref()
+                    .ok_or("no vault is open".to_owned())
+                    .and_then(|s| {
+                        save_page_region(s, &path, page, rect).map_err(|e| e.to_string())
+                    }),
+            )))
+        }
+        PdfEffect::Library(job) => crate::exec_pdf_library::run(w, job, now_ns),
+        PdfEffect::MakeItem(job) => crate::exec_pdf_items::make(w, &job, now_ns),
+        PdfEffect::LoadScanned(path) => {
+            let result = match &w.session {
+                Some(s) => scanned_pages(&s.conn, &path).map_err(|e| e.to_string()),
+                None => Ok(Vec::new()),
+            };
+            Msg::Pdf(PdfMsg::Scanned(path, result))
+        }
+        PdfEffect::LoadSourced(path) => sourced(w, &path),
         PdfEffect::PickMerge => pick_merge(w),
         PdfEffect::SaveCopy(req) => Msg::Pdf(PdfMsg::Arrange(ArrangeMsg::Saved(
             w.session
@@ -154,4 +203,40 @@ fn pick_merge(w: &Worker) -> Msg {
         }
     };
     Msg::Pdf(PdfMsg::Arrange(ArrangeMsg::FileAdded(result)))
+}
+
+fn make_note(
+    w: &mut Worker,
+    now_ns: i64,
+    pdf: &str,
+    pages: (usize, usize),
+    (selection, folder, title, pictures): (Option<&str>, &str, &str, &[String]),
+) -> Msg {
+    let result = match &mut w.session {
+        Some(s) => fresh_id_source(u64::try_from(now_ns / 1_000_000).unwrap_or(0))
+            .and_then(|ids| {
+                let req = NoteRequest {
+                    pdf,
+                    first: pages.0,
+                    last: pages.1,
+                    selection,
+                    folder,
+                    title,
+                    pictures,
+                };
+                note_from_pdf(s, &req, ids)
+            })
+            .map(|(info, made)| Box::new((info, made.path)))
+            .map_err(|e| e.to_string()),
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::Pdf(PdfMsg::Extract(ExtractMsg::Made(result)))
+}
+
+fn sourced(w: &Worker, pdf: &str) -> Msg {
+    let result = match &w.session {
+        Some(s) => items_made_from(&s.conn, pdf, None).map_err(|e| e.to_string()),
+        None => Ok(Vec::new()),
+    };
+    Msg::Pdf(PdfMsg::Extract(ExtractMsg::Sourced(pdf.to_owned(), result)))
 }

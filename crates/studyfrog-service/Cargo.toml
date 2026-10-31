@@ -30,3 +30,4 @@ rusqlite.workspace = true
 
 [dev-dependencies]
 lopdf.workspace = true
+image.workspace = true

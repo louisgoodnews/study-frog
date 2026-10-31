@@ -19,6 +19,7 @@ fn the_prompt_and_the_answer_are_drawn_as_markdown() {
         prompt: "Capital of **France** and *Spain*?".into(),
         answer: "- `Paris`\n- Madrid".into(),
         previous: None,
+        source: None,
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     let mut h = harness(m);

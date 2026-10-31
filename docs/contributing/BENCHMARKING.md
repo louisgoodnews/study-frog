@@ -12,6 +12,7 @@ replaced by a measured baseline when its crate gets its first benchmark (the own
 | Markdown parse + index | md/store | 10k notes cold index < 3 s (measured 0.57 s) | startup on a large vault stays under a few seconds | TASK-0028 (done) |
 | SLM comparison | slm | p95 < 150 ms for 30 words (CPU) | interactive feedback threshold (about 100-200 ms feels immediate to a user) | TASK-0050 |
 | Graph layout + projection | graph | 5k nodes, 10k edges: < 8 ms per frame, zero allocation (measured 4.0 ms, 0 allocs) | half of the 16.6 ms frame budget, leaving the rest for painting | TASK-0043 (done) |
+| PDF: structure / all text / one page's words / draw one page, 500 pages | pdf | < 50 ms / < 2 s / < 100 ms / < 50 ms | opening must feel instant, a first scan of a big PDF is a background pass, turning a page and drawing it stay under a tenth of a second | TASK-0122 (done) |
 
 Rules: commit baselines with `--save-baseline`; PRs touching a hot path report the diff;
 introduce `smallvec`/`ahash`/`bumpalo` only with a before/after number in the commit message.
@@ -103,3 +104,18 @@ the pass used the benchmarks and the structure of the code, not a sampling profi
 Allocation: `crates/studyfrog-graph/tests/allocs.rs` uses `dhat` as the test binary's global allocator and asserts
 0 allocations over 50 frames. This is the safe way to count allocations (no `unsafe` in our code).
 
+
+## PDF support (2026-10-31, TASK-0122)
+`cargo bench -p studyfrog-pdf --bench pdf` generates a 500-page file (40 lines of text per page) and measures:
+
+| Bench | Result | Budget |
+|---|---|---|
+| `info` (page sizes, outline, properties) | 2.1 ms | under 50 ms |
+| `all_text` (text of 500 pages, for the index) | 374 ms (0.75 ms per page) | under 2 s |
+| `page_text_with_words` (one page with word boxes) | 51.7 ms | under 100 ms |
+| `render_one_page_at_1x` | 6.0 ms | under 50 ms |
+| `reverse_all_pages` (rewrite all 500 pages in reverse) | 25.5 ms | none set |
+
+`page_text_with_words` is dominated by parsing the whole document again for each call; if turning pages ever feels slow
+on very large files, keep the parsed document in the worker. Drawing was measured with the 8 ms median per page found in
+the library spike (`docs/research/pdf-library-spike.md`) on real documents.

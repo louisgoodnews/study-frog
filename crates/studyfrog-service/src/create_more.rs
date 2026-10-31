@@ -3,6 +3,7 @@
 
 use studyfrog_core::items::DEFAULT_MIN_SCORE;
 use studyfrog_md::doc::{CardDoc, Doc, NoteDoc, QuestionDoc, StackDoc};
+use studyfrog_md::extra::with_extra;
 use studyfrog_md::render::render_doc;
 use studyfrog_store::stackmap::STACK_FILE;
 
@@ -41,6 +42,8 @@ pub struct NewItem<'a> {
     /// The stack (vault-relative folder) it goes into. Required for everything but a stack, where
     /// `None` means a top-level stack.
     pub parent: Option<&'a str>,
+    /// Where the text came from, such as `docs/book.pdf#page=3` (written as the `source` key).
+    pub source: Option<&'a str>,
 }
 
 /// What was created.
@@ -122,6 +125,11 @@ pub fn create_item(
 ) -> Result<(VaultInfo, Created), ServiceError> {
     let title = title_of(item)?;
     check_title(&title)?;
+    if item.source.is_some_and(|s| s.contains(['"', '\n'])) {
+        return Err(invalid(
+            "the source of an item cannot contain quotes or line breaks",
+        ));
+    }
     if item.kind != NewKind::Stack && item.parent.is_none() {
         return Err(invalid("choose the stack it goes into"));
     }
@@ -129,7 +137,11 @@ pub fn create_item(
         Some(folder) => parent_dir(session, folder)?,
         None => session.root.clone(),
     };
-    let doc = doc_of(item, &title, ids)?;
+    let doc = with_extra(
+        &doc_of(item, &title, ids)?,
+        "source",
+        item.source.map(|s| format!("\"{s}\"")).as_deref(),
+    );
     let text = render_doc(&doc).map_err(render_error)?;
     let rel_of = |name: &str| match item.parent {
         Some(folder) => format!("{folder}/{name}"),

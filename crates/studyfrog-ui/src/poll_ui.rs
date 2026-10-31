@@ -37,6 +37,7 @@ pub fn vault_polled(
     match result {
         Ok(Some(info)) if state.vault.is_some() => {
             let mut effects = crate::browse::reload(&state.browser.selection);
+            effects.push(crate::pdf_library_ui::load());
             let state = State {
                 vault: Some(info),
                 ..state

@@ -91,6 +91,7 @@ pub fn running_model(mode: studyfrog_core::run::RunMode) -> Model {
             prompt: prompt.into(),
             answer: answer.into(),
             previous: None,
+            source: None,
         };
         apply(&mut m, Msg::ItemLoaded(Uid(uid), Ok(content)));
     }

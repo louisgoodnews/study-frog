@@ -105,14 +105,43 @@ fn spans_line(ui: &mut egui::Ui, spans: &[Span], heading: Option<u8>, out: &mut 
                         out.push(Msg::OpenLink(target.clone()));
                     }
                 }
-                Some(Link::Url(url)) => {
-                    ui.hyperlink_to(text, url);
-                }
-                Some(Link::Image(path)) => crate::view::image::draw_image(ui, &span.text, path),
+                Some(Link::Url(url)) => match crate::pdf_link::pdf_target(url) {
+                    Some((path, page)) => pdf_link(ui, text, (path, page), out),
+                    None => {
+                        ui.hyperlink_to(text, url);
+                    }
+                },
+                Some(Link::Image(path)) => match crate::pdf_link::pdf_target(path) {
+                    Some((p, page)) => {
+                        let name = if span.text.is_empty() { &p } else { &span.text };
+                        pdf_link(
+                            ui,
+                            egui::RichText::new(format!("PDF: {name}, page {}", page + 1)),
+                            (p.clone(), page),
+                            out,
+                        );
+                    }
+                    None => crate::view::image::draw_image(ui, &span.text, path),
+                },
                 None => {
                     ui.label(text);
                 }
             }
         }
     });
+}
+
+fn pdf_link(
+    ui: &mut egui::Ui,
+    text: egui::RichText,
+    (path, page): (String, usize),
+    out: &mut Vec<Msg>,
+) {
+    if ui
+        .link(text)
+        .on_hover_text(format!("Open {path}, page {}", page + 1))
+        .clicked()
+    {
+        out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Open(path, page)));
+    }
 }

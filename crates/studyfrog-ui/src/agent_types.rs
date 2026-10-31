@@ -87,6 +87,8 @@ pub struct AgentState {
     pub form: ConnForm,
     /// What to do with the vault.
     pub instruction: String,
+    /// Pages of a PDF to read as well: path, first and last page (0-based).
+    pub pdf_pages: Option<(String, usize, usize)>,
     /// A wiki request waiting for the go-ahead.
     pub pending: Option<Pending>,
     /// A proposal being reviewed.
@@ -118,6 +120,7 @@ impl Default for AgentState {
                 key: String::new(),
             },
             instruction: "Organise these notes: add an Index note, link related notes, and make flashcards of the key facts.".to_owned(),
+            pdf_pages: None,
             pending: None,
             reviewing: None,
             applied: None,
@@ -167,6 +170,10 @@ pub enum AgentMsg {
     Saved(Result<Connections, String>),
     /// The instruction for the wiki changed.
     Instruction(String),
+    /// Read these pages of a PDF as well (path, first, last; 0-based).
+    UsePdfPages(String, usize, usize),
+    /// Do not read PDF pages.
+    ClearPdfPages,
     /// Look at what a wiki request would send.
     PrepareWiki,
     /// That is ready: what would be sent.

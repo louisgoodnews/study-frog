@@ -14,7 +14,11 @@ pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
     } else if allowed && (screen == Screen::Home || screen == Screen::Library) {
         (
             State { screen, ..state },
-            vec![Effect::LoadHome, Effect::LoadSessions],
+            vec![
+                Effect::LoadHome,
+                Effect::LoadSessions,
+                crate::pdf_library_ui::load(),
+            ],
         )
     } else if allowed && screen == Screen::Agent {
         (State { screen, ..state }, vec![Effect::LoadAgent])

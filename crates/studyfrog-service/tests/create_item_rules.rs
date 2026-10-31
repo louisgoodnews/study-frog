@@ -38,6 +38,7 @@ fn item(
     parent: Option<&'static str>,
 ) -> NewItem<'static> {
     NewItem {
+        source: None,
         kind,
         title,
         text,

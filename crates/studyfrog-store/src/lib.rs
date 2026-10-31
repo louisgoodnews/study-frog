@@ -15,6 +15,7 @@ pub mod link_graph;
 pub mod migrate;
 pub mod overview;
 pub mod pdf_index;
+pub mod pdf_notes;
 pub mod pdf_search;
 pub mod poll;
 pub mod reindex;

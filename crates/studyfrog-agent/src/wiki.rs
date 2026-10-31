@@ -38,6 +38,8 @@ pub enum Change {
         front: String,
         /// Back.
         back: String,
+        /// The id of the PDF page it comes from, when the model was given PDF pages.
+        source: Option<String>,
     },
     /// A new question.
     CreateQuestion {
@@ -47,6 +49,8 @@ pub enum Change {
         prompt: String,
         /// The reference answer.
         reference: String,
+        /// The id of the PDF page it comes from, when the model was given PDF pages.
+        source: Option<String>,
     },
     /// New text for parts of an item (`body`, `front`, `back`, `prompt` or `reference`).
     UpdateItem {
@@ -72,6 +76,8 @@ pub struct Proposal {
 pub const MAX_CHANGES: usize = 40;
 /// Longest text of one part.
 pub const MAX_TEXT: usize = 20_000;
+/// Ids of PDF pages start with this.
+pub const PDF_PREFIX: &str = "pdf:";
 const FIELDS: [&str; 5] = ["body", "front", "back", "prompt", "reference"];
 
 /// The instructions for working the wiki.
@@ -83,10 +89,11 @@ pub fn wiki_system() -> String {
      sources you were given. Answer with ONE JSON object and nothing else, in this shape: \
      {\"summary\": \"what you did and why\", \"changes\": [\
      {\"action\": \"create_note\", \"stack\": \"<folder>\", \"title\": \"...\", \"body\": \"markdown\"}, \
-     {\"action\": \"create_card\", \"stack\": \"<folder>\", \"front\": \"...\", \"back\": \"...\"}, \
+     {\"action\": \"create_card\", \"stack\": \"<folder>\", \"front\": \"...\", \"back\": \"...\", \"source\": \"<optional id of the PDF page>\"}, \
      {\"action\": \"create_question\", \"stack\": \"<folder>\", \"prompt\": \"...\", \"reference\": \"...\"}, \
      {\"action\": \"update_item\", \"uid\": \"<id>\", \"fields\": {\"body\": \"new markdown\"}}]}. \
-     Use only the stack folders and ids that appear in the vault listing."
+     Items with an id that starts with pdf: are pages of a PDF file; when a card or question comes from one, \
+     give its id as \"source\". Use only the stack folders and ids that appear in the vault listing."
         .to_owned()
 }
 
@@ -126,6 +133,11 @@ fn line_of(v: &Value, key: &str) -> Option<String> {
     text_of(v, key).filter(|s| s.chars().count() <= 200 && !s.chars().any(char::is_control))
 }
 
+/// The `source` of a new item: only an id the model was shown, and only a PDF page.
+fn source_of(v: &Value, uids: &[String]) -> Option<String> {
+    text_of(v, "source").filter(|s| s.starts_with(PDF_PREFIX) && uids.contains(s))
+}
+
 fn change_of(v: &Value, uids: &[String], stacks: &[String]) -> Result<Change, String> {
     let action = v.get("action").and_then(Value::as_str).unwrap_or("");
     let stack = || {
@@ -146,11 +158,13 @@ fn change_of(v: &Value, uids: &[String], stacks: &[String]) -> Result<Change, St
             stack: stack()?,
             front: need("front", text_of(v, "front"))?,
             back: need("back", text_of(v, "back"))?,
+            source: source_of(v, uids),
         }),
         "create_question" => Ok(Change::CreateQuestion {
             stack: stack()?,
             prompt: need("prompt", text_of(v, "prompt"))?,
             reference: need("reference", text_of(v, "reference"))?,
+            source: source_of(v, uids),
         }),
         "update_item" => {
             let uid = need("uid", text_of(v, "uid"))?;

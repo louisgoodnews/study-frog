@@ -79,16 +79,26 @@ pub fn update(state: State, msg: AgentMsg) -> (State, Vec<Effect>) {
             instruction: t,
             ..a
         }),
+        AgentMsg::UsePdfPages(path, first, last) => with(state, |a| AgentState {
+            pdf_pages: Some((path, first, last)),
+            tab: crate::agent_types::AgentTab::Wiki,
+            ..a
+        }),
+        AgentMsg::ClearPdfPages => with(state, |a| AgentState {
+            pdf_pages: None,
+            ..a
+        }),
         AgentMsg::PrepareWiki => match need_provider(&state.agent) {
             Err(e) => fail(state, e),
             Ok(_) => {
                 let folders = state.agent.folders.clone();
+                let pdf = state.agent.pdf_pages.clone();
                 let (state, _) = with(state, |a| AgentState {
                     busy: true,
                     error: None,
                     ..a
                 });
-                (state, vec![Effect::PrepareWiki(folders)])
+                (state, vec![Effect::PrepareWiki { folders, pdf }])
             }
         },
         AgentMsg::WikiPrepared(r) => {

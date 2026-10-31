@@ -4,6 +4,7 @@ use eframe::egui::{self, Color32, RichText, Sense, TextEdit, Vec2};
 use studyfrog_config::pdf_marks::{MARK_COLORS, MarkKind, PdfMark, mark_rgb};
 
 use crate::msg::Msg;
+use crate::pdf_draft_types::{DraftKind, DraftMsg};
 use crate::pdf_mark_types::MarkMsg;
 use crate::pdf_types::{PdfMsg, PdfView};
 
@@ -82,6 +83,17 @@ fn entry(view: &PdfView, at: usize, mark: &PdfMark, ui: &mut egui::Ui, out: &mut
             };
             if ui.link(format!("{kind}, page {}", mark.page + 1)).clicked() {
                 send(out, MarkMsg::Jump(mark.id));
+            }
+            if mark.kind == MarkKind::Highlight {
+                for (kind, label) in [(DraftKind::Card, "Card"), (DraftKind::Question, "Question")]
+                {
+                    if ui.small_button(label).clicked() {
+                        out.push(Msg::Pdf(PdfMsg::Draft(DraftMsg::Start(
+                            kind,
+                            Some(mark.id),
+                        ))));
+                    }
+                }
             }
             if ui.small_button("Delete").clicked() {
                 send(out, MarkMsg::Delete(mark.id));

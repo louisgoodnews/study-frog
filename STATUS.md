@@ -1,12 +1,12 @@
 # Status
 
-**Phase:** M0 to M7 complete; M8 (extensibility and release) is next. **Date:** 2026-10-30. **Branch:** `main`.
+**Phase:** M0 to M9 complete; released 0.1.0, PDF support (0.2.0) waits for the version bump. **Date:** 2026-10-31. **Branch:** `main`.
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
-- A Cargo workspace of 19 crates under `crates/` plus an example extension under `examples/` (layering enforced by `scripts/check-deps.sh`, ADR 0001):
+- A Cargo workspace of 20 crates under `crates/` plus an example extension under `examples/` (layering enforced by `scripts/check-deps.sh`, ADR 0001):
   `core`, `config`, `md`, `store`, `srs`, `rehearsal`, `calendar`, `board`, `graph`, `slm`, `candle`,
-  `report`, `achieve`, `ext`, `agent`, `net`, `service`, `ui`, `app`. No inherent `impl` blocks; files are at most 250 lines.
+  `report`, `achieve`, `ext`, `agent`, `net`, `pdf`, `service`, `ui`, `app`. No inherent `impl` blocks; files are at most 250 lines.
 - The app (`cargo run -p studyfrog-app`): vault of Markdown notes, cards and questions with links and a graph;
   FSRS-6 and SM-2 scheduling per stack; rehearsal runs in any order with latency capture, difficulty marks, a
   reading-speed baseline and a review after each run; typed answers compared offline (language model or word
@@ -14,9 +14,11 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
 ## Latest
-- **Next:** EPIC-022 (PDF documents, phase M9) is planned and in the backlog: STORY-0054 with TASK-0109 to TASK-0122.
-  TASK-0109 (the library spike) is done and in review: ADR 0010 is **Proposed** and waits for the owner; nothing else in
-  EPIC-022 starts before it is accepted.
+- **Next:** the owner bumps the version (0.2.0); draft notes are in `docs/RELEASE_NOTES_0.2.0.md`. EPIC-022 (PDF
+  support, phase M9) is done: viewer, index and search, highlights and notes, rearranging, notes, cards and pictures from
+  PDFs, assistant reading, library; OCR is deferred (docs/specs/pdf.md).
+- **Not verified by hand in a window:** the PDF viewer, thumbnails, highlights and the arrange grid were tested headless
+  only (see the release notes for what else).
 - EPIC-021 (knowledge workspace) is done: item page and Markdown editor, pictures, priority and difficulty,
   subjects and teachers, the performance explorer, backups, profiles and the AI assistant (docs/specs/agent.md).
 - **Not verified by hand in a window:** the item page, the Markdown toolbar, the date picker, the assistant screen,

@@ -125,7 +125,12 @@ pub enum Effect {
     /// Allow or forbid sending vault text to a connection.
     AllowConnection(String, bool),
     /// Collect what a wiki request would send.
-    PrepareWiki(Vec<String>),
+    PrepareWiki {
+        /// The stacks to read.
+        folders: Vec<String>,
+        /// Pages of a PDF to read as well: path, first and last page (0-based).
+        pdf: Option<(String, usize, usize)>,
+    },
     /// Ask a model one question.
     AgentChat {
         /// The model.

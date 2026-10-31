@@ -44,6 +44,7 @@ fn vault(label: &str) -> (Dir, VaultSession) {
 
 fn item<'a>(kind: NewKind, title: &'a str, parent: Option<&'a str>) -> NewItem<'a> {
     NewItem {
+        source: None,
         kind,
         title,
         text: "front",

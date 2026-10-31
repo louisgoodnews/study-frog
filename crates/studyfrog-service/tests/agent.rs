@@ -171,11 +171,13 @@ fn accepted_changes_are_applied_one_by_one_and_failures_do_not_stop_the_rest() {
             stack: "a".into(),
             front: "Capital of Peru?".into(),
             back: "Lima".into(),
+            source: None,
         },
         Change::CreateQuestion {
             stack: "z".into(),
             prompt: "Why?".into(),
             reference: "Because".into(),
+            source: None,
         },
         Change::UpdateItem {
             uid: format_ulid(Uid(2)),
