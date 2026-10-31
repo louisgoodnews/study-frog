@@ -6,6 +6,27 @@
 /// `shuffled` become sequential runs with the switch on.
 /// Calendar entries get a kind and reminders; `reminder_fired` remembers which reminder was shown
 /// for which occurrence so it shows once.
+/// PDF files anywhere in the vault and the text of each page (derived index: the files stay
+/// authoritative). `hash` decides whether the text is extracted again.
+pub(crate) const V11: &str = "
+CREATE TABLE pdf_doc (
+    path     TEXT PRIMARY KEY,
+    size     INTEGER NOT NULL,
+    mtime_ns INTEGER NOT NULL,
+    hash     INTEGER NOT NULL,
+    pages    INTEGER NOT NULL,
+    title    TEXT NOT NULL,
+    error    TEXT
+) WITHOUT ROWID;
+CREATE TABLE pdf_page (
+    path       TEXT NOT NULL REFERENCES pdf_doc(path) ON DELETE CASCADE,
+    page       INTEGER NOT NULL,
+    text       TEXT NOT NULL,
+    image_only INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (path, page)
+) WITHOUT ROWID;
+";
+
 /// Each item's own priority and difficulty word from its front matter (`NULL`: inherit from the stack).
 /// A stack's subjects, as the comma-separated list in its front matter (`NULL`: none).
 pub(crate) const V10: &str = "

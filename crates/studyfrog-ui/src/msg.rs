@@ -68,6 +68,8 @@ pub enum Msg {
     VaultPolled(Result<Option<VaultInfo>, String>),
     /// A message of the assistant screen.
     Agent(crate::agent_types::AgentMsg),
+    /// The PDF viewer.
+    Pdf(crate::pdf_types::PdfMsg),
     /// A message about profiles.
     Profile(crate::profile_ui::ProfileMsg),
     /// A message of the backup section.

@@ -6,7 +6,7 @@ use std::time::UNIX_EPOCH;
 
 use crate::error::{StoreError, io_err};
 
-/// A Markdown file found in the vault, with the stat data used for change detection.
+/// A file found in the vault, with the stat data used for change detection.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct VaultFile {
     /// Vault-relative path with `/` separators.
@@ -22,30 +22,48 @@ pub struct VaultFile {
 /// Every `.md` file under `root`, sorted by relative path. Hidden entries (leading `.`) and
 /// symlinks are skipped.
 pub fn list_markdown(root: &Path) -> Result<Vec<VaultFile>, StoreError> {
+    list_files(root, "md")
+}
+
+/// Every `.pdf` file under `root`, sorted by relative path, with the same skips.
+pub fn list_pdfs(root: &Path) -> Result<Vec<VaultFile>, StoreError> {
+    list_files(root, "pdf")
+}
+
+fn list_files(root: &Path, ext: &str) -> Result<Vec<VaultFile>, StoreError> {
     let mut found = Vec::new();
-    walk(root, root, &mut found)?;
+    walk(root, root, ext, &mut found)?;
     found.sort_by(|a, b| a.rel.cmp(&b.rel));
     Ok(found)
 }
 
-fn walk(root: &Path, dir: &Path, found: &mut Vec<VaultFile>) -> Result<(), StoreError> {
+fn walk(root: &Path, dir: &Path, ext: &str, found: &mut Vec<VaultFile>) -> Result<(), StoreError> {
     for entry in fs::read_dir(dir).map_err(|e| io_err(dir, &e))? {
         let entry = entry.map_err(|e| io_err(dir, &e))?;
-        visit(root, &entry, found)?;
+        visit(root, &entry, ext, found)?;
     }
     Ok(())
 }
 
-fn visit(root: &Path, entry: &DirEntry, found: &mut Vec<VaultFile>) -> Result<(), StoreError> {
+fn visit(
+    root: &Path,
+    entry: &DirEntry,
+    ext: &str,
+    found: &mut Vec<VaultFile>,
+) -> Result<(), StoreError> {
     let path = entry.path();
     if entry.file_name().to_string_lossy().starts_with('.') {
         return Ok(());
     }
     let kind = entry.file_type().map_err(|e| io_err(&path, &e))?;
     if kind.is_dir() {
-        return walk(root, &path, found);
+        return walk(root, &path, ext, found);
     }
-    if kind.is_file() && path.extension().is_some_and(|e| e == "md") {
+    if kind.is_file()
+        && path
+            .extension()
+            .is_some_and(|e| e.eq_ignore_ascii_case(ext))
+    {
         found.push(describe(root, &path, entry)?);
     }
     Ok(())

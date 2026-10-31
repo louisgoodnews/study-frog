@@ -5,6 +5,7 @@ use studyfrog_core::plan::item_kind_name;
 
 use crate::chrome::{ChromeMsg, Menu};
 use crate::msg::Msg;
+use crate::pdf_types::PdfMsg;
 use crate::state::{NoticeKind, State};
 use crate::view::popup::{close, dismissed, popup};
 
@@ -121,7 +122,7 @@ pub fn search_results(state: &State, ui: &mut egui::Ui, field: Rect, out: &mut V
         field.left_bottom() + egui::vec2(0.0, 4.0),
         field.width(),
         |ui| {
-            if state.chrome.results.is_empty() {
+            if state.chrome.results.is_empty() && state.chrome.pdf_results.is_empty() {
                 ui.weak(format!("No items match \"{query}\"."));
             }
             for item in &state.chrome.results {
@@ -133,9 +134,25 @@ pub fn search_results(state: &State, ui: &mut egui::Ui, field: Rect, out: &mut V
                     out.push(Msg::Chrome(ChromeMsg::SearchClear));
                 }
             }
+            pdf_hits(state, ui, out);
         },
     );
     if dismissed(ui, rect, field) {
         out.push(Msg::Chrome(ChromeMsg::SearchClear));
+    }
+}
+
+/// PDFs and pages that match the search, under the items.
+fn pdf_hits(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    for hit in &state.chrome.pdf_results {
+        let label = match hit.page {
+            Some(p) => format!("PDF · {} · page {p}\n{}", hit.title, hit.snippet),
+            None => format!("PDF · {}", hit.title),
+        };
+        if ui.button(label).clicked() {
+            let page = hit.page.map_or(0, |p| p - 1);
+            out.push(Msg::Pdf(PdfMsg::Open(hit.path.clone(), page)));
+            out.push(Msg::Chrome(ChromeMsg::SearchClear));
+        }
     }
 }

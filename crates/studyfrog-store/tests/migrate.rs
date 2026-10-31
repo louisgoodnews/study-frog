@@ -9,7 +9,7 @@ use studyfrog_store::error::StoreError;
 use studyfrog_store::migrate::{Migration, migrate, schema_version};
 use studyfrog_store::schema::MIGRATIONS;
 
-const TABLES: [&str; 21] = [
+const TABLES: [&str; 23] = [
     "file",
     "item",
     "link",
@@ -31,6 +31,8 @@ const TABLES: [&str; 21] = [
     "board_card",
     "achievement_unlock",
     "answer_score",
+    "pdf_doc",
+    "pdf_page",
 ];
 
 fn tables(conn: &Connection) -> Vec<String> {

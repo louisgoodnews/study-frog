@@ -25,7 +25,9 @@ use crate::chrome::{ChromeMsg, MAX_RESULTS};
 use crate::effect::Effect;
 use crate::msg::Msg;
 use crate::state::Selection;
-use crate::{exec_agent, exec_backup, exec_doc, exec_import, exec_plan, exec_profile, exec_run};
+use crate::{
+    exec_agent, exec_backup, exec_doc, exec_import, exec_pdf, exec_plan, exec_profile, exec_run,
+};
 
 /// Executor state: where per-user settings live and which vault is open.
 pub struct Worker {
@@ -51,6 +53,8 @@ pub struct Worker {
     pub transport: Option<studyfrog_agent::provider::Transport>,
     /// Where the agent logs its calls (never their content).
     pub state_dir: Option<PathBuf>,
+    /// The PDF read last (vault-relative path and bytes), kept for the page requests that follow.
+    pub pdf_bytes: Option<(String, studyfrog_pdf::PdfBytes)>,
 }
 
 /// A worker with nothing open.
@@ -67,6 +71,7 @@ pub fn worker_new(config_dir: Option<PathBuf>) -> Worker {
         registry: Registry::default(),
         transport: None,
         state_dir: None,
+        pdf_bytes: None,
     }
 }
 
@@ -154,6 +159,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             (&tags, parent.as_deref(), due.as_ref()),
             now_ns,
         ),
+        Effect::Pdf(e) => exec_pdf::run(w, e),
         Effect::BuildReports => exec_run::reports(w, now_ns),
         Effect::Explore { scope, period } => exec_run::explorer(w, (scope, period), now_ns),
         Effect::CheckAchievements => exec_run::achievements(w, now_ns),

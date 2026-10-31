@@ -3,6 +3,7 @@
 use std::fmt;
 use std::path::{Path, PathBuf};
 
+use crate::pdfs::index_pdfs;
 use rusqlite::Connection;
 use studyfrog_core::settings::{VaultSettings, vault_settings_default};
 use studyfrog_store::db::open_db;
@@ -61,6 +62,8 @@ pub struct VaultSession {
     pub conn: Connection,
     /// Change-detection state.
     pub poll: PollState,
+    /// PDF files waiting for their text to be extracted.
+    pub pdf_pending: usize,
 }
 
 /// What a front end shows about an open vault.
@@ -118,7 +121,15 @@ pub fn open_vault(path: &str) -> Result<(VaultSession, VaultInfo), ServiceError>
     reindex(&mut conn, &root).map_err(store)?;
     abort_unfinished_runs(&mut conn).map_err(store)?;
     let info = vault_info(&root, &conn)?;
-    Ok((VaultSession { root, conn, poll }, info))
+    Ok((
+        VaultSession {
+            root,
+            conn,
+            poll,
+            pdf_pending: 0,
+        },
+        info,
+    ))
 }
 
 /// Check the vault for changes. `Some(info)` when something was reindexed, `None` otherwise.
@@ -135,8 +146,10 @@ pub fn poll_vault(
     )
     .map_err(store)?;
     session.poll = state;
+    let pdfs_changed = index_pdfs(session, now_ns)?;
     match outcome {
         PollOutcome::Reindexed(_) => vault_info(&session.root, &session.conn).map(Some),
+        _ if pdfs_changed => vault_info(&session.root, &session.conn).map(Some),
         PollOutcome::Unchanged | PollOutcome::Settling => Ok(None),
     }
 }

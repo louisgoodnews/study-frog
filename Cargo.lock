@@ -5305,6 +5305,7 @@ name = "studyfrog-service"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "lopdf",
  "rusqlite",
  "studyfrog-achieve",
  "studyfrog-agent",
@@ -5314,6 +5315,7 @@ dependencies = [
  "studyfrog-core",
  "studyfrog-ext",
  "studyfrog-md",
+ "studyfrog-pdf",
  "studyfrog-rehearsal",
  "studyfrog-report",
  "studyfrog-slm",
@@ -5362,6 +5364,7 @@ dependencies = [
  "egui_extras",
  "egui_kittest",
  "image",
+ "lopdf",
  "studyfrog-achieve",
  "studyfrog-agent",
  "studyfrog-board",
@@ -5371,6 +5374,7 @@ dependencies = [
  "studyfrog-ext",
  "studyfrog-graph",
  "studyfrog-md",
+ "studyfrog-pdf",
  "studyfrog-rehearsal",
  "studyfrog-report",
  "studyfrog-service",

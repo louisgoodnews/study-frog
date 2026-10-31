@@ -97,7 +97,10 @@ fn searching_asks_for_matches_and_ignores_stale_answers() {
     let mut m = open_model();
     assert_eq!(
         chrome(&mut m, ChromeMsg::SearchEdited(" bon ".into())),
-        [Effect::SearchItems("bon".into())]
+        [
+            Effect::SearchItems("bon".into()),
+            Effect::Pdf(studyfrog_ui::pdf_types::PdfEffect::Search("bon".into()))
+        ]
     );
     chrome(
         &mut m,

@@ -8,6 +8,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- PDF files in the vault are indexed (title, page count and the text of every page, extracted once per change) and the
+  global search finds them by title and by text, showing the page of the hit (TASK-0111).
+- The PDF viewer: one page at a time with zoom (fit width, fit page, percent), page jump, outline, page thumbnails,
+  search inside the file with highlighted hits, word selection by dragging and copy, and the page's text for screen
+  readers; pages are drawn on the worker thread and cached (TASK-0112, TASK-0113).
 - The `studyfrog-pdf` crate (TASK-0110, TASK-0113): reads page sizes, outline, properties, words with boxes, text,
   Markdown and pictures; draws pages and regions; rotates, drops, reorders, merges and splits pages; writes
   highlights and notes into a copy. Size, page, pixel and time limits and crash containment keep hostile files from

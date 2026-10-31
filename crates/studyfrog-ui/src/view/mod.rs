@@ -27,6 +27,9 @@ mod menus;
 mod modal;
 mod modal_fields;
 mod navbar;
+mod pdf;
+mod pdf_page;
+mod pdf_side;
 mod popup;
 mod preview;
 mod profiles;
@@ -73,6 +76,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         Screen::Achievements => achievements::draw(state, ui),
         Screen::Agent => agent::draw(state, ui, &mut out),
         Screen::Reports => reports::draw(state, ui, &mut out),
+        Screen::Pdf => pdf::draw(state, ui, &mut out),
     });
     toast::draw(state, ui, &mut out);
     modal::draw(state, ui, &mut out);

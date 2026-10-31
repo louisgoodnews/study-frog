@@ -4,6 +4,7 @@
 use studyfrog_store::overview::ItemRow;
 
 use crate::effect::Effect;
+use crate::pdf_types::PdfEffect;
 use crate::state::{Notice, NoticeKind, State};
 
 /// Most notices kept in the notification list.
@@ -35,6 +36,8 @@ pub struct Chrome {
     pub search: String,
     /// Items matching the search.
     pub results: Vec<ItemRow>,
+    /// PDFs and pages matching the search.
+    pub pdf_results: Vec<studyfrog_store::pdf_search::PdfHit>,
     /// Recent notices, oldest first.
     pub notifications: Vec<Notice>,
     /// How many of them the user has seen.
@@ -54,6 +57,11 @@ pub enum ChromeMsg {
     SearchEdited(String),
     /// The search finished: the query it was for, and what it found.
     SearchResults(String, Result<Vec<ItemRow>, String>),
+    /// The PDF part of a search finished.
+    PdfResults(
+        String,
+        Result<Vec<studyfrog_store::pdf_search::PdfHit>, String>,
+    ),
     /// Clear the search.
     SearchClear,
 }
@@ -82,19 +90,26 @@ fn toggle_menu(state: State, menu: Menu) -> (State, Vec<Effect>) {
 
 fn search_edited(state: State, text: String) -> (State, Vec<Effect>) {
     let query = text.trim().to_owned();
-    let results = if query.is_empty() {
-        Vec::new()
+    let (results, pdf_results) = if query.is_empty() {
+        (Vec::new(), Vec::new())
     } else {
-        state.chrome.results.clone()
+        (
+            state.chrome.results.clone(),
+            state.chrome.pdf_results.clone(),
+        )
     };
     let effects = if query.is_empty() || state.vault.is_none() {
         Vec::new()
     } else {
-        vec![Effect::SearchItems(query)]
+        vec![
+            Effect::SearchItems(query.clone()),
+            Effect::Pdf(PdfEffect::Search(query)),
+        ]
     };
     let c = Chrome {
         search: text,
         results,
+        pdf_results,
         ..state.chrome.clone()
     };
     (State { chrome: c, ..state }, effects)
@@ -126,6 +141,22 @@ fn search_results(
     }
 }
 
+fn pdf_results(
+    state: State,
+    query: String,
+    result: Result<Vec<studyfrog_store::pdf_search::PdfHit>, String>,
+) -> (State, Vec<Effect>) {
+    if query != state.chrome.search.trim() {
+        return (state, Vec::new());
+    }
+    let pdf_results = result.unwrap_or_default();
+    let c = Chrome {
+        pdf_results,
+        ..state.chrome.clone()
+    };
+    with(state, c)
+}
+
 /// Handle the chrome's messages.
 pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
     match msg {
@@ -146,10 +177,12 @@ pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
         }
         ChromeMsg::SearchEdited(text) => search_edited(state, text),
         ChromeMsg::SearchResults(query, result) => search_results(state, query, result),
+        ChromeMsg::PdfResults(query, result) => pdf_results(state, query, result),
         ChromeMsg::SearchClear => {
             let c = Chrome {
                 search: String::new(),
                 results: Vec::new(),
+                pdf_results: Vec::new(),
                 ..state.chrome.clone()
             };
             with(state, c)

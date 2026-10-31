@@ -45,6 +45,8 @@ pub enum Screen {
     Achievements,
     /// Retention, answer times and the review forecast.
     Reports,
+    /// A PDF file open for reading.
+    Pdf,
 }
 
 /// Severity of a notice.
@@ -174,4 +176,6 @@ pub struct State {
     pub achievements: Option<AchievementReport>,
     /// The reading-speed test on the settings screen.
     pub reading_test: ReadingTest,
+    /// The PDF open in the viewer.
+    pub pdf: Option<crate::pdf_types::PdfView>,
 }

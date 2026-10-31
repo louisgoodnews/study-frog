@@ -216,6 +216,8 @@ pub enum Effect {
     },
     /// Find the item a wikilink points to.
     ResolveLink(String),
+    /// Something the PDF viewer needs.
+    Pdf(crate::pdf_types::PdfEffect),
     /// Create a card in the stack at `folder`.
     CreateCard {
         /// Vault-relative stack folder.

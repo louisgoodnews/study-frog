@@ -28,7 +28,9 @@ studyfrog-calendar.workspace = true
 studyfrog-graph.workspace = true
 studyfrog-service.workspace = true
 studyfrog-ext.workspace = true
+studyfrog-pdf.workspace = true
 eframe.workspace = true
 
 [dev-dependencies]
 egui_kittest.workspace = true
+lopdf.workspace = true

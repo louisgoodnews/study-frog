@@ -23,6 +23,10 @@ studyfrog-slm.workspace = true
 studyfrog-agent.workspace = true
 studyfrog-achieve.workspace = true
 studyfrog-ext.workspace = true
+studyfrog-pdf.workspace = true
 studyfrog-report.workspace = true
 chrono.workspace = true
 rusqlite.workspace = true
+
+[dev-dependencies]
+lopdf.workspace = true

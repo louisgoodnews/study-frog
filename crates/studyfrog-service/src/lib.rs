@@ -18,6 +18,7 @@ pub mod home;
 pub mod images;
 pub mod import;
 pub mod kanban;
+pub mod pdfs;
 pub mod planning;
 pub mod queue;
 pub mod queue_data;
