@@ -2,7 +2,7 @@
 id: TASK-0109
 type: task
 title: Spike and ADR 0010 to choose the PDF library
-status: backlog
+status: review
 epic: EPIC-022
 parents: [STORY-0054]
 estimate: 5
@@ -21,16 +21,16 @@ The owner asked for PDF support on 2026-10-31: PDF files are integral to how Stu
 A spike with numbers, then an ADR in the style of 0006 to 0009.
 
 ## Acceptance Criteria
-- [ ] Candidates are tried on a test set of PDFs: pdfium-based crates (needs the pdfium library bundled in the AppImage), the pure-Rust rpdfium and pdf_oxide, and lopdf for editing; mupdf is excluded for its AGPL licence unless the owner decides otherwise
-- [ ] Licence, version and upkeep of each are checked on crates.io, not taken from a blog
-- [ ] Page render time, text extraction quality (including non-Latin text and columns), image extraction, size added to the AppImage and build requirements are measured
+- [x] Candidates are tried on a test set of PDFs: pdfium-based crates (needs the pdfium library bundled in the AppImage), the pure-Rust rpdfium and pdf_oxide, and lopdf for editing; mupdf is excluded for its AGPL licence unless the owner decides otherwise
+- [x] Licence, version and upkeep of each are checked on crates.io, not taken from a blog
+- [x] Page render time, text extraction quality (including non-Latin text and columns), image extraction, size added to the AppImage and build requirements are measured
 - [ ] ADR 0010 records the choice and the build-vs-buy comparison and is accepted by the owner
 
 ## Design Notes
-Keep the library behind the `studyfrog-pdf` crate's functions (TASK-0110) so another can replace it. A search for the options found vendor pages with unverified benchmarks, so measure ourselves.
+Done: docs/research/pdf-library-spike.md and docs/adr/0010-pdf-library.md (Proposed). pdfium's render time and quality were not measured (the tool blocked running the downloaded library); non-Latin text, memory use and annotations were not covered. Keep the library behind the `studyfrog-pdf` crate's functions (TASK-0110) so another can replace it. A search for the options found vendor pages with unverified benchmarks, so measure ourselves.
 
 ## Dependencies
 None.
 
 ## Open Questions
-The owner decides the ADR.
+The owner must accept, change or reject ADR 0010; the last criterion stays open until then.

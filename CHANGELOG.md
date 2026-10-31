@@ -8,6 +8,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- PDF library spike (TASK-0109): measured findings in `docs/research/pdf-library-spike.md` and a proposed ADR 0010
+  (hayro to draw pages, pdf_oxide to read and edit, both behind a `studyfrog-pdf` crate).
 - Planning for PDF support: EPIC-022 with STORY-0054 and TASK-0109 to TASK-0122 (view, annotate, rearrange and extract
   PDF files), a new phase M9 in the roadmap and the `m9` label.
 
