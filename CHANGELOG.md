@@ -7,6 +7,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Added
+- Planning for PDF support: EPIC-022 with STORY-0054 and TASK-0109 to TASK-0122 (view, annotate, rearrange and extract
+  PDF files), a new phase M9 in the roadmap and the `m9` label.
+
 ## [0.1.0] - 2026-10-31
 
 ### Added

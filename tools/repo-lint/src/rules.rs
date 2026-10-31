@@ -12,7 +12,7 @@ const STATUSES: [&str; 6] = [
     "done",
     "blocked",
 ];
-const PHASES: [&str; 9] = ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8"];
+const PHASES: [&str; 10] = ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9"];
 const ESTIMATES: [u32; 5] = [1, 2, 3, 5, 8];
 const SECTIONS: [&str; 6] = [
     "## Context",
@@ -114,7 +114,7 @@ fn check_fields(issue: &Issue) -> Vec<String> {
         out.push(err(issue, "acceptance_criteria must not be empty"));
     }
     if !f.labels.iter().any(|l| PHASES.contains(&l.as_str())) {
-        out.push(err(issue, "labels must include a phase label (m0..m8)"));
+        out.push(err(issue, "labels must include a phase label (m0..m9)"));
     }
     if f.estimate.is_some_and(|e| !ESTIMATES.contains(&e)) {
         out.push(err(issue, "estimate must be one of 1, 2, 3, 5, 8"));

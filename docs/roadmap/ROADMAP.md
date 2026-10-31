@@ -13,6 +13,7 @@ Phases M0 to M8. Each phase has entry criteria, an epic breakdown (every epic ha
 | M6 | SLM comparison | EPIC-012, EPIC-013 | [M6-slm-comparison](M6-slm-comparison.md) |
 | M7 | Achievements and reporting | EPIC-014, EPIC-015 | [M7-achievements-and-reporting](M7-achievements-and-reporting.md) |
 | M8 | Extensibility and plugin boundaries | EPIC-016, EPIC-017 | [M8-extensibility-and-plugin-boundaries](M8-extensibility-and-plugin-boundaries.md) |
+| M9 | Documents (PDF) | EPIC-022 | [M9-documents](M9-documents.md) |
 
 ## M0 Bootstrap
 
@@ -276,3 +277,6 @@ Explicit extension points and release readiness.
   - **STORY-0032** Performance and packaging
     - TASK-0066 Profiling pass
     - TASK-0067 Linux packaging
+
+## M9 Documents (PDF)
+See [M9-documents](M9-documents.md): EPIC-022, STORY-0054 and TASK-0109 to TASK-0122.

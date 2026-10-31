@@ -14,6 +14,9 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
 ## Latest
+- **Next:** EPIC-022 (PDF documents, phase M9) is planned and in the backlog: STORY-0054 with TASK-0109 to TASK-0122.
+  Start with TASK-0109, the library spike and ADR 0010, which the owner must accept before the rest. Nothing is
+  in progress.
 - EPIC-021 (knowledge workspace) is done: item page and Markdown editor, pictures, priority and difficulty,
   subjects and teachers, the performance explorer, backups, profiles and the AI assistant (docs/specs/agent.md).
 - **Not verified by hand in a window:** the item page, the Markdown toolbar, the date picker, the assistant screen,

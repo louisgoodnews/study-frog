@@ -36,8 +36,8 @@ Body sections, in order: **Context**, **Description**, **Acceptance Criteria**,
 
 ## Labels
 Area: one per crate (`core`, `md`, `store`, `srs`, `rehearsal`, `slm`, `report`, `achieve`,
-`board`, `calendar`, `ui`, `app`), plus `docs`, `tooling`, `perf`, `decision`.
-Phase: `m0` to `m8`.
+`board`, `calendar`, `pdf`, `ui`, `app`), plus `docs`, `tooling`, `perf`, `decision`.
+Phase: `m0` to `m9`.
 
 ## Workflow
 `backlog → ready → in_progress → review → done`; `blocked` may be entered from any state
