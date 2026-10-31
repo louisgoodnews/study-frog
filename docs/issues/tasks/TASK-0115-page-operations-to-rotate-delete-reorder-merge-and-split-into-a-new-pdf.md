@@ -18,7 +18,7 @@ acceptance_criteria:
 The owner asked for PDF support on 2026-10-31: PDF files are integral to how StudyFrog is used, but today it cannot open them.
 
 ## Description
-An editing library (lopdf or what the ADR chooses) behind the studyfrog-pdf crate.
+This task is the whole of the owner's "edit" apart from annotations (TASK-0114): rotate, delete, reorder, merge, split. An editing library (lopdf or what the ADR chooses) behind the studyfrog-pdf crate.
 
 ## Acceptance Criteria
 - [ ] Pages can be rotated, deleted and reordered in a thumbnail view, with undo until the result is saved

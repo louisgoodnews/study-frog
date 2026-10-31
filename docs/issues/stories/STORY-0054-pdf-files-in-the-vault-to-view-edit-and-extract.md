@@ -29,12 +29,13 @@ Implement viewing, editing and extraction of PDF files, in the tasks below. The 
 - [ ] Hostile or broken PDFs cannot crash or hang the app
 
 ## Design Notes
-Tasks: TASK-0109 to TASK-0122. Order: the spike and ADR (0109) first; then the crate (0110) and indexing (0111); then viewer (0112) and the safety limits (0113); then annotations, page operations, extraction and the rest, which can overlap. "Edit" means annotating and changing pages, written to a new file or a sidecar, never rewriting the user's original in place and never editing the text inside a PDF (not reliable in any PDF library).
+Tasks: TASK-0109 to TASK-0122. Deferred: OCR (see EPIC-022). Order: the spike and ADR (0109) first; then the crate (0110) and indexing (0111); then viewer (0112) and the safety limits (0113); then annotations, page operations, extraction and the rest, which can overlap. "Edit" means annotating and changing pages, written to a new file or a sidecar, never rewriting the user's original in place and never editing the text inside a PDF (not reliable in any PDF library).
 
 ## Dependencies
 None.
 
 ## Open Questions
-1. Does "edit" cover more than annotations and page operations (for example filling forms, redaction, signing)? Default: no.
-2. Scanned PDFs have no text. OCR (Tesseract or a language model) is a large dependency; TASK-0118 only detects such pages and says so. Is OCR wanted later?
-3. Where should PDFs live: next to the notes in a stack folder (default, so they move with the stack) or in a shared documents folder?
+Answered by the owner on 2026-10-31:
+1. **Editing** means annotating plus page operations (rotate, delete, reorder, merge, split). Form filling, redaction, signing and editing the text inside a PDF are out of scope.
+2. **OCR** for scanned PDFs is deferred to a later epic. This story only detects image-only pages (TASK-0118).
+3. **Where PDFs live:** inside the vault folder, so the vault stays self-contained and backups complete. The scanner finds every `.pdf` anywhere under the vault (an existing folder of PDFs works as it is), and "Add PDF" copies a file into the chosen stack folder.

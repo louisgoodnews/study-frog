@@ -8,7 +8,7 @@ parents: [STORY-0054]
 estimate: 5
 labels: [m9, pdf]
 acceptance_criteria:
-  - "The scanner records every .pdf file (path, size, hash, page count, title) next to the Markdown files"
+  - "The scanner records every .pdf file anywhere under the vault folder (path, size, hash, page count, title) next to the Markdown files"
   - "The text of each page is extracted once, stored in the index and refreshed only when the file's hash changes"
   - "Global search and the Library find a PDF by title and by text, and show the page of the hit"
   - "Large vaults do not slow down: extraction runs off the UI thread and a progress note is shown for a first scan"
@@ -22,7 +22,7 @@ The owner asked for PDF support on 2026-10-31: PDF files are integral to how Stu
 Schema v11 with a document table and a page-text table (full text search if the index already supports it, else a LIKE search with a limit).
 
 ## Acceptance Criteria
-- [ ] The scanner records every .pdf file (path, size, hash, page count, title) next to the Markdown files
+- [ ] The scanner records every .pdf file anywhere under the vault folder (path, size, hash, page count, title) next to the Markdown files
 - [ ] The text of each page is extracted once, stored in the index and refreshed only when the file's hash changes
 - [ ] Global search and the Library find a PDF by title and by text, and show the page of the hit
 - [ ] Large vaults do not slow down: extraction runs off the UI thread and a progress note is shown for a first scan

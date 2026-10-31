@@ -18,7 +18,7 @@ acceptance_criteria:
 The owner asked for PDF support on 2026-10-31: PDF files are integral to how StudyFrog is used, but today it cannot open them.
 
 ## Description
-Copy rather than link, so the vault stays self-contained and backups complete.
+PDFs live inside the vault folder (owner's decision, 2026-10-31), so the vault stays self-contained and backups complete. The scanner indexes every .pdf under the vault, so PDFs the user already keeps there are found without being moved; Add PDF copies a file into the chosen stack folder.
 
 ## Acceptance Criteria
 - [ ] "Add PDF…" in the Create menu and the Library copies a file into the chosen stack folder

@@ -10,7 +10,7 @@ labels: [m9, pdf]
 acceptance_criteria:
   - "A page with no extractable text is marked as an image-only page in the viewer and the index"
   - "Extraction and search say that such pages have no text instead of silently finding nothing"
-  - "The docs state that OCR is not part of this story"
+  - "The docs state that OCR is deferred and not part of this story"
 ---
 
 ## Context
@@ -22,10 +22,10 @@ A cheap check on the extracted text and the page's pictures.
 ## Acceptance Criteria
 - [ ] A page with no extractable text is marked as an image-only page in the viewer and the index
 - [ ] Extraction and search say that such pages have no text instead of silently finding nothing
-- [ ] The docs state that OCR is not part of this story
+- [ ] The docs state that OCR is deferred and not part of this story
 
 ## Design Notes
-OCR is a separate decision (see the story's open questions).
+OCR is deferred by the owner (see EPIC-022); a later story can feed the same pages to an OCR engine.
 
 ## Dependencies
 TASK-0110.

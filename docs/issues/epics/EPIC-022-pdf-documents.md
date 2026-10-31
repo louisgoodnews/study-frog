@@ -19,10 +19,11 @@ Make PDFs first-class vault content: find them, read them in the app, mark them 
 - [ ] PDF files in the vault can be viewed, annotated and rearranged, and their text and pictures can be extracted into notes and cards
 
 ## Design Notes
+Out of scope for now: OCR (deferred), form filling, redaction, signing, and editing the text inside a PDF.
 One story (STORY-0054) with its tasks. The first task is a spike and an ADR, because everything else depends on which PDF library is used (build vs buy, P10: reading and drawing PDFs is a hard general problem, so the answer is a crate, not our own parser).
 
 ## Dependencies
 None.
 
 ## Open Questions
-See STORY-0054.
+Deferred by the owner on 2026-10-31: **OCR** for scanned PDFs (Tesseract or a language model). It is not in STORY-0054 and has no tasks yet; it becomes its own story under this epic or a later one once a library or model is chosen and the owner asks for it. Until then scanned pages are only detected (TASK-0118).

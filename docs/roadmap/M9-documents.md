@@ -23,6 +23,8 @@
     - TASK-0121 Add, link and organise PDFs
     - TASK-0122 Documentation, tests, accessibility and release notes for PDF support
 
+**Deferred:** OCR for scanned PDFs (owner's decision, 2026-10-31); no tasks yet.
+
 **Exit criteria:**
 - A PDF added to a vault is listed, found by search and opened in the viewer
 - Highlights and notes survive a restart and are never written into the original file
