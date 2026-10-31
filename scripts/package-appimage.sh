@@ -46,4 +46,5 @@ fi
 IMAGE="$OUT/StudyFrog-$VERSION-x86_64.AppImage"
 echo "==> packing $IMAGE"
 ARCH=x86_64 "$TOOL" --appimage-extract-and-run "$APPDIR" "$IMAGE"
-echo "package: ok ($IMAGE)"
+(cd "$OUT" && sha256sum "$(basename "$IMAGE")" > "$(basename "$IMAGE").sha256")
+echo "package: ok ($IMAGE, checksum in $IMAGE.sha256)"
