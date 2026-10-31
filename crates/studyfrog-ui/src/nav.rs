@@ -16,6 +16,8 @@ pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
             State { screen, ..state },
             vec![Effect::LoadHome, Effect::LoadSessions],
         )
+    } else if allowed && screen == Screen::Agent {
+        (State { screen, ..state }, vec![Effect::LoadAgent])
     } else if allowed && screen == Screen::Reports {
         let ask = crate::explorer_ui::refresh(&state);
         (State { screen, ..state }, vec![Effect::BuildReports, ask])

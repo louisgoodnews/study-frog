@@ -1,0 +1,17 @@
+[package]
+name = "studyfrog-agent"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "The AI agent's protocols, prompts and answers: pure data in, pure data out (ADR 0009)"
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-core.workspace = true
+serde_json.workspace = true
+serde.workspace = true
+toml.workspace = true

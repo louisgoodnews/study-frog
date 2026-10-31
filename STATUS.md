@@ -4,9 +4,9 @@
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
-- A Cargo workspace of 17 crates under `crates/` plus an example extension under `examples/` (layering enforced by `scripts/check-deps.sh`, ADR 0001):
+- A Cargo workspace of 19 crates under `crates/` plus an example extension under `examples/` (layering enforced by `scripts/check-deps.sh`, ADR 0001):
   `core`, `config`, `md`, `store`, `srs`, `rehearsal`, `calendar`, `board`, `graph`, `slm`, `candle`,
-  `report`, `achieve`, `ext`, `service`, `ui`, `app`. No inherent `impl` blocks; files are at most 250 lines.
+  `report`, `achieve`, `ext`, `agent`, `net`, `service`, `ui`, `app`. No inherent `impl` blocks; files are at most 250 lines.
 - The app (`cargo run -p studyfrog-app`): vault of Markdown notes, cards and questions with links and a graph;
   FSRS-6 and SM-2 scheduling per stack; rehearsal runs in any order with latency capture, difficulty marks, a
   reading-speed baseline and a review after each run; typed answers compared offline (language model or word
@@ -14,6 +14,13 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
 ## Latest
+- EPIC-021 (knowledge workspace) is done: item page and Markdown editor, pictures, priority and difficulty,
+  subjects and teachers, the performance explorer, backups, profiles and the AI assistant (docs/specs/agent.md).
+- **Not verified by hand in a window:** the item page, the Markdown toolbar, the date picker, the assistant screen,
+  the backup and profile menus and the new board cards were tested headless and by logic only. The Home, Calendar
+  and rehearsal screens were looked at in a real window earlier.
+- **Never run against a real provider:** the three wire formats follow the providers' documentation and are tested
+  against a local fake server only.
 - Home page, theme, library cards and rehearsal card layout are in (STORY-0038). The home summary reloads when the
   home or library screen opens, not on every vault change.
 

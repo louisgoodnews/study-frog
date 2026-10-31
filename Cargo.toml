@@ -9,6 +9,8 @@ members = [
     "crates/studyfrog-srs",
     "crates/studyfrog-rehearsal",
     "crates/studyfrog-slm",
+    "crates/studyfrog-agent",
+    "crates/studyfrog-net",
     "crates/studyfrog-candle",
     "crates/studyfrog-report",
     "crates/studyfrog-achieve",
@@ -40,6 +42,8 @@ studyfrog-store = { path = "crates/studyfrog-store" }
 studyfrog-srs = { path = "crates/studyfrog-srs" }
 studyfrog-rehearsal = { path = "crates/studyfrog-rehearsal" }
 studyfrog-slm = { path = "crates/studyfrog-slm" }
+studyfrog-agent = { path = "crates/studyfrog-agent" }
+studyfrog-net = { path = "crates/studyfrog-net" }
 studyfrog-candle = { path = "crates/studyfrog-candle" }
 studyfrog-report = { path = "crates/studyfrog-report" }
 studyfrog-achieve = { path = "crates/studyfrog-achieve" }
@@ -62,6 +66,7 @@ chrono = { version = "0.4", default-features = false, features = ["clock"] }
 dhat = "0.3"
 rfd = "0.17"
 serde_json = "1"
+ureq = { version = "3", default-features = false, features = ["rustls", "json"] }
 candle-core = "0.11"
 candle-nn = "0.11"
 candle-transformers = "0.11"

@@ -16,6 +16,7 @@ const VAULT_PREFIX: &str = "vault/";
 const DATABASE_ENTRY: &str = "database/index.sqlite";
 const SETTINGS_ENTRY: &str = "config/app.toml";
 const KEYS_ENTRY: &str = "config/secrets.toml";
+const PROVIDERS_ENTRY: &str = "config/providers.toml";
 /// The file of the API keys in the config folder.
 pub const SECRETS_FILE: &str = "secrets.toml";
 const INDEX_DIR: &str = ".studyfrog";
@@ -183,7 +184,12 @@ fn write_archive(
             mtime,
         )?;
     }
-    for (entry, path) in [(SETTINGS_ENTRY, &settings), (KEYS_ENTRY, &keys)] {
+    let providers = config_file(&opts, "providers.toml");
+    for (entry, path) in [
+        (SETTINGS_ENTRY, &settings),
+        (KEYS_ENTRY, &keys),
+        (PROVIDERS_ENTRY, &providers),
+    ] {
         if let Some(p) = path {
             add_file(&mut w, entry, p, mtime)?;
         }

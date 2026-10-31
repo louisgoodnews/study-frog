@@ -27,6 +27,8 @@ pub struct Host {
     pub file_picker: Option<FilePicker>,
     /// Importers and card types registered by extensions.
     pub registry: Registry,
+    /// Sends the AI agent's requests (the application links the network library).
+    pub transport: Option<studyfrog_agent::provider::Transport>,
 }
 
 /// What the user can choose from the registry, as plain text for the views.

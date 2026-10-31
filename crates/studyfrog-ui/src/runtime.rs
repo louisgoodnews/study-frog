@@ -33,6 +33,15 @@ fn config_dir() -> Option<std::path::PathBuf> {
     app_config_dir(xdg.as_deref(), home.as_deref())
 }
 
+/// `$XDG_STATE_HOME/studyfrog`, else `$HOME/.local/state/studyfrog`: where the agent logs its calls.
+fn state_dir() -> Option<std::path::PathBuf> {
+    let non_empty = |v: Option<String>| v.filter(|s| !s.is_empty()).map(std::path::PathBuf::from);
+    let base = non_empty(std::env::var("XDG_STATE_HOME").ok()).or_else(|| {
+        non_empty(std::env::var("HOME").ok()).map(|h| h.join(".local").join("state"))
+    })?;
+    Some(base.join("studyfrog"))
+}
+
 /// Start the worker. It repaints the window whenever it has produced messages.
 pub fn spawn(ctx: egui::Context, host: Host) -> Runtime {
     let (effects, effect_rx) = channel::<Effect>();
@@ -44,6 +53,7 @@ pub fn spawn(ctx: egui::Context, host: Host) -> Runtime {
             models_dir(xdg.as_deref(), home.as_deref())
         };
         let mut worker = worker_with_host(config_dir(), models, host);
+        worker.state_dir = state_dir();
         while let Ok(effect) = effect_rx.recv() {
             for msg in execute(&mut worker, effect, now_ns()) {
                 if msg_tx.send(msg).is_err() {

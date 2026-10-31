@@ -5,6 +5,8 @@ use studyfrog_core::uid::Uid;
 use studyfrog_md::doc::Doc;
 use studyfrog_service::document::{load_document, resolve_link, save_document};
 
+use studyfrog_service::session::poll_vault;
+
 use crate::exec::Worker;
 use crate::msg::Msg;
 use crate::subjects_ui::SubjectsMsg;
@@ -69,4 +71,12 @@ pub fn subjects(w: &Worker, change: Option<studyfrog_config::subjects::SubjectBo
         None => Ok(load_subjects(session)),
     };
     Msg::Subjects(SubjectsMsg::Loaded(result))
+}
+
+/// Check the open vault for changed files.
+pub fn poll(w: &mut Worker, now_ns: i64) -> Msg {
+    match &mut w.session {
+        Some(session) => Msg::VaultPolled(poll_vault(session, now_ns).map_err(|e| e.to_string())),
+        None => Msg::VaultPolled(Ok(None)),
+    }
 }

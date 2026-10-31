@@ -18,5 +18,6 @@ pub fn host() -> Host {
         folder_picker: Some(picker::pick_folder),
         file_picker: Some(picker::pick_file),
         registry,
+        transport: Some(studyfrog_net::send),
     }
 }

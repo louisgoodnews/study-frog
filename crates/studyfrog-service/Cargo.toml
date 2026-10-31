@@ -20,6 +20,7 @@ studyfrog-store.workspace = true
 studyfrog-srs.workspace = true
 studyfrog-rehearsal.workspace = true
 studyfrog-slm.workspace = true
+studyfrog-agent.workspace = true
 studyfrog-achieve.workspace = true
 studyfrog-ext.workspace = true
 studyfrog-report.workspace = true

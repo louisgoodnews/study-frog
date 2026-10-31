@@ -5,13 +5,14 @@ use eframe::egui::{self, Panel};
 use crate::msg::Msg;
 use crate::state::{Screen, State};
 
-const SCREENS: [(Screen, &str); 9] = [
+const SCREENS: [(Screen, &str); 10] = [
     (Screen::Home, "Home"),
     (Screen::Library, "Library"),
     (Screen::Calendar, "Calendar"),
     (Screen::Board, "Board"),
     (Screen::Achievements, "Achievements"),
     (Screen::Reports, "Reports"),
+    (Screen::Agent, "Assistant"),
     (Screen::Graph, "Graph"),
     (Screen::Rehearse, "Rehearse"),
     (Screen::Settings, "Settings"),

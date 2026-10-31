@@ -66,6 +66,8 @@ pub enum Msg {
     Tick,
     /// The result of a change check: `None` when nothing changed.
     VaultPolled(Result<Option<VaultInfo>, String>),
+    /// A message of the assistant screen.
+    Agent(crate::agent_types::AgentMsg),
     /// A message about profiles.
     Profile(crate::profile_ui::ProfileMsg),
     /// A message of the backup section.

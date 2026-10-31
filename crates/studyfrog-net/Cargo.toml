@@ -1,0 +1,15 @@
+[package]
+name = "studyfrog-net"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "The HTTP transport for the AI agent, kept apart so only the application links a network library"
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-agent.workspace = true
+ureq.workspace = true

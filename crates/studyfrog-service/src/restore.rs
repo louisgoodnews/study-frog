@@ -16,6 +16,7 @@ const VAULT_PREFIX: &str = "vault/";
 const DATABASE_ENTRY: &str = "database/index.sqlite";
 const SETTINGS_ENTRY: &str = "config/app.toml";
 const KEYS_ENTRY: &str = "config/secrets.toml";
+const PROVIDERS_ENTRY: &str = "config/providers.toml";
 const INDEX_DIR: &str = ".studyfrog";
 
 fn io_err(path: &Path, e: std::io::Error) -> ServiceError {
@@ -127,7 +128,7 @@ fn unpack(
             })?;
             extract(&mut r, &entry, &target.join(rel))?;
             report.files += 1;
-        } else if entry.name == SETTINGS_ENTRY || entry.name == KEYS_ENTRY {
+        } else if [SETTINGS_ENTRY, KEYS_ENTRY, PROVIDERS_ENTRY].contains(&entry.name.as_str()) {
             restore_config_file(&mut r, &entry, config_dir, target, &mut report)?;
         } else {
             tar_copy(&mut r, &entry, &mut std::io::sink()).map_err(bad)?;
@@ -154,10 +155,11 @@ fn restore_config_file(
     let mut text = Vec::new();
     tar_copy(r, entry, &mut text)
         .map_err(|e| ServiceError::Invalid(format!("the backup is damaged: {e}")))?;
-    let file = dir.join(if is_settings {
-        APP_CONFIG_FILE
-    } else {
-        SECRETS_FILE
+    let is_providers = entry.name == PROVIDERS_ENTRY;
+    let file = dir.join(match (is_settings, is_providers) {
+        (true, _) => APP_CONFIG_FILE,
+        (_, true) => "providers.toml",
+        _ => SECRETS_FILE,
     });
     fs::create_dir_all(dir).map_err(|e| io_err(dir, e))?;
     if file.exists() {
@@ -170,7 +172,7 @@ fn restore_config_file(
         text
     };
     fs::write(&file, content).map_err(|e| io_err(&file, e))?;
-    if is_settings {
+    if is_settings || is_providers {
         report.settings_restored = true;
     } else {
         set_private(&file)?;

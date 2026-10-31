@@ -1,6 +1,9 @@
 //! Views: plain functions from `&State` to the messages the user's input produced.
 
 mod achievements;
+mod agent;
+mod agent_exam;
+mod agent_wiki;
 mod backup;
 mod bars;
 mod board;
@@ -68,6 +71,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         Screen::Calendar => calendar::draw(state, ui, &mut out),
         Screen::Board => board::draw(state, ui, &mut out),
         Screen::Achievements => achievements::draw(state, ui),
+        Screen::Agent => agent::draw(state, ui, &mut out),
         Screen::Reports => reports::draw(state, ui, &mut out),
     });
     toast::draw(state, ui, &mut out);

@@ -10,7 +10,7 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 use studyfrog_service::queue::{NewRun, preview_queue};
-use studyfrog_service::session::{VaultSession, current_settings, open_vault, poll_vault};
+use studyfrog_service::session::{VaultSession, current_settings, open_vault};
 use studyfrog_service::timezone::local_day_window;
 use studyfrog_service::track::create_card_tracked;
 use studyfrog_slm::models::Opened;
@@ -25,7 +25,7 @@ use crate::chrome::{ChromeMsg, MAX_RESULTS};
 use crate::effect::Effect;
 use crate::msg::Msg;
 use crate::state::Selection;
-use crate::{exec_backup, exec_doc, exec_import, exec_plan, exec_profile, exec_run};
+use crate::{exec_agent, exec_backup, exec_doc, exec_import, exec_plan, exec_profile, exec_run};
 
 /// Executor state: where per-user settings live and which vault is open.
 pub struct Worker {
@@ -47,6 +47,10 @@ pub struct Worker {
     pub file_picker: Option<FilePicker>,
     /// The importers and card types extensions registered.
     pub registry: Registry,
+    /// Sends the AI agent's requests.
+    pub transport: Option<studyfrog_agent::provider::Transport>,
+    /// Where the agent logs its calls (never their content).
+    pub state_dir: Option<PathBuf>,
 }
 
 /// A worker with nothing open.
@@ -61,6 +65,8 @@ pub fn worker_new(config_dir: Option<PathBuf>) -> Worker {
         folder_picker: None,
         file_picker: None,
         registry: Registry::default(),
+        transport: None,
+        state_dir: None,
     }
 }
 
@@ -76,6 +82,7 @@ pub fn worker_with_host(
         folder_picker: host.folder_picker,
         file_picker: host.file_picker,
         registry: host.registry,
+        transport: host.transport,
         ..worker_new(config_dir)
     }
 }
@@ -100,7 +107,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
                 .map(|p| p.display().to_string()),
         ),
         Effect::OpenVault(path) => open(w, &path),
-        Effect::PollVault => poll(w, now_ns),
+        Effect::PollVault => exec_doc::poll(w, now_ns),
         Effect::CheckReminders => exec_plan::reminders(w, now_ns),
         Effect::SaveAppSettings(settings) => save_settings(w, &settings),
         Effect::LoadItems(selection) => load_items(w, &selection),
@@ -113,6 +120,15 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),
         Effect::SearchItems(query) => search(w, query),
         Effect::LoadHome => exec_run::home(w, now_ns),
+        e @ (Effect::LoadAgent
+        | Effect::SaveConnection { .. }
+        | Effect::RemoveConnection(_)
+        | Effect::AllowConnection(..)
+        | Effect::PrepareWiki(_)
+        | Effect::AgentChat { .. }
+        | Effect::ApplyChanges(_)
+        | Effect::PrepareExam { .. }
+        | Effect::RecordExam(_)) => exec_agent::run(w, e, now_ns),
         Effect::Backup { include_keys } => exec_backup::backup(w, include_keys, now_ns),
         Effect::ChooseBackup => exec_backup::choose(w),
         Effect::Restore {
@@ -184,13 +200,6 @@ fn open(w: &mut Worker, path: &str) -> Msg {
             Msg::VaultOpened(Ok(info))
         }
         Err(e) => Msg::VaultOpened(Err(e.to_string())),
-    }
-}
-
-fn poll(w: &mut Worker, now_ns: i64) -> Msg {
-    match &mut w.session {
-        Some(session) => Msg::VaultPolled(poll_vault(session, now_ns).map_err(|e| e.to_string())),
-        None => Msg::VaultPolled(Ok(None)),
     }
 }
 

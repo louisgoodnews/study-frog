@@ -25,6 +25,8 @@ pub enum Screen {
     Welcome,
     /// What is ready today and what happened lately.
     Home,
+    /// The assistant: connections, wiki proposals and exams.
+    Agent,
     /// Stacks and items of the open vault.
     Library,
     /// Set up and run a rehearsal.
@@ -156,6 +158,8 @@ pub struct State {
     pub extensions: Extensions,
     /// The home screen's numbers (also the stack badges in the library).
     pub home: Option<HomeSummary>,
+    /// The assistant screen.
+    pub agent: crate::agent_types::AgentState,
     /// The user profiles.
     pub profiles: crate::profile_ui::ProfileState,
     /// Backing up and restoring.

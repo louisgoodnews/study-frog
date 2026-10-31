@@ -1,6 +1,6 @@
 # ADR 0009: An AI agent that works the vault and examines the user
 
-- Status: **Accepted** (2026-10-30, by the owner; to be implemented in STORY-0049)
+- Status: **Accepted** (2026-10-30, by the owner; implemented in STORY-0049, see docs/specs/agent.md)
 - Date: 2026-10-30
 
 ## Context

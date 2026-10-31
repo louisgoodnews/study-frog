@@ -82,7 +82,7 @@ pub fn record_step(
     tx.commit().map_err(sql_err)
 }
 
-fn rate_item(
+pub(crate) fn rate_item(
     conn: &Connection,
     item: Uid,
     rating: Rating,

@@ -8,6 +8,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- The Assistant screen: connect a local model (Ollama and similar) or a remote one (OpenAI-compatible, Anthropic),
+  let it read chosen stacks and propose changes like an LLM wiki editor (new notes, cards, questions, edits, an
+  index) that you accept one by one, and be examined by it with the verdicts recorded as reviews only when you say
+  so. A remote model is refused until you allow it; keys live in a private file in your config folder; calls are
+  logged without their content (STORY-0049, ADR 0009).
 - Backups and restores (Settings, and the welcome page): one plain `.tar` with the vault's files, a consistent copy of
   the database (review history, runs, the board and the calendar), and optionally the settings and API keys. A
   restore goes into a new or empty folder, never overwrites anything, and keeps the old settings next to the new
