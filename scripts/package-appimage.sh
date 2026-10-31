@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the Linux package: an AppImage holding the release binary, a desktop entry and an icon.
 #
-#   scripts/package-appimage.sh                # builds target/appimage/StudyFrog-<version>-x86_64.AppImage
+#   scripts/package-appimage.sh                # builds target/appimage/StudyFrog-<version>-x86_64.AppImage and .tar.gz, each with a .sha256
 #   scripts/package-appimage.sh --appdir-only  # stops after assembling the AppDir (no download)
 #
 # appimagetool is downloaded once (pinned release) into target/tools unless $APPIMAGETOOL points at one.
@@ -30,8 +30,23 @@ install -m 644 packaging/studyfrog.desktop "$APPDIR/studyfrog.desktop"
 install -m 644 packaging/studyfrog.png "$APPDIR/studyfrog.png"
 ln -s usr/bin/studyfrog "$APPDIR/AppRun"
 
+# The same binary as a plain archive, for people who do not use AppImages.
+TARBALL="$OUT/StudyFrog-$VERSION-x86_64.tar.gz"
+STAGE="$OUT/StudyFrog-$VERSION"
+echo "==> archiving $TARBALL"
+rm -rf "$STAGE"
+mkdir -p "$STAGE/bin" "$STAGE/share/applications" "$STAGE/share/icons"
+install -m 755 "$APPDIR/usr/bin/studyfrog" "$STAGE/bin/studyfrog"
+install -m 644 packaging/studyfrog.desktop "$STAGE/share/applications/studyfrog.desktop"
+install -m 644 packaging/studyfrog.png "$STAGE/share/icons/studyfrog.png"
+install -m 644 README.md LICENSE-APACHE LICENSE-MIT CHANGELOG.md "$STAGE/"
+install -m 644 "docs/RELEASE_NOTES_$VERSION.md" "$STAGE/RELEASE_NOTES.md" 2>/dev/null || true
+tar --sort=name --owner=0 --group=0 --numeric-owner -C "$OUT" -czf "$TARBALL" "StudyFrog-$VERSION"
+(cd "$OUT" && sha256sum "$(basename "$TARBALL")" > "$(basename "$TARBALL").sha256")
+rm -rf "$STAGE"
+
 if [ "${1:-}" = "--appdir-only" ]; then
-  echo "package: AppDir ready ($APPDIR); run without --appdir-only to pack it"
+  echo "package: AppDir and tarball ready ($APPDIR, $TARBALL); run without --appdir-only to pack the AppImage"
   exit 0
 fi
 
@@ -47,4 +62,4 @@ IMAGE="$OUT/StudyFrog-$VERSION-x86_64.AppImage"
 echo "==> packing $IMAGE"
 ARCH=x86_64 "$TOOL" --appimage-extract-and-run "$APPDIR" "$IMAGE"
 (cd "$OUT" && sha256sum "$(basename "$IMAGE")" > "$(basename "$IMAGE").sha256")
-echo "package: ok ($IMAGE, checksum in $IMAGE.sha256)"
+echo "package: ok ($IMAGE and $TARBALL, checksums beside them)"

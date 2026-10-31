@@ -17,7 +17,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libwayland-dev libx11-dev libgl1-mesa-dev pkg-config desktop-file-utils
       - name: Gate
         run: scripts/check.sh
-      - name: Build the AppImage
+      - name: Build the AppImage and the tarball
         run: scripts/package-appimage.sh
       - name: Publish the release
         env:
@@ -28,4 +28,5 @@ jobs:
           notes="docs/RELEASE_NOTES_${version}.md"
           test -f "$notes"
           gh release create "$TAG" --title "StudyFrog $version" --notes-file "$notes" \
-            target/appimage/StudyFrog-${version}-x86_64.AppImage target/appimage/StudyFrog-${version}-x86_64.AppImage.sha256
+            target/appimage/StudyFrog-${version}-x86_64.AppImage target/appimage/StudyFrog-${version}-x86_64.AppImage.sha256 \
+            target/appimage/StudyFrog-${version}-x86_64.tar.gz target/appimage/StudyFrog-${version}-x86_64.tar.gz.sha256

@@ -7,6 +7,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Added
+- Releases carry a `.tar.gz` (binary, desktop entry, icon, licences, README, changelog, release notes) and its `.sha256`
+  next to the AppImage; the packaging script writes them and the release workflow uploads them (TASK-0125).
+
 ## [0.2.0] - 2026-10-31
 
 ### Added

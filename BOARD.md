@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (123) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (124) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
@@ -129,6 +129,7 @@
 |  |  |  |  |  | [TASK-0122](docs/issues/tasks/TASK-0122-documentation-tests-accessibility-and-release-notes-for-pdf-support.md) Documentation, tests, accessibility and release notes for PDF support (3) |
 |  |  |  |  |  | [TASK-0123](docs/issues/tasks/TASK-0123-follow-links-inside-a-pdf-after-the-user-agrees.md) Follow links inside a PDF after the user agrees (3) |
 |  |  |  |  |  | [TASK-0124](docs/issues/tasks/TASK-0124-release-0-2-0.md) Release 0.2.0 (2) |
+|  |  |  |  |  | [TASK-0125](docs/issues/tasks/TASK-0125-publish-a-tar-gz-and-its-checksum-with-every-release.md) Publish a tar.gz and its checksum with every release (1) |
 
 ## Stories
 
@@ -187,7 +188,7 @@
 | [STORY-0051](docs/issues/stories/STORY-0051-user-profiles.md) User profiles (5) | done | 0/0 |
 | [STORY-0052](docs/issues/stories/STORY-0052-stack-due-dates-that-pass-and-can-change.md) Stack due dates that pass and can change (3) | done | 0/0 |
 | [STORY-0053](docs/issues/stories/STORY-0053-priority-and-difficulty-with-inheritance.md) Priority and difficulty with inheritance (8) | done | 0/0 |
-| [STORY-0054](docs/issues/stories/STORY-0054-pdf-files-in-the-vault-to-view-edit-and-extract.md) PDF files in the vault to view, edit and extract (8) | done | 16/16 |
+| [STORY-0054](docs/issues/stories/STORY-0054-pdf-files-in-the-vault-to-view-edit-and-extract.md) PDF files in the vault to view, edit and extract (8) | done | 17/17 |
 
 ## Epics
 
