@@ -18,19 +18,21 @@ use studyfrog_slm::models::Opened;
 use studyfrog_ext::types::Registry;
 
 use crate::host::{FilePicker, FolderPicker, Host};
-use studyfrog_store::app_config::{read_app_settings, write_app_settings};
+use studyfrog_store::app_config::write_app_settings;
 use studyfrog_store::overview::{list_items, search_items};
 
 use crate::chrome::{ChromeMsg, MAX_RESULTS};
 use crate::effect::Effect;
 use crate::msg::Msg;
 use crate::state::Selection;
-use crate::{exec_doc, exec_import, exec_plan, exec_run};
+use crate::{exec_backup, exec_doc, exec_import, exec_plan, exec_profile, exec_run};
 
 /// Executor state: where per-user settings live and which vault is open.
 pub struct Worker {
     /// Directory holding `app.toml`; `None` when no home directory is known.
     pub config_dir: Option<PathBuf>,
+    /// The folder above all profiles (`None` when no home directory is known).
+    pub root_config: Option<PathBuf>,
     /// The open vault.
     pub session: Option<VaultSession>,
     /// Where language models are installed; `None` means word matching only.
@@ -50,6 +52,7 @@ pub struct Worker {
 /// A worker with nothing open.
 pub fn worker_new(config_dir: Option<PathBuf>) -> Worker {
     Worker {
+        root_config: config_dir.clone(),
         config_dir,
         session: None,
         models_dir: None,
@@ -80,7 +83,10 @@ pub fn worker_with_host(
 /// Perform one effect and report what happened. `now_ns` is the current Unix time in nanoseconds.
 pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
     let msg = match effect {
-        Effect::LoadAppSettings => load_settings(w),
+        Effect::LoadAppSettings => return exec_profile::startup(w),
+        Effect::CreateProfile(name) => exec_profile::create(w, &name),
+        Effect::SwitchProfile(name) => exec_profile::switch(w, &name),
+        Effect::DeleteProfile(name) => exec_profile::delete(w, &name),
         Effect::PickImportFile => exec_import::pick_file(w),
         Effect::ImportFile { folder, path } => exec_import::import_file(w, &folder, &path, now_ns),
         Effect::CreateFromType {
@@ -107,6 +113,12 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),
         Effect::SearchItems(query) => search(w, query),
         Effect::LoadHome => exec_run::home(w, now_ns),
+        Effect::Backup { include_keys } => exec_backup::backup(w, include_keys, now_ns),
+        Effect::ChooseBackup => exec_backup::choose(w),
+        Effect::Restore {
+            archive,
+            with_settings,
+        } => exec_backup::restore(w, &archive, with_settings),
         Effect::AddImage(target) => exec_import::add_image(w, target),
         Effect::LoadSubjects => exec_doc::subjects(w, None),
         Effect::SaveSubjects(book) => exec_doc::subjects(w, Some(book)),
@@ -155,22 +167,6 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         }),
     };
     vec![msg]
-}
-
-fn load_settings(w: &Worker) -> Msg {
-    let Some(dir) = &w.config_dir else {
-        return Msg::Started {
-            app: AppSettings::default(),
-            error: None,
-        };
-    };
-    match read_app_settings(dir) {
-        Ok(app) => Msg::Started { app, error: None },
-        Err(e) => Msg::Started {
-            app: AppSettings::default(),
-            error: Some(e.to_string()),
-        },
-    }
 }
 
 fn save_settings(w: &Worker, settings: &AppSettings) -> Msg {

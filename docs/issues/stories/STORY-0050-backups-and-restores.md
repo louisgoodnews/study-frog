@@ -2,7 +2,7 @@
 id: STORY-0050
 type: story
 title: Backups and restores
-status: backlog
+status: done
 epic: EPIC-021
 parents: [EPIC-021]
 estimate: 5
@@ -19,11 +19,11 @@ The owner asked for this after reviewing the app on 2026-10-30.
 Backups and restores.
 
 ## Acceptance Criteria
-- [ ] A backup holds the vault content and the configuration, and optionally the keys
-- [ ] A restore brings them back after a check and a confirmation
+- [x] A backup holds the vault content and the configuration, and optionally the keys
+- [x] A restore brings them back after a check and a confirmation
 
 ## Design Notes
-A zip-like archive written to a folder the user picks; the database is rebuilt from the files.
+service::backup and restore write and read a plain tar (service::tar), with manifest.toml first, a VACUUM INTO copy of the database, the vault files, and optionally settings and keys. A restore goes into a new or empty folder. A zip-like archive written to a folder the user picks; the database is rebuilt from the files.
 
 ## Dependencies
 None.

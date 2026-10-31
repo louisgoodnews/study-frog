@@ -23,6 +23,8 @@ fn sections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.separator();
     crate::view::subjects::draw(state, ui, out);
     ui.separator();
+    crate::view::backup::draw(state, ui, out);
+    ui.separator();
     let Some(vault) = &state.vault else { return };
     if let Some(e) = &vault.settings_error {
         ui.colored_label(

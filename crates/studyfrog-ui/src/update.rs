@@ -74,6 +74,8 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::PickImage(t) => crate::image_ui::pick(state, t),
         Msg::ImageAdded(t, r) => crate::image_ui::added(state, t, r),
         Msg::Explorer(m) => crate::explorer_ui::update(state, m),
+        Msg::Backup(m) => crate::backup_ui::update(state, m),
+        Msg::Profile(m) => crate::profile_ui::update(state, m),
         Msg::Subjects(m) => crate::subjects_ui::update(state, m),
         Msg::RemindersDue(r) => crate::reminder_ui::arrived(state, r),
         Msg::VaultPolled(result) => crate::poll_ui::vault_polled(state, result),
@@ -142,7 +144,7 @@ fn vault_toast() -> crate::modal::Toast {
     }
 }
 
-fn started(
+pub(crate) fn started(
     state: State,
     app: studyfrog_core::settings::AppSettings,
     error: Option<String>,

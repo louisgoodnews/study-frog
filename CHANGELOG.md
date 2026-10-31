@@ -8,6 +8,12 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Backups and restores (Settings, and the welcome page): one plain `.tar` with the vault's files, a consistent copy of
+  the database (review history, runs, the board and the calendar), and optionally the settings and API keys. A
+  restore goes into a new or empty folder, never overwrites anything, and keeps the old settings next to the new
+  ones (STORY-0050).
+- User profiles: each has its own settings, recent vaults and API keys; switch, create and delete them from the
+  profile menu (or the welcome page). The vault path is no longer shown in the profile menu (STORY-0051).
 - Pictures in notes, cards, questions and answers: a Picture button in the Markdown toolbar copies a png, jpg or gif
   into the vault's `assets/` folder and inserts `![alt](assets/name.png)`; pictures show in the editor preview, the
   item page and while rehearsing, and only pictures inside the vault are loaded (STORY-0044).

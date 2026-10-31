@@ -4,6 +4,7 @@
 
 use eframe::egui;
 
+use crate::backup_ui::BackupMsg;
 use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::state::State;
@@ -26,6 +27,17 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
     } else if ui.button("Open or create a vault…").clicked() {
         out.push(Msg::Modal(ModalMsg::OpenVault));
+    }
+    if !state.opening && ui.button("Restore from a backup…").clicked() {
+        out.push(Msg::Backup(BackupMsg::Choose));
+    }
+    if let Some(c) = &state.backup.chosen {
+        ui.add_space(8.0);
+        crate::view::backup::chosen(state, c, ui, out);
+    }
+    if state.profiles.list.names.len() > 1 {
+        ui.add_space(12.0);
+        super::profiles::draw(state, ui, out);
     }
     if !state.app.recent.is_empty() {
         ui.add_space(12.0);

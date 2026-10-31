@@ -156,6 +156,10 @@ pub struct State {
     pub extensions: Extensions,
     /// The home screen's numbers (also the stack badges in the library).
     pub home: Option<HomeSummary>,
+    /// The user profiles.
+    pub profiles: crate::profile_ui::ProfileState,
+    /// Backing up and restoring.
+    pub backup: crate::backup_ui::BackupState,
     /// The teachers and subjects of the vault.
     pub subjects: crate::subjects_ui::SubjectsState,
     /// The latest reports.

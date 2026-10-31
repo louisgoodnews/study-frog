@@ -41,3 +41,43 @@ pub fn write_app_settings(dir: &Path, settings: &AppSettings) -> Result<(), Stor
     fs::write(&temp, render_app_settings(settings)).map_err(|e| io_err(&temp, &e))?;
     fs::rename(&temp, &target).map_err(|e| io_err(&target, &e))
 }
+
+/// The profiles of this install; a missing file means only the default profile.
+pub fn read_profiles(root: &Path) -> Result<studyfrog_config::profiles::Profiles, StoreError> {
+    use studyfrog_config::profiles::{PROFILES_FILE, parse_profiles, profiles_default};
+    let path = root.join(PROFILES_FILE);
+    match fs::read_to_string(&path) {
+        Ok(text) => parse_profiles(&text).map_err(|e| StoreError::Config {
+            path: path.display().to_string(),
+            message: e.to_string(),
+        }),
+        Err(e) if e.kind() == ErrorKind::NotFound => Ok(profiles_default()),
+        Err(e) => Err(io_err(&path, &e)),
+    }
+}
+
+/// Write `profiles.toml` into `root`, through a temporary file.
+pub fn write_profiles(
+    root: &Path,
+    p: &studyfrog_config::profiles::Profiles,
+) -> Result<(), StoreError> {
+    use studyfrog_config::profiles::{PROFILES_FILE, render_profiles};
+    fs::create_dir_all(root).map_err(|e| io_err(root, &e))?;
+    let (target, temp) = (
+        root.join(PROFILES_FILE),
+        root.join(format!("{PROFILES_FILE}.tmp")),
+    );
+    fs::write(&temp, render_profiles(p)).map_err(|e| io_err(&temp, &e))?;
+    fs::rename(&temp, &target).map_err(|e| io_err(&target, &e))
+}
+
+/// Where a profile keeps its `app.toml` and keys: the default one in `root` itself, the others in
+/// `root/profiles/<name>`.
+pub fn profile_dir(root: &Path, name: &str) -> PathBuf {
+    use studyfrog_config::profiles::{DEFAULT_PROFILE, profile_slug};
+    if name == DEFAULT_PROFILE {
+        root.to_owned()
+    } else {
+        root.join("profiles").join(profile_slug(name))
+    }
+}

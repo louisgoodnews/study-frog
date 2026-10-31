@@ -5,6 +5,7 @@
 
 pub mod achievements;
 pub mod app;
+pub mod backup_ui;
 pub mod browse;
 pub mod chrome;
 pub mod deadline_ui;
@@ -13,9 +14,11 @@ pub mod editor;
 mod editor_edit;
 pub mod effect;
 pub mod exec;
+pub mod exec_backup;
 pub mod exec_doc;
 pub mod exec_import;
 pub mod exec_plan;
+pub mod exec_profile;
 pub mod exec_run;
 pub mod explorer_ui;
 pub mod graph;
@@ -36,6 +39,7 @@ pub mod nav;
 pub mod plan_msg;
 pub mod planner;
 pub mod poll_ui;
+pub mod profile_ui;
 pub mod reading_test;
 pub mod reminder_ui;
 pub mod reports;

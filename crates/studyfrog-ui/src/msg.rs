@@ -66,6 +66,10 @@ pub enum Msg {
     Tick,
     /// The result of a change check: `None` when nothing changed.
     VaultPolled(Result<Option<VaultInfo>, String>),
+    /// A message about profiles.
+    Profile(crate::profile_ui::ProfileMsg),
+    /// A message of the backup section.
+    Backup(crate::backup_ui::BackupMsg),
     /// A message of the performance explorer.
     Explorer(crate::explorer_ui::ExplorerMsg),
     /// The user asked to add a picture to a text area.

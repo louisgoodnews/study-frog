@@ -100,9 +100,8 @@ fn help(ui: &mut egui::Ui) {
 
 fn profile(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.strong(format!("StudyFrog {}", env!("CARGO_PKG_VERSION")));
-    if let Some(v) = &state.vault {
-        ui.weak(&v.root);
-    }
+    ui.separator();
+    super::profiles::draw(state, ui, out);
     ui.separator();
     if ui.button("Close vault").clicked() {
         out.push(Msg::CloseVault);

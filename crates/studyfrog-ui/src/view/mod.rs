@@ -1,6 +1,7 @@
 //! Views: plain functions from `&State` to the messages the user's input produced.
 
 mod achievements;
+mod backup;
 mod bars;
 mod board;
 mod calendar;
@@ -25,6 +26,7 @@ mod modal_fields;
 mod navbar;
 mod popup;
 mod preview;
+mod profiles;
 mod reports;
 mod run;
 mod run_card;

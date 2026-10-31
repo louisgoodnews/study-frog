@@ -2,7 +2,7 @@
 id: STORY-0051
 type: story
 title: User profiles
-status: backlog
+status: done
 epic: EPIC-021
 parents: [EPIC-021]
 estimate: 5
@@ -19,11 +19,11 @@ The owner asked for this after reviewing the app on 2026-10-30.
 User profiles.
 
 ## Acceptance Criteria
-- [ ] More than one profile can exist, each with its own settings and recent vaults
-- [ ] The profile menu switches between them
+- [x] More than one profile can exist, each with its own settings and recent vaults
+- [x] The profile menu switches between them
 
 ## Design Notes
-Per-profile directory under the config dir.
+profiles.toml in the config folder; the Default profile keeps app.toml in the config folder itself, the others live in profiles/<slug>/ with their own settings and keys. Per-profile directory under the config dir.
 
 ## Dependencies
 None.

@@ -111,6 +111,26 @@ pub enum Effect {
     },
     /// Read what the home screen shows.
     LoadHome,
+    /// Make a new profile and switch to it.
+    CreateProfile(String),
+    /// Switch to another profile.
+    SwitchProfile(String),
+    /// Delete a profile and its settings and keys (not its vault).
+    DeleteProfile(String),
+    /// Ask where to put a backup of the vault and write it.
+    Backup {
+        /// Put the API keys in it.
+        include_keys: bool,
+    },
+    /// Ask for a backup file and read what it holds.
+    ChooseBackup,
+    /// Ask for an empty folder and unpack a backup there.
+    Restore {
+        /// The backup file.
+        archive: String,
+        /// Replace the app settings with those of the backup.
+        with_settings: bool,
+    },
     /// Choose a picture, copy it into the vault and report where it went.
     AddImage(crate::image_ui::ImageTarget),
     /// Read the vault's teachers and subjects.

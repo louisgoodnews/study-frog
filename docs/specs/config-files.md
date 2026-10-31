@@ -74,3 +74,19 @@ teacher = "Ms Rivera"   # optional; a subject has at most one teacher
 Names are unique (ignoring case), one line, without commas. Unknown keys and unknown teachers are errors, and the
 file is then not used (the Settings screen says why). A stack lists its subjects in its front matter:
 `subjects: Mathematics, Physics`.
+
+## `profiles.toml` (config folder)
+```toml
+current = "School"
+
+[[profile]]
+name = "School"
+```
+"Default" always exists and keeps `app.toml` and `secrets.toml` directly in the config folder; every other profile
+keeps its own in `profiles/<name as a folder>/`. Names are unique ignoring case, one line, at most 40 characters.
+
+## Backups
+A backup is a plain tar file: `manifest.toml` first (layout version, time, program version, vault name, file count
+and size, whether settings and keys are inside), then `database/index.sqlite` (a consistent copy made with
+`VACUUM INTO`), `vault/<path>` for every vault file except the index folder, and `config/app.toml` and
+`config/secrets.toml` when included. Restoring writes into a new or empty folder only; paths that leave it are refused.
