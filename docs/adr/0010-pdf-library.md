@@ -1,6 +1,6 @@
 # ADR 0010: PDF libraries behind one crate
 
-- Status: **Proposed** (2026-10-31; waiting for the owner. Nothing else in EPIC-022 starts before it is accepted.)
+- Status: **Accepted** (2026-10-31, by the owner; implemented in EPIC-022)
 - Date: 2026-10-31
 
 ## Context

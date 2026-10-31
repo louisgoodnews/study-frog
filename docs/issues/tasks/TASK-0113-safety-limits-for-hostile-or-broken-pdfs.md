@@ -2,7 +2,7 @@
 id: TASK-0113
 type: task
 title: Safety limits for hostile or broken PDFs
-status: backlog
+status: in_progress
 epic: EPIC-022
 parents: [STORY-0054]
 estimate: 3

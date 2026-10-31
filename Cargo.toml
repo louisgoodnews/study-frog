@@ -10,6 +10,7 @@ members = [
     "crates/studyfrog-rehearsal",
     "crates/studyfrog-slm",
     "crates/studyfrog-agent",
+    "crates/studyfrog-pdf",
     "crates/studyfrog-net",
     "crates/studyfrog-candle",
     "crates/studyfrog-report",
@@ -43,6 +44,10 @@ studyfrog-srs = { path = "crates/studyfrog-srs" }
 studyfrog-rehearsal = { path = "crates/studyfrog-rehearsal" }
 studyfrog-slm = { path = "crates/studyfrog-slm" }
 studyfrog-agent = { path = "crates/studyfrog-agent" }
+studyfrog-pdf = { path = "crates/studyfrog-pdf" }
+hayro = "0.8"
+pdf_oxide = { version = "0.3", default-features = false, features = ["icc"] }
+lopdf = "0.46"
 studyfrog-net = { path = "crates/studyfrog-net" }
 studyfrog-candle = { path = "crates/studyfrog-candle" }
 studyfrog-report = { path = "crates/studyfrog-report" }

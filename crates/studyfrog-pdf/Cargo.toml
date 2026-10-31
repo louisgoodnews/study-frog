@@ -1,0 +1,17 @@
+[package]
+name = "studyfrog-pdf"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "PDF files as plain data: pages, text, pictures, drawing and page operations, behind one seam (ADR 0010)"
+
+[lints]
+workspace = true
+
+[dependencies]
+hayro.workspace = true
+pdf_oxide.workspace = true
+lopdf.workspace = true
+image.workspace = true

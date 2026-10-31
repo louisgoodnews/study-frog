@@ -4,21 +4,21 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (13) | Ready (0) | In progress (0/3) | Review (2) | Blocked (0) | Done (107) |
+| Backlog (11) | Ready (0) | In progress (1/3) | Review (1) | Blocked (0) | Done (109) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0110](docs/issues/tasks/TASK-0110-the-studyfrog-pdf-crate-with-documents-pages-text-and-pictures-as-data.md) The studyfrog-pdf crate with documents, pages, text and pictures as data (5) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-| [TASK-0111](docs/issues/tasks/TASK-0111-index-pdfs-in-the-vault-and-make-them-searchable.md) Index PDFs in the vault and make them searchable (5) |  |  | [TASK-0109](docs/issues/tasks/TASK-0109-spike-and-adr-0010-to-choose-the-pdf-library.md) Spike and ADR 0010 to choose the PDF library (5) |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-| [TASK-0112](docs/issues/tasks/TASK-0112-pdf-viewer-screen.md) PDF viewer screen (8) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-| [TASK-0113](docs/issues/tasks/TASK-0113-safety-limits-for-hostile-or-broken-pdfs.md) Safety limits for hostile or broken PDFs (3) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
-| [TASK-0114](docs/issues/tasks/TASK-0114-annotations-as-highlights-and-notes-in-a-sidecar-file.md) Annotations as highlights and notes in a sidecar file (5) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
-| [TASK-0115](docs/issues/tasks/TASK-0115-page-operations-to-rotate-delete-reorder-merge-and-split-into-a-new-pdf.md) Page operations to rotate, delete, reorder, merge and split into a new PDF (5) |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
-| [TASK-0116](docs/issues/tasks/TASK-0116-export-an-annotated-copy-and-edit-document-properties.md) Export an annotated copy and edit document properties (3) |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
-| [TASK-0117](docs/issues/tasks/TASK-0117-extract-text-into-markdown-notes-with-a-link-back-to-the-page.md) Extract text into Markdown notes with a link back to the page (5) |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
-| [TASK-0118](docs/issues/tasks/TASK-0118-detect-scanned-pages-and-say-so.md) Detect scanned pages and say so (2) |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
-| [TASK-0119](docs/issues/tasks/TASK-0119-extract-pictures-and-page-snapshots-into-the-vault.md) Extract pictures and page snapshots into the vault (3) |  |  |  |  | [TASK-0010](docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
-| [TASK-0120](docs/issues/tasks/TASK-0120-cards-and-questions-from-highlighted-passages-with-the-assistant-s-help.md) Cards and questions from highlighted passages, with the assistant's help (5) |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
-| [TASK-0121](docs/issues/tasks/TASK-0121-add-link-and-organise-pdfs.md) Add, link and organise PDFs (3) |  |  |  |  | [TASK-0012](docs/issues/tasks/TASK-0012-id-newtypes-and-arena-indices.md) Id newtypes and arena indices (3) |
-| [TASK-0122](docs/issues/tasks/TASK-0122-documentation-tests-accessibility-and-release-notes-for-pdf-support.md) Documentation, tests, accessibility and release notes for PDF support (3) |  |  |  |  | [TASK-0013](docs/issues/tasks/TASK-0013-stack-note-card-question-structs.md) Stack, Note, Card, Question structs (3) |
+| [TASK-0111](docs/issues/tasks/TASK-0111-index-pdfs-in-the-vault-and-make-them-searchable.md) Index PDFs in the vault and make them searchable (5) |  | [TASK-0113](docs/issues/tasks/TASK-0113-safety-limits-for-hostile-or-broken-pdfs.md) Safety limits for hostile or broken PDFs (3) | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+| [TASK-0112](docs/issues/tasks/TASK-0112-pdf-viewer-screen.md) PDF viewer screen (8) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+| [TASK-0114](docs/issues/tasks/TASK-0114-annotations-as-highlights-and-notes-in-a-sidecar-file.md) Annotations as highlights and notes in a sidecar file (5) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+| [TASK-0115](docs/issues/tasks/TASK-0115-page-operations-to-rotate-delete-reorder-merge-and-split-into-a-new-pdf.md) Page operations to rotate, delete, reorder, merge and split into a new PDF (5) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+| [TASK-0116](docs/issues/tasks/TASK-0116-export-an-annotated-copy-and-edit-document-properties.md) Export an annotated copy and edit document properties (3) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
+| [TASK-0117](docs/issues/tasks/TASK-0117-extract-text-into-markdown-notes-with-a-link-back-to-the-page.md) Extract text into Markdown notes with a link back to the page (5) |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
+| [TASK-0118](docs/issues/tasks/TASK-0118-detect-scanned-pages-and-say-so.md) Detect scanned pages and say so (2) |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
+| [TASK-0119](docs/issues/tasks/TASK-0119-extract-pictures-and-page-snapshots-into-the-vault.md) Extract pictures and page snapshots into the vault (3) |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
+| [TASK-0120](docs/issues/tasks/TASK-0120-cards-and-questions-from-highlighted-passages-with-the-assistant-s-help.md) Cards and questions from highlighted passages, with the assistant's help (5) |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
+| [TASK-0121](docs/issues/tasks/TASK-0121-add-link-and-organise-pdfs.md) Add, link and organise PDFs (3) |  |  |  |  | [TASK-0010](docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
+| [TASK-0122](docs/issues/tasks/TASK-0122-documentation-tests-accessibility-and-release-notes-for-pdf-support.md) Documentation, tests, accessibility and release notes for PDF support (3) |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
+|  |  |  |  |  | [TASK-0012](docs/issues/tasks/TASK-0012-id-newtypes-and-arena-indices.md) Id newtypes and arena indices (3) |
+|  |  |  |  |  | [TASK-0013](docs/issues/tasks/TASK-0013-stack-note-card-question-structs.md) Stack, Note, Card, Question structs (3) |
 |  |  |  |  |  | [TASK-0014](docs/issues/tasks/TASK-0014-review-and-rating-types.md) Review and Rating types (2) |
 |  |  |  |  |  | [TASK-0015](docs/issues/tasks/TASK-0015-run-and-event-types.md) Run and event types (3) |
 |  |  |  |  |  | [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) |
@@ -113,6 +113,8 @@
 |  |  |  |  |  | [TASK-0106](docs/issues/tasks/TASK-0106-stack-due-date-and-new-items-on-the-board.md) Stack due date and new items on the board (3) |
 |  |  |  |  |  | [TASK-0107](docs/issues/tasks/TASK-0107-three-step-rehearsal-setup.md) Three-step rehearsal setup (3) |
 |  |  |  |  |  | [TASK-0108](docs/issues/tasks/TASK-0108-home-and-calendar-fill-the-window.md) Home and calendar fill the window (3) |
+|  |  |  |  |  | [TASK-0109](docs/issues/tasks/TASK-0109-spike-and-adr-0010-to-choose-the-pdf-library.md) Spike and ADR 0010 to choose the PDF library (5) |
+|  |  |  |  |  | [TASK-0110](docs/issues/tasks/TASK-0110-the-studyfrog-pdf-crate-with-documents-pages-text-and-pictures-as-data.md) The studyfrog-pdf crate with documents, pages, text and pictures as data (5) |
 
 ## Stories
 
@@ -171,7 +173,7 @@
 | [STORY-0051](docs/issues/stories/STORY-0051-user-profiles.md) User profiles (5) | done | 0/0 |
 | [STORY-0052](docs/issues/stories/STORY-0052-stack-due-dates-that-pass-and-can-change.md) Stack due dates that pass and can change (3) | done | 0/0 |
 | [STORY-0053](docs/issues/stories/STORY-0053-priority-and-difficulty-with-inheritance.md) Priority and difficulty with inheritance (8) | done | 0/0 |
-| [STORY-0054](docs/issues/stories/STORY-0054-pdf-files-in-the-vault-to-view-edit-and-extract.md) PDF files in the vault to view, edit and extract (8) | backlog | 0/14 |
+| [STORY-0054](docs/issues/stories/STORY-0054-pdf-files-in-the-vault-to-view-edit-and-extract.md) PDF files in the vault to view, edit and extract (8) | backlog | 2/14 |
 
 ## Epics
 

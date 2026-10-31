@@ -8,8 +8,12 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- The `studyfrog-pdf` crate (TASK-0110, TASK-0113): reads page sizes, outline, properties, words with boxes, text,
+  Markdown and pictures; draws pages and regions; rotates, drops, reorders, merges and splits pages; writes
+  highlights and notes into a copy. Size, page, pixel and time limits and crash containment keep hostile files from
+  taking the app down.
 - PDF library spike (TASK-0109): measured findings in `docs/research/pdf-library-spike.md` and a proposed ADR 0010
-  (hayro to draw pages, pdf_oxide to read and edit, both behind a `studyfrog-pdf` crate).
+  (hayro to draw pages, pdf_oxide to read and edit, both behind a `studyfrog-pdf` crate); ADR 0010 is accepted.
 - Planning for PDF support: EPIC-022 with STORY-0054 and TASK-0109 to TASK-0122 (view, annotate, rearrange and extract
   PDF files), a new phase M9 in the roadmap and the `m9` label.
 

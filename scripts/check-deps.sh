@@ -14,6 +14,7 @@ declare -A allowed=(
   [rehearsal]="core srs"
   [slm]="core"
   [agent]="core"
+  [pdf]=""
   [net]="agent"
   [candle]="slm"
   [report]="core srs"
@@ -21,8 +22,8 @@ declare -A allowed=(
   [board]="core"
   [calendar]="core"
   [ext]=""
-  [service]="core md config calendar board store srs rehearsal slm achieve report ext agent"
-  [ui]="core md config graph store srs rehearsal slm report achieve board calendar service ext agent"
+  [service]="core md config calendar board store srs rehearsal slm achieve report ext agent pdf"
+  [ui]="core md config graph store srs rehearsal slm report achieve board calendar service ext agent pdf"
   [app]="ui slm candle ext agent net"
 )
 
