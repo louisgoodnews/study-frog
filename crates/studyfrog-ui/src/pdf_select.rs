@@ -49,3 +49,31 @@ pub fn matching_words(words: &[WordBox], query: &str) -> Vec<usize> {
         .map(|(i, _)| i)
         .collect()
 }
+
+/// One rectangle per line of the selected words, each as wide as its words.
+pub fn line_rects(
+    words: &[WordBox],
+    selection: &[usize],
+) -> Vec<studyfrog_config::pdf_marks::MarkRect> {
+    use studyfrog_config::pdf_marks::MarkRect;
+    let mut rects: Vec<MarkRect> = Vec::new();
+    for w in selection.iter().filter_map(|i| words.get(*i)) {
+        match rects.last_mut() {
+            Some(r) if (w.y - r.y).abs() < r.height * 0.6 => {
+                let right = (r.x + r.width).max(w.x + w.width);
+                let bottom = (r.y + r.height).max(w.y + w.height);
+                r.x = r.x.min(w.x);
+                r.y = r.y.min(w.y);
+                r.width = right - r.x;
+                r.height = bottom - r.y;
+            }
+            _ => rects.push(MarkRect {
+                x: w.x,
+                y: w.y,
+                width: w.width,
+                height: w.height,
+            }),
+        }
+    }
+    rects
+}

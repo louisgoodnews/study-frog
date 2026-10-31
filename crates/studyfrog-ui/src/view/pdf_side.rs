@@ -4,6 +4,7 @@ use eframe::egui::{self, ScrollArea, Sense, Vec2};
 
 use crate::msg::Msg;
 use crate::pdf_types::{PageKey, PdfMsg, PdfView, Side};
+use crate::view::pdf_notes;
 use crate::view::pdf_page::{picture_for, texture};
 
 const THUMB_WIDTH: f32 = 120.0;
@@ -83,6 +84,7 @@ pub fn draw(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     thumbnail(view, page, ui, out);
                 }
             }
+            Side::Notes => pdf_notes::list(view, ui, out),
             Side::Closed => {}
         });
 }

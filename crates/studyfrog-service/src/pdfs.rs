@@ -110,6 +110,7 @@ pub fn index_pdfs(session: &mut VaultSession, now_ns: i64) -> Result<bool, Servi
     for file in waiting.into_iter().take(FILES_PER_PASS) {
         any |= refresh(session, file, rows.get(&file.rel))?;
     }
+    any |= crate::pdf_marks::refresh_marks(session, &listed)?;
     Ok(any)
 }
 

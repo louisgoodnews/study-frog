@@ -34,6 +34,7 @@ fn open(state: State, path: String, page: usize) -> (State, Vec<Effect>) {
         title: stem(&path),
         path: path.clone(),
         page,
+        color: "yellow".to_owned(),
         ..PdfView::default()
     };
     effects.push(Effect::Pdf(PdfEffect::Open(path)));
@@ -61,6 +62,7 @@ fn opened(
                 .filter(|t| !t.trim().is_empty())
                 .unwrap_or(view.title.clone());
             let page = view.page.min(info.page_count.saturating_sub(1));
+            let marks = Effect::Pdf(PdfEffect::LoadMarks(path.clone()));
             let ask = Effect::Pdf(PdfEffect::Text { path, page });
             (
                 with(
@@ -73,7 +75,7 @@ fn opened(
                         ..view
                     },
                 ),
-                vec![ask],
+                vec![ask, marks],
             )
         }
         Err(e) => (
@@ -175,6 +177,8 @@ pub fn update(state: State, msg: PdfMsg) -> (State, Vec<Effect>) {
             },
             Vec::new(),
         ),
+        PdfMsg::Arrange(m) => crate::pdf_arrange_ui::update(state, m),
+        PdfMsg::Marks(m) => crate::pdf_marks_ui::update(state, m),
         PdfMsg::ShowSide(side) => (
             State {
                 pdf: state.pdf.clone().map(|v| PdfView { side, ..v }),

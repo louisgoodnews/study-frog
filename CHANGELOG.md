@@ -8,6 +8,12 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Highlights and notes on PDFs: choose a colour, highlight the selected words or place a note, edit and delete them in a
+  list, jump to each; stored in plain text in `name.pdf.notes.toml` next to the PDF, searchable, included in backups, and
+  followed to the right page if the PDF is replaced by a revision (TASK-0114).
+- Rearranging PDFs: turn, move and drop pages in a thumbnail grid with undo, append other PDFs, split by page ranges and
+  save as a new file with new title, author and subject and, if wanted, the highlights and notes written into the copy
+  as standard annotations; the original is never changed (TASK-0115, TASK-0116).
 - PDF files in the vault are indexed (title, page count and the text of every page, extracted once per change) and the
   global search finds them by title and by text, showing the page of the hit (TASK-0111).
 - The PDF viewer: one page at a time with zoom (fit width, fit page, percent), page jump, outline, page thumbnails,

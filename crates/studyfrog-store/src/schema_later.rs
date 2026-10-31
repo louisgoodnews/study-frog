@@ -16,7 +16,17 @@ CREATE TABLE pdf_doc (
     hash     INTEGER NOT NULL,
     pages    INTEGER NOT NULL,
     title    TEXT NOT NULL,
-    error    TEXT
+    error    TEXT,
+    marks_size  INTEGER NOT NULL DEFAULT -1,
+    marks_mtime INTEGER NOT NULL DEFAULT 0
+) WITHOUT ROWID;
+CREATE TABLE pdf_mark (
+    path TEXT NOT NULL REFERENCES pdf_doc(path) ON DELETE CASCADE,
+    id   INTEGER NOT NULL,
+    page INTEGER NOT NULL,
+    text TEXT NOT NULL,
+    note TEXT NOT NULL,
+    PRIMARY KEY (path, id)
 ) WITHOUT ROWID;
 CREATE TABLE pdf_page (
     path       TEXT NOT NULL REFERENCES pdf_doc(path) ON DELETE CASCADE,

@@ -43,6 +43,8 @@ pub enum Side {
     Outline,
     /// Thumbnails of every page.
     Pages,
+    /// The highlights and notes.
+    Notes,
     /// Folded away.
     Closed,
 }
@@ -78,6 +80,16 @@ pub struct PdfView {
     pub side: Side,
     /// Why the file could not be shown.
     pub error: Option<String>,
+    /// Highlights and notes.
+    pub marks: Vec<studyfrog_config::pdf_marks::PdfMark>,
+    /// The page each mark is on now, in the order of `marks`.
+    pub marks_now: Vec<Option<usize>>,
+    /// The colour new marks get.
+    pub color: String,
+    /// The next click places a note.
+    pub placing_note: bool,
+    /// The new file being planned, if any.
+    pub arrange: Option<crate::pdf_arrange_types::Arrange>,
 }
 
 /// Changes to the viewer.
@@ -119,6 +131,10 @@ pub enum PdfMsg {
     Select(Vec<usize>),
     /// Show another side panel.
     ShowSide(Side),
+    /// Highlights and notes.
+    Marks(crate::pdf_mark_types::MarkMsg),
+    /// Rearranging into a new file.
+    Arrange(crate::pdf_arrange_types::ArrangeMsg),
 }
 
 /// Work the viewer asks the worker for.
@@ -149,4 +165,24 @@ pub enum PdfEffect {
     },
     /// Find PDFs by title and text for the global search.
     Search(String),
+    /// Ask for another PDF to merge in.
+    PickMerge,
+    /// Write a new PDF from a plan.
+    SaveCopy(studyfrog_service::pdf_ops::SaveRequest),
+    /// Write one file per page range.
+    Split {
+        /// Vault-relative path of the PDF.
+        path: String,
+        /// 0-based first and last page of each range.
+        ranges: Vec<(usize, usize)>,
+    },
+    /// Read the highlights and notes of a PDF.
+    LoadMarks(String),
+    /// Write the highlights and notes of a PDF.
+    SaveMarks {
+        /// Vault-relative path.
+        path: String,
+        /// All of its marks.
+        marks: Vec<studyfrog_config::pdf_marks::PdfMark>,
+    },
 }

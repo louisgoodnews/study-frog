@@ -13,7 +13,13 @@ use studyfrog_store::pdf_search::pages_containing;
 use crate::chrome::{ChromeMsg, MAX_RESULTS};
 use crate::exec::Worker;
 use crate::msg::Msg;
+use crate::pdf_arrange_types::ArrangeMsg;
+use crate::pdf_mark_types::MarkMsg;
 use crate::pdf_types::{PageKey, PdfEffect, PdfMsg};
+use studyfrog_config::pdf_marks::PdfMark;
+use studyfrog_service::pdf_marks::{load_marks, mark_pages_now, save_marks};
+use studyfrog_service::pdf_ops::{pdf_page_total, save_pdf_copy, split_pdf};
+use studyfrog_service::session::ServiceError;
 
 /// A path inside the vault: relative, no `..`, ends in `.pdf`.
 fn is_vault_pdf(rel: &str) -> bool {
@@ -91,5 +97,61 @@ pub fn run(w: &mut Worker, effect: PdfEffect) -> Msg {
         PdfEffect::Text { path, page } => text(w, &path, page),
         PdfEffect::Find { path, query } => find(w, &path, &query),
         PdfEffect::Search(query) => search(w, query),
+        PdfEffect::PickMerge => pick_merge(w),
+        PdfEffect::SaveCopy(req) => Msg::Pdf(PdfMsg::Arrange(ArrangeMsg::Saved(
+            w.session
+                .as_ref()
+                .ok_or("no vault is open".to_owned())
+                .and_then(|s| save_pdf_copy(s, &req).map_err(|e| e.to_string())),
+        ))),
+        PdfEffect::Split { path, ranges } => Msg::Pdf(PdfMsg::Arrange(ArrangeMsg::Splitted(
+            w.session
+                .as_ref()
+                .ok_or("no vault is open".to_owned())
+                .and_then(|s| split_pdf(s, &path, &ranges).map_err(|e| e.to_string())),
+        ))),
+        PdfEffect::LoadMarks(path) => load_marks_msg(w, &path),
+        PdfEffect::SaveMarks { path, marks } => save_marks_msg(w, &path, &marks),
     }
+}
+
+fn load_marks_msg(w: &Worker, rel: &str) -> Msg {
+    let result = match &w.session {
+        Some(s) => load_marks(s, rel).and_then(|marks| {
+            let now = mark_pages_now(s, rel, &marks)?;
+            Ok(Box::new((marks, now)))
+        }),
+        None => Err(ServiceError::Invalid("no vault is open".to_owned())),
+    };
+    Msg::Pdf(PdfMsg::Marks(MarkMsg::Loaded(
+        rel.to_owned(),
+        result.map_err(|e| e.to_string()),
+    )))
+}
+
+fn save_marks_msg(w: &mut Worker, rel: &str, marks: &[PdfMark]) -> Msg {
+    let result = match &mut w.session {
+        Some(s) => save_marks(s, rel, marks).map_err(|e| e.to_string()),
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::Pdf(PdfMsg::Marks(MarkMsg::Saved(result)))
+}
+
+/// Ask for a PDF with the native dialog and count its pages.
+fn pick_merge(w: &Worker) -> Msg {
+    let (Some(pick), Some(session)) = (w.file_picker, w.session.as_ref()) else {
+        return Msg::Pdf(PdfMsg::Arrange(ArrangeMsg::FileAdded(Err(
+            "this build has no file dialog".to_owned(),
+        ))));
+    };
+    let result = match pick(&["pdf"]) {
+        None => Ok(None),
+        Some(path) => {
+            let path = path.display().to_string();
+            pdf_page_total(session, &path)
+                .map(|n| Some((path, n)))
+                .map_err(|e| e.to_string())
+        }
+    };
+    Msg::Pdf(PdfMsg::Arrange(ArrangeMsg::FileAdded(result)))
 }

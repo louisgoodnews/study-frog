@@ -137,3 +137,52 @@ pub fn pdf_page_plain(
         .map_err(sql_err)?;
     rows.next().transpose().map_err(sql_err)
 }
+
+/// The searchable part of one mark.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MarkText {
+    /// Id in the notes file.
+    pub id: u32,
+    /// Page, 0-based.
+    pub page: usize,
+    /// The text the mark covers.
+    pub text: String,
+    /// The user's note.
+    pub note: String,
+}
+
+/// Size and modification time of each notes file as last read (`-1` size: there was none).
+pub fn pdf_marks_seen(conn: &Connection) -> Result<HashMap<String, (i64, i64)>, StoreError> {
+    let mut stmt = conn
+        .prepare("SELECT path, marks_size, marks_mtime FROM pdf_doc")
+        .map_err(sql_err)?;
+    let rows = stmt
+        .query_map([], |r| Ok((r.get(0)?, (r.get(1)?, r.get(2)?))))
+        .map_err(sql_err)?;
+    rows.map(|r| r.map_err(sql_err)).collect()
+}
+
+/// Replace the indexed marks of a PDF and remember which version of the notes file they came from.
+pub fn pdf_marks_store(
+    conn: &mut Connection,
+    path: &str,
+    stat: (i64, i64),
+    marks: &[MarkText],
+) -> Result<(), StoreError> {
+    let tx = conn.transaction().map_err(sql_err)?;
+    tx.execute("DELETE FROM pdf_mark WHERE path = ?1", [path])
+        .map_err(sql_err)?;
+    for m in marks {
+        tx.execute(
+            "INSERT INTO pdf_mark (path, id, page, text, note) VALUES (?1, ?2, ?3, ?4, ?5)",
+            params![path, m.id, m.page as i64, m.text, m.note],
+        )
+        .map_err(sql_err)?;
+    }
+    tx.execute(
+        "UPDATE pdf_doc SET marks_size = ?2, marks_mtime = ?3 WHERE path = ?1",
+        params![path, stat.0, stat.1],
+    )
+    .map_err(sql_err)?;
+    tx.commit().map_err(sql_err)
+}

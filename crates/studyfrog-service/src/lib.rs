@@ -18,6 +18,8 @@ pub mod home;
 pub mod images;
 pub mod import;
 pub mod kanban;
+pub mod pdf_marks;
+pub mod pdf_ops;
 pub mod pdfs;
 pub mod planning;
 pub mod queue;

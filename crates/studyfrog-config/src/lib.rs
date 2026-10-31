@@ -4,6 +4,7 @@ pub mod achievements;
 pub mod app;
 pub mod backup;
 pub mod error;
+pub mod pdf_marks;
 pub mod profiles;
 pub mod stack;
 pub mod subjects;

@@ -3,10 +3,11 @@
 use eframe::egui::{self, Panel, RichText, TextEdit};
 
 use crate::msg::Msg;
+use crate::pdf_arrange_types::ArrangeMsg;
 use crate::pdf_select::selected_text;
 use crate::pdf_types::{PdfMsg, PdfView, Side, Zoom};
 use crate::state::State;
-use crate::view::{pdf_page, pdf_side};
+use crate::view::{pdf_arrange, pdf_notes, pdf_page, pdf_side};
 
 fn msg(out: &mut Vec<Msg>, m: PdfMsg) {
     out.push(Msg::Pdf(m));
@@ -82,6 +83,7 @@ fn side_buttons(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     for (side, name) in [
         (Side::Outline, "Outline"),
         (Side::Pages, "Pages"),
+        (Side::Notes, "Notes"),
         (Side::Closed, "Hide"),
     ] {
         if ui
@@ -120,6 +122,9 @@ fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         search(view, ui, out);
         ui.separator();
         copy_button(view, ui);
+        if ui.button("Arrange pages ...").clicked() {
+            msg(out, PdfMsg::Arrange(ArrangeMsg::Start));
+        }
         ui.separator();
         side_buttons(view, ui, out);
     });
@@ -138,6 +143,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         );
     }
     toolbar(view, ui, out);
+    pdf_notes::bar(view, ui, out);
     ui.separator();
     if view.info.is_none() {
         if view.error.is_none() {
@@ -150,5 +156,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .default_size(170.0)
             .show(ui, |ui| pdf_side::draw(view, ui, out));
     }
-    egui::CentralPanel::default().show(ui, |ui| pdf_page::draw(view, ui, out));
+    egui::CentralPanel::default().show(ui, |ui| match &view.arrange {
+        Some(a) => pdf_arrange::draw(view, a, ui, out),
+        None => pdf_page::draw(view, ui, out),
+    });
 }

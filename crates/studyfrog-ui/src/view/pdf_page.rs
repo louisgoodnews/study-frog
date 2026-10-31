@@ -3,15 +3,17 @@
 
 use std::sync::Arc;
 
-use eframe::egui::{
-    self, Color32, ColorImage, Pos2, Rect, ScrollArea, Sense, TextureHandle, TextureOptions, Vec2,
-};
+use eframe::egui::{self, Color32, Pos2, Rect, ScrollArea, Sense, Vec2};
+use studyfrog_config::pdf_marks::MarkKind;
 use studyfrog_pdf::render::{PageRect, Pixels};
 
 use crate::msg::Msg;
+use crate::pdf_mark_types::MarkMsg;
 use crate::pdf_select::{matching_words, words_in_rect};
 use crate::pdf_types::{PageKey, PdfMsg, PdfView, Zoom};
 use crate::theme::{palette_of, tint};
+use crate::view::pdf_notes;
+pub use crate::view::pdf_texture::{prune, texture};
 
 /// Logical pixels per point at 100 %.
 const POINT_PX: f32 = 96.0 / 72.0;
@@ -22,49 +24,6 @@ pub fn picture_for(view: &PdfView, key: PageKey) -> Option<Arc<Pixels>> {
     let exact = view.pictures.iter().find(|(k, _)| *k == key);
     let same_page = view.pictures.iter().rev().find(|(k, _)| k.page == key.page);
     exact.or(same_page).map(|(_, px)| px.clone())
-}
-
-fn texture_id(path: &str, key: PageKey) -> egui::Id {
-    egui::Id::NULL.with(("pdf-texture", path, key.page, key.scale_milli))
-}
-
-/// The texture of a picture, uploaded on first use.
-pub fn texture(ctx: &egui::Context, path: &str, key: PageKey, px: &Pixels) -> TextureHandle {
-    let id = texture_id(path, key);
-    if let Some(t) = ctx.data(|d| d.get_temp::<TextureHandle>(id)) {
-        return t;
-    }
-    let image =
-        ColorImage::from_rgba_unmultiplied([px.width as usize, px.height as usize], &px.rgba);
-    let handle = ctx.load_texture(
-        format!("pdf-{}-{}", key.page, key.scale_milli),
-        image,
-        TextureOptions::LINEAR,
-    );
-    let list_id = egui::Id::NULL.with("pdf-texture-list");
-    ctx.data_mut(|d| {
-        d.insert_temp(id, handle.clone());
-        let mut list: Vec<egui::Id> = d.get_temp(list_id).unwrap_or_default();
-        list.push(id);
-        d.insert_temp(list_id, list);
-    });
-    handle
-}
-
-/// Let go of textures whose picture the state no longer holds.
-fn prune(ctx: &egui::Context, view: &PdfView) {
-    let live: Vec<egui::Id> = view
-        .pictures
-        .iter()
-        .map(|(k, _)| texture_id(&view.path, *k))
-        .collect();
-    let list_id = egui::Id::NULL.with("pdf-texture-list");
-    ctx.data_mut(|d| {
-        let list: Vec<egui::Id> = d.get_temp(list_id).unwrap_or_default();
-        let (keep, drop): (Vec<_>, Vec<_>) = list.into_iter().partition(|id| live.contains(id));
-        drop.iter().for_each(|id| d.remove::<TextureHandle>(*id));
-        d.insert_temp(list_id, keep);
-    });
 }
 
 /// The scale (thousandths of a pixel per point) and the size on screen in logical pixels.
@@ -110,6 +69,51 @@ fn paint_words(view: &PdfView, ui: &egui::Ui, rect: Rect, logical: f32) {
     for i in view.selection.iter().filter(|i| **i < text.words.len()) {
         ui.painter().rect_filled(boxed(*i), 2.0, tint(p.accent, 90));
     }
+}
+
+fn paint_marks(view: &PdfView, ui: &egui::Ui, rect: Rect, logical: f32) {
+    for m in view.marks.iter().filter(|m| m.page == view.page) {
+        let color = pdf_notes::color_of(&m.color);
+        for r in &m.rects {
+            let area = Rect::from_min_size(
+                rect.min + Vec2::new(r.x, r.y) * logical,
+                Vec2::new(r.width, r.height) * logical,
+            );
+            match m.kind {
+                MarkKind::Highlight => {
+                    ui.painter()
+                        .rect_filled(area, 2.0, color.gamma_multiply(0.45));
+                }
+                MarkKind::Note => {
+                    ui.painter().rect_filled(area, 3.0, color);
+                    ui.painter().rect_stroke(
+                        area,
+                        3.0,
+                        ui.visuals().widgets.active.fg_stroke,
+                        egui::StrokeKind::Inside,
+                    );
+                }
+            }
+        }
+    }
+}
+
+fn place(
+    view: &PdfView,
+    response: &egui::Response,
+    rect: Rect,
+    logical: f32,
+    out: &mut Vec<Msg>,
+) -> bool {
+    let Some(at) = response
+        .interact_pointer_pos()
+        .filter(|_| view.placing_note && response.clicked())
+    else {
+        return false;
+    };
+    let p = (at - rect.min) / logical;
+    out.push(Msg::Pdf(PdfMsg::Marks(MarkMsg::PlaceNote(p.x, p.y))));
+    true
 }
 
 fn select(view: &PdfView, response: &egui::Response, rect: Rect, logical: f32, out: &mut Vec<Msg>) {
@@ -179,8 +183,11 @@ pub fn draw(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             if !view.pictures.iter().any(|(k, _)| *k == key) {
                 out.push(Msg::Pdf(PdfMsg::Need(key)));
             }
+            paint_marks(view, ui, rect, logical);
             paint_words(view, ui, rect, logical);
-            select(view, &response, rect, logical, out);
+            if !place(view, &response, rect, logical, out) {
+                select(view, &response, rect, logical, out);
+            }
             page_text(view, ui);
         });
 }

@@ -15,6 +15,8 @@ pub struct PdfHit {
     pub page: Option<usize>,
     /// A short stretch of text around the match.
     pub snippet: String,
+    /// The match is in one of the user's highlights or notes.
+    pub annotation: bool,
 }
 
 fn like(needle: &str) -> String {
@@ -67,6 +69,7 @@ pub fn search_pdfs(
             title,
             page: None,
             snippet: String::new(),
+            annotation: false,
         });
     }
     let room = limit.saturating_sub(hits.len());
@@ -90,8 +93,11 @@ pub fn search_pdfs(
             title,
             page: Some(page as usize + 1),
             snippet: snippet(&text, needle),
+            annotation: false,
         });
     }
+    let room = limit.saturating_sub(hits.len());
+    hits.extend(mark_hits(conn, &pattern, needle, room)?);
     Ok(hits)
 }
 
@@ -115,4 +121,44 @@ pub fn pages_containing(
         .map_err(sql_err)?;
     rows.map(|r| r.map(|p| p as usize).map_err(sql_err))
         .collect()
+}
+
+/// Highlights and notes whose covered text or note contains the query.
+fn mark_hits(
+    conn: &Connection,
+    pattern: &str,
+    needle: &str,
+    room: usize,
+) -> Result<Vec<PdfHit>, StoreError> {
+    let mut stmt = conn
+        .prepare("SELECT m.path, d.title, m.page, m.text, m.note FROM pdf_mark m JOIN pdf_doc d ON d.path = m.path WHERE m.text LIKE ?1 ESCAPE '\\' OR m.note LIKE ?1 ESCAPE '\\' ORDER BY d.title COLLATE NOCASE, m.page LIMIT ?2")
+        .map_err(sql_err)?;
+    let rows = stmt
+        .query_map(params![pattern, room as i64], |r| {
+            Ok((
+                r.get::<_, String>(0)?,
+                r.get::<_, String>(1)?,
+                r.get::<_, i64>(2)?,
+                r.get::<_, String>(3)?,
+                r.get::<_, String>(4)?,
+            ))
+        })
+        .map_err(sql_err)?;
+    let mut hits = Vec::new();
+    for r in rows {
+        let (path, title, page, text, note) = r.map_err(sql_err)?;
+        let from = if note.to_lowercase().contains(&needle.to_lowercase()) {
+            note
+        } else {
+            text
+        };
+        hits.push(PdfHit {
+            path,
+            title,
+            page: Some(page as usize + 1),
+            snippet: snippet(&from, needle),
+            annotation: true,
+        });
+    }
+    Ok(hits)
 }
