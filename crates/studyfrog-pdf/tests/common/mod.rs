@@ -90,3 +90,57 @@ pub fn three() -> Vec<u8> {
         Some("Three pages"),
     )
 }
+
+pub fn rect(a: [i64; 4]) -> Object {
+    Object::Array(a.iter().map(|v| Object::Integer(*v)).collect())
+}
+
+/// Three pages. Page 1 has: a web link, a link to page 3 by destination array, a link by name, a launch
+/// action and a JavaScript action. The named destination `chap` is page 2.
+pub fn linked() -> Vec<u8> {
+    let mut doc = Document::with_version("1.5");
+    let pages_id = doc.new_object_id();
+    let ids: Vec<_> = (0..3).map(|_| doc.new_object_id()).collect();
+    let uri = doc.add_object(dictionary! {"Type" => "Annot", "Subtype" => "Link", "Rect" => rect([72, 700, 172, 720]),
+        "A" => dictionary! {"S" => "URI", "URI" => Object::String(b"https://example.org/x".to_vec(), StringFormat::Literal)}});
+    let goto = doc.add_object(
+        dictionary! {"Type" => "Annot", "Subtype" => "Link", "Rect" => rect([72, 600, 172, 620]),
+        "A" => dictionary! {"S" => "GoTo", "D" => vec![Object::Reference(ids[2]), "Fit".into()]}},
+    );
+    let by_name = doc.add_object(
+        dictionary! {"Type" => "Annot", "Subtype" => "Link", "Rect" => rect([72, 500, 172, 520]),
+        "Dest" => Object::String(b"chap".to_vec(), StringFormat::Literal)},
+    );
+    let launch = doc.add_object(dictionary! {"Type" => "Annot", "Subtype" => "Link", "Rect" => rect([72, 400, 172, 420]),
+        "A" => dictionary! {"S" => "Launch", "F" => Object::String(b"calc".to_vec(), StringFormat::Literal)}});
+    let script = doc.add_object(dictionary! {"Type" => "Annot", "Subtype" => "Link", "Rect" => rect([72, 300, 172, 320]),
+        "A" => dictionary! {"S" => "JavaScript", "JS" => Object::String(b"app.alert(1)".to_vec(), StringFormat::Literal)}});
+    let note = doc.add_object(
+        dictionary! {"Type" => "Annot", "Subtype" => "Text", "Rect" => rect([10, 10, 30, 30])},
+    );
+    let annots: Vec<Object> = [uri, goto, by_name, launch, script, note]
+        .into_iter()
+        .map(Object::Reference)
+        .collect();
+    for (i, id) in ids.iter().enumerate() {
+        let stream = doc.add_object(Stream::new(Dictionary::new(), Vec::new()));
+        let mut page = dictionary! {"Type" => "Page", "Parent" => pages_id, "MediaBox" => rect([0, 0, 612, 792]), "Contents" => stream};
+        if i == 0 {
+            page.set("Annots", annots.clone());
+        }
+        doc.objects.insert(*id, Object::Dictionary(page));
+    }
+    let kids: Vec<Object> = ids.iter().map(|i| Object::Reference(*i)).collect();
+    doc.objects.insert(
+        pages_id,
+        Object::Dictionary(dictionary! {"Type" => "Pages", "Kids" => kids, "Count" => 3}),
+    );
+    let dests =
+        doc.add_object(dictionary! {"chap" => vec![Object::Reference(ids[1]), "Fit".into()]});
+    let catalog =
+        doc.add_object(dictionary! {"Type" => "Catalog", "Pages" => pages_id, "Dests" => dests});
+    doc.trailer.set("Root", catalog);
+    let mut out = Vec::new();
+    doc.save_to(&mut out).unwrap();
+    out
+}

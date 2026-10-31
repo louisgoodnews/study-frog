@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M0 to M9 complete; released 0.1.0, PDF support (0.2.0) waits for the version bump. **Date:** 2026-10-31. **Branch:** `main`.
+**Phase:** M0 to M9 complete; released 0.2.0 (PDF support). **Date:** 2026-10-31. **Branch:** `main`.
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
@@ -14,7 +14,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
 ## Latest
-- **Next:** the owner bumps the version (0.2.0); draft notes are in `docs/RELEASE_NOTES_0.2.0.md`. EPIC-022 (PDF
+- **Released:** 0.2.0 (notes in `docs/RELEASE_NOTES_0.2.0.md`). EPIC-022 (PDF
   support, phase M9) is done: viewer, index and search, highlights and notes, rearranging, notes, cards and pictures from
   PDFs, assistant reading, library; OCR is deferred (docs/specs/pdf.md).
 - **Not verified by hand in a window:** the PDF viewer, thumbnails, highlights and the arrange grid were tested headless

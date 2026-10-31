@@ -4,16 +4,14 @@
 use std::sync::Arc;
 
 use eframe::egui::{self, Color32, Pos2, Rect, ScrollArea, Sense, Vec2};
-use studyfrog_config::pdf_marks::MarkKind;
 use studyfrog_pdf::render::{PageRect, Pixels};
 
 use crate::msg::Msg;
 use crate::pdf_extract_types::ExtractMsg;
 use crate::pdf_mark_types::MarkMsg;
-use crate::pdf_select::{matching_words, words_in_rect};
+use crate::pdf_select::words_in_rect;
 use crate::pdf_types::{PageKey, PdfMsg, PdfView, Zoom};
-use crate::theme::{palette_of, tint};
-use crate::view::pdf_notes;
+use crate::view::pdf_paint;
 pub use crate::view::pdf_texture::{prune, texture};
 
 /// Logical pixels per point at 100 %.
@@ -47,55 +45,6 @@ fn page_rect_of(rect: Rect, a: Pos2, b: Pos2, logical: f32) -> PageRect {
         y: (lo.y - rect.min.y) / logical,
         width: (hi.x - lo.x) / logical,
         height: (hi.y - lo.y) / logical,
-    }
-}
-
-fn paint_words(view: &PdfView, ui: &egui::Ui, rect: Rect, logical: f32) {
-    let Some(text) = &view.text else { return };
-    let p = palette_of(ui);
-    let boxed = |i: usize| {
-        let w = &text.words[i];
-        Rect::from_min_size(
-            rect.min + Vec2::new(w.x, w.y) * logical,
-            Vec2::new(w.width, w.height) * logical,
-        )
-    };
-    for i in matching_words(&text.words, &view.query) {
-        ui.painter().rect_filled(
-            boxed(i),
-            2.0,
-            Color32::from_rgba_unmultiplied(255, 214, 0, 110),
-        );
-    }
-    for i in view.selection.iter().filter(|i| **i < text.words.len()) {
-        ui.painter().rect_filled(boxed(*i), 2.0, tint(p.accent, 90));
-    }
-}
-
-fn paint_marks(view: &PdfView, ui: &egui::Ui, rect: Rect, logical: f32) {
-    for m in view.marks.iter().filter(|m| m.page == view.page) {
-        let color = pdf_notes::color_of(&m.color);
-        for r in &m.rects {
-            let area = Rect::from_min_size(
-                rect.min + Vec2::new(r.x, r.y) * logical,
-                Vec2::new(r.width, r.height) * logical,
-            );
-            match m.kind {
-                MarkKind::Highlight => {
-                    ui.painter()
-                        .rect_filled(area, 2.0, color.gamma_multiply(0.45));
-                }
-                MarkKind::Note => {
-                    ui.painter().rect_filled(area, 3.0, color);
-                    ui.painter().rect_stroke(
-                        area,
-                        3.0,
-                        ui.visuals().widgets.active.fg_stroke,
-                        egui::StrokeKind::Inside,
-                    );
-                }
-            }
-        }
     }
 }
 
@@ -215,9 +164,11 @@ pub fn draw(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             if !view.pictures.iter().any(|(k, _)| *k == key) {
                 out.push(Msg::Pdf(PdfMsg::Need(key)));
             }
-            paint_marks(view, ui, rect, logical);
-            paint_words(view, ui, rect, logical);
-            if !place(view, &response, rect, logical, out)
+            pdf_paint::paint_marks(view, ui, rect, logical);
+            pdf_paint::paint_words(view, ui, rect, logical);
+            pdf_paint::paint_links(view, ui, rect, logical);
+            if !pdf_paint::click_link(view, &response, rect, logical, out)
+                && !place(view, &response, rect, logical, out)
                 && !snapshot(view, ui, &response, rect, logical, out)
             {
                 select(view, &response, rect, logical, out);

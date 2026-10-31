@@ -185,6 +185,7 @@ pub fn update(state: State, msg: PdfMsg) -> (State, Vec<Effect>) {
             Vec::new(),
         ),
         PdfMsg::Scanned(path, r) => scanned(state, path, r),
+        PdfMsg::Link(m) => crate::pdf_link_ui::update(state, m),
         PdfMsg::Library(m) => crate::pdf_library_ui::update(state, m),
         PdfMsg::Draft(m) => crate::pdf_draft_ui::update(state, m),
         PdfMsg::Extract(m) => crate::pdf_extract_ui::update(state, m),

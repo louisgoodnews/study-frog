@@ -33,6 +33,7 @@ mod pdf_arrange;
 mod pdf_extract;
 mod pdf_notes;
 mod pdf_page;
+mod pdf_paint;
 mod pdf_side;
 mod pdf_texture;
 mod popup;

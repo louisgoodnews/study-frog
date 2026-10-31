@@ -4,6 +4,7 @@ use eframe::egui::{self, Panel, RichText, TextEdit};
 
 use crate::msg::Msg;
 use crate::pdf_arrange_types::ArrangeMsg;
+use crate::pdf_link_types::LinkMsg;
 use crate::pdf_select::selected_text;
 use crate::pdf_types::{PdfMsg, PdfView, Side, Zoom};
 use crate::state::State;
@@ -149,6 +150,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     toolbar(view, ui, out);
     pdf_notes::bar(view, ui, out);
+    link_question(view, ui, out);
     ui.separator();
     if view.info.is_none() {
         if view.error.is_none() {
@@ -173,5 +175,22 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     egui::CentralPanel::default().show(ui, |ui| match &view.arrange {
         Some(a) => pdf_arrange::draw(view, a, ui, out),
         None => pdf_page::draw(view, ui, out),
+    });
+}
+
+/// The question that comes before a web address is opened.
+fn link_question(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let Some(url) = &view.pending_link else {
+        return;
+    };
+    ui.horizontal_wrapped(|ui| {
+        ui.label(format!("This PDF links to {url}. Open it in your browser?"));
+        if ui.button("Open").clicked() {
+            ui.ctx().open_url(egui::OpenUrl::new_tab(url));
+            out.push(Msg::Pdf(PdfMsg::Link(LinkMsg::Approve)));
+        }
+        if ui.button("Do not open").clicked() {
+            out.push(Msg::Pdf(PdfMsg::Link(LinkMsg::Dismiss)));
+        }
     });
 }

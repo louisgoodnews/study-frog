@@ -7,7 +7,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-31
+
 ### Added
+- Links inside a PDF: outlined on the page, page links followed with a click, web and mail addresses opened only after
+  the user presses Open on a question that shows the address; launch, script and other actions are never run (TASK-0123).
 - Documentation, tests and benchmarks for PDF support: `docs/specs/pdf.md`, headless view tests with the accessibility
   audit, a 500-page benchmark with budgets, and draft release notes `docs/RELEASE_NOTES_0.2.0.md` (TASK-0122).
 - PDFs in the library: the stack page lists its PDFs with page counts, 'Add PDF ...' (also in the Create dialog) copies a

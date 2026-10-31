@@ -9,6 +9,7 @@ pub mod edit;
 pub mod error;
 pub mod images;
 pub mod limits;
+pub mod links;
 pub mod render;
 pub mod text;
 

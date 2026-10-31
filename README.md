@@ -1,15 +1,16 @@
 # StudyFrog
 
 A Linux-native desktop learning app: a Markdown note vault with links, SRS flashcards, timed rehearsal runs, a
-planning calendar, a kanban board, achievements, reports, offline answer comparison and an optional AI assistant.
+planning calendar, a kanban board, achievements, reports, offline answer comparison, PDF files you can read, mark up,
+rearrange and turn into notes and cards, and an optional AI assistant.
 
 Written in Rust as a functional, data-oriented Cargo workspace (no OOP idioms).
 
-**Status:** version 0.1.0. See [docs/RELEASE_NOTES_0.1.0.md](docs/RELEASE_NOTES_0.1.0.md) for what it does and what
-is not verified, [STATUS.md](STATUS.md) for where the project stands and [docs/README.md](docs/README.md) for the docs.
+**Status:** version 0.2.0. See [docs/RELEASE_NOTES_0.2.0.md](docs/RELEASE_NOTES_0.2.0.md) (and
+[0.1.0](docs/RELEASE_NOTES_0.1.0.md)) for what it does and what is not verified, [STATUS.md](STATUS.md) for where the project stands and [docs/README.md](docs/README.md) for the docs.
 
 ## Install
-Download `StudyFrog-0.1.0-x86_64.AppImage` from the release, `chmod +x` it and run it. Or build:
+Download `StudyFrog-0.2.0-x86_64.AppImage` from the release, `chmod +x` it and run it. Or build:
 ```
 cargo run -p studyfrog-app --release          # opens the window
 ```

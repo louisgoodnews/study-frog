@@ -1,4 +1,4 @@
-# StudyFrog 0.2.0 (draft: the version number has not been bumped yet)
+# StudyFrog 0.2.0
 
 PDF files are now part of the vault. They live in the vault folder like everything else; StudyFrog never changes a
 PDF in place.
@@ -19,12 +19,14 @@ PDF in place.
   pictures on a page and any dragged rectangle (a figure, a formula) are saved into `assets/` and can be put in the note.
   A highlighted passage or a selection becomes a card or a question. The assistant can read chosen pages (you see
   the text first and nothing is sent until you press Send) and propose cards that name their page.
+- **Links.** Links inside a PDF are outlined on the page. A link to another page is followed with a click; a web or mail
+  address is shown to you and opened in the browser only after you press Open. Nothing else a link can ask for is ever run.
 - **Organise.** "Add PDF ..." copies a file into a stack; renaming a PDF moves its notes file and rewrites every note,
   card and link that names it. `[text](file.pdf#page=3)` opens the viewer at that page.
 
 ## Not included
 - **Reading text from pictures (OCR).** Scanned pages are flagged and said to have no text; this is deferred.
-- Editing text or images inside a PDF, forms, signatures, encrypted PDFs, following links inside a PDF.
+- Editing text or images inside a PDF, forms, signatures, encrypted PDFs, links that launch programs or run scripts.
 - The outline, links and the original's own annotations are not carried into a rearranged copy; marks on turned
   pages are left out of an annotated copy (the message says how many).
 

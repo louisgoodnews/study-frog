@@ -6,6 +6,7 @@ use pdf_oxide::converters::ConversionOptions;
 use crate::PdfBytes;
 use crate::error::PdfError;
 use crate::limits::{FILE_TIME_LIMIT_SECS, MAX_PAGES, check_size, guarded, guarded_for};
+use crate::links::{PageLink, read_links};
 
 /// A word and where it is, in points from the top left of the page.
 #[derive(Debug, Clone, PartialEq)]
@@ -31,6 +32,8 @@ pub struct PageText {
     pub text: String,
     /// The page has pictures but no text, such as a scanned page.
     pub image_only: bool,
+    /// Links on the page that lead to an address or to another page (empty for a whole-file read).
+    pub links: Vec<PageLink>,
 }
 
 fn open(bytes: &PdfBytes) -> Result<PdfDocument, PdfError> {
@@ -46,7 +49,7 @@ fn open(bytes: &PdfBytes) -> Result<PdfDocument, PdfError> {
 
 /// The six numbers of the map from the PDF's own space (points, y up, from the bottom left of the media box)
 /// to the page as shown (points, y down, from the top left, with the page's rotation and crop applied).
-fn page_transform(bytes: &PdfBytes, page: usize) -> Result<[f64; 6], PdfError> {
+pub(crate) fn page_transform(bytes: &PdfBytes, page: usize) -> Result<[f64; 6], PdfError> {
     let pdf = hayro::hayro_syntax::Pdf::new(bytes.clone())
         .map_err(|e| PdfError::Invalid(format!("{e:?}")))?;
     let pages = pdf.pages();
@@ -115,6 +118,7 @@ pub fn pdf_page_text(bytes: &PdfBytes, page: usize) -> Result<PageText, PdfError
             words,
             text,
             image_only,
+            links: read_links(&bytes, page).unwrap_or_default(),
         })
     })
 }
@@ -145,6 +149,7 @@ pub fn pdf_all_text(bytes: &PdfBytes) -> Result<Vec<PageText>, PdfError> {
                     words: Vec::new(),
                     text,
                     image_only,
+                    links: Vec::new(),
                 }
             })
             .collect())

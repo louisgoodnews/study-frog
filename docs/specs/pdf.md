@@ -16,7 +16,7 @@ for one call and 180 s for a whole file. A PDF over a limit is refused with a se
 runs on its own thread under `catch_unwind` and a timeout, so a panic comes back as "the PDF library crashed" and a
 hang as "took too long"; the window never waits for either. Broken files (not a PDF, truncated, looping page tree,
 bad cross-reference table) give an error, never a crash; this is tested in `crates/studyfrog-pdf/tests/hostile.rs`.
-JavaScript and launch actions are never run, and links inside a PDF are not followed.
+JavaScript and launch actions are never run.
 
 ## The index (TASK-0111)
 Schema v11: `pdf_doc` (path, size, mtime, hash, pages, title, error, state of the notes file), `pdf_page` (text per
@@ -77,3 +77,10 @@ was not shown is dropped. The accepted item gets `source: "path#page=N"`.
 ## Benchmarks and tests
 `cargo bench -p studyfrog-pdf --bench pdf` (500 pages; numbers in `docs/contributing/BENCHMARKING.md`). Headless tests:
 `crates/studyfrog-ui/tests/pdf_*.rs`, including the accessibility audit `pdf_a11y.rs`.
+
+## Links inside a PDF (TASK-0123)
+The links of the shown page (link annotations with a `URI` or `GoTo` action, or a `Dest`, direct or named through
+`Dests` or the `Names` tree) are read with its words and outlined on the page. A link to a page of the file is followed with
+one click. A link to an address is offered with the address written out; only `http`, `https` and `mailto` are offered,
+and the browser opens only after the user presses Open. Launch, JavaScript, file and every other action are ignored and a
+click on such a link says so.
