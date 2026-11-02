@@ -24,6 +24,7 @@ pub mod fam_report;
 pub mod fam_stacks;
 pub mod familiarity;
 pub mod filters;
+pub mod goals;
 pub mod home;
 pub mod images;
 pub mod import;

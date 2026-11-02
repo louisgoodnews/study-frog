@@ -23,6 +23,10 @@ pub enum LibraryEffect {
     Undo(Snapshot),
     /// Read the summary of the stack at this folder, for this generation of the list.
     LoadSummary(String, u64),
+    /// Read the goals of the stack with this folder and uid.
+    LoadGoals(String, Uid),
+    /// Write the goals of a stack.
+    SaveGoals(Uid, String),
     /// Give a stack or item a status.
     SetStatus(Uid, Option<studyfrog_core::status::Status>),
 }

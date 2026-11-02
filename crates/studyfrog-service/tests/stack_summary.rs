@@ -178,3 +178,39 @@ fn the_tree_lists_every_nested_stack_with_its_depth_and_next_due_date() {
     assert_eq!(sum.tree[0].due_day, None);
     let _ = fs::remove_dir_all(&dir);
 }
+
+#[test]
+fn goals_are_saved_in_the_stack_file_and_survive_a_reopen() {
+    use studyfrog_service::goals::{load_goals, save_goals};
+    let dir = std::env::temp_dir().join(format!("studyfrog-goals-{}", std::process::id()));
+    let _ = fs::remove_dir_all(&dir);
+    fs::create_dir_all(dir.join("s")).unwrap();
+    fs::write(
+        dir.join("s/_stack.md"),
+        "---\nid: 00000000000000000000000001\nkind: stack\ntitle: S\n---\nAbout this stack.\n",
+    )
+    .unwrap();
+    fs::write(
+        dir.join("s/n.md"),
+        "---\nid: 0000000000000000000000000A\nkind: note\ntitle: N\n---\nbody\n",
+    )
+    .unwrap();
+    {
+        let (mut s, _) = open_vault(dir.to_str().unwrap()).unwrap();
+        assert_eq!(load_goals(&s, Uid(1)).unwrap(), "");
+        save_goals(&mut s, Uid(1), "- pass\n- [ ] practise", UnixMs(NOW)).unwrap();
+        assert!(save_goals(&mut s, Uid(1), "# Heading", UnixMs(NOW)).is_err());
+        assert!(
+            save_goals(&mut s, Uid(0xA), "- x", UnixMs(NOW)).is_err(),
+            "a note has no goals"
+        );
+    }
+    let text = fs::read_to_string(dir.join("s/_stack.md")).unwrap();
+    assert!(
+        text.contains("About this stack.") && text.contains("## Goals\n\n- pass\n- [ ] practise"),
+        "{text}"
+    );
+    let (s, _) = open_vault(dir.to_str().unwrap()).unwrap();
+    assert_eq!(load_goals(&s, Uid(1)).unwrap(), "- pass\n- [ ] practise");
+    let _ = fs::remove_dir_all(&dir);
+}

@@ -9,6 +9,7 @@ pub mod doc;
 pub mod error;
 pub mod extra;
 pub mod fence;
+pub mod goals;
 pub mod links;
 pub mod names;
 pub mod parse;

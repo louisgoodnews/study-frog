@@ -41,6 +41,16 @@ pub fn run(w: &mut Worker, effect: LibraryEffect, now_ns: i64) -> Msg {
                 folder, generation, summary,
             )))
         }
+        LibraryEffect::LoadGoals(folder, uid) => {
+            let text = studyfrog_service::goals::load_goals(s, uid).map_err(|e| e.to_string());
+            Msg::Library(LibraryMsg::Stack(StackViewMsg::GoalsLoaded(folder, text)))
+        }
+        LibraryEffect::SaveGoals(uid, text) => {
+            let done = studyfrog_service::goals::save_goals(s, uid, &text, now)
+                .map(Box::new)
+                .map_err(|e| e.to_string());
+            Msg::Library(LibraryMsg::Stack(StackViewMsg::GoalsSaved(done)))
+        }
         LibraryEffect::SetStatus(uid, status) => {
             let done = studyfrog_service::set_status::set_status(s, uid, status, now)
                 .map(Box::new)

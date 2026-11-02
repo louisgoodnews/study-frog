@@ -1,55 +1,16 @@
 //! The page of a stack: its tabs (the last one is remembered per stack), the Summary read when its tab opens, and the status
 //! chip of the header. Pure.
 
-use studyfrog_core::settings::{AppSettings, MAX_STACK_TABS};
 use studyfrog_core::status::Status;
 use studyfrog_core::uid::Uid;
 use studyfrog_service::stack_summary::StackSummary;
 
 use crate::effect::Effect;
 use crate::library_bulk::LibraryEffect;
+pub use crate::stack_goals::{Goals, sync_goals};
+use crate::stack_tabs::remembered;
+pub use crate::stack_tabs::{StackTab, TABS, tab_label, tab_of};
 use crate::state::{Notice, NoticeKind, Screen, Selection, State, VaultInfo};
-
-/// A tab of the stack page.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum StackTab {
-    /// Counts, charts, activity and sub-stacks.
-    Summary,
-    /// The items of the stack as a table, with its due date and PDFs.
-    List,
-    /// What is coming up and what is not planned yet.
-    Backlog,
-    /// The stacks inside this one as a tree.
-    Substacks,
-}
-
-/// The tabs in the order shown, with their stored key and name.
-pub const TABS: [(StackTab, &str, &str); 4] = [
-    (StackTab::Summary, "summary", "Summary"),
-    (StackTab::List, "list", "List"),
-    (StackTab::Backlog, "backlog", "Backlog"),
-    (StackTab::Substacks, "substacks", "Sub-stacks"),
-];
-
-/// The name of a tab.
-pub fn tab_label(t: StackTab) -> &'static str {
-    TABS.iter()
-        .find(|(x, _, _)| *x == t)
-        .map_or("", |(_, _, l)| l)
-}
-
-/// The tab remembered for the stack at `folder`, else Summary.
-pub fn tab_of(app: &AppSettings, folder: &str) -> StackTab {
-    let key = app
-        .stack_tabs
-        .iter()
-        .filter_map(|e| e.rsplit_once(':'))
-        .find(|(f, _)| *f == folder)
-        .map(|(_, k)| k);
-    TABS.iter()
-        .find(|(_, k, _)| Some(*k) == key)
-        .map_or(StackTab::Summary, |(t, _, _)| *t)
-}
 
 /// The summary read for one stack, and whether one is being read.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -58,6 +19,8 @@ pub struct StackViewState {
     pub summary: Option<(String, u64, Box<StackSummary>)>,
     /// The folder and generation being read.
     pub loading: Option<(String, u64)>,
+    /// The goals of the open stack: its folder, what is saved and what is typed.
+    pub goals: Option<Goals>,
 }
 
 /// What happened on the stack page.
@@ -69,35 +32,24 @@ pub enum StackViewMsg {
     Step(i32),
     /// The summary of a stack arrived.
     Loaded(String, u64, Result<Box<StackSummary>, String>),
+    /// The goals of a stack were read.
+    GoalsLoaded(String, Result<String, String>),
+    /// The goals text was edited.
+    GoalsEdited(String),
+    /// Write the goals to the stack's file.
+    GoalsSave,
+    /// The goals were written.
+    GoalsSaved(Result<Box<VaultInfo>, String>),
     /// Give the stack a status (`None`: automatic).
     SetStatus(Uid, Option<Status>),
     /// The status was written.
     StatusSet(Result<Box<VaultInfo>, String>),
 }
 
-fn open_folder(state: &State) -> Option<&str> {
+pub(crate) fn open_folder(state: &State) -> Option<&str> {
     match &state.browser.selection {
         Selection::Stack(f) if state.screen == Screen::Library => Some(f),
         _ => None,
-    }
-}
-
-fn remembered(app: &AppSettings, folder: &str, tab: StackTab) -> AppSettings {
-    let key = TABS
-        .iter()
-        .find(|(t, _, _)| *t == tab)
-        .map_or("summary", |(_, k, _)| *k);
-    let mut tabs: Vec<String> = app
-        .stack_tabs
-        .iter()
-        .filter(|e| e.rsplit_once(':').is_none_or(|(f, _)| f != folder))
-        .cloned()
-        .collect();
-    tabs.push(format!("{folder}:{key}"));
-    let skip = tabs.len().saturating_sub(MAX_STACK_TABS);
-    AppSettings {
-        stack_tabs: tabs.split_off(skip),
-        ..app.clone()
     }
 }
 
@@ -140,6 +92,27 @@ pub fn update(state: State, msg: StackViewMsg) -> (State, Vec<Effect>) {
                 format!("Could not read the summary: {e}"),
             );
         }
+        StackViewMsg::GoalsLoaded(folder, Ok(text)) => {
+            let goals = Goals {
+                folder,
+                saved: text.clone(),
+                draft: text,
+                saving: false,
+            };
+            state.library.stack_view.goals = Some(goals);
+        }
+        StackViewMsg::GoalsLoaded(_, Err(e)) => notice(
+            &mut state,
+            NoticeKind::Error,
+            format!("Could not read the goals: {e}"),
+        ),
+        StackViewMsg::GoalsEdited(text) => {
+            if let Some(g) = &mut state.library.stack_view.goals {
+                g.draft = text;
+            }
+        }
+        StackViewMsg::GoalsSave => return crate::stack_goals::save_goals(state),
+        StackViewMsg::GoalsSaved(result) => return crate::stack_goals::goals_saved(state, result),
         StackViewMsg::SetStatus(uid, status) => {
             return (
                 state,

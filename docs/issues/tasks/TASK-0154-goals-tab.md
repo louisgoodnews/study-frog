@@ -2,7 +2,7 @@
 id: TASK-0154
 type: task
 title: Goals tab
-status: in_progress
+status: done
 epic: EPIC-023
 parents: [STORY-0064]
 estimate: 2
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add the Goals section to the stack file and an editor on the tab.
 
 ## Acceptance Criteria
-- [ ] The tab shows the stack's goals as a bullet list that the user edits in place at any time, with check boxes allowed
-- [ ] Goals are stored under a Goals heading in the stack's Markdown file and survive a round trip, a restart and a backup
+- [x] The tab shows the stack's goals as a bullet list that the user edits in place at any time, with check boxes allowed
+- [x] Goals are stored under a Goals heading in the stack's Markdown file and survive a round trip, a restart and a backup
 
 ## Design Notes
 None.

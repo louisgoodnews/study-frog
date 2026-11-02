@@ -4,11 +4,11 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (20) | Ready (0) | In progress (3/3) | Review (1) | Blocked (0) | Done (160) |
+| Backlog (20) | Ready (0) | In progress (2/3) | Review (1) | Blocked (0) | Done (161) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0157](docs/issues/tasks/TASK-0157-specify-the-interchange-formats.md) Specify the interchange formats (3) |  | [TASK-0154](docs/issues/tasks/TASK-0154-goals-tab.md) Goals tab (2) | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [TASK-0158](docs/issues/tasks/TASK-0158-export-a-library-or-stack.md) Export a library or stack (3) |  | [TASK-0155](docs/issues/tasks/TASK-0155-roadmap-tab.md) Roadmap tab (5) |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-| [TASK-0159](docs/issues/tasks/TASK-0159-import-with-preview-and-duplicate-handling.md) Import with preview and duplicate handling (5) |  | [TASK-0156](docs/issues/tasks/TASK-0156-board-calendar-and-reports-tabs-scoped-to-the-stack.md) Board, Calendar and Reports tabs scoped to the stack (3) |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+| [TASK-0157](docs/issues/tasks/TASK-0157-specify-the-interchange-formats.md) Specify the interchange formats (3) |  | [TASK-0155](docs/issues/tasks/TASK-0155-roadmap-tab.md) Roadmap tab (5) | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0158](docs/issues/tasks/TASK-0158-export-a-library-or-stack.md) Export a library or stack (3) |  | [TASK-0156](docs/issues/tasks/TASK-0156-board-calendar-and-reports-tabs-scoped-to-the-stack.md) Board, Calendar and Reports tabs scoped to the stack (3) |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+| [TASK-0159](docs/issues/tasks/TASK-0159-import-with-preview-and-duplicate-handling.md) Import with preview and duplicate handling (5) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 | [TASK-0160](docs/issues/tasks/TASK-0160-import-and-export-screens.md) Import and export screens (3) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
 | [TASK-0161](docs/issues/tasks/TASK-0161-plan-the-help-content.md) Plan the help content (2) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
 | [TASK-0162](docs/issues/tasks/TASK-0162-help-viewer-with-navigation-and-search.md) Help viewer with navigation and search (5) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
@@ -159,6 +159,7 @@
 |  |  |  |  |  | [TASK-0151](docs/issues/tasks/TASK-0151-summary-tab.md) Summary tab (5) |
 |  |  |  |  |  | [TASK-0152](docs/issues/tasks/TASK-0152-list-and-backlog-tabs.md) List and Backlog tabs (3) |
 |  |  |  |  |  | [TASK-0153](docs/issues/tasks/TASK-0153-sub-stacks-tab.md) Sub-stacks tab (2) |
+|  |  |  |  |  | [TASK-0154](docs/issues/tasks/TASK-0154-goals-tab.md) Goals tab (2) |
 |  |  |  |  |  | [TASK-0179](docs/issues/tasks/TASK-0179-specify-the-rehearsal-modes.md) Specify the rehearsal modes (2) |
 |  |  |  |  |  | [TASK-0180](docs/issues/tasks/TASK-0180-countdown-and-count-up-in-the-run-state-machine.md) Countdown and count up in the run state machine (5) |
 |  |  |  |  |  | [TASK-0183](docs/issues/tasks/TASK-0183-research-a-model-that-combines-familiarity-with-fsrs.md) Research a model that combines familiarity with FSRS (5) |
@@ -234,7 +235,7 @@
 | [STORY-0061](docs/issues/stories/STORY-0061-statuses-for-stacks-notes-cards-and-questions.md) Statuses for stacks, notes, cards and questions (8) | done | 3/3 |
 | [STORY-0062](docs/issues/stories/STORY-0062-calendar-plans-the-next-reviews-and-lets-the-user-move-them.md) Calendar plans the next reviews and lets the user move them (8) | done | 3/3 |
 | [STORY-0063](docs/issues/stories/STORY-0063-stack-page-with-tabs-and-summary.md) Stack page with tabs and summary (8) | done | 3/3 |
-| [STORY-0064](docs/issues/stories/STORY-0064-stack-sub-views-for-list-backlog-roadmap-board-calendar-and-reports.md) Stack sub-views for list, backlog, roadmap, board, calendar and reports (8) | backlog | 2/5 |
+| [STORY-0064](docs/issues/stories/STORY-0064-stack-sub-views-for-list-backlog-roadmap-board-calendar-and-reports.md) Stack sub-views for list, backlog, roadmap, board, calendar and reports (8) | backlog | 3/5 |
 | [STORY-0065](docs/issues/stories/STORY-0065-import-and-export-in-json-and-other-formats.md) Import and export in JSON and other formats (8) | backlog | 0/4 |
 | [STORY-0066](docs/issues/stories/STORY-0066-built-in-wiki-faq-and-tutorials.md) Built-in wiki, FAQ and tutorials (8) | backlog | 0/6 |
 | [STORY-0067](docs/issues/stories/STORY-0067-importers-for-anki-and-obsidian.md) Importers for Anki and Obsidian (8) | backlog | 0/3 |
