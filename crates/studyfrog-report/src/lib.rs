@@ -7,5 +7,6 @@ pub mod familiarity;
 mod familiarity_types;
 pub mod forecast;
 pub mod latency;
+pub mod replay;
 pub mod retention;
 pub mod simulate;

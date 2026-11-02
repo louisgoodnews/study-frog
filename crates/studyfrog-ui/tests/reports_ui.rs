@@ -42,6 +42,10 @@ fn group(name: &str, percent: u8, items: usize) -> studyfrog_service::fam_report
     }
 }
 
+fn no_replay() -> studyfrog_report::replay::ReplayReport {
+    studyfrog_report::replay::replay(&[], &studyfrog_srs::params::params_default())
+}
+
 fn bundle() -> ReportBundle {
     let bucket = |from_days, to_days, reviews, recalled| RetentionBucket {
         from_days,
@@ -50,6 +54,7 @@ fn bundle() -> ReportBundle {
         recalled,
     };
     ReportBundle {
+        replay: no_replay(),
         familiarity: studyfrog_service::fam_report::FamReport {
             spread: [0, 0, 1, 0, 0, 0, 0, 2, 0, 1],
             unscored: 2,
@@ -146,6 +151,7 @@ fn an_empty_history_says_so_and_still_draws() {
     m.state.screen = Screen::Reports;
     m.state.explorer.tab = studyfrog_ui::explorer_ui::ReportTab::Memory;
     let empty = ReportBundle {
+        replay: no_replay(),
         familiarity: studyfrog_service::fam_report::FamReport {
             spread: [0; 10],
             unscored: 0,

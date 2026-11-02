@@ -25,6 +25,8 @@ pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
     } else if allowed && screen == Screen::Reports {
         let ask = crate::explorer_ui::refresh(&state);
         (State { screen, ..state }, vec![Effect::BuildReports, ask])
+    } else if allowed && screen == Screen::Settings {
+        (State { screen, ..state }, vec![Effect::BuildReports])
     } else if allowed && screen == Screen::Achievements {
         (State { screen, ..state }, vec![Effect::CheckAchievements])
     } else if allowed && screen == Screen::Board {

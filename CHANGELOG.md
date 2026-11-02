@@ -23,6 +23,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- Settings (Study tab) tells from the user's own review history whether familiarity improves the predictions of recall: a replay scores plain FSRS against the familiarity-adjusted prediction by log loss and a calibration table, fits the strength and half-stability on the first 80 percent when there are at least 1000 reviews, and shows the verdict, the best values and the change in reviews; it never switches the factor off itself (TASK-0184).
 - A Familiarity tab in the reports shows how the items spread over the scale and, per stack and per subject, the roll-up and the three least familiar items with the inputs behind each value; the item page has a Familiarity card with the value, its drivers and its course over time (TASK-0138).
 - Home shows a "Needs attention" card with the five least familiar items and why (low familiarity, overdue, an exam within 14 days); run setup offers "Least familiar first" and a familiarity filter (TASK-0139).
 - Queues use familiarity: under a daily allowance the least familiar due items are chosen first, `familiarity_threshold` in `studyfrog.toml` leaves out due items at or above it, and a run can be ordered "Least familiar first" or limited to items less familiar than a level (TASK-0140).

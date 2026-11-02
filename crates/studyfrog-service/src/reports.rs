@@ -61,6 +61,8 @@ pub struct ReportBundle {
     pub backtest: BacktestReport,
     /// How familiar the user is with the items.
     pub familiarity: crate::fam_report::FamReport,
+    /// Whether familiarity improves the predictions, replayed on the history.
+    pub replay: studyfrog_report::replay::ReplayReport,
 }
 
 fn day_of(ms: i64, offset_minutes: i32) -> i64 {
@@ -166,5 +168,6 @@ pub fn build_reports(
         forecast: forecast(&items, &model, today, FORECAST_DAYS),
         backtest: backtest_report(&history, today, &params),
         familiarity: crate::fam_report::familiarity_report(&session.conn, now).map_err(store)?,
+        replay: crate::fam_replay::replay_history(&session.conn, now, &params).map_err(store)?,
     })
 }

@@ -15,7 +15,7 @@ pub type Section = fn(&State, &mut egui::Ui, &mut Vec<Msg>);
 /// The groups of settings on a tab. Adding a setting means adding its section here, to one tab only.
 pub fn sections_of(tab: SettingsTab) -> &'static [Section] {
     match tab {
-        SettingsTab::Study => &[scheduling, view_tracking],
+        SettingsTab::Study => &[scheduling, view_tracking, replay],
         SettingsTab::Rehearsal => &[reading_speed],
         SettingsTab::Answers => &[answer_comparison],
         SettingsTab::Data => &[crate::view::backup::draw],
@@ -72,6 +72,11 @@ fn view_tracking(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         out.push(Msg::SetTrackViews(on));
     }
     ui.weak("Used to tell how familiar you are with an item. Only the time and the item are stored, on this computer, and they are part of backups.");
+}
+
+/// Whether familiarity improves the predictions on the user's history.
+fn replay(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
+    super::settings_replay::draw(state, ui);
 }
 
 /// The scheduler settings the vault uses (read-only) and where to change them.

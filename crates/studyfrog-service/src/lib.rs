@@ -19,6 +19,7 @@ pub mod explore;
 mod explore_types;
 pub mod fam_all;
 pub mod fam_curve;
+pub mod fam_replay;
 pub mod fam_report;
 pub mod familiarity;
 pub mod filters;

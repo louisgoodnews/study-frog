@@ -2,7 +2,7 @@
 id: TASK-0184
 type: task
 title: Replay familiarity against the user's review history for a verdict
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0059]
 estimate: 3
@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 that familiarity influence FSRS so that well-known
 Tell the user, from their own data, whether familiarity improves FSRS predictions. The factor of TASK-0141 is on from the start (owner's decision, 2026-11-02), so this is advice, not a gate.
 
 ## Acceptance Criteria
-- [ ] A replay walks the user's review history in order and scores plain FSRS recall predictions against the familiarity-adjusted ones by log loss and a binned calibration table
-- [ ] For a user with at least 1000 reviews the replay fits on the first 80 percent of the history and tests on the rest, and Settings shows the verdict, the fitted values and the change in reviews per year; if plain FSRS predicts better it suggests switching the factor off and never does so itself
-- [ ] The replay is a pure function with tests on simulated histories, and 10k reviews replay within a measured budget
+- [x] A replay walks the user's review history in order and scores plain FSRS recall predictions against the familiarity-adjusted ones by log loss and a binned calibration table
+- [x] For a user with at least 1000 reviews the replay fits on the first 80 percent of the history and tests on the rest, and Settings shows the verdict, the fitted values and the change in reviews per year; if plain FSRS predicts better it suggests switching the factor off and never does so itself
+- [x] The replay is a pure function with tests on simulated histories, and 10k reviews replay within a measured budget
 
 ## Design Notes
 Method in section 7 of docs/research/familiarity-and-fsrs.md. Fit beta, S_half and the expected-familiarity curve on the first 80 percent of the history and test on the rest. The workload effect is estimated with the forecast's simulator.
@@ -32,3 +32,6 @@ STORY-0058 (the familiarity values), TASK-0141 and the view-time records of TASK
 
 ## Open Questions
 None.
+
+## Outcome
+Fitting uses a grid over the strength (0 to 4) and the half-stability (10 to 120 days) on the first 80 percent of the history, in time order. The workload change is the mean of 1/m over the scored reviews at the fitted values, not a run of the forecast simulator. A scale-down of every interval can lower the log loss on a history where plain FSRS over-predicts recall, so "familiarity helps" can also mean "FSRS is over-confident for this user"; the calibration table shows which.

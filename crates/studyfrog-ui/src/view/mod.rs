@@ -54,6 +54,7 @@ mod run;
 mod run_card;
 mod session_form;
 mod settings;
+mod settings_replay;
 mod setup;
 mod setup_how;
 mod setup_review;
