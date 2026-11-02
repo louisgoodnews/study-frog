@@ -2,7 +2,7 @@
 id: TASK-0146
 type: task
 title: Plan the next reviews as calendar entries
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0062]
 estimate: 3
@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Implement the planner in studyfrog-calendar from the schedule of every item.
 
 ## Acceptance Criteria
-- [ ] A pure function groups due dates into entries per stack and day with the item count and the stack's size
-- [ ] Complete and on-hold stacks and items produce no entries
-- [ ] Property tests cover grouping and skipping, and 10k items plan within a measured budget
+- [x] A pure function groups due dates into entries per stack and day with the item count and the stack's size
+- [x] Complete and on-hold stacks and items produce no entries
+- [x] Property tests cover grouping and skipping, and 10k items plan within a measured budget
 
 ## Design Notes
 None.

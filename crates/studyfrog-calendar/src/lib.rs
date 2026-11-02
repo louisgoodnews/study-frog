@@ -3,4 +3,5 @@
 
 pub mod recurrence;
 pub mod reminders;
+pub mod review_plan;
 pub mod session;

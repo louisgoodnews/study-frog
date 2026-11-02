@@ -20,6 +20,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- The calendar crate has a planner (`review_plan`) that turns the schedule into entries, one per stack and day with the item count and the stack's size; done and paused items and stacks make none (TASK-0146).
 - Library rows can be ticked (a check box per row and one for all rows the filter lets through); a bar then sets status, priority or difficulty, moves the items to a stack, adds or removes a tag, or deletes them after a question that names the number. Each change is one step that "Undo last change" takes back (TASK-0133).
 - Saved filters: the Filters menu saves the current filter or query under a name in `filters.toml` in the vault, reopens it and removes it (TASK-0133; per vault, not per profile, as the library spec proposes).
 - The library's search bar has a Standard mode (title word, type, status and priority) and a Query mode with the errors under the box, suggestions for field names, operators and values, and a switch that turns the fields into a query and a plain query back into fields (TASK-0132).
