@@ -25,6 +25,7 @@ struct RawApp {
     reading_min_words: Option<u32>,
     settings_tab: Option<String>,
     track_views: Option<bool>,
+    library_columns: Option<String>,
 }
 
 /// `value` if it is inside `range`, else an error naming the key and its line.
@@ -89,6 +90,7 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
         answer_engine,
         settings_tab: raw.settings_tab,
         views_untracked: raw.track_views == Some(false),
+        library_columns: raw.library_columns,
     })
 }
 
@@ -122,6 +124,9 @@ pub fn render_app_settings(s: &AppSettings) -> String {
     }
     if s.views_untracked {
         out.push_str("track_views = false\n");
+    }
+    if let Some(columns) = &s.library_columns {
+        out.push_str(&format!("library_columns = {}\n", toml_string(columns)));
     }
     if let Some(tab) = &s.settings_tab {
         out.push_str(&format!("settings_tab = {}\n", toml_string(tab)));

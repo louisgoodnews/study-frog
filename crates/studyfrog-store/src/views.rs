@@ -74,3 +74,38 @@ pub fn viewed_items(conn: &Connection) -> Result<Vec<Uid>, StoreError> {
     }
     Ok(out)
 }
+
+/// The recorded views of every item, oldest first, by item.
+pub fn load_all_views(
+    conn: &Connection,
+) -> Result<std::collections::HashMap<Uid, Vec<ViewEvent>>, StoreError> {
+    let mut stmt = conn
+        .prepare("SELECT item_uid, kind, at_ms, active_ms, expected_ms FROM item_view ORDER BY item_uid, at_ms, id")
+        .map_err(sql_err)?;
+    let rows = stmt
+        .query_map([], |r| {
+            Ok((
+                r.get::<_, String>(0)?,
+                r.get::<_, String>(1)?,
+                r.get::<_, i64>(2)?,
+                r.get::<_, u32>(3)?,
+                r.get::<_, Option<u32>>(4)?,
+            ))
+        })
+        .map_err(sql_err)?;
+    let mut out: std::collections::HashMap<Uid, Vec<ViewEvent>> = std::collections::HashMap::new();
+    for row in rows {
+        let (id, kind, at, active_ms, expected_ms) = row.map_err(sql_err)?;
+        let item = parse_ulid(&id).ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}")))?;
+        let kind = view_kind_from_name(&kind)
+            .ok_or_else(|| StoreError::Corrupt(format!("view kind: {kind:?}")))?;
+        out.entry(item).or_default().push(ViewEvent {
+            item,
+            kind,
+            at: UnixMs(at),
+            active_ms,
+            expected_ms,
+        });
+    }
+    Ok(out)
+}

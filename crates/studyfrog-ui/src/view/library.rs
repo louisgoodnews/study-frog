@@ -4,6 +4,7 @@ use eframe::egui::{self, Panel, RichText};
 use studyfrog_core::scheduler::{Scheduler, scheduler_name};
 use studyfrog_store::overview::{StackRow, VaultOverview};
 
+use crate::library_ui::LibraryMsg;
 use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::state::{Selection, State};
@@ -30,7 +31,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .default_size(220.0)
         .show(ui, |ui| stack_list(state, ui, out));
     match &state.browser.selection {
-        Selection::Nothing => overview(state, ui, out),
+        Selection::Nothing if state.library.show_overview => overview(state, ui, out),
         _ => items::draw(state, ui, out),
     }
 }
@@ -70,11 +71,15 @@ fn stack_list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     {
         out.push(Msg::Select(Selection::Inbox));
     }
-    if ui
-        .selectable_label(*current == Selection::Nothing, "Overview")
-        .clicked()
-    {
+    let all = *current == Selection::Nothing && !state.library.show_overview;
+    if ui.selectable_label(all, "All items").clicked() {
         out.push(Msg::Select(Selection::Nothing));
+        out.push(Msg::Library(LibraryMsg::Overview(false)));
+    }
+    let overview = *current == Selection::Nothing && state.library.show_overview;
+    if ui.selectable_label(overview, "Overview").clicked() {
+        out.push(Msg::Select(Selection::Nothing));
+        out.push(Msg::Library(LibraryMsg::Overview(true)));
     }
     ui.separator();
     if ui.button("New stack…").clicked() {

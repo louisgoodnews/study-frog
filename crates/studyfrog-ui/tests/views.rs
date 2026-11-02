@@ -23,6 +23,7 @@ fn the_vault_dialog_opens_a_typed_path_and_the_welcome_page_lists_recent_vaults(
         reading: Default::default(),
         settings_tab: None,
         views_untracked: false,
+        library_columns: None,
     };
     let mut h = harness(model);
     h.run();
@@ -58,7 +59,12 @@ fn the_vault_dialog_opens_a_typed_path_and_the_welcome_page_lists_recent_vaults(
 
 #[test]
 fn library_lists_stacks_counts_inbox_and_problems() {
-    let mut h = harness(open_model());
+    let mut m = open_model();
+    apply(
+        &mut m,
+        Msg::Library(studyfrog_ui::library_ui::LibraryMsg::Overview(true)),
+    );
+    let mut h = harness(m);
     h.run();
     for text in [
         "All stacks",

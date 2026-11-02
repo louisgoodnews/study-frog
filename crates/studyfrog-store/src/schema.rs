@@ -2,7 +2,7 @@
 
 use crate::migrate::Migration;
 use crate::schema_early::{V2, V3};
-use crate::schema_later::{V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17};
+use crate::schema_later::{V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18};
 
 /// All migrations, oldest first.
 pub const MIGRATIONS: &[Migration] = &[
@@ -90,6 +90,11 @@ pub const MIGRATIONS: &[Migration] = &[
         version: 17,
         name: "answer and view timing",
         sql: V17,
+    },
+    Migration {
+        version: 18,
+        name: "item text",
+        sql: V18,
     },
 ];
 

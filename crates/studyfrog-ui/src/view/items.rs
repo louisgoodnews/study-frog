@@ -2,86 +2,71 @@
 
 use eframe::egui::{self, RichText};
 use studyfrog_core::civil::format_date;
-use studyfrog_core::plan::{ItemKind, item_kind_name};
-use studyfrog_core::status::status_label;
-use studyfrog_core::time::UnixMs;
-use studyfrog_md::rfc3339::format_rfc3339;
-use studyfrog_store::overview::ItemRow;
 
-use crate::browse::filter_items;
 use crate::deadline_ui::deadline_of;
 use crate::msg::{DraftField, Msg};
 use crate::planner::PlanMsg;
 use crate::state::{Selection, State};
 use crate::theme::palette_of;
-use crate::view::kit;
 use crate::view::widgets::text_field;
 
-/// "new" for an item never reviewed, else the UTC date it is next due.
-fn due_text(due: Option<UnixMs>) -> String {
-    match due.and_then(format_rfc3339) {
-        Some(text) => format!("due {}", &text[..10]),
-        None => "new".to_owned(),
-    }
-}
-
-fn kind_text(kind: ItemKind) -> &'static str {
-    item_kind_name(kind)
-}
-
-fn item_row(item: &ItemRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let p = palette_of(ui);
-    ui.horizontal(|ui| {
-        kit::pill(ui, kind_text(item.kind), p.text_weak);
-        if ui.link(&item.title).clicked() {
-            out.push(Msg::OpenItem(item.uid));
-        }
-        let color = if item.due.is_none() {
-            p.accent
-        } else {
-            p.text_weak
-        };
-        ui.label(
-            RichText::new(status_label(item.status))
-                .small()
-                .color(p.text_weak),
-        );
-        ui.label(RichText::new(due_text(item.due)).small().color(color));
-        ui.label(RichText::new(&item.path).small().color(p.text_weak));
-    });
-}
-
-/// Heading, filter, item list, and the card form for a stack.
-pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let b = &state.browser;
-    let heading = match &b.selection {
+/// The page's heading: the stack's name, "Inbox" or "All items".
+fn heading(state: &State) -> String {
+    match &state.browser.selection {
         Selection::Stack(folder) => state
             .vault
             .as_ref()
             .and_then(|v| v.overview.stacks.iter().find(|s| s.folder == *folder))
             .map_or_else(|| folder.clone(), |s| s.title.clone()),
-        _ => "Inbox".to_owned(),
-    };
-    ui.label(RichText::new(heading).size(26.0).strong());
-    due_row(state, ui, out);
-    crate::view::status_ui::summary(ui, &b.status_counts);
-    child_stacks(state, ui, out);
-    if let Some(text) = text_field(ui, "Search titles", &b.search, "type to filter", 1) {
+        Selection::Inbox => "Inbox".to_owned(),
+        Selection::Nothing => "All items".to_owned(),
+    }
+}
+
+/// The search field, the count, the column menu and the table of items.
+fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if let Some(text) = text_field(
+        ui,
+        "Search titles",
+        &state.browser.search,
+        "type to filter",
+        1,
+    ) {
         out.push(Msg::SearchEdited(text));
     }
-    let shown = filter_items(&b.items, &b.search);
-    ui.label(format!("{} of {} items", shown.len(), b.items.len()));
+    ui.horizontal(|ui| {
+        ui.label(crate::view::library_table::count_line(state));
+        crate::view::library_table::column_menu(state, ui, out);
+    });
+    ui.allocate_ui(
+        egui::vec2(
+            ui.available_width(),
+            (ui.available_height() * 0.6).max(260.0),
+        ),
+        |ui| {
+            crate::view::library_table::draw(state, ui, out);
+        },
+    );
+}
+
+/// Heading and the list of items; for a stack also its due date, status roll-up, PDFs and the new-card form.
+pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     egui::ScrollArea::vertical()
-        .max_height(ui.available_height() * 0.5)
+        .auto_shrink([false, false])
         .show(ui, |ui| {
-            for item in &shown {
-                item_row(item, ui, out);
+            ui.label(RichText::new(heading(state)).size(26.0).strong());
+            let stack = matches!(state.browser.selection, Selection::Stack(_));
+            if stack {
+                due_row(state, ui, out);
+                crate::view::status_ui::summary(ui, &state.browser.status_counts);
+                child_stacks(state, ui, out);
+            }
+            list(state, ui, out);
+            if let Selection::Stack(folder) = &state.browser.selection {
+                crate::view::library_pdfs::stack_section(state, folder, ui, out);
+                card_form(state, ui, out);
             }
         });
-    if let Selection::Stack(folder) = &b.selection {
-        crate::view::library_pdfs::stack_section(state, folder, ui, out);
-        card_form(state, ui, out);
-    }
 }
 
 fn card_form(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {

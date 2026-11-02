@@ -75,3 +75,17 @@ pub fn notifications(w: &Worker, op: crate::notify::NotifyEffect, now_ns: i64) -
     };
     Vec::new()
 }
+
+/// Every item of the vault as a row of the library list.
+pub fn library(w: &Worker, now_ns: i64) -> Msg {
+    use crate::library_ui::LibraryMsg;
+    let rows = match &w.session {
+        Some(s) => studyfrog_service::library_rows::load_library_rows(
+            s,
+            studyfrog_core::time::UnixMs(now_ns / 1_000_000),
+        )
+        .map_err(|e| e.to_string()),
+        None => Ok(Vec::new()),
+    };
+    Msg::Library(LibraryMsg::Loaded(rows))
+}

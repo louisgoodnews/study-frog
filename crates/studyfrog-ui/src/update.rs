@@ -16,12 +16,10 @@ fn notice(kind: NoticeKind, text: impl Into<String>) -> Option<Notice> {
 /// Advance the state by one message. Every new notice also goes to the notification list.
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
     let before = state.notice.clone();
-    let (next, mut effects) = step(state, msg);
-    let (next, notified) = crate::notify::track(&before, next);
-    effects.extend(notified);
-    let (next, recorded) = crate::view_time::sync(next);
-    effects.extend(recorded);
-    (next, effects)
+    let reload = crate::library_ui::wants_reload(&msg);
+    let (next, effects) = step(state, msg);
+    let (next, after) = crate::hooks::after(next, &before, reload);
+    (next, [effects, after].concat())
 }
 
 fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
@@ -132,6 +130,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::ReadingTest(m) => crate::reading_test::update(state, m),
         Msg::SettingsTab(m) => crate::app_settings_ui::update(state, m),
         Msg::Activity => crate::view_time::activity(state),
+        Msg::Library(m) => crate::library_ui::update(state, m),
         Msg::SetTrackViews(on) => crate::app_settings_ui::set_track_views(state, on),
         run @ (Msg::StartRunClicked
         | Msg::RunReady(_)
@@ -163,10 +162,15 @@ pub(crate) fn started(
     let notice =
         error.and_then(|e| notice(NoticeKind::Error, format!("App settings not used: {e}")));
     let last = app.vault.clone();
+    let mut library = state.library.clone();
+    if let Some(text) = &app.library_columns {
+        library.columns = crate::library_ui::columns_from_text(text);
+    }
     let state = State {
         path_input: last.clone().unwrap_or_default(),
         app,
         notice,
+        library,
         ..state
     };
     match last {

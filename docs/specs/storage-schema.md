@@ -113,3 +113,4 @@ turns runs left idle, running or paused into `aborted` and closes their log with
   event `time_up` marks the end of a countdown ([rehearsal-run](rehearsal-run.md)).
 - `review.answer_ms`, `review.expected_ms` and `item_view.expected_ms` (version 17): how long the answer was on screen before a rating (paused time left out) and how long its words
   should take to read at the user's speed, and the reading time of the text that was viewed; `NULL` for reviews and views from before. Familiarity uses them.
+- `item.body` (version 18): the text of each item (front and back, or the body), for the library's text search. The migration marks every file so the next scan reads and indexes it again.

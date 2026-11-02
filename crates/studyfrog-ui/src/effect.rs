@@ -51,6 +51,8 @@ pub enum Effect {
     LoadItems(Selection),
     /// Count the items of a stack and its sub-stacks by status.
     LoadStatusCounts(Selection),
+    /// Read every item of the vault as a row of the library list.
+    LoadLibrary,
     /// Store or read the notifications.
     Notifications(crate::notify::NotifyEffect),
     /// Record how long an item was viewed or worked on.

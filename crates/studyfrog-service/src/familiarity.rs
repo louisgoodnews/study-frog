@@ -117,21 +117,23 @@ fn deadline_dates(conn: &Connection, home: Option<&ItemHome>) -> Result<Vec<Date
         .collect())
 }
 
-/// The exam or deadline that matters at `now`: the nearest one still ahead, else the latest one that has passed.
+/// The exam or deadline that matters on `today` among `days`: the nearest one still ahead, else the latest one that has passed.
+pub(crate) fn pick_exam(days: &[i64], today: i64) -> Option<i64> {
+    let ahead = days.iter().filter(|d| **d >= today).min();
+    ahead.or_else(|| days.iter().max()).copied()
+}
+
+/// The exam or deadline that matters at `now` for the item's stack.
 fn exam_date(
     conn: &Connection,
     home: Option<&ItemHome>,
     now: UnixMs,
 ) -> Result<Option<UnixMs>, StoreError> {
-    let today = now.0.div_euclid(DAY_MS);
     let days: Vec<i64> = deadline_dates(conn, home)?
         .into_iter()
         .map(date_to_days)
         .collect();
-    let ahead = days.iter().filter(|d| **d >= today).min();
-    Ok(ahead
-        .or_else(|| days.iter().max())
-        .map(|d| UnixMs(d * DAY_MS)))
+    Ok(pick_exam(&days, now.0.div_euclid(DAY_MS)).map(|d| UnixMs(d * DAY_MS)))
 }
 
 /// Days until the nearest exam or deadline of the item's stack or a stack above it; `None` when there is none ahead.

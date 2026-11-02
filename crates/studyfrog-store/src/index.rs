@@ -155,8 +155,8 @@ fn write_item(
     run(tx, "DELETE FROM item WHERE uid = ?1", [&uid])?;
     run(
         tx,
-        "INSERT INTO item (uid, path, kind, title, stack_path, created_ms, updated_ms, priority, difficulty, subjects, source, status)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
+        "INSERT INTO item (uid, path, kind, title, stack_path, created_ms, updated_ms, priority, difficulty, subjects, source, status, body)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
         params![
             uid,
             rel,
@@ -169,7 +169,8 @@ fn write_item(
             word_of(doc, "difficulty", |w| difficulty_from_name(w).is_some()),
             extra_raw(doc, "subjects"),
             extra_value(doc, "source"),
-            word_of(doc, "status", |w| status_from_name(w).is_some())
+            word_of(doc, "status", |w| status_from_name(w).is_some()),
+            doc_texts(doc).join("\n").trim().to_owned()
         ],
     )?;
     write_tags(tx, &uid, &meta.tags)?;

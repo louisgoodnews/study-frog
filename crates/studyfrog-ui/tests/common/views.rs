@@ -118,3 +118,32 @@ pub fn assert_all_named(h: &Harness<'_, App>, screen: &str) {
         }
     }
 }
+
+/// A row of the library list for tests: a card in the "french" stack with plain values.
+pub fn lib_item(n: u128, title: &str) -> studyfrog_service::library_rows::LibraryItem {
+    use studyfrog_core::plan::ItemKind;
+    use studyfrog_core::priority::Priority;
+    use studyfrog_core::query_eval::Row;
+    use studyfrog_core::status::Status;
+    studyfrog_service::library_rows::LibraryItem {
+        uid: Uid(n),
+        row: Row {
+            path: format!("french/{n}.md"),
+            title: title.into(),
+            body: String::new(),
+            kind: ItemKind::Card,
+            status: Status::New,
+            stacks: vec!["french".into(), "French".into()],
+            subjects: Vec::new(),
+            teachers: Vec::new(),
+            tags: Vec::new(),
+            priority: Priority::Medium,
+            difficulty: None,
+            familiarity: None,
+            due_day: None,
+            reviews: 0,
+            created_day: None,
+            updated_day: None,
+        },
+    }
+}

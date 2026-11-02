@@ -216,8 +216,18 @@ fn by_field(a: &Row, b: &Row, o: Order) -> Ordering {
 
 /// The indices of the rows that match, in the order the query asks for (items equal on every key are by path).
 pub fn run(q: &Query, rows: &[Row], today: i64) -> Vec<usize> {
+    run_filtered(q, rows, today, &|_| true)
+}
+
+/// Like [`run`], looking only at the rows `keep` accepts (a stack, the inbox).
+pub fn run_filtered(
+    q: &Query,
+    rows: &[Row],
+    today: i64,
+    keep: &dyn Fn(&Row) -> bool,
+) -> Vec<usize> {
     let mut found: Vec<usize> = (0..rows.len())
-        .filter(|i| matches(q, &rows[*i], today))
+        .filter(|i| keep(&rows[*i]) && matches(q, &rows[*i], today))
         .collect();
     found.sort_by(|a, b| {
         let keys = q.order.iter().map(|o| by_field(&rows[*a], &rows[*b], *o));

@@ -41,6 +41,7 @@ fn starting_with_a_remembered_vault_opens_it() {
         reading: Default::default(),
         settings_tab: None,
         views_untracked: false,
+        library_columns: None,
     };
     let (s, fx) = update(State::default(), Msg::Started { app, error: None });
     assert_eq!((s.path_input.as_str(), s.opening), ("/v/notes", true));

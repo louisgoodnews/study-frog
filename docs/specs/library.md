@@ -29,6 +29,7 @@ sorted or changed in bulk, and the forms are always in the way.
 - **Bottom:** "N of M items" and a refresh button, as in Jira ("50 von 1000+"); the count says "1000+" when the list is cut at 1000 rows.
 
 ## Columns
+(In the first version the direction of a sort is shown as `^` and `v` after the heading, because the app's font has no arrow glyphs.)
 Shown by default: title, type, status, priority, due. Optional (chosen from a column menu, remembered per profile): difficulty,
 familiarity (shown as a percentage), stack, subjects, tags, reviews, created, updated, path. A column is sorted by clicking its header (click
 again to reverse, shift-click to add a second key); the sort is also what an `ORDER BY` in a query sets.
@@ -53,7 +54,7 @@ With a selection a bar appears with **bulk actions**: set status, set priority, 
 | New-card form, new note, new question | the Create dialog (already there) |
 | Import form | the Import and export menu |
 | A stack's due date, description and sub-stacks | the stack page (STORY-0063) and the item page; the tree shows sub-stacks |
-| A stack's PDFs | the stack page's PDFs tab; PDFs are not rows in the list in 0.3.0 |
+| A stack's PDFs | the stack page's PDFs tab; PDFs are not rows in the list in 0.3.0 (until the stack overview exists they stay under the list) |
 | Title filter | the search bar |
 
 ## What each task takes, today and after

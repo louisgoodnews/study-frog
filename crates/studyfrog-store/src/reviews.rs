@@ -114,3 +114,41 @@ pub fn load_reviews_timed(conn: &Connection, item: Uid) -> Result<Vec<TimedRevie
     }
     Ok(out)
 }
+
+/// The reviews of every item with their timing, oldest first, by item.
+pub fn load_all_reviews_timed(
+    conn: &Connection,
+) -> Result<std::collections::HashMap<Uid, Vec<TimedReview>>, StoreError> {
+    let mut stmt = conn
+        .prepare(
+            "SELECT item_uid, rating, at_ms, elapsed_days, answer_ms, expected_ms FROM review ORDER BY item_uid, at_ms, id",
+        )
+        .map_err(sql_err)?;
+    let rows = stmt
+        .query_map([], |r| {
+            Ok((
+                r.get::<_, String>(0)?,
+                r.get::<_, u8>(1)?,
+                (r.get::<_, i64>(2)?, r.get::<_, f32>(3)?),
+                r.get::<_, Option<u32>>(4)?.zip(r.get::<_, Option<u32>>(5)?),
+            ))
+        })
+        .map_err(sql_err)?;
+    let mut out: std::collections::HashMap<Uid, Vec<TimedReview>> =
+        std::collections::HashMap::new();
+    for row in rows {
+        let (id, rating, (at, elapsed_days), timing) = row.map_err(sql_err)?;
+        let item = studyfrog_md::ulid::parse_ulid(&id)
+            .ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}")))?;
+        let rating = rating_from_value(rating)
+            .ok_or_else(|| StoreError::Corrupt(format!("rating: {rating}")))?;
+        let review = Review {
+            item,
+            rating,
+            at: UnixMs(at),
+            elapsed_days,
+        };
+        out.entry(item).or_default().push((review, timing));
+    }
+    Ok(out)
+}

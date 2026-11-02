@@ -195,6 +195,8 @@ pub enum Msg {
     SetAnswerEngine(AnswerEngine),
     /// Something happened in the reading-speed test.
     ReadingTest(ReadingTestMsg),
+    /// Something happened on the library list.
+    Library(crate::library_ui::LibraryMsg),
     /// The user touched the keyboard, the mouse or the screen.
     Activity,
     /// Recording how long items are viewed was switched on or off.

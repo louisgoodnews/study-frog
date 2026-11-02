@@ -20,6 +20,7 @@ pub mod home;
 pub mod images;
 pub mod import;
 pub mod kanban;
+pub mod library_rows;
 pub mod pdf_library;
 pub mod pdf_marks;
 pub mod pdf_notes;

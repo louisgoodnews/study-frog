@@ -108,6 +108,8 @@ pub struct AppSettings {
     pub settings_tab: Option<String>,
     /// Do not record how long items are viewed (the default is to record it).
     pub views_untracked: bool,
+    /// The columns of the library list, as stored words (`title,type,status`); `None` uses the defaults.
+    pub library_columns: Option<String>,
 }
 
 /// `settings` after opening `path`: it becomes the current vault and moves to the front of the recent list.

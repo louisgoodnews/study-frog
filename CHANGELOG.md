@@ -19,6 +19,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- The library list: every item of the vault in a table with sortable columns (title, type, status, priority, difficulty, familiarity, stack, subjects, tags, reviews,
+  due, created, updated, path; a click sorts, a second click reverses, shift adds a key), a column menu that is remembered, 'N of M items', and a tree entry 'All items';
+  10 000 rows draw in about 11 ms per frame because only the rows in view are built. The search is still the title search (TASK-0131).
 - The library's query language: a parser with messages that name the column, a printer, and an evaluator over item rows (fields for text, type, status, stack, subject,
   teacher, tag, priority, difficulty, familiarity, due, reviews, dates and path; `AND`, `OR`, `NOT`, `IN`, `IS EMPTY`, `ORDER BY`). User text never reaches SQL; 10 000 items are
   filtered in a few milliseconds. The screens come with TASK-0131 and TASK-0132 (TASK-0130).

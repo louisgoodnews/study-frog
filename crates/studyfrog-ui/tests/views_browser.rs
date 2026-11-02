@@ -3,7 +3,7 @@
 
 mod common;
 
-use common::views::{harness, open_model};
+use common::views::{harness, lib_item, open_model};
 use egui_kittest::kittest::Queryable;
 use studyfrog_core::plan::ItemKind;
 use studyfrog_core::uid::Uid;
@@ -29,6 +29,11 @@ fn stack_open() -> studyfrog_ui::model::Model {
     apply(
         &mut m,
         Msg::ItemsLoaded(Ok(vec![item(1, "Bonjour"), item(2, "Au revoir")])),
+    );
+    let rows = vec![lib_item(1, "Bonjour"), lib_item(2, "Au revoir")];
+    apply(
+        &mut m,
+        Msg::Library(studyfrog_ui::library_ui::LibraryMsg::Loaded(Ok(rows))),
     );
     m
 }
@@ -114,18 +119,18 @@ fn the_card_form_only_appears_inside_a_stack_not_in_the_inbox() {
 
 #[test]
 fn the_item_list_says_when_each_item_is_next_due() {
-    use studyfrog_core::time::UnixMs;
     let mut m = stack_open();
-    m.state.browser.items[0].due = Some(UnixMs(1_800_000_000_000)); // 2027-01-15 UTC
+    m.state.library.items[0].row.due_day = Some(1_800_000_000_000 / 86_400_000); // 2027-01-15 UTC
+    m.state.library.rows[0].due_day = Some(1_800_000_000_000 / 86_400_000);
     let mut h = harness(m);
     h.run_steps(2);
     assert!(
-        h.query_by_label("due 2027-01-15").is_some(),
+        h.query_by_label("2027-01-15").is_some(),
         "a reviewed item shows its date"
     );
     assert_eq!(
-        h.query_all_by_label("new").count(),
+        h.query_all_by_label("–").count(),
         1,
-        "the other was never reviewed"
+        "the other was never reviewed, so it has no due date"
     );
 }

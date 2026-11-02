@@ -3,7 +3,7 @@
 
 mod common;
 
-use common::views::{assert_all_named, harness, open_model};
+use common::views::{assert_all_named, harness, lib_item, open_model};
 use egui_kittest::kittest::Queryable;
 use studyfrog_core::plan::ItemKind;
 use studyfrog_core::status::Status;
@@ -110,6 +110,10 @@ fn list_rows_show_each_items_status_and_the_stack_shows_its_roll_up() {
         row(2, "Au revoir", Status::Done),
     ];
     apply(&mut m, Msg::ItemsLoaded(Ok(items)));
+    let (mut one, mut two) = (lib_item(1, "Bonjour"), lib_item(2, "Au revoir"));
+    (one.row.status, two.row.status) = (Status::Learning, Status::Done);
+    let rows = studyfrog_ui::library_ui::LibraryMsg::Loaded(Ok(vec![one, two]));
+    apply(&mut m, Msg::Library(rows));
     let counts = vec![
         (Status::New, 1),
         (Status::Learning, 3),

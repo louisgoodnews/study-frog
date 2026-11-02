@@ -98,6 +98,12 @@ ALTER TABLE review ADD COLUMN expected_ms INTEGER CHECK (expected_ms IS NULL OR 
 ALTER TABLE item_view ADD COLUMN expected_ms INTEGER CHECK (expected_ms IS NULL OR expected_ms >= 0);
 ";
 
+/// The text of each item (front and back, body), for searching, and a mark on every file so the next scan reads and indexes it again.
+pub(crate) const V18: &str = "
+ALTER TABLE item ADD COLUMN body TEXT;
+UPDATE file SET mtime_ns = -1, hash = 0;
+";
+
 pub(crate) const V9: &str = "
 ALTER TABLE item ADD COLUMN priority TEXT CHECK (priority IS NULL OR priority IN ('lowest', 'low', 'medium', 'high', 'highest'));
 ALTER TABLE item ADD COLUMN difficulty TEXT CHECK (difficulty IS NULL OR difficulty IN ('easy', 'medium', 'difficult'));
