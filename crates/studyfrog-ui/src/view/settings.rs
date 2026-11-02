@@ -102,6 +102,16 @@ fn scheduling(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
             "off".to_owned()
         });
         ui.end_row();
+        ui.label("Familiarity threshold");
+        ui.label(if s.familiarity_threshold < 1.0 {
+            format!(
+                "{} % (due items above it are left out)",
+                (s.familiarity_threshold * 100.0).round()
+            )
+        } else {
+            "off".to_owned()
+        });
+        ui.end_row();
         ui.label("FSRS weights");
         ui.label(if s.weights.is_some() {
             "custom"
@@ -111,7 +121,7 @@ fn scheduling(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
         ui.end_row();
     });
     ui.add_space(8.0);
-    ui.weak("Edit studyfrog.toml in the vault folder, and _stack.toml next to a stack, to change these (familiarity_strength, and familiarity = false to switch it off for one stack).");
+    ui.weak("Edit studyfrog.toml in the vault folder, and _stack.toml next to a stack, to change these (familiarity_strength, familiarity_threshold, and familiarity = false to switch it off for one stack).");
 }
 
 fn test_msg(out: &mut Vec<Msg>, m: ReadingTestMsg) {

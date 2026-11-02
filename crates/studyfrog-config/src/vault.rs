@@ -18,6 +18,7 @@ struct RawSrs {
     maximum_interval_days: Option<u32>,
     weights: Option<Vec<f64>>,
     familiarity_strength: Option<f64>,
+    familiarity_threshold: Option<f64>,
 }
 
 #[derive(Deserialize)]
@@ -51,6 +52,18 @@ fn strength_value(text: &str, value: Option<f64>, default: f32) -> Result<f32, C
     }
 }
 
+/// The familiarity threshold: 0 to 1, finite; the default when absent.
+fn threshold_value(text: &str, value: Option<f64>, default: f32) -> Result<f32, ConfigError> {
+    match value {
+        None => Ok(default),
+        Some(v) if v.is_finite() && (0.0..=1.0).contains(&v) => Ok(v as f32),
+        Some(v) => Err(config_error(
+            line_of_key(text, "familiarity_threshold"),
+            format!("familiarity_threshold must be between 0 and 1, not {v}"),
+        )),
+    }
+}
+
 /// Parse and validate `studyfrog.toml`; keys that are absent fall back to the defaults.
 pub fn parse_vault_settings(text: &str) -> Result<VaultSettings, ConfigError> {
     let raw: RawVault = toml::from_str(text).map_err(|e| from_toml(text, &e))?;
@@ -60,6 +73,7 @@ pub fn parse_vault_settings(text: &str) -> Result<VaultSettings, ConfigError> {
         maximum_interval_days: None,
         weights: None,
         familiarity_strength: None,
+        familiarity_threshold: None,
     });
     let base = vault_settings_default();
     let max = srs
@@ -89,6 +103,11 @@ pub fn parse_vault_settings(text: &str) -> Result<VaultSettings, ConfigError> {
             srs.familiarity_strength,
             base.familiarity_strength,
         )?,
+        familiarity_threshold: threshold_value(
+            text,
+            srs.familiarity_threshold,
+            base.familiarity_threshold,
+        )?,
     })
 }
 
@@ -110,6 +129,10 @@ pub fn render_vault_settings(s: &VaultSettings) -> String {
     out.push_str(&format!(
         "familiarity_strength = {}\n",
         float_text(s.familiarity_strength)
+    ));
+    out.push_str(&format!(
+        "familiarity_threshold = {}\n",
+        float_text(s.familiarity_threshold)
     ));
     if let Some(w) = s.weights {
         let items: Vec<String> = w.iter().map(|x| float_text(*x)).collect();

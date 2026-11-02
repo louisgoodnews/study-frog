@@ -74,6 +74,10 @@ pub fn sort_by_order(items: &mut [&Candidate], order: Order, now: UnixMs, p: &Pa
                 .cmp(&b.last_review)
                 .then_with(|| by_priority(a, b))
         }),
+        Order::LeastFamiliar => items.sort_by(|a, b| {
+            let (fa, fb) = (a.familiarity.unwrap_or(0.0), b.familiarity.unwrap_or(0.0));
+            fa.total_cmp(&fb).then_with(|| by_priority(a, b))
+        }),
         Order::LowestRetrievability => {
             // The recall of an item costs a `powf`; compute it once per item, not once per comparison.
             let mut keyed_items: Vec<(Option<f32>, &Candidate)> =

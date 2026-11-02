@@ -33,6 +33,13 @@ fn difficulty_ok(filter: &ItemFilter, c: &Candidate) -> bool {
     })
 }
 
+/// Items with no history count as unknown, which is less familiar than any bound.
+fn familiarity_ok(filter: &ItemFilter, c: &Candidate) -> bool {
+    filter
+        .familiarity_below
+        .is_none_or(|bound| c.familiarity.is_none_or(|f| f < bound))
+}
+
 /// Whether `c` passes every predicate of `filter`.
 pub fn admits(filter: &ItemFilter, c: &Candidate, now: UnixMs) -> bool {
     (filter.kinds.is_empty() || filter.kinds.contains(&c.kind))
@@ -40,4 +47,5 @@ pub fn admits(filter: &ItemFilter, c: &Candidate, now: UnixMs) -> bool {
         && tags_ok(&filter.tags_any, c)
         && state_ok(filter.state, c, now)
         && difficulty_ok(filter, c)
+        && familiarity_ok(filter, c)
 }

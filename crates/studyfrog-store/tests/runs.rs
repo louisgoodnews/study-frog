@@ -202,6 +202,7 @@ fn the_full_filter_round_trips_in_order() {
         tags_any: vec!["Ünï".into(), "a,b".into(), "x\ty".into()],
         state: StateFilter::NotDue,
         difficulty: Some(DifficultyRange { min: 2.5, max: 7.5 }),
+        familiarity_below: None,
     };
     let stored = run(
         1,

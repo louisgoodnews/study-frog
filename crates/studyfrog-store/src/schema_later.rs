@@ -198,3 +198,34 @@ CREATE TABLE board_card (
 ) WITHOUT ROWID;
 CREATE INDEX board_card_column ON board_card(column_id, pos);
 ";
+
+/// The run order `least_familiar` and the familiarity bound of the filter. A CHECK cannot be changed in place,
+/// so the `run` table (which no other table refers to) is rebuilt with its rows.
+pub(crate) const V19: &str = "
+CREATE TABLE run_new (
+    uid             TEXT PRIMARY KEY,
+    mode            TEXT NOT NULL CHECK (mode IN ('flip', 'answer')),
+    state           TEXT NOT NULL CHECK (state IN ('idle', 'running', 'paused', 'finished', 'aborted')),
+    started_at_ms   INTEGER,
+    order_name      TEXT NOT NULL DEFAULT 'due'
+        CHECK (order_name IN ('due', 'sequential', 'shuffled', 'hardest_first', 'easiest_first',
+                              'stalest_first', 'lowest_retrievability', 'least_familiar')),
+    effect          TEXT NOT NULL DEFAULT 'update_schedule' CHECK (effect IN ('update_schedule', 'practice_only')),
+    seed            INTEGER NOT NULL DEFAULT 0,
+    run_limit       INTEGER,
+    requeue_again   INTEGER NOT NULL DEFAULT 1 CHECK (requeue_again IN (0, 1)),
+    filter_state    TEXT NOT NULL DEFAULT 'any' CHECK (filter_state IN ('any', 'new', 'learned', 'due', 'not_due')),
+    filter_diff_min REAL,
+    filter_diff_max REAL,
+    pacing          TEXT NOT NULL DEFAULT 'free' CHECK (pacing IN ('free', 'countdown', 'count_up')),
+    countdown_secs  INTEGER CHECK (countdown_secs IS NULL OR countdown_secs BETWEEN 60 AND 10800),
+    shuffle         INTEGER NOT NULL DEFAULT 0 CHECK (shuffle IN (0, 1)),
+    filter_fam_below REAL CHECK (filter_fam_below IS NULL OR filter_fam_below BETWEEN 0 AND 1)
+) WITHOUT ROWID;
+INSERT INTO run_new (uid, mode, state, started_at_ms, order_name, effect, seed, run_limit, requeue_again,
+                     filter_state, filter_diff_min, filter_diff_max, pacing, countdown_secs, shuffle)
+SELECT uid, mode, state, started_at_ms, order_name, effect, seed, run_limit, requeue_again,
+       filter_state, filter_diff_min, filter_diff_max, pacing, countdown_secs, shuffle FROM run;
+DROP TABLE run;
+ALTER TABLE run_new RENAME TO run;
+";

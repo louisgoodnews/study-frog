@@ -30,12 +30,13 @@ struct RunRow {
     shuffle: bool,
     pacing: String,
     countdown: Option<u32>,
+    fam_below: Option<f32>,
 }
 
 fn read_run_row(conn: &Connection, uid: Uid) -> Result<Option<RunRow>, StoreError> {
     let sql =
         "SELECT mode, state, started_at_ms, order_name, effect, seed, run_limit, requeue_again,
-                      filter_state, filter_diff_min, filter_diff_max, shuffle, pacing, countdown_secs FROM run WHERE uid = ?1";
+                      filter_state, filter_diff_min, filter_diff_max, shuffle, pacing, countdown_secs, filter_fam_below FROM run WHERE uid = ?1";
     let found = conn.query_row(sql, [format_ulid(uid)], |r| {
         Ok(RunRow {
             mode: r.get(0)?,
@@ -51,6 +52,7 @@ fn read_run_row(conn: &Connection, uid: Uid) -> Result<Option<RunRow>, StoreErro
             shuffle: r.get(11)?,
             pacing: r.get(12)?,
             countdown: r.get(13)?,
+            fam_below: r.get(14)?,
         })
     });
     match found {
@@ -76,6 +78,7 @@ pub fn load_run(conn: &Connection, uid: Uid) -> Result<Option<Run>, StoreError> 
         state: state_filter_from_name(&row.filter_state)
             .ok_or_else(|| corrupt("filter_state", &row.filter_state))?,
         difficulty,
+        familiarity_below: row.fam_below,
     };
     let plan = RunPlan {
         order: order_from_name(&row.order).ok_or_else(|| corrupt("order", &row.order))?,

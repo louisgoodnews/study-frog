@@ -33,6 +33,8 @@ pub struct Candidate<'a> {
     /// How hard the owner says the item is, if they said; stands in for the memory difficulty of an
     /// item that was never reviewed.
     pub difficulty_hint: Option<Difficulty>,
+    /// How familiar the user is with the item (0 to 1); `None` for an item with no history.
+    pub familiarity: Option<f32>,
 }
 
 /// An allowance for the spaced order; `None` means unlimited.

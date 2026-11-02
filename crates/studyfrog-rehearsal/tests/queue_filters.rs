@@ -83,6 +83,7 @@ fn filter() -> impl Strategy<Value = ItemFilter> {
             tags_any: tags.into_iter().map(str::to_owned).collect(),
             state,
             difficulty,
+            familiarity_below: None,
         }
     })
 }

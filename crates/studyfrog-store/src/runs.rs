@@ -29,8 +29,8 @@ pub fn insert_run(conn: &Connection, run: &Run) -> Result<(), StoreError> {
     let range = p.filter.difficulty;
     conn.execute(
         "INSERT INTO run (uid, mode, state, started_at_ms, order_name, effect, seed, run_limit, requeue_again,
-                          filter_state, filter_diff_min, filter_diff_max, shuffle, pacing, countdown_secs)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)",
+                          filter_state, filter_diff_min, filter_diff_max, shuffle, pacing, countdown_secs, filter_fam_below)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)",
         params![
             format_ulid(run.uid),
             run_mode_name(run.mode),
@@ -46,7 +46,8 @@ pub fn insert_run(conn: &Connection, run: &Run) -> Result<(), StoreError> {
             range.map(|r| r.max),
             p.shuffle,
             pacing_name(p.pacing),
-            countdown_secs(p.pacing)
+            countdown_secs(p.pacing),
+            p.filter.familiarity_below
         ],
     )
     .map_err(sql_err)?;

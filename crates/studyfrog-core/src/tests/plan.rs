@@ -5,13 +5,14 @@ use crate::plan::{
     state_filter_name,
 };
 
-const ORDERS: [Order; 6] = [
+const ORDERS: [Order; 7] = [
     Order::Due,
     Order::Sequential,
     Order::HardestFirst,
     Order::EasiestFirst,
     Order::StalestFirst,
     Order::LowestRetrievability,
+    Order::LeastFamiliar,
 ];
 
 #[test]

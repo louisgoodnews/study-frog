@@ -16,6 +16,7 @@ pub mod document;
 pub mod expiry;
 pub mod explore;
 mod explore_types;
+pub mod fam_all;
 pub mod familiarity;
 pub mod filters;
 pub mod home;

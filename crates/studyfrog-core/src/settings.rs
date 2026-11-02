@@ -31,6 +31,8 @@ pub struct VaultSettings {
     pub weights: Option<[f32; 21]>,
     /// How strongly familiarity tempers intervals (0 switches it off; `docs/research/familiarity-and-fsrs.md`).
     pub familiarity_strength: f32,
+    /// A due item at or above this familiarity (0 to 1) is left out of the daily queue; 1 leaves nothing out.
+    pub familiarity_threshold: f32,
 }
 
 /// Defaults used when `studyfrog.toml` is absent or leaves a key out.
@@ -41,6 +43,7 @@ pub fn vault_settings_default() -> VaultSettings {
         maximum_interval_days: 36500,
         weights: None,
         familiarity_strength: 2.0,
+        familiarity_threshold: 1.0,
     }
 }
 

@@ -18,13 +18,14 @@ const PRESETS: [(Preset, &str); 5] = [
     (Preset::Stalest, "Not seen for longest"),
 ];
 
-const ORDERS: [(Order, &str); 6] = [
+const ORDERS: [(Order, &str); 7] = [
     (Order::Due, "Due first"),
     (Order::Sequential, "In order"),
     (Order::HardestFirst, "Hardest first"),
     (Order::EasiestFirst, "Easiest first"),
     (Order::StalestFirst, "Not seen for longest"),
     (Order::LowestRetrievability, "Most likely forgotten"),
+    (Order::LeastFamiliar, "Least familiar first"),
 ];
 
 const STATES: [(StateFilter, &str); 5] = [
@@ -133,5 +134,17 @@ fn more(form: &SetupForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if let Some(text) = text_field(ui, "Highest difficulty (1-10)", &form.diff_max, "", 1) {
             edit(out, SetupEdit::DiffMax(text));
         }
+    }
+    let mut fam = form.fam_on;
+    if ui
+        .checkbox(&mut fam, "Only items I am less familiar with than a level")
+        .changed()
+    {
+        edit(out, SetupEdit::FamOn(fam));
+    }
+    if form.fam_on
+        && let Some(text) = text_field(ui, "Less familiar than (percent)", &form.fam_below, "", 1)
+    {
+        edit(out, SetupEdit::FamBelow(text));
     }
 }

@@ -25,6 +25,11 @@ pub fn lead_ms(p: Priority) -> i64 {
     }
 }
 
+/// Familiarity in thousandths, so the least familiar sort first; an unknown one counts as 0.
+fn milli(f: Option<f32>) -> i32 {
+    (f.unwrap_or(0.0).clamp(0.0, 1.0) * 1000.0).round() as i32
+}
+
 fn cap<T>(mut items: Vec<T>, limit: Option<u32>) -> Vec<T> {
     if let Some(n) = limit {
         items.truncate(n as usize);
@@ -62,7 +67,15 @@ pub fn spaced_queue<'a>(
         .copied()
         .filter(|c| is_due(c, UnixMs(now.0 + lead_ms(c.priority))))
         .collect();
-    due.sort_by_key(|c| (Reverse(c.priority), c.due, c.position, c.uid));
+    due.sort_by_key(|c| {
+        (
+            Reverse(c.priority),
+            milli(c.familiarity),
+            c.due,
+            c.position,
+            c.uid,
+        )
+    });
     let mut new: Vec<&Candidate> = admitted
         .iter()
         .copied()

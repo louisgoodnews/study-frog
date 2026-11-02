@@ -104,9 +104,10 @@ proptest! {
         retention in decimal(100),
         max in 1_u32..100_000,
         strength in decimal(1000),
+        threshold in decimal(100),
         weights in prop::option::of(prop::array::uniform21((-5_000_i32..30_000).prop_map(|n| n as f32 / 1000.0))),
     ) {
-        let s = VaultSettings { scheduler: sched, request_retention: retention, maximum_interval_days: max, weights, familiarity_strength: strength };
+        let s = VaultSettings { scheduler: sched, request_retention: retention, maximum_interval_days: max, weights, familiarity_strength: strength, familiarity_threshold: threshold };
         prop_assert_eq!(parse_vault_settings(&render_vault_settings(&s)), Ok(s));
     }
 }
@@ -219,4 +220,12 @@ fn answer_engine_and_reading_thresholds_are_read_and_checked() {
         !render_app_settings(&Default::default()).contains("answer_engine"),
         "defaults are not written"
     );
+}
+
+#[test]
+fn the_familiarity_threshold_is_between_zero_and_one() {
+    let ok = parse_vault_settings("[srs]\nfamiliarity_threshold = 0.9\n").unwrap();
+    assert!((ok.familiarity_threshold - 0.9).abs() < 1e-6);
+    assert_eq!(parse_vault_settings("").unwrap().familiarity_threshold, 1.0);
+    assert!(parse_vault_settings("[srs]\nfamiliarity_threshold = 1.5\n").is_err());
 }

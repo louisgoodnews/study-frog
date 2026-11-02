@@ -3,7 +3,7 @@
 use std::collections::HashMap;
 
 use rusqlite::Connection;
-use studyfrog_core::plan::RunPlan;
+use studyfrog_core::plan::{Order, RunPlan};
 use studyfrog_core::run::{Run, RunMode, RunState};
 use studyfrog_core::settings::VaultSettings;
 use studyfrog_core::time::UnixMs;
@@ -17,11 +17,16 @@ use studyfrog_store::settings::{daily_counts, item_homes, stack_limits};
 
 use crate::day::DayWindow;
 use crate::expiry::{expired_stacks, today_of, without_expired};
+use crate::fam_all::item_familiarities;
 use crate::queue_data::Schedules;
 use crate::settings::{params_for, scheduler_for};
 
 /// Queue candidates from the indexed items and their schedules.
-pub fn candidates<'a>(items: &'a [IndexedItem], sched: &Schedules) -> Vec<Candidate<'a>> {
+pub fn candidates<'a>(
+    items: &'a [IndexedItem],
+    sched: &Schedules,
+    fams: &HashMap<Uid, f32>,
+) -> Vec<Candidate<'a>> {
     items
         .iter()
         .map(|it| {
@@ -37,6 +42,7 @@ pub fn candidates<'a>(items: &'a [IndexedItem], sched: &Schedules) -> Vec<Candid
                 last_review: scheduled.map(|s| s.last_review),
                 priority: it.priority,
                 difficulty_hint: it.difficulty,
+                familiarity: fams.get(&it.uid).copied(),
             }
         })
         .collect()
@@ -79,6 +85,25 @@ pub fn stack_budgets(
         .collect())
 }
 
+/// The spaced plan also leaves out what the vault's threshold calls familiar enough.
+fn with_threshold(mut plan: RunPlan, vault: &VaultSettings) -> RunPlan {
+    if plan.order == Order::Due && vault.familiarity_threshold < 1.0 {
+        let bound = vault.familiarity_threshold;
+        plan.filter.familiarity_below = Some(
+            plan.filter
+                .familiarity_below
+                .map_or(bound, |b| b.min(bound)),
+        );
+    }
+    plan
+}
+
+/// Whether building the queue reads familiarity (the spaced order, the least-familiar order, or a bound).
+fn needs_familiarity(plan: &RunPlan) -> bool {
+    matches!(plan.order, Order::Due | Order::LeastFamiliar)
+        || plan.filter.familiarity_below.is_some()
+}
+
 /// Build a not-yet-started run: reads items, schedules and stack limits from the index and applies
 /// the plan. No file is read.
 pub fn new_run(conn: &Connection, req: NewRun, vault: &VaultSettings) -> Result<Run, StoreError> {
@@ -93,9 +118,15 @@ pub fn new_run(conn: &Connection, req: NewRun, vault: &VaultSettings) -> Result<
         let expired = expired_stacks(conn, today_of(req.day))?;
         items = without_expired(items, &expired);
     }
+    let plan = with_threshold(req.plan.clone(), vault);
+    let fams = if needs_familiarity(&plan) {
+        item_familiarities(conn, &items, req.now)?
+    } else {
+        HashMap::new()
+    };
     let queue = build_queue(
-        &candidates(&items, &sched),
-        &req.plan,
+        &candidates(&items, &sched, &fams),
+        &plan,
         req.now,
         &budgets,
         &params_for(vault, None),

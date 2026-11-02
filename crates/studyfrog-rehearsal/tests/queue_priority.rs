@@ -29,6 +29,7 @@ fn item(uid: u128, priority: Priority, due_in_hours: Option<i64>) -> Candidate<'
         last_review: due_in_hours.map(|_| UnixMs(NOW.0 - 100 * HOUR)),
         priority,
         difficulty_hint: None,
+        familiarity: None,
     }
 }
 

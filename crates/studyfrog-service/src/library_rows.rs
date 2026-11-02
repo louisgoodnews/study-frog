@@ -4,12 +4,11 @@ use std::collections::HashMap;
 
 use studyfrog_calendar::session::EventKind;
 use studyfrog_core::civil::date_to_days;
-use studyfrog_core::plan::ItemKind;
 use studyfrog_core::query_eval::Row;
-use studyfrog_core::status::{Status, effective_status, status_from_name};
+use studyfrog_core::status::{effective_status, status_from_name};
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
-use studyfrog_report::familiarity::{FamContext, FamEvent, fam_params_default, familiarity};
+use studyfrog_report::familiarity::{FamEvent, fam_params_default, familiarity};
 use studyfrog_store::item_meta::{ItemMeta, load_item_meta};
 use studyfrog_store::items::{IndexedItem, load_indexed_items};
 use studyfrog_store::overview::{StackRow, load_overview};
@@ -90,7 +89,7 @@ pub(crate) fn exams(
     Ok(out)
 }
 
-fn events_of(
+pub(crate) fn events_of(
     reviews: Option<&Vec<TimedReview>>,
     views: Option<&Vec<studyfrog_core::views::ViewEvent>>,
 ) -> Vec<FamEvent> {
@@ -130,12 +129,7 @@ fn row_of((item, meta): (&IndexedItem, &ItemMeta), shared: &Shared, now: UnixMs)
         .as_ref()
         .and_then(|f| shared.exams.get(f))
         .map(|d| UnixMs(d * DAY_MS));
-    let ctx = FamContext {
-        is_note: item.kind == ItemKind::Note,
-        mark: item.difficulty,
-        done: status == Status::Done,
-        exam,
-    };
+    let ctx = crate::fam_all::fam_context(item, status, exam);
     let events = events_of(shared.reviews.get(&item.uid), shared.views.get(&item.uid));
     Row {
         path: meta.path.clone(),

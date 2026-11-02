@@ -94,6 +94,7 @@ fn candidates(tags: &[String]) -> Vec<Candidate<'_>> {
                     .then(|| UnixMs(NOW.0 - i64::from(1 + lcg(&mut seed) % 90) * day)),
                 priority: Default::default(),
                 difficulty_hint: None,
+                familiarity: None,
             }
         })
         .collect()

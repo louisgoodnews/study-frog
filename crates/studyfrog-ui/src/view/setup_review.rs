@@ -18,6 +18,7 @@ fn order_text(o: Order) -> &'static str {
         Order::EasiestFirst => "easiest first",
         Order::StalestFirst => "not seen for longest first",
         Order::LowestRetrievability => "most likely forgotten first",
+        Order::LeastFamiliar => "least familiar first",
     }
 }
 

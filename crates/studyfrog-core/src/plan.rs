@@ -29,6 +29,8 @@ pub enum Order {
     StalestFirst,
     /// Lowest predicted recall first.
     LowestRetrievability,
+    /// Lowest familiarity first (items with no history first of all).
+    LeastFamiliar,
 }
 
 /// Which learning state an item must be in.
@@ -68,6 +70,8 @@ pub struct ItemFilter {
     pub state: StateFilter,
     /// Difficulty range; items without an FSRS state are excluded when set.
     pub difficulty: Option<DifficultyRange>,
+    /// Only items less familiar than this (0 to 1); items with no history always pass.
+    pub familiarity_below: Option<f32>,
 }
 
 /// What a run does to the schedule.
@@ -113,6 +117,7 @@ pub fn filter_all() -> ItemFilter {
         tags_any: Vec::new(),
         state: StateFilter::Any,
         difficulty: None,
+        familiarity_below: None,
     }
 }
 
@@ -158,13 +163,14 @@ pub fn plan_stalest() -> RunPlan {
     plan(Order::StalestFirst, ScheduleEffect::PracticeOnly, false)
 }
 
-const ORDERS: [(Order, &str); 6] = [
+const ORDERS: [(Order, &str); 7] = [
     (Order::Due, "due"),
     (Order::Sequential, "sequential"),
     (Order::HardestFirst, "hardest_first"),
     (Order::EasiestFirst, "easiest_first"),
     (Order::StalestFirst, "stalest_first"),
     (Order::LowestRetrievability, "lowest_retrievability"),
+    (Order::LeastFamiliar, "least_familiar"),
 ];
 
 /// Persisted name of an order.

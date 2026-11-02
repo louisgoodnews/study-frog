@@ -56,6 +56,10 @@ pub enum SetupEdit {
     DiffMin(String),
     /// Highest difficulty (1 to 10).
     DiffMax(String),
+    /// Turn the familiarity filter on or off.
+    FamOn(bool),
+    /// Only items less familiar than this many percent.
+    FamBelow(String),
 }
 
 /// The fields as the user edits them (text stays text until it is validated).
@@ -87,6 +91,10 @@ pub struct SetupForm {
     pub diff_min: String,
     /// Highest difficulty as typed.
     pub diff_max: String,
+    /// Familiarity filter switched on.
+    pub fam_on: bool,
+    /// The familiarity bound as typed, in percent.
+    pub fam_below: String,
 }
 
 fn plan_to_form(plan: &RunPlan, mode: RunMode) -> SetupForm {
@@ -104,6 +112,11 @@ fn plan_to_form(plan: &RunPlan, mode: RunMode) -> SetupForm {
         difficulty_on: plan.filter.difficulty.is_some(),
         diff_min: "1".to_owned(),
         diff_max: "10".to_owned(),
+        fam_on: plan.filter.familiarity_below.is_some(),
+        fam_below: plan
+            .filter
+            .familiarity_below
+            .map_or_else(|| "60".to_owned(), |f| format!("{}", (f * 100.0).round())),
     }
 }
 
@@ -125,7 +138,7 @@ impl Default for SetupForm {
     }
 }
 
-fn number<T: std::str::FromStr>(text: &str, what: &str) -> Result<T, String> {
+pub(crate) fn number<T: std::str::FromStr>(text: &str, what: &str) -> Result<T, String> {
     text.trim()
         .parse()
         .map_err(|_| format!("{what} must be a number"))
@@ -170,6 +183,7 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
         tags_any,
         state: f.state,
         difficulty: difficulty(f)?,
+        familiarity_below: crate::setup_fam::familiarity_bound(f)?,
     };
     Ok(RunPlan {
         order: f.order,
@@ -226,5 +240,7 @@ pub fn apply_edit(f: SetupForm, edit: SetupEdit) -> SetupForm {
         SetupEdit::DifficultyOn(difficulty_on) => SetupForm { difficulty_on, ..f },
         SetupEdit::DiffMin(diff_min) => SetupForm { diff_min, ..f },
         SetupEdit::DiffMax(diff_max) => SetupForm { diff_max, ..f },
+        SetupEdit::FamOn(fam_on) => SetupForm { fam_on, ..f },
+        SetupEdit::FamBelow(fam_below) => SetupForm { fam_below, ..f },
     }
 }

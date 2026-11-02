@@ -20,6 +20,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- Queues use familiarity: under a daily allowance the least familiar due items are chosen first, `familiarity_threshold` in `studyfrog.toml` leaves out due items at or above it, and a run can be ordered "Least familiar first" or limited to items less familiar than a level (TASK-0140).
 - The calendar shows the reviews the schedule planned as chips ("French: 4 of 10 due") told apart from sessions: a click opens the stack, a chip can be dragged to another day, and the side panel and the context menu move it by date for those who do not drag; "Undo last move" takes a move back and a move past an exam or due date says so. "Show the reviews the schedule plans" turns them off (`calendar_reviews = false` in `app.toml`) (TASK-0148).
 - Planned reviews can be read from the schedule and moved to another day (`review_plan` in the service): a move changes only the due date of the items, warns when the new day is after an exam or deadline of their stack, and can be undone (TASK-0147).
 - The calendar crate has a planner (`review_plan`) that turns the schedule into entries, one per stack and day with the item count and the stack's size; done and paused items and stacks make none (TASK-0146).

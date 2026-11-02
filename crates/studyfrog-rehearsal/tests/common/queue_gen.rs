@@ -39,6 +39,7 @@ pub fn borrow(items: &[Owned]) -> Vec<Candidate<'_>> {
             last_review: o.last_review,
             priority: Default::default(),
             difficulty_hint: None,
+            familiarity: None,
         })
         .collect()
 }

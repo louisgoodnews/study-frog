@@ -153,7 +153,7 @@ pub fn home_summary(
         load_schedules(conn, |uid| scheduler_for(&vault, homes.get(&uid))).map_err(store)?;
     let expired = expired_stacks(conn, today_of(day)).map_err(store)?;
     let items = without_expired(load_indexed_items(conn).map_err(store)?, &expired);
-    let cands = candidates(&items, &sched);
+    let cands = candidates(&items, &sched, &HashMap::new());
     let overview = load_overview(conn).map_err(ServiceError::Store)?;
 
     let mut per: HashMap<Uid, (usize, usize)> = HashMap::new();

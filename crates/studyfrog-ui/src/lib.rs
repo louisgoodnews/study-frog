@@ -89,6 +89,7 @@ pub mod run_update;
 pub mod runtime;
 pub mod session_form;
 pub mod setup;
+pub mod setup_fam;
 pub mod setup_form;
 pub mod state;
 pub mod subjects_ui;
