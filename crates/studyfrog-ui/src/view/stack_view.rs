@@ -67,14 +67,42 @@ fn actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg
     });
 }
 
-/// The tab bar with the keys Left and Right; returns nothing, sends the choice.
+const TAB_WIDTH: f32 = 84.0;
+const MORE_WIDTH: f32 = 70.0;
+
+/// How many tabs show in the bar for `width`, always the current one among them; the others go into More.
+fn shown_tabs(width: f32, current: StackTab) -> Vec<StackTab> {
+    let fit = (((width - MORE_WIDTH) / TAB_WIDTH).floor() as usize).max(1);
+    if fit >= TABS.len() {
+        return TABS.iter().map(|(t, _, _)| *t).collect();
+    }
+    let mut shown: Vec<StackTab> = TABS.iter().take(fit).map(|(t, _, _)| *t).collect();
+    if !shown.contains(&current) {
+        shown.pop();
+        shown.push(current);
+    }
+    shown
+}
+
+/// The tab bar with a More menu for the tabs that do not fit, and the keys Left and Right.
 fn tab_bar(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let current = tab_of(&state.app, folder);
+    let shown = shown_tabs(ui.available_width(), current);
     ui.horizontal(|ui| {
-        for (tab, _, label) in TABS {
-            if ui.selectable_label(tab == current, label).clicked() {
-                send(out, StackViewMsg::Select(tab));
+        for (tab, _, label) in TABS.iter().filter(|(t, _, _)| shown.contains(t)) {
+            if ui.selectable_label(*tab == current, *label).clicked() {
+                send(out, StackViewMsg::Select(*tab));
             }
+        }
+        if shown.len() < TABS.len() {
+            ui.menu_button("More", |ui| {
+                for (tab, _, label) in TABS.iter().filter(|(t, _, _)| !shown.contains(t)) {
+                    if ui.button(*label).clicked() {
+                        send(out, StackViewMsg::Select(*tab));
+                        ui.close();
+                    }
+                }
+            });
         }
     });
     if ui.ctx().egui_wants_keyboard_input() {
@@ -110,6 +138,12 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 StackTab::Summary => crate::view::stack_summary_view::draw(state, folder, ui, out),
                 StackTab::List => list_tab(state, folder, ui, out),
                 StackTab::Roadmap => crate::view::stack_roadmap_view::draw(state, folder, ui, out),
+                StackTab::Board => crate::view::stack_board_view::draw(state, folder, ui, out),
+                StackTab::Calendar => {
+                    let scope = stack.uid;
+                    crate::view::calendar::draw_scoped(state, Some(scope), ui, out);
+                }
+                StackTab::Reports => crate::view::stack_reports_view::draw(state, folder, ui, out),
                 StackTab::Goals => crate::view::stack_goals_view::draw(state, folder, ui, out),
                 StackTab::Substacks => crate::view::stack_tree_view::draw(state, folder, ui, out),
                 StackTab::Backlog => crate::view::stack_backlog_view::draw(state, folder, ui, out),

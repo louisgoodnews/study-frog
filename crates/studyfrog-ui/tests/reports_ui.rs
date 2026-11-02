@@ -31,6 +31,7 @@ fn stats(p50: u32) -> LatencyStats {
 fn group(name: &str, percent: u8, items: usize) -> studyfrog_service::fam_report::FamGroup {
     studyfrog_service::fam_report::FamGroup {
         name: name.into(),
+        folder: name.to_lowercase(),
         percent: Some(percent),
         items,
         least: vec![studyfrog_service::fam_report::FamRow {

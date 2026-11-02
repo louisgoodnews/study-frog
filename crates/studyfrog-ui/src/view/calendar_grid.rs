@@ -5,6 +5,7 @@ use eframe::egui::{
 };
 use studyfrog_calendar::session::{EventKind, Occurrence, Session};
 use studyfrog_core::civil::{Date, format_date};
+use studyfrog_core::uid::Uid;
 
 use crate::msg::Msg;
 use crate::planner::{PlanMsg, grid_of};
@@ -44,7 +45,7 @@ pub fn kind_color(p: &Palette, kind: EventKind) -> Color32 {
     }
 }
 
-pub fn month(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+pub fn month(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = &state.planner;
     ui.horizontal_wrapped(|ui| {
         ui.label(RichText::new("Calendar").size(24.0));
@@ -80,7 +81,7 @@ pub fn month(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.horizontal(|ui| {
             for day in week {
                 let size = vec2(width, height);
-                let (rect, more) = day_cell(state, *day, size, (ui, out));
+                let (rect, more) = day_cell(state, (*day, scope), size, (ui, out));
                 cells.push((*day, rect));
                 dropped.extend(more);
             }
@@ -91,7 +92,7 @@ pub fn month(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn day_cell(
     state: &State,
-    day: Date,
+    (day, scope): (Date, Option<Uid>),
     size: egui::Vec2,
     (ui, out): (&mut egui::Ui, &mut Vec<Msg>),
 ) -> (Rect, Vec<calendar_reviews::Dropped>) {
@@ -107,6 +108,7 @@ fn day_cell(
                 .find(|s| s.id == o.session)
                 .map(|s| (o, s))
         })
+        .filter(|(_, s)| scope.is_none_or(|u| s.stack == Some(u)))
         .collect();
     let (rect, response) = ui.allocate_exact_size(size, Sense::click());
     let name = if entries.is_empty() {
@@ -146,7 +148,7 @@ fn day_cell(
         ink,
     );
     let used = chips(&painter, rect, &entries, &pal);
-    let reviews = calendar_reviews::day_chips(state, day, (rect, used), (ui, out));
+    let reviews = calendar_reviews::day_chips(state, day, (rect, used), scope, (ui, out));
     if response.on_hover_text(format_date(day)).clicked() {
         plan(out, PlanMsg::Select(day));
     }

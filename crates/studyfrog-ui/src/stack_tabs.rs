@@ -15,16 +15,25 @@ pub enum StackTab {
     Substacks,
     /// The items and stacks on a time axis.
     Roadmap,
+    /// The items in a column for each status.
+    Board,
+    /// The stack's sessions and planned reviews.
+    Calendar,
+    /// The stack's familiarity report.
+    Reports,
     /// What the user wants to reach with the stack.
     Goals,
 }
 
 /// The tabs in the order shown, with their stored key and name.
-pub const TABS: [(StackTab, &str, &str); 6] = [
+pub const TABS: [(StackTab, &str, &str); 9] = [
     (StackTab::Summary, "summary", "Summary"),
     (StackTab::List, "list", "List"),
     (StackTab::Backlog, "backlog", "Backlog"),
     (StackTab::Roadmap, "roadmap", "Roadmap"),
+    (StackTab::Board, "board", "Board"),
+    (StackTab::Calendar, "calendar", "Calendar"),
+    (StackTab::Reports, "reports", "Reports"),
     (StackTab::Substacks, "substacks", "Sub-stacks"),
     (StackTab::Goals, "goals", "Goals"),
 ];

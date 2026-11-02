@@ -39,6 +39,8 @@ pub struct FamRow {
 pub struct FamGroup {
     /// Its name.
     pub name: String,
+    /// Its folder for a stack; empty for a subject.
+    pub folder: String,
     /// The roll-up in percent, `None` when no item has a history.
     pub percent: Option<u8>,
     /// Items in it.
@@ -175,6 +177,7 @@ pub(crate) fn group(name: String, members: &[&Scored]) -> FamGroup {
         .collect();
     FamGroup {
         name,
+        folder: String::new(),
         percent: stack_familiarity(&scored).map(|f| percent(f.value)),
         items: members.len(),
         least,
@@ -200,8 +203,9 @@ pub fn familiarity_report(
     }
     let per_stack = stacks
         .iter()
-        .map(|st| {
-            group(
+        .map(|st| FamGroup {
+            folder: st.folder.clone(),
+            ..group(
                 st.title.clone(),
                 &all.iter()
                     .filter(|s| inside(&s.folder, &st.folder))

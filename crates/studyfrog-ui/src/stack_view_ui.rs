@@ -23,6 +23,8 @@ pub struct StackViewState {
     pub goals: Option<Goals>,
     /// How the roadmap is zoomed.
     pub zoom: crate::stack_roadmap::Zoom,
+    /// The stack and tab whose extra data was asked for.
+    pub asked: Option<(String, StackTab)>,
 }
 
 /// What happened on the stack page.
@@ -168,4 +170,23 @@ pub fn sync(state: State) -> (State, Vec<Effect>) {
     state.library.stack_view.loading = Some((folder.clone(), generation));
     let effect = Effect::Library(LibraryEffect::LoadSummary(folder, generation));
     (state, vec![effect])
+}
+
+/// Read what a tab needs that is not read anywhere else: the sessions for the Calendar, the reports for Reports.
+pub fn sync_data(state: State) -> (State, Vec<Effect>) {
+    let Some(folder) = open_folder(&state).map(str::to_owned) else {
+        return (state, Vec::new());
+    };
+    let tab = tab_of(&state.app, &folder);
+    let effects = match tab {
+        StackTab::Calendar if !state.planner.loaded => vec![Effect::LoadSessions],
+        StackTab::Reports if state.reports.is_none() => vec![Effect::BuildReports],
+        _ => Vec::new(),
+    };
+    let mut state = state;
+    if effects.is_empty() || state.library.stack_view.asked == Some((folder.clone(), tab)) {
+        return (state, Vec::new());
+    }
+    state.library.stack_view.asked = Some((folder, tab));
+    (state, effects)
 }

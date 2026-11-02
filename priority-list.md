@@ -29,7 +29,7 @@ Last updated: 2026-11-02.
 - [x] 15. TASK-0149 to TASK-0151 Stack overview: specification, shell, Summary
 
 ## Wave 4: the rest
-- [ ] 16. TASK-0152 to TASK-0156 Stack sub-views
+- [x] 16. TASK-0152 to TASK-0156 Stack sub-views
 - [ ] 17. TASK-0181 and TASK-0182 Rehearsal mode screens and reports
 - [ ] 18. TASK-0157 to TASK-0160 Import and export, then TASK-0167 to TASK-0169 Anki and Obsidian
 - [ ] 19. TASK-0161 to TASK-0166 Help: wiki, FAQ, tutorials

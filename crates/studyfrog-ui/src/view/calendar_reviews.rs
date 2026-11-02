@@ -33,13 +33,13 @@ pub fn title_of(state: &State, stack: Option<Uid>) -> String {
     found.unwrap_or_else(|| "Inbox".to_owned())
 }
 
-fn on_day(state: &State, day: Date) -> Vec<&PlanEntry> {
+fn on_day(state: &State, day: Date, scope: Option<Uid>) -> Vec<&PlanEntry> {
     let n = date_to_days(day);
     state
         .planner
         .reviews
         .iter()
-        .filter(|e| e.day == n)
+        .filter(|e| e.day == n && scope.is_none_or(|u| e.stack == Some(u)))
         .collect()
 }
 
@@ -85,10 +85,11 @@ pub fn day_chips(
     state: &State,
     day: Date,
     (cell, first): (Rect, usize),
+    scope: Option<Uid>,
     (ui, out): (&mut egui::Ui, &mut Vec<Msg>),
 ) -> Vec<Dropped> {
     let mut dropped = Vec::new();
-    for (i, e) in on_day(state, day).into_iter().enumerate() {
+    for (i, e) in on_day(state, day, scope).into_iter().enumerate() {
         let top = cell.top() + 24.0 + (first + i) as f32 * 17.0;
         let rect = Rect::from_min_size(
             egui::pos2(cell.left() + 4.0, top),
@@ -179,7 +180,7 @@ fn entry_card(state: &State, e: &PlanEntry, ui: &mut egui::Ui, out: &mut Vec<Msg
 }
 
 /// The section under the chosen day: the planned reviews of that day, the setting and the undo.
-pub fn side_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+pub fn side_section(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let mut on = crate::planner_reviews::shown(state);
     if ui
         .checkbox(&mut on, "Show the reviews the schedule plans")
@@ -193,7 +194,7 @@ pub fn side_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if !on {
         return;
     }
-    let entries = on_day(state, state.planner.selected);
+    let entries = on_day(state, state.planner.selected, scope);
     if entries.is_empty() {
         ui.weak("No reviews planned for this day.");
     }

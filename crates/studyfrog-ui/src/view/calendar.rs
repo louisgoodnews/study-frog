@@ -22,7 +22,13 @@ fn plan(out: &mut Vec<Msg>, m: PlanMsg) {
 }
 
 /// The month on the left, the day and the form on the right.
+/// The whole screen.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    draw_scoped(state, None, ui, out);
+}
+
+/// The calendar of one stack (`Some`) or of everything (`None`): the same month grid, day list and form.
+pub fn draw_scoped(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = &state.planner;
     if !p.loaded {
         ui.heading("Calendar");
@@ -36,13 +42,13 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let down = egui::Layout::top_down(egui::Align::Min);
         ui.allocate_ui_with_layout(vec2(month_width, height), down, |ui| {
             ui.set_min_size(vec2(month_width, height));
-            calendar_grid::month(state, ui, out);
+            calendar_grid::month(state, scope, ui, out);
         });
         ui.allocate_ui_with_layout(vec2(side_width, height), down, |ui| {
             ui.set_min_size(vec2(side_width, height));
             egui::ScrollArea::vertical().show(ui, |ui| match &p.form {
                 Some(form) => session_form::draw(state, form, ui, out),
-                None => side(state, ui, out),
+                None => side(state, scope, ui, out),
             });
         });
     });
@@ -58,14 +64,25 @@ fn stack_title(state: &State, uid: Option<Uid>) -> Option<String> {
         .map(|s| s.title.clone())
 }
 
-fn side(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+fn side(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = &state.planner;
     ui.label(
         RichText::new(format!("Sessions on {}", format_date(p.selected)))
             .size(18.0)
             .strong(),
     );
-    let day: Vec<&Occurrence> = p.shown.iter().filter(|o| o.date == p.selected).collect();
+    let day: Vec<&Occurrence> = p
+        .shown
+        .iter()
+        .filter(|o| o.date == p.selected)
+        .filter(|o| {
+            scope.is_none_or(|u| {
+                p.sessions
+                    .iter()
+                    .any(|s| s.id == o.session && s.stack == Some(u))
+            })
+        })
+        .collect();
     if day.is_empty() {
         ui.weak("Nothing planned for this day.");
     }
@@ -79,16 +96,26 @@ fn side(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     ui.add_space(10.0);
     kit::section(ui, "Planned reviews");
-    super::calendar_reviews::side_section(state, ui, out);
+    super::calendar_reviews::side_section(state, scope, ui, out);
     ui.add_space(10.0);
     kit::section(ui, "Coming up");
-    upcoming(state, ui);
+    upcoming(state, scope, ui);
 }
 
-fn upcoming(state: &State, ui: &mut egui::Ui) {
+fn upcoming(state: &State, scope: Option<Uid>, ui: &mut egui::Ui) {
     let p = &state.planner;
     let pal = palette_of(ui);
-    let list = occurrences_all(&p.sessions, p.today, add_days(p.today, UPCOMING_DAYS));
+    let all = occurrences_all(&p.sessions, p.today, add_days(p.today, UPCOMING_DAYS));
+    let list: Vec<_> = all
+        .into_iter()
+        .filter(|o| {
+            scope.is_none_or(|u| {
+                p.sessions
+                    .iter()
+                    .any(|s| s.id == o.session && s.stack == Some(u))
+            })
+        })
+        .collect();
     if list.is_empty() {
         ui.weak("Nothing in the next two weeks.");
     }
