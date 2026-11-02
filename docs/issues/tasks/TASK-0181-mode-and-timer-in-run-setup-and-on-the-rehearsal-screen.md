@@ -2,7 +2,7 @@
 id: TASK-0181
 type: task
 title: Mode and timer in run setup and on the rehearsal screen
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0070]
 estimate: 3

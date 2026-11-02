@@ -30,7 +30,7 @@ Last updated: 2026-11-02.
 
 ## Wave 4: the rest
 - [x] 16. TASK-0152 to TASK-0156 Stack sub-views
-- [ ] 17. TASK-0181 and TASK-0182 Rehearsal mode screens and reports
+- [x] 17. TASK-0181 and TASK-0182 Rehearsal mode screens and reports
 - [ ] 18. TASK-0157 to TASK-0160 Import and export, then TASK-0167 to TASK-0169 Anki and Obsidian
 - [ ] 19. TASK-0161 to TASK-0166 Help: wiki, FAQ, tutorials
 - [ ] 20. TASK-0170 to TASK-0174 Diary

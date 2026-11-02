@@ -15,6 +15,8 @@ pub enum ReportTab {
     Memory,
     /// How familiar the user is with the items.
     Familiarity,
+    /// The history of runs.
+    Runs,
 }
 
 /// What the explorer is looking at and what it found.
@@ -28,6 +30,8 @@ pub struct ExplorerState {
     pub period: Period,
     /// The latest numbers for the scope and period.
     pub data: Option<Box<Explorer>>,
+    /// Only runs of this mode in the history of runs.
+    pub mode: Option<studyfrog_core::run::RunMode>,
 }
 
 /// Messages of the explorer.
@@ -37,6 +41,8 @@ pub enum ExplorerMsg {
     Tab(ReportTab),
     /// Look at a stack, an item or the whole vault.
     Open(Scope),
+    /// Show only runs of a mode (`None`: all).
+    Mode(Option<studyfrog_core::run::RunMode>),
     /// Look further back or not.
     Period(Period),
     /// The numbers arrived.
@@ -66,6 +72,13 @@ pub fn refresh(state: &State) -> Effect {
 /// Handle the explorer's messages.
 pub fn update(state: State, msg: ExplorerMsg) -> (State, Vec<Effect>) {
     match msg {
+        ExplorerMsg::Mode(mode) => {
+            let explorer = ExplorerState {
+                mode,
+                ..state.explorer.clone()
+            };
+            (State { explorer, ..state }, Vec::new())
+        }
         ExplorerMsg::Tab(tab) => {
             let explorer = ExplorerState {
                 tab,

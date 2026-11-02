@@ -63,6 +63,8 @@ pub struct ReportBundle {
     pub familiarity: crate::fam_report::FamReport,
     /// Whether familiarity improves the predictions, replayed on the history.
     pub replay: studyfrog_report::replay::ReplayReport,
+    /// The latest runs with their mode, pacing and time.
+    pub runs: Vec<crate::run_history::RunSummary>,
 }
 
 fn day_of(ms: i64, offset_minutes: i32) -> i64 {
@@ -169,5 +171,6 @@ pub fn build_reports(
         backtest: backtest_report(&history, today, &params),
         familiarity: crate::fam_report::familiarity_report(&session.conn, now).map_err(store)?,
         replay: crate::fam_replay::replay_history(&session.conn, now, &params).map_err(store)?,
+        runs: crate::run_history::run_history(&session.conn).map_err(store)?,
     })
 }

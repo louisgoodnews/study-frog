@@ -185,3 +185,26 @@ fn a_count_up_shows_the_time_used_and_a_free_run_shows_no_clock_and_a_pause_stop
     );
     assert_eq!(mmss(3_599_000), "59:59");
 }
+
+#[test]
+fn the_review_after_a_countdown_says_the_planned_and_the_used_time() {
+    let mut m = running(Pacing::Countdown(120));
+    m.state.now = 10.0;
+    apply(&mut m, Msg::RunAction(Action::Flip));
+    m.state.now = 20.0;
+    apply(&mut m, Msg::RunAction(Action::Rate(Rating::Good)));
+    m.state.now = 121.0;
+    apply(&mut m, Msg::Tick);
+    assert_eq!(
+        m.state.rehearse.run.as_ref().unwrap().session.run.state,
+        RunState::Finished
+    );
+    let mut h = harness(m);
+    h.run_steps(4);
+    assert!(
+        h.query_all_by_label_contains("Countdown of 02:00, used")
+            .count()
+            >= 1
+    );
+    assert!(h.query_all_by_label_contains("answers a minute").count() >= 1);
+}

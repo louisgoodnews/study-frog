@@ -2,7 +2,7 @@
 id: STORY-0070
 type: story
 title: Rehearsal modes for countdown and count up
-status: in_progress
+status: done
 epic: EPIC-023
 parents: [EPIC-023]
 estimate: 8
@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Give the user two more ways to rehearse besides the free run: against the clock, and open-ended with the time counted.
 
 ## Acceptance Criteria
-- [ ] A run can be set up as a countdown with a time amount the user chooses, and it ends by itself when the time is up and opens the review of the performance
-- [ ] A run can be set up as a count up, which shows the elapsed time and goes on until the last item of the list is completed or the user ends it
-- [ ] The mode and the time used are stored with the run and shown in the review and the reports
+- [x] A run can be set up as a countdown with a time amount the user chooses, and it ends by itself when the time is up and opens the review of the performance
+- [x] A run can be set up as a count up, which shows the elapsed time and goes on until the last item of the list is completed or the user ends it
+- [x] The mode and the time used are stored with the run and shown in the review and the reports
 
 ## Design Notes
 The state machine (`studyfrog-rehearsal`) is pure and takes an injected clock, so the modes are added as a field of the run plan: Free (today's behaviour), Countdown with a number of seconds, and CountUp. In a countdown the user sets a fixed time (presets such as 5, 10, 15 and 25 minutes and a custom amount); the screen shows the remaining time, warns at one minute and ten seconds in text and sound-free cues (not by colour alone, and announced to screen readers) and, at zero, forces the end: the item on screen counts as not answered, the run ends and the review of the run's performance opens at once (the review after each run already exists). If the queue runs out before the time, the run ends early. Pausing stops the clock, as paused time is already left out of the latency. In a count up the screen shows the elapsed time, there is no limit and the run ends when the last item of the list has been completed; the user can still end it early, which opens the same review. The review and the reports show the mode, the time planned and the time used, and the answer rate per minute, so a run against the clock can be compared with another. The run plan is stored with the run, so a stored plan from an older version reads as Free.

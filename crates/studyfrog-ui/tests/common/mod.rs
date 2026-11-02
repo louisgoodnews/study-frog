@@ -3,6 +3,7 @@
 
 pub mod ext;
 pub mod flow;
+pub mod reports;
 pub mod runs;
 pub mod views;
 

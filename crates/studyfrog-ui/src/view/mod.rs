@@ -50,6 +50,7 @@ mod preview;
 mod profiles;
 mod reports;
 mod reports_fam;
+mod reports_runs;
 mod run;
 mod run_card;
 mod run_timer;

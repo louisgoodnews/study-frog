@@ -45,6 +45,7 @@ pub mod reports;
 pub mod rerate;
 pub mod restore;
 pub mod review_plan;
+pub mod run_history;
 pub mod schedule;
 pub mod session;
 pub mod set_status;

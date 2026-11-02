@@ -56,7 +56,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   unverified from memory. No git remote is configured.
 
 ## Next
-- **Active (0.3.0 wave 3):** library (item 12) and the calendar planner (item 13) are done; the Create dialog redesign and item defaults (item 21) are done; item 14 (familiarity in queues, Home, reports and the replay) is done; item 15 (stack overview: Summary and List tabs) is done; item 16 (the stack tabs Backlog, Roadmap, Board, Calendar, Reports, Sub-stacks, Goals) is done; next is item 17, the rehearsal mode screens and reports (TASK-0181, TASK-0182).
+- **Active (0.3.0 wave 3):** library (item 12) and the calendar planner (item 13) are done; the Create dialog redesign and item defaults (item 21) are done; item 14 (familiarity in queues, Home, reports and the replay) is done; item 15 (stack overview: Summary and List tabs) is done; item 16 (the stack tabs Backlog, Roadmap, Board, Calendar, Reports, Sub-stacks, Goals) is done; item 17 (rehearsal modes: countdown and count up in setup, on the screen and in the reports) is done; next is item 18, import and export with the Anki and Obsidian importers (TASK-0157 to TASK-0160, TASK-0167 to TASK-0169).
 - **0.3.0 is planned** (phase M10, EPIC-023, `docs/roadmap/M10-usability-and-insight.md`): 15 stories and one bug (BUG-0001, commas in teacher names), all in backlog.
   The owner answered the open design questions on 2026-11-02 (accepted choices are listed in the phase file); what is still
   open is in each story's Open Questions. The familiarity and FSRS model is researched and decided (`docs/research/familiarity-and-fsrs.md`: relative factor, on from the start).

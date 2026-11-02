@@ -56,6 +56,22 @@ pub fn draw(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
     });
     counts(run, ui);
+    ui.weak(crate::run_time::run_line(
+        run.session.run.plan.pacing,
+        studyfrog_rehearsal::pacing::run_active_ms(&run.events),
+        summarize(&run.events, &run.latencies)
+            .rated
+            .iter()
+            .sum::<usize>() as u32,
+    ));
+    ui.weak(crate::run_time::run_line(
+        run.session.run.plan.pacing,
+        studyfrog_rehearsal::pacing::run_active_ms(&run.events),
+        summarize(&run.events, &run.latencies)
+            .rated
+            .iter()
+            .sum::<usize>() as u32,
+    ));
     let updates = run.session.run.plan.effect == ScheduleEffect::UpdateSchedule;
     if !updates {
         ui.weak("Practice only: your schedule was not changed.");
