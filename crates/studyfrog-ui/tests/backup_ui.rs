@@ -42,6 +42,7 @@ fn manifest() -> Manifest {
 fn model() -> Model {
     let mut m = open_model();
     m.state.screen = Screen::Settings;
+    m.state.app.settings_tab = Some("data".into());
     m
 }
 

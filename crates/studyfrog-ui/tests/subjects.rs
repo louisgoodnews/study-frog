@@ -15,6 +15,7 @@ use studyfrog_ui::subjects_ui::SubjectsMsg;
 fn model() -> Model {
     let mut m = open_model();
     m.state.screen = Screen::Settings;
+    m.state.app.settings_tab = Some("subjects".into());
     let book = SubjectBook {
         teachers: vec!["Rivera".into()],
         subjects: vec![Subject {

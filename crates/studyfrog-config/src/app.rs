@@ -23,6 +23,7 @@ struct RawApp {
     reading_fast_percent: Option<u32>,
     reading_slow_percent: Option<u32>,
     reading_min_words: Option<u32>,
+    settings_tab: Option<String>,
 }
 
 /// `value` if it is inside `range`, else an error naming the key and its line.
@@ -85,6 +86,7 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
         recent: raw.recent,
         reading_wpm: raw.reading_wpm,
         answer_engine,
+        settings_tab: raw.settings_tab,
     })
 }
 
@@ -115,6 +117,9 @@ pub fn render_app_settings(s: &AppSettings) -> String {
     }
     if let Some(w) = s.reading_wpm {
         out.push_str(&format!("reading_wpm = {w}\n"));
+    }
+    if let Some(tab) = &s.settings_tab {
+        out.push_str(&format!("settings_tab = {}\n", toml_string(tab)));
     }
     out
 }

@@ -9,6 +9,7 @@ pub mod agent_run;
 pub mod agent_types;
 pub mod agent_ui;
 pub mod app;
+pub mod app_settings_ui;
 pub mod backup_ui;
 pub mod browse;
 pub mod chrome;

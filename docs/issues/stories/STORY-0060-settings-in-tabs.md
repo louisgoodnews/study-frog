@@ -2,7 +2,7 @@
 id: STORY-0060
 type: story
 title: Settings in tabs
-status: backlog
+status: done
 epic: EPIC-023
 parents: [EPIC-023]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Settings is one long page; group it so a setting can be found by what it is about.
 
 ## Acceptance Criteria
-- [ ] Settings are sorted into tabs by domain in a notebook-style tab bar
-- [ ] The selected tab is remembered, and every tab is reachable by keyboard
+- [x] Settings are sorted into tabs by domain in a notebook-style tab bar
+- [x] The selected tab is remembered, and every tab is reachable by keyboard
 
 ## Design Notes
 Proposed tabs: General, Appearance, Study and scheduling, Rehearsal, Answers and AI, Notifications, Data (backups, profiles, vault), Subjects and teachers. A tab is a record of a title and a view function, so a task can add one without touching the shell. Keep the existing setting persistence (ADR 0007) as it is; this changes layout only.

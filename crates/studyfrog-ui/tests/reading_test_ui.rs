@@ -79,6 +79,7 @@ fn an_implausible_time_is_not_kept_and_stray_messages_do_nothing() {
 fn the_settings_screen_walks_through_the_test() {
     let mut m = open_model();
     apply(&mut m, Msg::Navigate(Screen::Settings));
+    m.state.app.settings_tab = Some("rehearsal".into());
     let mut h = harness(m);
     h.run();
     assert!(
@@ -144,6 +145,7 @@ fn the_answer_comparison_choice_is_kept_and_the_thresholds_are_explained() {
     use studyfrog_core::settings::AnswerEngine;
     let mut m = open_model();
     apply(&mut m, Msg::Navigate(Screen::Settings));
+    m.state.app.settings_tab = Some("answers".into());
     let mut h = harness(m);
     h.run();
     assert!(h

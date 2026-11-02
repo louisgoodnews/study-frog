@@ -13,6 +13,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   keeps what was typed and says why next to the field (BUG-0001).
 
 ### Added
+- Settings are in tabs by domain (Study and scheduling, Rehearsal, Answers and AI, Data, Subjects and teachers); the last tab is
+  remembered in `app.toml` as `settings_tab`, and the Left and Right keys move between tabs. Tabs for General, Appearance and
+  Notifications appear when they have settings (TASK-0142).
+- Specification of item statuses (`docs/specs/status.md`): five statuses, where they are stored, who may change them, what they do to
+  the schedule, and how a stack rolls up its items (TASK-0143).
 - Priority order for 0.3.0 in four waves in `docs/roadmap/M10-usability-and-insight.md`; wave 1 is `ready` on the board (BUG-0001,
   TASK-0128, TASK-0135, TASK-0142, TASK-0143).
 - Research and a proposal for combining familiarity with FSRS: a relative factor on the FSRS interval that leaves the stored

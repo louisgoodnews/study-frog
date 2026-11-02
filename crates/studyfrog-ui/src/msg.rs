@@ -193,6 +193,8 @@ pub enum Msg {
     SetAnswerEngine(AnswerEngine),
     /// Something happened in the reading-speed test.
     ReadingTest(ReadingTestMsg),
+    /// A tab of the settings screen was chosen or stepped to.
+    SettingsTab(crate::app_settings_ui::SettingsTabMsg),
 }
 
 /// A change in the editor.

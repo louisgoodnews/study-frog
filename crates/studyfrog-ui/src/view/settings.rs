@@ -1,30 +1,69 @@
-//! The effective settings (read-only) and the reading-speed test.
+//! The settings screen: tabs by domain, with the effective settings (read-only), the reading-speed test and more.
 
-use eframe::egui::{self, Grid};
+use eframe::egui::{self, Grid, Key};
 use studyfrog_core::scheduler::scheduler_name;
 use studyfrog_core::settings::AnswerEngine;
 
+use crate::app_settings_ui::{SHOWN, SettingsTab, SettingsTabMsg, current_tab, tab_label};
 use crate::msg::Msg;
 use crate::reading_test::{ReadingTestMsg, TEXT, TestPhase, current_wpm};
 use crate::state::State;
 
-/// Vault settings (with the reason when `studyfrog.toml` was not usable) and where they come from.
-pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    egui::ScrollArea::vertical()
-        .auto_shrink([false, false])
-        .show(ui, |ui| sections(state, ui, out));
+/// A part of a tab: draws one group of settings.
+pub type Section = fn(&State, &mut egui::Ui, &mut Vec<Msg>);
+
+/// The groups of settings on a tab. Adding a setting means adding its section here, to one tab only.
+pub fn sections_of(tab: SettingsTab) -> &'static [Section] {
+    match tab {
+        SettingsTab::Study => &[scheduling],
+        SettingsTab::Rehearsal => &[reading_speed],
+        SettingsTab::Answers => &[answer_comparison],
+        SettingsTab::Data => &[crate::view::backup::draw],
+        SettingsTab::Subjects => &[crate::view::subjects::draw],
+        SettingsTab::General | SettingsTab::Appearance | SettingsTab::Notifications => &[],
+    }
 }
 
-fn sections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+/// The settings screen: a tab bar and the groups of the chosen tab.
+pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.heading("Settings");
-    reading_speed(state, ui, out);
+    let tab = current_tab(&state.app);
+    tab_bar(ui, tab, out);
     ui.separator();
-    answer_comparison(state, ui, out);
-    ui.separator();
-    crate::view::subjects::draw(state, ui, out);
-    ui.separator();
-    crate::view::backup::draw(state, ui, out);
-    ui.separator();
+    egui::ScrollArea::vertical()
+        .auto_shrink([false, false])
+        .show(ui, |ui| {
+            for section in sections_of(tab) {
+                section(state, ui, out);
+                ui.add_space(8.0);
+            }
+        });
+}
+
+fn tab_bar(ui: &mut egui::Ui, current: SettingsTab, out: &mut Vec<Msg>) {
+    ui.horizontal_wrapped(|ui| {
+        for tab in SHOWN {
+            if ui
+                .selectable_label(tab == current, tab_label(tab))
+                .clicked()
+            {
+                out.push(Msg::SettingsTab(SettingsTabMsg::Select(tab)));
+            }
+        }
+    });
+    if ui.ctx().egui_wants_keyboard_input() {
+        return;
+    }
+    for (key, by) in [(Key::ArrowLeft, -1), (Key::ArrowRight, 1)] {
+        if ui.input(|i| i.key_pressed(key)) {
+            out.push(Msg::SettingsTab(SettingsTabMsg::Step(by)));
+        }
+    }
+}
+
+/// The scheduler settings the vault uses (read-only) and where to change them.
+fn scheduling(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
+    ui.heading("Scheduling");
     let Some(vault) = &state.vault else { return };
     if let Some(e) = &vault.settings_error {
         ui.colored_label(

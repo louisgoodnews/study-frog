@@ -81,7 +81,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Subjects(m) => crate::subjects_ui::update(state, m),
         Msg::RemindersDue(r) => crate::reminder_ui::arrived(state, r),
         Msg::VaultPolled(result) => crate::poll_ui::vault_polled(state, result),
-        Msg::AppSettingsSaved(result) => settings_saved(state, result),
+        Msg::AppSettingsSaved(result) => crate::app_settings_ui::saved(state, result),
         browse @ (Msg::Select(_)
         | Msg::SearchEdited(_)
         | Msg::ItemsLoaded(_)
@@ -124,6 +124,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::Imported(_)) => crate::import_ui::update(state, import),
         Msg::SetAnswerEngine(engine) => crate::reading_test::set_answer_engine(state, engine),
         Msg::ReadingTest(m) => crate::reading_test::update(state, m),
+        Msg::SettingsTab(m) => crate::app_settings_ui::update(state, m),
         run @ (Msg::StartRunClicked
         | Msg::RunReady(_)
         | Msg::RunAction(_)
@@ -232,19 +233,6 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
                 },
                 Vec::new(),
             )
-        }
-    }
-}
-
-fn settings_saved(state: State, result: Result<(), String>) -> (State, Vec<Effect>) {
-    match result {
-        Ok(()) => (state, Vec::new()),
-        Err(e) => {
-            let notice = notice(
-                NoticeKind::Error,
-                format!("Could not remember the vault: {e}"),
-            );
-            (State { notice, ..state }, Vec::new())
         }
     }
 }

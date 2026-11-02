@@ -99,6 +99,8 @@ pub struct AppSettings {
     pub answer_engine: AnswerEngine,
     /// Thresholds for the reading-speed suggestions.
     pub reading: ReadingTuning,
+    /// The tab of the settings screen shown last (a stable key such as `rehearsal`).
+    pub settings_tab: Option<String>,
 }
 
 /// `settings` after opening `path`: it becomes the current vault and moves to the front of the recent list.
