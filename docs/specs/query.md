@@ -58,22 +58,29 @@ value      = word | string | number | percent | date | relative
 says so.
 
 ## Errors
-A query that cannot be read is not run. The message names the **column** (counted from 1) and what was expected, and the box marks the place:
-| Query | Message |
-|---|---|
-| `type =` | Expected a value after `=` at column 6 |
-| `status = nope` | Unknown status `nope` at column 10. The statuses are new, learning, reviewing, done, paused |
-| `colour = red` | Unknown field `colour` at column 1. Did you mean `tag`? (names within two edits are offered) |
-| `due < 7d AND` | Expected a condition after `AND` at column 14 |
-| `(type = card` | Missing `)` for the `(` at column 1 |
-| `text ~ "open` | The string that starts at column 8 is not closed |
-| `familiarity > 1.5` | `familiarity` is between 0 and 1 (column 15) |
-| `type > card` | `>` does not apply to `type`; use `=`, `!=` or `IN` (column 6) |
+A query that cannot be read is not run. The message names the **column** (counted from 1) where something is wrong or missing, and the box marks the place.
+For something missing the column is the one right after the last token, where it should have been:
+| Query | Column | Message |
+|---|---|---|
+| `type =` | 7 | Expected a value after `=` at column 7 |
+| `status = nope` | 10 | Unknown status `nope` at column 10. The statuses are new, learning, reviewing, done, paused |
+| `colour = red` | 1 | Unknown field `colour` at column 1. The fields are text, title, type, ... (a name within two edits is offered instead: `tga` gives Did you mean `tag`?) |
+| `due < 7d AND` | 13 | Expected a condition after AND at column 13 |
+| `(type = card` | 1 | Missing `)` for the `(` at column 1 |
+| `text ~ "open` | 8 | The string that starts at column 8 is not closed |
+| `familiarity > 1.5` | 15 | familiarity is between 0 and 1 (column 15) |
+| `type > card` | 6 | `>` does not apply to `type`; use `=`, `!=` or `IN` (column 6) |
+| `priority IS EMPTY` | 10 | `priority` is never empty (column 10) |
+| `type = card status` | 13 | Unexpected `status` at column 13. Expected AND, OR or ORDER BY |
+| `type IN card` | 9 | Expected `(` after IN at column 9 |
+| `ORDER BY text` | 10 | A result cannot be sorted by `text` (column 10) |
+
+A field that can be missing (difficulty, familiarity, due, created, updated) matches no comparison except `!=` when it is missing; use `IS EMPTY` to find those items.
 
 ## Safety and limits
-The query is parsed into a tree and the tree is evaluated against the index with **bound parameters**: user text is never put into SQL, nothing but
-item fields can be reached, and there are no sub-queries or functions. A query is at most 2000 characters and 20 levels of parentheses deep.
-`familiarity` is not stored: it is computed for the items that pass the other conditions first.
+The query is parsed into a tree of typed values (a name, an operator and a value already checked against its field) and the tree is evaluated **in memory** over the
+items' rows, which are read from the index once: user text is never put into SQL, nothing but item fields can be reached, and there are no sub-queries or functions. A query is at most 2000 characters and 20 levels of parentheses deep.
+`familiarity` is not stored in the index: it is computed when the rows are loaded. Measured: 10 000 items are filtered and sorted in 2 to 18 ms (debug build; budget 50 ms).
 
 ## Standard mode
 The Standard mode's fields compose into a query in this language, and the query box shows it; typing in the query box fills the Standard fields
