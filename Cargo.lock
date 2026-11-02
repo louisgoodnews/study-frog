@@ -5309,6 +5309,7 @@ dependencies = [
  "image",
  "lopdf",
  "rusqlite",
+ "serde_json",
  "studyfrog-achieve",
  "studyfrog-agent",
  "studyfrog-board",
@@ -5323,6 +5324,7 @@ dependencies = [
  "studyfrog-slm",
  "studyfrog-srs",
  "studyfrog-store",
+ "zip 9.2.0",
 ]
 
 [[package]]

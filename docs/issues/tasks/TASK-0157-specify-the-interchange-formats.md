@@ -2,7 +2,7 @@
 id: TASK-0157
 type: task
 title: Specify the interchange formats
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0065]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Write the formats down before building them.
 
 ## Acceptance Criteria
-- [ ] docs/specs/interchange.md defines the JSON schema with its version, the CSV columns, the Markdown layout and how duplicates and conflicts are decided
-- [ ] The spec names Anki and Obsidian as the first importers and says how a new format adapter is added
+- [x] docs/specs/interchange.md defines the JSON schema with its version, the CSV columns, the Markdown layout and how duplicates and conflicts are decided
+- [x] The spec names Anki and Obsidian as the first importers and says how a new format adapter is added
 
 ## Design Notes
 None.

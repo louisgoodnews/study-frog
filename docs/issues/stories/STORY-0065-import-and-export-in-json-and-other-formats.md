@@ -2,7 +2,7 @@
 id: STORY-0065
 type: story
 title: Import and export in JSON and other formats
-status: backlog
+status: in_progress
 epic: EPIC-023
 parents: [EPIC-023]
 estimate: 8

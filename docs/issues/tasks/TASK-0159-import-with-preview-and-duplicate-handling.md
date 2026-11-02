@@ -2,7 +2,7 @@
 id: TASK-0159
 type: task
 title: Import with preview and duplicate handling
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0065]
 estimate: 5
@@ -21,10 +21,10 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add decoders and the dry-run engine and register the formats in the extension registry.
 
 ## Acceptance Criteria
-- [ ] A dry run reports creates, duplicates and errors without writing
-- [ ] The user chooses to skip, replace or keep both for duplicates, and nothing is written on a cancel
-- [ ] Malformed and hostile files cannot crash the app, shown by a corpus test
-- [ ] The existing TSV import runs through the same path
+- [x] A dry run reports creates, duplicates and errors without writing
+- [x] The user chooses to skip, replace or keep both for duplicates, and nothing is written on a cancel
+- [x] Malformed and hostile files cannot crash the app, shown by a corpus test
+- [x] The existing TSV import runs through the same path
 
 ## Design Notes
 None.

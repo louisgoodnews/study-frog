@@ -2,7 +2,7 @@
 id: TASK-0158
 type: task
 title: Export a library or stack
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0065]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add pure encoders and the service function that writes them.
 
 ## Acceptance Criteria
-- [ ] JSON, CSV and Markdown exports of the library or of one stack, with pictures and PDFs in a zip
-- [ ] Exporting and importing a JSON file into an empty vault gives the same items, verified by a round-trip test
+- [x] JSON, CSV and Markdown exports of the library or of one stack, with pictures and PDFs in a zip
+- [x] Exporting and importing a JSON file into an empty vault gives the same items, verified by a round-trip test
 
 ## Design Notes
 None.
