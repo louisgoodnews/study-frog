@@ -27,7 +27,7 @@ Make StudyFrog easier to use and let it tell the user what to study.
 - [ ] A rehearsal can run against a countdown or count up
 
 ## Design Notes
-Stories STORY-0055, STORY-0056, STORY-0057, STORY-0058, STORY-0059, STORY-0060, STORY-0061, STORY-0062, STORY-0063, STORY-0064, STORY-0065, STORY-0066, STORY-0067, STORY-0068, STORY-0070. Release target: 0.3.0. The Jira screenshots of the owner are the reference for the library list and the stack view.
+Stories STORY-0055, STORY-0056, STORY-0057, STORY-0058, STORY-0059, STORY-0060, STORY-0061, STORY-0062, STORY-0063, STORY-0064, STORY-0065, STORY-0066, STORY-0067, STORY-0068, STORY-0070, STORY-0071. Release target: 0.3.0. The Jira screenshots of the owner are the reference for the library list and the stack view.
 
 ## Dependencies
 None.

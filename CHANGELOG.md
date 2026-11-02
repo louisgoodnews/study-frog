@@ -13,6 +13,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   keeps what was typed and says why next to the field (BUG-0001).
 
 ### Changed
+- New cards, notes and questions start with priority medium and difficulty difficult (the highest) unless the user chose others; stacks get neither (TASK-0185).
 - The library page no longer holds the new-card form: a card, note or question is made in the Create dialog, and the import panel and the card types of extensions moved into an "Import…" dialog on a stack's list (TASK-0134).
 - The bell's notifications are records the user manages: each has an id, time and read state and is kept in the vault's database for 30 days
   (at most 200), so they survive a restart. Opening the panel no longer marks everything read (TASK-0126).

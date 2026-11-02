@@ -78,6 +78,10 @@ issue view are the visual reference for the library, the stack overview and the 
     - TASK-0180 Countdown and count up in the run state machine
     - TASK-0181 Mode and timer in run setup and on the rehearsal screen
     - TASK-0182 Mode and time in the review and the reports
+  - **STORY-0071** Create dialog like Jira
+    - TASK-0185 New items default to the highest difficulty and medium priority
+    - TASK-0186 Create dialog laid out like Jira's
+    - TASK-0187 Markdown editors in the create dialog that grow by dragging
 
 **Withdrawn:** STORY-0069 (stack detail view) and TASK-0175 to TASK-0178 on 2026-11-02, because the existing item page is the
 issue-like detail view for a note, a card, a question and a stack and the owner accepted it as it is. The numbers are not reused.

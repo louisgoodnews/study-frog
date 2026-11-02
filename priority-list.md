@@ -34,3 +34,4 @@ Last updated: 2026-11-02.
 - [ ] 18. TASK-0157 to TASK-0160 Import and export, then TASK-0167 to TASK-0169 Anki and Obsidian
 - [ ] 19. TASK-0161 to TASK-0166 Help: wiki, FAQ, tutorials
 - [ ] 20. TASK-0170 to TASK-0174 Diary
+- [ ] 21. TASK-0185 to TASK-0187 Create dialog like Jira and defaults for new items (asked for by the owner on 2026-11-02; done right after item 14)

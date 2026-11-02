@@ -113,6 +113,21 @@ pub(crate) fn meta(title: &str, tags: &[String], ids: IdSource) -> Meta {
     }
 }
 
+/// The priority and difficulty a new card, note or question starts with unless the user chose others.
+pub(crate) fn with_new_defaults(doc: Doc) -> Doc {
+    use studyfrog_md::extra::{extra_value, with_extra};
+    if matches!(doc, Doc::Stack(_)) {
+        return doc;
+    }
+    let mut doc = doc;
+    for (key, default) in [("priority", "medium"), ("difficulty", "difficult")] {
+        if extra_value(&doc, key).is_none() {
+            doc = with_extra(&doc, key, Some(default));
+        }
+    }
+    doc
+}
+
 pub(crate) fn render_error(e: RenderError) -> ServiceError {
     match e {
         RenderError::AmbiguousSeparator => {
@@ -192,13 +207,13 @@ pub fn write_card(
         return Err(invalid("that folder is not a stack"));
     }
     let name = unique_name(&slug(&title), ".md", |n| dir.join(n).exists());
-    let doc = Doc::Card(CardDoc {
+    let doc = with_new_defaults(Doc::Card(CardDoc {
         meta: meta(&title, card.tags, ids),
         reversible: false,
         front: card.front.trim_end().to_owned(),
         back: card.back.trim_end().to_owned(),
         extra: Vec::new(),
-    });
+    }));
     let text = render_doc(&doc).map_err(render_error)?;
     write_new(&dir.join(name), &text)
 }

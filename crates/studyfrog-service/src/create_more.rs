@@ -9,7 +9,7 @@ use studyfrog_store::stackmap::STACK_FILE;
 
 use crate::create::{
     IdSource, check_title, default_card_title, invalid, meta, refresh, render_error, slug,
-    unique_name, write_new,
+    unique_name, with_new_defaults, write_new,
 };
 use crate::session::{ServiceError, VaultInfo, VaultSession};
 
@@ -138,7 +138,7 @@ pub fn create_item(
         None => session.root.clone(),
     };
     let doc = with_extra(
-        &doc_of(item, &title, ids)?,
+        &with_new_defaults(doc_of(item, &title, ids)?),
         "source",
         item.source.map(|s| format!("\"{s}\"")).as_deref(),
     );
