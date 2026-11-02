@@ -1,7 +1,8 @@
 # Familiarity
 
-Planned for 0.3.0 (STORY-0058). The meaning was defined by the owner on 2026-11-02; the constants below are proposals
-to be checked on worked examples (section 8) and calibrated by the validation of TASK-0137.
+Planned for 0.3.0 (STORY-0058). The meaning was defined by the owner on 2026-11-02, who also accepted the behaviour on the worked examples
+(section 8), the note cap, the mark factors and the one-view-per-hour rule that day. The constants below are the starting
+values; the validation of TASK-0137 may calibrate them.
 
 ## 1. Meaning and range
 Familiarity is **how familiar the user is with an item**: a card, a note, a question or a stack. It is a number from

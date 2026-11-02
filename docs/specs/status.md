@@ -58,8 +58,8 @@ not changed by that.
 
 ## Boards
 The global kanban board (EPIC-011) keeps its free-form columns. The Board tab of a stack groups its items by status, and
-moving a card between columns changes the item's status. *(Proposal, to be confirmed by the owner: the owner has not yet
-answered whether board columns are bound to statuses.)*
+moving a card between columns changes the item's status. (Accepted by the owner on 2026-11-02: only a stack's Board tab is
+bound to statuses, the global board stays free-form.)
 
 ## Tests
 Round trip of the key for all four kinds; absent key derives `new` and `learning`; unknown value kept; automatic change

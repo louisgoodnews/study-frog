@@ -2,7 +2,7 @@
 id: TASK-0143
 type: task
 title: Specify the statuses, their names and their transitions
-status: review
+status: done
 epic: EPIC-023
 parents: [STORY-0061]
 estimate: 2
@@ -20,7 +20,7 @@ Write the spec and get the owner's decision before any code.
 
 ## Acceptance Criteria
 - [x] docs/specs/status.md lists each status with its stored value, label, meaning and allowed transitions
-- [ ] The owner has accepted the names and whether the board columns are bound to statuses
+- [x] The owner has accepted the names and whether the board columns are bound to statuses
 
 ## Design Notes
 Written 2026-11-02 in `docs/specs/status.md`. The five names are accepted by the owner. Proposed and awaiting the owner: the global kanban board keeps free-form columns, and a stack's Board tab groups by status (moving a card changes the status); the suggestion thresholds (0.8, 0.5, 0.95 for 30 days).
@@ -29,4 +29,4 @@ Written 2026-11-02 in `docs/specs/status.md`. The five names are accepted by the
 None.
 
 ## Open Questions
-Are board columns bound to statuses? Proposal: only in the Board tab of a stack, not on the global board.
+Accepted by the owner on 2026-11-02: only a stack's Board tab is bound to statuses; the global board stays free-form.
