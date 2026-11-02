@@ -94,6 +94,7 @@ pub mod setup_fam;
 pub mod setup_form;
 pub mod stack_backlog;
 pub mod stack_goals;
+pub mod stack_roadmap;
 pub mod stack_tabs;
 pub mod stack_view_ui;
 pub mod state;

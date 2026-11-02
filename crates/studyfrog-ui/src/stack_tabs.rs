@@ -13,15 +13,18 @@ pub enum StackTab {
     Backlog,
     /// The stacks inside this one as a tree.
     Substacks,
+    /// The items and stacks on a time axis.
+    Roadmap,
     /// What the user wants to reach with the stack.
     Goals,
 }
 
 /// The tabs in the order shown, with their stored key and name.
-pub const TABS: [(StackTab, &str, &str); 5] = [
+pub const TABS: [(StackTab, &str, &str); 6] = [
     (StackTab::Summary, "summary", "Summary"),
     (StackTab::List, "list", "List"),
     (StackTab::Backlog, "backlog", "Backlog"),
+    (StackTab::Roadmap, "roadmap", "Roadmap"),
     (StackTab::Substacks, "substacks", "Sub-stacks"),
     (StackTab::Goals, "goals", "Goals"),
 ];

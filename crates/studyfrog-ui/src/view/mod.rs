@@ -62,6 +62,7 @@ mod setup_what;
 mod sidebar;
 mod stack_backlog_view;
 mod stack_goals_view;
+mod stack_roadmap_view;
 mod stack_summary_view;
 mod stack_tree_view;
 mod stack_view;

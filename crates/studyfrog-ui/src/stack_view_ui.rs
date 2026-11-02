@@ -21,6 +21,8 @@ pub struct StackViewState {
     pub loading: Option<(String, u64)>,
     /// The goals of the open stack: its folder, what is saved and what is typed.
     pub goals: Option<Goals>,
+    /// How the roadmap is zoomed.
+    pub zoom: crate::stack_roadmap::Zoom,
 }
 
 /// What happened on the stack page.
@@ -40,6 +42,8 @@ pub enum StackViewMsg {
     GoalsSave,
     /// The goals were written.
     GoalsSaved(Result<Box<VaultInfo>, String>),
+    /// Zoom the roadmap.
+    Zoom(crate::stack_roadmap::Zoom),
     /// Give the stack a status (`None`: automatic).
     SetStatus(Uid, Option<Status>),
     /// The status was written.
@@ -113,6 +117,7 @@ pub fn update(state: State, msg: StackViewMsg) -> (State, Vec<Effect>) {
         }
         StackViewMsg::GoalsSave => return crate::stack_goals::save_goals(state),
         StackViewMsg::GoalsSaved(result) => return crate::stack_goals::goals_saved(state, result),
+        StackViewMsg::Zoom(zoom) => state.library.stack_view.zoom = zoom,
         StackViewMsg::SetStatus(uid, status) => {
             return (
                 state,
