@@ -27,7 +27,7 @@ Move data in and out of StudyFrog in open formats, for sharing a stack, for othe
 ## Design Notes
 This is interchange, not backup: STORY-0050 backs up the whole vault for restoring it; export writes a chosen part in a documented format. JSON carries a format version and holds stacks, notes, cards, questions, tags, links, status, priority and difficulty, due dates and the review history and schedule only in the advanced export mode. CSV and TSV carry cards and questions (front, back, tags, stack). A Markdown export is the vault layout with the front-matter, so it can be opened elsewhere. Import runs a dry run first that lists what would be created, what already exists (by id, else by front and back) and what fails, then writes only after the user confirms. Importers are registered through the extension traits (ADR 0008) so a new format is a record in the registry. The existing import (`import_ui.rs`, `exec_import.rs`) becomes one of them. Pictures and PDFs travel in a zip beside the JSON.
 
-Tasks: TASK-0156, TASK-0157, TASK-0158, TASK-0159.
+Tasks: TASK-0157, TASK-0158, TASK-0159, TASK-0160.
 
 ## Dependencies
 None; export of statuses and familiarity inputs follows STORY-0061 and STORY-0058 once they exist.

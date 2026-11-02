@@ -1,5 +1,5 @@
 ---
-id: TASK-0170
+id: TASK-0171
 type: task
 title: Diary entries in the data model, Markdown and index
 status: backlog

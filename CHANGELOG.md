@@ -12,7 +12,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   search, a stack overview with sub-views and a separate stack detail view, a familiarity value used in reports and scheduling, tabbed
   settings, item statuses, calendar entries for the next reviews that can be moved by drag and drop, import and export
   with Anki and Obsidian importers, a built-in wiki with FAQ and tutorials, a diary and rehearsal modes for countdown and count up, recorded as STORY-0055 to
-  STORY-0070, BUG-0001 and TASK-0126 to TASK-0181; the issue checker accepts phase `m10`.
+  STORY-0070, BUG-0001 and TASK-0126 to TASK-0182; the issue checker accepts phase `m10`.
 - Releases carry a `.tar.gz` (binary, desktop entry, icon, licences, README, changelog, release notes) and its `.sha256`
   next to the AppImage; the packaging script writes them and the release workflow uploads them (TASK-0125).
 

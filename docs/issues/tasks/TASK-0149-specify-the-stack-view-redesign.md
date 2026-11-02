@@ -9,7 +9,7 @@ estimate: 2
 labels: [m10, docs, decision]
 acceptance_criteria:
   - "docs/specs/stack-view.md lists the header, the tabs and the Summary widgets, with the owner's Jira screenshots as the reference"
-  - "The owner has accepted the layout and which Jira tabs are wanted (Goals and Forms are open)"
+  - "The owner has accepted the layout and the tabs (Goals is a user-edited bullet list, Forms is not wanted)"
 ---
 
 ## Context
@@ -20,7 +20,7 @@ Write the redesign down before building it.
 
 ## Acceptance Criteria
 - [ ] docs/specs/stack-view.md lists the header, the tabs and the Summary widgets, with the owner's Jira screenshots as the reference
-- [ ] The owner has accepted the layout and which Jira tabs are wanted (Goals and Forms are open)
+- [ ] The owner has accepted the layout and the tabs (Goals is a user-edited bullet list, Forms is not wanted)
 
 ## Design Notes
 None.

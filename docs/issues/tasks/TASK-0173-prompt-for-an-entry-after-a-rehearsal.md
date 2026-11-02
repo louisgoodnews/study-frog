@@ -1,5 +1,5 @@
 ---
-id: TASK-0172
+id: TASK-0173
 type: task
 title: Prompt for an entry after a rehearsal
 status: backlog

@@ -283,4 +283,4 @@ Explicit extension points and release readiness.
 See [M9-documents](M9-documents.md): EPIC-022, STORY-0054 and TASK-0109 to TASK-0122.
 
 ## M10 Usability and insight (0.3.0)
-See [M10-usability-and-insight](M10-usability-and-insight.md): EPIC-023, STORY-0055 to STORY-0070, BUG-0001 and TASK-0126 to TASK-0181.
+See [M10-usability-and-insight](M10-usability-and-insight.md): EPIC-023, STORY-0055 to STORY-0070, BUG-0001 and TASK-0126 to TASK-0182.

@@ -1,5 +1,5 @@
 ---
-id: TASK-0168
+id: TASK-0169
 type: task
 title: Document how to write a format adapter
 status: backlog

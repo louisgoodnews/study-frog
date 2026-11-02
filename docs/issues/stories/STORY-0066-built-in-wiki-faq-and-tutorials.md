@@ -27,7 +27,7 @@ Let a user learn what StudyFrog is for and how to use it without leaving the app
 ## Design Notes
 The supplied content is Markdown in the repository (`docs/help/`), compiled into the binary so it works offline and is versioned with the code, and shown by the existing Markdown preview. It is English and read-only (the owner's decision, 2026-11-02). Pages: Why StudyFrog (from `docs/VISION.md`, written for users), Getting started, one how-to per screen, the FAQ, a glossary (from `docs/GLOSSARY.md`) and a page on privacy and local data. The user may add pages and edit the pages they added, in the same Markdown editor as notes; they live in a `wiki/` folder of the vault so they are backed up, searched and linked like notes. Supplied pages cannot be changed, but a user page can link to them and can be created as a copy of one. Tutorials are short step lists that open the screen they describe and can be repeated; the first-run tutorial is offered once and can be skipped. The search covers supplied and user pages with the same search code as the vault. The `?` in the top bar opens help; a help button on each screen opens the matching page. A check script fails when a supplied page links to a page that does not exist.
 
-Tasks: TASK-0160, TASK-0161, TASK-0162, TASK-0163, TASK-0164, TASK-0165.
+Tasks: TASK-0161, TASK-0162, TASK-0163, TASK-0164, TASK-0165, TASK-0166.
 
 ## Dependencies
 Content for features of 0.3.0 can be written as each feature lands; the viewer stands alone.

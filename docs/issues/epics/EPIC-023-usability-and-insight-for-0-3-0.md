@@ -9,7 +9,7 @@ acceptance_criteria:
   - "The library, stack view, settings and notification center are redesigned for easier use"
   - "Items have statuses and a familiarity value, and StudyFrog suggests what to focus on and shows the next reviews on the calendar, movable by the user"
   - "Data can be exported and imported in open formats (Anki and Obsidian first), and a built-in wiki, FAQ and tutorials explain StudyFrog"
-  - "The user can keep a diary of self-reported progress, and a stack and an item each have their own view"
+  - "The user can keep a diary of self-reported progress, and a stack opens as an overview with sub-views apart from the existing detail page"
   - "A rehearsal can run against a countdown or count up"
 ---
 
@@ -23,11 +23,11 @@ Make StudyFrog easier to use and let it tell the user what to study.
 - [ ] The library, stack view, settings and notification center are redesigned for easier use
 - [ ] Items have statuses and a familiarity value, and StudyFrog suggests what to focus on and shows the next reviews on the calendar, movable by the user
 - [ ] Data can be exported and imported in open formats (Anki and Obsidian first), and a built-in wiki, FAQ and tutorials explain StudyFrog
-- [ ] The user can keep a diary of self-reported progress, and a stack and an item each have their own view
+- [ ] The user can keep a diary of self-reported progress, and a stack opens as an overview with sub-views apart from the existing detail page
 - [ ] A rehearsal can run against a countdown or count up
 
 ## Design Notes
-Stories STORY-0055, STORY-0056, STORY-0057, STORY-0058, STORY-0059, STORY-0060, STORY-0061, STORY-0062, STORY-0063, STORY-0064, STORY-0065, STORY-0066, STORY-0067, STORY-0068, STORY-0069, STORY-0070. Release target: 0.3.0. The Jira screenshots of the owner are the reference for the library list and the stack view.
+Stories STORY-0055, STORY-0056, STORY-0057, STORY-0058, STORY-0059, STORY-0060, STORY-0061, STORY-0062, STORY-0063, STORY-0064, STORY-0065, STORY-0066, STORY-0067, STORY-0068, STORY-0070. Release target: 0.3.0. The Jira screenshots of the owner are the reference for the library list and the stack view.
 
 ## Dependencies
 None.

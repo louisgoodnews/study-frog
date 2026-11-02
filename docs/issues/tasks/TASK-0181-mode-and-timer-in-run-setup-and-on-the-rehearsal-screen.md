@@ -1,5 +1,5 @@
 ---
-id: TASK-0180
+id: TASK-0181
 type: task
 title: Mode and timer in run setup and on the rehearsal screen
 status: backlog

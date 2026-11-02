@@ -46,77 +46,74 @@ issue view are the visual reference for the library, the stack overview and the 
   - **STORY-0064** Stack sub-views for list, backlog, roadmap, board, calendar and reports
     - TASK-0152 List and Backlog tabs
     - TASK-0153 Sub-stacks tab
-    - TASK-0154 Roadmap tab
-    - TASK-0155 Board, Calendar and Reports tabs scoped to the stack
+    - TASK-0154 Goals tab
+    - TASK-0155 Roadmap tab
+    - TASK-0156 Board, Calendar and Reports tabs scoped to the stack
   - **STORY-0065** Import and export in JSON and other formats
-    - TASK-0156 Specify the interchange formats
-    - TASK-0157 Export a library or stack
-    - TASK-0158 Import with preview and duplicate handling
-    - TASK-0159 Import and export screens
+    - TASK-0157 Specify the interchange formats
+    - TASK-0158 Export a library or stack
+    - TASK-0159 Import with preview and duplicate handling
+    - TASK-0160 Import and export screens
   - **STORY-0066** Built-in wiki, FAQ and tutorials
-    - TASK-0160 Plan the help content
-    - TASK-0161 Help viewer with navigation and search
-    - TASK-0162 User-added and user-edited help pages
-    - TASK-0163 Assistant proposals for user help pages
-    - TASK-0164 Write the vision, getting started and FAQ pages
-    - TASK-0165 Guided tutorials
+    - TASK-0161 Plan the help content
+    - TASK-0162 Help viewer with navigation and search
+    - TASK-0163 User-added and user-edited help pages
+    - TASK-0164 Assistant proposals for user help pages
+    - TASK-0165 Write the vision, getting started and FAQ pages
+    - TASK-0166 Guided tutorials
   - **STORY-0067** Importers for Anki and Obsidian
-    - TASK-0166 Anki importer
-    - TASK-0167 Obsidian vault importer
-    - TASK-0168 Document how to write a format adapter
+    - TASK-0167 Anki importer
+    - TASK-0168 Obsidian vault importer
+    - TASK-0169 Document how to write a format adapter
   - **STORY-0068** Diary for self-reported progress
-    - TASK-0169 Specify the diary
-    - TASK-0170 Diary entries in the data model, Markdown and index
-    - TASK-0171 Diary screen
-    - TASK-0172 Prompt for an entry after a rehearsal
-    - TASK-0173 Self-assessment against measured results
-  - **STORY-0069** Stack detail view like Jira's issue view
-    - TASK-0174 Specify the detail view
-    - TASK-0175 Detail view layout with the details panel
-    - TASK-0176 Open an item in a side panel
-    - TASK-0177 Activity log of reviews, edits and status changes
+    - TASK-0170 Specify the diary
+    - TASK-0171 Diary entries in the data model, Markdown and index
+    - TASK-0172 Diary screen
+    - TASK-0173 Prompt for an entry after a rehearsal
+    - TASK-0174 Self-assessment against measured results
   - **STORY-0070** Rehearsal modes for countdown and count up
-    - TASK-0178 Specify the rehearsal modes
-    - TASK-0179 Countdown and count up in the run state machine
-    - TASK-0180 Mode and timer in run setup and on the rehearsal screen
-    - TASK-0181 Mode and time in the review and the reports
+    - TASK-0179 Specify the rehearsal modes
+    - TASK-0180 Countdown and count up in the run state machine
+    - TASK-0181 Mode and timer in run setup and on the rehearsal screen
+    - TASK-0182 Mode and time in the review and the reports
+
+**Withdrawn:** STORY-0069 (stack detail view) and TASK-0175 to TASK-0178 on 2026-11-02, because the existing item page is the
+issue-like detail view for a note, a card, a question and a stack and the owner accepted it as it is. The numbers are not reused.
 
 **Order:** statuses (0061) and the tab bar (0060) first, because the stack pages, library and calendar use them; notifications
-(0055), the vault name (0056), the rehearsal modes (0070), import and export (0065) with its importers (0067), help (0066) and the diary (0068) are
-independent; familiarity (0058) before its reports and scheduling use (0059); the library list and query (0057) before the stack
-sub-views (0064) and the side panel of the detail view (0069); the stack overview (0063) before its sub-views.
+(0055), the vault name (0056), the rehearsal modes (0070), import and export (0065) with its importers (0067), help (0066)
+and the diary (0068) are independent; familiarity (0058) before its reports and scheduling use (0059); the library list and
+query (0057) before the stack sub-views (0064); the stack overview (0063) before its sub-views.
 
 **Accepted by the owner on 2026-11-02:** the vault name in the bar (reversing STORY-0041), the status names, the settings
 tabs, the calendar behaviour (next reviews from the schedule, movable by drag and drop, a moved item stays out of the queue
 until its new day, a warning past an exam or due date), familiarity as a float from 0.0 to 1.0, the library as a copy of
-Jira's list view with an SQL-like search, a stack overview (Jira project view) apart from the stack detail view (Jira issue
-view), Anki and Obsidian as the first importers with review history imported and the schedule adapted (as many formats as
-possible later), export of review history by checkbox, help pages that are English and read-only plus user pages linked
-to the assistant's proposals, and a diary with every rating.
+Jira's list view with an SQL-like search, a stack overview (Jira project view) apart from the existing stack editing page
+(the issue-like detail view, unchanged), Goals as a bullet list the user edits and no Forms tab, Anki and Obsidian as the
+first importers with review history imported and the schedule adapted (as many formats as possible later), the export
+modal (default without scheduling; advanced, for now only to include scheduling), help pages that are English and read-only
+plus user pages linked to the assistant's proposals, a diary with every rating and pictures, sub-stacks as a Summary section
+and a tab, names with commas (BUG-0001), the rehearsal modes (the open item at the end of a countdown counts as not
+answered), and familiarity: it grows a little per view, much with easier ratings, falls with harder ones, grows with shorter
+view time, falls slowly without contact while the item is not Complete and its exam date has not passed, and is a
+sub-criterion of scheduling that affects selection, order, the planned day and the scheduler's interval (the higher the
+familiarity the stronger; an item at 1.0 about once a month), and a per-item report.
 
-**Also accepted on 2026-11-02:** the export asks for its mode in a modal (default without scheduling; advanced, for now
-only to include scheduling), diary entries may carry pictures, sub-stacks are both a Summary section and a tab, names with
-commas are allowed (BUG-0001), and familiarity means how well the user knows an item: it grows a little per view, grows
-much with easier ratings, falls with harder ones, grows with shorter view time, falls slowly without contact while the item
-is not Complete and its exam date has not passed, and is a sub-criterion of scheduling that affects selection, order, the
-planned day and the scheduler's interval, and a per-item report. Rehearsal gets two more modes, countdown and count up
-(STORY-0070).
-
-**Decisions still open:** how strong familiarity's effect on the interval is by default (set by simulation), what happens
-to the open item when a countdown ends (TASK for the modes' specification), the overview and detail layouts and whether
-Goals and Forms tabs are wanted, and the quoting format for names with commas (a proposal in BUG-0001).
+**Decisions still open:** the overview layout (TASK-specification of STORY-0063), whether a countdown may be extended,
+whether the 30-day anchor caps items whose algorithm interval is longer, and the quoting format for names with commas
+(a proposal in BUG-0001).
 
 **Exit criteria:**
 - Notifications can be marked read, deleted and filtered, and survive a restart
 - The bar names the open vault
 - The library is a sortable list with filters and a query syntax; 10k items scroll and filter within the frame budget
-- A stack opens as an overview with tabs, and its own details open in a detail view or side panel
+- A stack opens as an overview with tabs, apart from the existing detail page
 - Every item has a status, and finished items are not planned on the calendar
 - After a rehearsal the next reviews show on the calendar per stack and day, and an entry can be moved to another day
 - Familiarity values (0.0 to 1.0) are shown per item in reports and on Home with reasons, steer the queue, the calendar planner and the scheduler's intervals, and their error on the simulated history is recorded
 - Settings are in tabs and every setting appears once
 - A library or stack exports to JSON, with scheduling if the advanced mode asks for it, and imports again without loss; Anki (with its history) and Obsidian import
 - The app has a help area with the vision, a FAQ and tutorials, a first-run tutorial and the user's own pages, which the assistant can propose edits to
-- BUG-0001 is fixed
 - Runs can be set up as a countdown or a count up, and the review shows the mode and the time used
+- BUG-0001 is fixed
 - The diary records self-reported progress and a report sets it against measured results
