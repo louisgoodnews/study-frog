@@ -123,6 +123,7 @@ fn item_of(v: &Value, n: usize) -> Result<XItem, String> {
         priority: optional(v, "priority"),
         difficulty: optional(v, "difficulty"),
         reviews,
+        extra: Vec::new(),
     })
 }
 

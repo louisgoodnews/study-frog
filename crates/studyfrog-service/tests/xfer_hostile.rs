@@ -87,3 +87,28 @@ impl Drop for Dir {
         let _ = fs::remove_dir_all(&self.0);
     }
 }
+
+#[test]
+fn the_adapter_table_picks_a_reader_by_extension_and_refuses_the_unknown() {
+    use studyfrog_service::xfer_adapters::{ADAPTERS, adapter_for, read_source};
+    assert_eq!(adapter_for("a.APKG").unwrap().name, "Anki package");
+    assert_eq!(adapter_for("x.tsv").unwrap().name, "CSV or TSV cards");
+    assert!(adapter_for("x.docx").is_none() && adapter_for("noextension").is_none());
+    assert_eq!(ADAPTERS.len(), 4);
+    let dir = std::env::temp_dir().join(format!("studyfrog-adapters-{}", std::process::id()));
+    let _ = fs::remove_dir_all(&dir);
+    fs::create_dir_all(&dir).unwrap();
+    fs::write(dir.join("cards.csv"), "front,back\nq,a\n").unwrap();
+    fs::write(dir.join("odd.docx"), "x").unwrap();
+    fs::write(dir.join("bad.json"), "{").unwrap();
+    let (b, name) = read_source(&dir.join("cards.csv")).unwrap();
+    assert_eq!((b.items.len(), name), (1, "CSV or TSV cards"));
+    assert!(
+        read_source(&dir.join("odd.docx"))
+            .unwrap_err()
+            .contains("no importer")
+    );
+    assert!(read_source(&dir.join("bad.json")).is_err());
+    assert!(read_source(&dir.join("missing.csv")).is_err());
+    let _ = fs::remove_dir_all(&dir);
+}

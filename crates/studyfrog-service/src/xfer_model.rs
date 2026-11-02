@@ -51,6 +51,8 @@ pub struct XItem {
     pub difficulty: Option<String>,
     /// Its reviews, when scheduling is included.
     pub reviews: Vec<XReview>,
+    /// Front-matter keys of the source that StudyFrog keeps as they are (`key`, one-line `value`).
+    pub extra: Vec<(String, String)>,
 }
 
 /// Everything in a file.
@@ -82,6 +84,7 @@ pub fn item(kind: ItemKind, stack: &str, text: &str, answer: &str) -> XItem {
         priority: None,
         difficulty: None,
         reviews: Vec::new(),
+        extra: Vec::new(),
     }
 }
 

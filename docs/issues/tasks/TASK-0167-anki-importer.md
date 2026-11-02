@@ -2,7 +2,7 @@
 id: TASK-0167
 type: task
 title: Anki importer
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0067]
 estimate: 5
@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Write the adapter: zip, SQLite collection, media map, mapping to the interchange model.
 
 ## Acceptance Criteria
-- [ ] Decks become stacks, basic and cloze notes become cards, and tags and pictures are kept
-- [ ] Review history is imported as reviews and the schedule is adapted from it, with a checkbox to leave it out
-- [ ] A corpus of broken and hostile .apkg files neither crashes nor hangs the app
+- [x] Decks become stacks, basic and cloze notes become cards, and tags and pictures are kept
+- [x] Review history is imported as reviews and the schedule is adapted from it, with a checkbox to leave it out
+- [x] A corpus of broken and hostile .apkg files neither crashes nor hangs the app
 
 ## Design Notes
 None.

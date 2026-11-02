@@ -59,6 +59,50 @@ A `Registry` is two `Vec`s; look things up with `importer_for_file`, `find_card_
 break) and a **cloze card type** (`The {{c1::mitochondria}} is the {{c2::powerhouse::energy}}` becomes one
 card per gap number; the front hides the gap or shows its hint, the back shows the answer in bold).
 
+## Writing a format adapter (import and export of whole libraries)
+
+The importers above add cards to a stack. Whole files in other formats (an Anki package, an Obsidian vault, a JSON export) are read
+by **format adapters**, which build a *bundle* of stacks, items and files; the same dry run, duplicate handling and writing then
+serve every format ([interchange](specs/interchange.md)). A new format needs no change to the core.
+
+An adapter is one record in `ADAPTERS` in `crates/studyfrog-service/src/xfer_adapters.rs`:
+
+```rust
+Adapter { name: "My format", extensions: &["myf"], read: my_format }
+```
+
+`read` is `fn(&[u8]) -> Result<Bundle, String>`. It must never panic and must bound its work: use `xfer_zip::read_zip` for zips (it
+limits the number and size of files), refuse input over the limits in `xfer_plan::MAX_ITEMS`, and return an error string for anything it
+cannot read. The bundle (`xfer_model.rs`) holds `XStack { folder, title, description }`, `XItem { kind, title, text, answer, tags, stack,
+status, priority, difficulty, reviews, extra }` and `files` (vault-relative path and bytes). Folders must be relative with no `..`;
+`xfer_model::safe_folder` checks it and the import refuses what fails. Put things the format has and StudyFrog does not into
+`bundle.warnings` ("3 callouts kept as text") so the preview can say so.
+
+**Worked example**, a format of one line per card, `front|back|tag1,tag2`:
+
+```rust
+fn pipes(bytes: &[u8]) -> Result<Bundle, String> {
+    let text = std::str::from_utf8(bytes).map_err(|_| "not UTF-8 text".to_owned())?;
+    let mut b = Bundle::default();
+    for (n, line) in text.lines().enumerate().filter(|(_, l)| !l.trim().is_empty()) {
+        let parts: Vec<&str> = line.splitn(3, '|').collect();
+        let [front, back] = [parts.first(), parts.get(1)].map(|p| p.copied().unwrap_or_default());
+        if back.is_empty() {
+            b.warnings.push(format!("line {}: no back, left out", n + 1));
+            continue;
+        }
+        let mut item = xfer_model::item(ItemKind::Card, "", front, back);
+        item.tags = parts.get(2).map_or_else(Vec::new, |t| t.split(',').map(|s| s.trim().to_owned()).collect());
+        b.items.push(item);
+    }
+    Ok(b)
+}
+```
+
+Add `Adapter { name: "Pipe-separated cards", extensions: &["pipes"], read: pipes }` to `ADAPTERS`; the import dialog then offers it,
+shows its preview and writes its cards with the user's choice for duplicates. Test it like the others in
+`crates/studyfrog-service/tests/xfer_*.rs`: a good file, and a corpus of broken ones that must give an error, not a crash.
+
 ## Limits
 
 - Extensions are compiled in. There is no loading of code at run time, no sandbox and no permissions: an

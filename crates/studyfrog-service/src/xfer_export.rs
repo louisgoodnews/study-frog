@@ -42,6 +42,7 @@ fn item_of(doc: &Doc, stack: &str, scheduling: Option<&[XReview]>) -> XItem {
         priority: extra_value(doc, "priority"),
         difficulty: extra_value(doc, "difficulty"),
         reviews: scheduling.map_or_else(Vec::new, <[XReview]>::to_vec),
+        extra: Vec::new(),
     }
 }
 

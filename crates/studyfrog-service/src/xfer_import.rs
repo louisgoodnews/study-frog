@@ -83,6 +83,9 @@ fn doc_of(item: &XItem, uid: Uid, ids: IdSource, notes: &mut Vec<String>) -> Doc
             _ => {}
         }
     }
+    for (key, value) in &item.extra {
+        doc = with_extra(&doc, key, Some(value));
+    }
     if item.id.is_some() {
         doc
     } else {

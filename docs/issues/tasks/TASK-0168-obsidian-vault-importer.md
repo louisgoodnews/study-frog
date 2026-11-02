@@ -2,7 +2,7 @@
 id: TASK-0168
 type: task
 title: Obsidian vault importer
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0067]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Write the adapter for an Obsidian folder.
 
 ## Acceptance Criteria
-- [ ] Folders become stacks, Markdown files become notes with their front-matter, wikilinks, tags and pictures kept
-- [ ] Syntax StudyFrog does not support is kept as text and counted in the preview
+- [x] Folders become stacks, Markdown files become notes with their front-matter, wikilinks, tags and pictures kept
+- [x] Syntax StudyFrog does not support is kept as text and counted in the preview
 
 ## Design Notes
 None.
