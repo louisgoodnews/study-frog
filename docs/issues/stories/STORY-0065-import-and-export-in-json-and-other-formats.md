@@ -2,7 +2,7 @@
 id: STORY-0065
 type: story
 title: Import and export in JSON and other formats
-status: in_progress
+status: done
 epic: EPIC-023
 parents: [EPIC-023]
 estimate: 8
@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Move data in and out of StudyFrog in open formats, for sharing a stack, for other tools and for keeping a copy outside the app.
 
 ## Acceptance Criteria
-- [ ] The library or a chosen stack can be exported as JSON, CSV and a folder of Markdown files, and a JSON export can be imported again with nothing lost
-- [ ] Import shows a preview with counts, duplicates and errors before anything is written
-- [ ] Anki and Obsidian are imported first (STORY-0067) and further formats are added through the same registry; the long-term goal is to support as many formats as possible
+- [x] The library or a chosen stack can be exported as JSON, CSV and a folder of Markdown files, and a JSON export can be imported again with nothing lost
+- [x] Import shows a preview with counts, duplicates and errors before anything is written
+- [x] Anki and Obsidian are imported first (STORY-0067) and further formats are added through the same registry; the long-term goal is to support as many formats as possible
 
 ## Design Notes
 This is interchange, not backup: STORY-0050 backs up the whole vault for restoring it; export writes a chosen part in a documented format. JSON carries a format version and holds stacks, notes, cards, questions, tags, links, status, priority and difficulty, due dates and the review history and schedule only in the advanced export mode. CSV and TSV carry cards and questions (front, back, tags, stack). A Markdown export is the vault layout with the front-matter, so it can be opened elsewhere. Import runs a dry run first that lists what would be created, what already exists (by id, else by front and back) and what fails, then writes only after the user confirms. Importers are registered through the extension traits (ADR 0008) so a new format is a record in the registry. The existing import (`import_ui.rs`, `exec_import.rs`) becomes one of them. Pictures and PDFs travel in a zip beside the JSON.

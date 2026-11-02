@@ -4,9 +4,9 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (11) | Ready (0) | In progress (1/3) | Review (1) | Blocked (0) | Done (171) |
+| Backlog (11) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (172) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0161](docs/issues/tasks/TASK-0161-plan-the-help-content.md) Plan the help content (2) |  | [TASK-0160](docs/issues/tasks/TASK-0160-import-and-export-screens.md) Import and export screens (3) | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0161](docs/issues/tasks/TASK-0161-plan-the-help-content.md) Plan the help content (2) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0162](docs/issues/tasks/TASK-0162-help-viewer-with-navigation-and-search.md) Help viewer with navigation and search (5) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 | [TASK-0163](docs/issues/tasks/TASK-0163-user-added-and-user-edited-help-pages.md) User-added and user-edited help pages (5) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 | [TASK-0164](docs/issues/tasks/TASK-0164-assistant-proposals-for-user-help-pages.md) Assistant proposals for user help pages (3) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
@@ -165,6 +165,7 @@
 |  |  |  |  |  | [TASK-0157](docs/issues/tasks/TASK-0157-specify-the-interchange-formats.md) Specify the interchange formats (3) |
 |  |  |  |  |  | [TASK-0158](docs/issues/tasks/TASK-0158-export-a-library-or-stack.md) Export a library or stack (3) |
 |  |  |  |  |  | [TASK-0159](docs/issues/tasks/TASK-0159-import-with-preview-and-duplicate-handling.md) Import with preview and duplicate handling (5) |
+|  |  |  |  |  | [TASK-0160](docs/issues/tasks/TASK-0160-import-and-export-screens.md) Import and export screens (3) |
 |  |  |  |  |  | [TASK-0167](docs/issues/tasks/TASK-0167-anki-importer.md) Anki importer (5) |
 |  |  |  |  |  | [TASK-0168](docs/issues/tasks/TASK-0168-obsidian-vault-importer.md) Obsidian vault importer (3) |
 |  |  |  |  |  | [TASK-0169](docs/issues/tasks/TASK-0169-document-how-to-write-a-format-adapter.md) Document how to write a format adapter (2) |
@@ -246,7 +247,7 @@
 | [STORY-0062](docs/issues/stories/STORY-0062-calendar-plans-the-next-reviews-and-lets-the-user-move-them.md) Calendar plans the next reviews and lets the user move them (8) | done | 3/3 |
 | [STORY-0063](docs/issues/stories/STORY-0063-stack-page-with-tabs-and-summary.md) Stack page with tabs and summary (8) | done | 3/3 |
 | [STORY-0064](docs/issues/stories/STORY-0064-stack-sub-views-for-list-backlog-roadmap-board-calendar-and-reports.md) Stack sub-views for list, backlog, roadmap, board, calendar and reports (8) | done | 5/5 |
-| [STORY-0065](docs/issues/stories/STORY-0065-import-and-export-in-json-and-other-formats.md) Import and export in JSON and other formats (8) | in_progress | 3/4 |
+| [STORY-0065](docs/issues/stories/STORY-0065-import-and-export-in-json-and-other-formats.md) Import and export in JSON and other formats (8) | done | 4/4 |
 | [STORY-0066](docs/issues/stories/STORY-0066-built-in-wiki-faq-and-tutorials.md) Built-in wiki, FAQ and tutorials (8) | backlog | 0/6 |
 | [STORY-0067](docs/issues/stories/STORY-0067-importers-for-anki-and-obsidian.md) Importers for Anki and Obsidian (8) | done | 3/3 |
 | [STORY-0068](docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | backlog | 0/5 |
@@ -279,4 +280,4 @@
 | [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 4/4 |
 | [EPIC-021](docs/issues/epics/EPIC-021-knowledge-workspace.md) Knowledge workspace | done | 14/14 |
 | [EPIC-022](docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | done | 1/1 |
-| [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | backlog | 13/16 |
+| [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | backlog | 14/16 |

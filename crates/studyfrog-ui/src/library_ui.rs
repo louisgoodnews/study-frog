@@ -103,6 +103,8 @@ pub enum LibraryMsg {
     Bulk(crate::library_bulk::BulkMsg),
     /// The page of a stack.
     Stack(crate::stack_view_ui::StackViewMsg),
+    /// The import and export dialog.
+    Transfer(crate::transfer_ui::TransferMsg),
 }
 
 /// Whether this message changes what the list should show, so the rows are read again.
@@ -154,6 +156,7 @@ pub fn update(state: State, msg: LibraryMsg) -> (State, Vec<Effect>) {
         LibraryMsg::Search(m) => return (crate::library_search::update(state, m), Vec::new()),
         LibraryMsg::Bulk(m) => return crate::library_bulk::update(state, m),
         LibraryMsg::Stack(m) => return crate::stack_view_ui::update(state, m),
+        LibraryMsg::Transfer(m) => return crate::transfer_ui::update(state, m),
     }
     (state, Vec::new())
 }

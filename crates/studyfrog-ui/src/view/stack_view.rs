@@ -61,6 +61,13 @@ fn actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg
         {
             out.push(Msg::Modal(ModalMsg::OpenImport));
         }
+        if ui.button("Import or export…").clicked() {
+            let open = crate::transfer_ui::TransferMsg::Open(
+                crate::transfer_ui::Tab::Export,
+                Some(stack.folder.clone()),
+            );
+            out.push(Msg::Library(LibraryMsg::Transfer(open)));
+        }
         if ui.button("Start rehearsal").clicked() {
             out.push(Msg::Home(HomeMsg::RehearseStack(stack.folder.clone())));
         }

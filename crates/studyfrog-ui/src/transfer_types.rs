@@ -1,0 +1,140 @@
+//! The data of the import and export dialog.
+
+use studyfrog_service::xfer_plan::{PlanLine, Policy};
+
+use crate::state::VaultInfo;
+
+/// Which half of the dialog is shown.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Tab {
+    /// Write a file.
+    Export,
+    /// Read a file.
+    Import,
+}
+
+/// The file format of an export.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Format {
+    /// A zip with `export.json` and the pictures and PDFs.
+    Json,
+    /// Cards and questions as CSV.
+    Csv,
+    /// The vault's Markdown files in a zip.
+    Markdown,
+}
+
+/// What a dry run found, for the preview.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Preview {
+    /// The adapter that read the file.
+    pub adapter: String,
+    /// The first lines of the plan.
+    pub lines: Vec<PlanLine>,
+    /// Items in all.
+    pub total: usize,
+    /// To create, already there, refused.
+    pub counts: (usize, usize, usize),
+    /// Stacks that would be made.
+    pub new_stacks: usize,
+    /// What the reader said about the file.
+    pub warnings: Vec<String>,
+    /// Whether the file carries reviews.
+    pub scheduling: bool,
+    /// Pictures and PDFs in the file.
+    pub files: usize,
+}
+
+/// What an import wrote.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Imported {
+    /// Items written as new.
+    pub created: usize,
+    /// Items overwritten.
+    pub replaced: usize,
+    /// Items left out.
+    pub skipped: usize,
+    /// Things worth telling.
+    pub notes: Vec<String>,
+    /// The vault afterwards.
+    pub info: VaultInfo,
+}
+
+/// The dialog's fields.
+#[derive(Debug, Clone, PartialEq)]
+pub struct TransferState {
+    /// The half shown.
+    pub tab: Tab,
+    /// The stack exported or imported into; `None`: the whole library, or what the file names.
+    pub scope: Option<String>,
+    /// The export format.
+    pub format: Format,
+    /// The export mode question is open.
+    pub choosing_mode: bool,
+    /// Advanced mode: include scheduling.
+    pub scheduling: bool,
+    /// The folder an export is written to.
+    pub destination: String,
+    /// The file or folder to import.
+    pub path: String,
+    /// What to do with duplicates.
+    pub policy: Policy,
+    /// Import the review history of the file.
+    pub with_schedule: bool,
+    /// The dry run.
+    pub preview: Option<Box<Preview>>,
+    /// The last result or problem, in words.
+    pub status: Option<String>,
+    /// A job is running.
+    pub busy: bool,
+}
+
+impl Default for TransferState {
+    fn default() -> Self {
+        TransferState {
+            tab: Tab::Export,
+            scope: None,
+            format: Format::Json,
+            choosing_mode: false,
+            scheduling: false,
+            destination: String::new(),
+            path: String::new(),
+            policy: Policy::Skip,
+            with_schedule: false,
+            preview: None,
+            status: None,
+            busy: false,
+        }
+    }
+}
+
+/// What the worker is asked to do.
+#[derive(Debug, Clone, PartialEq)]
+pub enum TransferJob {
+    /// Ask for a file (or a folder).
+    Browse(bool),
+    /// Read the file and say what an import would do.
+    Preview(String, Option<String>),
+    /// Read the file again and write it.
+    Import {
+        /// The file or folder.
+        path: String,
+        /// The stack to import into.
+        target: Option<String>,
+        /// What to do with duplicates.
+        policy: Policy,
+        /// Import the reviews.
+        with_schedule: bool,
+    },
+    /// Write an export.
+    Export {
+        /// The folder to write to.
+        folder: String,
+        /// The stack, or the whole library.
+        scope: Option<String>,
+        /// The format.
+        format: Format,
+        /// Include scheduling.
+        scheduling: bool,
+    },
+}

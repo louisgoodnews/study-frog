@@ -26,6 +26,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             Modal::Create(form) => super::modal_create::create(state, form, ui, out),
             Modal::Vault => vault(state, ui, out),
             Modal::Import => super::modal_import::import(state, ui, out),
+            Modal::Transfer => super::modal_transfer::transfer(state, ui, out),
         }
     });
     if response.should_close() {

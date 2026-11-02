@@ -15,6 +15,8 @@ pub enum Modal {
     Vault,
     /// Add cards from a card type or a file into the open stack.
     Import,
+    /// Export part of the library or import a file with a preview.
+    Transfer,
 }
 
 /// The priority and difficulty the user chose; `None` leaves the default.

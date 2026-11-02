@@ -46,6 +46,14 @@ pub(super) fn window_buttons(ctx: &Context, f: &CreateForm, ui: &mut egui::Ui, o
             set_width(ctx, if wide { NORMAL } else { WIDE });
         }
         ui.menu_button("More", |ui| {
+            if ui.button("Import or export…").clicked() {
+                let open = crate::transfer_ui::TransferMsg::Open(
+                    crate::transfer_ui::Tab::Import,
+                    f.parent.clone(),
+                );
+                out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
+                ui.close();
+            }
             if ui.button("Add PDF ...").clicked() {
                 let folder = f.parent.clone().unwrap_or_default();
                 let add = crate::pdf_library_types::LibraryMsg::AddTo(folder);

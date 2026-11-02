@@ -156,6 +156,8 @@ pub struct State {
     pub graph: Option<GraphState>,
     /// The calendar.
     pub planner: Planner,
+    /// The import and export dialog.
+    pub transfer: crate::transfer_ui::TransferState,
     /// The kanban board.
     pub kanban: Kanban,
     /// The open dialog.

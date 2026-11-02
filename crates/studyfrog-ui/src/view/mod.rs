@@ -35,6 +35,7 @@ mod modal_create;
 mod modal_fields;
 pub mod modal_import;
 mod modal_size;
+mod modal_transfer;
 mod navbar;
 pub mod notifications;
 mod pdf;

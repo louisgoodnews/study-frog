@@ -41,6 +41,7 @@ pub fn run(w: &mut Worker, effect: LibraryEffect, now_ns: i64) -> Msg {
                 folder, generation, summary,
             )))
         }
+        LibraryEffect::Transfer(job) => crate::exec_transfer::run(w, job, now_ns),
         LibraryEffect::LoadGoals(folder, uid) => {
             let text = studyfrog_service::goals::load_goals(s, uid).map_err(|e| e.to_string());
             Msg::Library(LibraryMsg::Stack(StackViewMsg::GoalsLoaded(folder, text)))
