@@ -1,6 +1,6 @@
 # Roadmap
 
-Phases M0 to M8. Each phase has entry criteria, an epic breakdown (every epic has at least one story, every story at least one task) and **exit criteria**: what must be demonstrably working. Issue files for a phase are created when it becomes next (M0 seeded now); until then the tree below is the plan of record.
+Phases M0 to M10. Each phase has entry criteria, an epic breakdown (every epic has at least one story, every story at least one task) and **exit criteria**: what must be demonstrably working. Issue files for a phase are created when it becomes next (M0 seeded now); until then the tree below is the plan of record.
 
 | Phase | Name | Epics | Detail |
 |---|---|---|---|
@@ -14,6 +14,7 @@ Phases M0 to M8. Each phase has entry criteria, an epic breakdown (every epic ha
 | M7 | Achievements and reporting | EPIC-014, EPIC-015 | [M7-achievements-and-reporting](M7-achievements-and-reporting.md) |
 | M8 | Extensibility and plugin boundaries | EPIC-016, EPIC-017 | [M8-extensibility-and-plugin-boundaries](M8-extensibility-and-plugin-boundaries.md) |
 | M9 | Documents (PDF) | EPIC-022 | [M9-documents](M9-documents.md) |
+| M10 | Usability and insight (0.3.0) | EPIC-023 | [M10-usability-and-insight](M10-usability-and-insight.md) |
 
 ## M0 Bootstrap
 
@@ -280,3 +281,6 @@ Explicit extension points and release readiness.
 
 ## M9 Documents (PDF)
 See [M9-documents](M9-documents.md): EPIC-022, STORY-0054 and TASK-0109 to TASK-0122.
+
+## M10 Usability and insight (0.3.0)
+See [M10-usability-and-insight](M10-usability-and-insight.md): EPIC-023, STORY-0055 to STORY-0070, BUG-0001 and TASK-0126 to TASK-0181.

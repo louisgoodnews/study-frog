@@ -4,65 +4,65 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (124) |
+| Backlog (57) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (124) |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-|  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-|  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-|  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
-|  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
-|  |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
-|  |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
-|  |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
-|  |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
-|  |  |  |  |  | [TASK-0010](docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
-|  |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
-|  |  |  |  |  | [TASK-0012](docs/issues/tasks/TASK-0012-id-newtypes-and-arena-indices.md) Id newtypes and arena indices (3) |
-|  |  |  |  |  | [TASK-0013](docs/issues/tasks/TASK-0013-stack-note-card-question-structs.md) Stack, Note, Card, Question structs (3) |
-|  |  |  |  |  | [TASK-0014](docs/issues/tasks/TASK-0014-review-and-rating-types.md) Review and Rating types (2) |
-|  |  |  |  |  | [TASK-0015](docs/issues/tasks/TASK-0015-run-and-event-types.md) Run and event types (3) |
-|  |  |  |  |  | [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) |
-|  |  |  |  |  | [TASK-0017](docs/issues/tasks/TASK-0017-fsrs-property-and-golden-tests.md) FSRS property and golden tests (3) |
-|  |  |  |  |  | [TASK-0018](docs/issues/tasks/TASK-0018-sm-2-functions.md) SM-2 functions (3) |
-|  |  |  |  |  | [TASK-0019](docs/issues/tasks/TASK-0019-srs-criterion-benchmark.md) SRS criterion benchmark (2) |
-|  |  |  |  |  | [TASK-0020](docs/issues/tasks/TASK-0020-schema-structs-and-validation.md) Schema structs and validation (3) |
-|  |  |  |  |  | [TASK-0021](docs/issues/tasks/TASK-0021-fence-splitter-and-serde-saphyr-parsing.md) Fence splitter and serde-saphyr parsing (3) |
-|  |  |  |  |  | [TASK-0022](docs/issues/tasks/TASK-0022-round-trip-property-test.md) Round-trip property test (3) |
-|  |  |  |  |  | [TASK-0023](docs/issues/tasks/TASK-0023-wikilink-extraction.md) Wikilink extraction (3) |
-|  |  |  |  |  | [TASK-0024](docs/issues/tasks/TASK-0024-card-and-question-section-split.md) Card and question section split (2) |
-|  |  |  |  |  | [TASK-0025](docs/issues/tasks/TASK-0025-initial-schema.md) Initial schema (3) |
-|  |  |  |  |  | [TASK-0026](docs/issues/tasks/TASK-0026-migration-runner.md) Migration runner (2) |
-|  |  |  |  |  | [TASK-0027](docs/issues/tasks/TASK-0027-vault-scanner.md) Vault scanner (5) |
-|  |  |  |  |  | [TASK-0028](docs/issues/tasks/TASK-0028-incremental-reindex.md) Incremental reindex (5) |
-|  |  |  |  |  | [TASK-0029](docs/issues/tasks/TASK-0029-file-watcher.md) File watcher (3) |
-|  |  |  |  |  | [TASK-0030](docs/issues/tasks/TASK-0030-run-input-types-and-transition-errors.md) Run input types and transition errors (2) |
-|  |  |  |  |  | [TASK-0031](docs/issues/tasks/TASK-0031-transition-functions.md) Transition functions (5) |
-|  |  |  |  |  | [TASK-0032](docs/issues/tasks/TASK-0032-injected-monotonic-clock.md) Injected monotonic clock (3) |
-|  |  |  |  |  | [TASK-0033](docs/issues/tasks/TASK-0033-persist-run-events.md) Persist run events (3) |
-|  |  |  |  |  | [TASK-0034](docs/issues/tasks/TASK-0034-spaced-due-first-queue-with-daily-budgets.md) Spaced (due-first) queue with daily budgets (3) |
-|  |  |  |  |  | [TASK-0035](docs/issues/tasks/TASK-0035-rehearsal-benchmark.md) Rehearsal benchmark (2) |
-|  |  |  |  |  | [TASK-0036](docs/issues/tasks/TASK-0036-eframe-window-and-navigation.md) eframe window and navigation (3) |
-|  |  |  |  |  | [TASK-0037](docs/issues/tasks/TASK-0037-elm-style-update-loop-and-effects.md) Elm-style update loop and effects (5) |
-|  |  |  |  |  | [TASK-0038](docs/issues/tasks/TASK-0038-stack-browser.md) Stack browser (3) |
-|  |  |  |  |  | [TASK-0039](docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) |
-|  |  |  |  |  | [TASK-0040](docs/issues/tasks/TASK-0040-editor-widget.md) Editor widget (5) |
-|  |  |  |  |  | [TASK-0041](docs/issues/tasks/TASK-0041-preview-renderer.md) Preview renderer (3) |
-|  |  |  |  |  | [TASK-0042](docs/issues/tasks/TASK-0042-force-directed-layout-soa.md) Force-directed layout (SoA) (5) |
-|  |  |  |  |  | [TASK-0043](docs/issues/tasks/TASK-0043-graph-render-benchmark.md) Graph render benchmark (3) |
-|  |  |  |  |  | [TASK-0044](docs/issues/tasks/TASK-0044-session-model-and-recurrence.md) Session model and recurrence (5) |
-|  |  |  |  |  | [TASK-0045](docs/issues/tasks/TASK-0045-calendar-view.md) Calendar view (5) |
-|  |  |  |  |  | [TASK-0046](docs/issues/tasks/TASK-0046-columns-and-wip-limits.md) Columns and WIP limits (3) |
-|  |  |  |  |  | [TASK-0047](docs/issues/tasks/TASK-0047-move-and-push-semantics.md) Move and push semantics (5) |
-|  |  |  |  |  | [TASK-0048](docs/issues/tasks/TASK-0048-board-view-with-drag-and-drop.md) Board view with drag and drop (5) |
-|  |  |  |  |  | [TASK-0049](docs/issues/tasks/TASK-0049-slm-runtime-trait.md) SlmRuntime trait (2) |
-|  |  |  |  |  | [TASK-0050](docs/issues/tasks/TASK-0050-candle-embedder-and-spike.md) Candle embedder and spike (8) |
-|  |  |  |  |  | [TASK-0051](docs/issues/tasks/TASK-0051-model-management.md) Model management (3) |
-|  |  |  |  |  | [TASK-0052](docs/issues/tasks/TASK-0052-score-functions.md) Score functions (3) |
-|  |  |  |  |  | [TASK-0053](docs/issues/tasks/TASK-0053-scoring-property-tests.md) Scoring property tests (2) |
-|  |  |  |  |  | [TASK-0054](docs/issues/tasks/TASK-0054-answer-input-in-rehearsal.md) Answer input in rehearsal (3) |
-|  |  |  |  |  | [TASK-0055](docs/issues/tasks/TASK-0055-slm-benchmark.md) SLM benchmark (1) |
-|  |  |  |  |  | [TASK-0056](docs/issues/tasks/TASK-0056-rule-data-model.md) Rule data model (3) |
-|  |  |  |  |  | [TASK-0057](docs/issues/tasks/TASK-0057-achievement-evaluator.md) Evaluator and unlock memory (5) |
+| [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+| [TASK-0126](docs/issues/tasks/TASK-0126-notification-records-with-ids-read-state-and-persistence.md) Notification records with ids, read state and persistence (3) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+| [TASK-0127](docs/issues/tasks/TASK-0127-notification-center-panel.md) Notification center panel (5) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+| [TASK-0128](docs/issues/tasks/TASK-0128-vault-name-next-to-the-studyfrog-name-in-the-bar.md) Vault name next to the StudyFrog name in the bar (2) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+| [TASK-0129](docs/issues/tasks/TASK-0129-specify-the-library-redesign-and-the-query-syntax.md) Specify the library redesign and the query syntax (3) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
+| [TASK-0130](docs/issues/tasks/TASK-0130-search-query-parser-and-evaluator.md) Search query parser and evaluator (5) |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
+| [TASK-0131](docs/issues/tasks/TASK-0131-item-list-with-columns-and-sorting.md) Item list with columns and sorting (5) |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
+| [TASK-0132](docs/issues/tasks/TASK-0132-search-bar-with-standard-and-query-modes.md) Search bar with Standard and Query modes (3) |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
+| [TASK-0133](docs/issues/tasks/TASK-0133-saved-filters-and-bulk-actions.md) Saved filters and bulk actions (3) |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
+| [TASK-0134](docs/issues/tasks/TASK-0134-move-card-creation-and-import-out-of-the-page.md) Move card creation and import out of the page (2) |  |  |  |  | [TASK-0010](docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
+| [TASK-0135](docs/issues/tasks/TASK-0135-specify-the-familiarity-value.md) Specify the familiarity value (3) |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
+| [TASK-0136](docs/issues/tasks/TASK-0136-record-how-long-items-are-viewed-and-acted-on.md) Record how long items are viewed and acted on (3) |  |  |  |  | [TASK-0012](docs/issues/tasks/TASK-0012-id-newtypes-and-arena-indices.md) Id newtypes and arena indices (3) |
+| [TASK-0137](docs/issues/tasks/TASK-0137-familiarity-as-a-pure-function-with-benchmarks.md) Familiarity as a pure function with benchmarks (5) |  |  |  |  | [TASK-0013](docs/issues/tasks/TASK-0013-stack-note-card-question-structs.md) Stack, Note, Card, Question structs (3) |
+| [TASK-0138](docs/issues/tasks/TASK-0138-per-item-familiarity-in-the-reports.md) Per-item familiarity in the reports (3) |  |  |  |  | [TASK-0014](docs/issues/tasks/TASK-0014-review-and-rating-types.md) Review and Rating types (2) |
+| [TASK-0139](docs/issues/tasks/TASK-0139-needs-attention-card-and-least-familiar-run-order.md) Needs-attention card and least-familiar run order (3) |  |  |  |  | [TASK-0015](docs/issues/tasks/TASK-0015-run-and-event-types.md) Run and event types (3) |
+| [TASK-0140](docs/issues/tasks/TASK-0140-familiarity-in-queue-selection-and-the-calendar-planner.md) Familiarity in queue selection and the calendar planner (3) |  |  |  |  | [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) |
+| [TASK-0141](docs/issues/tasks/TASK-0141-familiarity-scales-the-scheduler-s-interval.md) Familiarity scales the scheduler's interval (5) |  |  |  |  | [TASK-0017](docs/issues/tasks/TASK-0017-fsrs-property-and-golden-tests.md) FSRS property and golden tests (3) |
+| [TASK-0142](docs/issues/tasks/TASK-0142-settings-tab-bar-and-domain-grouping.md) Settings tab bar and domain grouping (3) |  |  |  |  | [TASK-0018](docs/issues/tasks/TASK-0018-sm-2-functions.md) SM-2 functions (3) |
+| [TASK-0143](docs/issues/tasks/TASK-0143-specify-the-statuses-their-names-and-their-transitions.md) Specify the statuses, their names and their transitions (2) |  |  |  |  | [TASK-0019](docs/issues/tasks/TASK-0019-srs-criterion-benchmark.md) SRS criterion benchmark (2) |
+| [TASK-0144](docs/issues/tasks/TASK-0144-status-field-in-the-data-model-and-markdown-schema.md) Status field in the data model and Markdown schema (3) |  |  |  |  | [TASK-0020](docs/issues/tasks/TASK-0020-schema-structs-and-validation.md) Schema structs and validation (3) |
+| [TASK-0145](docs/issues/tasks/TASK-0145-change-and-show-statuses-in-the-ui.md) Change and show statuses in the UI (3) |  |  |  |  | [TASK-0021](docs/issues/tasks/TASK-0021-fence-splitter-and-serde-saphyr-parsing.md) Fence splitter and serde-saphyr parsing (3) |
+| [TASK-0146](docs/issues/tasks/TASK-0146-plan-the-next-reviews-as-calendar-entries.md) Plan the next reviews as calendar entries (3) |  |  |  |  | [TASK-0022](docs/issues/tasks/TASK-0022-round-trip-property-test.md) Round-trip property test (3) |
+| [TASK-0147](docs/issues/tasks/TASK-0147-move-an-entry-to-another-day.md) Move an entry to another day (3) |  |  |  |  | [TASK-0023](docs/issues/tasks/TASK-0023-wikilink-extraction.md) Wikilink extraction (3) |
+| [TASK-0148](docs/issues/tasks/TASK-0148-calendar-entries-with-drag-and-drop.md) Calendar entries with drag and drop (3) |  |  |  |  | [TASK-0024](docs/issues/tasks/TASK-0024-card-and-question-section-split.md) Card and question section split (2) |
+| [TASK-0149](docs/issues/tasks/TASK-0149-specify-the-stack-view-redesign.md) Specify the stack view redesign (2) |  |  |  |  | [TASK-0025](docs/issues/tasks/TASK-0025-initial-schema.md) Initial schema (3) |
+| [TASK-0150](docs/issues/tasks/TASK-0150-stack-page-shell-with-header-and-tabs.md) Stack page shell with header and tabs (3) |  |  |  |  | [TASK-0026](docs/issues/tasks/TASK-0026-migration-runner.md) Migration runner (2) |
+| [TASK-0151](docs/issues/tasks/TASK-0151-summary-tab.md) Summary tab (5) |  |  |  |  | [TASK-0027](docs/issues/tasks/TASK-0027-vault-scanner.md) Vault scanner (5) |
+| [TASK-0152](docs/issues/tasks/TASK-0152-list-and-backlog-tabs.md) List and Backlog tabs (3) |  |  |  |  | [TASK-0028](docs/issues/tasks/TASK-0028-incremental-reindex.md) Incremental reindex (5) |
+| [TASK-0153](docs/issues/tasks/TASK-0153-sub-stacks-tab.md) Sub-stacks tab (2) |  |  |  |  | [TASK-0029](docs/issues/tasks/TASK-0029-file-watcher.md) File watcher (3) |
+| [TASK-0154](docs/issues/tasks/TASK-0154-roadmap-tab.md) Roadmap tab (5) |  |  |  |  | [TASK-0030](docs/issues/tasks/TASK-0030-run-input-types-and-transition-errors.md) Run input types and transition errors (2) |
+| [TASK-0155](docs/issues/tasks/TASK-0155-board-calendar-and-reports-tabs-scoped-to-the-stack.md) Board, Calendar and Reports tabs scoped to the stack (3) |  |  |  |  | [TASK-0031](docs/issues/tasks/TASK-0031-transition-functions.md) Transition functions (5) |
+| [TASK-0156](docs/issues/tasks/TASK-0156-specify-the-interchange-formats.md) Specify the interchange formats (3) |  |  |  |  | [TASK-0032](docs/issues/tasks/TASK-0032-injected-monotonic-clock.md) Injected monotonic clock (3) |
+| [TASK-0157](docs/issues/tasks/TASK-0157-export-a-library-or-stack.md) Export a library or stack (3) |  |  |  |  | [TASK-0033](docs/issues/tasks/TASK-0033-persist-run-events.md) Persist run events (3) |
+| [TASK-0158](docs/issues/tasks/TASK-0158-import-with-preview-and-duplicate-handling.md) Import with preview and duplicate handling (5) |  |  |  |  | [TASK-0034](docs/issues/tasks/TASK-0034-spaced-due-first-queue-with-daily-budgets.md) Spaced (due-first) queue with daily budgets (3) |
+| [TASK-0159](docs/issues/tasks/TASK-0159-import-and-export-screens.md) Import and export screens (3) |  |  |  |  | [TASK-0035](docs/issues/tasks/TASK-0035-rehearsal-benchmark.md) Rehearsal benchmark (2) |
+| [TASK-0160](docs/issues/tasks/TASK-0160-plan-the-help-content.md) Plan the help content (2) |  |  |  |  | [TASK-0036](docs/issues/tasks/TASK-0036-eframe-window-and-navigation.md) eframe window and navigation (3) |
+| [TASK-0161](docs/issues/tasks/TASK-0161-help-viewer-with-navigation-and-search.md) Help viewer with navigation and search (5) |  |  |  |  | [TASK-0037](docs/issues/tasks/TASK-0037-elm-style-update-loop-and-effects.md) Elm-style update loop and effects (5) |
+| [TASK-0162](docs/issues/tasks/TASK-0162-user-added-and-user-edited-help-pages.md) User-added and user-edited help pages (5) |  |  |  |  | [TASK-0038](docs/issues/tasks/TASK-0038-stack-browser.md) Stack browser (3) |
+| [TASK-0163](docs/issues/tasks/TASK-0163-assistant-proposals-for-user-help-pages.md) Assistant proposals for user help pages (3) |  |  |  |  | [TASK-0039](docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) |
+| [TASK-0164](docs/issues/tasks/TASK-0164-write-the-vision-getting-started-and-faq-pages.md) Write the vision, getting started and FAQ pages (3) |  |  |  |  | [TASK-0040](docs/issues/tasks/TASK-0040-editor-widget.md) Editor widget (5) |
+| [TASK-0165](docs/issues/tasks/TASK-0165-guided-tutorials.md) Guided tutorials (3) |  |  |  |  | [TASK-0041](docs/issues/tasks/TASK-0041-preview-renderer.md) Preview renderer (3) |
+| [TASK-0166](docs/issues/tasks/TASK-0166-anki-importer.md) Anki importer (5) |  |  |  |  | [TASK-0042](docs/issues/tasks/TASK-0042-force-directed-layout-soa.md) Force-directed layout (SoA) (5) |
+| [TASK-0167](docs/issues/tasks/TASK-0167-obsidian-vault-importer.md) Obsidian vault importer (3) |  |  |  |  | [TASK-0043](docs/issues/tasks/TASK-0043-graph-render-benchmark.md) Graph render benchmark (3) |
+| [TASK-0168](docs/issues/tasks/TASK-0168-document-how-to-write-a-format-adapter.md) Document how to write a format adapter (2) |  |  |  |  | [TASK-0044](docs/issues/tasks/TASK-0044-session-model-and-recurrence.md) Session model and recurrence (5) |
+| [TASK-0169](docs/issues/tasks/TASK-0169-specify-the-diary.md) Specify the diary (2) |  |  |  |  | [TASK-0045](docs/issues/tasks/TASK-0045-calendar-view.md) Calendar view (5) |
+| [TASK-0170](docs/issues/tasks/TASK-0170-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  |  |  | [TASK-0046](docs/issues/tasks/TASK-0046-columns-and-wip-limits.md) Columns and WIP limits (3) |
+| [TASK-0171](docs/issues/tasks/TASK-0171-diary-screen.md) Diary screen (5) |  |  |  |  | [TASK-0047](docs/issues/tasks/TASK-0047-move-and-push-semantics.md) Move and push semantics (5) |
+| [TASK-0172](docs/issues/tasks/TASK-0172-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |  |  |  |  | [TASK-0048](docs/issues/tasks/TASK-0048-board-view-with-drag-and-drop.md) Board view with drag and drop (5) |
+| [TASK-0173](docs/issues/tasks/TASK-0173-self-assessment-against-measured-results.md) Self-assessment against measured results (3) |  |  |  |  | [TASK-0049](docs/issues/tasks/TASK-0049-slm-runtime-trait.md) SlmRuntime trait (2) |
+| [TASK-0174](docs/issues/tasks/TASK-0174-specify-the-detail-view.md) Specify the detail view (2) |  |  |  |  | [TASK-0050](docs/issues/tasks/TASK-0050-candle-embedder-and-spike.md) Candle embedder and spike (8) |
+| [TASK-0175](docs/issues/tasks/TASK-0175-detail-view-layout-with-the-details-panel.md) Detail view layout with the details panel (5) |  |  |  |  | [TASK-0051](docs/issues/tasks/TASK-0051-model-management.md) Model management (3) |
+| [TASK-0176](docs/issues/tasks/TASK-0176-open-an-item-in-a-side-panel.md) Open an item in a side panel (3) |  |  |  |  | [TASK-0052](docs/issues/tasks/TASK-0052-score-functions.md) Score functions (3) |
+| [TASK-0177](docs/issues/tasks/TASK-0177-activity-log-of-reviews-edits-and-status-changes.md) Activity log of reviews, edits and status changes (3) |  |  |  |  | [TASK-0053](docs/issues/tasks/TASK-0053-scoring-property-tests.md) Scoring property tests (2) |
+| [TASK-0178](docs/issues/tasks/TASK-0178-specify-the-rehearsal-modes.md) Specify the rehearsal modes (2) |  |  |  |  | [TASK-0054](docs/issues/tasks/TASK-0054-answer-input-in-rehearsal.md) Answer input in rehearsal (3) |
+| [TASK-0179](docs/issues/tasks/TASK-0179-countdown-and-count-up-in-the-run-state-machine.md) Countdown and count up in the run state machine (5) |  |  |  |  | [TASK-0055](docs/issues/tasks/TASK-0055-slm-benchmark.md) SLM benchmark (1) |
+| [TASK-0180](docs/issues/tasks/TASK-0180-mode-and-timer-in-run-setup-and-on-the-rehearsal-screen.md) Mode and timer in run setup and on the rehearsal screen (3) |  |  |  |  | [TASK-0056](docs/issues/tasks/TASK-0056-rule-data-model.md) Rule data model (3) |
+| [TASK-0181](docs/issues/tasks/TASK-0181-mode-and-time-in-the-review-and-the-reports.md) Mode and time in the review and the reports (2) |  |  |  |  | [TASK-0057](docs/issues/tasks/TASK-0057-achievement-evaluator.md) Evaluator and unlock memory (5) |
 |  |  |  |  |  | [TASK-0058](docs/issues/tasks/TASK-0058-achievements-screen.md) Achievements screen and announcements (3) |
 |  |  |  |  |  | [TASK-0059](docs/issues/tasks/TASK-0059-retention-curves.md) Retention curves (2) |
 |  |  |  |  |  | [TASK-0060](docs/issues/tasks/TASK-0060-latency-distributions.md) Latency distributions (3) |
@@ -189,6 +189,22 @@
 | [STORY-0052](docs/issues/stories/STORY-0052-stack-due-dates-that-pass-and-can-change.md) Stack due dates that pass and can change (3) | done | 0/0 |
 | [STORY-0053](docs/issues/stories/STORY-0053-priority-and-difficulty-with-inheritance.md) Priority and difficulty with inheritance (8) | done | 0/0 |
 | [STORY-0054](docs/issues/stories/STORY-0054-pdf-files-in-the-vault-to-view-edit-and-extract.md) PDF files in the vault to view, edit and extract (8) | done | 17/17 |
+| [STORY-0055](docs/issues/stories/STORY-0055-notification-management.md) Notification management (5) | backlog | 0/2 |
+| [STORY-0056](docs/issues/stories/STORY-0056-current-vault-in-the-top-bar.md) Current vault in the top bar (2) | backlog | 0/1 |
+| [STORY-0057](docs/issues/stories/STORY-0057-library-redesign.md) Library redesign (8) | backlog | 0/6 |
+| [STORY-0058](docs/issues/stories/STORY-0058-familiarity-value.md) Familiarity value (8) | backlog | 0/3 |
+| [STORY-0059](docs/issues/stories/STORY-0059-familiarity-in-reports-on-home-and-in-scheduling.md) Familiarity in reports, on Home and in scheduling (8) | backlog | 0/4 |
+| [STORY-0060](docs/issues/stories/STORY-0060-settings-in-tabs.md) Settings in tabs (3) | backlog | 0/1 |
+| [STORY-0061](docs/issues/stories/STORY-0061-statuses-for-stacks-notes-cards-and-questions.md) Statuses for stacks, notes, cards and questions (8) | backlog | 0/3 |
+| [STORY-0062](docs/issues/stories/STORY-0062-calendar-plans-the-next-reviews-and-lets-the-user-move-them.md) Calendar plans the next reviews and lets the user move them (8) | backlog | 0/3 |
+| [STORY-0063](docs/issues/stories/STORY-0063-stack-page-with-tabs-and-summary.md) Stack page with tabs and summary (8) | backlog | 0/3 |
+| [STORY-0064](docs/issues/stories/STORY-0064-stack-sub-views-for-list-backlog-roadmap-board-calendar-and-reports.md) Stack sub-views for list, backlog, roadmap, board, calendar and reports (8) | backlog | 0/4 |
+| [STORY-0065](docs/issues/stories/STORY-0065-import-and-export-in-json-and-other-formats.md) Import and export in JSON and other formats (8) | backlog | 0/4 |
+| [STORY-0066](docs/issues/stories/STORY-0066-built-in-wiki-faq-and-tutorials.md) Built-in wiki, FAQ and tutorials (8) | backlog | 0/6 |
+| [STORY-0067](docs/issues/stories/STORY-0067-importers-for-anki-and-obsidian.md) Importers for Anki and Obsidian (8) | backlog | 0/3 |
+| [STORY-0068](docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | backlog | 0/5 |
+| [STORY-0069](docs/issues/stories/STORY-0069-stack-detail-view-like-jira-s-issue-view.md) Stack detail view like Jira's issue view (8) | backlog | 0/4 |
+| [STORY-0070](docs/issues/stories/STORY-0070-rehearsal-modes-for-countdown-and-count-up.md) Rehearsal modes for countdown and count up (8) | backlog | 0/4 |
 
 ## Epics
 
@@ -216,3 +232,4 @@
 | [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 4/4 |
 | [EPIC-021](docs/issues/epics/EPIC-021-knowledge-workspace.md) Knowledge workspace | done | 14/14 |
 | [EPIC-022](docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | done | 1/1 |
+| [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | backlog | 0/16 |
