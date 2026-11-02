@@ -2,8 +2,8 @@
 //! Pure: no egui, no I/O.
 
 use studyfrog_core::plan::{
-    DifficultyRange, ItemFilter, ItemKind, Order, RunPlan, ScheduleEffect, StateFilter,
-    plan_hardest, plan_sequential, plan_shuffled, plan_spaced, plan_stalest,
+    ItemFilter, ItemKind, Order, RunPlan, ScheduleEffect, StateFilter, plan_hardest,
+    plan_sequential, plan_shuffled, plan_spaced, plan_stalest,
 };
 use studyfrog_core::run::RunMode;
 use studyfrog_core::uid::Uid;
@@ -60,6 +60,8 @@ pub enum SetupEdit {
     FamOn(bool),
     /// Only items less familiar than this many percent.
     FamBelow(String),
+    /// Change the pacing.
+    Pacing(crate::setup_pacing::PacingEdit),
 }
 
 /// The fields as the user edits them (text stays text until it is validated).
@@ -95,6 +97,8 @@ pub struct SetupForm {
     pub fam_on: bool,
     /// The familiarity bound as typed, in percent.
     pub fam_below: String,
+    /// How the clock figures in the run.
+    pub pacing: crate::setup_pacing::PacingForm,
 }
 
 fn plan_to_form(plan: &RunPlan, mode: RunMode) -> SetupForm {
@@ -113,6 +117,7 @@ fn plan_to_form(plan: &RunPlan, mode: RunMode) -> SetupForm {
         diff_min: "1".to_owned(),
         diff_max: "10".to_owned(),
         fam_on: plan.filter.familiarity_below.is_some(),
+        pacing: crate::setup_pacing::form_of(plan.pacing),
         fam_below: plan
             .filter
             .familiarity_below
@@ -144,20 +149,6 @@ pub(crate) fn number<T: std::str::FromStr>(text: &str, what: &str) -> Result<T, 
         .map_err(|_| format!("{what} must be a number"))
 }
 
-fn difficulty(f: &SetupForm) -> Result<Option<DifficultyRange>, String> {
-    if !f.difficulty_on {
-        return Ok(None);
-    }
-    let (min, max): (f32, f32) = (
-        number(&f.diff_min, "the lowest difficulty")?,
-        number(&f.diff_max, "the highest difficulty")?,
-    );
-    if !(1.0..=10.0).contains(&min) || !(1.0..=10.0).contains(&max) || min > max {
-        return Err("difficulty runs from 1 to 10, lowest first".to_owned());
-    }
-    Ok(Some(DifficultyRange { min, max }))
-}
-
 fn limit(f: &SetupForm) -> Result<Option<u32>, String> {
     if f.limit.trim().is_empty() {
         return Ok(None);
@@ -182,7 +173,7 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
         stacks: f.stacks.clone(),
         tags_any,
         state: f.state,
-        difficulty: difficulty(f)?,
+        difficulty: crate::setup_fam::difficulty(f)?,
         familiarity_below: crate::setup_fam::familiarity_bound(f)?,
     };
     Ok(RunPlan {
@@ -193,7 +184,7 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
         seed,
         limit: limit(f)?,
         requeue_again: f.requeue_again,
-        pacing: studyfrog_core::pacing::Pacing::Free,
+        pacing: crate::setup_pacing::pacing_from(&f.pacing)?,
     })
 }
 
@@ -242,5 +233,9 @@ pub fn apply_edit(f: SetupForm, edit: SetupEdit) -> SetupForm {
         SetupEdit::DiffMax(diff_max) => SetupForm { diff_max, ..f },
         SetupEdit::FamOn(fam_on) => SetupForm { fam_on, ..f },
         SetupEdit::FamBelow(fam_below) => SetupForm { fam_below, ..f },
+        SetupEdit::Pacing(e) => SetupForm {
+            pacing: crate::setup_pacing::edited(f.pacing.clone(), e),
+            ..f
+        },
     }
 }

@@ -51,6 +51,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
     });
     ui.add_space(6.0);
+    crate::view::setup_pacing::draw(form, ui, out);
+    ui.add_space(6.0);
     ui.label("How");
     ui.horizontal(|ui| {
         for (mode, label) in [

@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add the setup control and the timer to the screens.
 
 ## Acceptance Criteria
-- [ ] Run setup offers the mode and, for a countdown, presets and a custom time
-- [ ] The rehearsal screen shows the remaining or elapsed time, warns at one minute and ten seconds in text, and announces it to screen readers
-- [ ] At zero the review opens, and the accessibility audit passes
+- [x] Run setup offers the mode and, for a countdown, presets and a custom time
+- [x] The rehearsal screen shows the remaining or elapsed time, warns at one minute and ten seconds in text, and announces it to screen readers
+- [x] At zero the review opens, and the accessibility audit passes
 
 ## Design Notes
 None.

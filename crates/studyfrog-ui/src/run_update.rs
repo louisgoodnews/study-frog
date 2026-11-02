@@ -96,7 +96,7 @@ fn run_ready(state: State, result: Result<Run, String>) -> (State, Vec<Effect>) 
 
 /// Feed one action to the engine. Actions the engine refuses (a rating before the answer is
 /// revealed, a second flip, ...) are ignored: they are stray key presses, not errors.
-fn act(state: State, action: Action) -> (State, Vec<Effect>) {
+pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
     let mut state = state;
     let Some(mut run) = state.rehearse.run.take() else {
         return (state, Vec::new());

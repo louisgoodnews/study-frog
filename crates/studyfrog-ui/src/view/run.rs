@@ -114,6 +114,9 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
                 .saturating_sub(s.paused_in_item_ms);
             kit::pill(ui, &format!("{:.1} s", f64::from(on_item) / 1000.0), weak);
         }
+        if let Some(clock) = crate::run_clock::clock_of(state, run) {
+            crate::view::run_timer::draw(&clock, ui);
+        }
         ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
             if ui.button("Stop (Esc)").clicked() {
                 act(out, Action::Abort);

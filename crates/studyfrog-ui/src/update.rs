@@ -66,11 +66,11 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
             Vec::new(),
         ),
         Msg::Tick => {
-            let (state, mut effects) = crate::poll_ui::tick(state);
+            let (state, polled) = crate::poll_ui::tick(state);
             let (state, more) = crate::reminder_ui::tick(state);
-            effects.extend(more);
             let (state, _) = crate::view_time::tick(state);
-            (state, effects)
+            let (state, ended) = crate::run_clock::tick(state);
+            (state, [polled, more, ended].concat())
         }
         Msg::PickImage(t) => crate::image_ui::pick(state, t),
         Msg::ImageAdded(t, r) => crate::image_ui::added(state, t, r),

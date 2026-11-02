@@ -23,6 +23,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- Run setup offers a time for the run: no clock, a countdown (5, 10, 15 or 25 minutes or any from 1 to 180) or a count up. The rehearsal screen shows the time left or used, says "One minute left" and "Ten seconds left" in text and announces them to screen readers, and a countdown ends the run by itself at zero, leaving the item on screen unrated and opening the review (TASK-0181).
 - The stack page has Board (a column per status, items move by dragging or a menu), Calendar (the month grid, day list and planned reviews of that stack only, sharing the global calendar's code) and Reports (the stack's familiarity and least familiar items) tabs; tabs that do not fit go into a More menu (TASK-0156).
 - The stack page has a Roadmap tab: a row for each stack inside it and each item directly in it, with a bar from its first date to its next one on a time axis with a line for today; zoom (Today, Weeks, Months, Quarters), scrolling both ways, only the rows in view are drawn (1000 rows measured), and each bar is a named button that opens its stack or item (TASK-0155).
 - The stack page has a Goals tab: a Markdown bullet list (check boxes allowed) edited in place and saved under a `## Goals` heading in the stack's `_stack.md`, where it is searchable and part of backups; the rest of the file is kept (TASK-0154).
