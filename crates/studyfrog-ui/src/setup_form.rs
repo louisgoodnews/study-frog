@@ -179,6 +179,7 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
         seed,
         limit: limit(f)?,
         requeue_again: f.requeue_again,
+        pacing: studyfrog_core::pacing::Pacing::Free,
     })
 }
 

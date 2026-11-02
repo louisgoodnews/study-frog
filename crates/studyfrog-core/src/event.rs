@@ -58,6 +58,8 @@ pub enum EventKind {
     RunPaused,
     /// Run resumed.
     RunResumed,
+    /// A countdown ran out; the item on screen, if any, was not answered. Followed by `RunFinished`.
+    TimeUp,
     /// Normal end.
     RunFinished,
     /// Early exit or crash recovery.
@@ -113,6 +115,7 @@ pub fn event_name(kind: &EventKind) -> &'static str {
         EventKind::ItemMarked(_) => "item_marked",
         EventKind::RunPaused => "run_paused",
         EventKind::RunResumed => "run_resumed",
+        EventKind::TimeUp => "time_up",
         EventKind::RunFinished => "run_finished",
         EventKind::RunAborted => "run_aborted",
     }
@@ -157,6 +160,7 @@ pub fn event_from_parts(name: &str, payload: Option<&str>) -> Option<EventKind> 
         ("item_marked", Some(v)) => difficulty_from_name(v).map(EventKind::ItemMarked),
         ("run_paused", None) => Some(EventKind::RunPaused),
         ("run_resumed", None) => Some(EventKind::RunResumed),
+        ("time_up", None) => Some(EventKind::TimeUp),
         ("run_finished", None) => Some(EventKind::RunFinished),
         ("run_aborted", None) => Some(EventKind::RunAborted),
         _ => None,

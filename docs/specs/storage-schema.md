@@ -109,4 +109,5 @@ turns runs left idle, running or paused into `aborted` and closes their log with
 - `notification` (version 15): the bell's list, one row per notification: `id` (chosen by the app), `kind` (`info` or `error`), `text`,
   `at_ms`, `read` (0 or 1) and `target` (`screen:calendar`, `item:<id>` or `NULL`). Per vault, part of the database copy in a backup, capped
   at 200 rows and 30 days.
-
+- `run.pacing` and `run.countdown_secs` (version 16): how the clock figures in a run (`free`, `countdown` with 60 to 10 800 seconds, or `count_up`); runs made before read as `free`. The
+  event `time_up` marks the end of a countdown ([rehearsal-run](rehearsal-run.md)).

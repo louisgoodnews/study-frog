@@ -8,6 +8,7 @@ use studyfrog_core::run::{RunMode, RunState};
 use studyfrog_core::uid::Uid;
 
 use crate::input::{Action, Input, StepError, StepOutput};
+use crate::pacing::remaining_ms;
 use crate::session::{ItemPhase, Session, current_item};
 
 /// Apply one input.
@@ -17,6 +18,9 @@ pub fn step(session: &mut Session, input: Input) -> Result<StepOutput, StepError
     }
     validate(session, &input.action)?;
     session.last_t_ms = input.t_ms;
+    if timed_out(session, input.t_ms) {
+        return Ok(time_up(session, input.t_ms));
+    }
     Ok(apply(session, input))
 }
 
@@ -26,10 +30,10 @@ fn validate(s: &Session, action: &Action) -> Result<(), StepError> {
         (RunState::Idle, Action::Start | Action::Abort) => Ok(()),
         (RunState::Idle, _) => Err(StepError::NotStarted),
         (_, Action::Start) => Err(StepError::AlreadyStarted),
-        (RunState::Paused, Action::Resume | Action::Abort) => Ok(()),
+        (RunState::Paused, Action::Resume | Action::Abort | Action::Tick) => Ok(()),
         (RunState::Paused, _) => Err(StepError::Paused),
         (_, Action::Resume) => Err(StepError::NotPaused),
-        (_, Action::Pause | Action::Abort) => Ok(()),
+        (_, Action::Pause | Action::Abort | Action::Tick) => Ok(()),
         (_, Action::Flip | Action::Skip) => {
             require_phase(s, ItemPhase::Shown, StepError::NotAwaitingReveal)
         }
@@ -94,6 +98,7 @@ fn apply(s: &mut Session, input: Input) -> StepOutput {
         Action::Skip => skip(s, t, item, &mut out),
         Action::Rate(rating) => rate(s, t, item, rating, &mut out),
         Action::Mark(d) => out.events.push(event(s, t, item, EventKind::ItemMarked(d))),
+        Action::Tick => {}
         Action::Pause => pause(s, t, &mut out),
         Action::Resume => resume(s, t, &mut out),
         Action::Abort => abort(s, t, &mut out),
@@ -103,6 +108,7 @@ fn apply(s: &mut Session, input: Input) -> StepOutput {
 
 fn start(s: &mut Session, t: u32, out: &mut StepOutput) {
     s.run.state = RunState::Running;
+    s.started_ms = t;
     out.events.push(event(s, t, None, EventKind::RunStarted));
     show_next(s, t, out);
 }
@@ -181,6 +187,7 @@ fn pause(s: &mut Session, t: u32, out: &mut StepOutput) {
 fn resume(s: &mut Session, t: u32, out: &mut StepOutput) {
     let paused = s.paused_at_ms.take().map_or(0, |at| t.saturating_sub(at));
     s.paused_in_item_ms = s.paused_in_item_ms.saturating_add(paused);
+    s.paused_total_ms = s.paused_total_ms.saturating_add(paused);
     s.run.state = RunState::Running;
     out.events.push(event(s, t, None, EventKind::RunResumed));
 }
@@ -189,4 +196,20 @@ fn abort(s: &mut Session, t: u32, out: &mut StepOutput) {
     s.phase = ItemPhase::NoItem;
     s.run.state = RunState::Aborted;
     out.events.push(event(s, t, None, EventKind::RunAborted));
+}
+
+/// A countdown whose active time has run out while the run was running.
+fn timed_out(s: &Session, t: u32) -> bool {
+    s.run.state == RunState::Running && remaining_ms(s, t) == Some(0)
+}
+
+/// End a countdown: the item on screen is not answered (no rating, no schedule change) and the run is finished.
+fn time_up(s: &mut Session, t: u32) -> StepOutput {
+    let mut out = StepOutput::default();
+    let open = current_item(s);
+    out.events.push(event(s, t, open, EventKind::TimeUp));
+    s.phase = ItemPhase::NoItem;
+    s.run.state = RunState::Finished;
+    out.events.push(event(s, t, None, EventKind::RunFinished));
+    out
 }

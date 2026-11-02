@@ -2,6 +2,7 @@
 
 use rusqlite::Connection;
 use studyfrog_core::event::{RunEvent, event_from_parts};
+use studyfrog_core::pacing::pacing_from_parts;
 use studyfrog_core::plan::{
     DifficultyRange, ItemFilter, RunPlan, effect_from_name, item_kind_from_name, order_from_name,
     state_filter_from_name,
@@ -27,12 +28,14 @@ struct RunRow {
     filter_state: String,
     diff: (Option<f32>, Option<f32>),
     shuffle: bool,
+    pacing: String,
+    countdown: Option<u32>,
 }
 
 fn read_run_row(conn: &Connection, uid: Uid) -> Result<Option<RunRow>, StoreError> {
     let sql =
         "SELECT mode, state, started_at_ms, order_name, effect, seed, run_limit, requeue_again,
-                      filter_state, filter_diff_min, filter_diff_max, shuffle FROM run WHERE uid = ?1";
+                      filter_state, filter_diff_min, filter_diff_max, shuffle, pacing, countdown_secs FROM run WHERE uid = ?1";
     let found = conn.query_row(sql, [format_ulid(uid)], |r| {
         Ok(RunRow {
             mode: r.get(0)?,
@@ -46,6 +49,8 @@ fn read_run_row(conn: &Connection, uid: Uid) -> Result<Option<RunRow>, StoreErro
             filter_state: r.get(8)?,
             diff: (r.get(9)?, r.get(10)?),
             shuffle: r.get(11)?,
+            pacing: r.get(12)?,
+            countdown: r.get(13)?,
         })
     });
     match found {
@@ -80,6 +85,8 @@ pub fn load_run(conn: &Connection, uid: Uid) -> Result<Option<Run>, StoreError> 
         seed: row.seed as u64,
         limit: row.limit,
         requeue_again: row.requeue,
+        pacing: pacing_from_parts(&row.pacing, row.countdown)
+            .ok_or_else(|| corrupt("pacing", &row.pacing))?,
     };
     Ok(Some(Run {
         uid,

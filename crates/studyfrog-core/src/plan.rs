@@ -98,6 +98,8 @@ pub struct RunPlan {
     pub limit: Option<u32>,
     /// Rated-Again items return to the end of the queue.
     pub requeue_again: bool,
+    /// How the clock figures in the run: free, a countdown or a count up.
+    pub pacing: crate::pacing::Pacing,
 }
 
 /// How often one item may be requeued within a run.
@@ -123,6 +125,7 @@ fn plan(order: Order, effect: ScheduleEffect, requeue_again: bool) -> RunPlan {
         seed: 0,
         limit: None,
         requeue_again,
+        pacing: crate::pacing::Pacing::Free,
     }
 }
 

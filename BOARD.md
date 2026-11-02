@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (42) | Ready (0) | In progress (0/3) | Review (2) | Blocked (0) | Done (137) |
+| Backlog (40) | Ready (0) | In progress (0/3) | Review (2) | Blocked (0) | Done (139) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0130](docs/issues/tasks/TASK-0130-search-query-parser-and-evaluator.md) Search query parser and evaluator (5) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0131](docs/issues/tasks/TASK-0131-item-list-with-columns-and-sorting.md) Item list with columns and sorting (5) |  |  | [TASK-0129](docs/issues/tasks/TASK-0129-specify-the-library-redesign-and-the-query-syntax.md) Specify the library redesign and the query syntax (3) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
@@ -43,11 +43,11 @@
 | [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |  |  |  |  | [TASK-0034](docs/issues/tasks/TASK-0034-spaced-due-first-queue-with-daily-budgets.md) Spaced (due-first) queue with daily budgets (3) |
 | [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |  |  |  |  | [TASK-0035](docs/issues/tasks/TASK-0035-rehearsal-benchmark.md) Rehearsal benchmark (2) |
 | [TASK-0174](docs/issues/tasks/TASK-0174-self-assessment-against-measured-results.md) Self-assessment against measured results (3) |  |  |  |  | [TASK-0036](docs/issues/tasks/TASK-0036-eframe-window-and-navigation.md) eframe window and navigation (3) |
-| [TASK-0179](docs/issues/tasks/TASK-0179-specify-the-rehearsal-modes.md) Specify the rehearsal modes (2) |  |  |  |  | [TASK-0037](docs/issues/tasks/TASK-0037-elm-style-update-loop-and-effects.md) Elm-style update loop and effects (5) |
-| [TASK-0180](docs/issues/tasks/TASK-0180-countdown-and-count-up-in-the-run-state-machine.md) Countdown and count up in the run state machine (5) |  |  |  |  | [TASK-0038](docs/issues/tasks/TASK-0038-stack-browser.md) Stack browser (3) |
-| [TASK-0181](docs/issues/tasks/TASK-0181-mode-and-timer-in-run-setup-and-on-the-rehearsal-screen.md) Mode and timer in run setup and on the rehearsal screen (3) |  |  |  |  | [TASK-0039](docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) |
-| [TASK-0182](docs/issues/tasks/TASK-0182-mode-and-time-in-the-review-and-the-reports.md) Mode and time in the review and the reports (2) |  |  |  |  | [TASK-0040](docs/issues/tasks/TASK-0040-editor-widget.md) Editor widget (5) |
-| [TASK-0184](docs/issues/tasks/TASK-0184-replay-familiarity-against-the-user-s-review-history-for-a-verdict.md) Replay familiarity against the user's review history for a verdict (3) |  |  |  |  | [TASK-0041](docs/issues/tasks/TASK-0041-preview-renderer.md) Preview renderer (3) |
+| [TASK-0181](docs/issues/tasks/TASK-0181-mode-and-timer-in-run-setup-and-on-the-rehearsal-screen.md) Mode and timer in run setup and on the rehearsal screen (3) |  |  |  |  | [TASK-0037](docs/issues/tasks/TASK-0037-elm-style-update-loop-and-effects.md) Elm-style update loop and effects (5) |
+| [TASK-0182](docs/issues/tasks/TASK-0182-mode-and-time-in-the-review-and-the-reports.md) Mode and time in the review and the reports (2) |  |  |  |  | [TASK-0038](docs/issues/tasks/TASK-0038-stack-browser.md) Stack browser (3) |
+| [TASK-0184](docs/issues/tasks/TASK-0184-replay-familiarity-against-the-user-s-review-history-for-a-verdict.md) Replay familiarity against the user's review history for a verdict (3) |  |  |  |  | [TASK-0039](docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) |
+|  |  |  |  |  | [TASK-0040](docs/issues/tasks/TASK-0040-editor-widget.md) Editor widget (5) |
+|  |  |  |  |  | [TASK-0041](docs/issues/tasks/TASK-0041-preview-renderer.md) Preview renderer (3) |
 |  |  |  |  |  | [TASK-0042](docs/issues/tasks/TASK-0042-force-directed-layout-soa.md) Force-directed layout (SoA) (5) |
 |  |  |  |  |  | [TASK-0043](docs/issues/tasks/TASK-0043-graph-render-benchmark.md) Graph render benchmark (3) |
 |  |  |  |  |  | [TASK-0044](docs/issues/tasks/TASK-0044-session-model-and-recurrence.md) Session model and recurrence (5) |
@@ -142,6 +142,8 @@
 |  |  |  |  |  | [TASK-0143](docs/issues/tasks/TASK-0143-specify-the-statuses-their-names-and-their-transitions.md) Specify the statuses, their names and their transitions (2) |
 |  |  |  |  |  | [TASK-0144](docs/issues/tasks/TASK-0144-status-field-in-the-data-model-and-markdown-schema.md) Status field in the data model and Markdown schema (3) |
 |  |  |  |  |  | [TASK-0145](docs/issues/tasks/TASK-0145-change-and-show-statuses-in-the-ui.md) Change and show statuses in the UI (3) |
+|  |  |  |  |  | [TASK-0179](docs/issues/tasks/TASK-0179-specify-the-rehearsal-modes.md) Specify the rehearsal modes (2) |
+|  |  |  |  |  | [TASK-0180](docs/issues/tasks/TASK-0180-countdown-and-count-up-in-the-run-state-machine.md) Countdown and count up in the run state machine (5) |
 |  |  |  |  |  | [TASK-0183](docs/issues/tasks/TASK-0183-research-a-model-that-combines-familiarity-with-fsrs.md) Research a model that combines familiarity with FSRS (5) |
 
 ## Stories
@@ -216,7 +218,7 @@
 | [STORY-0066](docs/issues/stories/STORY-0066-built-in-wiki-faq-and-tutorials.md) Built-in wiki, FAQ and tutorials (8) | backlog | 0/6 |
 | [STORY-0067](docs/issues/stories/STORY-0067-importers-for-anki-and-obsidian.md) Importers for Anki and Obsidian (8) | backlog | 0/3 |
 | [STORY-0068](docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | backlog | 0/5 |
-| [STORY-0070](docs/issues/stories/STORY-0070-rehearsal-modes-for-countdown-and-count-up.md) Rehearsal modes for countdown and count up (8) | backlog | 0/4 |
+| [STORY-0070](docs/issues/stories/STORY-0070-rehearsal-modes-for-countdown-and-count-up.md) Rehearsal modes for countdown and count up (8) | in_progress | 2/4 |
 
 ## Epics
 

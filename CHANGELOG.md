@@ -19,6 +19,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- The rehearsal engine knows two more pacings besides the free run: a countdown that ends the run by itself when its active time is up (the item on screen
+  counts as not answered, with no rating and no schedule change; a pause stops the clock) and a count up. The pacing is stored with the run (schema
+  version 16, older runs read as free) and a `time_up` event marks the end of a countdown. The screens come with TASK-0181 (TASK-0179, TASK-0180).
 - Specifications of the library redesign (`docs/specs/library.md`: a Jira-style list with columns, sorting, selection and bulk actions) and of the
   query language (`docs/specs/query.md`: grammar, fields, operators, error messages, limits) (TASK-0129).
 - A notification center under the bell: filters for all, unread and errors, mark one or all read or unread, delete one or clear all, the list

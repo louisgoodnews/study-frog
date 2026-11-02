@@ -26,6 +26,8 @@ pub enum Action {
     Resume,
     /// Leave the run early.
     Abort,
+    /// Time has passed and nothing else happened; a countdown may run out.
+    Tick,
 }
 
 /// An action with the monotonic time (milliseconds since run start) at which it happened.

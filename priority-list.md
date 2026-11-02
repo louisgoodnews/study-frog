@@ -20,7 +20,7 @@ Last updated: 2026-11-02.
 - [x] 8. TASK-0137 Familiarity as a pure function, and TASK-0141 its factor on the FSRS interval (on from the start)
 - [x] 9. TASK-0126 and TASK-0127 Notification records and the notification center
 - [ ] 10. TASK-0129 Specify the library redesign and the query syntax (written, in review: the owner to accept the syntax)
-- [ ] 11. TASK-0179 and TASK-0180 Rehearsal modes: specification and engine
+- [x] 11. TASK-0179 and TASK-0180 Rehearsal modes: specification and engine
 
 ## Wave 3: the big screens
 - [ ] 12. TASK-0130 to TASK-0134 Library: query, list, search bar, saved filters, forms out of the page

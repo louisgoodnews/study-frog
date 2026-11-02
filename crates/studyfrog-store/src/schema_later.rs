@@ -85,6 +85,12 @@ CREATE TABLE notification (
 CREATE INDEX notification_at ON notification(at_ms);
 ";
 
+/// How the clock figures in a run: free, a countdown (with its seconds) or a count up.
+pub(crate) const V16: &str = "
+ALTER TABLE run ADD COLUMN pacing TEXT NOT NULL DEFAULT 'free' CHECK (pacing IN ('free', 'countdown', 'count_up'));
+ALTER TABLE run ADD COLUMN countdown_secs INTEGER CHECK (countdown_secs IS NULL OR countdown_secs BETWEEN 60 AND 10800);
+";
+
 pub(crate) const V9: &str = "
 ALTER TABLE item ADD COLUMN priority TEXT CHECK (priority IS NULL OR priority IN ('lowest', 'low', 'medium', 'high', 'highest'));
 ALTER TABLE item ADD COLUMN difficulty TEXT CHECK (difficulty IS NULL OR difficulty IN ('easy', 'medium', 'difficult'));

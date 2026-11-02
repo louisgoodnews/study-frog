@@ -2,6 +2,7 @@
 
 pub mod clock;
 pub mod input;
+pub mod pacing;
 pub mod queue;
 pub mod reading;
 pub mod session;

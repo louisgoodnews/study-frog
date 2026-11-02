@@ -29,6 +29,30 @@ Semantics:
   excluded by the filter and sorted last by the orders.
 - Queue building is a pure function of `(candidates, plan, now, budgets)`; ordering is deterministic.
 
+## Pacing: free, countdown and count up
+A plan also has a **pacing** (STORY-0070). It says how the clock figures in the run; it never changes which items are chosen or what a rating does.
+
+| Pacing | Stored as | Meaning |
+|---|---|---|
+| `Free` | `free` | The run as it always was: no limit, the elapsed time is not shown. The default, and what every run made before 0.3.0 reads as. |
+| `Countdown(seconds)` | `countdown` and `countdown_secs` | A time the user sets. The run ends by itself when it is up. |
+| `CountUp` | `count_up` | No limit. The elapsed time is shown, and the run goes on until the last item of the list is completed or the user ends it. |
+
+- **The clock** is *active time*: the monotonic time since the start minus all time paused. Pausing stops it; a paused run does not run out.
+- **Countdown limits** are 1 to 180 minutes (in seconds in the plan); the setup offers 5, 10, 15 and 25 minutes and a custom amount. A countdown cannot be
+  extended once it has started (proposal; the owner may allow it).
+- **When the time is up** the engine ends the run: a `TimeUp` event (carrying the item on screen, if there is one), then `RunFinished`. **The item on
+  screen counts as not answered** (the owner, 2026-11-02): it gets no rating and changes no schedule, whether or not its answer had been shown. Items
+  rated before keep their effect. Any input that arrives at or after the limit, a rating included, is *not applied*: the clock owns that second.
+- **Ticks:** the shell sends a `Tick` input about once a second; it moves the clock and does nothing else, so a countdown ends on time even if the
+  user does nothing. While paused a tick does nothing.
+- **A queue that is used up before the time** finishes the run early, as always; requeued items (rated Again) keep coming back until the time is up.
+- **Warnings** (screen, not engine): the time left is shown, and at 60 and at 10 seconds a message says so in text and is announced to screen readers; colour is never the
+  only cue. The engine offers `remaining_ms(session, t)`.
+- **Count up** needs nothing special from the engine: the screen shows `active_ms(session, t)`; the run ends in the usual ways (queue done, `Abort`).
+- **Reports and the review** show the pacing, the planned time (countdown), the time used (`run_active_ms` over the events) and the answers rated per minute.
+- **Storage:** `run.pacing` (`free`, `countdown`, `count_up`) and `run.countdown_secs` (migration 16). A crashed run is recovered as `Aborted` and keeps its pacing.
+
 ## Events
 All events carry `run_id`, `item_id`, `t_ms` (monotonic ms since run start) and a sequence number.
 | Event | Meaning |
@@ -40,6 +64,7 @@ All events carry `run_id`, `item_id`, `t_ms` (monotonic ms since run start) and 
 | `AnswerSubmitted` | free text submitted; latency = time-to-answer; text stored |
 | `ItemRated` | Again/Hard/Good/Easy chosen (feeds SRS) |
 | `RunPaused` / `RunResumed` | paused time is excluded from latency |
+| `TimeUp` | a countdown ran out; carries the item on screen, if any; followed by `RunFinished` |
 | `RunFinished` | normal end; `RunAborted` for early exit |
 
 ## Latency capture

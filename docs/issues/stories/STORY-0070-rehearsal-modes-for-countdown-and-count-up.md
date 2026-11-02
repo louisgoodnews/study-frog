@@ -2,7 +2,7 @@
 id: STORY-0070
 type: story
 title: Rehearsal modes for countdown and count up
-status: backlog
+status: in_progress
 epic: EPIC-023
 parents: [EPIC-023]
 estimate: 8

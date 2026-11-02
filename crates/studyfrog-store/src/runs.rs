@@ -2,6 +2,7 @@
 
 use rusqlite::{Connection, params};
 use studyfrog_core::event::{RunEvent, event_name, event_payload};
+use studyfrog_core::pacing::{countdown_secs, pacing_name};
 use studyfrog_core::plan::{
     ItemFilter, effect_name, item_kind_name, order_name, state_filter_name,
 };
@@ -28,8 +29,8 @@ pub fn insert_run(conn: &Connection, run: &Run) -> Result<(), StoreError> {
     let range = p.filter.difficulty;
     conn.execute(
         "INSERT INTO run (uid, mode, state, started_at_ms, order_name, effect, seed, run_limit, requeue_again,
-                          filter_state, filter_diff_min, filter_diff_max, shuffle)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+                          filter_state, filter_diff_min, filter_diff_max, shuffle, pacing, countdown_secs)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)",
         params![
             format_ulid(run.uid),
             run_mode_name(run.mode),
@@ -43,7 +44,9 @@ pub fn insert_run(conn: &Connection, run: &Run) -> Result<(), StoreError> {
             state_filter_name(p.filter.state),
             range.map(|r| r.min),
             range.map(|r| r.max),
-            p.shuffle
+            p.shuffle,
+            pacing_name(p.pacing),
+            countdown_secs(p.pacing)
         ],
     )
     .map_err(sql_err)?;

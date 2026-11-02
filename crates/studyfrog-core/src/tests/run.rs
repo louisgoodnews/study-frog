@@ -34,6 +34,7 @@ fn event_names_are_unique_and_item_events_are_classified() {
         EventKind::ItemRated(Rating::Good),
         EventKind::RunPaused,
         EventKind::RunResumed,
+        EventKind::TimeUp,
         EventKind::RunFinished,
         EventKind::RunAborted,
     ];

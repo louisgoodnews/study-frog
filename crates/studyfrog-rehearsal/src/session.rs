@@ -33,6 +33,10 @@ pub struct Session {
     pub paused_at_ms: Option<u32>,
     /// Paused time accumulated while the current item was on screen.
     pub paused_in_item_ms: u32,
+    /// When the run started, on the run's clock.
+    pub started_ms: u32,
+    /// All time paused so far, not counting a pause that is going on.
+    pub paused_total_ms: u32,
     /// Time of the last accepted input.
     pub last_t_ms: u32,
     /// Sequence number of the next event.
@@ -52,6 +56,8 @@ pub fn session_new(run: Run) -> Session {
         shown_at_ms: 0,
         paused_at_ms: None,
         paused_in_item_ms: 0,
+        started_ms: 0,
+        paused_total_ms: 0,
         last_t_ms: 0,
         next_seq: 0,
         requeues: HashMap::new(),
