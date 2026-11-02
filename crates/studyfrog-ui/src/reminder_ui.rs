@@ -6,7 +6,8 @@ use studyfrog_core::civil::format_minute;
 
 use crate::effect::Effect;
 use crate::modal_types::{Toast, ToastAction};
-use crate::state::{Notice, NoticeKind, State};
+use crate::notify::NotifyTarget;
+use crate::state::{Notice, NoticeKind, Screen, State};
 
 /// How many ticks (about a second each) pass between two looks at the calendar.
 pub const CHECK_EVERY: u32 = 30;
@@ -61,17 +62,15 @@ pub fn arrived(state: State, result: Result<Vec<DueReminder>, String>) -> (State
                     action: ToastAction::OpenCalendar,
                 });
             }
-            let notice = Some(Notice {
-                kind: NoticeKind::Info,
-                text: format!("Reminder: {}", reminder_text(&list[0])),
-            });
-            for r in list.iter().skip(1) {
-                state.chrome.notifications.push(Notice {
-                    kind: NoticeKind::Info,
-                    text: format!("Reminder: {}", reminder_text(r)),
-                });
+            let mut effects = Vec::new();
+            for r in &list {
+                let text = format!("Reminder: {}", reminder_text(r));
+                let target = Some(NotifyTarget::Screen(Screen::Calendar));
+                let (next, more) = crate::notify::push(state, (NoticeKind::Info, text), target);
+                state = next;
+                effects.extend(more);
             }
-            (State { notice, ..state }, Vec::new())
+            (state, effects)
         }
         Err(e) => {
             let notice = Some(Notice {

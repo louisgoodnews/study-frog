@@ -6,7 +6,7 @@ use studyfrog_core::plan::item_kind_name;
 use crate::chrome::{ChromeMsg, Menu};
 use crate::msg::Msg;
 use crate::pdf_types::PdfMsg;
-use crate::state::{NoticeKind, State};
+use crate::state::State;
 use crate::view::popup::{close, dismissed, popup};
 
 const SHORTCUTS: [(&str, &str); 8] = [
@@ -28,7 +28,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, anchors: &[(Menu, Rect)], out: &mu
     let Some((_, anchor)) = anchors.iter().find(|(m, _)| *m == open) else {
         return;
     };
-    let width = if open == Menu::Help { 340.0 } else { 260.0 };
+    let width = match open {
+        Menu::Help => 340.0,
+        Menu::Notifications => 420.0,
+        _ => 260.0,
+    };
     let at = egui::pos2(
         (anchor.right() - width).max(anchor.left().min(8.0)),
         anchor.bottom() + 4.0,
@@ -40,7 +44,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, anchors: &[(Menu, Rect)], out: &mu
     };
     let rect = popup(ui, "navbar-menu", at, width, |ui| match open {
         Menu::Vaults => vaults(state, ui, out),
-        Menu::Notifications => notifications(state, ui),
+        Menu::Notifications => crate::view::notifications::draw(state, ui, out),
         Menu::Help => help(ui),
         Menu::Profile => profile(state, ui, out),
     });
@@ -69,20 +73,6 @@ fn vaults(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if ui.button("Open another vault…").clicked() {
         out.push(Msg::CloseVault);
         close(out);
-    }
-}
-
-fn notifications(state: &State, ui: &mut egui::Ui) {
-    ui.strong("Notifications");
-    if state.chrome.notifications.is_empty() {
-        ui.label("Nothing yet.");
-    }
-    for n in state.chrome.notifications.iter().rev().take(10) {
-        let color = match n.kind {
-            NoticeKind::Info => ui.visuals().text_color(),
-            NoticeKind::Error => ui.visuals().error_fg_color,
-        };
-        ui.colored_label(color, &n.text);
     }
 }
 

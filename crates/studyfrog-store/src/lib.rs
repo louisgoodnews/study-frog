@@ -14,6 +14,7 @@ pub mod items;
 pub mod library;
 pub mod link_graph;
 pub mod migrate;
+pub mod notifications;
 pub mod overview;
 pub mod pdf_index;
 pub mod pdf_notes;

@@ -9,7 +9,7 @@ use egui_kittest::kittest::Queryable;
 use studyfrog_core::plan::ItemKind;
 use studyfrog_core::uid::Uid;
 use studyfrog_store::overview::ItemRow;
-use studyfrog_ui::chrome::{ChromeMsg, Menu};
+use studyfrog_ui::chrome::{ChromeMsg, Menu, unread};
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::exec::{execute, worker_new};
 use studyfrog_ui::modal::Modal;
@@ -109,8 +109,9 @@ fn the_bell_shows_a_badge_and_a_list_of_notices_and_clicking_elsewhere_closes_it
     assert_eq!(h.state().0.state.chrome.menu, Some(Menu::Notifications));
     assert!(h.query_all_by_label("Search failed: Disk is full").count() >= 1);
     assert_eq!(
-        h.state().0.state.chrome.seen,
-        h.state().0.state.chrome.notifications.len()
+        unread(&h.state().0.state.chrome),
+        1,
+        "opening the list does not mark anything read"
     );
     h.get_by_label("Calendar").click();
     h.run();

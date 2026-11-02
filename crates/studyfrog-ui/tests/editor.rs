@@ -180,9 +180,11 @@ fn revert_and_the_unsaved_changes_guards() {
     assert!(m.state.notice.as_ref().unwrap().text.contains("unsaved"));
     apply(&mut m, Msg::Navigate(Screen::Settings));
     assert_eq!(m.state.screen, Screen::Editor, "navigation is blocked too");
+    let fx = apply(&mut m, Msg::OpenItem(Uid(0xB)));
     assert!(
-        apply(&mut m, Msg::OpenItem(Uid(0xB))).is_empty(),
-        "so is opening another item"
+        fx.iter()
+            .all(|e| matches!(e, studyfrog_ui::effect::Effect::Notifications(_))),
+        "so is opening another item (only the notice is stored): {fx:?}"
     );
 
     apply(&mut m, Msg::RevertClicked);

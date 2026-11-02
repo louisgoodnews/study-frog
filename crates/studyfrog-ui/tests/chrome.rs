@@ -66,8 +66,8 @@ fn one_menu_is_open_at_a_time_and_opening_the_bell_marks_notices_seen() {
     chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Notifications));
     assert_eq!(
         unread(&m.state.chrome),
-        0,
-        "opening the list marks them seen"
+        before + 1,
+        "opening the list reads nothing: that is the user's to do"
     );
 }
 
@@ -81,8 +81,11 @@ fn every_new_notice_is_kept_once_and_the_list_is_capped() {
     let list = &m.state.chrome.notifications;
     assert_eq!(list.len(), MAX_NOTIFICATIONS);
     assert_eq!(
-        (list[0].text.as_str(), list.last().unwrap().text.as_str()),
-        ("Search failed: n5", "Search failed: n34")
+        (list[0].text.clone(), list.last().unwrap().text.clone()),
+        (
+            "Search failed: n5".to_owned(),
+            format!("Search failed: n{}", MAX_NOTIFICATIONS + 4)
+        )
     );
     apply(&mut m, Msg::Tick);
     assert_eq!(

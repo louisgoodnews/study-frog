@@ -17,7 +17,9 @@ fn notice(kind: NoticeKind, text: impl Into<String>) -> Option<Notice> {
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
     let before = state.notice.clone();
     let (next, mut effects) = step(state, msg);
-    let (next, recorded) = crate::view_time::sync(crate::chrome::track_notice(&before, next));
+    let (next, notified) = crate::notify::track(&before, next);
+    effects.extend(notified);
+    let (next, recorded) = crate::view_time::sync(next);
     effects.extend(recorded);
     (next, effects)
 }

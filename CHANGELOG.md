@@ -13,10 +13,15 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   keeps what was typed and says why next to the field (BUG-0001).
 
 ### Changed
+- The bell's notifications are records the user manages: each has an id, time and read state and is kept in the vault's database for 30 days
+  (at most 200), so they survive a restart. Opening the panel no longer marks everything read (TASK-0126).
 - The top bar shows the open vault's folder name next to StudyFrog (cut at 24 characters, full path in the tooltip), reversing the
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- A notification center under the bell: filters for all, unread and errors, mark one or all read or unread, delete one or clear all, the list
+  grouped under Today, Yesterday and the date, a link on notifications that have a target (reminders open the calendar), and an unread count on
+  the bell (TASK-0127).
 - Familiarity values and their use in scheduling: `studyfrog_report::familiarity` values an item from its ratings, views, mark and the fall without
   contact; after each rating the next due date is multiplied by a factor that compares familiarity with what the FSRS stability suggests (0.25 to 2,
   nothing before the third review, never stretched past an exam or deadline, the stored state untouched). On by default; `familiarity_strength` in

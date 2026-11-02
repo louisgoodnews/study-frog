@@ -174,9 +174,10 @@ fn stopping_aborts_the_run_and_leaving_returns_to_setup_with_a_fresh_count() {
 fn a_run_cannot_be_started_twice_or_with_an_invalid_form_or_no_items() {
     let (mut m, mut w, _vault) = ready("guard", Preset::Spaced);
     apply(&mut m, Msg::Setup(SetupEdit::Limit("x".into())));
+    let fx = apply(&mut m, Msg::StartRunClicked);
     assert!(
-        apply(&mut m, Msg::StartRunClicked).is_empty(),
-        "an invalid form does not start"
+        fx.iter().all(|e| matches!(e, Effect::Notifications(_))),
+        "an invalid form does not start: {fx:?}"
     );
     assert!(m.state.notice.as_ref().unwrap().text.contains("limit"));
     let fx = apply(&mut m, Msg::Setup(SetupEdit::Limit("".into())));

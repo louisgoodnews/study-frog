@@ -104,3 +104,9 @@ turns runs left idle, running or paused into `aborted` and closes their log with
 - `item_view` (version 13): one row per visit to the item page, `item_uid`, `kind` (`view`, or `edit` when the item was changed or saved
   during the visit), `at_ms` (when it ended) and `active_ms` (active time; idle time is left out). It is part of the database copy in a
   backup. Answer time is not stored here: it comes from the timestamps of `run_event`.
+- `stack_config.familiarity` (version 14): a stack's own switch for familiarity from its `_stack.toml` (`NULL`: follow the vault); the
+  `stack_setting` view carries it.
+- `notification` (version 15): the bell's list, one row per notification: `id` (chosen by the app), `kind` (`info` or `error`), `text`,
+  `at_ms`, `read` (0 or 1) and `target` (`screen:calendar`, `item:<id>` or `NULL`). Per vault, part of the database copy in a backup, capped
+  at 200 rows and 30 days.
+

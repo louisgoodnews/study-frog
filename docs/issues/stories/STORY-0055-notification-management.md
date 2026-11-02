@@ -2,7 +2,7 @@
 id: STORY-0055
 type: story
 title: Notification management
-status: backlog
+status: done
 epic: EPIC-023
 parents: [EPIC-023]
 estimate: 5
@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Turn the bell's short list of recent messages into a notification center that the user can manage: read state, deletion, filtering and persistence.
 
 ## Acceptance Criteria
-- [ ] Every notification has an id and a read state that survive a restart
-- [ ] The notification center can mark one or all notifications read or unread, delete one, clear all and filter by unread or by errors
-- [ ] The bell shows the number of unread notifications
+- [x] Every notification has an id and a read state that survive a restart
+- [x] The notification center can mark one or all notifications read or unread, delete one, clear all and filter by unread or by errors
+- [x] The bell shows the number of unread notifications
 
 ## Design Notes
 Today the bell keeps the last notices in memory (`chrome.rs`, `track_notice`) and shows them as plain text. Notifications become data with an id, kind, text, time, read flag and optional target (the item or screen the message is about, so a click opens it). Persist in the app database so they survive a restart; cap the stored count and age by a setting. Keep the panel keyboard-operable and covered by the accessibility audit.

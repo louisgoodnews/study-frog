@@ -28,6 +28,7 @@ mod menus;
 mod modal;
 mod modal_fields;
 mod navbar;
+pub mod notifications;
 mod pdf;
 mod pdf_arrange;
 mod pdf_extract;

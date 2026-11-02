@@ -72,6 +72,19 @@ CREATE VIEW stack_setting AS
     FROM stack_identity i LEFT JOIN stack_config c ON c.folder = i.folder;
 ";
 
+/// The notification list of the bell.
+pub(crate) const V15: &str = "
+CREATE TABLE notification (
+    id     INTEGER PRIMARY KEY,
+    kind   TEXT NOT NULL CHECK (kind IN ('info', 'error')),
+    text   TEXT NOT NULL,
+    at_ms  INTEGER NOT NULL,
+    read   INTEGER NOT NULL DEFAULT 0 CHECK (read IN (0, 1)),
+    target TEXT
+);
+CREATE INDEX notification_at ON notification(at_ms);
+";
+
 pub(crate) const V9: &str = "
 ALTER TABLE item ADD COLUMN priority TEXT CHECK (priority IS NULL OR priority IN ('lowest', 'low', 'medium', 'high', 'highest'));
 ALTER TABLE item ADD COLUMN difficulty TEXT CHECK (difficulty IS NULL OR difficulty IN ('easy', 'medium', 'difficult'));

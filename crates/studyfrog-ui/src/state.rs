@@ -144,6 +144,8 @@ pub struct State {
     /// Seconds on the shell's monotonic clock, refreshed every frame. Time enters the pure update
     /// only through this field.
     pub now: f64,
+    /// The wall clock in Unix milliseconds, set from the system clock at the start of each frame.
+    pub wall_ms: i64,
     /// The document open for editing.
     pub editor: Option<Editor>,
     /// The visit to the item on the page that is being timed.

@@ -122,6 +122,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         } => {
             return crate::exec_items::record_view(w, (item, kind, active_ms), now_ns);
         }
+        Effect::Notifications(op) => return crate::exec_items::notifications(w, op, now_ns),
         Effect::LoadStatusCounts(selection) => crate::exec_items::counts(w, &selection),
         Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
         Effect::StartRun { plan, mode } => exec_run::start(w, plan, mode, now_ns),

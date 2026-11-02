@@ -7,8 +7,7 @@ use crate::effect::Effect;
 use crate::pdf_types::PdfEffect;
 use crate::state::{Notice, NoticeKind, State};
 
-/// Most notices kept in the notification list.
-pub const MAX_NOTIFICATIONS: usize = 30;
+pub use crate::notify::MAX_NOTIFICATIONS;
 /// Most search results shown.
 pub const MAX_RESULTS: usize = 10;
 /// Most characters of the vault name shown in the top bar before it is cut with an ellipsis.
@@ -54,10 +53,16 @@ pub struct Chrome {
     pub results: Vec<ItemRow>,
     /// PDFs and pages matching the search.
     pub pdf_results: Vec<studyfrog_store::pdf_search::PdfHit>,
-    /// Recent notices, oldest first.
-    pub notifications: Vec<Notice>,
-    /// How many of them the user has seen.
-    pub seen: usize,
+    /// The notification list, oldest first.
+    pub notifications: Vec<crate::notify::Notification>,
+    /// The next notification id.
+    pub next_id: u64,
+    /// Which notifications the panel lists.
+    pub notify_filter: crate::notify::NotifyFilter,
+    /// The vault whose stored list this one is.
+    pub notify_vault: Option<String>,
+    /// The stored list has been read, so changes are stored too.
+    pub notify_loaded: bool,
 }
 
 /// Messages of the chrome.
@@ -80,6 +85,10 @@ pub enum ChromeMsg {
     ),
     /// Clear the search.
     SearchClear,
+    /// The user did something in the notification panel.
+    Notify(crate::notify::NotifyMsg),
+    /// The stored notifications were read.
+    NotificationsLoaded(Result<Vec<crate::notify::Notification>, String>),
 }
 
 fn with(state: State, chrome: Chrome) -> (State, Vec<Effect>) {
@@ -89,16 +98,10 @@ fn with(state: State, chrome: Chrome) -> (State, Vec<Effect>) {
 fn toggle_menu(state: State, menu: Menu) -> (State, Vec<Effect>) {
     let c = state.chrome.clone();
     let opening = c.menu != Some(menu);
-    let seen = if opening && menu == Menu::Notifications {
-        c.notifications.len()
-    } else {
-        c.seen
-    };
     with(
         state,
         Chrome {
             menu: opening.then_some(menu),
-            seen,
             ..c
         },
     )
@@ -194,6 +197,8 @@ pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
         ChromeMsg::SearchEdited(text) => search_edited(state, text),
         ChromeMsg::SearchResults(query, result) => search_results(state, query, result),
         ChromeMsg::PdfResults(query, result) => pdf_results(state, query, result),
+        ChromeMsg::Notify(m) => crate::notify::update(state, m),
+        ChromeMsg::NotificationsLoaded(r) => crate::notify::loaded(state, r),
         ChromeMsg::SearchClear => {
             let c = Chrome {
                 search: String::new(),
@@ -206,22 +211,7 @@ pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
     }
 }
 
-/// Keep every new notice in the list the bell shows. Call after each update with the notice from
-/// before it.
-pub fn track_notice(before: &Option<Notice>, mut state: State) -> State {
-    let Some(n) = state.notice.clone().filter(|n| Some(n) != before.as_ref()) else {
-        return state;
-    };
-    let c = &mut state.chrome;
-    c.notifications.push(n);
-    if c.notifications.len() > MAX_NOTIFICATIONS {
-        c.notifications.remove(0);
-        c.seen = c.seen.saturating_sub(1);
-    }
-    state
-}
-
-/// Notices the user has not looked at yet.
+/// Notifications the user has not read yet.
 pub fn unread(c: &Chrome) -> usize {
-    c.notifications.len().saturating_sub(c.seen)
+    crate::notify::unread_count(&c.notifications)
 }

@@ -46,6 +46,8 @@ pub mod modal_types;
 pub mod model;
 pub mod msg;
 pub mod nav;
+pub mod notify;
+mod notify_types;
 pub mod pdf_arrange_plan;
 pub mod pdf_arrange_types;
 pub mod pdf_arrange_ui;

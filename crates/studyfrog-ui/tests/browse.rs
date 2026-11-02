@@ -101,6 +101,10 @@ fn creating_succeeds_clears_the_forms_and_refreshes_the_open_stack() {
     apply(&mut m, Msg::DraftEdited(DraftField::Front, "f".into()));
     let info = studyfrog_service_info();
     let (state, fx) = update(m.state.clone(), Msg::Created(Ok(info)));
+    let fx: Vec<Effect> = fx
+        .into_iter()
+        .filter(|e| !matches!(e, Effect::Notifications(_)))
+        .collect();
     assert!(state.browser.draft.front.is_empty());
     assert_eq!(
         fx,
