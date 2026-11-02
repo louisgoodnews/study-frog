@@ -22,6 +22,7 @@ fn the_vault_dialog_opens_a_typed_path_and_the_welcome_page_lists_recent_vaults(
         answer_engine: Default::default(),
         reading: Default::default(),
         settings_tab: None,
+        views_untracked: false,
     };
     let mut h = harness(model);
     h.run();

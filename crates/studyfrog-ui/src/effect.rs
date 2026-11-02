@@ -51,6 +51,15 @@ pub enum Effect {
     LoadItems(Selection),
     /// Count the items of a stack and its sub-stacks by status.
     LoadStatusCounts(Selection),
+    /// Record how long an item was viewed or worked on.
+    RecordView {
+        /// The item.
+        item: studyfrog_core::uid::Uid,
+        /// View or edit.
+        kind: studyfrog_core::views::ViewKind,
+        /// Active milliseconds.
+        active_ms: u32,
+    },
     /// Count the items a run built from this plan would contain.
     PreviewQueue {
         /// The plan.

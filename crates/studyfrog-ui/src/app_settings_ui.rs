@@ -110,6 +110,16 @@ pub fn update(state: State, msg: SettingsTabMsg) -> (State, Vec<Effect>) {
     }
 }
 
+/// Switch the recording of item views on or off.
+pub fn set_track_views(state: State, on: bool) -> (State, Vec<Effect>) {
+    let app = AppSettings {
+        views_untracked: !on,
+        ..state.app.clone()
+    };
+    let effects = vec![Effect::SaveAppSettings(app.clone())];
+    (State { app, ..state }, effects)
+}
+
 /// The result of storing `app.toml`: a failure is reported, success changes nothing.
 pub fn saved(state: State, result: Result<(), String>) -> (State, Vec<Effect>) {
     match result {

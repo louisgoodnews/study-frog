@@ -19,6 +19,7 @@ pub mod stack;
 pub mod status;
 pub mod time;
 pub mod uid;
+pub mod views;
 
 #[cfg(test)]
 mod tests;

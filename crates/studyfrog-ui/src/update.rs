@@ -16,8 +16,10 @@ fn notice(kind: NoticeKind, text: impl Into<String>) -> Option<Notice> {
 /// Advance the state by one message. Every new notice also goes to the notification list.
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
     let before = state.notice.clone();
-    let (next, effects) = step(state, msg);
-    (crate::chrome::track_notice(&before, next), effects)
+    let (next, mut effects) = step(state, msg);
+    let (next, recorded) = crate::view_time::sync(crate::chrome::track_notice(&before, next));
+    effects.extend(recorded);
+    (next, effects)
 }
 
 fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
@@ -69,6 +71,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
             let (state, mut effects) = crate::poll_ui::tick(state);
             let (state, more) = crate::reminder_ui::tick(state);
             effects.extend(more);
+            let (state, _) = crate::view_time::tick(state);
             (state, effects)
         }
         Msg::PickImage(t) => crate::image_ui::pick(state, t),
@@ -126,6 +129,8 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::SetAnswerEngine(engine) => crate::reading_test::set_answer_engine(state, engine),
         Msg::ReadingTest(m) => crate::reading_test::update(state, m),
         Msg::SettingsTab(m) => crate::app_settings_ui::update(state, m),
+        Msg::Activity => crate::view_time::activity(state),
+        Msg::SetTrackViews(on) => crate::app_settings_ui::set_track_views(state, on),
         run @ (Msg::StartRunClicked
         | Msg::RunReady(_)
         | Msg::RunAction(_)

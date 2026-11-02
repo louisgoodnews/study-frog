@@ -86,5 +86,6 @@ pub mod summary;
 pub mod theme;
 pub mod update;
 pub mod view;
+pub mod view_time;
 
 pub use app::run;

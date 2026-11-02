@@ -50,6 +50,7 @@ reading_wpm = 215              # measured reading speed, 50 to 1000; absent = th
 Further keys, all optional:
 ```toml
 answer_engine = "words"        # "auto" (default: language model when installed) or "words" (word matching only)
+track_views = false           # absent = record how long items are viewed; false switches it off (Settings, Study and scheduling)
 settings_tab = "rehearsal"     # the tab of the Settings screen shown last: study, rehearsal, answers, data or subjects
 reading_fast_percent = 75      # 10 to 100: reading under this share of the expected time is fast
 reading_slow_percent = 200     # 100 to 1000: reading over this share is slow

@@ -84,7 +84,8 @@ fn every_tab_has_a_unique_key_and_label_that_read_back() {
 }
 
 /// The headings of the settings that exist, each of which must be on exactly one tab.
-const SETTINGS: [&str; 5] = [
+const SETTINGS: [&str; 6] = [
+    "Familiarity",
     "Reading speed",
     "Answer comparison",
     "Teachers",
@@ -94,7 +95,7 @@ const SETTINGS: [&str; 5] = [
 
 #[test]
 fn every_setting_is_on_exactly_one_tab() {
-    let mut seen = [0_usize; 5];
+    let mut seen = [0_usize; 6];
     for tab in SHOWN {
         let mut h = harness(model(Some(tab_key(tab))));
         h.run();
@@ -103,7 +104,7 @@ fn every_setting_is_on_exactly_one_tab() {
             seen[i] += h.query_all_by_label(heading).count().min(1);
         }
     }
-    assert_eq!(seen, [1; 5], "{SETTINGS:?}");
+    assert_eq!(seen, [1; 6], "{SETTINGS:?}");
 }
 
 #[test]

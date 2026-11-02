@@ -146,6 +146,8 @@ pub struct State {
     pub now: f64,
     /// The document open for editing.
     pub editor: Option<Editor>,
+    /// The visit to the item on the page that is being timed.
+    pub view: Option<crate::view_time::ViewTracker>,
     /// The link graph.
     pub graph: Option<GraphState>,
     /// The calendar.

@@ -49,6 +49,18 @@ pub(crate) const V12: &str = "
 ALTER TABLE item ADD COLUMN status TEXT CHECK (status IS NULL OR status IN ('new', 'learning', 'reviewing', 'done', 'paused'));
 ";
 
+/// How long the item page was open and active, per visit.
+pub(crate) const V13: &str = "
+CREATE TABLE item_view (
+    id        INTEGER PRIMARY KEY,
+    item_uid  TEXT NOT NULL,
+    kind      TEXT NOT NULL CHECK (kind IN ('view', 'edit')),
+    at_ms     INTEGER NOT NULL,
+    active_ms INTEGER NOT NULL CHECK (active_ms >= 0)
+);
+CREATE INDEX item_view_item ON item_view(item_uid, at_ms);
+";
+
 pub(crate) const V9: &str = "
 ALTER TABLE item ADD COLUMN priority TEXT CHECK (priority IS NULL OR priority IN ('lowest', 'low', 'medium', 'high', 'highest'));
 ALTER TABLE item ADD COLUMN difficulty TEXT CHECK (difficulty IS NULL OR difficulty IN ('easy', 'medium', 'difficult'));

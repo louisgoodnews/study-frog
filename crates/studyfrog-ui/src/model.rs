@@ -36,6 +36,9 @@ pub fn frame(model: &mut Model, ui: &mut egui::Ui) -> Vec<Effect> {
     let now = ui.input(|i| i.time);
     model.state.now = now;
     let mut msgs = view::draw(&model.state, ui);
+    if ui.input(|i| !i.events.is_empty() || i.pointer.is_moving() || i.pointer.any_down()) {
+        msgs.push(Msg::Activity);
+    }
     if now - model.last_tick >= TICK_SECONDS {
         model.last_tick = now;
         msgs.push(Msg::Tick);

@@ -195,6 +195,10 @@ pub enum Msg {
     SetAnswerEngine(AnswerEngine),
     /// Something happened in the reading-speed test.
     ReadingTest(ReadingTestMsg),
+    /// The user touched the keyboard, the mouse or the screen.
+    Activity,
+    /// Recording how long items are viewed was switched on or off.
+    SetTrackViews(bool),
     /// A tab of the settings screen was chosen or stepped to.
     SettingsTab(crate::app_settings_ui::SettingsTabMsg),
 }

@@ -17,6 +17,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- The item page times how long an item is looked at: active time only (a minute without input stops the clock), one `view` record per
+  visit and an `edit` record when the item was changed, kept in the database and in backups. Settings, under Study and scheduling,
+  can switch it off (`track_views = false` in `app.toml`) (TASK-0136).
 - Statuses on screen: a status menu on the item page (Automatic, Not studied yet, Learning, In review, Complete, On hold), the status
   on every item in a stack's list, and a line under a stack's heading with how many of its items, sub-stacks included, are in each
   status (TASK-0145).

@@ -115,6 +115,13 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::CheckReminders => exec_plan::reminders(w, now_ns),
         Effect::SaveAppSettings(settings) => save_settings(w, &settings),
         Effect::LoadItems(selection) => crate::exec_items::items(w, &selection),
+        Effect::RecordView {
+            item,
+            kind,
+            active_ms,
+        } => {
+            return crate::exec_items::record_view(w, (item, kind, active_ms), now_ns);
+        }
         Effect::LoadStatusCounts(selection) => crate::exec_items::counts(w, &selection),
         Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
         Effect::StartRun { plan, mode } => exec_run::start(w, plan, mode, now_ns),

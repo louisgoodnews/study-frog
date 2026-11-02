@@ -101,6 +101,8 @@ pub struct AppSettings {
     pub reading: ReadingTuning,
     /// The tab of the settings screen shown last (a stable key such as `rehearsal`).
     pub settings_tab: Option<String>,
+    /// Do not record how long items are viewed (the default is to record it).
+    pub views_untracked: bool,
 }
 
 /// `settings` after opening `path`: it becomes the current vault and moves to the front of the recent list.

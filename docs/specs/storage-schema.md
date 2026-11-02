@@ -97,3 +97,10 @@ turns runs left idle, running or paused into `aborted` and closes their log with
 - **Change detection** is polling: `poll_changes` stats the vault, compares a fingerprint, and reindexes
   only on change. Files modified within the settle window (default chosen by the caller, 200 ms
   suggested) are deferred to the next poll. The clock is a parameter.
+
+## Item status and views (schema versions 12 and 13)
+- `item.status` (version 12): the item's own `status` front-matter word, or `NULL` when the key is absent; the effective status is derived
+  from it and from whether a `review` row exists ([status](status.md)).
+- `item_view` (version 13): one row per visit to the item page, `item_uid`, `kind` (`view`, or `edit` when the item was changed or saved
+  during the visit), `at_ms` (when it ended) and `active_ms` (active time; idle time is left out). It is part of the database copy in a
+  backup. Answer time is not stored here: it comes from the timestamps of `run_event`.

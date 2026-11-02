@@ -34,3 +34,4 @@ pub mod stackmap;
 mod traits;
 pub mod vault;
 pub mod vault_config;
+pub mod views;
