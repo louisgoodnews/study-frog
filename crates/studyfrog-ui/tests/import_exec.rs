@@ -121,15 +121,19 @@ fn the_executor_expands_a_card_type_and_explains_its_refusals() {
 }
 
 #[test]
-fn the_form_offers_card_types_and_the_import_panel_only_when_extensions_exist() {
+fn the_import_dialog_offers_card_types_and_files_only_when_extensions_exist() {
     let mut h = harness(model_in_stack());
     h.run();
-    assert_all_named(&h, "library with extensions");
+    assert!(
+        h.query_by_label("Card front").is_none(),
+        "the page holds no card form any more"
+    );
+    h.get_by_label("Import…").click();
+    h.run();
+    assert_all_named(&h, "import dialog");
     for text in [
         "Card type:",
-        "Basic (front and back)",
         "Two cards",
-        "Import from a file",
         "Import cards",
         "Reads: Comma lines",
         "File to import",
@@ -146,12 +150,14 @@ fn the_form_offers_card_types_and_the_import_panel_only_when_extensions_exist() 
     assert!(
         h.query_by_label("Source text").is_some() && h.query_by_label("Write a word.").is_some()
     );
-    assert!(h.query_by_label("Add cards").is_some() && h.query_by_label("Card back").is_none());
+    assert!(h.query_by_label("Add cards").is_some());
 
     let mut plain = open_model();
     apply(&mut plain, Msg::Select(Selection::Stack("french".into())));
     let mut h = harness(plain);
     h.run();
-    assert!(h.query_by_label("Card type:").is_none() && h.query_by_label("Browse…").is_none());
-    assert!(h.query_by_label("Add card").is_some());
+    assert!(
+        h.query_by_label("Import…").is_none(),
+        "without extensions there is nothing to import with"
+    );
 }

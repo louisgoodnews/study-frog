@@ -171,6 +171,13 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             },
             Vec::new(),
         ),
+        ModalMsg::OpenImport => (
+            State {
+                modal: Some(Modal::Import),
+                ..state
+            },
+            Vec::new(),
+        ),
         ModalMsg::Close => (
             State {
                 modal: None,

@@ -68,23 +68,22 @@ fn the_title_filter_narrows_the_list_as_you_type() {
 }
 
 #[test]
-fn the_new_card_form_sends_its_request() {
+fn the_page_holds_no_creation_forms_and_a_card_is_made_in_the_create_dialog() {
     let mut h = harness(stack_open());
     h.run();
-    h.get_by_label("Card front").focus();
-    h.get_by_label("Card front").type_text("2+2?");
-    h.get_by_label("Card back").focus();
-    h.get_by_label("Card back").type_text("4");
+    for gone in ["Card front", "Card back", "Add card", "New card"] {
+        assert!(
+            h.query_by_label(gone).is_none(),
+            "{gone} moved to the Create dialog"
+        );
+    }
+    apply(
+        &mut h.state_mut().0,
+        Msg::Modal(studyfrog_ui::modal::ModalMsg::OpenCreate),
+    );
     h.run();
-    h.get_by_label("Add card").click();
-    h.run();
-    let wanted = Effect::CreateCard {
-        folder: "french".into(),
-        title: String::new(),
-        front: "2+2?".into(),
-        back: "4".into(),
-    };
-    assert!(h.state().1.contains(&wanted), "{:?}", h.state().1);
+    assert!(h.query_by_label("Card").is_some() && h.query_by_label("Note").is_some());
+    assert!(h.query_by_label("Question").is_some() && h.query_by_label("Stack").is_some());
 }
 
 #[test]
@@ -105,12 +104,11 @@ fn the_new_stack_button_opens_the_dialog_for_a_stack() {
 }
 
 #[test]
-fn the_card_form_only_appears_inside_a_stack_not_in_the_inbox() {
+fn the_inbox_keeps_the_stack_list_available() {
     let mut m = open_model();
     apply(&mut m, Msg::Select(Selection::Inbox));
     let mut h = harness(m);
     h.run();
-    assert!(h.query_by_label("Add card").is_none());
     assert!(
         h.query_by_label("New stack…").is_some(),
         "the stack list stays available"

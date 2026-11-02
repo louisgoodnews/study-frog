@@ -34,6 +34,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         match modal {
             Modal::Create(form) => create(state, form, ui, out),
             Modal::Vault => vault(state, ui, out),
+            Modal::Import => super::modal_import::import(state, ui, out),
         }
     });
     if response.should_close() {

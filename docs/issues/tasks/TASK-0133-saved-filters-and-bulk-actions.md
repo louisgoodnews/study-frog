@@ -2,7 +2,7 @@
 id: TASK-0133
 type: task
 title: Saved filters and bulk actions
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0057]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add selection, the action bar and filter persistence.
 
 ## Acceptance Criteria
-- [ ] A filter or query can be saved by name and reopened, per profile
-- [ ] Selected rows can be given a status, a priority or a stack and be deleted after a confirmation
+- [x] A filter or query can be saved by name and reopened, per profile
+- [x] Selected rows can be given a status, a priority or a stack and be deleted after a confirmation
 
 ## Design Notes
 None.

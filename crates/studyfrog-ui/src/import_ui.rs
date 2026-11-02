@@ -102,10 +102,16 @@ fn imported(state: State, result: Result<ImportOutcome, String>) -> (State, Vec<
             } else {
                 NoticeKind::Info
             };
+            let modal = if report.created > 0 && state.modal == Some(crate::modal::Modal::Import) {
+                None
+            } else {
+                state.modal.clone()
+            };
             (
                 State {
                     vault: Some(info),
                     browser,
+                    modal,
                     notice: notice(kind, text),
                     ..state
                 },

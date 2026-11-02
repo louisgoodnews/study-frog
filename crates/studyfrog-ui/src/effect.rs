@@ -53,6 +53,8 @@ pub enum Effect {
     LoadStatusCounts(Selection),
     /// Read every item of the vault as a row of the library list.
     LoadLibrary,
+    /// Bulk edits and saved filters of the library.
+    Library(crate::library_bulk::LibraryEffect),
     /// Store or read the notifications.
     Notifications(crate::notify::NotifyEffect),
     /// Record how long an item was viewed or worked on.

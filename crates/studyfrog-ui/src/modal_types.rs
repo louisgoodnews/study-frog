@@ -13,6 +13,8 @@ pub enum Modal {
     Create(CreateForm),
     /// Choose the folder to use as the vault.
     Vault,
+    /// Add cards from a card type or a file into the open stack.
+    Import,
 }
 
 /// The create dialog's fields.
@@ -97,6 +99,8 @@ pub enum ModalMsg {
     OpenCreateStack,
     /// Open the vault dialog.
     OpenVault,
+    /// Open the import dialog for the open stack.
+    OpenImport,
     /// Close the open dialog.
     Close,
     /// Another kind of item.

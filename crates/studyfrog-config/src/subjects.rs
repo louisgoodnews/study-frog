@@ -118,7 +118,7 @@ pub fn parse_subjects(text: &str) -> Result<SubjectBook, ConfigError> {
 }
 
 /// A TOML basic string.
-fn quoted(s: &str) -> String {
+pub(crate) fn quoted(s: &str) -> String {
     let mut out = String::from("\"");
     for c in s.chars() {
         match c {

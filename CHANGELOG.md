@@ -13,12 +13,15 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   keeps what was typed and says why next to the field (BUG-0001).
 
 ### Changed
+- The library page no longer holds the new-card form: a card, note or question is made in the Create dialog, and the import panel and the card types of extensions moved into an "Import…" dialog on a stack's list (TASK-0134).
 - The bell's notifications are records the user manages: each has an id, time and read state and is kept in the vault's database for 30 days
   (at most 200), so they survive a restart. Opening the panel no longer marks everything read (TASK-0126).
 - The top bar shows the open vault's folder name next to StudyFrog (cut at 24 characters, full path in the tooltip), reversing the
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- Library rows can be ticked (a check box per row and one for all rows the filter lets through); a bar then sets status, priority or difficulty, moves the items to a stack, adds or removes a tag, or deletes them after a question that names the number. Each change is one step that "Undo last change" takes back (TASK-0133).
+- Saved filters: the Filters menu saves the current filter or query under a name in `filters.toml` in the vault, reopens it and removes it (TASK-0133; per vault, not per profile, as the library spec proposes).
 - The library's search bar has a Standard mode (title word, type, status and priority) and a Query mode with the errors under the box, suggestions for field names, operators and values, and a switch that turns the fields into a query and a plain query back into fields (TASK-0132).
 - The library list: every item of the vault in a table with sortable columns (title, type, status, priority, difficulty, familiarity, stack, subjects, tags, reviews,
   due, created, updated, path; a click sorts, a second click reverses, shift adds a key), a column menu that is remembered, 'N of M items', and a tree entry 'All items';

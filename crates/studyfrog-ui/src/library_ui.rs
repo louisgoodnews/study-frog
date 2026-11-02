@@ -39,6 +39,20 @@ pub struct LibraryState {
     pub search: crate::library_search::SearchState,
     /// Why the query text is not a query, if so.
     pub query_error: Option<studyfrog_core::query::QueryError>,
+    /// The rows ticked.
+    pub selected: std::collections::BTreeSet<studyfrog_core::uid::Uid>,
+    /// The saved filters of the vault.
+    pub filters: Vec<studyfrog_config::filters::SavedFilter>,
+    /// Why the filters file is not used.
+    pub filters_problem: Option<String>,
+    /// The name typed for a filter to save.
+    pub filter_name: String,
+    /// How to take back the last bulk edit.
+    pub undo: Option<studyfrog_service::bulk::Snapshot>,
+    /// The question before deleting is shown.
+    pub confirm_delete: bool,
+    /// The tag typed in the bulk bar.
+    pub tag_input: String,
 }
 
 impl Default for LibraryState {
@@ -56,6 +70,13 @@ impl Default for LibraryState {
             show_overview: false,
             search: Default::default(),
             query_error: None,
+            selected: Default::default(),
+            filters: Vec::new(),
+            filters_problem: None,
+            filter_name: String::new(),
+            undo: None,
+            confirm_delete: false,
+            tag_input: String::new(),
         }
     }
 }
@@ -73,6 +94,8 @@ pub enum LibraryMsg {
     Overview(bool),
     /// The search bar.
     Search(crate::library_search::SearchMsg),
+    /// The selection, the bulk bar and the saved filters.
+    Bulk(crate::library_bulk::BulkMsg),
 }
 
 /// Whether this message changes what the list should show, so the rows are read again.
@@ -129,6 +152,7 @@ pub fn update(state: State, msg: LibraryMsg) -> (State, Vec<Effect>) {
             lib.rows = items.iter().map(|i| i.row.clone()).collect();
             lib.items = items;
             lib.generation += 1;
+            crate::library_bulk::prune_selection(&mut state);
         }
         LibraryMsg::Loaded(Err(e)) => {
             state.notice = Some(crate::state::Notice {
@@ -154,6 +178,7 @@ pub fn update(state: State, msg: LibraryMsg) -> (State, Vec<Effect>) {
         }
         LibraryMsg::Overview(on) => lib.show_overview = on,
         LibraryMsg::Search(m) => return (crate::library_search::update(state, m), Vec::new()),
+        LibraryMsg::Bulk(m) => return crate::library_bulk::update(state, m),
     }
     (state, Vec::new())
 }
@@ -190,6 +215,9 @@ pub fn sync(state: State, reload: bool) -> (State, Vec<Effect>) {
     {
         state.library.stale = false;
         effects.push(Effect::LoadLibrary);
+        effects.push(Effect::Library(
+            crate::library_bulk::LibraryEffect::LoadFilters,
+        ));
     }
     let key = (
         state.library.generation,

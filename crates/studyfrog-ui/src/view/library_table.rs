@@ -4,10 +4,12 @@ use eframe::egui::{self, Align, Layout, RichText, Role, WidgetInfo};
 use egui_extras::{Column as Col, TableBuilder};
 use studyfrog_core::query::Order;
 
+use crate::library_bulk::BulkMsg;
 use crate::library_ui::{COLUMNS, Column, LibraryMsg, cell, column_field, column_label};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
+use studyfrog_service::library_rows::LibraryItem;
 
 const ROW_HEIGHT: f32 = 24.0;
 
@@ -71,6 +73,28 @@ pub fn column_menu(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 }
 
+fn tick(ui: &mut egui::Ui, on: bool, name: String) -> Option<bool> {
+    let mut value = on;
+    let r = ui.add(egui::Checkbox::without_text(&mut value));
+    r.widget_info(|| WidgetInfo::selected(Role::CheckBox, true, on, name.clone()));
+    r.changed().then_some(value)
+}
+
+fn select_all_box(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let lib = &state.library;
+    let all = !lib.shown.is_empty() && lib.selected.len() >= lib.shown.len();
+    if let Some(on) = tick(ui, all, "Select all rows".to_owned()) {
+        send(out, LibraryMsg::Bulk(BulkMsg::SelectAll(on)));
+    }
+}
+
+fn row_box(state: &State, item: &LibraryItem, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let on = state.library.selected.contains(&item.uid);
+    if let Some(v) = tick(ui, on, format!("Select {}", item.row.title)) {
+        send(out, LibraryMsg::Bulk(BulkMsg::Select(item.uid, v)));
+    }
+}
+
 /// The table.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let lib = &state.library;
@@ -89,11 +113,13 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .resizable(true)
         .cell_layout(Layout::left_to_right(Align::Center))
         .max_scroll_height(f32::INFINITY);
+    table = table.column(Col::exact(28.0));
     for c in &lib.columns {
         table = table.column(Col::initial(width(*c)).at_least(60.0).clip(true));
     }
     table
         .header(ROW_HEIGHT, |mut header| {
+            header.col(|ui| select_all_box(state, ui, out));
             for c in &lib.columns {
                 header.col(|ui| heading(state, ui, *c, out));
             }
@@ -101,6 +127,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .body(|body| {
             body.rows(ROW_HEIGHT, lib.shown.len(), |mut row| {
                 let item = &lib.items[lib.shown[row.index()]];
+                row.col(|ui| row_box(state, item, ui, out));
                 for c in &lib.columns {
                     row.col(|ui| {
                         let text = cell(&item.row, *c);
