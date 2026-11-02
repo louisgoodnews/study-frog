@@ -12,7 +12,7 @@ Last updated: 2026-11-02.
 - [ ] 2. [TASK-0143](docs/issues/tasks/TASK-0143-specify-the-statuses-their-names-and-their-transitions.md) Specify the statuses (written, in review: one question for the owner, board binding)
 - [x] 3. [TASK-0142](docs/issues/tasks/TASK-0142-settings-tab-bar-and-domain-grouping.md) Settings tab bar
 - [x] 4. [TASK-0128](docs/issues/tasks/TASK-0128-vault-name-next-to-the-studyfrog-name-in-the-bar.md) Vault name in the bar
-- [ ] 5. [TASK-0135](docs/issues/tasks/TASK-0135-specify-the-familiarity-value.md) Specify the familiarity value
+- [ ] 5. [TASK-0135](docs/issues/tasks/TASK-0135-specify-the-familiarity-value.md) Specify the familiarity value (written, in review: the owner to accept the worked examples)
 
 ## Wave 2: foundations
 - [ ] 6. TASK-0144 and TASK-0145 Statuses in the data model and the UI

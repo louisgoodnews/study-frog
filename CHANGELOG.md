@@ -17,6 +17,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- Specification of the familiarity value (`docs/specs/familiarity.md`): update rules for ratings, views and view time, the slow fall
+  and when it pauses, notes, the stack roll-up, confidence, worked examples and the properties to test (TASK-0135).
 - Settings are in tabs by domain (Study and scheduling, Rehearsal, Answers and AI, Data, Subjects and teachers); the last tab is
   remembered in `app.toml` as `settings_tab`, and the Left and Right keys move between tabs. Tabs for General, Appearance and
   Notifications appear when they have settings (TASK-0142).
