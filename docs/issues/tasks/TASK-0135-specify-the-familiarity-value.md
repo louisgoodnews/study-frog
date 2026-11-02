@@ -2,7 +2,7 @@
 id: TASK-0135
 type: task
 title: Specify the familiarity value
-status: backlog
+status: ready
 epic: EPIC-023
 parents: [STORY-0058]
 estimate: 3

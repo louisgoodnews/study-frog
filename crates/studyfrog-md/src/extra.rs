@@ -21,6 +21,14 @@ fn entries_mut(doc: &mut Doc) -> &mut Vec<RawEntry> {
     }
 }
 
+/// The value of a one-line key exactly as stored (trimmed, quotes kept); `None` when the key is absent or empty.
+pub fn extra_raw(doc: &Doc, key: &str) -> Option<String> {
+    let entry = entries(doc).iter().find(|e| e.key == key)?;
+    let (_, value) = entry.text.split_once(':')?;
+    let value = value.trim();
+    (!value.is_empty()).then(|| value.to_owned())
+}
+
 /// The value of a one-line key, without quotes; `None` when the key is absent or empty.
 pub fn extra_value(doc: &Doc, key: &str) -> Option<String> {
     let entry = entries(doc).iter().find(|e| e.key == key)?;

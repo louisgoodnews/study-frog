@@ -131,12 +131,13 @@ on the user's own history instead of a simulation:
 1. **Replay.** Walk the history in order. At each review compute FSRS's predicted recall `R` and the adjusted
    prediction `R_adj = R(t, S * m)` from the familiarity before the review. Score both against whether the user
    recalled (log loss and a calibration table in bins, as FSRS's own benchmark does).
-2. **Gate.** Switch the model on only for a user whose history is long enough (at least 1000 reviews) and for whom
-   `R_adj` has lower log loss. Fit `beta`, `S_half` and `F_expected` on the first part and test on the last 20 %.
+2. **Verdict.** For a user whose history is long enough (at least 1000 reviews), fit `beta`, `S_half` and `F_expected` on
+   the first 80 % and test on the last 20 %. The verdict says whether `R_adj` has lower log loss than `R`.
 3. **Workload check.** Report the change in reviews per year the factor causes for the same history, so the user sees
    the trade-off. Use the simulator of the forecast report (`docs/specs/reports.md`) for it.
-4. **Switch.** The model stays off by default (`beta = 0`) until the replay approves it; Settings shows the verdict and
-   lets the user turn it on or off.
+4. **Switch.** The model is **on from the start** (owner's decision, 2026-11-02) with `beta = 2`. Settings shows the replay
+   verdict; if it says plain FSRS predicts better, Settings suggests turning the model off or using the fitted values. It
+   never switches itself off.
 
 ## 8. Risks
 
@@ -163,9 +164,11 @@ pub fn interval_days_with(state: &MemState, factor: f32, p: &Params) -> u32   //
 Properties to test: `strength = 0` gives factor 1; the factor never decreases when familiarity rises; it stays inside
 the clamp; it is 1 when `F == F_expected(S)`; the interval is at least 1 day and at most the maximum.
 
-## 10. Decisions for the owner
+## 10. Decisions of the owner (2026-11-02)
 
-1. Is relative (M2) the right reading of "more familiar cards scheduled more generously"? It makes the factor depend on
-   how familiarity compares with what FSRS expects, not on familiarity alone.
-2. Defaults `beta = 2`, clamp 0.25 to 2, no change before the third review.
-3. Off until the replay approves it for the user (recommended), or on from the start?
+1. The relative reading (M2) is right: the factor depends on how familiarity compares with what FSRS expects, not on
+   familiarity alone.
+2. Defaults `beta = 2`, clamp 0.25 to 2 and no change before the third review are accepted.
+3. The model is on from the start, not gated by the replay. This was against the recommendation to keep it off until the
+   replay approves it, because the simulation cannot show that ratings or view time add information (section 6). The
+   replay (section 7) is therefore advisory, and the per-stack switch and the strength setting are the safety valves.

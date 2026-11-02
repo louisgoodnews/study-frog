@@ -5,6 +5,7 @@ use std::fs;
 use studyfrog_config::error::describe_config_error;
 use studyfrog_config::subjects::{
     SUBJECTS_FILE, Subject, SubjectBook, book_problem, parse_subjects, render_subjects,
+    without_unknown_teachers,
 };
 use studyfrog_store::overview::StackRow;
 
@@ -31,14 +32,9 @@ pub fn load_subjects(session: &VaultSession) -> (SubjectBook, Option<String>) {
 /// Check and store a book. A teacher that was removed leaves its subjects without a teacher.
 pub fn save_subjects(
     session: &VaultSession,
-    mut book: SubjectBook,
+    book: SubjectBook,
 ) -> Result<SubjectBook, ServiceError> {
-    let teachers = book.teachers.clone();
-    for s in &mut book.subjects {
-        if s.teacher.as_ref().is_some_and(|t| !teachers.contains(t)) {
-            s.teacher = None;
-        }
-    }
+    let book = without_unknown_teachers(&book);
     if let Some(why) = book_problem(&book) {
         return Err(ServiceError::Invalid(why));
     }

@@ -74,4 +74,4 @@ Body: prompt, `???`, reference answer.
 
 ## Front-matter keys the app writes
 Besides `id`, `kind`, `title`, `tags`, `aliases`, `created` and `updated`: `priority` (`lowest` to `highest`),
-`difficulty` (`easy`, `medium`, `difficult`) and, on a stack, `subjects` (comma-separated). Unknown keys are kept.
+`difficulty` (`easy`, `medium`, `difficult`) and, on a stack, `subjects` (comma-separated, or a flow sequence of double-quoted names when a name holds a comma, a quote, a backslash, a bracket or blanks at its ends: `subjects: ["Statistics, advanced", Maths]`; see `studyfrog_md::names`). Unknown keys are kept.

@@ -50,13 +50,29 @@ struct RawSubject {
     teacher: Option<String>,
 }
 
+/// The book with every subject's teacher cleared when that teacher is not in the list, as a save does.
+pub fn without_unknown_teachers(book: &SubjectBook) -> SubjectBook {
+    let subjects = book
+        .subjects
+        .iter()
+        .map(|s| Subject {
+            name: s.name.clone(),
+            teacher: s.teacher.clone().filter(|t| book.teachers.contains(t)),
+        })
+        .collect();
+    SubjectBook {
+        teachers: book.teachers.clone(),
+        subjects,
+    }
+}
+
 /// Why a book cannot be used, in words; `None` when it is fine.
 pub fn book_problem(book: &SubjectBook) -> Option<String> {
-    let blank = |s: &str| s.trim().is_empty() || s.contains('\n') || s.contains(',');
+    let blank = |s: &str| s.trim().is_empty() || s.chars().any(char::is_control);
     let mut seen = HashSet::new();
     for t in &book.teachers {
         if blank(t) {
-            return Some("a teacher's name must be one line without commas".to_owned());
+            return Some("a teacher's name must be one line and not empty".to_owned());
         }
         if !seen.insert(t.to_lowercase()) {
             return Some(format!("the teacher \"{t}\" is listed twice"));
@@ -65,7 +81,7 @@ pub fn book_problem(book: &SubjectBook) -> Option<String> {
     let mut names = HashSet::new();
     for s in &book.subjects {
         if blank(&s.name) {
-            return Some("a subject's name must be one line without commas".to_owned());
+            return Some("a subject's name must be one line and not empty".to_owned());
         }
         if !names.insert(s.name.to_lowercase()) {
             return Some(format!("the subject \"{}\" is listed twice", s.name));

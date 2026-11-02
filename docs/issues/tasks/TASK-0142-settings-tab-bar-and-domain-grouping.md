@@ -2,7 +2,7 @@
 id: TASK-0142
 type: task
 title: Settings tab bar and domain grouping
-status: backlog
+status: ready
 epic: EPIC-023
 parents: [STORY-0060]
 estimate: 3

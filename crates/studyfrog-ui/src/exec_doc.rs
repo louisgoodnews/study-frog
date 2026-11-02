@@ -67,7 +67,7 @@ pub fn subjects(w: &Worker, change: Option<studyfrog_config::subjects::SubjectBo
     let result = match change {
         Some(book) => save_subjects(session, book)
             .map(|b| (b, None))
-            .map_err(|e| e.to_string()),
+            .map_err(|e| format!("Could not save the subjects: {e}")),
         None => Ok(load_subjects(session)),
     };
     Msg::Subjects(SubjectsMsg::Loaded(result))

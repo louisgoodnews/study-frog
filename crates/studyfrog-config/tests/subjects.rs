@@ -1,7 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! `subjects.toml`: teachers and subjects.
 
-use studyfrog_config::subjects::{Subject, SubjectBook, parse_subjects, render_subjects};
+use studyfrog_config::subjects::{
+    Subject, SubjectBook, book_problem, parse_subjects, render_subjects,
+};
 
 fn book() -> SubjectBook {
     SubjectBook {
@@ -38,11 +40,16 @@ fn mistakes_are_named() {
             .contains("unknown teacher")
     );
     assert!(
-        parse_subjects("[[subject]]\nname = \"A, B\"\n")
+        parse_subjects("[[teacher]]\nname = \" \"\n")
             .unwrap_err()
             .message
-            .contains("commas")
+            .contains("one line")
     );
+    let with_comma = "[[teacher]]\nname = \"Prof. Dr. Künkelmann, Harry\"\n[[subject]]\nname = \"Statistics, advanced\"\nteacher = \"Prof. Dr. Künkelmann, Harry\"\n";
+    let book = parse_subjects(with_comma).unwrap();
+    assert_eq!(book.teachers, ["Prof. Dr. Künkelmann, Harry"]);
+    assert_eq!(parse_subjects(&render_subjects(&book)).unwrap(), book);
+    assert!(book_problem(&book).is_none());
     assert!(
         parse_subjects("colour = 1\n").is_err(),
         "unknown keys are refused"

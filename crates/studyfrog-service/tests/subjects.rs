@@ -83,3 +83,35 @@ fn the_book_is_saved_checked_and_loaded_and_a_removed_teacher_clears_the_subject
     );
     let _ = fs::remove_dir_all(&dir);
 }
+
+#[test]
+fn a_professor_with_a_comma_can_teach_a_subject_in_a_stack_and_survives_a_reload() {
+    let dir = std::env::temp_dir().join(format!("studyfrog-commas-{}", std::process::id()));
+    let prof = "Prof. Dr. Künkelmann, Harry";
+    let subject = "Test theory, basics";
+    let list = format!("subjects: [\"{subject}\", Maths]\n");
+    write(&dir, "a/_stack.md", 1, &list);
+    let (session, info) = open_vault(dir.to_str().unwrap()).unwrap();
+    let stacks = &info.overview.stacks;
+    assert_eq!(stack_subjects(stacks, "a"), [subject, "Maths"]);
+
+    let book = SubjectBook {
+        teachers: vec![prof.into()],
+        subjects: vec![
+            Subject {
+                name: subject.into(),
+                teacher: Some(prof.into()),
+            },
+            Subject {
+                name: "Maths".into(),
+                teacher: None,
+            },
+        ],
+    };
+    assert_eq!(save_subjects(&session, book.clone()).unwrap(), book);
+    let (loaded, problem) = load_subjects(&session);
+    assert_eq!((loaded.clone(), problem), (book, None));
+    let shown = subjects_with_teachers(&loaded, &stack_subjects(stacks, "a"));
+    assert_eq!(shown[0], (subject.to_owned(), Some(prof.to_owned())));
+    let _ = fs::remove_dir_all(&dir);
+}

@@ -31,4 +31,4 @@ Result: a relative multiplier on the FSRS interval, `m = exp(beta * (F - F_expec
 None.
 
 ## Open Questions
-Three decisions for the owner are listed in section 10 of the document.
+The owner decided on 2026-11-02: relative reading, defaults, and on from the start (section 10 of the document).

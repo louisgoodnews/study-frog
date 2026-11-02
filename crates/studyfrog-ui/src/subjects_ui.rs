@@ -1,6 +1,6 @@
 //! The teachers and subjects of the vault, edited on the settings screen. Pure.
 
-use studyfrog_config::subjects::{Subject, SubjectBook};
+use studyfrog_config::subjects::{Subject, SubjectBook, book_problem, without_unknown_teachers};
 
 use crate::effect::Effect;
 use crate::state::{Notice, NoticeKind, State};
@@ -18,6 +18,10 @@ pub struct SubjectsState {
     pub subject_draft: String,
     /// The teacher chosen for the new subject.
     pub subject_teacher: Option<String>,
+    /// Why the typed teacher cannot be added, shown under the field.
+    pub teacher_error: Option<String>,
+    /// Why the typed subject cannot be added, shown under the field.
+    pub subject_error: Option<String>,
 }
 
 /// Messages of the subjects section.
@@ -69,11 +73,12 @@ pub fn update(state: State, msg: SubjectsMsg) -> (State, Vec<Effect>) {
             let subjects = SubjectsState { book, error, ..s };
             (State { subjects, ..state }, Vec::new())
         }
-        SubjectsMsg::Loaded(Err(e)) => failed(state, format!("Could not save the subjects: {e}")),
+        SubjectsMsg::Loaded(Err(e)) => failed(state, e),
         SubjectsMsg::TeacherDraft(t) => draft(
             state,
             SubjectsState {
                 teacher_draft: t,
+                teacher_error: None,
                 ..s
             },
         ),
@@ -81,6 +86,7 @@ pub fn update(state: State, msg: SubjectsMsg) -> (State, Vec<Effect>) {
             state,
             SubjectsState {
                 subject_draft: t,
+                subject_error: None,
                 ..s
             },
         ),
@@ -97,11 +103,16 @@ pub fn update(state: State, msg: SubjectsMsg) -> (State, Vec<Effect>) {
                 return failed(state, "Type the teacher's name first.".to_owned());
             }
             book.teachers.push(name);
+            if let Some(why) = book_problem(&book) {
+                let teacher_error = Some(why);
+                return draft(state, SubjectsState { teacher_error, ..s });
+            }
             changed(
                 state,
                 book,
                 SubjectsState {
                     teacher_draft: String::new(),
+                    teacher_error: None,
                     ..s
                 },
             )
@@ -119,11 +130,16 @@ pub fn update(state: State, msg: SubjectsMsg) -> (State, Vec<Effect>) {
                 name,
                 teacher: s.subject_teacher.clone(),
             });
+            if let Some(why) = book_problem(&without_unknown_teachers(&book)) {
+                let subject_error = Some(why);
+                return draft(state, SubjectsState { subject_error, ..s });
+            }
             changed(
                 state,
                 book,
                 SubjectsState {
                     subject_draft: String::new(),
+                    subject_error: None,
                     ..s
                 },
             )

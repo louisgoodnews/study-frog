@@ -2,7 +2,7 @@
 id: TASK-0143
 type: task
 title: Specify the statuses, their names and their transitions
-status: backlog
+status: ready
 epic: EPIC-023
 parents: [STORY-0061]
 estimate: 2

@@ -65,6 +65,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if let Some(t) = text_field(ui, "New teacher", &s.teacher_draft, "name", 1) {
         send(out, SubjectsMsg::TeacherDraft(t));
     }
+    if let Some(e) = &s.teacher_error {
+        ui.colored_label(ui.visuals().error_fg_color, e);
+    }
     if ui.button("Add teacher").clicked() {
         send(out, SubjectsMsg::AddTeacher);
     }
@@ -88,6 +91,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     if let Some(t) = text_field(ui, "New subject", &s.subject_draft, "name", 1) {
         send(out, SubjectsMsg::SubjectDraft(t));
+    }
+    if let Some(e) = &s.subject_error {
+        ui.colored_label(ui.visuals().error_fg_color, e);
     }
     ui.horizontal(|ui| {
         ui.label("Taught by");

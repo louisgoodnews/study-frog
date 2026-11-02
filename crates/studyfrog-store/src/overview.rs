@@ -3,6 +3,7 @@
 use rusqlite::Connection;
 use studyfrog_core::scheduler::{Scheduler, scheduler_from_name};
 use studyfrog_core::uid::Uid;
+use studyfrog_md::names::decode_names;
 use studyfrog_md::ulid::parse_ulid;
 
 use crate::error::{StoreError, sql_err};
@@ -82,14 +83,9 @@ fn stack_row(r: &rusqlite::Row) -> rusqlite::Result<(String, StackRow)> {
     Ok((r.get(0)?, row))
 }
 
-/// The names in a comma-separated list, without blanks.
+/// The names in the stored `subjects` value (plain or quoted, see `studyfrog_md::names`).
 fn subjects_of(list: Option<String>) -> Vec<String> {
-    list.iter()
-        .flat_map(|l| l.split(','))
-        .map(str::trim)
-        .filter(|s| !s.is_empty())
-        .map(str::to_owned)
-        .collect()
+    list.as_deref().map_or_else(Vec::new, decode_names)
 }
 
 fn stacks(conn: &Connection) -> Result<Vec<StackRow>, StoreError> {

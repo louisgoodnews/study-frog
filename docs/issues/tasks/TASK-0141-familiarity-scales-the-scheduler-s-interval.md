@@ -11,7 +11,7 @@ acceptance_criteria:
   - "familiarity_factor and interval_days_with in studyfrog-srs follow docs/research/familiarity-and-fsrs.md and leave interval_days and the FSRS golden tests unchanged"
   - "Properties hold: strength 0 gives factor 1, a higher familiarity never lowers the factor, the factor stays inside its clamp and is 1 when familiarity equals the expected value, the interval is at least 1 day and at most the maximum, and nothing changes before the third review"
   - "The calendar planner and the queue builders use the adjusted interval, never past an exam or due date, and SM-2 uses the same factor with its interval as the stability"
-  - "Settings hold the strength and show the replay verdict of TASK-0184; the default is off"
+  - "Settings hold the strength (default 2, on from the start) and a per-stack switch, and show the replay verdict of TASK-0184"
 ---
 
 ## Context
@@ -24,13 +24,13 @@ Add the scaling to the srs crate behind the schedule update and measure it on th
 - [ ] familiarity_factor and interval_days_with in studyfrog-srs follow docs/research/familiarity-and-fsrs.md and leave interval_days and the FSRS golden tests unchanged
 - [ ] Properties hold: strength 0 gives factor 1, a higher familiarity never lowers the factor, the factor stays inside its clamp and is 1 when familiarity equals the expected value, the interval is at least 1 day and at most the maximum, and nothing changes before the third review
 - [ ] The calendar planner and the queue builders use the adjusted interval, never past an exam or due date, and SM-2 uses the same factor with its interval as the stability
-- [ ] Settings hold the strength and show the replay verdict of TASK-0184; the default is off
+- [ ] Settings hold the strength (default 2, on from the start) and a per-stack switch, and show the replay verdict of TASK-0184
 
 ## Design Notes
 None.
 
 ## Dependencies
-STORY-0058 and the research TASK-0183; TASK-0184 for the switch.
+STORY-0058 and the research TASK-0183; TASK-0184 for the verdict shown beside the switch.
 
 ## Open Questions
 None.

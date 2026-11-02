@@ -7,7 +7,7 @@ use studyfrog_core::event::difficulty_from_name;
 use studyfrog_core::priority::priority_from_name;
 use studyfrog_md::doc::{Doc, doc_kind, doc_meta, doc_texts, kind_name};
 use studyfrog_md::error::describe_parse_error;
-use studyfrog_md::extra::extra_value;
+use studyfrog_md::extra::{extra_raw, extra_value};
 use studyfrog_md::links::extract_wikilinks;
 use studyfrog_md::ulid::format_ulid;
 
@@ -166,7 +166,7 @@ fn write_item(
             meta.updated.map(|t| t.0),
             word_of(doc, "priority", |w| priority_from_name(w).is_some()),
             word_of(doc, "difficulty", |w| difficulty_from_name(w).is_some()),
-            extra_value(doc, "subjects"),
+            extra_raw(doc, "subjects"),
             extra_value(doc, "source")
         ],
     )?;

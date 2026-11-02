@@ -30,7 +30,7 @@ issue view are the visual reference for the library, the stack overview and the 
     - TASK-0140 Familiarity in queue selection and the calendar planner
     - TASK-0141 Familiarity scales the scheduler's interval
     - TASK-0183 Research a model that combines familiarity with FSRS
-    - TASK-0184 Replay familiarity against the user's review history to approve it
+    - TASK-0184 Replay familiarity against the user's review history for a verdict
   - **STORY-0060** Settings in tabs
     - TASK-0142 Settings tab bar and domain grouping
   - **STORY-0061** Statuses for stacks, notes, cards and questions
@@ -82,10 +82,33 @@ issue view are the visual reference for the library, the stack overview and the 
 **Withdrawn:** STORY-0069 (stack detail view) and TASK-0175 to TASK-0178 on 2026-11-02, because the existing item page is the
 issue-like detail view for a note, a card, a question and a stack and the owner accepted it as it is. The numbers are not reused.
 
-**Order:** statuses (0061) and the tab bar (0060) first, because the stack pages, library and calendar use them; notifications
-(0055), the vault name (0056), the rehearsal modes (0070), import and export (0065) with its importers (0067), help (0066)
-and the diary (0068) are independent; familiarity (0058) before its reports and scheduling use (0059); the library list and
-query (0057) before the stack sub-views (0064); the stack overview (0063) before its sub-views.
+## Priority order
+
+Proposed by Claude on 2026-11-02 from the dependencies between stories and from what hurts the user today; the owner may
+reorder. The board's Ready column holds wave 1. WIP limit 3 applies to work in progress, so start the first three.
+
+**Wave 1: start now (status `ready`).**
+1. BUG-0001 Names with commas cannot be used (the owner cannot assign a professor to a subject today).
+2. TASK-0143 Specify the statuses (decided; the stack pages, library and calendar all need statuses).
+3. TASK-0142 Settings tab bar (the same tab widget serves the stack page).
+4. TASK-0128 Vault name in the bar (small and independent).
+5. TASK-0135 Specify the familiarity value (the formula is needed by reports, scheduling and the FSRS factor).
+
+**Wave 2: foundations.** TASK-0144 and TASK-0145 statuses in data and UI; TASK-0136 view-time records; TASK-0137 familiarity
+function and TASK-0141 its factor on the FSRS interval (on from the start); TASK-0126 and TASK-0127 notifications;
+TASK-0129 library and query specification; TASK-0179 rehearsal modes specification and TASK-0180 its engine.
+
+**Wave 3: the big screens.** TASK-0130 to TASK-0134 library (query, list, bar, filters, forms); TASK-0146 to TASK-0148 calendar
+planner and drag and drop; TASK-0138 to TASK-0140 and TASK-0184 familiarity in reports, Home and queues, and the replay;
+TASK-0149 to TASK-0151 stack overview (specification, shell, Summary).
+
+**Wave 4: the rest.** TASK-0152 to TASK-0156 stack sub-views; TASK-0181 and TASK-0182 rehearsal mode screens and reports;
+TASK-0157 to TASK-0160 import and export, then TASK-0167 to TASK-0169 Anki and Obsidian; TASK-0161 to TASK-0166 help;
+TASK-0170 to TASK-0174 diary.
+
+Dependencies behind the order: statuses and the tab widget before the stack pages and the calendar; the familiarity formula
+before its reports and the FSRS factor; the library list and query before the stack sub-views; the stack overview before its
+sub-views; the import and export engine before the importers.
 
 **Accepted by the owner on 2026-11-02:** the vault name in the bar (reversing STORY-0041), the status names, the settings
 tabs, the calendar behaviour (next reviews from the schedule, movable by drag and drop, a moved item stays out of the queue
@@ -98,11 +121,10 @@ plus user pages linked to the assistant's proposals, a diary with every rating a
 and a tab, names with commas (BUG-0001), the rehearsal modes (the open item at the end of a countdown counts as not
 answered), and familiarity: it grows a little per view, much with easier ratings, falls with harder ones, grows with shorter
 view time, falls slowly without contact while the item is not Complete and its exam date has not passed, and is a
-sub-criterion of scheduling that affects selection, order, the planned day and the scheduler's interval (more familiar items are scheduled more generously, through a relative factor on the FSRS interval, see docs/research/familiarity-and-fsrs.md; the 30 days once mentioned were an example, not a cap), and a per-item report.
+sub-criterion of scheduling that affects selection, order, the planned day and the scheduler's interval (more familiar items are scheduled more generously, through a relative factor on the FSRS interval with beta 2, clamp 0.25 to 2 and no change before the third review, on from the start; see docs/research/familiarity-and-fsrs.md; the 30 days once mentioned were an example, not a cap), and a per-item report.
 
-**Decisions still open:** the overview layout (TASK-specification of STORY-0063), whether a countdown may be extended,
-the three decisions of the familiarity research (the relative reading, its defaults, and off until a replay approves it), and the quoting format for names with commas
-(a proposal in BUG-0001).
+**Decisions still open:** the stack overview layout (TASK-0149), whether a countdown may be extended, and the quoting format
+for names with commas (a proposal in BUG-0001).
 
 **Exit criteria:**
 - Notifications can be marked read, deleted and filtered, and survive a restart

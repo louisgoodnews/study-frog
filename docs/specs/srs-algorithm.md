@@ -66,6 +66,6 @@ maximum interval come from `studyfrog.toml` (see [config-files](config-files.md)
 ## Familiarity (planned, not implemented)
 A familiarity value from 0.0 to 1.0 per item may scale the interval FSRS computes, as a factor
 `exp(beta * (F - F_expected(S)))` that is 1 when familiarity is what the stability leads one to expect. The stored `MemState`
-is never changed, `interval_days` stays as it is, and a strength of 0 gives the plain interval. It is switched on per user only
-after a replay of their own history shows better recall predictions. Model, simulation and open decisions:
+is never changed, `interval_days` stays as it is, and a strength of 0 gives the plain interval. It is on from the start (owner's decision, 2026-11-02, beta 2); a replay of the
+user's own history reports whether it predicts better than plain FSRS and Settings can switch it off. Model, simulation and open decisions:
 [familiarity-and-fsrs](../research/familiarity-and-fsrs.md) (TASK-0183, TASK-0141, TASK-0184).

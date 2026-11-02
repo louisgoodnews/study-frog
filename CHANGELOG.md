@@ -7,10 +7,17 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Fixed
+- Teacher and subject names may contain commas ("Prof. Dr. Künkelmann, Harry"): a stack's `subjects` list is written as a
+  quoted list when needed and read back whole, and the Settings screen refuses a name that cannot be stored before saving,
+  keeps what was typed and says why next to the field (BUG-0001).
+
 ### Added
+- Priority order for 0.3.0 in four waves in `docs/roadmap/M10-usability-and-insight.md`; wave 1 is `ready` on the board (BUG-0001,
+  TASK-0128, TASK-0135, TASK-0142, TASK-0143).
 - Research and a proposal for combining familiarity with FSRS: a relative factor on the FSRS interval that leaves the stored
-  state untouched, a reproducible simulation (`docs/research/familiarity-fsrs-sim.py`) and a plan to approve it per user from
-  their own review history (TASK-0183, TASK-0184).
+  state untouched, a reproducible simulation (`docs/research/familiarity-fsrs-sim.py`) and a replay that tells each user whether it
+  helps; it is on from the start (TASK-0183, TASK-0184).
 - Planning for 0.3.0 (phase M10, EPIC-023): notification management, the vault in the bar, a library with an SQL-like
   search, a stack overview with sub-views and a separate stack detail view, a familiarity value used in reports and scheduling, tabbed
   settings, item statuses, calendar entries for the next reviews that can be moved by drag and drop, import and export

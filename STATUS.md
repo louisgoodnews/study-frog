@@ -58,8 +58,9 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 ## Next
 - **0.3.0 is planned** (phase M10, EPIC-023, `docs/roadmap/M10-usability-and-insight.md`): 15 stories and one bug (BUG-0001, commas in teacher names), all in backlog.
   The owner answered the open design questions on 2026-11-02 (accepted choices are listed in the phase file); what is still
-  open is in each story's Open Questions. The familiarity and FSRS model is researched (`docs/research/familiarity-and-fsrs.md`,
-  TASK-0183): three decisions wait for the owner (section 10). Suggested first work: statuses (STORY-0061) and settings tabs (STORY-0060).
+  open is in each story's Open Questions. The familiarity and FSRS model is researched and decided (`docs/research/familiarity-and-fsrs.md`: relative factor, on from the start).
+  Priority order in four waves is in the phase file; wave 1 is `ready` (BUG-0001 is done; the list is `priority-list.md`): TASK-0143 (statuses spec), TASK-0142 (settings
+  tabs), TASK-0128 (vault name), TASK-0135 (familiarity spec).
 - **The AppImage builds and starts** (`scripts/package-appimage.sh`: 9.5 MB, SHA-256 `40721ef0...6825fd`, stripped
   binary, no libraries beyond libc; OpenGL, X11, Wayland and xkbcommon come from the host). The CI workflow
   (`.github/workflows/ci.yml`) passes `actionlint` but has never run because there is no git remote: that is the

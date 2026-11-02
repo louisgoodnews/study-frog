@@ -12,6 +12,7 @@ functional free functions, nesting < 3, files <= 250 lines (aim ~150), performan
 3. **Gate:** `scripts/check.sh` must pass before committing.
 4. Conventional commits with a `Refs: TASK-xxxx` footer (see `docs/contributing/COMMIT_CONVENTIONS.md`).
 5. Update `STATUS.md` (next task, open flags) when the active task changes.
+6. **Priority list:** work follows `priority-list.md`; tick an item there when it is done and verified, and report it.
 
 ## Build vs buy (P10)
 If you can build a better implementation than an external crate for our needs, build it. Keep crates

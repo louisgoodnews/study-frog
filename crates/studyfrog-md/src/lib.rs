@@ -10,6 +10,7 @@ pub mod error;
 pub mod extra;
 pub mod fence;
 pub mod links;
+pub mod names;
 pub mod parse;
 pub mod raw;
 pub mod render;
