@@ -16,7 +16,7 @@ contact unless the item is finished.
 
 ## 2. The value is a fold over the history
 `familiarity(events, now, context)` is a **pure function**: it starts at 0.0 at the first event and folds the events in
-time order, applying the decay of section 4 before each one and once more up to `now`. No stored state, no clock inside.
+time order (events at the same instant are ordered by kind and size, so the result never depends on how they were stored), applying the decay of section 4 before each one and once more up to `now`. No stored state, no clock inside.
 
 ## 3. Events and what each does
 `F` is the value before the event, `s` the speed factor, `m` the mark factor. Gains move F towards 1, losses scale it down.
@@ -28,7 +28,7 @@ time order, applying the decay of section 4 before each one and once more up to 
 | Rating **Hard** | `F -= 0.25 * F` |
 | Rating **Again** | `F -= 0.50 * F` |
 | **View** of the item page (no rating) | `F += 0.02 * (1 - F) * s_v` |
-| **Edit** | no change; it counts as contact, so the decay clock restarts |
+| **Edit** | no change: the value neither rises nor falls faster (the fall is exponential, so there is no clock to restart); the event is kept so that a different fall can use it |
 
 - **Speed factor `s` (ratings Easy and Good):** `s = clamp(expected / actual, 0.5, 1.5)`. `actual` is the time the answer
   side was on screen (the measurement the reading-speed suggestions already use); `expected = max(3 s, 60 * words / wpm)` for

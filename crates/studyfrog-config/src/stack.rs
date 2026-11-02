@@ -17,6 +17,7 @@ struct RawStack {
     request_retention: Option<f64>,
     daily_new_limit: Option<u32>,
     daily_review_limit: Option<u32>,
+    familiarity: Option<bool>,
 }
 
 /// Parse and validate `_stack.toml`. Unknown keys are errors.
@@ -33,6 +34,7 @@ pub fn parse_stack_settings(text: &str) -> Result<StackSettings, ConfigError> {
             .transpose()?,
         daily_new_limit: raw.daily_new_limit,
         daily_review_limit: raw.daily_review_limit,
+        familiarity: raw.familiarity,
     })
 }
 
@@ -53,6 +55,9 @@ pub fn render_stack_settings(s: &StackSettings) -> String {
     }
     if let Some(n) = s.daily_review_limit {
         out.push_str(&format!("daily_review_limit = {n}\n"));
+    }
+    if let Some(on) = s.familiarity {
+        out.push_str(&format!("familiarity = {on}\n"));
     }
     out
 }

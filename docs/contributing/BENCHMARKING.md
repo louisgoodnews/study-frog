@@ -119,3 +119,5 @@ Allocation: `crates/studyfrog-graph/tests/allocs.rs` uses `dhat` as the test bin
 `page_text_with_words` is dominated by parsing the whole document again for each call; if turning pages ever feels slow
 on very large files, keep the parsed document in the worker. Drawing was measured with the 8 ms median per page found in
 the library spike (`docs/research/pdf-library-spike.md`) on real documents.
+
+Familiarity (`cargo bench -p studyfrog-report --bench reports -- familiarity`; 10 000 items with 20 ratings and 5 views each; budget: 20 ms): 7.3 ms (2026-11-02).

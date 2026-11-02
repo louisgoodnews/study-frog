@@ -111,7 +111,8 @@ fn settings_flow_from_toml_into_the_view_and_the_library() {
             scheduler: Some(Scheduler::Sm2),
             request_retention: Some(0.85),
             daily_new_limit: Some(5),
-            daily_review_limit: None
+            daily_review_limit: None,
+            familiarity: None
         }
     );
     assert_eq!(

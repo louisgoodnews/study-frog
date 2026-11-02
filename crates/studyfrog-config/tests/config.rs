@@ -20,7 +20,8 @@ fn stack_settings_parse_with_comments_and_partial_keys() {
             scheduler: Some(Scheduler::Sm2),
             request_retention: None,
             daily_new_limit: Some(12),
-            daily_review_limit: None
+            daily_review_limit: None,
+            familiarity: None
         }
     );
     assert_eq!(parse_stack_settings("").unwrap(), StackSettings::default());
@@ -91,8 +92,9 @@ proptest! {
         retention in prop::option::of(decimal(100)),
         new in prop::option::of(any::<u32>()),
         review in prop::option::of(any::<u32>()),
+        flag in prop::option::of(any::<bool>()),
     ) {
-        let s = StackSettings { scheduler: sched, request_retention: retention, daily_new_limit: new, daily_review_limit: review };
+        let s = StackSettings { scheduler: sched, request_retention: retention, daily_new_limit: new, daily_review_limit: review, familiarity: flag };
         prop_assert_eq!(parse_stack_settings(&render_stack_settings(&s)), Ok(s));
     }
 
@@ -101,9 +103,10 @@ proptest! {
         sched in prop_oneof![Just(Scheduler::Fsrs), Just(Scheduler::Sm2)],
         retention in decimal(100),
         max in 1_u32..100_000,
+        strength in decimal(1000),
         weights in prop::option::of(prop::array::uniform21((-5_000_i32..30_000).prop_map(|n| n as f32 / 1000.0))),
     ) {
-        let s = VaultSettings { scheduler: sched, request_retention: retention, maximum_interval_days: max, weights };
+        let s = VaultSettings { scheduler: sched, request_retention: retention, maximum_interval_days: max, weights, familiarity_strength: strength };
         prop_assert_eq!(parse_vault_settings(&render_vault_settings(&s)), Ok(s));
     }
 }

@@ -19,6 +19,8 @@ pub struct ItemHome {
     pub scheduler: Option<Scheduler>,
     /// The stack's retention override.
     pub request_retention: Option<f32>,
+    /// The stack's switch for familiarity, `None` for the vault default.
+    pub familiarity: Option<bool>,
 }
 
 /// Daily allowances of a stack; `None` means unlimited.
@@ -52,7 +54,7 @@ fn scheduler_of(name: Option<String>) -> Result<Option<Scheduler>, StoreError> {
 
 /// Home of every indexed item that sits in a stack (items in the inbox are absent).
 pub fn item_homes(conn: &Connection) -> Result<HashMap<Uid, ItemHome>, StoreError> {
-    let sql = "SELECT i.uid, s.uid, s.scheduler, s.request_retention
+    let sql = "SELECT i.uid, s.uid, s.scheduler, s.request_retention, s.familiarity
                FROM item i JOIN stack_setting s ON s.folder = i.stack_path";
     let mut stmt = conn.prepare(sql).map_err(sql_err)?;
     let rows = stmt
@@ -62,18 +64,20 @@ pub fn item_homes(conn: &Connection) -> Result<HashMap<Uid, ItemHome>, StoreErro
                 r.get::<_, String>(1)?,
                 r.get::<_, Option<String>>(2)?,
                 r.get::<_, Option<f32>>(3)?,
+                r.get::<_, Option<bool>>(4)?,
             ))
         })
         .map_err(sql_err)?;
     let mut homes = HashMap::new();
     for row in rows {
-        let (item, stack, scheduler, retention) = row.map_err(sql_err)?;
+        let (item, stack, scheduler, retention, familiarity) = row.map_err(sql_err)?;
         homes.insert(
             uid_of(&item)?,
             ItemHome {
                 stack: uid_of(&stack)?,
                 scheduler: scheduler_of(scheduler)?,
                 request_retention: retention,
+                familiarity,
             },
         );
     }
@@ -147,20 +151,22 @@ pub fn daily_counts(
 
 /// Home of one item, if it sits in a stack. A single indexed lookup, cheap enough per rating.
 pub fn item_home(conn: &Connection, item: Uid) -> Result<Option<ItemHome>, StoreError> {
-    let sql = "SELECT s.uid, s.scheduler, s.request_retention
+    let sql = "SELECT s.uid, s.scheduler, s.request_retention, s.familiarity
                FROM item i JOIN stack_setting s ON s.folder = i.stack_path WHERE i.uid = ?1";
     let found = conn.query_row(sql, [studyfrog_md::ulid::format_ulid(item)], |r| {
         Ok((
             r.get::<_, String>(0)?,
             r.get::<_, Option<String>>(1)?,
             r.get::<_, Option<f32>>(2)?,
+            r.get::<_, Option<bool>>(3)?,
         ))
     });
     match found {
-        Ok((stack, scheduler, request_retention)) => Ok(Some(ItemHome {
+        Ok((stack, scheduler, request_retention, familiarity)) => Ok(Some(ItemHome {
             stack: uid_of(&stack)?,
             scheduler: scheduler_of(scheduler)?,
             request_retention,
+            familiarity,
         })),
         Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
         Err(e) => Err(sql_err(e)),

@@ -17,6 +17,7 @@ struct RawSrs {
     request_retention: Option<f64>,
     maximum_interval_days: Option<u32>,
     weights: Option<Vec<f64>>,
+    familiarity_strength: Option<f64>,
 }
 
 #[derive(Deserialize)]
@@ -38,6 +39,18 @@ fn weights_value(text: &str, w: &[f64]) -> Result<[f32; 21], ConfigError> {
     Ok(out)
 }
 
+/// The familiarity strength: 0 to 10, finite; the default when absent.
+fn strength_value(text: &str, value: Option<f64>, default: f32) -> Result<f32, ConfigError> {
+    match value {
+        None => Ok(default),
+        Some(v) if v.is_finite() && (0.0..=10.0).contains(&v) => Ok(v as f32),
+        Some(v) => Err(config_error(
+            line_of_key(text, "familiarity_strength"),
+            format!("familiarity_strength must be between 0 and 10, not {v}"),
+        )),
+    }
+}
+
 /// Parse and validate `studyfrog.toml`; keys that are absent fall back to the defaults.
 pub fn parse_vault_settings(text: &str) -> Result<VaultSettings, ConfigError> {
     let raw: RawVault = toml::from_str(text).map_err(|e| from_toml(text, &e))?;
@@ -46,6 +59,7 @@ pub fn parse_vault_settings(text: &str) -> Result<VaultSettings, ConfigError> {
         request_retention: None,
         maximum_interval_days: None,
         weights: None,
+        familiarity_strength: None,
     });
     let base = vault_settings_default();
     let max = srs
@@ -70,6 +84,11 @@ pub fn parse_vault_settings(text: &str) -> Result<VaultSettings, ConfigError> {
             .unwrap_or(base.request_retention),
         maximum_interval_days: max,
         weights: srs.weights.map(|w| weights_value(text, &w)).transpose()?,
+        familiarity_strength: strength_value(
+            text,
+            srs.familiarity_strength,
+            base.familiarity_strength,
+        )?,
     })
 }
 
@@ -87,6 +106,10 @@ pub fn render_vault_settings(s: &VaultSettings) -> String {
     out.push_str(&format!(
         "maximum_interval_days = {}\n",
         s.maximum_interval_days
+    ));
+    out.push_str(&format!(
+        "familiarity_strength = {}\n",
+        float_text(s.familiarity_strength)
     ));
     if let Some(w) = s.weights {
         let items: Vec<String> = w.iter().map(|x| float_text(*x)).collect();

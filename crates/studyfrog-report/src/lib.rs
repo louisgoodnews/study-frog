@@ -3,6 +3,8 @@
 
 pub mod backtest;
 pub mod explore;
+pub mod familiarity;
+mod familiarity_types;
 pub mod forecast;
 pub mod latency;
 pub mod retention;

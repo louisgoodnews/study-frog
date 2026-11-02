@@ -15,6 +15,7 @@ pub mod document;
 pub mod expiry;
 pub mod explore;
 mod explore_types;
+pub mod familiarity;
 pub mod home;
 pub mod images;
 pub mod import;

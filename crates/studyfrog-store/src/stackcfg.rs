@@ -71,10 +71,10 @@ fn write_config(conn: &Connection, file: &VaultFile) -> Result<bool, StoreError>
         Err(message) => (StackSettings::default(), Some(message)),
     };
     conn.execute(
-        "INSERT INTO stack_config (folder, size, mtime_ns, scheduler, request_retention, daily_new_limit, daily_review_limit, error)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
+        "INSERT INTO stack_config (folder, size, mtime_ns, scheduler, request_retention, daily_new_limit, daily_review_limit, error, familiarity)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
          ON CONFLICT(folder) DO UPDATE SET size = ?2, mtime_ns = ?3, scheduler = ?4, request_retention = ?5,
-             daily_new_limit = ?6, daily_review_limit = ?7, error = ?8",
+             daily_new_limit = ?6, daily_review_limit = ?7, error = ?8, familiarity = ?9",
         params![
             parent_folder(&file.rel),
             file.size as i64,
@@ -83,7 +83,8 @@ fn write_config(conn: &Connection, file: &VaultFile) -> Result<bool, StoreError>
             s.request_retention,
             s.daily_new_limit,
             s.daily_review_limit,
-            error
+            error,
+            s.familiarity
         ],
     )
     .map_err(sql_err)?;

@@ -14,6 +14,8 @@ pub struct StackSettings {
     pub daily_new_limit: Option<u32>,
     /// Reviews per day.
     pub daily_review_limit: Option<u32>,
+    /// Whether familiarity tempers this stack's intervals; `None` follows the vault.
+    pub familiarity: Option<bool>,
 }
 
 /// Vault-wide settings from `studyfrog.toml`.
@@ -27,6 +29,8 @@ pub struct VaultSettings {
     pub maximum_interval_days: u32,
     /// Custom FSRS weights; `None` means the published defaults.
     pub weights: Option<[f32; 21]>,
+    /// How strongly familiarity tempers intervals (0 switches it off; `docs/research/familiarity-and-fsrs.md`).
+    pub familiarity_strength: f32,
 }
 
 /// Defaults used when `studyfrog.toml` is absent or leaves a key out.
@@ -36,6 +40,7 @@ pub fn vault_settings_default() -> VaultSettings {
         request_retention: 0.9,
         maximum_interval_days: 36500,
         weights: None,
+        familiarity_strength: 2.0,
     }
 }
 

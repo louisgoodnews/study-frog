@@ -95,6 +95,13 @@ fn scheduling(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
         ui.label("Maximum interval (days)");
         ui.label(s.maximum_interval_days.to_string());
         ui.end_row();
+        ui.label("Familiarity strength");
+        ui.label(if s.familiarity_strength > 0.0 {
+            format!("{} (0 switches it off)", s.familiarity_strength)
+        } else {
+            "off".to_owned()
+        });
+        ui.end_row();
         ui.label("FSRS weights");
         ui.label(if s.weights.is_some() {
             "custom"
@@ -104,7 +111,7 @@ fn scheduling(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
         ui.end_row();
     });
     ui.add_space(8.0);
-    ui.weak("Edit studyfrog.toml in the vault folder, and _stack.toml next to a stack, to change these.");
+    ui.weak("Edit studyfrog.toml in the vault folder, and _stack.toml next to a stack, to change these (familiarity_strength, and familiarity = false to switch it off for one stack).");
 }
 
 fn test_msg(out: &mut Vec<Msg>, m: ReadingTestMsg) {

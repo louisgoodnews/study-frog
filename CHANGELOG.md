@@ -17,6 +17,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- Familiarity values and their use in scheduling: `studyfrog_report::familiarity` values an item from its ratings, views, mark and the fall without
+  contact; after each rating the next due date is multiplied by a factor that compares familiarity with what the FSRS stability suggests (0.25 to 2,
+  nothing before the third review, never stretched past an exam or deadline, the stored state untouched). On by default; `familiarity_strength` in
+  `studyfrog.toml` (0 is off) and `familiarity = false` in a `_stack.toml` switch it. Validation numbers are in `docs/specs/reports.md` (TASK-0137,
+  TASK-0141).
 - The item page times how long an item is looked at: active time only (a minute without input stops the clock), one `view` record per
   visit and an `edit` record when the item was changed, kept in the database and in backups. Settings, under Study and scheduling,
   can switch it off (`track_views = false` in `app.toml`) (TASK-0136).

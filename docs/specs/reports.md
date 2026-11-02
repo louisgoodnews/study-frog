@@ -35,3 +35,20 @@ Measured on simulated histories (3 seeds, 150 days, cut at day 119): weekly tota
 ## Budget
 Each report computes in under 50 ms on 100,000 reviews; measured 0.4 to 6.6 ms
 ([BENCHMARKING](../contributing/BENCHMARKING.md)).
+
+## Familiarity
+`studyfrog_report::familiarity` values an item from its history ([familiarity](familiarity.md)). Checked on the simulated learner
+of the forecast (`tests/familiarity_validation.rs`; 3 seeds, 200 days, 20 new items a day, about 49 000 reviews and 12 000 items; the
+numbers are what the tests print):
+
+- **Recalled or forgotten at the due date: AUC 0.51.** Familiarity built from the ratings so far does not tell a recalled review from a
+  forgotten one. That is expected, not a failure: FSRS schedules every review at about the target retention, so recall at the due date
+  is almost the same for every item. This is why TASK-0184 judges the factor by replaying FSRS's own predictions against the adjusted ones.
+- **Ranking items by how ready they are now: Spearman 0.38** between familiarity on day 200 and the simulated learner's true chance of
+  recalling the item that day. A moderate agreement. A fall of familiarity that depends on the item's longest review gap (`gap_factor`,
+  off, not in the specification) changes it little (0.376 off, 0.376 at 2, 0.376 at 4, 0.387 at 8), so it stays off.
+- **Not the same thing as stability:** the rank correlation with FSRS stability is 0.11, because stability grows with the length of the last
+  interval while familiarity grows with practice and falls with time. The factor of the research uses the *difference* between them.
+- Both are one simulated learner; they say the function behaves sensibly, not how well it will predict a real user.
+
+**Budget:** valuing 10 000 items with 25 events each takes 7.3 ms (budget 20 ms; `cargo bench -p studyfrog-report`).

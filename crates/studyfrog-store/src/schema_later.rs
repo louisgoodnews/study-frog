@@ -61,6 +61,17 @@ CREATE TABLE item_view (
 CREATE INDEX item_view_item ON item_view(item_uid, at_ms);
 ";
 
+/// A stack's own switch for familiarity (`NULL`: follow the vault); the view that joins it is made again.
+pub(crate) const V14: &str = "
+ALTER TABLE stack_config ADD COLUMN familiarity INTEGER CHECK (familiarity IS NULL OR familiarity IN (0, 1));
+DROP VIEW stack_setting;
+CREATE VIEW stack_setting AS
+    SELECT i.uid AS uid, i.folder AS folder, c.scheduler AS scheduler,
+           c.request_retention AS request_retention, c.daily_new_limit AS daily_new_limit,
+           c.daily_review_limit AS daily_review_limit, c.familiarity AS familiarity
+    FROM stack_identity i LEFT JOIN stack_config c ON c.folder = i.folder;
+";
+
 pub(crate) const V9: &str = "
 ALTER TABLE item ADD COLUMN priority TEXT CHECK (priority IS NULL OR priority IN ('lowest', 'low', 'medium', 'high', 'highest'));
 ALTER TABLE item ADD COLUMN difficulty TEXT CHECK (difficulty IS NULL OR difficulty IN ('easy', 'medium', 'difficult'));

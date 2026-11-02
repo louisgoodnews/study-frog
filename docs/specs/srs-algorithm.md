@@ -63,9 +63,17 @@ vault (`[srs] scheduler` in `studyfrog.toml`). Both write to the same `review` h
 next review, which starts fresh state in the new algorithm. Custom FSRS weights, the retention default and the
 maximum interval come from `studyfrog.toml` (see [config-files](config-files.md)).
 
-## Familiarity (planned, not implemented)
+## Familiarity
 A familiarity value from 0.0 to 1.0 per item may scale the interval FSRS computes, as a factor
 `exp(beta * (F - F_expected(S)))` that is 1 when familiarity is what the stability leads one to expect. The stored `MemState`
 is never changed, `interval_days` stays as it is, and a strength of 0 gives the plain interval. It is on from the start (owner's decision, 2026-11-02, beta 2); a replay of the
 user's own history reports whether it predicts better than plain FSRS and Settings can switch it off. Model, simulation and open decisions:
 [familiarity-and-fsrs](../research/familiarity-and-fsrs.md) (TASK-0183, TASK-0141, TASK-0184).
+
+Implemented (TASK-0141) in `studyfrog-srs::familiarity` (`familiarity_factor`, `interval_days_with`, `scaled_interval_days`, `before_deadline`) and called by
+`studyfrog-service::familiarity` after each rating: the factor uses the item's familiarity ([familiarity](familiarity.md)) after the rating and the
+stability FSRS just computed, the due date is the interval times the factor (never below one day, never above the maximum), and a stretched
+interval is cut at the next exam or deadline of the item's stack or one above it, but never below the plain interval. SM-2 uses its interval as the
+stability and keeps its stored interval, so its progression is unchanged. Switches: `familiarity_strength` in `studyfrog.toml` (default 2, 0 is off)
+and `familiarity = false` in a `_stack.toml`. Not yet used: the time the answer was on screen and the expected reading time (the factor sees
+ratings, views and the difficulty mark), the exam date for the fall of familiarity, and the re-rating replay, which recomputes plain FSRS dates.

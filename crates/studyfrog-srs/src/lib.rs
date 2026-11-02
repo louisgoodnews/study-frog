@@ -1,6 +1,7 @@
 //! Spaced-repetition scheduling: pure functions from review history to next due date.
 
 pub mod difficulty;
+pub mod familiarity;
 pub mod fsrs;
 pub mod fuzz;
 pub mod params;

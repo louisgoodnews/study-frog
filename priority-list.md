@@ -17,7 +17,7 @@ Last updated: 2026-11-02.
 ## Wave 2: foundations
 - [x] 6. TASK-0144 and TASK-0145 Statuses in the data model and the UI
 - [x] 7. TASK-0136 Record view and action time
-- [ ] 8. TASK-0137 Familiarity as a pure function, and TASK-0141 its factor on the FSRS interval (on from the start)
+- [x] 8. TASK-0137 Familiarity as a pure function, and TASK-0141 its factor on the FSRS interval (on from the start)
 - [ ] 9. TASK-0126 and TASK-0127 Notification records and the notification center
 - [ ] 10. TASK-0129 Specify the library redesign and the query syntax
 - [ ] 11. TASK-0179 and TASK-0180 Rehearsal modes: specification and engine

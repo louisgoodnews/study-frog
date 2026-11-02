@@ -10,6 +10,7 @@ tables are **errors** (a typo must not silently do nothing). Comments are allowe
 scheduler = "fsrs"            # "fsrs" (default) or "sm2"; the default for stacks that do not choose
 request_retention = 0.9       # FSRS target retention, strictly between 0 and 1
 maximum_interval_days = 36500 # at least 1
+familiarity_strength = 2.0     # 0 to 10; how strongly familiarity tempers intervals, 0 switches it off (default 2)
 weights = [0.212, ...]        # optional: exactly 21 finite numbers (FSRS-6); default = published weights
 ```
 Missing file or missing keys mean the defaults shown. An invalid file is reported with its line and the app
@@ -21,6 +22,7 @@ scheduler = "sm2"             # overrides the vault default
 request_retention = 0.85      # FSRS retention override
 daily_new_limit = 20          # new items per day
 daily_review_limit = 200      # reviews per day
+familiarity = false            # false switches familiarity off for this stack, true forces it on; absent follows the vault
 ```
 Every key is optional; omitted keys use the vault defaults. A `_stack.toml` without a `_stack.md` in the same
 folder is ignored. Daily limits count distinct items per day from the review history (see

@@ -23,6 +23,7 @@ use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 
 use crate::create::IdSource;
 use crate::day::DayWindow;
+use crate::familiarity::{retime_fsrs, retime_sm2};
 use crate::queue::{NewRun, new_run};
 use crate::schedule::{apply_rating, apply_rating_sm2};
 use crate::session::{ServiceError, VaultSession, current_settings};
@@ -94,19 +95,26 @@ pub(crate) fn rate_item(
         Scheduler::Fsrs => {
             let params = params_for(vault, home.and_then(|h| h.request_retention));
             let prev = load_mem_state(conn, item)?;
-            let (review, mem) = apply_rating(prev.as_ref(), item, rating, now, &params);
+            let (review, mut mem) = apply_rating(prev.as_ref(), item, rating, now, &params);
+            retime_fsrs(
+                conn,
+                &mut mem,
+                (item, rating),
+                (&params, vault, home.as_ref()),
+            )?;
             insert_review(conn, &review)?;
             save_mem_state(conn, item, &mem)
         }
         Scheduler::Sm2 => {
             let prev = load_sm2_state(conn, item)?;
-            let (review, state) = apply_rating_sm2(
+            let (review, mut state) = apply_rating_sm2(
                 prev.as_ref(),
                 item,
                 rating,
                 now,
                 vault.maximum_interval_days,
             );
+            retime_sm2(conn, &mut state, (item, rating), (vault, home.as_ref()))?;
             insert_review(conn, &review)?;
             save_sm2_state(conn, item, &state)
         }
