@@ -1,6 +1,6 @@
 //! The library list: the rows of the vault, the columns shown, the sort and what the current stack and search let through. Pure.
 
-use studyfrog_core::query::{Cond, Field, MAX_ORDER_KEYS, Op, Order, Query, Val};
+use studyfrog_core::query::{Field, MAX_ORDER_KEYS, Order};
 use studyfrog_core::query_eval::{Row, run_filtered};
 use studyfrog_service::library_rows::LibraryItem;
 
@@ -35,6 +35,10 @@ pub struct LibraryState {
     pub stale: bool,
     /// The old overview of stacks is shown instead of the list.
     pub show_overview: bool,
+    /// The search bar.
+    pub search: crate::library_search::SearchState,
+    /// Why the query text is not a query, if so.
+    pub query_error: Option<studyfrog_core::query::QueryError>,
 }
 
 impl Default for LibraryState {
@@ -50,6 +54,8 @@ impl Default for LibraryState {
             scope_total: 0,
             stale: true,
             show_overview: false,
+            search: Default::default(),
+            query_error: None,
         }
     }
 }
@@ -65,6 +71,8 @@ pub enum LibraryMsg {
     ToggleColumn(Column),
     /// Show the old overview of stacks, or the list.
     Overview(bool),
+    /// The search bar.
+    Search(crate::library_search::SearchMsg),
 }
 
 /// Whether this message changes what the list should show, so the rows are read again.
@@ -145,6 +153,7 @@ pub fn update(state: State, msg: LibraryMsg) -> (State, Vec<Effect>) {
             return (state, effects);
         }
         LibraryMsg::Overview(on) => lib.show_overview = on,
+        LibraryMsg::Search(m) => return (crate::library_search::update(state, m), Vec::new()),
     }
     (state, Vec::new())
 }
@@ -157,13 +166,18 @@ fn in_scope(row: &Row, selection: &Selection) -> bool {
     }
 }
 
-fn query_of(search: &str, sort: &[Order]) -> Query {
-    let word = search.trim();
-    let cond = (!word.is_empty())
-        .then(|| Cond::Cmp(Field::Title, Op::Contains, Val::Text(word.to_owned())));
-    Query {
-        cond,
-        order: sort.to_vec(),
+/// What the bar asks for, as one comparable text.
+fn search_key(state: &State) -> String {
+    let s = &state.library.search;
+    match s.mode {
+        crate::library_search::SearchMode::Query => format!("q:{}", s.query),
+        crate::library_search::SearchMode::Standard => format!(
+            "s:{}|{:?}|{:?}|{:?}",
+            state.browser.search.trim(),
+            s.kind,
+            s.status,
+            s.priority
+        ),
     }
 }
 
@@ -180,15 +194,20 @@ pub fn sync(state: State, reload: bool) -> (State, Vec<Effect>) {
     let key = (
         state.library.generation,
         state.browser.selection.clone(),
-        state.browser.search.clone(),
+        search_key(&state),
         state.library.sort.clone(),
     );
     if state.library.shown_for.as_ref() != Some(&key) {
         let today = state.wall_ms.div_euclid(86_400_000);
-        let q = query_of(&key.2, &key.3);
         let selection = key.1.clone();
-        state.library.shown =
-            run_filtered(&q, &state.library.rows, today, &|r| in_scope(r, &selection));
+        match crate::library_search::effective(&state) {
+            Ok(q) => {
+                state.library.query_error = None;
+                state.library.shown =
+                    run_filtered(&q, &state.library.rows, today, &|r| in_scope(r, &selection));
+            }
+            Err(e) => state.library.query_error = Some(e),
+        }
         let scope = state
             .library
             .rows

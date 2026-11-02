@@ -41,6 +41,7 @@ pub mod import_ui;
 pub mod kanban;
 pub mod kanban_msg;
 pub mod library_columns;
+pub mod library_search;
 pub mod library_ui;
 pub mod md_edit;
 pub mod modal;

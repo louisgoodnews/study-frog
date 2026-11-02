@@ -13,6 +13,7 @@ pub mod pacing;
 pub mod plan;
 pub mod priority;
 pub mod query;
+pub mod query_complete;
 pub mod query_cond;
 pub mod query_cursor;
 pub mod query_eval;

@@ -19,6 +19,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- The library's search bar has a Standard mode (title word, type, status and priority) and a Query mode with the errors under the box, suggestions for field names, operators and values, and a switch that turns the fields into a query and a plain query back into fields (TASK-0132).
 - The library list: every item of the vault in a table with sortable columns (title, type, status, priority, difficulty, familiarity, stack, subjects, tags, reviews,
   due, created, updated, path; a click sorts, a second click reverses, shift adds a key), a column menu that is remembered, 'N of M items', and a tree entry 'All items';
   10 000 rows draw in about 11 ms per frame because only the rows in view are built. The search is still the title search (TASK-0131).

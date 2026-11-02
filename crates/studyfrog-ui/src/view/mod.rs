@@ -23,6 +23,7 @@ mod items;
 pub(crate) mod kit;
 mod library;
 mod library_pdfs;
+pub mod library_search;
 pub mod library_table;
 mod md_editor;
 mod menus;

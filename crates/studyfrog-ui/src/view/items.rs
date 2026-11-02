@@ -25,15 +25,7 @@ fn heading(state: &State) -> String {
 
 /// The search field, the count, the column menu and the table of items.
 fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    if let Some(text) = text_field(
-        ui,
-        "Search titles",
-        &state.browser.search,
-        "type to filter",
-        1,
-    ) {
-        out.push(Msg::SearchEdited(text));
-    }
+    crate::view::library_search::draw(state, ui, out);
     ui.horizontal(|ui| {
         ui.label(crate::view::library_table::count_line(state));
         crate::view::library_table::column_menu(state, ui, out);

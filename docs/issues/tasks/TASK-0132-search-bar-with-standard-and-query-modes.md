@@ -2,7 +2,7 @@
 id: TASK-0132
 type: task
 title: Search bar with Standard and Query modes
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0057]
 estimate: 3
@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Build the bar on the parser and the list.
 
 ## Acceptance Criteria
-- [ ] The bar toggles between filter fields and a query box, each narrowing the list
-- [ ] Query mode shows errors under the box and completes field names; Standard converts to Query and back
-- [ ] The accessibility audit passes
+- [x] The bar toggles between filter fields and a query box, each narrowing the list
+- [x] Query mode shows errors under the box and completes field names; Standard converts to Query and back
+- [x] The accessibility audit passes
 
 ## Design Notes
 None.
