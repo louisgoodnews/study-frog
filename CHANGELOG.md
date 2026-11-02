@@ -19,6 +19,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- Specifications of the library redesign (`docs/specs/library.md`: a Jira-style list with columns, sorting, selection and bulk actions) and of the
+  query language (`docs/specs/query.md`: grammar, fields, operators, error messages, limits) (TASK-0129).
 - A notification center under the bell: filters for all, unread and errors, mark one or all read or unread, delete one or clear all, the list
   grouped under Today, Yesterday and the date, a link on notifications that have a target (reminders open the calendar), and an unread count on
   the bell (TASK-0127).
