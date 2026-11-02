@@ -87,6 +87,11 @@ pub enum Msg {
         studyfrog_core::uid::Uid,
         Result<Vec<studyfrog_store::overview::ItemRow>, String>,
     ),
+    /// How familiar the user is with an open item, over time.
+    FamCurveLoaded(
+        studyfrog_core::uid::Uid,
+        Result<Box<studyfrog_service::fam_curve::ItemCurve>, String>,
+    ),
     /// Reminders that came due (each is reported once).
     RemindersDue(Result<Vec<studyfrog_calendar::reminders::DueReminder>, String>),
     /// The app settings were saved (or not).

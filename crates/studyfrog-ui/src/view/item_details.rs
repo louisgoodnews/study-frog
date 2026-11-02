@@ -51,6 +51,7 @@ pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         }
     });
     ui.add_space(10.0);
+    crate::view::item_fam::card(e, ui);
     links(e, ui, out);
     ui.add_space(10.0);
     linked_from(e, ui, out);

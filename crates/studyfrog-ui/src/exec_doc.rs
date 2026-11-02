@@ -58,6 +58,18 @@ pub fn backlinks(w: &Worker, uid: Uid, title: &str) -> Msg {
     Msg::BacklinksLoaded(uid, result)
 }
 
+/// The links to an item and its familiarity over time.
+pub fn item_extras(w: &Worker, uid: Uid, title: &str, now_ns: i64) -> Vec<Msg> {
+    let now = studyfrog_core::time::UnixMs(now_ns / 1_000_000);
+    let curve = match &w.session {
+        Some(s) => studyfrog_service::fam_curve::item_curve(&s.conn, uid, now)
+            .map(Box::new)
+            .map_err(|e| e.to_string()),
+        None => Err("no vault is open".to_owned()),
+    };
+    vec![backlinks(w, uid, title), Msg::FamCurveLoaded(uid, curve)]
+}
+
 /// Read the subjects book, or store a changed one and read it back.
 pub fn subjects(w: &Worker, change: Option<studyfrog_config::subjects::SubjectBook>) -> Msg {
     use studyfrog_service::subjects::{load_subjects, save_subjects};

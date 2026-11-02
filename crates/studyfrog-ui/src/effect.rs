@@ -190,7 +190,7 @@ pub enum Effect {
     LoadSubjects,
     /// Store the vault's teachers and subjects.
     SaveSubjects(studyfrog_config::subjects::SubjectBook),
-    /// Find the items that link to this one (by its title).
+    /// Find what the item page shows besides the file: the items that link to it (by title) and its familiarity.
     LoadBacklinks(studyfrog_core::uid::Uid, String),
     /// Find items whose title contains this text (the global search).
     SearchItems(String),

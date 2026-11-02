@@ -159,7 +159,10 @@ proptest! {
             for b in blocks {
                 match b {
                     Block::Heading { spans, .. } | Block::Paragraph(spans) => out.push_str(&plain_text(spans)),
-                    Block::Code { text, .. } => out.push_str(text),
+                    Block::Code { lang, text } => {
+                        out.push_str(lang);
+                        out.push_str(text);
+                    }
                     Block::Quote(inner) => collect(inner, out),
                     Block::List { items, .. } => items.iter().for_each(|i| collect(&i.blocks, out)),
                     Block::Rule => {}

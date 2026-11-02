@@ -25,13 +25,11 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
 fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
     match msg {
         Msg::Started { app, error } => started(state, app, error),
-        Msg::PathEdited(text) => (
-            State {
-                path_input: text,
-                ..state
-            },
-            Vec::new(),
-        ),
+        Msg::PathEdited(text) => {
+            let mut state = state;
+            state.path_input = text;
+            (state, Vec::new())
+        }
         Msg::BrowseVaultClicked => (state, vec![Effect::PickVaultFolder]),
         Msg::VaultFolderPicked(Some(path)) => open(
             State {
@@ -105,6 +103,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         edit @ (Msg::OpenItem(_)
         | Msg::DocumentLoaded(..)
         | Msg::BacklinksLoaded(..)
+        | Msg::FamCurveLoaded(..)
         | Msg::Edit(_)
         | Msg::SaveClicked
         | Msg::Saved(_)

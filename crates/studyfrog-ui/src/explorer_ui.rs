@@ -13,6 +13,8 @@ pub enum ReportTab {
     Performance,
     /// Retention, answer times and the forecast.
     Memory,
+    /// How familiar the user is with the items.
+    Familiarity,
 }
 
 /// What the explorer is looking at and what it found.

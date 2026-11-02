@@ -59,6 +59,8 @@ pub struct ReportBundle {
     pub forecast: Vec<f32>,
     /// How good such a forecast has been.
     pub backtest: BacktestReport,
+    /// How familiar the user is with the items.
+    pub familiarity: crate::fam_report::FamReport,
 }
 
 fn day_of(ms: i64, offset_minutes: i32) -> i64 {
@@ -163,5 +165,6 @@ pub fn build_reports(
         by_mark: latency_by_mark(&samples),
         forecast: forecast(&items, &model, today, FORECAST_DAYS),
         backtest: backtest_report(&history, today, &params),
+        familiarity: crate::fam_report::familiarity_report(&session.conn, now).map_err(store)?,
     })
 }

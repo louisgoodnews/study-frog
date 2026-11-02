@@ -148,7 +148,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::AddImage(target) => exec_import::add_image(w, target),
         Effect::LoadSubjects => exec_doc::subjects(w, None),
         Effect::SaveSubjects(book) => exec_doc::subjects(w, Some(book)),
-        Effect::LoadBacklinks(uid, title) => exec_doc::backlinks(w, uid, &title),
+        Effect::LoadBacklinks(uid, title) => return exec_doc::item_extras(w, uid, &title, now_ns),
         Effect::CreateItem {
             kind,
             title,

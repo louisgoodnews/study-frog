@@ -58,6 +58,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         for (tab, label) in [
             (ReportTab::Performance, "Performance"),
             (ReportTab::Memory, "Memory and forecast"),
+            (ReportTab::Familiarity, "Familiarity"),
         ] {
             if ui
                 .selectable_label(state.explorer.tab == tab, label)
@@ -70,6 +71,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     match state.explorer.tab {
         ReportTab::Performance => crate::view::explorer::draw(state, ui, out),
         ReportTab::Memory => memory(state, ui),
+        ReportTab::Familiarity => crate::view::reports_fam::draw(state, ui, out),
     }
 }
 

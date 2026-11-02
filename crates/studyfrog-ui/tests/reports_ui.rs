@@ -7,6 +7,7 @@ use common::views::{assert_all_named, harness, open_model};
 use common::{NOW_NS, sample_vault};
 use egui_kittest::kittest::Queryable;
 use studyfrog_core::event::Difficulty;
+use studyfrog_core::uid::Uid;
 use studyfrog_report::backtest::BacktestError;
 use studyfrog_report::latency::LatencyStats;
 use studyfrog_report::retention::RetentionBucket;
@@ -27,6 +28,20 @@ fn stats(p50: u32) -> LatencyStats {
     }
 }
 
+fn group(name: &str, percent: u8, items: usize) -> studyfrog_service::fam_report::FamGroup {
+    studyfrog_service::fam_report::FamGroup {
+        name: name.into(),
+        percent: Some(percent),
+        items,
+        least: vec![studyfrog_service::fam_report::FamRow {
+            uid: Uid(7),
+            title: "Subjonctif".into(),
+            percent: 12,
+            drivers: "1 rating(s), the last again 3 day(s) ago".into(),
+        }],
+    }
+}
+
 fn bundle() -> ReportBundle {
     let bucket = |from_days, to_days, reviews, recalled| RetentionBucket {
         from_days,
@@ -35,6 +50,12 @@ fn bundle() -> ReportBundle {
         recalled,
     };
     ReportBundle {
+        familiarity: studyfrog_service::fam_report::FamReport {
+            spread: [0, 0, 1, 0, 0, 0, 0, 2, 0, 1],
+            unscored: 2,
+            stacks: vec![group("French", 63, 4)],
+            subjects: vec![group("Languages", 63, 4)],
+        },
         reviews: 120,
         retention: vec![
             bucket(1, 1, 45, 39),
@@ -125,6 +146,12 @@ fn an_empty_history_says_so_and_still_draws() {
     m.state.screen = Screen::Reports;
     m.state.explorer.tab = studyfrog_ui::explorer_ui::ReportTab::Memory;
     let empty = ReportBundle {
+        familiarity: studyfrog_service::fam_report::FamReport {
+            spread: [0; 10],
+            unscored: 0,
+            stacks: vec![],
+            subjects: vec![],
+        },
         reviews: 0,
         retention: vec![],
         latency: None,
@@ -165,4 +192,37 @@ fn the_executor_computes_reports_for_a_real_vault() {
     };
     assert_eq!((r.reviews, r.forecast.len()), (0, 30));
     assert!(r.backtest.simulated && r.backtest.error.is_some());
+}
+
+#[test]
+fn the_familiarity_tab_shows_the_spread_the_groups_and_why_each_item_is_listed() {
+    let mut m = common::views::open_model();
+    m.state.screen = Screen::Reports;
+    m.state.explorer.tab = studyfrog_ui::explorer_ui::ReportTab::Familiarity;
+    m.state.reports = Some(bundle());
+    let mut h = harness(m);
+    h.run_steps(4);
+    for text in [
+        "By stack",
+        "By subject",
+        "How well you know your items",
+        "0-9 %",
+        "90-100 %",
+    ] {
+        assert!(h.query_by_label(text).is_some(), "missing {text}");
+    }
+    assert!(
+        h.query_by_label_contains("French: 63 % (4 item(s))")
+            .is_some()
+    );
+    assert!(
+        h.query_all_by_label_contains("the last again 3 day(s) ago")
+            .count()
+            >= 1
+    );
+    assert!(
+        h.query_by_label_contains("2 item(s) have no history yet")
+            .is_some()
+    );
+    assert_all_named(&h, "familiarity report");
 }

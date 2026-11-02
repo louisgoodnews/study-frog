@@ -2,7 +2,7 @@
 id: TASK-0138
 type: task
 title: Per-item familiarity in the reports
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0059]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add the report screens and their data functions.
 
 ## Acceptance Criteria
-- [ ] A report shows the distribution and the least familiar items per stack and per subject, and a page per item shows its value over time
-- [ ] Each row says which inputs drove its value
+- [x] A report shows the distribution and the least familiar items per stack and per subject, and a page per item shows its value over time
+- [x] Each row says which inputs drove its value
 
 ## Design Notes
 None.

@@ -8,6 +8,19 @@ use crate::effect::Effect;
 use crate::msg::EditAction;
 use crate::state::{NoticeKind, State};
 
+/// Keep the curve of the open item.
+pub(crate) fn curve(
+    state: State,
+    uid: Uid,
+    curve: Box<studyfrog_service::fam_curve::ItemCurve>,
+) -> (State, Vec<Effect>) {
+    let mut state = state;
+    if let Some(e) = state.editor.as_mut().filter(|e| e.uid == uid) {
+        e.curve = Some(curve);
+    }
+    (state, Vec::new())
+}
+
 pub(crate) fn backlinks(
     state: State,
     uid: Uid,

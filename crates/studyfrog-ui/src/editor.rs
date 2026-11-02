@@ -31,6 +31,8 @@ pub struct Editor {
     pub saving: Option<Doc>,
     /// Items whose text links to this one.
     pub backlinks: Vec<studyfrog_store::overview::ItemRow>,
+    /// The familiarity over time, once read.
+    pub curve: Option<Box<studyfrog_service::fam_curve::ItemCurve>>,
 }
 
 /// True when the form differs from what is on disk.
@@ -71,6 +73,7 @@ fn editor_new(loaded: LoadedDoc, uid: Uid) -> Editor {
         form,
         saving: None,
         backlinks: Vec::new(),
+        curve: None,
     }
 }
 
@@ -84,6 +87,7 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
     match msg {
         Msg::OpenItem(uid) => open_item(state, uid),
         Msg::DocumentLoaded(uid, result) => loaded(state, uid, result),
+        Msg::FamCurveLoaded(uid, Ok(curve)) => crate::editor_edit::curve(state, uid, curve),
         Msg::BacklinksLoaded(uid, result) => crate::editor_edit::backlinks(state, uid, result),
         Msg::Edit(action) => crate::editor_edit::edit(state, action),
         Msg::SaveClicked => save(state),
