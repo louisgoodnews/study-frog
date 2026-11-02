@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use rusqlite::{Connection, Transaction, params};
 use studyfrog_core::event::difficulty_from_name;
 use studyfrog_core::priority::priority_from_name;
+use studyfrog_core::status::status_from_name;
 use studyfrog_md::doc::{Doc, doc_kind, doc_meta, doc_texts, kind_name};
 use studyfrog_md::error::describe_parse_error;
 use studyfrog_md::extra::{extra_raw, extra_value};
@@ -154,8 +155,8 @@ fn write_item(
     run(tx, "DELETE FROM item WHERE uid = ?1", [&uid])?;
     run(
         tx,
-        "INSERT INTO item (uid, path, kind, title, stack_path, created_ms, updated_ms, priority, difficulty, subjects, source)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+        "INSERT INTO item (uid, path, kind, title, stack_path, created_ms, updated_ms, priority, difficulty, subjects, source, status)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
         params![
             uid,
             rel,
@@ -167,7 +168,8 @@ fn write_item(
             word_of(doc, "priority", |w| priority_from_name(w).is_some()),
             word_of(doc, "difficulty", |w| difficulty_from_name(w).is_some()),
             extra_raw(doc, "subjects"),
-            extra_value(doc, "source")
+            extra_value(doc, "source"),
+            word_of(doc, "status", |w| status_from_name(w).is_some())
         ],
     )?;
     write_tags(tx, &uid, &meta.tags)?;

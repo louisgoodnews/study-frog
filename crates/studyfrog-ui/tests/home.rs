@@ -42,6 +42,7 @@ fn summary(ready: usize) -> HomeSummary {
             kind: ItemKind::Card,
             path: "french/a.md".into(),
             due: None,
+            status: studyfrog_core::status::Status::New,
         }],
         recent_runs: vec![RunRow {
             uid: Uid(9),
@@ -57,6 +58,7 @@ fn summary(ready: usize) -> HomeSummary {
             kind: ItemKind::Card,
             path: "french/b.md".into(),
             due: Some(studyfrog_core::time::UnixMs(7 * DAY)),
+            status: studyfrog_core::status::Status::New,
         }],
         upcoming: vec![Upcoming {
             title: "Final exam".into(),

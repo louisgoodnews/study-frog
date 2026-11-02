@@ -29,6 +29,7 @@ fn row(n: u128, title: &str) -> ItemRow {
         kind: ItemKind::Card,
         path: format!("{n}.md"),
         due: None,
+        status: studyfrog_core::status::Status::New,
     }
 }
 

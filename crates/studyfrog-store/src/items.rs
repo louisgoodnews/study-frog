@@ -7,6 +7,7 @@ use studyfrog_core::uid::Uid;
 use studyfrog_md::ulid::parse_ulid;
 
 use crate::error::{StoreError, sql_err};
+use crate::item_rows::{ITEM_COLS, item_row, raw_item};
 use crate::traits::{inherited, own_of, stack_traits};
 
 /// One item of a stack (or of the inbox) as the UI lists it.
@@ -22,33 +23,18 @@ pub struct ItemRow {
     pub path: String,
     /// When the item is next due; `None` for items that were never reviewed.
     pub due: Option<studyfrog_core::time::UnixMs>,
-}
-
-type RawItem = (String, String, String, String, Option<i64>);
-
-fn raw_item(r: &rusqlite::Row<'_>) -> rusqlite::Result<RawItem> {
-    Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?))
-}
-
-fn item_row((id, title, kind, path, due): RawItem) -> Result<ItemRow, StoreError> {
-    let uid = parse_ulid(&id).ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}")))?;
-    let kind = studyfrog_core::plan::item_kind_from_name(&kind)
-        .ok_or_else(|| StoreError::Corrupt(format!("kind: {kind:?}")))?;
-    Ok(ItemRow {
-        uid,
-        title,
-        kind,
-        path,
-        due: due.map(studyfrog_core::time::UnixMs),
-    })
+    /// Its status: the stored one, else derived from whether it was ever reviewed.
+    pub status: studyfrog_core::status::Status,
 }
 
 /// Items directly in `folder` (`None` for the inbox), without the stack file, ordered by path.
 pub fn list_items(conn: &Connection, folder: Option<&str>) -> Result<Vec<ItemRow>, StoreError> {
-    let sql = "SELECT i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms)
+    let sql = format!(
+        "SELECT {ITEM_COLS}
                FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
-               WHERE i.stack_path IS ?1 AND i.kind != 'stack' ORDER BY i.path";
-    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+               WHERE i.stack_path IS ?1 AND i.kind != 'stack' ORDER BY i.path"
+    );
+    let mut stmt = conn.prepare(&sql).map_err(sql_err)?;
     let rows = stmt.query_map([folder], raw_item).map_err(sql_err)?;
     rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
 }
@@ -68,11 +54,13 @@ pub fn search_items(
         .replace('\\', "\\\\")
         .replace('%', "\\%")
         .replace('_', "\\_");
-    let sql = "SELECT i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms)
+    let sql = format!(
+        "SELECT {ITEM_COLS}
                FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
                WHERE i.kind != 'stack' AND i.title LIKE ?1 ESCAPE '\\'
-               ORDER BY (i.title LIKE ?2 ESCAPE '\\') DESC, i.title COLLATE NOCASE, i.path LIMIT ?3";
-    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+               ORDER BY (i.title LIKE ?2 ESCAPE '\\') DESC, i.title COLLATE NOCASE, i.path LIMIT ?3"
+    );
+    let mut stmt = conn.prepare(&sql).map_err(sql_err)?;
     let params = (format!("%{escaped}%"), format!("{escaped}%"), limit as i64);
     let rows = stmt.query_map(params, raw_item).map_err(sql_err)?;
     rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
@@ -182,12 +170,14 @@ pub fn resolve_title(conn: &Connection, target: &str) -> Result<Option<Uid>, Sto
 
 /// The items (not stacks) whose text links to `title` with a wikilink, without `except` itself.
 pub fn linking_to(conn: &Connection, title: &str, except: Uid) -> Result<Vec<ItemRow>, StoreError> {
-    let sql = "SELECT DISTINCT i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms)
+    let sql = format!(
+        "SELECT DISTINCT {ITEM_COLS}
                FROM link l JOIN item i ON i.uid = l.src_uid
                LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
                WHERE l.target = ?1 COLLATE NOCASE AND i.kind != 'stack' AND i.uid != ?2
-               ORDER BY i.title COLLATE NOCASE, i.path";
-    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+               ORDER BY i.title COLLATE NOCASE, i.path"
+    );
+    let mut stmt = conn.prepare(&sql).map_err(sql_err)?;
     let params = (title.trim(), studyfrog_md::ulid::format_ulid(except));
     let rows = stmt.query_map(params, raw_item).map_err(sql_err)?;
     rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
@@ -195,10 +185,12 @@ pub fn linking_to(conn: &Connection, title: &str, except: Uid) -> Result<Vec<Ite
 
 /// The items due at `now_ms` or earlier, the most overdue first, at most `limit`.
 pub fn due_items(conn: &Connection, now_ms: i64, limit: usize) -> Result<Vec<ItemRow>, StoreError> {
-    let sql = "SELECT i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms) AS due
+    let sql = format!(
+        "SELECT {ITEM_COLS}
                FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
-               WHERE i.kind != 'stack' AND COALESCE(m.due_ms, s.due_ms) <= ?1 ORDER BY due, i.path LIMIT ?2";
-    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+               WHERE i.kind != 'stack' AND COALESCE(m.due_ms, s.due_ms) <= ?1 ORDER BY due, i.path LIMIT ?2"
+    );
+    let mut stmt = conn.prepare(&sql).map_err(sql_err)?;
     let rows = stmt
         .query_map((now_ms, limit as i64), raw_item)
         .map_err(sql_err)?;
@@ -208,10 +200,12 @@ pub fn due_items(conn: &Connection, now_ms: i64, limit: usize) -> Result<Vec<Ite
 /// The items edited most recently (by the time in their front matter, else when they were created),
 /// newest first.
 pub fn recent_items(conn: &Connection, limit: usize) -> Result<Vec<ItemRow>, StoreError> {
-    let sql = "SELECT i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms)
+    let sql = format!(
+        "SELECT {ITEM_COLS}
                FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
-               WHERE i.kind != 'stack' ORDER BY COALESCE(i.updated_ms, i.created_ms, 0) DESC, i.path LIMIT ?1";
-    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+               WHERE i.kind != 'stack' ORDER BY COALESCE(i.updated_ms, i.created_ms, 0) DESC, i.path LIMIT ?1"
+    );
+    let mut stmt = conn.prepare(&sql).map_err(sql_err)?;
     let rows = stmt.query_map([limit as i64], raw_item).map_err(sql_err)?;
     rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
 }

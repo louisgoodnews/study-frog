@@ -44,6 +44,11 @@ pub(crate) const V10: &str = "
 ALTER TABLE item ADD COLUMN subjects TEXT;
 ";
 
+/// Each item's own status word from its front matter (`NULL`: derived from its history).
+pub(crate) const V12: &str = "
+ALTER TABLE item ADD COLUMN status TEXT CHECK (status IS NULL OR status IN ('new', 'learning', 'reviewing', 'done', 'paused'));
+";
+
 pub(crate) const V9: &str = "
 ALTER TABLE item ADD COLUMN priority TEXT CHECK (priority IS NULL OR priority IN ('lowest', 'low', 'medium', 'high', 'highest'));
 ALTER TABLE item ADD COLUMN difficulty TEXT CHECK (difficulty IS NULL OR difficulty IN ('easy', 'medium', 'difficult'));

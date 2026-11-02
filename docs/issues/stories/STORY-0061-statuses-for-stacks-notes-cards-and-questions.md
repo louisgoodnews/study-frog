@@ -2,7 +2,7 @@
 id: STORY-0061
 type: story
 title: Statuses for stacks, notes, cards and questions
-status: backlog
+status: in_progress
 epic: EPIC-023
 parents: [EPIC-023]
 estimate: 8

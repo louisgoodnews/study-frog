@@ -192,6 +192,7 @@ fn typing_in_the_search_asks_for_matches_and_choosing_one_opens_it() {
         kind: ItemKind::Card,
         path: "french/a.md".into(),
         due: None,
+        status: studyfrog_core::status::Status::New,
     };
     apply(
         &mut h.state_mut().0,

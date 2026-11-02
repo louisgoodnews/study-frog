@@ -9,6 +9,7 @@ pub mod error;
 pub mod hash;
 pub mod home;
 pub mod index;
+mod item_rows;
 pub mod items;
 pub mod library;
 pub mod link_graph;

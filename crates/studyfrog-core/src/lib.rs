@@ -16,6 +16,7 @@ pub mod run;
 pub mod scheduler;
 pub mod settings;
 pub mod stack;
+pub mod status;
 pub mod time;
 pub mod uid;
 

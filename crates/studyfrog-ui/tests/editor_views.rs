@@ -179,6 +179,7 @@ fn the_side_column_lists_the_items_that_link_here() {
         kind: ItemKind::Card,
         path: "s/c.md".into(),
         due: None,
+        status: studyfrog_core::status::Status::New,
     };
     apply(&mut m, Msg::BacklinksLoaded(Uid(0xA), Ok(vec![row])));
     let mut h = harness(m);

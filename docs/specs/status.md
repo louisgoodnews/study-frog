@@ -22,15 +22,15 @@ A one-line front-matter key `status` on every kind, next to `priority` and `diff
   review (a note: one view) is `learning`.
 - **Present:** it wins over the derived value, whatever the history says.
 
-The app writes the key when the user sets a status and when the first review moves an item out of `new`
-(`new` is then not written; absence means derived). An unknown value in a file is kept verbatim, shown as the derived
+The app writes the key only when the user sets a status. The first review does not touch the file: the effective status
+simply becomes `learning` because the history now has a review (a user-set `new` stays `new`). An unknown value in a file is kept verbatim, shown as the derived
 status, and flagged in the item's details; it is never overwritten silently.
 
 ## Who may change it
 | Change | By |
 |---|---|
 | any status to any other | the user, on the item page, in the list (bulk too) and on the board of a stack |
-| `new` to `learning` | automatic, on the first review (a note: the first view), only while the status is absent or `new` |
+| `new` to `learning` | automatic and derived, on the first review (a note: the first view), only while the key is absent |
 | `learning` to `reviewing`, `reviewing` to `learning` | **suggested** from familiarity (STORY-0058), never automatic |
 | to `done` | the user only; a suggestion may be offered when an item stays near full familiarity (see below) |
 

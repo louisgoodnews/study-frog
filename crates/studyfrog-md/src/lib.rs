@@ -16,5 +16,6 @@ pub mod raw;
 pub mod render;
 pub mod rfc3339;
 pub mod sections;
+pub mod status;
 pub mod ulid;
 pub mod validate;

@@ -19,6 +19,7 @@ fn item(n: u128, title: &str) -> ItemRow {
         kind: ItemKind::Card,
         path: format!("french/{n}.md"),
         due: None,
+        status: studyfrog_core::status::Status::New,
     }
 }
 
