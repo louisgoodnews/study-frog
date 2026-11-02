@@ -75,6 +75,8 @@ pub mod pdf_types;
 pub mod pdf_ui;
 pub mod plan_msg;
 pub mod planner;
+pub mod planner_rehearse;
+pub mod planner_reviews;
 pub mod poll_ui;
 pub mod profile_ui;
 pub mod reading_test;

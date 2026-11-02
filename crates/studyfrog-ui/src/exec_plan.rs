@@ -107,3 +107,54 @@ pub fn load_board(w: &mut Worker, now_ns: i64) -> Msg {
 pub fn board_command(w: &mut Worker, op: &BoardOp, now_ns: i64) -> Msg {
     board_msg(w, |s| apply_board_op(s, op, ids(now_ns)?))
 }
+
+fn reviews(m: crate::planner_reviews::ReviewMsg) -> Msg {
+    Msg::Plan(PlanMsg::Reviews(m))
+}
+
+/// Read the reviews the schedule planned between two local days.
+pub fn review_plan(w: &Worker, days: (i64, i64)) -> Msg {
+    use crate::planner_reviews::ReviewMsg;
+    let result = match &w.session {
+        Some(s) => studyfrog_service::review_plan::plan_reviews(s, days).map_err(|e| e.to_string()),
+        None => Err(NO_VAULT.to_owned()),
+    };
+    reviews(ReviewMsg::Loaded(result))
+}
+
+/// Make the items due on a local day.
+pub fn move_reviews(w: &Worker, items: &[Uid], day: i64, now_ns: i64) -> Msg {
+    use crate::planner_reviews::ReviewMsg;
+    let now = UnixMs(now_ns / 1_000_000);
+    let result = match &w.session {
+        Some(s) => studyfrog_service::review_plan::move_reviews(s, items, day, now)
+            .map(Box::new)
+            .map_err(|e| e.to_string()),
+        None => Err(NO_VAULT.to_owned()),
+    };
+    reviews(ReviewMsg::Moved(result))
+}
+
+/// Put the due dates of a move back.
+pub fn undo_move(w: &Worker, undo: &[studyfrog_service::review_plan::Prior]) -> Msg {
+    use crate::planner_reviews::ReviewMsg;
+    let result = match &w.session {
+        Some(s) => studyfrog_service::review_plan::undo_move(s, undo).map_err(|e| e.to_string()),
+        None => Err(NO_VAULT.to_owned()),
+    };
+    reviews(ReviewMsg::Undone(result))
+}
+
+/// Perform one effect on the planned reviews.
+pub fn reviews_effect(
+    w: &Worker,
+    effect: crate::planner_reviews::ReviewEffect,
+    now_ns: i64,
+) -> Msg {
+    use crate::planner_reviews::ReviewEffect;
+    match effect {
+        ReviewEffect::Load(from, to) => review_plan(w, (from, to)),
+        ReviewEffect::Move(items, day) => move_reviews(w, &items, day, now_ns),
+        ReviewEffect::Undo(undo) => undo_move(w, &undo),
+    }
+}

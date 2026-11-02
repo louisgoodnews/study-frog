@@ -4,14 +4,12 @@
 use studyfrog_calendar::recurrence::occurrences_all;
 use studyfrog_calendar::session::{Occurrence, Session};
 use studyfrog_core::civil::{Date, Weekday, add_months, month_grid};
-use studyfrog_core::uid::Uid;
 
 use crate::effect::Effect;
 use crate::session_form::{SessionForm, apply_form_edit, form_from, form_new, session_from_form};
 
 pub use crate::plan_msg::PlanMsg;
-use crate::setup::{Preset, Rehearse, SetupEdit, apply_edit, form_for_preset, refresh_preview};
-use crate::state::{Notice, NoticeKind, Screen, State};
+use crate::state::{Notice, NoticeKind, State};
 
 /// The week starts on Monday.
 pub const WEEK_START: Weekday = Weekday::Mon;
@@ -35,6 +33,12 @@ pub struct Planner {
     pub form: Option<SessionForm>,
     /// Why the last save was refused.
     pub form_error: Option<String>,
+    /// The reviews the schedule planned for the visible grid.
+    pub reviews: Vec<studyfrog_calendar::review_plan::PlanEntry>,
+    /// The entry whose date is being chosen.
+    pub moving: Option<crate::planner_reviews::MoveForm>,
+    /// How to take back the last move of reviews.
+    pub undo: Option<Vec<studyfrog_service::review_plan::Prior>>,
 }
 
 impl Default for Planner {
@@ -53,6 +57,9 @@ impl Default for Planner {
             shown: Vec::new(),
             form: None,
             form_error: None,
+            reviews: Vec::new(),
+            moving: None,
+            undo: None,
         }
     }
 }
@@ -162,29 +169,20 @@ fn changed(state: State, result: Result<Vec<Session>, String>) -> (State, Vec<Ef
     }
 }
 
-/// Open the rehearse screen with the session's stack as the only stack filter.
-fn rehearse(state: State, id: Uid) -> (State, Vec<Effect>) {
-    let stack = state.planner.sessions.iter().find(|s| s.id == id);
-    let Some(s) = stack else {
-        return (state, Vec::new());
-    };
-    let mut form = form_for_preset(Preset::Spaced, state.rehearse.form.mode);
-    if let Some(uid) = s.stack {
-        form = apply_edit(form, SetupEdit::Stack(uid, true));
+/// Handle the calendar messages; the planned reviews are read again whenever the grid or the sessions change.
+pub fn update(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
+    let refresh = matches!(
+        msg,
+        PlanMsg::Loaded(Ok(_)) | PlanMsg::Month(_) | PlanMsg::Today
+    );
+    let (state, mut effects) = update_one(state, msg);
+    if refresh {
+        effects.extend(crate::planner_reviews::reload(&state));
     }
-    refresh_preview(State {
-        screen: Screen::Rehearse,
-        rehearse: Rehearse {
-            form,
-            run: None,
-            ..state.rehearse.clone()
-        },
-        ..state
-    })
+    (state, effects)
 }
 
-/// Handle the calendar messages.
-pub fn update(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
+fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
     let p = state.planner.clone();
     match msg {
         PlanMsg::Loaded(Ok((sessions, today))) => with(state, loaded(p, sessions, today)),
@@ -229,6 +227,7 @@ pub fn update(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
         PlanMsg::Delete(id) => (state, vec![Effect::DeleteSession(id)]),
         PlanMsg::Skip(id, date) => (state, vec![Effect::CancelOccurrence(id, date)]),
         PlanMsg::Changed(result) => changed(state, result),
-        PlanMsg::Rehearse(id) => rehearse(state, id),
+        PlanMsg::Rehearse(id) => crate::planner_rehearse::rehearse(state, id),
+        PlanMsg::Reviews(m) => crate::planner_reviews::update(state, m),
     }
 }

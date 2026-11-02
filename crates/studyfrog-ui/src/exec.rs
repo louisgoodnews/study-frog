@@ -124,6 +124,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::StartRun { plan, mode } => exec_run::start(w, plan, mode, now_ns),
         Effect::LoadGraph => exec_doc::load_graph_msg(w),
         Effect::LoadSessions => exec_plan::load_sessions(w, now_ns),
+        Effect::Reviews(e) => exec_plan::reviews_effect(w, e, now_ns),
         Effect::SaveSession(s) => exec_plan::save(w, s, now_ns),
         Effect::DeleteSession(id) => exec_plan::delete(w, id),
         Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),

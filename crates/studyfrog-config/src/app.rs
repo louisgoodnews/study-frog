@@ -26,6 +26,7 @@ struct RawApp {
     settings_tab: Option<String>,
     track_views: Option<bool>,
     library_columns: Option<String>,
+    calendar_reviews: Option<bool>,
 }
 
 /// `value` if it is inside `range`, else an error naming the key and its line.
@@ -91,6 +92,7 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
         settings_tab: raw.settings_tab,
         views_untracked: raw.track_views == Some(false),
         library_columns: raw.library_columns,
+        calendar_reviews_off: raw.calendar_reviews == Some(false),
     })
 }
 
@@ -124,6 +126,9 @@ pub fn render_app_settings(s: &AppSettings) -> String {
     }
     if s.views_untracked {
         out.push_str("track_views = false\n");
+    }
+    if s.calendar_reviews_off {
+        out.push_str("calendar_reviews = false\n");
     }
     if let Some(columns) = &s.library_columns {
         out.push_str(&format!("library_columns = {}\n", toml_string(columns)));

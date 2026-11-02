@@ -110,6 +110,8 @@ pub struct AppSettings {
     pub views_untracked: bool,
     /// The columns of the library list, as stored words (`title,type,status`); `None` uses the defaults.
     pub library_columns: Option<String>,
+    /// Do not show the reviews the schedule plans as entries of the calendar (the default is to show them).
+    pub calendar_reviews_off: bool,
 }
 
 /// `settings` after opening `path`: it becomes the current vault and moves to the front of the recent list.

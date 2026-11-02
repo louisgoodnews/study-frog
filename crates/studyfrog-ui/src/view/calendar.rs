@@ -36,7 +36,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let down = egui::Layout::top_down(egui::Align::Min);
         ui.allocate_ui_with_layout(vec2(month_width, height), down, |ui| {
             ui.set_min_size(vec2(month_width, height));
-            calendar_grid::month(p, ui, out);
+            calendar_grid::month(state, ui, out);
         });
         ui.allocate_ui_with_layout(vec2(side_width, height), down, |ui| {
             ui.set_min_size(vec2(side_width, height));
@@ -77,6 +77,9 @@ fn side(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if kit::primary_button(ui, "Add to calendar").clicked() {
         plan(out, PlanMsg::New);
     }
+    ui.add_space(10.0);
+    kit::section(ui, "Planned reviews");
+    super::calendar_reviews::side_section(state, ui, out);
     ui.add_space(10.0);
     kit::section(ui, "Coming up");
     upcoming(state, ui);

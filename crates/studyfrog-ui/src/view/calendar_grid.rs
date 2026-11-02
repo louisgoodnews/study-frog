@@ -7,8 +7,10 @@ use studyfrog_calendar::session::{EventKind, Occurrence, Session};
 use studyfrog_core::civil::{Date, format_date};
 
 use crate::msg::Msg;
-use crate::planner::{PlanMsg, Planner, grid_of};
+use crate::planner::{PlanMsg, grid_of};
+use crate::state::State;
 use crate::theme::{Palette, palette_of, tint};
+use crate::view::calendar_reviews;
 
 const MONTHS: [&str; 12] = [
     "January",
@@ -42,7 +44,8 @@ pub fn kind_color(p: &Palette, kind: EventKind) -> Color32 {
     }
 }
 
-pub fn month(p: &Planner, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+pub fn month(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let p = &state.planner;
     ui.horizontal_wrapped(|ui| {
         ui.label(RichText::new("Calendar").size(24.0));
         ui.add_space(12.0);
@@ -72,16 +75,27 @@ pub fn month(p: &Planner, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             );
         }
     });
+    let (mut cells, mut dropped) = (Vec::new(), Vec::new());
     for week in grid_of(p.month).chunks(7) {
         ui.horizontal(|ui| {
             for day in week {
-                day_cell(p, *day, vec2(width, height), ui, out);
+                let size = vec2(width, height);
+                let (rect, more) = day_cell(state, *day, size, (ui, out));
+                cells.push((*day, rect));
+                dropped.extend(more);
             }
         });
     }
+    calendar_reviews::resolve(&dropped, &cells, out);
 }
 
-fn day_cell(p: &Planner, day: Date, size: egui::Vec2, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+fn day_cell(
+    state: &State,
+    day: Date,
+    size: egui::Vec2,
+    (ui, out): (&mut egui::Ui, &mut Vec<Msg>),
+) -> (Rect, Vec<calendar_reviews::Dropped>) {
+    let p = &state.planner;
     let pal = palette_of(ui);
     let entries: Vec<(&Occurrence, &Session)> = p
         .shown
@@ -131,13 +145,21 @@ fn day_cell(p: &Planner, day: Date, size: egui::Vec2, ui: &mut egui::Ui, out: &m
         FontId::proportional(14.0),
         ink,
     );
-    chips(&painter, rect, &entries, &pal);
+    let used = chips(&painter, rect, &entries, &pal);
+    let reviews = calendar_reviews::day_chips(state, day, (rect, used), (ui, out));
     if response.on_hover_text(format_date(day)).clicked() {
         plan(out, PlanMsg::Select(day));
     }
+    (rect, reviews)
 }
 
-fn chips(painter: &egui::Painter, rect: Rect, entries: &[(&Occurrence, &Session)], pal: &Palette) {
+/// Draws the session chips and returns how many lines they took.
+fn chips(
+    painter: &egui::Painter,
+    rect: Rect,
+    entries: &[(&Occurrence, &Session)],
+    pal: &Palette,
+) -> usize {
     for (i, (_, s)) in entries.iter().take(CHIPS).enumerate() {
         let top = rect.top() + 24.0 + i as f32 * 17.0;
         let chip = Rect::from_min_size(
@@ -145,7 +167,7 @@ fn chips(painter: &egui::Painter, rect: Rect, entries: &[(&Occurrence, &Session)
             vec2(rect.width() - 8.0, 15.0),
         );
         if chip.bottom() > rect.bottom() {
-            return;
+            return i;
         }
         let color = kind_color(pal, s.kind);
         painter.rect_filled(chip, 3.0, tint(color, 60));
@@ -168,4 +190,5 @@ fn chips(painter: &egui::Painter, rect: Rect, entries: &[(&Occurrence, &Session)
             pal.text_weak,
         );
     }
+    entries.len().min(CHIPS)
 }

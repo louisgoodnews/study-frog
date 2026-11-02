@@ -9,6 +9,7 @@ mod bars;
 mod board;
 mod calendar;
 mod calendar_grid;
+mod calendar_reviews;
 mod date_picker;
 mod editor;
 mod explorer;

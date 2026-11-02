@@ -37,4 +37,6 @@ pub enum PlanMsg {
     Rehearse(Uid),
     /// Set or change the due date of a stack.
     StackDeadline(Uid),
+    /// The reviews the schedule planned.
+    Reviews(crate::planner_reviews::ReviewMsg),
 }
