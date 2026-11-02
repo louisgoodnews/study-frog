@@ -2,7 +2,7 @@
 id: TASK-0149
 type: task
 title: Specify the stack view redesign
-status: backlog
+status: review
 epic: EPIC-023
 parents: [STORY-0063]
 estimate: 2
@@ -19,7 +19,7 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Write the redesign down before building it.
 
 ## Acceptance Criteria
-- [ ] docs/specs/stack-view.md lists the header, the tabs and the Summary widgets, with the owner's Jira screenshots as the reference
+- [x] docs/specs/stack-view.md lists the header, the tabs and the Summary widgets, with the owner's Jira screenshots as the reference
 - [ ] The owner has accepted the layout and the tabs (Goals is a user-edited bullet list, Forms is not wanted)
 
 ## Design Notes
