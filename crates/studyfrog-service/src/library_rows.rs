@@ -57,7 +57,7 @@ fn stack_chain(stacks: &[StackRow], folder: Option<&str>) -> Vec<String> {
 }
 
 /// The exam or deadline that matters for each stack: its own or one above it.
-fn exams(
+pub(crate) fn exams(
     conn: &rusqlite::Connection,
     stacks: &[StackRow],
     today: i64,

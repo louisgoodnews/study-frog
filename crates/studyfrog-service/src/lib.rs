@@ -37,6 +37,7 @@ pub mod reminders;
 pub mod reports;
 pub mod rerate;
 pub mod restore;
+pub mod review_plan;
 pub mod schedule;
 pub mod session;
 pub mod settings;

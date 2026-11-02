@@ -40,3 +40,16 @@ pub fn day_window_at(now: UnixMs, offset: impl Fn(UnixMs) -> i32) -> DayWindow {
 pub fn local_day_window(now: UnixMs) -> DayWindow {
     day_window_at(now, local_offset_minutes)
 }
+
+/// The instant a local calendar day begins, in the system time zone; `day` counts from 1970-01-01.
+pub fn local_day_start(day: i64) -> UnixMs {
+    local_midnight(
+        studyfrog_core::civil::date_from_days(day),
+        &local_offset_minutes,
+    )
+}
+
+/// The local calendar day (counted from 1970-01-01) an instant falls on, in the system time zone.
+pub fn local_day_of(at: UnixMs) -> i64 {
+    studyfrog_core::civil::date_to_days(utc_to_local(at, local_offset_minutes(at)).date)
+}

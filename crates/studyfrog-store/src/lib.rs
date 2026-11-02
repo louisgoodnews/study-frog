@@ -5,6 +5,7 @@ pub mod answer_scores;
 pub mod app_config;
 pub mod board_store;
 pub mod db;
+pub mod due_dates;
 pub mod error;
 pub mod hash;
 pub mod home;
