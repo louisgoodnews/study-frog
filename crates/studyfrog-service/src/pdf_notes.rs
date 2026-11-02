@@ -165,6 +165,8 @@ pub fn note_from_pdf(
         tags: &[],
         parent: Some(req.folder),
         source: Some(&source),
+        priority: None,
+        difficulty: None,
     };
     create_item(session, &item, ids)
 }
@@ -223,6 +225,8 @@ pub fn item_from_pdf(
         tags: &[],
         parent: Some(req.folder),
         source: Some(&source),
+        priority: None,
+        difficulty: None,
     };
     create_item(session, &item, ids)
 }

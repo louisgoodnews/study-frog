@@ -4,6 +4,8 @@
 mod common;
 
 use common::views::open_model;
+use studyfrog_core::event::Difficulty;
+use studyfrog_core::priority::Priority;
 use studyfrog_service::create_more::{Created, NewKind};
 use studyfrog_store::overview::VaultOverview;
 use studyfrog_ui::effect::Effect;
@@ -122,6 +124,7 @@ fn submitting_sends_one_request_with_clean_values_and_a_second_press_waits() {
             tags: vec!["geo".into(), "easy".into()],
             parent: Some("french".into()),
             due: None,
+            choices: (Some(Priority::Medium), Some(Difficulty::Difficult)),
         }]
     );
     assert!(form(&m).busy);

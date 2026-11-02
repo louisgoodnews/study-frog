@@ -100,6 +100,10 @@ pub fn create_item(
     kind: NewKind,
     [title, text, answer]: [&str; 3],
     (tags, parent, due): (&[String], Option<&str>, Option<&DueDate>),
+    (priority, difficulty): (
+        Option<studyfrog_core::priority::Priority>,
+        Option<studyfrog_core::event::Difficulty>,
+    ),
     now_ns: i64,
 ) -> Msg {
     let Some(session) = &mut w.session else {
@@ -113,6 +117,8 @@ pub fn create_item(
         answer,
         tags,
         parent,
+        priority,
+        difficulty,
     };
     let result = ids(now_ns)
         .and_then(|ids| create_tracked(session, &item, due, ids))

@@ -157,11 +157,13 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             tags,
             parent,
             due,
+            choices,
         } => exec_import::create_item(
             w,
             kind,
             [&title, &text, &answer],
             (&tags, parent.as_deref(), due.as_ref()),
+            choices,
             now_ns,
         ),
         Effect::Pdf(e) => exec_pdf::run(w, e, now_ns),

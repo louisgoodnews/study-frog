@@ -2,7 +2,6 @@
 
 use studyfrog_board::ops::BoardOp;
 use studyfrog_calendar::session::Session;
-use studyfrog_core::civil::Date;
 use studyfrog_core::plan::RunPlan;
 use studyfrog_core::review::Rating;
 use studyfrog_core::run::RunMode;
@@ -106,7 +105,7 @@ pub enum Effect {
     CreateItem {
         /// What to create.
         kind: studyfrog_service::create_more::NewKind,
-        /// Title (may be empty for cards and questions).
+        /// Title (empty: from the text).
         title: String,
         /// Description, body, front or prompt.
         text: String,
@@ -116,8 +115,10 @@ pub enum Effect {
         tags: Vec<String>,
         /// The stack it goes into.
         parent: Option<String>,
-        /// For a stack: when it is due and when to remind.
+        /// For a stack: due date and reminders.
         due: Option<studyfrog_service::track::DueDate>,
+        /// Priority and difficulty chosen.
+        choices: crate::modal_types::Choices,
     },
     /// Read what the home screen shows.
     LoadHome,
@@ -215,7 +216,7 @@ pub enum Effect {
     /// Delete a session.
     DeleteSession(Uid),
     /// Skip one occurrence of a session.
-    CancelOccurrence(Uid, Date),
+    CancelOccurrence(Uid, studyfrog_core::civil::Date),
     /// Read the board (creating the default one on first use).
     LoadBoard,
     /// Apply a board command and store the result.

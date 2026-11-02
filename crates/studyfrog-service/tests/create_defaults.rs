@@ -23,6 +23,8 @@ fn item(kind: NewKind, title: &'static str, parent: Option<&'static str>) -> New
         answer: "a",
         tags: &[],
         parent,
+        priority: None,
+        difficulty: None,
     }
 }
 

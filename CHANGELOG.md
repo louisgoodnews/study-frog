@@ -13,6 +13,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   keeps what was typed and says why next to the field (BUG-0001).
 
 ### Changed
+- The Create dialog is laid out like Jira's: the parent stack and the type (a drop-down) in the top left corner, a large title, the Markdown editors, then priority, difficulty and tags (due date for a stack); "Add PDF ..." moved into a More menu, and Enlarge and a grip at the lower left widen the dialog (TASK-0186).
+- Every Markdown editor, in the dialog and on the item page, gets a bar under it that makes it taller when dragged or with the arrow keys (TASK-0187).
 - New cards, notes and questions start with priority medium and difficulty difficult (the highest) unless the user chose others; stacks get neither (TASK-0185).
 - The library page no longer holds the new-card form: a card, note or question is made in the Create dialog, and the import panel and the card types of extensions moved into an "Import…" dialog on a stack's list (TASK-0134).
 - The bell's notifications are records the user manages: each has an id, time and read state and is kept in the vault's database for 30 days

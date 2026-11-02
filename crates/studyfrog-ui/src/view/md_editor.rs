@@ -37,6 +37,40 @@ const TOOLS: [(Cmd, &str, &str); 10] = [
     (Cmd::Rule, "---", "Rule"),
 ];
 
+const LINE: f32 = 16.0;
+const MIN_HEIGHT: f32 = 48.0;
+const MAX_HEIGHT: f32 = 1200.0;
+
+/// A bar under the editor that makes it taller when dragged, or with the arrow keys when it has focus.
+fn resize_grip(ui: &mut egui::Ui, (name, id): (&str, Id), height: f32) {
+    let (rect, r) = ui.allocate_exact_size(
+        egui::vec2(ui.available_width(), 10.0),
+        egui::Sense::click_and_drag(),
+    );
+    let color = ui.visuals().weak_text_color();
+    ui.painter().text(
+        rect.center(),
+        egui::Align2::CENTER_CENTER,
+        "....",
+        egui::FontId::monospace(10.0),
+        color,
+    );
+    let label = format!("Resize {name}");
+    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, label.clone()));
+    let key = ui.input(|i| {
+        i.key_pressed(egui::Key::ArrowDown) as i8 - i.key_pressed(egui::Key::ArrowUp) as i8
+    });
+    let step = if r.has_focus() {
+        f32::from(key) * LINE * 2.0
+    } else {
+        0.0
+    };
+    let drag = if r.dragged() { r.drag_delta().y } else { 0.0 };
+    if step != 0.0 || drag != 0.0 {
+        ui.data_mut(|d| d.insert_temp(id, (height + step + drag).clamp(MIN_HEIGHT, MAX_HEIGHT)));
+    }
+}
+
 type Cached = Arc<(String, Vec<Block>)>;
 
 fn blocks_of(ui: &egui::Ui, id: Id, text: &str) -> Arc<(String, Vec<Block>)> {
@@ -139,6 +173,12 @@ pub fn md_editor(
         ui.data_mut(|d| d.insert_temp(id.with("select"), sel));
     }
     let pal = palette_of(ui);
+    let height_id = id.with("height");
+    let height = ui
+        .data(|d| d.get_temp::<f32>(height_id))
+        .unwrap_or(rows as f32 * LINE)
+        .clamp(MIN_HEIGHT, MAX_HEIGHT);
+    let rows = (height / LINE).round().max(2.0) as usize;
     let body = |ui: &mut egui::Ui, current: &mut String, changed: &mut bool| {
         let edit = TextEdit::multiline(current)
             .id(text_id)
@@ -171,6 +211,7 @@ pub fn md_editor(
             });
         }
     }
+    resize_grip(ui, (name, height_id), height);
     if let Some(sel) = ui.data_mut(|d| d.remove_temp::<(usize, usize)>(id.with("select"))) {
         set_selection(ui, text_id, sel);
     }

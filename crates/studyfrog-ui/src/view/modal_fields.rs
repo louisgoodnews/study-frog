@@ -9,7 +9,6 @@ use crate::msg::Msg;
 use crate::session_form::REMINDER_CHOICES;
 use crate::state::State;
 use crate::view::date_picker::{date_field, today_of};
-use crate::view::modal::WIDTH;
 
 fn send(out: &mut Vec<Msg>, m: ModalMsg) {
     out.push(Msg::Modal(m));
@@ -58,10 +57,9 @@ pub(super) fn parent_picker(state: &State, f: &CreateForm, ui: &mut egui::Ui, ou
     } else {
         "Parent stack"
     };
-    ui.label(label);
     let picker = ComboBox::from_id_salt("parent-stack")
         .selected_text(current)
-        .width(WIDTH - 24.0)
+        .width(220.0)
         .show_ui(ui, |ui| {
             if is_stack && ui.selectable_label(f.parent.is_none(), none).clicked() {
                 send(out, ModalMsg::SetParent(None));

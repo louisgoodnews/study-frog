@@ -22,16 +22,22 @@ fn with_dialog() -> Model {
 #[test]
 fn the_create_dialog_offers_the_four_kinds_with_their_own_fields() {
     let mut h = harness(with_dialog());
-    h.run();
+    h.run_steps(8);
     assert_all_named(&h, "create dialog");
+    h.get_by_label("Type of item").click();
+    h.run_steps(8);
     for kind in ["Stack", "Card", "Note", "Question"] {
         assert!(h.query_all_by_label(kind).count() >= 1, "missing {kind}");
     }
+    h.get_by_label("Card").click();
+    h.run_steps(8);
     for field in [
         "Title",
         "Front",
         "Back",
-        "Stack",
+        "Parent stack",
+        "Priority",
+        "Difficulty",
         "Tags",
         "Create another",
         "Create",
@@ -43,17 +49,23 @@ fn the_create_dialog_offers_the_four_kinds_with_their_own_fields() {
             "a card needs {field}"
         );
     }
-    h.get_by_label("Question").click();
-    h.run();
+    apply(
+        &mut h.state_mut().0,
+        Msg::Modal(ModalMsg::SetKind(NewKind::Question)),
+    );
+    h.run_steps(8);
     assert!(h.query_by_label("Prompt").is_some() && h.query_by_label("Reference answer").is_some());
-    h.get_by_label("Note").click();
-    h.run();
+    apply(
+        &mut h.state_mut().0,
+        Msg::Modal(ModalMsg::SetKind(NewKind::Note)),
+    );
+    h.run_steps(8);
     assert!(h.query_by_label("Body").is_some() && h.query_by_label("Back").is_none());
     apply(
         &mut h.state_mut().0,
         Msg::Modal(ModalMsg::SetKind(NewKind::Stack)),
     );
-    h.run();
+    h.run_steps(8);
     assert!(h.query_by_label("Description").is_some());
     assert!(
         h.query_all_by_label("Inside stack (optional)").count() >= 1,

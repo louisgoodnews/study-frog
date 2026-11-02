@@ -109,6 +109,8 @@ fn create(session: &mut VaultSession, change: &Change, ids: IdSource) -> Result<
         answer,
         tags: &[],
         parent: Some(stack.as_str()),
+        priority: None,
+        difficulty: None,
     };
     create_item(session, &item, ids).map(|_| ())
 }

@@ -17,6 +17,12 @@ pub enum Modal {
     Import,
 }
 
+/// The priority and difficulty the user chose; `None` leaves the default.
+pub type Choices = (
+    Option<studyfrog_core::priority::Priority>,
+    Option<studyfrog_core::event::Difficulty>,
+);
+
 /// The create dialog's fields.
 #[derive(Debug, Clone, PartialEq)]
 pub struct CreateForm {
@@ -42,6 +48,10 @@ pub struct CreateForm {
     pub due: String,
     /// For a stack with a due date: minutes before it at which to remind.
     pub reminders: Vec<u32>,
+    /// The priority of a card, note or question (medium unless changed).
+    pub priority: studyfrog_core::priority::Priority,
+    /// The difficulty of a card, note or question (the highest unless changed).
+    pub difficulty: studyfrog_core::event::Difficulty,
 }
 
 /// A field of the create dialog.
@@ -111,6 +121,10 @@ pub enum ModalMsg {
     SetParent(Option<String>),
     /// "Create another" changed.
     SetAnother(bool),
+    /// Choose the priority.
+    SetPriority(studyfrog_core::priority::Priority),
+    /// Choose the difficulty.
+    SetDifficulty(studyfrog_core::event::Difficulty),
     /// A reminder lead time was switched on or off.
     ToggleReminder(u32),
     /// "Create" was activated.

@@ -51,6 +51,8 @@ fn item<'a>(kind: NewKind, title: &'a str, parent: Option<&'a str>) -> NewItem<'
         answer: "back",
         tags: &[],
         parent,
+        priority: None,
+        difficulty: None,
     }
 }
 

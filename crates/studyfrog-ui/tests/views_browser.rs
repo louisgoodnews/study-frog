@@ -82,8 +82,9 @@ fn the_page_holds_no_creation_forms_and_a_card_is_made_in_the_create_dialog() {
         Msg::Modal(studyfrog_ui::modal::ModalMsg::OpenCreate),
     );
     h.run();
-    assert!(h.query_by_label("Card").is_some() && h.query_by_label("Note").is_some());
-    assert!(h.query_by_label("Question").is_some() && h.query_by_label("Stack").is_some());
+    assert!(
+        h.query_by_label("Type of item").is_some() && h.query_by_label("Parent stack").is_some()
+    );
 }
 
 #[test]

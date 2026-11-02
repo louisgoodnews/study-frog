@@ -186,23 +186,23 @@ fn the_date_picker_fills_the_due_date_and_pages_through_months() {
     let mut m = open_model();
     apply(&mut m, Msg::Modal(ModalMsg::OpenCreateStack));
     let mut h = harness(m);
-    h.run();
+    h.run_steps(8);
     assert!(
         h.query_by_label("2026-01-15").is_none(),
         "closed until asked for"
     );
     h.get_by_label("Pick date").click();
-    h.run();
+    h.run_steps(8);
     h.get_by_label("Later month").click();
-    h.run();
+    h.run_steps(8);
     assert!(
         h.query_by_label("2026-02-14").is_some(),
         "February is showing"
     );
     h.get_by_label("Earlier month").click();
-    h.run();
+    h.run_steps(8);
     h.get_by_label("2026-01-15").click();
-    h.run();
+    h.run_steps(8);
     let Some(Modal::Create(f)) = &h.state().0.state.modal else {
         panic!()
     };

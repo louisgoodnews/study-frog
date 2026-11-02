@@ -42,6 +42,8 @@ fn form_new(state: &State, kind: Option<NewKind>) -> CreateForm {
         busy: false,
         due: String::new(),
         reminders: vec![1440],
+        priority: studyfrog_core::priority::Priority::Medium,
+        difficulty: studyfrog_core::event::Difficulty::Difficult,
     }
 }
 
@@ -74,6 +76,11 @@ fn submit(state: State) -> (State, Vec<Effect>) {
         tags: tags_of(&form.tags),
         parent: form.parent.clone(),
         due: due_of(&form),
+        choices: if form.kind == NewKind::Stack {
+            (None, None)
+        } else {
+            (Some(form.priority), Some(form.difficulty))
+        },
     };
     let (state, _) = with_form(state, |f| CreateForm {
         busy: true,
@@ -219,6 +226,8 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             ..f
         }),
         ModalMsg::SetAnother(another) => with_form(state, |f| CreateForm { another, ..f }),
+        ModalMsg::SetPriority(priority) => with_form(state, |f| CreateForm { priority, ..f }),
+        ModalMsg::SetDifficulty(difficulty) => with_form(state, |f| CreateForm { difficulty, ..f }),
         ModalMsg::ToggleReminder(m) => with_form(state, |f| CreateForm {
             reminders: toggled(&f.reminders, m),
             ..f

@@ -127,7 +127,7 @@ fn the_create_button_opens_the_create_dialog() {
     let mut h = harness(open_model());
     h.run();
     h.get_by_label("+ Create").click();
-    h.run();
+    h.run_steps(8);
     assert!(matches!(h.state().0.state.modal, Some(Modal::Create(_))));
     assert!(
         h.query_by_label("Title").is_some(),

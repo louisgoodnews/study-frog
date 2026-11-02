@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (33) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (150) |
+| Backlog (31) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (152) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0138](docs/issues/tasks/TASK-0138-per-item-familiarity-in-the-reports.md) Per-item familiarity in the reports (3) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0139](docs/issues/tasks/TASK-0139-needs-attention-card-and-least-familiar-run-order.md) Needs-attention card and least-familiar run order (3) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
@@ -37,8 +37,8 @@
 | [TASK-0181](docs/issues/tasks/TASK-0181-mode-and-timer-in-run-setup-and-on-the-rehearsal-screen.md) Mode and timer in run setup and on the rehearsal screen (3) |  |  |  |  | [TASK-0028](docs/issues/tasks/TASK-0028-incremental-reindex.md) Incremental reindex (5) |
 | [TASK-0182](docs/issues/tasks/TASK-0182-mode-and-time-in-the-review-and-the-reports.md) Mode and time in the review and the reports (2) |  |  |  |  | [TASK-0029](docs/issues/tasks/TASK-0029-file-watcher.md) File watcher (3) |
 | [TASK-0184](docs/issues/tasks/TASK-0184-replay-familiarity-against-the-user-s-review-history-for-a-verdict.md) Replay familiarity against the user's review history for a verdict (3) |  |  |  |  | [TASK-0030](docs/issues/tasks/TASK-0030-run-input-types-and-transition-errors.md) Run input types and transition errors (2) |
-| [TASK-0186](docs/issues/tasks/TASK-0186-create-dialog-laid-out-like-jira.md) Create dialog laid out like Jira's (3) |  |  |  |  | [TASK-0031](docs/issues/tasks/TASK-0031-transition-functions.md) Transition functions (5) |
-| [TASK-0187](docs/issues/tasks/TASK-0187-markdown-editors-in-the-create-dialog-that-grow-by-dragging.md) Markdown editors in the create dialog that grow by dragging (3) |  |  |  |  | [TASK-0032](docs/issues/tasks/TASK-0032-injected-monotonic-clock.md) Injected monotonic clock (3) |
+|  |  |  |  |  | [TASK-0031](docs/issues/tasks/TASK-0031-transition-functions.md) Transition functions (5) |
+|  |  |  |  |  | [TASK-0032](docs/issues/tasks/TASK-0032-injected-monotonic-clock.md) Injected monotonic clock (3) |
 |  |  |  |  |  | [TASK-0033](docs/issues/tasks/TASK-0033-persist-run-events.md) Persist run events (3) |
 |  |  |  |  |  | [TASK-0034](docs/issues/tasks/TASK-0034-spaced-due-first-queue-with-daily-budgets.md) Spaced (due-first) queue with daily budgets (3) |
 |  |  |  |  |  | [TASK-0035](docs/issues/tasks/TASK-0035-rehearsal-benchmark.md) Rehearsal benchmark (2) |
@@ -156,6 +156,8 @@
 |  |  |  |  |  | [TASK-0180](docs/issues/tasks/TASK-0180-countdown-and-count-up-in-the-run-state-machine.md) Countdown and count up in the run state machine (5) |
 |  |  |  |  |  | [TASK-0183](docs/issues/tasks/TASK-0183-research-a-model-that-combines-familiarity-with-fsrs.md) Research a model that combines familiarity with FSRS (5) |
 |  |  |  |  |  | [TASK-0185](docs/issues/tasks/TASK-0185-new-items-default-to-difficult-and-medium-priority.md) New items default to the highest difficulty and medium priority (1) |
+|  |  |  |  |  | [TASK-0186](docs/issues/tasks/TASK-0186-create-dialog-laid-out-like-jira.md) Create dialog laid out like Jira's (3) |
+|  |  |  |  |  | [TASK-0187](docs/issues/tasks/TASK-0187-markdown-editors-in-the-create-dialog-that-grow-by-dragging.md) Markdown editors in the create dialog that grow by dragging (3) |
 
 ## Stories
 
@@ -230,7 +232,7 @@
 | [STORY-0067](docs/issues/stories/STORY-0067-importers-for-anki-and-obsidian.md) Importers for Anki and Obsidian (8) | backlog | 0/3 |
 | [STORY-0068](docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | backlog | 0/5 |
 | [STORY-0070](docs/issues/stories/STORY-0070-rehearsal-modes-for-countdown-and-count-up.md) Rehearsal modes for countdown and count up (8) | in_progress | 2/4 |
-| [STORY-0071](docs/issues/stories/STORY-0071-create-dialog-like-jira.md) Create dialog like Jira (8) | backlog | 1/3 |
+| [STORY-0071](docs/issues/stories/STORY-0071-create-dialog-like-jira.md) Create dialog like Jira (8) | done | 3/3 |
 
 ## Epics
 
@@ -258,4 +260,4 @@
 | [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 4/4 |
 | [EPIC-021](docs/issues/epics/EPIC-021-knowledge-workspace.md) Knowledge workspace | done | 14/14 |
 | [EPIC-022](docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | done | 1/1 |
-| [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | backlog | 7/16 |
+| [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | backlog | 8/16 |

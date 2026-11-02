@@ -12,6 +12,8 @@ use crate::create::{
     unique_name, with_new_defaults, write_new,
 };
 use crate::session::{ServiceError, VaultInfo, VaultSession};
+use studyfrog_core::event::difficulty_name;
+use studyfrog_core::priority::priority_name;
 
 /// What can be created.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -44,6 +46,10 @@ pub struct NewItem<'a> {
     pub parent: Option<&'a str>,
     /// Where the text came from, such as `docs/book.pdf#page=3` (written as the `source` key).
     pub source: Option<&'a str>,
+    /// The priority the user chose; `None` leaves the default (medium; a stack states none).
+    pub priority: Option<studyfrog_core::priority::Priority>,
+    /// The difficulty the user chose; `None` leaves the default (difficult; a stack states none).
+    pub difficulty: Option<studyfrog_core::event::Difficulty>,
 }
 
 /// What was created.
@@ -117,6 +123,18 @@ fn title_of(item: &NewItem<'_>) -> Result<String, ServiceError> {
     }
 }
 
+/// The document with the priority and difficulty the user chose.
+fn with_choices(doc: Doc, item: &NewItem<'_>) -> Doc {
+    let doc = match item.priority {
+        Some(p) => with_extra(&doc, "priority", Some(priority_name(p))),
+        None => doc,
+    };
+    match item.difficulty {
+        Some(d) => with_extra(&doc, "difficulty", Some(difficulty_name(d))),
+        None => doc,
+    }
+}
+
 /// Create the item as a new file (or folder) and reindex once.
 pub fn create_item(
     session: &mut VaultSession,
@@ -138,7 +156,7 @@ pub fn create_item(
         None => session.root.clone(),
     };
     let doc = with_extra(
-        &with_new_defaults(doc_of(item, &title, ids)?),
+        &with_choices(with_new_defaults(doc_of(item, &title, ids)?), item),
         "source",
         item.source.map(|s| format!("\"{s}\"")).as_deref(),
     );

@@ -141,7 +141,9 @@ fn the_create_dialog_offers_adding_a_pdf() {
         Msg::Modal(studyfrog_ui::modal::ModalMsg::OpenCreate),
     );
     let mut h = common::views::harness(model);
-    h.run_steps(2);
+    h.run_steps(8);
+    h.get_by_label("More").click();
+    h.run_steps(8);
     assert!(h.query_by_label("Add PDF ...").is_some());
 }
 

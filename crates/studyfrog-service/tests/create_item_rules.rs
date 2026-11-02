@@ -45,6 +45,8 @@ fn item(
         answer,
         tags: &[],
         parent,
+        priority: None,
+        difficulty: None,
     }
 }
 
