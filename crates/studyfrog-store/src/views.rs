@@ -11,14 +11,15 @@ use crate::error::{StoreError, sql_err};
 /// Append a view to the history.
 pub fn insert_view(conn: &Connection, e: &ViewEvent) -> Result<(), StoreError> {
     conn.prepare_cached(
-        "INSERT INTO item_view (item_uid, kind, at_ms, active_ms) VALUES (?1, ?2, ?3, ?4)",
+        "INSERT INTO item_view (item_uid, kind, at_ms, active_ms, expected_ms) VALUES (?1, ?2, ?3, ?4, ?5)",
     )
     .and_then(|mut s| {
         s.execute(params![
             format_ulid(e.item),
             view_kind_name(e.kind),
             e.at.0,
-            e.active_ms
+            e.active_ms,
+            e.expected_ms
         ])
     })
     .map(drop)
@@ -29,7 +30,7 @@ pub fn insert_view(conn: &Connection, e: &ViewEvent) -> Result<(), StoreError> {
 pub fn load_views(conn: &Connection, item: Uid) -> Result<Vec<ViewEvent>, StoreError> {
     let mut stmt = conn
         .prepare(
-            "SELECT kind, at_ms, active_ms FROM item_view WHERE item_uid = ?1 ORDER BY at_ms, id",
+            "SELECT kind, at_ms, active_ms, expected_ms FROM item_view WHERE item_uid = ?1 ORDER BY at_ms, id",
         )
         .map_err(sql_err)?;
     let rows = stmt
@@ -38,12 +39,13 @@ pub fn load_views(conn: &Connection, item: Uid) -> Result<Vec<ViewEvent>, StoreE
                 r.get::<_, String>(0)?,
                 r.get::<_, i64>(1)?,
                 r.get::<_, u32>(2)?,
+                r.get::<_, Option<u32>>(3)?,
             ))
         })
         .map_err(sql_err)?;
     let mut out = Vec::new();
     for row in rows {
-        let (kind, at, active_ms) = row.map_err(sql_err)?;
+        let (kind, at, active_ms, expected_ms) = row.map_err(sql_err)?;
         let kind = view_kind_from_name(&kind)
             .ok_or_else(|| StoreError::Corrupt(format!("view kind: {kind:?}")))?;
         out.push(ViewEvent {
@@ -51,6 +53,7 @@ pub fn load_views(conn: &Connection, item: Uid) -> Result<Vec<ViewEvent>, StoreE
             kind,
             at: UnixMs(at),
             active_ms,
+            expected_ms,
         });
     }
     Ok(out)

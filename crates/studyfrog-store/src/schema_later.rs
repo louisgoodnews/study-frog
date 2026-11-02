@@ -91,6 +91,13 @@ ALTER TABLE run ADD COLUMN pacing TEXT NOT NULL DEFAULT 'free' CHECK (pacing IN 
 ALTER TABLE run ADD COLUMN countdown_secs INTEGER CHECK (countdown_secs IS NULL OR countdown_secs BETWEEN 60 AND 10800);
 ";
 
+/// How long the answer was on screen before a rating and how long it should take to read, and the same expected time for a view.
+pub(crate) const V17: &str = "
+ALTER TABLE review ADD COLUMN answer_ms INTEGER CHECK (answer_ms IS NULL OR answer_ms >= 0);
+ALTER TABLE review ADD COLUMN expected_ms INTEGER CHECK (expected_ms IS NULL OR expected_ms >= 0);
+ALTER TABLE item_view ADD COLUMN expected_ms INTEGER CHECK (expected_ms IS NULL OR expected_ms >= 0);
+";
+
 pub(crate) const V9: &str = "
 ALTER TABLE item ADD COLUMN priority TEXT CHECK (priority IS NULL OR priority IN ('lowest', 'low', 'medium', 'high', 'highest'));
 ALTER TABLE item ADD COLUMN difficulty TEXT CHECK (difficulty IS NULL OR difficulty IN ('easy', 'medium', 'difficult'));

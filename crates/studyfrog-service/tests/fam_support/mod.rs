@@ -16,7 +16,7 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_core::views::{ViewEvent, ViewKind};
 use studyfrog_rehearsal::input::StepOutput;
-use studyfrog_service::rehearse::{StepContext, record_step};
+use studyfrog_service::rehearse::{RatingTiming, StepContext, record_step};
 use studyfrog_service::schedule::apply_rating;
 use studyfrog_service::session::open_vault;
 use studyfrog_srs::params::params_default;
@@ -58,7 +58,7 @@ pub fn vault(label: &str, stack_toml: Option<&str>) -> Dir {
 
 pub fn rate(
     conn: &mut Connection,
-    (seq, rating): (u32, Rating),
+    (seq, rating, timing): (u32, Rating, Option<(u32, u32)>),
     now: i64,
     settings: &VaultSettings,
 ) {
@@ -78,6 +78,10 @@ pub fn rate(
         run,
         effect: ScheduleEffect::UpdateSchedule,
         state: RunState::Running,
+        timing: timing.map(|(answer_ms, expected_ms)| RatingTiming {
+            answer_ms,
+            expected_ms,
+        }),
     };
     record_step(conn, &ctx, &out, UnixMs(now), settings).unwrap();
 }
@@ -96,6 +100,8 @@ pub struct Opts {
     pub exam_at: Option<i64>,
     /// Sixty hourly views of the item page between the second and third review.
     pub views: bool,
+    /// How long each answer was on screen and how long it should take to read, for every rating.
+    pub timing: Option<(u32, u32)>,
 }
 
 pub fn chain(dir: &Dir, ratings: &[Rating], settings: &VaultSettings, o: &Opts) -> Chain {
@@ -127,6 +133,7 @@ pub fn chain(dir: &Dir, ratings: &[Rating], settings: &VaultSettings, o: &Opts) 
                 kind: ViewKind::View,
                 at,
                 active_ms: 20_000,
+                expected_ms: None,
             };
             insert_view(&session.conn, &e).unwrap();
         }
@@ -139,7 +146,7 @@ pub fn chain(dir: &Dir, ratings: &[Rating], settings: &VaultSettings, o: &Opts) 
     let mut now = START;
     for (i, r) in ratings.iter().enumerate() {
         let before = load_mem_state(&session.conn, ITEM).unwrap();
-        rate(&mut session.conn, (i as u32, *r), now, settings);
+        rate(&mut session.conn, (i as u32, *r, o.timing), now, settings);
         let (due, stored) = if o.sm2 {
             let s = load_sm2_state(&session.conn, ITEM).unwrap().unwrap();
             (s.due.0, s.state.interval_days as f32)

@@ -36,6 +36,8 @@ pub struct FamParams {
     pub min_view_ms: u32,
     /// At most one view counts in this many milliseconds.
     pub view_gap_ms: i64,
+    /// Days before an exam or due date over which gains are damped to the floor, and that floor (a share of a full gain).
+    pub exam_ramp: (f32, f32),
 }
 
 /// The defaults of the specification.
@@ -55,6 +57,7 @@ pub fn fam_params_default() -> FamParams {
         full_confidence: (5.0, 10.0),
         min_view_ms: 1000,
         view_gap_ms: 3_600_000,
+        exam_ramp: (14.0, 0.5),
     }
 }
 

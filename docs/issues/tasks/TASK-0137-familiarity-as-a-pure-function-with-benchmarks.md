@@ -29,6 +29,8 @@ Implement the formula from the spec in the report crate with property tests, a b
 ## Design Notes
 Done in `studyfrog_report::familiarity` with the constants of the specification in `FamParams` (`gap_factor`, off by default, is an experiment that is not in the specification). The validation numbers are in `docs/specs/reports.md`: on the simulated history the value separates nothing at the due date (AUC 0.51, expected because FSRS equalises recall there) and ranks items by true readiness with a Spearman correlation of 0.38.
 
+Updated 2026-11-02 at the owner's request: the exam or due date also damps gains close to it (`FamParams.exam_ramp`, 14 days and a floor of 0.5), and the answer speed is stored with each review and used in scheduling.
+
 ## Dependencies
 The specification task of this story.
 

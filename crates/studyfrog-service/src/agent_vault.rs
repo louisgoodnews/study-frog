@@ -146,7 +146,7 @@ pub fn record_exam(
         let Some(uid) = parse_ulid(&r.uid) else {
             continue;
         };
-        crate::rehearse::rate_item(&tx, uid, rating_of(r.verdict), now, &vault)
+        crate::rehearse::rate_item(&tx, uid, (rating_of(r.verdict), None), now, &vault)
             .map_err(ServiceError::Store)?;
         n += 1;
     }

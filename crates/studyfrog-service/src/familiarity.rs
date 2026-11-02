@@ -3,7 +3,7 @@
 
 use rusqlite::Connection;
 use studyfrog_calendar::session::EventKind;
-use studyfrog_core::civil::{date_from_days, days_between};
+use studyfrog_core::civil::{Date, date_from_days, date_to_days, days_between};
 use studyfrog_core::event::{Difficulty, difficulty_from_name};
 use studyfrog_core::review::Rating;
 use studyfrog_core::settings::VaultSettings;
@@ -17,8 +17,10 @@ use studyfrog_srs::familiarity::{
 };
 use studyfrog_srs::fsrs::interval_days;
 use studyfrog_srs::params::Params;
+
+use crate::rehearse::RatingTiming;
 use studyfrog_store::error::{StoreError, sql_err};
-use studyfrog_store::schedule::{StoredMem, StoredSm2, load_reviews};
+use studyfrog_store::schedule::{StoredMem, StoredSm2, load_reviews_timed};
 use studyfrog_store::sessions::load_sessions;
 use studyfrog_store::settings::ItemHome;
 use studyfrog_store::views::load_views;
@@ -47,69 +49,101 @@ fn difficulty_mark(conn: &Connection, item: Uid) -> Result<Option<Difficulty>, S
     }
 }
 
-/// The item's familiarity after the rating just given, and how many reviews it now has.
+/// The item's familiarity after the rating just given, and how many reviews it now has. The answer time of each
+/// rating, the reading time of each view and the exam or due date of the stack all count.
 fn familiarity_after(
     conn: &Connection,
-    (item, rating, now): (Uid, Rating, UnixMs),
+    home: Option<&ItemHome>,
+    (item, rating, timing, now): (Uid, Rating, Option<RatingTiming>, UnixMs),
 ) -> Result<Option<(f32, u32)>, StoreError> {
-    let mut events: Vec<FamEvent> = load_reviews(conn, item)?
+    let past = |(r, t): (studyfrog_core::review::Review, Option<(u32, u32)>)| FamEvent::Rating {
+        at: r.at,
+        rating: r.rating,
+        answer_ms: t.map(|t| t.0),
+        expected_ms: t.map(|t| t.1),
+    };
+    let mut events: Vec<FamEvent> = load_reviews_timed(conn, item)?
         .into_iter()
-        .map(|r| FamEvent::Rating {
-            at: r.at,
-            rating: r.rating,
-            answer_ms: None,
-            expected_ms: None,
-        })
+        .map(past)
         .collect();
     events.push(FamEvent::Rating {
         at: now,
         rating,
-        answer_ms: None,
-        expected_ms: None,
+        answer_ms: timing.map(|t| t.answer_ms),
+        expected_ms: timing.map(|t| t.expected_ms),
     });
     let reviews = events.len() as u32;
     events.extend(load_views(conn, item)?.into_iter().map(|v| FamEvent::View {
         at: v.at,
         active_ms: v.active_ms,
-        expected_ms: None,
+        expected_ms: v.expected_ms,
     }));
+    let exam = exam_date(conn, home, now)?;
     let ctx = FamContext {
         mark: difficulty_mark(conn, item)?,
+        exam,
         ..FamContext::default()
     };
     Ok(familiarity(&events, now, &ctx, &fam_params_default()).map(|f| (f.value, reviews)))
 }
 
-/// Days until the nearest exam or deadline of the item's stack or a stack above it; `None` when there is none.
-fn days_to_deadline(
-    conn: &Connection,
-    home: Option<&ItemHome>,
-    now: UnixMs,
-) -> Result<Option<u32>, StoreError> {
-    let Some(home) = home else { return Ok(None) };
-    let today = date_from_days(now.0.div_euclid(DAY_MS));
-    let ours = studyfrog_store::overview::load_overview(conn)?;
-    let own_folder = ours
+/// The dates of the exams and deadlines of the item's stack and of the stacks above it.
+fn deadline_dates(conn: &Connection, home: Option<&ItemHome>) -> Result<Vec<Date>, StoreError> {
+    let Some(home) = home else {
+        return Ok(Vec::new());
+    };
+    let overview = studyfrog_store::overview::load_overview(conn)?;
+    let own = overview
         .stacks
         .iter()
         .find(|s| s.uid == home.stack)
         .map(|s| s.folder.clone());
     let above = |uid: Uid| {
-        let folder = ours
+        let folder = overview
             .stacks
             .iter()
             .find(|s| s.uid == uid)
             .map(|s| s.folder.as_str());
-        match (folder, own_folder.as_deref()) {
+        match (folder, own.as_deref()) {
             (Some(f), Some(own)) => own == f || own.starts_with(&format!("{f}/")),
             _ => false,
         }
     };
-    let nearest = load_sessions(conn)?
+    Ok(load_sessions(conn)?
         .into_iter()
         .filter(|s| matches!(s.kind, EventKind::Exam | EventKind::Deadline))
         .filter(|s| s.stack.is_some_and(above))
-        .map(|s| days_between(today, s.start.date))
+        .map(|s| s.start.date)
+        .collect())
+}
+
+/// The exam or deadline that matters at `now`: the nearest one still ahead, else the latest one that has passed.
+fn exam_date(
+    conn: &Connection,
+    home: Option<&ItemHome>,
+    now: UnixMs,
+) -> Result<Option<UnixMs>, StoreError> {
+    let today = now.0.div_euclid(DAY_MS);
+    let days: Vec<i64> = deadline_dates(conn, home)?
+        .into_iter()
+        .map(date_to_days)
+        .collect();
+    let ahead = days.iter().filter(|d| **d >= today).min();
+    Ok(ahead
+        .or_else(|| days.iter().max())
+        .map(|d| UnixMs(d * DAY_MS)))
+}
+
+/// Days until the nearest exam or deadline of the item's stack or a stack above it; `None` when there is none ahead.
+fn days_to_deadline(
+    conn: &Connection,
+    home: Option<&ItemHome>,
+    now: UnixMs,
+) -> Result<Option<u32>, StoreError> {
+    let today = date_from_days(now.0.div_euclid(DAY_MS));
+    let nearest = deadline_dates(conn, home)?
+        .into_iter()
+        .map(|d| days_between(today, d))
         .filter(|d| *d >= 0)
         .min();
     Ok(nearest.map(|d| d as u32))
@@ -126,14 +160,15 @@ fn factor_params(vault: &VaultSettings) -> FactorParams {
 pub fn retime_fsrs(
     conn: &Connection,
     mem: &mut StoredMem,
-    given: (Uid, Rating),
+    given: (Uid, Rating, Option<RatingTiming>),
     (params, vault, home): (&Params, &VaultSettings, Option<&ItemHome>),
 ) -> Result<(), StoreError> {
     if !enabled(vault, home) {
         return Ok(());
     }
     let now = mem.last_review;
-    let Some((fam, reviews)) = familiarity_after(conn, (given.0, given.1, now))? else {
+    let Some((fam, reviews)) = familiarity_after(conn, home, (given.0, given.1, given.2, now))?
+    else {
         return Ok(());
     };
     let factor = familiarity_factor(fam, mem.state.stability, reviews, &factor_params(vault));
@@ -150,14 +185,15 @@ pub fn retime_fsrs(
 pub fn retime_sm2(
     conn: &Connection,
     stored: &mut StoredSm2,
-    given: (Uid, Rating),
+    given: (Uid, Rating, Option<RatingTiming>),
     (vault, home): (&VaultSettings, Option<&ItemHome>),
 ) -> Result<(), StoreError> {
     if !enabled(vault, home) {
         return Ok(());
     }
     let now = stored.last_review;
-    let Some((fam, reviews)) = familiarity_after(conn, (given.0, given.1, now))? else {
+    let Some((fam, reviews)) = familiarity_after(conn, home, (given.0, given.1, given.2, now))?
+    else {
         return Ok(());
     };
     let base = stored.state.interval_days;

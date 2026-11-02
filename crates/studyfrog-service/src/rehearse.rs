@@ -14,7 +14,7 @@ use studyfrog_rehearsal::session::Session;
 use studyfrog_store::error::{StoreError, sql_err};
 use studyfrog_store::runs::{abort_unfinished_runs, append_events, insert_run, set_run_state};
 use studyfrog_store::schedule::{
-    insert_review, load_mem_state, load_sm2_state, save_mem_state, save_sm2_state,
+    insert_review_timed, load_mem_state, load_sm2_state, save_mem_state, save_sm2_state,
 };
 use studyfrog_store::settings::item_home;
 
@@ -44,6 +44,17 @@ pub struct StepContext {
     pub effect: ScheduleEffect,
     /// Lifecycle state after the step.
     pub state: RunState,
+    /// For a rating: how long the answer was on screen and how long it should take to read.
+    pub timing: Option<RatingTiming>,
+}
+
+/// The timing of a rating, for familiarity: the answer's time on screen and the reading time it should need.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RatingTiming {
+    /// Milliseconds the answer was on screen before the rating, paused time excluded.
+    pub answer_ms: u32,
+    /// Milliseconds the answer's words should take to read at the user's speed.
+    pub expected_ms: u32,
 }
 
 /// The context of a session after a step.
@@ -52,6 +63,7 @@ pub fn step_context(session: &Session) -> StepContext {
         run: session.run.uid,
         effect: session.run.plan.effect,
         state: session.run.state,
+        timing: None,
     }
 }
 
@@ -76,7 +88,7 @@ pub fn record_step(
     if ctx.effect == ScheduleEffect::UpdateSchedule {
         for e in &out.events {
             if let (EventKind::ItemRated(rating), Some(item)) = (&e.kind, e.item) {
-                rate_item(&tx, item, *rating, now, vault)?;
+                rate_item(&tx, item, (*rating, ctx.timing), now, vault)?;
             }
         }
     }
@@ -86,7 +98,7 @@ pub fn record_step(
 pub(crate) fn rate_item(
     conn: &Connection,
     item: Uid,
-    rating: Rating,
+    (rating, timing): (Rating, Option<RatingTiming>),
     now: UnixMs,
     vault: &VaultSettings,
 ) -> Result<(), StoreError> {
@@ -96,13 +108,10 @@ pub(crate) fn rate_item(
             let params = params_for(vault, home.and_then(|h| h.request_retention));
             let prev = load_mem_state(conn, item)?;
             let (review, mut mem) = apply_rating(prev.as_ref(), item, rating, now, &params);
-            retime_fsrs(
-                conn,
-                &mut mem,
-                (item, rating),
-                (&params, vault, home.as_ref()),
-            )?;
-            insert_review(conn, &review)?;
+            let given = (item, rating, timing);
+            retime_fsrs(conn, &mut mem, given, (&params, vault, home.as_ref()))?;
+            let timed = timing.map(|t| (t.answer_ms, t.expected_ms));
+            insert_review_timed(conn, &review, timed)?;
             save_mem_state(conn, item, &mem)
         }
         Scheduler::Sm2 => {
@@ -114,8 +123,10 @@ pub(crate) fn rate_item(
                 now,
                 vault.maximum_interval_days,
             );
-            retime_sm2(conn, &mut state, (item, rating), (vault, home.as_ref()))?;
-            insert_review(conn, &review)?;
+            let given = (item, rating, timing);
+            retime_sm2(conn, &mut state, given, (vault, home.as_ref()))?;
+            let timed = timing.map(|t| (t.answer_ms, t.expected_ms));
+            insert_review_timed(conn, &review, timed)?;
             save_sm2_state(conn, item, &state)
         }
     }

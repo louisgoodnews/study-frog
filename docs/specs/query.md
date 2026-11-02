@@ -1,7 +1,7 @@
 # Query language
 
 The typed search of the library (STORY-0057), in the manner of Jira's JQL and written like SQL. Planned for 0.3.0; the syntax below is
-a proposal to be accepted with TASK-0129.
+accepted by the owner on 2026-11-02.
 
 ## Examples
 ```

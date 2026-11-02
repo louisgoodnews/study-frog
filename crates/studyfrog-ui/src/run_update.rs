@@ -3,10 +3,12 @@
 
 use studyfrog_core::run::{Run, RunState};
 use studyfrog_core::settings::AnswerEngine;
+use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::{Action, Input};
+use studyfrog_rehearsal::reading::{expected_ms, item_records, word_count};
 use studyfrog_rehearsal::session::{ItemPhase, current_item, session_new};
 use studyfrog_rehearsal::step::step;
-use studyfrog_service::rehearse::step_context;
+use studyfrog_service::rehearse::{RatingTiming, step_context};
 
 use crate::effect::Effect;
 use crate::msg::Msg;
@@ -100,6 +102,7 @@ fn act(state: State, action: Action) -> (State, Vec<Effect>) {
         return (state, Vec::new());
     };
     let t_ms = engine_ms(state.now, run.started_time, run.session.last_t_ms);
+    let rated_item = current_item(&run.session);
     let clears_answer = matches!(action, Action::Rate(_) | Action::Skip);
     let mut effects = Vec::new();
     let submitted = match &action {
@@ -123,13 +126,25 @@ fn act(state: State, action: Action) -> (State, Vec<Effect>) {
         if is_over(&run) {
             effects.push(Effect::CheckAchievements);
         }
-        effects.push(Effect::RecordStep {
-            ctx: step_context(&run.session),
-            out,
-        });
+        let mut ctx = step_context(&run.session);
+        ctx.timing = rated_item.and_then(|item| rating_timing(&run, item));
+        effects.push(Effect::RecordStep { ctx, out });
     }
     state.rehearse.run = Some(run);
     (state, effects)
+}
+
+/// How long the answer of `item` was on screen before it was rated and how long its words should take to read.
+fn rating_timing(run: &RunView, item: Uid) -> Option<RatingTiming> {
+    let record = item_records(&run.events)
+        .into_iter()
+        .find(|r| r.item == item)?;
+    let answer_ms = record.rated.and(record.read_ms)?;
+    let words = word_count(&run.content.get(&item)?.answer);
+    (words > 0).then(|| RatingTiming {
+        answer_ms,
+        expected_ms: expected_ms(words, &run.reading),
+    })
 }
 
 /// Request the content of the current item and the next few that are not loaded yet.

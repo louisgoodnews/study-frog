@@ -36,6 +36,9 @@ time order (events at the same instant are ordered by kind and size, so the resu
   lowers it; a rating without a measured time uses `s = 1`.
 - **View factor `s_v`:** `clamp(expected / actual, 0.25, 1.5)` for the item's own text. Views under 1 second are ignored and
   at most one view per item per hour counts. A view during a run is the rating's, not a second event.
+- **Exam factor `x` (the owner, 2026-11-02):** a gain close to an exam or due date counts for less than one far from it. When the item's stack has an
+  exam or due date still ahead, `x = 0.5 + 0.5 * min(1, days_left / 14)`: a full gain at 14 days or more, three quarters a week before, half on the day. After the date
+  `x = 1`. It scales the gains of Easy, Good and views, never the losses, and it uses the nearest exam or due date of the stack and the stacks above it.
 - **Mark factor `m`:** the item's difficulty mark scales gains: `easy` 1.1, `medium` 1.0, `difficult` 0.8; no mark is 1.0.
 - **Priority** does not change an item's own value; it weights the item in a stack's roll-up (section 6).
 - Losses ignore the speed: a lapse is a lapse however long it took.
@@ -87,6 +90,8 @@ After 90 days without contact the value is 0.77, after a year 0.46. If the item 
 **The same rating, different speed.** A first rating of Easy gives 0.68 when the answer was read fast (`s` 1.5), 0.45 at the
 expected time and 0.23 when it was slow (`s` 0.5); a first Good gives 0.45, 0.30 and 0.15. This is the owner's rule that
 a shorter view time means more familiarity.
+
+**Close to an exam.** The first Good, 0.30 in full, is worth 0.30 with the exam 14 days off, 0.23 a week off and 0.16 the day before; a lapse still takes half.
 
 **A note:** ten views three days apart give 0.18, thirty give 0.42; it never passes 0.8.
 

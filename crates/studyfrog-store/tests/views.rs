@@ -15,6 +15,7 @@ fn event(item: u128, kind: ViewKind, at: i64, active_ms: u32) -> ViewEvent {
         kind,
         at: UnixMs(at),
         active_ms,
+        expected_ms: Some(active_ms / 2),
     }
 }
 

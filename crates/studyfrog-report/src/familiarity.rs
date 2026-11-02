@@ -60,6 +60,16 @@ fn mark_factor(mark: Option<Difficulty>, p: &FamParams) -> f32 {
     }
 }
 
+/// The share of a gain that counts at `at`: full when the exam is far off or past, down to the floor on the day of it.
+fn exam_share(at: UnixMs, exam: Option<UnixMs>, p: &FamParams) -> f32 {
+    let Some(x) = exam.filter(|x| x.0 > at.0) else {
+        return 1.0;
+    };
+    let (ramp, floor) = p.exam_ramp;
+    let days_left = (x.0 - at.0) as f64 / MS_PER_DAY;
+    floor + (1.0 - floor) * (days_left / f64::from(ramp)).min(1.0) as f32
+}
+
 fn rated(f: f32, e: (Rating, f32, f32), p: &FamParams) -> f32 {
     let (rating, s, m) = e;
     match rating {
@@ -99,11 +109,9 @@ pub fn familiarity(
                     longest_gap = longest_gap.max((at_of(e).0 - prev.0) as f64 / MS_PER_DAY);
                 }
                 last_rating = Some(at_of(e));
-                f = rated(
-                    f,
-                    (rating, speed(answer_ms, expected_ms, p.speed_bounds), m),
-                    p,
-                );
+                let x = exam_share(at_of(e), ctx.exam, p);
+                let s = speed(answer_ms, expected_ms, p.speed_bounds);
+                f = rated(f, (rating, s, m * x), p);
             }
             FamEvent::View {
                 at,
@@ -113,7 +121,11 @@ pub fn familiarity(
                 let apart = last_view.is_none_or(|v| at.0 - v.0 >= p.view_gap_ms);
                 if active_ms >= p.min_view_ms && apart {
                     let bounds = (p.view_speed_min, p.speed_bounds.1);
-                    f += p.view_gain * (1.0 - f) * speed(Some(active_ms), expected_ms, bounds);
+                    let (s, x) = (
+                        speed(Some(active_ms), expected_ms, bounds),
+                        exam_share(at, ctx.exam, p),
+                    );
+                    f += p.view_gain * (1.0 - f) * s * x;
                     (views, last_view) = (views + 1, Some(at));
                 }
             }

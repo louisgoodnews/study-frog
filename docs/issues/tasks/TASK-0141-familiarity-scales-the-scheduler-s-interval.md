@@ -29,6 +29,8 @@ Add the scaling to the srs crate behind the schedule update and measure it on th
 ## Design Notes
 Done: `studyfrog-srs::familiarity` and `studyfrog-service::familiarity`, called from `rate_item` after each rating; see `docs/specs/srs-algorithm.md`. The calendar planner (TASK-0146) and the queue builders read the stored due dates, which already include the factor, so they need no change of their own; the deadline cut is done when the due date is set. The replay verdict beside the switch comes with TASK-0184. Rating speed and the exam date for the fall are not used yet (see the specification).
 
+Updated 2026-11-02: the answer time and expected reading time of each rating, the reading time of each view and the exam or due date now reach the factor (migration 17, `StepContext.timing`, `RecordView.expected_ms`).
+
 ## Dependencies
 STORY-0058 and the research TASK-0183; TASK-0184 for the verdict shown beside the switch.
 

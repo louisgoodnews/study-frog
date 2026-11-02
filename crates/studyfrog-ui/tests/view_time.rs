@@ -42,9 +42,7 @@ fn work(m: &mut Model, from: u32, to: u32) {
 fn recorded(fx: &[Effect]) -> Vec<(ViewKind, u32)> {
     fx.iter()
         .filter_map(|e| match e {
-            Effect::RecordView {
-                kind, active_ms, ..
-            } => Some((*kind, *active_ms)),
+            Effect::RecordView(v) => Some((v.kind, v.active_ms)),
             _ => None,
         })
         .collect()
@@ -166,4 +164,25 @@ fn switching_off_during_a_visit_drops_it_without_recording() {
     work(&mut m, 1, 20);
     let fx = apply(&mut m, Msg::SetTrackViews(false));
     assert!(recorded(&fx).is_empty() && m.state.view.is_none());
+}
+
+#[test]
+fn a_visit_records_how_long_the_text_should_take_to_read() {
+    let mut m = open_model();
+    at(&mut m, 0.0);
+    open(&mut m, CARD, 0xA);
+    work(&mut m, 1, 10);
+    let fx = apply(&mut m, Msg::Navigate(Screen::Library));
+    let expected: Vec<Option<u32>> = fx
+        .iter()
+        .filter_map(|e| match e {
+            Effect::RecordView(v) => Some(v.expected_ms),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(
+        expected,
+        [Some(504)],
+        "two words (front and back) at 238 words a minute"
+    );
 }

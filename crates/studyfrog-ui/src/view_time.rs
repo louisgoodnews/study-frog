@@ -7,6 +7,8 @@
 use studyfrog_core::uid::Uid;
 use studyfrog_core::views::ViewKind;
 
+use studyfrog_rehearsal::reading::{expected_ms, reading_params, word_count};
+
 use crate::editor::is_dirty;
 use crate::effect::Effect;
 use crate::state::{Screen, State};
@@ -17,6 +19,19 @@ pub const IDLE_SECS: f64 = 60.0;
 pub const MAX_STEP_SECS: f64 = 5.0;
 /// Visits shorter than this are not recorded (accidental opens).
 pub const MIN_VIEW_MS: u32 = 1000;
+
+/// A visit to record: the item, view or edit, the active time and the reading time of its text.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ViewRecord {
+    /// The item.
+    pub item: Uid,
+    /// View or edit.
+    pub kind: ViewKind,
+    /// Active milliseconds.
+    pub active_ms: u32,
+    /// How long the item's text should take to read, if it has words.
+    pub expected_ms: Option<u32>,
+}
 
 /// The visit in progress.
 #[derive(Debug, Clone, PartialEq)]
@@ -33,6 +48,8 @@ pub struct ViewTracker {
     pub opened_hash: u64,
     /// The item was changed or saved during the visit.
     pub edited: bool,
+    /// How long the item's text should take to read at the user's speed.
+    pub expected_ms: Option<u32>,
 }
 
 /// Input happened: the user is here.
@@ -65,6 +82,13 @@ pub fn tick(state: State) -> (State, Vec<Effect>) {
     (state, Vec::new())
 }
 
+/// How long the item's text should take to read at the user's reading speed; `None` for an item without words.
+fn reading_time(state: &State, e: &crate::editor::Editor) -> Option<u32> {
+    let words: usize = e.form.fields.iter().map(|f| word_count(&f.text)).sum();
+    let params = reading_params(state.app.reading_wpm, &state.app.reading);
+    (words > 0).then(|| expected_ms(words, &params))
+}
+
 /// The editor, when the item page is the screen being shown.
 fn on_page(state: &State) -> Option<&crate::editor::Editor> {
     state
@@ -82,17 +106,19 @@ fn recorded(t: &ViewTracker) -> Vec<Effect> {
     if active_ms < MIN_VIEW_MS {
         return Vec::new();
     }
-    let mut out = vec![Effect::RecordView {
+    let mut out = vec![Effect::RecordView(ViewRecord {
         item: t.uid,
         kind: ViewKind::View,
         active_ms,
-    }];
+        expected_ms: t.expected_ms,
+    })];
     if t.edited {
-        out.push(Effect::RecordView {
+        out.push(Effect::RecordView(ViewRecord {
             item: t.uid,
             kind: ViewKind::Edit,
             active_ms,
-        });
+            expected_ms: t.expected_ms,
+        }));
     }
     out
 }
@@ -119,6 +145,7 @@ pub fn sync(state: State) -> (State, Vec<Effect>) {
             active: 0.0,
             opened_hash: e.hash,
             edited: false,
+            expected_ms: reading_time(&state, e),
         }),
         _ => None,
     };

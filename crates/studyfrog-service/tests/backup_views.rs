@@ -29,6 +29,7 @@ fn views_survive_a_backup_and_a_restore() {
         kind: ViewKind::View,
         at: UnixMs(1_700_000_000_000),
         active_ms: 42_000,
+        expected_ms: Some(7_000),
     };
     insert_view(&session.conn, &seen).unwrap();
 

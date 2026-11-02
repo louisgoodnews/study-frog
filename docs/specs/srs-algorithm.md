@@ -75,5 +75,6 @@ Implemented (TASK-0141) in `studyfrog-srs::familiarity` (`familiarity_factor`, `
 stability FSRS just computed, the due date is the interval times the factor (never below one day, never above the maximum), and a stretched
 interval is cut at the next exam or deadline of the item's stack or one above it, but never below the plain interval. SM-2 uses its interval as the
 stability and keeps its stored interval, so its progression is unchanged. Switches: `familiarity_strength` in `studyfrog.toml` (default 2, 0 is off)
-and `familiarity = false` in a `_stack.toml`. Not yet used: the time the answer was on screen and the expected reading time (the factor sees
-ratings, views and the difficulty mark), the exam date for the fall of familiarity, and the re-rating replay, which recomputes plain FSRS dates.
+and `familiarity = false` in a `_stack.toml`. The factor sees the ratings, each with the time the answer was on screen and the time it should take to read (stored with the review, `review.answer_ms` and
+`expected_ms`), the views with their reading time, the difficulty mark and the exam or due date of the stack (which damps gains close to it and stops the fall once it
+has passed). Not used: the re-rating replay recomputes plain FSRS dates.

@@ -19,6 +19,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- Answer speed counts for familiarity and scheduling: each rating stores how long its answer was on screen and how long it should take to read (schema version 17),
+  views store the reading time of the item, and a card read faster than expected gains more familiarity than one read slowly. Gains close to an exam or due date of the
+  stack count for less (half on the day itself, in full from 14 days before), at the owner's request (TASK-0137, TASK-0141).
 - The rehearsal engine knows two more pacings besides the free run: a countdown that ends the run by itself when its active time is up (the item on screen
   counts as not answered, with no rating and no schedule change; a pause stops the clock) and a count up. The pacing is stored with the run (schema
   version 16, older runs read as free) and a `time_up` event marks the end of a countdown. The screens come with TASK-0181 (TASK-0179, TASK-0180).

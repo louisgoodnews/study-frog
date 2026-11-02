@@ -27,15 +27,13 @@ pub fn counts(w: &Worker, selection: &Selection) -> Msg {
 }
 
 /// Store a recorded view. A failure is not shown: losing a few seconds of timing must not interrupt the user.
-pub fn record_view(
-    w: &Worker,
-    (item, kind, active_ms): (
-        studyfrog_core::uid::Uid,
-        studyfrog_core::views::ViewKind,
-        u32,
-    ),
-    now_ns: i64,
-) -> Vec<Msg> {
+pub fn record_view(w: &Worker, v: crate::view_time::ViewRecord, now_ns: i64) -> Vec<Msg> {
+    let crate::view_time::ViewRecord {
+        item,
+        kind,
+        active_ms,
+        expected_ms,
+    } = v;
     if let Some(s) = &w.session {
         let at = studyfrog_core::time::UnixMs(now_ns / 1_000_000);
         let _ = studyfrog_store::views::insert_view(
@@ -45,6 +43,7 @@ pub fn record_view(
                 kind,
                 at,
                 active_ms,
+                expected_ms,
             },
         );
     }

@@ -2,9 +2,12 @@
 
 use std::collections::HashMap;
 
+pub use crate::reviews::{
+    TimedReview, insert_review, insert_review_timed, load_reviews, load_reviews_timed,
+    set_latest_review_rating,
+};
 use rusqlite::{Connection, params};
 use studyfrog_core::memory::{MemState, Sm2State};
-use studyfrog_core::review::{Rating, Review, rating_from_value, rating_value};
 use studyfrog_core::scheduler::Scheduler;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
@@ -81,65 +84,6 @@ pub fn load_all_mem_states(conn: &Connection) -> Result<HashMap<Uid, StoredMem>,
         all.insert(uid, mem_of(mem));
     }
     Ok(all)
-}
-
-/// Append a review to the history.
-pub fn insert_review(conn: &Connection, r: &Review) -> Result<(), StoreError> {
-    conn.prepare_cached(
-        "INSERT INTO review (item_uid, rating, at_ms, elapsed_days) VALUES (?1, ?2, ?3, ?4)",
-    )
-    .and_then(|mut s| {
-        s.execute(params![
-            format_ulid(r.item),
-            rating_value(r.rating),
-            r.at.0,
-            r.elapsed_days
-        ])
-    })
-    .map(drop)
-    .map_err(sql_err)
-}
-
-/// Replace the rating of the item's latest review. Returns false when the item has no review.
-pub fn set_latest_review_rating(
-    conn: &Connection,
-    item: Uid,
-    rating: Rating,
-) -> Result<bool, StoreError> {
-    conn.execute(
-        "UPDATE review SET rating = ?1 WHERE id = \
-         (SELECT id FROM review WHERE item_uid = ?2 ORDER BY at_ms DESC, id DESC LIMIT 1)",
-        params![rating_value(rating), format_ulid(item)],
-    )
-    .map(|n| n > 0)
-    .map_err(sql_err)
-}
-
-/// The review history of an item, oldest first.
-pub fn load_reviews(conn: &Connection, item: Uid) -> Result<Vec<Review>, StoreError> {
-    let mut stmt = conn
-        .prepare(
-            "SELECT rating, at_ms, elapsed_days FROM review WHERE item_uid = ?1 ORDER BY at_ms, id",
-        )
-        .map_err(sql_err)?;
-    let rows = stmt
-        .query_map([format_ulid(item)], |r| {
-            Ok((r.get::<_, u8>(0)?, r.get::<_, i64>(1)?, r.get::<_, f32>(2)?))
-        })
-        .map_err(sql_err)?;
-    let mut out = Vec::new();
-    for row in rows {
-        let (rating, at, elapsed_days) = row.map_err(sql_err)?;
-        let rating = rating_from_value(rating)
-            .ok_or_else(|| StoreError::Corrupt(format!("rating: {rating}")))?;
-        out.push(Review {
-            item,
-            rating,
-            at: UnixMs(at),
-            elapsed_days,
-        });
-    }
-    Ok(out)
 }
 
 /// SM-2 state with the times the scheduler needs.

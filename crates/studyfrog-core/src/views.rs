@@ -38,4 +38,6 @@ pub struct ViewEvent {
     pub at: UnixMs,
     /// Active time in milliseconds.
     pub active_ms: u32,
+    /// How long the item's text should take to read at the user's speed, if known.
+    pub expected_ms: Option<u32>,
 }

@@ -1,7 +1,7 @@
 # Library
 
-Planned for 0.3.0 (STORY-0057). The layout was accepted by the owner on 2026-11-02: a copy of Jira's list view. The details
-below are proposals to be confirmed with the specification task (TASK-0129).
+Planned for 0.3.0 (STORY-0057). The layout (a copy of Jira's list view), the query syntax, the column defaults and saved filters per vault were all accepted by the
+owner on 2026-11-02.
 
 ## Today
 The Library screen puts everything in one scrolling page: a tree of stacks on the left; on the right the stack's name, its due date,
