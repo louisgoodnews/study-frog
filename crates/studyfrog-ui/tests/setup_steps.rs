@@ -117,3 +117,21 @@ fn shuffling_a_spaced_run_keeps_it_updating_the_schedule() {
         "a preset starts from its own plan"
     );
 }
+
+#[test]
+fn the_how_step_offers_least_familiar_first_and_a_familiarity_filter_that_reaches_the_plan() {
+    let mut m = setup_model();
+    apply(&mut m, Msg::SetupStep(SetupStep::How));
+    let mut h = harness(m);
+    h.run_steps(4);
+    assert!(h.query_by_label("Least familiar first").is_some());
+    h.get_by_label("Least familiar first").click();
+    h.run_steps(2);
+    assert_eq!(h.state().0.state.rehearse.form.order, Order::LeastFamiliar);
+    apply(&mut h.state_mut().0, Msg::Setup(SetupEdit::FamOn(true)));
+    h.run_steps(2);
+    assert_all_named(&h, "setup how with familiarity");
+    let plan =
+        studyfrog_ui::setup_form::plan_from_form(&h.state().0.state.rehearse.form, 1).unwrap();
+    assert_eq!(plan.filter.familiarity_below, Some(0.6));
+}

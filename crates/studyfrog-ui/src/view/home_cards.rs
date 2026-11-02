@@ -93,3 +93,22 @@ pub(super) fn recent_column(h: &HomeSummary, fill: f32, ui: &mut egui::Ui, out: 
         }
     });
 }
+
+/// The card of the items the user knows least, each a link with the reasons.
+pub(super) fn attention_card(h: &HomeSummary, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if h.attention.is_empty() {
+        return;
+    }
+    kit::section(ui, "Needs attention");
+    kit::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        for a in &h.attention {
+            ui.horizontal_wrapped(|ui| {
+                if ui.link(&a.title).clicked() {
+                    out.push(Msg::OpenItem(a.uid));
+                }
+                ui.weak(a.reasons.join(" · "));
+            });
+        }
+    });
+}

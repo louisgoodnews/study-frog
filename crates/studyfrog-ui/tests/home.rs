@@ -36,6 +36,7 @@ fn summary(ready: usize) -> HomeSummary {
             due: 2,
             new: 1,
         }],
+        attention: Vec::new(),
         recent_items: vec![ItemRow {
             uid: Uid(7),
             title: "Bonjour".into(),
@@ -144,4 +145,36 @@ fn the_buttons_start_a_run_or_open_the_setup_for_one_stack() {
     h.get_by_label("Bonjour").click();
     h.run();
     assert!(h.state().1.contains(&Effect::LoadDocument(Uid(7))));
+}
+
+#[test]
+fn the_needs_attention_card_lists_the_items_with_their_reasons_and_opens_one() {
+    let mut m = home_model(3);
+    m.state.home.as_mut().unwrap().attention = vec![studyfrog_service::attention::Attention {
+        uid: Uid(33),
+        title: "Subjonctif".into(),
+        percent: 12,
+        reasons: vec!["Familiarity 12 %".into(), "Exam in 5 day(s)".into()],
+    }];
+    let mut h = harness(m);
+    h.run_steps(4);
+    assert!(h.query_by_label("Needs attention").is_some());
+    assert!(h.query_by_label_contains("Exam in 5 day(s)").is_some());
+    assert_all_named(&h, "home with attention");
+    h.get_by_label("Subjonctif").click();
+    h.run_steps(4);
+    assert!(
+        h.state().1.contains(&Effect::LoadDocument(Uid(33))),
+        "{:?}",
+        h.state().1
+    );
+
+    let mut none = home_model(3);
+    none.state.home.as_mut().unwrap().attention.clear();
+    let mut h = harness(none);
+    h.run_steps(4);
+    assert!(
+        h.query_by_label("Needs attention").is_none(),
+        "no card when nothing needs it"
+    );
 }

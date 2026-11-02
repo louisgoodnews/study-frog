@@ -5,6 +5,7 @@ pub mod agent;
 pub mod agent_apply;
 pub mod agent_pdf;
 pub mod agent_vault;
+pub mod attention;
 pub mod backup;
 pub mod bulk;
 pub mod compare;

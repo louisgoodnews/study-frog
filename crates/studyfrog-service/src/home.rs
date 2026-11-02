@@ -21,6 +21,7 @@ use studyfrog_store::overview::{
 use studyfrog_store::schedule::load_schedules;
 use studyfrog_store::settings::item_homes;
 
+use crate::attention::needs_attention;
 use crate::day::DayWindow;
 use crate::expiry::{expired_stacks, today_of, without_expired};
 use crate::planning::list_sessions;
@@ -105,6 +106,8 @@ pub struct HomeSummary {
     pub due_items: Vec<ItemRow>,
     /// Calendar entries of the next days (not today).
     pub upcoming: Vec<Upcoming>,
+    /// The items the user knows least, with the reasons.
+    pub attention: Vec<crate::attention::Attention>,
 }
 
 /// The most overdue items, leaving out those of expired stacks.
@@ -235,5 +238,6 @@ pub fn home_summary(
         sessions_today,
         due_items: kept_due_items(conn, now, &items)?,
         upcoming: upcoming(&sessions, local_now.date),
+        attention: needs_attention(conn, &items, now).map_err(store)?,
     })
 }

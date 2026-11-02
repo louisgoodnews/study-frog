@@ -2,7 +2,7 @@
 id: TASK-0139
 type: task
 title: Needs-attention card and least-familiar run order
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0059]
 estimate: 3
@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add the card and the run order, reusing the queue builders.
 
 ## Acceptance Criteria
-- [ ] Home shows a 'Needs attention' card with reasons
-- [ ] Run setup offers 'least familiar first' as an order and as a filter
-- [ ] Each is covered by headless view tests
+- [x] Home shows a 'Needs attention' card with reasons
+- [x] Run setup offers 'least familiar first' as an order and as a filter
+- [x] Each is covered by headless view tests
 
 ## Design Notes
 None.
