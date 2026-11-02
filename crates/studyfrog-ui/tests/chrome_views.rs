@@ -49,8 +49,12 @@ fn the_top_bar_has_every_control_named_and_the_sidebar_lists_the_screens() {
         assert!(h.query_by_label(screen).is_some(), "sidebar lacks {screen}");
     }
     assert!(
-        h.query_by_label("notes").is_none(),
-        "the bar does not show the vault name"
+        h.query_by_label("notes").is_some(),
+        "the bar shows the vault name next to StudyFrog"
+    );
+    assert!(
+        h.query_by_label("v").is_none() && h.query_by_label("/v/notes").is_none(),
+        "the path is not shown, only the folder name"
     );
     assert_all_named(&h, "top bar");
 }

@@ -12,6 +12,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   quoted list when needed and read back whole, and the Settings screen refuses a name that cannot be stored before saving,
   keeps what was typed and says why next to the field (BUG-0001).
 
+### Changed
+- The top bar shows the open vault's folder name next to StudyFrog (cut at 24 characters, full path in the tooltip), reversing the
+  removal of STORY-0041 at the owner's request (TASK-0128).
+
 ### Added
 - Settings are in tabs by domain (Study and scheduling, Rehearsal, Answers and AI, Data, Subjects and teachers); the last tab is
   remembered in `app.toml` as `settings_tab`, and the Left and Right keys move between tabs. Tabs for General, Appearance and

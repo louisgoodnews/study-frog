@@ -11,6 +11,22 @@ use crate::state::{Notice, NoticeKind, State};
 pub const MAX_NOTIFICATIONS: usize = 30;
 /// Most search results shown.
 pub const MAX_RESULTS: usize = 10;
+/// Most characters of the vault name shown in the top bar before it is cut with an ellipsis.
+pub const MAX_VAULT_NAME: usize = 24;
+
+/// The vault's folder name for the top bar, cut to [`MAX_VAULT_NAME`] characters with an ellipsis. The path is
+/// not part of it (the bar's tooltip carries the full path).
+pub fn vault_label(root: &str) -> String {
+    let name = root
+        .rsplit(['/', '\\'])
+        .find(|part| !part.is_empty())
+        .unwrap_or(root);
+    if name.chars().count() <= MAX_VAULT_NAME {
+        return name.to_owned();
+    }
+    let cut: String = name.chars().take(MAX_VAULT_NAME - 1).collect();
+    format!("{}…", cut.trim_end())
+}
 
 /// The menu opened from the top bar (at most one at a time).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

@@ -4,10 +4,10 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (50) | Ready (2) | In progress (0/3) | Review (2) | Blocked (0) | Done (127) |
+| Backlog (50) | Ready (1) | In progress (0/3) | Review (2) | Blocked (0) | Done (128) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0126](docs/issues/tasks/TASK-0126-notification-records-with-ids-read-state-and-persistence.md) Notification records with ids, read state and persistence (3) | [TASK-0128](docs/issues/tasks/TASK-0128-vault-name-next-to-the-studyfrog-name-in-the-bar.md) Vault name next to the StudyFrog name in the bar (2) |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [TASK-0127](docs/issues/tasks/TASK-0127-notification-center-panel.md) Notification center panel (5) | [TASK-0135](docs/issues/tasks/TASK-0135-specify-the-familiarity-value.md) Specify the familiarity value (3) |  | [TASK-0143](docs/issues/tasks/TASK-0143-specify-the-statuses-their-names-and-their-transitions.md) Specify the statuses, their names and their transitions (2) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+| [TASK-0126](docs/issues/tasks/TASK-0126-notification-records-with-ids-read-state-and-persistence.md) Notification records with ids, read state and persistence (3) | [TASK-0135](docs/issues/tasks/TASK-0135-specify-the-familiarity-value.md) Specify the familiarity value (3) |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0127](docs/issues/tasks/TASK-0127-notification-center-panel.md) Notification center panel (5) |  |  | [TASK-0143](docs/issues/tasks/TASK-0143-specify-the-statuses-their-names-and-their-transitions.md) Specify the statuses, their names and their transitions (2) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 | [TASK-0129](docs/issues/tasks/TASK-0129-specify-the-library-redesign-and-the-query-syntax.md) Specify the library redesign and the query syntax (3) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 | [TASK-0130](docs/issues/tasks/TASK-0130-search-query-parser-and-evaluator.md) Search query parser and evaluator (5) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
 | [TASK-0131](docs/issues/tasks/TASK-0131-item-list-with-columns-and-sorting.md) Item list with columns and sorting (5) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
@@ -131,6 +131,7 @@
 |  |  |  |  |  | [TASK-0123](docs/issues/tasks/TASK-0123-follow-links-inside-a-pdf-after-the-user-agrees.md) Follow links inside a PDF after the user agrees (3) |
 |  |  |  |  |  | [TASK-0124](docs/issues/tasks/TASK-0124-release-0-2-0.md) Release 0.2.0 (2) |
 |  |  |  |  |  | [TASK-0125](docs/issues/tasks/TASK-0125-publish-a-tar-gz-and-its-checksum-with-every-release.md) Publish a tar.gz and its checksum with every release (1) |
+|  |  |  |  |  | [TASK-0128](docs/issues/tasks/TASK-0128-vault-name-next-to-the-studyfrog-name-in-the-bar.md) Vault name next to the StudyFrog name in the bar (2) |
 |  |  |  |  |  | [TASK-0142](docs/issues/tasks/TASK-0142-settings-tab-bar-and-domain-grouping.md) Settings tab bar and domain grouping (3) |
 |  |  |  |  |  | [TASK-0183](docs/issues/tasks/TASK-0183-research-a-model-that-combines-familiarity-with-fsrs.md) Research a model that combines familiarity with FSRS (5) |
 
@@ -193,7 +194,7 @@
 | [STORY-0053](docs/issues/stories/STORY-0053-priority-and-difficulty-with-inheritance.md) Priority and difficulty with inheritance (8) | done | 0/0 |
 | [STORY-0054](docs/issues/stories/STORY-0054-pdf-files-in-the-vault-to-view-edit-and-extract.md) PDF files in the vault to view, edit and extract (8) | done | 17/17 |
 | [STORY-0055](docs/issues/stories/STORY-0055-notification-management.md) Notification management (5) | backlog | 0/2 |
-| [STORY-0056](docs/issues/stories/STORY-0056-current-vault-in-the-top-bar.md) Current vault in the top bar (2) | backlog | 0/1 |
+| [STORY-0056](docs/issues/stories/STORY-0056-current-vault-in-the-top-bar.md) Current vault in the top bar (2) | done | 1/1 |
 | [STORY-0057](docs/issues/stories/STORY-0057-library-redesign.md) Library redesign (8) | backlog | 0/6 |
 | [STORY-0058](docs/issues/stories/STORY-0058-familiarity-value.md) Familiarity value (8) | backlog | 0/3 |
 | [STORY-0059](docs/issues/stories/STORY-0059-familiarity-in-reports-on-home-and-in-scheduling.md) Familiarity in reports, on Home and in scheduling (8) | backlog | 1/6 |
@@ -234,4 +235,4 @@
 | [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 4/4 |
 | [EPIC-021](docs/issues/epics/EPIC-021-knowledge-workspace.md) Knowledge workspace | done | 14/14 |
 | [EPIC-022](docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | done | 1/1 |
-| [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | backlog | 1/15 |
+| [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | backlog | 2/15 |

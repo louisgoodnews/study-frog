@@ -42,6 +42,14 @@ abstracts or secondary summaries and should be checked against the papers before
 7. **Looks matter a little, usability matters more (Tractinsky vs. Tuch).** The shared theme exists for
    consistency, but we judge screens by task success, not by looks.
 
+## Decisions reversed
+
+- **The vault name in the top bar (2026-11-02, TASK-0128, reversing STORY-0041).** STORY-0041 removed the vault folder name
+  from the bar, the status line and notices. The owner asked for it back in the bar because several vaults and profiles can
+  be used and the bar did not say which one was open (visibility of system status, Nielsen). The bar shows the folder name
+  only, cut at 24 characters with an ellipsis; the path is only in the tooltip. The status line and notices stay as
+  STORY-0041 left them.
+
 ## What we do not know
 
 We have no data from StudyFrog users yet. The release checklist should include a five-person task test (set

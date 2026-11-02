@@ -5,10 +5,11 @@ use eframe::egui::{
     self, Align, Color32, Key, Layout, Panel, Rect, RichText, Role, TextEdit, WidgetInfo, vec2,
 };
 
-use crate::chrome::{ChromeMsg, Menu, unread};
+use crate::chrome::{ChromeMsg, Menu, unread, vault_label};
 use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::state::{Screen, State};
+use crate::theme::palette_of;
 use crate::view::icons::{Glyph, icon_button};
 use crate::view::kit;
 use crate::view::menus;
@@ -107,6 +108,11 @@ fn brand_cluster(
         ui.add(egui::Label::new(RichText::new("StudyFrog").strong()).sense(egui::Sense::click()));
     if state.vault.is_some() && brand.clicked() {
         out.push(Msg::Navigate(Screen::Home));
+    }
+    if let Some(vault) = &state.vault {
+        let name = vault_label(&vault.root);
+        ui.label(RichText::new(name).color(palette_of(ui).text_weak))
+            .on_hover_text(format!("Open vault: {}", vault.root));
     }
 }
 
