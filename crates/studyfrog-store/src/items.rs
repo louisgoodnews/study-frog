@@ -209,3 +209,33 @@ pub fn recent_items(conn: &Connection, limit: usize) -> Result<Vec<ItemRow>, Sto
     let rows = stmt.query_map([limit as i64], raw_item).map_err(sql_err)?;
     rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
 }
+
+/// How many items of the stack in `folder` and of every stack below it are in each status, in menu order.
+/// The status is the stored one, else `learning` for an item with a review and `new` for one without
+/// (the same rule as [`studyfrog_core::status::effective_status`]).
+pub fn status_counts(
+    conn: &Connection,
+    folder: &str,
+) -> Result<Vec<(studyfrog_core::status::Status, u32)>, StoreError> {
+    let escaped = folder
+        .replace('\\', "\\\\")
+        .replace('%', "\\%")
+        .replace('_', "\\_");
+    let sql = "SELECT COALESCE(i.status, CASE WHEN EXISTS(SELECT 1 FROM review r WHERE r.item_uid = i.uid)
+                    THEN 'learning' ELSE 'new' END), COUNT(*)
+               FROM item i
+               WHERE i.kind != 'stack' AND (i.stack_path = ?1 OR i.stack_path LIKE ?2 ESCAPE '\\')
+               GROUP BY 1";
+    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+    let rows = stmt
+        .query_map((folder, format!("{escaped}/%")), |r| {
+            Ok((r.get::<_, String>(0)?, r.get::<_, u32>(1)?))
+        })
+        .map_err(sql_err)?;
+    let found: Vec<(String, u32)> = rows.collect::<Result<_, _>>().map_err(sql_err)?;
+    let count_of = |word: &str| found.iter().find(|(w, _)| w == word).map_or(0, |(_, n)| *n);
+    Ok(studyfrog_core::status::STATUSES
+        .into_iter()
+        .map(|s| (s, count_of(studyfrog_core::status::status_name(s))))
+        .collect())
+}

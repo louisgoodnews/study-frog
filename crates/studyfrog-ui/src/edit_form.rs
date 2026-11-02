@@ -4,9 +4,11 @@
 
 use studyfrog_core::event::{Difficulty, difficulty_from_name, difficulty_name};
 use studyfrog_core::priority::{Priority, priority_from_name, priority_name};
+use studyfrog_core::status::Status;
 use studyfrog_md::doc::Doc;
 use studyfrog_md::extra::{extra_value, with_extra};
 use studyfrog_md::names::{extra_names, with_extra_names};
+use studyfrog_md::status::{status_of, with_status};
 
 /// One multi-line text area.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -32,6 +34,8 @@ pub struct EditForm {
     pub priority: Option<Priority>,
     /// The difficulty the item states itself; `None`: inherit.
     pub difficulty: Option<Difficulty>,
+    /// The status the item states itself; `None`: derived from its history.
+    pub status: Option<Status>,
     /// The subjects a stack names (empty for other kinds and for a stack that names none).
     pub subjects: Vec<String>,
 }
@@ -73,6 +77,7 @@ pub fn form_from_doc(doc: &Doc) -> EditForm {
         fields,
         priority: extra_value(doc, "priority").and_then(|w| priority_from_name(&w)),
         difficulty: extra_value(doc, "difficulty").and_then(|w| difficulty_from_name(&w)),
+        status: status_of(doc),
         subjects: extra_names(doc, "subjects"),
     }
 }
@@ -135,6 +140,11 @@ pub fn apply_form(doc: &Doc, form: &EditForm) -> Result<Doc, String> {
     }
     let out = with_extra(&out, "priority", form.priority.map(priority_name));
     let out = with_extra(&out, "difficulty", form.difficulty.map(difficulty_name));
+    let out = if form.status == status_of(doc) {
+        out
+    } else {
+        with_status(&out, form.status)
+    };
     if !matches!(out, Doc::Stack(_)) {
         return Ok(out);
     }

@@ -19,12 +19,11 @@ use studyfrog_ext::types::Registry;
 
 use crate::host::{FilePicker, FolderPicker, Host};
 use studyfrog_store::app_config::write_app_settings;
-use studyfrog_store::overview::{list_items, search_items};
+use studyfrog_store::overview::search_items;
 
 use crate::chrome::{ChromeMsg, MAX_RESULTS};
 use crate::effect::Effect;
 use crate::msg::Msg;
-use crate::state::Selection;
 use crate::{
     exec_agent, exec_backup, exec_doc, exec_import, exec_pdf, exec_plan, exec_profile, exec_run,
 };
@@ -115,7 +114,8 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::PollVault => exec_doc::poll(w, now_ns),
         Effect::CheckReminders => exec_plan::reminders(w, now_ns),
         Effect::SaveAppSettings(settings) => save_settings(w, &settings),
-        Effect::LoadItems(selection) => load_items(w, &selection),
+        Effect::LoadItems(selection) => crate::exec_items::items(w, &selection),
+        Effect::LoadStatusCounts(selection) => crate::exec_items::counts(w, &selection),
         Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
         Effect::StartRun { plan, mode } => exec_run::start(w, plan, mode, now_ns),
         Effect::LoadGraph => exec_doc::load_graph_msg(w),
@@ -206,17 +206,6 @@ fn open(w: &mut Worker, path: &str) -> Msg {
             Msg::VaultOpened(Ok(info))
         }
         Err(e) => Msg::VaultOpened(Err(e.to_string())),
-    }
-}
-
-fn load_items(w: &Worker, selection: &Selection) -> Msg {
-    let folder = match selection {
-        Selection::Stack(f) => Some(f.as_str()),
-        Selection::Inbox | Selection::Nothing => None,
-    };
-    match &w.session {
-        Some(s) => Msg::ItemsLoaded(list_items(&s.conn, folder).map_err(|e| e.to_string())),
-        None => Msg::ItemsLoaded(Ok(Vec::new())),
     }
 }
 

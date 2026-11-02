@@ -17,6 +17,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- Statuses on screen: a status menu on the item page (Automatic, Not studied yet, Learning, In review, Complete, On hold), the status
+  on every item in a stack's list, and a line under a stack's heading with how many of its items, sub-stacks included, are in each
+  status (TASK-0145).
 - Item status in the data: the optional `status` front-matter key (`new`, `learning`, `reviewing`, `done`, `paused`) on every kind, an
   index column (schema version 12) and an effective status on every item list, derived from the review history when the key is
   absent. The screens come with TASK-0145 (TASK-0144).

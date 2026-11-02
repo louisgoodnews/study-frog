@@ -15,6 +15,10 @@ fn error(text: impl Into<String>) -> Option<Notice> {
 pub fn reload(selection: &Selection) -> Vec<Effect> {
     match selection {
         Selection::Nothing => Vec::new(),
+        Selection::Stack(_) => vec![
+            Effect::LoadItems(selection.clone()),
+            Effect::LoadStatusCounts(selection.clone()),
+        ],
         other => vec![Effect::LoadItems(other.clone())],
     }
 }
@@ -41,6 +45,13 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Select(sel) => select(state, sel),
         Msg::SearchEdited(text) => with_browser(state, |b| Browser { search: text, ..b }),
         Msg::ItemsLoaded(result) => items_loaded(state, result),
+        Msg::StatusCountsLoaded(Ok(status_counts)) => {
+            with_browser(state, |b| Browser { status_counts, ..b })
+        }
+        Msg::StatusCountsLoaded(Err(_)) => with_browser(state, |b| Browser {
+            status_counts: Vec::new(),
+            ..b
+        }),
         Msg::DraftEdited(field, text) => with_browser(state, |b| edit_draft(b, field, text)),
         Msg::AddCardClicked => add_card(state),
         Msg::Created(result) => created(state, result),

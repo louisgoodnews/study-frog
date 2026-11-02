@@ -36,6 +36,7 @@ pub(crate) fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
             EditAction::Tags(t) => e.form.tags = t,
             EditAction::Priority(p) => e.form.priority = p,
             EditAction::Difficulty(d) => e.form.difficulty = d,
+            EditAction::Status(s) => e.form.status = s,
             EditAction::Subject(name, on) => {
                 e.form.subjects.retain(|s| *s != name);
                 if on {

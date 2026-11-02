@@ -147,6 +147,6 @@ pub fn load_overview(conn: &Connection) -> Result<VaultOverview, StoreError> {
 
 pub use crate::items::{
     IndexedItem, ItemRow, due_items, item_path, linking_to, list_items, load_indexed_items,
-    recent_items, resolve_title, search_items,
+    recent_items, resolve_title, search_items, status_counts,
 };
 pub use crate::link_graph::{GraphNode, LinkGraph, load_link_graph};

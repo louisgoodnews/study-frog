@@ -23,6 +23,7 @@ pub mod exec_agent;
 pub mod exec_backup;
 pub mod exec_doc;
 pub mod exec_import;
+pub mod exec_items;
 pub mod exec_pdf;
 pub mod exec_pdf_items;
 pub mod exec_pdf_library;

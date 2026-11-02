@@ -74,7 +74,10 @@ fn the_outcome_is_reported_and_the_stack_is_reloaded() {
         },
     };
     let fx = apply(&mut m, Msg::Imported(Ok(ok)));
-    assert!(matches!(&fx[..], [Effect::LoadItems(_)]));
+    assert!(matches!(
+        &fx[..],
+        [Effect::LoadItems(_), Effect::LoadStatusCounts(_)]
+    ));
     let n = m.state.notice.clone().unwrap();
     assert_eq!(n.kind, NoticeKind::Info);
     assert_eq!(n.text, "Created 3 card(s). Skipped 1: card 2: bad");

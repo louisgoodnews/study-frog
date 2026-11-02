@@ -49,6 +49,7 @@ mod setup_how;
 mod setup_review;
 mod setup_what;
 mod sidebar;
+pub mod status_ui;
 mod subjects;
 mod summary;
 mod summary_items;

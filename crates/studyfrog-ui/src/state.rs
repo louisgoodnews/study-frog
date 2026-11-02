@@ -97,6 +97,8 @@ pub struct Browser {
     pub selection: Selection,
     /// Items of the selection, as last loaded.
     pub items: Vec<ItemRow>,
+    /// How many items of the stack, with its sub-stacks, are in each status, as last loaded.
+    pub status_counts: Vec<(studyfrog_core::status::Status, u32)>,
     /// Title filter.
     pub search: String,
     /// Card being written.

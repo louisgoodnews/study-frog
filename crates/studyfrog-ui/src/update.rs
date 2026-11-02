@@ -85,6 +85,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         browse @ (Msg::Select(_)
         | Msg::SearchEdited(_)
         | Msg::ItemsLoaded(_)
+        | Msg::StatusCountsLoaded(_)
         | Msg::DraftEdited(..)
         | Msg::AddCardClicked
         | Msg::Created(_)) => crate::browse::update(state, browse),

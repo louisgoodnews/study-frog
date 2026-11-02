@@ -49,6 +49,8 @@ pub enum Effect {
     SaveAppSettings(AppSettings),
     /// List the items of a stack (or the inbox).
     LoadItems(Selection),
+    /// Count the items of a stack and its sub-stacks by status.
+    LoadStatusCounts(Selection),
     /// Count the items a run built from this plan would contain.
     PreviewQueue {
         /// The plan.

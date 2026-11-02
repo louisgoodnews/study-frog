@@ -41,6 +41,7 @@ pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         subject_rows(state, e, ui, out);
         priority_row(e, ui, out);
         difficulty_row(e, ui, out);
+        status_row(state, e, ui, out);
         source_link(e, ui, out);
         let meta = studyfrog_md::doc::doc_meta(&e.doc);
         for (word, at) in [("Created", meta.created), ("Updated", meta.updated)] {
@@ -111,6 +112,20 @@ fn priority_row(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
     });
+}
+
+/// The status menu; an item with no stored status shows what its history makes of it, when the list is loaded.
+fn status_row(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.label("Status");
+    let derived = state
+        .browser
+        .items
+        .iter()
+        .find(|i| i.path == e.path)
+        .map(|i| i.status);
+    if let Some(choice) = crate::view::status_ui::status_menu(ui, e.form.status, derived) {
+        out.push(Msg::Edit(EditAction::Status(choice)));
+    }
 }
 
 fn difficulty_row(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {

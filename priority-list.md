@@ -15,7 +15,7 @@ Last updated: 2026-11-02.
 - [x] 5. [TASK-0135](docs/issues/tasks/TASK-0135-specify-the-familiarity-value.md) Specify the familiarity value
 
 ## Wave 2: foundations
-- [ ] 6. TASK-0144 Statuses in the data model (done) and TASK-0145 in the UI
+- [x] 6. TASK-0144 and TASK-0145 Statuses in the data model and the UI
 - [ ] 7. TASK-0136 Record view and action time
 - [ ] 8. TASK-0137 Familiarity as a pure function, and TASK-0141 its factor on the FSRS interval (on from the start)
 - [ ] 9. TASK-0126 and TASK-0127 Notification records and the notification center

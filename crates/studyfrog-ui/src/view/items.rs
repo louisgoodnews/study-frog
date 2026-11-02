@@ -3,6 +3,7 @@
 use eframe::egui::{self, RichText};
 use studyfrog_core::civil::format_date;
 use studyfrog_core::plan::{ItemKind, item_kind_name};
+use studyfrog_core::status::status_label;
 use studyfrog_core::time::UnixMs;
 use studyfrog_md::rfc3339::format_rfc3339;
 use studyfrog_store::overview::ItemRow;
@@ -40,6 +41,11 @@ fn item_row(item: &ItemRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         } else {
             p.text_weak
         };
+        ui.label(
+            RichText::new(status_label(item.status))
+                .small()
+                .color(p.text_weak),
+        );
         ui.label(RichText::new(due_text(item.due)).small().color(color));
         ui.label(RichText::new(&item.path).small().color(p.text_weak));
     });
@@ -58,6 +64,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     };
     ui.label(RichText::new(heading).size(26.0).strong());
     due_row(state, ui, out);
+    crate::view::status_ui::summary(ui, &b.status_counts);
     child_stacks(state, ui, out);
     if let Some(text) = text_field(ui, "Search titles", &b.search, "type to filter", 1) {
         out.push(Msg::SearchEdited(text));

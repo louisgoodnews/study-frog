@@ -202,6 +202,7 @@ fn a_new_stack_is_opened_and_a_refusal_keeps_the_form_with_its_reason() {
         fx,
         [
             Effect::LoadItems(Selection::Stack("french/verbs".into())),
+            Effect::LoadStatusCounts(Selection::Stack("french/verbs".into())),
             Effect::LoadBoard,
             Effect::LoadSessions
         ]

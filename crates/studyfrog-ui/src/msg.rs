@@ -97,6 +97,8 @@ pub enum Msg {
     SearchEdited(String),
     /// The items of the selection were loaded.
     ItemsLoaded(Result<Vec<ItemRow>, String>),
+    /// The status counts of the selected stack were loaded.
+    StatusCountsLoaded(Result<Vec<(studyfrog_core::status::Status, u32)>, String>),
     /// A field of the new-card form changed.
     DraftEdited(DraftField, String),
     /// "Add card" was activated.
@@ -210,6 +212,8 @@ pub enum EditAction {
     Priority(Option<studyfrog_core::priority::Priority>),
     /// The item's own difficulty; `None` takes the stack's.
     Difficulty(Option<studyfrog_core::event::Difficulty>),
+    /// The item's own status; `None` leaves it to the history.
+    Status(Option<studyfrog_core::status::Status>),
     /// A subject of a stack on or off.
     Subject(String, bool),
 }

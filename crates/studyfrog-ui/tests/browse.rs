@@ -51,7 +51,13 @@ fn selecting_loads_items_and_resets_the_filter() {
     let mut m = Model::default();
     apply(&mut m, Msg::SearchEdited("old".into()));
     let fx = apply(&mut m, Msg::Select(Selection::Stack("french".into())));
-    assert_eq!(fx, [Effect::LoadItems(Selection::Stack("french".into()))]);
+    assert_eq!(
+        fx,
+        [
+            Effect::LoadItems(Selection::Stack("french".into())),
+            Effect::LoadStatusCounts(Selection::Stack("french".into()))
+        ]
+    );
     assert!(m.state.browser.search.is_empty() && m.state.browser.items.is_empty());
     assert!(
         apply(&mut m, Msg::Select(Selection::Nothing)).is_empty(),
@@ -96,7 +102,13 @@ fn creating_succeeds_clears_the_forms_and_refreshes_the_open_stack() {
     let info = studyfrog_service_info();
     let (state, fx) = update(m.state.clone(), Msg::Created(Ok(info)));
     assert!(state.browser.draft.front.is_empty());
-    assert_eq!(fx, [Effect::LoadItems(Selection::Stack("maths".into()))]);
+    assert_eq!(
+        fx,
+        [
+            Effect::LoadItems(Selection::Stack("maths".into())),
+            Effect::LoadStatusCounts(Selection::Stack("maths".into()))
+        ]
+    );
     let (state, fx) = update(m.state, Msg::Created(Err("exists".into())));
     assert!(
         fx.is_empty() && state.browser.draft.front == "f",
