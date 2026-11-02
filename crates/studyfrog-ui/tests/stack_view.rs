@@ -43,7 +43,10 @@ fn summary() -> StackSummary {
             done: 2,
             total: 5,
             percent: Some(41),
+            depth: 1,
+            due_day: None,
         }],
+        tree: Vec::new(),
     }
 }
 

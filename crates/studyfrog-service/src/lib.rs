@@ -49,6 +49,7 @@ pub mod session;
 pub mod set_status;
 pub mod settings;
 pub mod stack_summary;
+pub mod stack_tree;
 pub mod subjects;
 pub mod tar;
 pub mod timezone;

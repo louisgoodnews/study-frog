@@ -8,13 +8,13 @@ use studyfrog_core::priority::{PRIORITIES, Priority};
 use studyfrog_core::status::{STATUSES, Status, effective_status, status_from_name};
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
-use studyfrog_store::due_dates::stack_statuses;
 use studyfrog_store::error::StoreError;
 use studyfrog_store::item_meta::{ItemMeta, load_item_meta};
-use studyfrog_store::overview::{StackRow, load_indexed_items, load_overview};
+use studyfrog_store::overview::{load_indexed_items, load_overview};
 use studyfrog_store::reviews::load_all_reviews_timed;
 
-use crate::fam_stacks::stack_percents;
+pub use crate::stack_tree::SubStack;
+use crate::stack_tree::tree;
 
 const DAY_MS: i64 = 86_400_000;
 /// Days the cards look back and ahead.
@@ -46,23 +46,6 @@ pub struct Activity {
     pub at_ms: i64,
 }
 
-/// A stack inside the one shown.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SubStack {
-    /// Its folder.
-    pub folder: String,
-    /// Its title.
-    pub title: String,
-    /// Its status (the one it states, else new).
-    pub status: Status,
-    /// Items done.
-    pub done: usize,
-    /// Items in all.
-    pub total: usize,
-    /// Its familiarity in percent, if any item has a history.
-    pub percent: Option<u8>,
-}
-
 /// The Summary of a stack.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StackSummary {
@@ -84,13 +67,15 @@ pub struct StackSummary {
     pub activity: Vec<Activity>,
     /// The stacks inside this one, directly.
     pub substacks: Vec<SubStack>,
+    /// Every stack inside this one, in tree order.
+    pub tree: Vec<SubStack>,
 }
 
-fn inside(folder: &str, stack: &str) -> bool {
+pub(crate) fn inside(folder: &str, stack: &str) -> bool {
     folder == stack || folder.starts_with(&format!("{stack}/"))
 }
 
-fn status_of(m: &ItemMeta) -> Status {
+pub(crate) fn status_of(m: &ItemMeta) -> Status {
     effective_status(
         m.status.as_deref().and_then(status_from_name),
         m.reviews > 0,
@@ -120,43 +105,6 @@ fn feed(items: &[(&Uid, &ItemMeta)], last: &HashMap<Uid, i64>) -> Vec<Activity> 
     all.sort_by(|a, b| b.at_ms.cmp(&a.at_ms).then(a.uid.cmp(&b.uid)));
     all.truncate(FEED);
     all
-}
-
-fn substacks(
-    stacks: &[StackRow],
-    folder: &str,
-    members: &[(&Uid, &ItemMeta)],
-    conn: &rusqlite::Connection,
-    now: UnixMs,
-) -> Result<Vec<SubStack>, StoreError> {
-    let own = stack_statuses(conn)?;
-    let percents = stack_percents(conn, now)?;
-    Ok(stacks
-        .iter()
-        .filter(|s| s.parent.as_deref() == Some(folder))
-        .map(|s| {
-            let inner: Vec<_> = members
-                .iter()
-                .filter(|(_, m)| m.stack.as_deref().is_some_and(|f| inside(f, &s.folder)))
-                .collect();
-            let status = own
-                .get(&s.folder)
-                .and_then(|w| w.as_deref())
-                .and_then(status_from_name)
-                .unwrap_or(Status::New);
-            SubStack {
-                folder: s.folder.clone(),
-                title: s.title.clone(),
-                status,
-                done: inner
-                    .iter()
-                    .filter(|(_, m)| status_of(m) == Status::Done)
-                    .count(),
-                total: inner.len(),
-                percent: percents.get(&s.folder).copied().flatten(),
-            }
-        })
-        .collect())
 }
 
 /// The summary of the stack at `folder`, with its sub-stacks' items included.
@@ -189,6 +137,7 @@ pub fn stack_summary(
         types: [0; 3],
         activity: feed(&members, &last),
         substacks: Vec::new(),
+        tree: Vec::new(),
     };
     for (uid, m) in &members {
         let status = status_of(m);
@@ -215,6 +164,7 @@ pub fn stack_summary(
         s.types[t] += 1;
     }
     let stacks = load_overview(conn)?.stacks;
-    s.substacks = substacks(&stacks, folder, &members, conn, now)?;
+    s.tree = tree(&stacks, folder, &members, conn, now)?;
+    s.substacks = s.tree.iter().filter(|t| t.depth == 1).cloned().collect();
     Ok(s)
 }

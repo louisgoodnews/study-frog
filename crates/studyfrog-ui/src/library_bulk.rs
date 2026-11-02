@@ -38,6 +38,8 @@ pub enum BulkMsg {
     Apply(BulkEdit),
     /// Show or hide the question before deleting.
     AskDelete(bool),
+    /// Change one item, selected or not (the backlog's drag and drop).
+    MoveOne(Uid, BulkEdit),
     /// The worker changed the items.
     Done(Result<Box<BulkDone>, String>),
     /// Take the last bulk edit back.
@@ -164,6 +166,12 @@ pub fn update(state: State, msg: BulkMsg) -> (State, Vec<Effect>) {
         }
         BulkMsg::Apply(_) => {}
         BulkMsg::AskDelete(on) => state.library.confirm_delete = on,
+        BulkMsg::MoveOne(uid, edit) => {
+            return (
+                state,
+                vec![Effect::Library(LibraryEffect::Bulk(vec![uid], edit))],
+            );
+        }
         BulkMsg::Done(result) => return done(state, result),
         BulkMsg::Undo => {
             if let Some(snapshot) = state.library.undo.take() {

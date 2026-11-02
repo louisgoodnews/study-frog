@@ -2,7 +2,7 @@
 id: TASK-0153
 type: task
 title: Sub-stacks tab
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0064]
 estimate: 2
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Build the tree view from the library's stack rows.
 
 ## Acceptance Criteria
-- [ ] The tab shows the tree of sub-stacks with status, progress, due date and familiarity and opens a sub-stack on a click
-- [ ] The tree folds open and closed and a stack without sub-stacks shows an empty state
+- [x] The tab shows the tree of sub-stacks with status, progress, due date and familiarity and opens a sub-stack on a click
+- [x] The tree folds open and closed and a stack without sub-stacks shows an empty state
 
 ## Design Notes
 None.

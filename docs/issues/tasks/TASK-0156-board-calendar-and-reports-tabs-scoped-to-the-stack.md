@@ -2,7 +2,7 @@
 id: TASK-0156
 type: task
 title: Board, Calendar and Reports tabs scoped to the stack
-status: backlog
+status: in_progress
 epic: EPIC-023
 parents: [STORY-0064]
 estimate: 3

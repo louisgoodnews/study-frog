@@ -2,7 +2,7 @@
 id: TASK-0154
 type: task
 title: Goals tab
-status: backlog
+status: in_progress
 epic: EPIC-023
 parents: [STORY-0064]
 estimate: 2

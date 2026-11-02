@@ -109,6 +109,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             match tab_of(&state.app, folder) {
                 StackTab::Summary => crate::view::stack_summary_view::draw(state, folder, ui, out),
                 StackTab::List => list_tab(state, folder, ui, out),
+                StackTab::Substacks => crate::view::stack_tree_view::draw(state, folder, ui, out),
+                StackTab::Backlog => crate::view::stack_backlog_view::draw(state, folder, ui, out),
             }
         });
 }

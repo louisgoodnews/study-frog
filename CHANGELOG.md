@@ -23,6 +23,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
+- The stack page has a Backlog tab (Up next and Not yet planned with the count per status; an item moves between them by dragging or by a button, which makes it Learning or puts it on hold) and a Sub-stacks tab (the tree of stacks inside, folding, each with status, progress, due date and familiarity, opening one on a click) (TASK-0152, TASK-0153).
 - A stack opens as a page like Jira's project view: a breadcrumb, the stack's title, a status chip that changes the stack's status, and the actions Details, New item, Import and Start rehearsal, with tabs Summary and List (the last tab is remembered per stack; Left and Right switch). The old stack page is the List tab (TASK-0150).
 - The Summary tab, read only when it opens, shows cards for completed, updated, created and due-soon items, a status ring, priorities, types, an activity feed and the sub-stacks with status, progress and familiarity, all with their numbers as text (TASK-0151).
 - Settings (Study tab) tells from the user's own review history whether familiarity improves the predictions of recall: a replay scores plain FSRS against the familiarity-adjusted prediction by log loss and a calibration table, fits the strength and half-stability on the first 80 percent when there are at least 1000 reviews, and shows the verdict, the best values and the change in reviews; it never switches the factor off itself (TASK-0184).

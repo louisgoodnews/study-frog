@@ -17,12 +17,18 @@ pub enum StackTab {
     Summary,
     /// The items of the stack as a table, with its due date and PDFs.
     List,
+    /// What is coming up and what is not planned yet.
+    Backlog,
+    /// The stacks inside this one as a tree.
+    Substacks,
 }
 
 /// The tabs in the order shown, with their stored key and name.
-pub const TABS: [(StackTab, &str, &str); 2] = [
+pub const TABS: [(StackTab, &str, &str); 4] = [
     (StackTab::Summary, "summary", "Summary"),
     (StackTab::List, "list", "List"),
+    (StackTab::Backlog, "backlog", "Backlog"),
+    (StackTab::Substacks, "substacks", "Sub-stacks"),
 ];
 
 /// The name of a tab.
@@ -174,7 +180,11 @@ pub fn sync(state: State) -> (State, Vec<Effect>) {
         .loading
         .as_ref()
         .is_some_and(|(f, g)| *f == folder && *g == generation);
-    if tab_of(&state.app, &folder) != StackTab::Summary || held || asked || state.library.stale {
+    let wants = matches!(
+        tab_of(&state.app, &folder),
+        StackTab::Summary | StackTab::Substacks
+    );
+    if !wants || held || asked || state.library.stale {
         return (state, Vec::new());
     }
     state.library.stack_view.loading = Some((folder.clone(), generation));

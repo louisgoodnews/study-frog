@@ -92,6 +92,7 @@ pub mod session_form;
 pub mod setup;
 pub mod setup_fam;
 pub mod setup_form;
+pub mod stack_backlog;
 pub mod stack_view_ui;
 pub mod state;
 pub mod subjects_ui;

@@ -123,3 +123,58 @@ fn a_stack_can_be_given_a_status_and_back_to_automatic() {
     );
     let _ = fs::remove_dir_all(&dir);
 }
+
+#[test]
+fn the_tree_lists_every_nested_stack_with_its_depth_and_next_due_date() {
+    use studyfrog_calendar::session::{Ends, EventKind, Repeat, Session};
+    use studyfrog_core::civil::{LocalTime, date_from_days, date_to_days};
+    let dir = std::env::temp_dir().join(format!("studyfrog-stree-{}", std::process::id()));
+    let _ = fs::remove_dir_all(&dir);
+    for (p, id, t) in [
+        ("a", '1', "A"),
+        ("a/b", '2', "B"),
+        ("a/b/c", '3', "C"),
+        ("a/d", '4', "D"),
+    ] {
+        fs::create_dir_all(dir.join(p)).unwrap();
+        fs::write(
+            dir.join(p).join("_stack.md"),
+            format!("---\nid: 0000000000000000000000000{id}\nkind: stack\ntitle: {t}\n---\n"),
+        )
+        .unwrap();
+    }
+    let (mut s, _) = open_vault(dir.to_str().unwrap()).unwrap();
+    let day = date_to_days(studyfrog_core::civil::date_from_days(NOW.div_euclid(DAY))) + 9;
+    let exam = Session {
+        id: Uid(900),
+        title: "Exam".into(),
+        stack: Some(Uid(3)),
+        start: LocalTime {
+            date: date_from_days(day),
+            minute: 540,
+        },
+        duration_min: 60,
+        repeat: Repeat::Never,
+        ends: Ends::Forever,
+        cancelled: Vec::new(),
+        notes: String::new(),
+        kind: EventKind::Exam,
+        reminders: Vec::new(),
+    };
+    studyfrog_store::sessions::save_session(&mut s.conn, &exam).unwrap();
+    let sum = stack_summary(&s.conn, "a", UnixMs(NOW)).unwrap();
+    let shape: Vec<(&str, usize)> = sum
+        .tree
+        .iter()
+        .map(|t| (t.title.as_str(), t.depth))
+        .collect();
+    assert_eq!(shape, [("B", 1), ("C", 2), ("D", 1)], "tree order");
+    assert_eq!(
+        sum.substacks.len(),
+        2,
+        "the summary lists only the direct ones"
+    );
+    assert_eq!(sum.tree[1].due_day, Some(day));
+    assert_eq!(sum.tree[0].due_day, None);
+    let _ = fs::remove_dir_all(&dir);
+}

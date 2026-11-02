@@ -2,7 +2,7 @@
 id: TASK-0155
 type: task
 title: Roadmap tab
-status: backlog
+status: in_progress
 epic: EPIC-023
 parents: [STORY-0064]
 estimate: 5

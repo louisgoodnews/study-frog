@@ -2,7 +2,7 @@
 id: TASK-0152
 type: task
 title: List and Backlog tabs
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0064]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Reuse the item list and add the two groups.
 
 ## Acceptance Criteria
-- [ ] List shows the item list scoped to the stack and its sub-stacks
-- [ ] Backlog shows 'Up next' and 'Not yet planned' with item counts per status, and an item can be dragged between them
+- [x] List shows the item list scoped to the stack and its sub-stacks
+- [x] Backlog shows 'Up next' and 'Not yet planned' with item counts per status, and an item can be dragged between them
 
 ## Design Notes
 None.
