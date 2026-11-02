@@ -29,6 +29,8 @@ issue view are the visual reference for the library, the stack overview and the 
     - TASK-0139 Needs-attention card and least-familiar run order
     - TASK-0140 Familiarity in queue selection and the calendar planner
     - TASK-0141 Familiarity scales the scheduler's interval
+    - TASK-0183 Research a model that combines familiarity with FSRS
+    - TASK-0184 Replay familiarity against the user's review history to approve it
   - **STORY-0060** Settings in tabs
     - TASK-0142 Settings tab bar and domain grouping
   - **STORY-0061** Statuses for stacks, notes, cards and questions
@@ -96,11 +98,10 @@ plus user pages linked to the assistant's proposals, a diary with every rating a
 and a tab, names with commas (BUG-0001), the rehearsal modes (the open item at the end of a countdown counts as not
 answered), and familiarity: it grows a little per view, much with easier ratings, falls with harder ones, grows with shorter
 view time, falls slowly without contact while the item is not Complete and its exam date has not passed, and is a
-sub-criterion of scheduling that affects selection, order, the planned day and the scheduler's interval (the higher the
-familiarity the stronger; an item at 1.0 about once a month), and a per-item report.
+sub-criterion of scheduling that affects selection, order, the planned day and the scheduler's interval (more familiar items are scheduled more generously, through a relative factor on the FSRS interval, see docs/research/familiarity-and-fsrs.md; the 30 days once mentioned were an example, not a cap), and a per-item report.
 
 **Decisions still open:** the overview layout (TASK-specification of STORY-0063), whether a countdown may be extended,
-whether the 30-day anchor caps items whose algorithm interval is longer, and the quoting format for names with commas
+the three decisions of the familiarity research (the relative reading, its defaults, and off until a replay approves it), and the quoting format for names with commas
 (a proposal in BUG-0001).
 
 **Exit criteria:**

@@ -62,3 +62,10 @@ vault (`[srs] scheduler` in `studyfrog.toml`). Both write to the same `review` h
 `mem_state` (FSRS) and `sm2_state` (SM-2). When a stack is switched, items keep their old due date until the
 next review, which starts fresh state in the new algorithm. Custom FSRS weights, the retention default and the
 maximum interval come from `studyfrog.toml` (see [config-files](config-files.md)).
+
+## Familiarity (planned, not implemented)
+A familiarity value from 0.0 to 1.0 per item may scale the interval FSRS computes, as a factor
+`exp(beta * (F - F_expected(S)))` that is 1 when familiarity is what the stability leads one to expect. The stored `MemState`
+is never changed, `interval_days` stays as it is, and a strength of 0 gives the plain interval. It is switched on per user only
+after a replay of their own history shows better recall predictions. Model, simulation and open decisions:
+[familiarity-and-fsrs](../research/familiarity-and-fsrs.md) (TASK-0183, TASK-0141, TASK-0184).

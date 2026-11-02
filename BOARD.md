@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (54) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (124) |
+| Backlog (55) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (125) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 | [TASK-0126](docs/issues/tasks/TASK-0126-notification-records-with-ids-read-state-and-persistence.md) Notification records with ids, read state and persistence (3) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
@@ -60,7 +60,7 @@
 | [TASK-0180](docs/issues/tasks/TASK-0180-countdown-and-count-up-in-the-run-state-machine.md) Countdown and count up in the run state machine (5) |  |  |  |  | [TASK-0052](docs/issues/tasks/TASK-0052-score-functions.md) Score functions (3) |
 | [TASK-0181](docs/issues/tasks/TASK-0181-mode-and-timer-in-run-setup-and-on-the-rehearsal-screen.md) Mode and timer in run setup and on the rehearsal screen (3) |  |  |  |  | [TASK-0053](docs/issues/tasks/TASK-0053-scoring-property-tests.md) Scoring property tests (2) |
 | [TASK-0182](docs/issues/tasks/TASK-0182-mode-and-time-in-the-review-and-the-reports.md) Mode and time in the review and the reports (2) |  |  |  |  | [TASK-0054](docs/issues/tasks/TASK-0054-answer-input-in-rehearsal.md) Answer input in rehearsal (3) |
-|  |  |  |  |  | [TASK-0055](docs/issues/tasks/TASK-0055-slm-benchmark.md) SLM benchmark (1) |
+| [TASK-0184](docs/issues/tasks/TASK-0184-replay-familiarity-against-the-user-s-review-history-to-approve-it.md) Replay familiarity against the user's review history to approve it (3) |  |  |  |  | [TASK-0055](docs/issues/tasks/TASK-0055-slm-benchmark.md) SLM benchmark (1) |
 |  |  |  |  |  | [TASK-0056](docs/issues/tasks/TASK-0056-rule-data-model.md) Rule data model (3) |
 |  |  |  |  |  | [TASK-0057](docs/issues/tasks/TASK-0057-achievement-evaluator.md) Evaluator and unlock memory (5) |
 |  |  |  |  |  | [TASK-0058](docs/issues/tasks/TASK-0058-achievements-screen.md) Achievements screen and announcements (3) |
@@ -130,6 +130,7 @@
 |  |  |  |  |  | [TASK-0123](docs/issues/tasks/TASK-0123-follow-links-inside-a-pdf-after-the-user-agrees.md) Follow links inside a PDF after the user agrees (3) |
 |  |  |  |  |  | [TASK-0124](docs/issues/tasks/TASK-0124-release-0-2-0.md) Release 0.2.0 (2) |
 |  |  |  |  |  | [TASK-0125](docs/issues/tasks/TASK-0125-publish-a-tar-gz-and-its-checksum-with-every-release.md) Publish a tar.gz and its checksum with every release (1) |
+|  |  |  |  |  | [TASK-0183](docs/issues/tasks/TASK-0183-research-a-model-that-combines-familiarity-with-fsrs.md) Research a model that combines familiarity with FSRS (5) |
 
 ## Stories
 
@@ -193,7 +194,7 @@
 | [STORY-0056](docs/issues/stories/STORY-0056-current-vault-in-the-top-bar.md) Current vault in the top bar (2) | backlog | 0/1 |
 | [STORY-0057](docs/issues/stories/STORY-0057-library-redesign.md) Library redesign (8) | backlog | 0/6 |
 | [STORY-0058](docs/issues/stories/STORY-0058-familiarity-value.md) Familiarity value (8) | backlog | 0/3 |
-| [STORY-0059](docs/issues/stories/STORY-0059-familiarity-in-reports-on-home-and-in-scheduling.md) Familiarity in reports, on Home and in scheduling (8) | backlog | 0/4 |
+| [STORY-0059](docs/issues/stories/STORY-0059-familiarity-in-reports-on-home-and-in-scheduling.md) Familiarity in reports, on Home and in scheduling (8) | backlog | 1/6 |
 | [STORY-0060](docs/issues/stories/STORY-0060-settings-in-tabs.md) Settings in tabs (3) | backlog | 0/1 |
 | [STORY-0061](docs/issues/stories/STORY-0061-statuses-for-stacks-notes-cards-and-questions.md) Statuses for stacks, notes, cards and questions (8) | backlog | 0/3 |
 | [STORY-0062](docs/issues/stories/STORY-0062-calendar-plans-the-next-reviews-and-lets-the-user-move-them.md) Calendar plans the next reviews and lets the user move them (8) | backlog | 0/3 |

@@ -8,10 +8,10 @@ parents: [STORY-0059]
 estimate: 5
 labels: [m10, srs]
 acceptance_criteria:
-  - "A pure function scales the interval that FSRS or SM-2 computed so that the effect grows with familiarity and an item at 1.0 comes back after about 30 days (a setting), less familiar items sooner, never past an exam or due date"
-  - "Properties hold: higher familiarity never gives a shorter interval, 1.0 gives about the longest-interval setting, strength 0 returns the algorithm's interval, and bounds hold for every input"
-  - "A simulated history shows how retention and workload change with the strength, the numbers are recorded in docs/specs/reports.md and the default strength follows from them"
-  - "Settings hold the strength, and the golden tests of FSRS and SM-2 still pass with strength 0"
+  - "familiarity_factor and interval_days_with in studyfrog-srs follow docs/research/familiarity-and-fsrs.md and leave interval_days and the FSRS golden tests unchanged"
+  - "Properties hold: strength 0 gives factor 1, a higher familiarity never lowers the factor, the factor stays inside its clamp and is 1 when familiarity equals the expected value, the interval is at least 1 day and at most the maximum, and nothing changes before the third review"
+  - "The calendar planner and the queue builders use the adjusted interval, never past an exam or due date, and SM-2 uses the same factor with its interval as the stability"
+  - "Settings hold the strength and show the replay verdict of TASK-0184; the default is off"
 ---
 
 ## Context
@@ -21,16 +21,16 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add the scaling to the srs crate behind the schedule update and measure it on the simulated history.
 
 ## Acceptance Criteria
-- [ ] A pure function scales the interval that FSRS or SM-2 computed so that the effect grows with familiarity and an item at 1.0 comes back after about 30 days (a setting), less familiar items sooner, never past an exam or due date
-- [ ] Properties hold: higher familiarity never gives a shorter interval, 1.0 gives about the longest-interval setting, strength 0 returns the algorithm's interval, and bounds hold for every input
-- [ ] A simulated history shows how retention and workload change with the strength, the numbers are recorded in docs/specs/reports.md and the default strength follows from them
-- [ ] Settings hold the strength, and the golden tests of FSRS and SM-2 still pass with strength 0
+- [ ] familiarity_factor and interval_days_with in studyfrog-srs follow docs/research/familiarity-and-fsrs.md and leave interval_days and the FSRS golden tests unchanged
+- [ ] Properties hold: strength 0 gives factor 1, a higher familiarity never lowers the factor, the factor stays inside its clamp and is 1 when familiarity equals the expected value, the interval is at least 1 day and at most the maximum, and nothing changes before the third review
+- [ ] The calendar planner and the queue builders use the adjusted interval, never past an exam or due date, and SM-2 uses the same factor with its interval as the stability
+- [ ] Settings hold the strength and show the replay verdict of TASK-0184; the default is off
 
 ## Design Notes
 None.
 
 ## Dependencies
-STORY-0058.
+STORY-0058 and the research TASK-0183; TASK-0184 for the switch.
 
 ## Open Questions
 None.
