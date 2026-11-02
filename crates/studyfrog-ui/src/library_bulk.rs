@@ -21,6 +21,10 @@ pub enum LibraryEffect {
     Bulk(Vec<Uid>, BulkEdit),
     /// Put the files of a bulk edit back.
     Undo(Snapshot),
+    /// Read the summary of the stack at this folder, for this generation of the list.
+    LoadSummary(String, u64),
+    /// Give a stack or item a status.
+    SetStatus(Uid, Option<studyfrog_core::status::Status>),
 }
 
 /// What happened to the selection, the bulk bar or the saved filters.

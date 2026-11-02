@@ -2,7 +2,7 @@
 id: TASK-0150
 type: task
 title: Stack page shell with header and tabs
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0063]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Build the shell on the shared tab widget and move the existing content into tabs.
 
 ## Acceptance Criteria
-- [ ] A stack opens with a header, a tab bar with an overflow menu and the last tab remembered per stack
-- [ ] Existing content (description, PDFs, items, due date) is reachable from a tab or from the stack detail view
+- [x] A stack opens with a header, a tab bar with an overflow menu and the last tab remembered per stack
+- [x] Existing content (description, PDFs, items, due date) is reachable from a tab or from the stack detail view
 
 ## Design Notes
 None.

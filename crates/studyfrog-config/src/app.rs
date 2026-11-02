@@ -27,6 +27,7 @@ struct RawApp {
     track_views: Option<bool>,
     library_columns: Option<String>,
     calendar_reviews: Option<bool>,
+    stack_tabs: Option<Vec<String>>,
 }
 
 /// `value` if it is inside `range`, else an error naming the key and its line.
@@ -93,6 +94,7 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
         views_untracked: raw.track_views == Some(false),
         library_columns: raw.library_columns,
         calendar_reviews_off: raw.calendar_reviews == Some(false),
+        stack_tabs: raw.stack_tabs.unwrap_or_default(),
     })
 }
 
@@ -126,6 +128,10 @@ pub fn render_app_settings(s: &AppSettings) -> String {
     }
     if s.views_untracked {
         out.push_str("track_views = false\n");
+    }
+    if !s.stack_tabs.is_empty() {
+        let items: Vec<String> = s.stack_tabs.iter().map(|t| toml_string(t)).collect();
+        out.push_str(&format!("stack_tabs = [{}]\n", items.join(", ")));
     }
     if s.calendar_reviews_off {
         out.push_str("calendar_reviews = false\n");

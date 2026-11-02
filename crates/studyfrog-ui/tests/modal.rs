@@ -207,7 +207,11 @@ fn a_new_stack_is_opened_and_a_refusal_keeps_the_form_with_its_reason() {
             Effect::LoadItems(Selection::Stack("french/verbs".into())),
             Effect::LoadStatusCounts(Selection::Stack("french/verbs".into())),
             Effect::LoadBoard,
-            Effect::LoadSessions
+            Effect::LoadSessions,
+            Effect::Library(studyfrog_ui::library_bulk::LibraryEffect::LoadSummary(
+                "french/verbs".into(),
+                0
+            )),
         ]
     );
 }

@@ -115,7 +115,12 @@ pub struct AppSettings {
     pub library_columns: Option<String>,
     /// Do not show the reviews the schedule plans as entries of the calendar (the default is to show them).
     pub calendar_reviews_off: bool,
+    /// The tab each stack was last left on, as `folder:tab` (at most [`MAX_STACK_TABS`]).
+    pub stack_tabs: Vec<String>,
 }
+
+/// Most stacks whose tab is remembered.
+pub const MAX_STACK_TABS: usize = 200;
 
 /// `settings` after opening `path`: it becomes the current vault and moves to the front of the recent list.
 pub fn with_opened_vault(settings: &AppSettings, path: &str) -> AppSettings {

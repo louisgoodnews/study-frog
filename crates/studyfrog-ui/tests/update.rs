@@ -43,6 +43,7 @@ fn starting_with_a_remembered_vault_opens_it() {
         views_untracked: false,
         library_columns: None,
         calendar_reviews_off: false,
+        stack_tabs: Vec::new(),
     };
     let (s, fx) = update(State::default(), Msg::Started { app, error: None });
     assert_eq!((s.path_input.as_str(), s.opening), ("/v/notes", true));

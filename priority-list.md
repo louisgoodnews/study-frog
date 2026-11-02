@@ -26,7 +26,7 @@ Last updated: 2026-11-02.
 - [x] 12. TASK-0130 to TASK-0134 Library: query, list, search bar, saved filters, forms out of the page
 - [x] 13. TASK-0146 to TASK-0148 Calendar: plan the next reviews, move them, drag and drop
 - [x] 14. TASK-0138 to TASK-0140 and TASK-0184 Familiarity in reports, Home and queues, and the replay
-- [ ] 15. TASK-0149 to TASK-0151 Stack overview: specification, shell, Summary
+- [x] 15. TASK-0149 to TASK-0151 Stack overview: specification, shell, Summary
 
 ## Wave 4: the rest
 - [ ] 16. TASK-0152 to TASK-0156 Stack sub-views

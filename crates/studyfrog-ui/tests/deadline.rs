@@ -16,6 +16,7 @@ use studyfrog_ui::state::{Screen, Selection};
 fn model(with_deadline: bool) -> Model {
     let mut m = open_model();
     let stack = m.state.vault.as_ref().unwrap().overview.stacks[0].clone();
+    m.state.app.stack_tabs = vec![format!("{}:list", stack.folder)];
     apply(&mut m, Msg::Select(Selection::Stack(stack.folder)));
     let sessions = if with_deadline {
         vec![Session {

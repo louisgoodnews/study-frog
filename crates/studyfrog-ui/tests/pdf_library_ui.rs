@@ -120,6 +120,7 @@ fn the_stack_page_shows_its_pdfs_with_page_counts_and_the_home_page_lists_them()
     lib(&mut model, &mut worker, LibraryMsg::Load);
     apply(&mut model, Msg::Navigate(Screen::Library));
     apply(&mut model, Msg::Select(Selection::Stack("bio".into())));
+    model.state.app.stack_tabs = vec!["bio:list".into()];
     let mut h = common::views::harness(model);
     h.run_steps(2);
     assert!(h.query_by_label("Add PDF ...").is_some());

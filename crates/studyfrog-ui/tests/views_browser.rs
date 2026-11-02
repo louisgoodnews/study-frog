@@ -26,6 +26,7 @@ fn item(n: u128, title: &str) -> ItemRow {
 fn stack_open() -> studyfrog_ui::model::Model {
     let mut m = open_model();
     apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    m.state.app.stack_tabs = vec!["french:list".into()];
     apply(
         &mut m,
         Msg::ItemsLoaded(Ok(vec![item(1, "Bonjour"), item(2, "Au revoir")])),

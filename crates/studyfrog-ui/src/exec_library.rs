@@ -8,6 +8,7 @@ use crate::exec::Worker;
 use crate::library_bulk::{BulkMsg, LibraryEffect};
 use crate::library_ui::LibraryMsg;
 use crate::msg::Msg;
+use crate::stack_view_ui::StackViewMsg;
 
 fn msg(m: BulkMsg) -> Msg {
     Msg::Library(LibraryMsg::Bulk(m))
@@ -32,6 +33,20 @@ pub fn run(w: &mut Worker, effect: LibraryEffect, now_ns: i64) -> Msg {
                 .map(Box::new)
                 .map_err(|e| e.to_string()),
         )),
+        LibraryEffect::LoadSummary(folder, generation) => {
+            let summary = studyfrog_service::stack_summary::stack_summary(&s.conn, &folder, now)
+                .map(Box::new)
+                .map_err(|e| e.to_string());
+            Msg::Library(LibraryMsg::Stack(StackViewMsg::Loaded(
+                folder, generation, summary,
+            )))
+        }
+        LibraryEffect::SetStatus(uid, status) => {
+            let done = studyfrog_service::set_status::set_status(s, uid, status, now)
+                .map(Box::new)
+                .map_err(|e| e.to_string());
+            Msg::Library(LibraryMsg::Stack(StackViewMsg::StatusSet(done)))
+        }
         LibraryEffect::Undo(snapshot) => msg(BulkMsg::Undone(
             bulk_undo(s, &snapshot)
                 .map(Box::new)

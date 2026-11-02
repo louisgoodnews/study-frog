@@ -105,6 +105,7 @@ fn the_menu_says_what_the_history_makes_of_an_item_without_a_status() {
 fn list_rows_show_each_items_status_and_the_stack_shows_its_roll_up() {
     let mut m = open_model();
     apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    m.state.app.stack_tabs = vec!["french:list".into()];
     let items = vec![
         row(1, "Bonjour", Status::Learning),
         row(2, "Au revoir", Status::Done),

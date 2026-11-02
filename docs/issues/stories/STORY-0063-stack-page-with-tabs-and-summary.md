@@ -2,7 +2,7 @@
 id: STORY-0063
 type: story
 title: Stack page with tabs and summary
-status: backlog
+status: done
 epic: EPIC-023
 parents: [EPIC-023]
 estimate: 8
@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 The stack page puts everything in one scrolling column. Give it a header and tabs, and a Summary like the one in the owner's Jira screenshots.
 
 ## Acceptance Criteria
-- [ ] A stack opens as a page with a header and tabs, in the manner of Jira's project view, and the last tab is remembered per stack
-- [ ] The Summary tab shows what happened in the last 7 days, a status overview, priorities, types and recent activity
-- [ ] The stack's own details open from the header in the existing stack editing page, which is the issue-like detail view and stays as it is, so the overview and the detail view are two screens
+- [x] A stack opens as a page with a header and tabs, in the manner of Jira's project view, and the last tab is remembered per stack
+- [x] The Summary tab shows what happened in the last 7 days, a status overview, priorities, types and recent activity
+- [x] The stack's own details open from the header in the existing stack editing page, which is the issue-like detail view and stays as it is, so the overview and the detail view are two screens
 
 ## Design Notes
 Header: breadcrumb of parent stacks, the stack's name, status chip and actions. Tab bar with an overflow menu ('More') for the tabs that do not fit. Summary mirrors the Jira summary: four count cards (completed, updated, created and due soon, over the last or next 7 days), a status overview as a ring chart with the total in the middle and a legend, a priority bar chart, a breakdown by item type (cards, notes, questions) and an activity feed (empty state: 'No activity yet'). The tabs are Summary and the sub-views of STORY-0064. Charts follow the dataviz rules: colour is never the only cue and values are in the legend. The tab widget is the one from STORY-0060. Sub-views of the tabs are STORY-0064. This page is the stack overview, Jira's project view. The stack's own details (description, fields, priority, subjects, scheduler) are the existing item page, which already serves a note, a card, a question and a stack like Jira's issue view and which the owner accepted as it is on 2026-11-02; it is reached from the header, so there is no Details tab here.

@@ -3,7 +3,7 @@
 Planned for 0.3.0 (STORY-0063, STORY-0064). This is Jira's *project view*: the page of a stack as a place to work in, with tabs.
 The stack's own details (description, priority, subjects, scheduler, due date) stay on the item page, which already serves a note, a
 card, a question and a stack like Jira's issue view; the owner accepted it as it is on 2026-11-02. It is reached from the header's
-"Details" button, so the stack view has no Details tab. **Status: proposed, waiting for the owner's acceptance (TASK-0149).**
+"Details" button, so the stack view has no Details tab. **Status: accepted by the owner on 2026-11-02 (TASK-0149).**
 
 ## Header
 - **Breadcrumb** of the parent stacks (each a link), then the stack's name as a large title.
@@ -25,14 +25,14 @@ Nothing is read until the tab opens.
    Colour is never the only cue: every slice is named in the legend with its number.
 3. **Priorities:** a bar chart, one bar per priority, each with its count as text.
 4. **Types:** a table of note, card and question with their counts.
-5. **Activity:** a feed of recent changes to the stack's items (created, edited, status changed, rehearsed), newest first, 20 at most;
+5. **Activity:** a feed of recent changes to the stack's items (created, edited, rehearsed; a change of status is not recorded with a time, so it is not listed), newest first, 20 at most;
    empty state "No activity yet".
 6. **Sub-stacks:** a list with status, progress (done / total) and familiarity of each, folding open and closed.
 
 ## Not in 0.3.0
 Editing the layout, per-user card choices, watchers and automation.
 
-## Open for the owner
-1. Is the tab order right, and is Backlog before Roadmap what you want?
-2. Should "Start rehearsal" be in the header, or only on the tabs?
-3. "Completed" counts items whose status became done in the last 7 days: is that the meaning you want?
+## Decided by the owner
+1. Backlog comes before Roadmap in the tab order.
+2. Start rehearsal is in the header.
+3. "Completed" counts items whose status became done in the last 7 days (the file does not record when, so the count is the items that are done and were edited in that time).

@@ -10,5 +10,7 @@ pub fn after(state: State, before: &Option<Notice>, reload: bool) -> (State, Vec
     effects.extend(recorded);
     let (state, rows) = crate::library_ui::sync(state, reload);
     effects.extend(rows);
+    let (state, summary) = crate::stack_view_ui::sync(state);
+    effects.extend(summary);
     (state, effects)
 }

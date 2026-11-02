@@ -30,7 +30,7 @@ fn can_import(state: &State) -> bool {
 }
 
 /// The search field, the count, the column menu and the table of items.
-fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+pub(super) fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     crate::view::library_search::draw(state, ui, out);
     ui.horizontal(|ui| {
         ui.label(crate::view::library_table::count_line(state));
@@ -54,6 +54,10 @@ fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 /// Heading and the list of items; for a stack also its due date, status roll-up, PDFs and the new-card form.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if matches!(state.browser.selection, Selection::Stack(_)) {
+        crate::view::stack_view::draw(state, ui, out);
+        return;
+    }
     egui::ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
@@ -72,7 +76,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 /// The stack's due date and the button to set or change it.
-fn due_row(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+pub(super) fn due_row(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let (Selection::Stack(open), Some(vault)) = (&state.browser.selection, &state.vault) else {
         return;
     };
@@ -100,7 +104,7 @@ fn due_row(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 /// Buttons for the stacks inside the open stack.
-fn child_stacks(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+pub(super) fn child_stacks(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let (Selection::Stack(open), Some(vault)) = (&state.browser.selection, &state.vault) else {
         return;
     };

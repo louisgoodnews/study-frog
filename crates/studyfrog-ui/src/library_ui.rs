@@ -1,11 +1,13 @@
 //! The library list: the rows of the vault, the columns shown, the sort and what the current stack and search let through. Pure.
 
-use studyfrog_core::query::{Field, MAX_ORDER_KEYS, Order};
+use studyfrog_core::query::Order;
 use studyfrog_core::query_eval::{Row, run_filtered};
 use studyfrog_service::library_rows::LibraryItem;
 
 use crate::effect::Effect;
 use crate::state::{Selection, State};
+
+use crate::library_sort::{sorted_by, toggle};
 
 pub use crate::library_columns::{
     COLUMNS, Column, DEFAULT_COLUMNS, cell, column_field, column_label, columns_from_text,
@@ -53,6 +55,8 @@ pub struct LibraryState {
     pub confirm_delete: bool,
     /// The tag typed in the bulk bar.
     pub tag_input: String,
+    /// The page of the open stack.
+    pub stack_view: crate::stack_view_ui::StackViewState,
 }
 
 impl Default for LibraryState {
@@ -77,6 +81,7 @@ impl Default for LibraryState {
             undo: None,
             confirm_delete: false,
             tag_input: String::new(),
+            stack_view: Default::default(),
         }
     }
 }
@@ -96,6 +101,8 @@ pub enum LibraryMsg {
     Search(crate::library_search::SearchMsg),
     /// The selection, the bulk bar and the saved filters.
     Bulk(crate::library_bulk::BulkMsg),
+    /// The page of a stack.
+    Stack(crate::stack_view_ui::StackViewMsg),
 }
 
 /// Whether this message changes what the list should show, so the rows are read again.
@@ -108,39 +115,6 @@ pub fn wants_reload(msg: &crate::msg::Msg) -> bool {
             | Msg::Navigate(crate::state::Screen::Library)
             | Msg::Created(Ok(_))
     )
-}
-
-fn toggle(columns: &[Column], c: Column) -> Vec<Column> {
-    if c == Column::Title {
-        return columns.to_vec();
-    }
-    let mut next: Vec<Column> = columns.to_vec();
-    match next.iter().position(|x| *x == c) {
-        Some(i) => {
-            next.remove(i);
-        }
-        None => next.push(c),
-    }
-    COLUMNS
-        .iter()
-        .map(|(x, _, _)| *x)
-        .filter(|x| next.contains(x))
-        .collect()
-}
-
-fn sorted_by(sort: &[Order], field: Field, add: bool) -> Vec<Order> {
-    let current = sort.iter().find(|o| o.field == field).copied();
-    let flipped = Order {
-        field,
-        descending: current.is_some_and(|o| !o.descending),
-    };
-    if !add {
-        return vec![flipped];
-    }
-    let mut next: Vec<Order> = sort.iter().filter(|o| o.field != field).copied().collect();
-    next.push(flipped);
-    let start = next.len().saturating_sub(MAX_ORDER_KEYS);
-    next.split_off(start)
 }
 
 /// Handle a library message.
@@ -179,6 +153,7 @@ pub fn update(state: State, msg: LibraryMsg) -> (State, Vec<Effect>) {
         LibraryMsg::Overview(on) => lib.show_overview = on,
         LibraryMsg::Search(m) => return (crate::library_search::update(state, m), Vec::new()),
         LibraryMsg::Bulk(m) => return crate::library_bulk::update(state, m),
+        LibraryMsg::Stack(m) => return crate::stack_view_ui::update(state, m),
     }
     (state, Vec::new())
 }

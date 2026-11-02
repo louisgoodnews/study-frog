@@ -100,16 +100,16 @@ pub(crate) fn drivers(events: &[FamEvent], ctx: &FamContext, now: UnixMs) -> Str
     parts.join("; ")
 }
 
-struct Scored {
-    uid: Uid,
-    title: String,
-    folder: Option<String>,
-    priority: studyfrog_core::priority::Priority,
-    fam: Option<Familiarity>,
-    why: String,
+pub(crate) struct Scored {
+    pub(crate) uid: Uid,
+    pub(crate) title: String,
+    pub(crate) folder: Option<String>,
+    pub(crate) priority: studyfrog_core::priority::Priority,
+    pub(crate) fam: Option<Familiarity>,
+    pub(crate) why: String,
 }
 
-fn score_all(
+pub(crate) fn score_all(
     conn: &rusqlite::Connection,
     stacks: &[StackRow],
     now: UnixMs,
@@ -146,7 +146,7 @@ fn score_all(
     Ok(out)
 }
 
-fn group(name: String, members: &[&Scored]) -> FamGroup {
+pub(crate) fn group(name: String, members: &[&Scored]) -> FamGroup {
     let scored: Vec<(_, Familiarity)> = members
         .iter()
         .filter_map(|s| s.fam.map(|f| (s.priority, f)))
@@ -181,7 +181,7 @@ fn group(name: String, members: &[&Scored]) -> FamGroup {
     }
 }
 
-fn inside(folder: &Option<String>, stack: &str) -> bool {
+pub(crate) fn inside(folder: &Option<String>, stack: &str) -> bool {
     folder
         .as_deref()
         .is_some_and(|f| f == stack || f.starts_with(&format!("{stack}/")))

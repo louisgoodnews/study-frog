@@ -179,6 +179,7 @@ fn the_library_shows_nested_stacks_as_a_tree_with_the_inner_ones_under_their_par
     let mut verbs = common::views::stack("Verbs", "french/verbs", 0, 1);
     verbs.parent = Some("french".into());
     v.overview.stacks.insert(1, verbs);
+    m.state.app.stack_tabs = vec!["french:list".into()];
     apply(
         &mut m,
         Msg::Select(studyfrog_ui::state::Selection::Stack("french".into())),

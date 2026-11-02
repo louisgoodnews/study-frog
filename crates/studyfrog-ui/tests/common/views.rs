@@ -35,6 +35,7 @@ pub fn stack(title: &str, folder: &str, notes: usize, cards: usize) -> StackRow 
         scheduler: None,
         daily_new_limit: Some(20),
         daily_review_limit: None,
+        status: None,
     }
 }
 
