@@ -85,7 +85,7 @@ calendar. See [[calendar]].
 
 ## Leaving StudyFrog
 The red **Exit** button at the right end of the top bar closes the app. If you are editing a document with unsaved
-changes, it asks first.
+changes, they are saved first.
 
 ## Going back
-The arrows after the vault switcher in the top bar go **Back** and **Forward** through the screens, stacks and items you visited, like a browser; the clock lists them so you can jump to any. **Alt+Left** and **Alt+Right** do the same. The list is kept while StudyFrog is open, and if you have unsaved changes in the editor it asks you to save or revert first.
+The arrows after the vault switcher in the top bar go **Back** and **Forward** through the screens, stacks and items you visited, like a browser; the clock lists them so you can jump to any. **Alt+Left** and **Alt+Right** do the same. The list is kept while StudyFrog is open, and if you have unsaved changes in the editor they are saved first.

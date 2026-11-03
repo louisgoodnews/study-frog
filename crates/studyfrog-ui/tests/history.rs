@@ -119,7 +119,8 @@ fn a_new_vault_starts_a_new_history() {
 }
 
 #[test]
-fn items_are_remembered_with_their_titles_and_reopened_and_unsaved_changes_block_leaving() {
+fn items_are_remembered_with_their_titles_and_reopened_and_unsaved_changes_are_saved_before_leaving()
+ {
     let (_v, mut m, mut w) = opened("history-items");
     send(&mut m, &mut w, Msg::OpenItem(Uid(12)));
     let item = Place::Item(Uid(12));
@@ -134,14 +135,16 @@ fn items_are_remembered_with_their_titles_and_reopened_and_unsaved_changes_block
         &mut m,
         Msg::Edit(studyfrog_ui::msg::EditAction::Title("changed".into())),
     );
-    go(&mut m, HistoryMsg::Go(0));
-    assert_eq!(
-        m.state.screen,
-        Screen::Editor,
-        "unsaved changes keep the user here"
+    let fx = go(&mut m, HistoryMsg::Go(0));
+    assert!(
+        fx.iter()
+            .any(|e| matches!(e, studyfrog_ui::effect::Effect::SaveDocument { .. })),
+        "the changes are saved first"
     );
-    assert!(m.state.notice.is_some(), "and say why");
+    assert_eq!(m.state.screen, Screen::Editor, "and the jump waits for it");
     assert_eq!(places(&m).len(), n);
+    common::run_to_idle(&mut m, &mut w, fx);
+    assert_ne!(m.state.screen, Screen::Editor, "then it goes");
 }
 
 #[test]

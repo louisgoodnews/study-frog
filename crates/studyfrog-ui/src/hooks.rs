@@ -16,7 +16,9 @@ pub fn around(
     let before = state.notice.clone();
     let there = crate::history::place_of(&state);
     let reload = crate::library_ui::wants_reload(&msg);
+    let visit = crate::editor_leave::visit(&state);
     let (next, effects) = step(state, msg);
+    let next = crate::editor_leave::after(visit, next);
     let (next, after) = after(next, &before, reload);
     let next = crate::history::record(next, there);
     let (next, last) = crate::appearance_ui::remember_screen(next);

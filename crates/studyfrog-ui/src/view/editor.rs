@@ -36,6 +36,18 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 }
 
+/// What the toolbar says about saving: nothing while everything is on disk.
+fn status(e: &Editor, dirty: bool, ui: &mut egui::Ui) {
+    if let Some(why) = &e.fail {
+        let color = ui.visuals().error_fg_color;
+        ui.label(RichText::new(format!("Not saved: {why}")).color(color));
+    } else if e.saving.is_some() {
+        ui.weak("saving…");
+    } else if dirty {
+        ui.weak("unsaved changes");
+    }
+}
+
 fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let dirty = is_dirty(e);
     ui.horizontal(|ui| {
@@ -43,14 +55,10 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             out.push(Msg::CloseEditor);
         }
         ui.label(RichText::new(&e.path).color(palette_of(ui).text_weak));
-        if dirty {
-            ui.weak("unsaved changes");
-        }
+        status(e, dirty, ui);
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            let saveable = dirty && e.saving.is_none();
-            let save = ui.add_enabled(saveable, egui::Button::new("Save"));
-            if save.clicked() {
-                out.push(Msg::SaveClicked);
+            if e.conflict && ui.button("Keep mine").clicked() {
+                out.push(Msg::KeepMineClicked);
             }
             if ui.add_enabled(dirty, egui::Button::new("Revert")).clicked() {
                 out.push(Msg::RevertClicked);

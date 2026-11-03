@@ -2,7 +2,7 @@
 id: STORY-0075
 type: story
 title: Create and edit without losing work
-status: backlog
+status: done
 epic: EPIC-026
 parents: [EPIC-026]
 estimate: 8
@@ -19,8 +19,8 @@ The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0: a
 Remove the steps that make the user save by hand and find what they just made.
 
 ## Acceptance Criteria
-- [ ] A new item can be opened from the notification that says it was created
-- [ ] The editor saves by itself, has no Save button and says when it saved
+- [x] A new item can be opened from the notification that says it was created
+- [x] The editor saves by itself, has no Save button and says when it saved
 
 ## Design Notes
 Tasks TASK-0199 to TASK-0201.

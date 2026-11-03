@@ -58,7 +58,8 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
             let (state, more) = crate::reminder_ui::tick(state);
             let (state, _) = crate::view_time::tick(state);
             let (state, ended) = crate::run_clock::tick(state);
-            (state, [polled, more, ended].concat())
+            let (state, saved) = crate::editor_save::tick(crate::editor_leave::expire(state));
+            (state, [polled, more, ended, saved].concat())
         }
         Msg::PickImage(t) => crate::image_ui::pick(state, t),
         Msg::ImageAdded(t, r) => crate::image_ui::added(state, t, r),
@@ -94,6 +95,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::FamCurveLoaded(..)
         | Msg::Edit(_)
         | Msg::SaveClicked
+        | Msg::KeepMineClicked
         | Msg::Saved(_)
         | Msg::RevertClicked
         | Msg::ReloadClicked

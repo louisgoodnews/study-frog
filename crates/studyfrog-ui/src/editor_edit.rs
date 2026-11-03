@@ -4,6 +4,7 @@ use studyfrog_core::uid::Uid;
 use studyfrog_md::blocks::parse_blocks;
 
 use crate::editor::notice;
+use crate::editor_save::token_done;
 use crate::effect::Effect;
 use crate::msg::EditAction;
 use crate::state::{NoticeKind, State};
@@ -43,10 +44,17 @@ pub(crate) fn backlinks(
 
 pub(crate) fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
     let mut state = state;
+    let mut finished = true;
     if let Some(e) = &mut state.editor {
         match action {
-            EditAction::Title(t) => e.form.title = t,
-            EditAction::Tags(t) => e.form.tags = t,
+            EditAction::Title(t) => {
+                finished = token_done(&e.form.title, &t);
+                e.form.title = t;
+            }
+            EditAction::Tags(t) => {
+                finished = token_done(&e.form.tags, &t);
+                e.form.tags = t;
+            }
             EditAction::Priority(p) => e.form.priority = p,
             EditAction::Difficulty(d) => e.form.difficulty = d,
             EditAction::Status(s) => e.form.status = s,
@@ -58,11 +66,12 @@ pub(crate) fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
             }
             EditAction::Field(i, text) => {
                 if let Some(f) = e.form.fields.get_mut(i) {
+                    finished = token_done(&f.text, &text);
                     f.text = text;
                     e.previews[i] = parse_blocks(&f.text);
                 }
             }
         }
     }
-    (state, Vec::new())
+    crate::editor_save::edited(state, finished)
 }

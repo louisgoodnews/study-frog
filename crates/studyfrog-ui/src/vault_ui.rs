@@ -19,6 +19,7 @@ fn vault_toast() -> crate::modal::Toast {
         title: "Set up your vault".to_owned(),
         detail: "Choose the folder StudyFrog keeps your notes in.".to_owned(),
         action: crate::modal::ToastAction::OpenVaultDialog,
+        expires_ms: None,
     }
 }
 

@@ -3,9 +3,9 @@
 use studyfrog_core::uid::Uid;
 use studyfrog_md::blocks::{Block, parse_blocks};
 use studyfrog_md::doc::Doc;
-use studyfrog_service::document::{LoadedDoc, Saved};
+use studyfrog_service::document::LoadedDoc;
 
-use crate::edit_form::{EditForm, apply_form, form_from_doc};
+use crate::edit_form::{EditForm, form_from_doc};
 use crate::effect::Effect;
 use crate::msg::Msg;
 use crate::state::{Notice, NoticeKind, Screen, State};
@@ -27,8 +27,22 @@ pub struct Editor {
     pub form: EditForm,
     /// Preview of each text area.
     pub previews: Vec<Vec<Block>>,
-    /// The document being written, while a save is in flight.
-    pub saving: Option<Doc>,
+    /// The document and form being written, while a save is in flight.
+    pub saving: Option<(Doc, EditForm)>,
+    /// When the first edit not yet saved was made (Unix milliseconds).
+    pub dirty_since: Option<i64>,
+    /// Edits were made while a save ran: save again when it is done.
+    pub again: bool,
+    /// Why the last save failed.
+    pub fail: Option<String>,
+    /// The file changed outside StudyFrog; nothing is saved until the user chooses.
+    pub conflict: bool,
+    /// How many times the document was saved during this visit.
+    pub saves: u32,
+    /// "Keep mine" was chosen after a conflict: the next load keeps the edits.
+    pub keep_mine: bool,
+    /// What to do once everything is saved (leave, open another item, exit).
+    pub after: Option<Box<Msg>>,
     /// Items whose text links to this one.
     pub backlinks: Vec<studyfrog_store::overview::ItemRow>,
     /// The familiarity over time, once read.
@@ -72,6 +86,13 @@ fn editor_new(loaded: LoadedDoc, uid: Uid) -> Editor {
         original: form.clone(),
         form,
         saving: None,
+        dirty_since: None,
+        again: false,
+        fail: None,
+        conflict: false,
+        saves: 0,
+        after: None,
+        keep_mine: false,
         backlinks: Vec::new(),
         curve: None,
     }
@@ -90,8 +111,9 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::FamCurveLoaded(uid, Ok(curve)) => crate::editor_edit::curve(state, uid, curve),
         Msg::BacklinksLoaded(uid, result) => crate::editor_edit::backlinks(state, uid, result),
         Msg::Edit(action) => crate::editor_edit::edit(state, action),
-        Msg::SaveClicked => save(state),
-        Msg::Saved(result) => saved(state, result),
+        Msg::SaveClicked => crate::editor_save::save(state),
+        Msg::Saved(result) => crate::editor_save::saved(state, result),
+        Msg::KeepMineClicked => keep_mine(state),
         Msg::RevertClicked => revert(state),
         Msg::ReloadClicked => reload(state),
         Msg::CloseEditor => close(state),
@@ -102,12 +124,27 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
 }
 
 fn open_item(state: State, uid: Uid) -> (State, Vec<Effect>) {
-    if has_unsaved_changes(&state) && state.editor.as_ref().is_some_and(|e| e.uid != uid) {
-        return notice(
-            state,
-            NoticeKind::Error,
-            "Save or revert your changes before opening another item.",
-        );
+    let state = if state.editor.as_ref().is_some_and(|e| e.uid != uid) {
+        let (state, waiting) = crate::editor_save::flush_before(state, Msg::OpenItem(uid));
+        if let Some(effects) = waiting {
+            return (state, effects);
+        }
+        state
+    } else {
+        state
+    };
+    (state, vec![Effect::LoadDocument(uid)])
+}
+
+/// "Keep mine" after a conflict: read the file again for its new fingerprint and save the edits over it.
+fn keep_mine(state: State) -> (State, Vec<Effect>) {
+    let Some(e) = state.editor.as_ref().filter(|e| e.conflict) else {
+        return (state, Vec::new());
+    };
+    let uid = e.uid;
+    let mut state = state;
+    if let Some(e) = &mut state.editor {
+        e.keep_mine = true;
     }
     (state, vec![Effect::LoadDocument(uid)])
 }
@@ -115,7 +152,17 @@ fn open_item(state: State, uid: Uid) -> (State, Vec<Effect>) {
 fn loaded(state: State, uid: Uid, result: Result<LoadedDoc, String>) -> (State, Vec<Effect>) {
     match result {
         Ok(doc) => {
-            let editor = editor_new(doc, uid);
+            let mut editor = editor_new(doc, uid);
+            let mine = state
+                .editor
+                .as_ref()
+                .filter(|e| e.uid == uid && e.keep_mine)
+                .map(|e| e.form.clone());
+            let kept = mine.is_some();
+            if let Some(form) = mine {
+                editor.previews = previews(&form);
+                (editor.form, editor.dirty_since) = (form, Some(state.wall_ms));
+            }
             let ask = Effect::LoadBacklinks(uid, editor.form.title.clone());
             let state = State {
                 editor: Some(editor),
@@ -123,50 +170,14 @@ fn loaded(state: State, uid: Uid, result: Result<LoadedDoc, String>) -> (State, 
                 notice: None,
                 ..state
             };
-            (state, vec![ask])
+            if !kept {
+                return (state, vec![ask]);
+            }
+            let (state, mut effects) = crate::editor_save::save(state);
+            effects.push(ask);
+            (state, effects)
         }
         Err(e) => notice(state, NoticeKind::Error, format!("Could not open it: {e}")),
-    }
-}
-
-fn save(state: State) -> (State, Vec<Effect>) {
-    let Some(e) = &state.editor else {
-        return (state, Vec::new());
-    };
-    if !is_dirty(e) || e.saving.is_some() {
-        return (state, Vec::new());
-    }
-    match apply_form(&e.doc, &e.form) {
-        Ok(doc) => {
-            let effect = Effect::SaveDocument {
-                path: e.path.clone(),
-                doc: doc.clone(),
-                hash: e.hash,
-            };
-            let mut state = state;
-            if let Some(e) = &mut state.editor {
-                e.saving = Some(doc);
-            }
-            (state, vec![effect])
-        }
-        Err(reason) => notice(state, NoticeKind::Error, reason),
-    }
-}
-
-fn saved(state: State, result: Result<Saved, String>) -> (State, Vec<Effect>) {
-    let mut state = state;
-    let Some(e) = &mut state.editor else {
-        return (state, Vec::new());
-    };
-    let pending = e.saving.take();
-    match (result, pending) {
-        (Ok(saved), Some(doc)) => {
-            (e.doc, e.hash, e.original) = (doc, saved.hash, e.form.clone());
-            state.vault = Some(saved.info);
-            notice(state, NoticeKind::Info, "Saved.")
-        }
-        (Ok(_), None) => (state, Vec::new()),
-        (Err(reason), _) => notice(state, NoticeKind::Error, format!("Not saved: {reason}")),
     }
 }
 
@@ -190,12 +201,9 @@ fn reload(state: State) -> (State, Vec<Effect>) {
 }
 
 fn close(state: State) -> (State, Vec<Effect>) {
-    if has_unsaved_changes(&state) {
-        return notice(
-            state,
-            NoticeKind::Error,
-            "You have unsaved changes: save, or revert them first.",
-        );
+    let (state, waiting) = crate::editor_save::flush_before(state, Msg::CloseEditor);
+    if let Some(effects) = waiting {
+        return (state, effects);
     }
     (
         State {

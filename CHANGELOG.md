@@ -19,6 +19,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The Markdown editor's code is split into a module of small files (`view/md_editor/`: toolbar, resizing, preview cache, list keys).
 
 ### Added
+- The editor saves by itself when a word is finished (a space or line break is typed), when something other than text changes, and at the latest 5 seconds after the first unsaved edit; a pause alone saves nothing. Leaving, opening another item and exiting save first; a file changed outside StudyFrog is never overwritten (Reload from disk or Keep mine); a failed save is shown and retried (TASK-0200).
+- Leaving an item you changed shows a "Saved <title>" toast that goes away after about three seconds (TASK-0201).
 - The notice after Create has an Open button that opens the new item, and the same entry in the notification list keeps that link (TASK-0199).
 - `studyfrog --screenshot FILE --theme dark|light|system` takes the picture in a theme, whatever is saved (TASK-0226).
 - Colours in the views come from the theme: the calendar's appointments and the graph's notes use a new theme colour, the notification badge the palette's red, and a test fails when a view writes a colour of its own (TASK-0226).

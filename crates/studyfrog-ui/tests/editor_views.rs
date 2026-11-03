@@ -55,7 +55,7 @@ fn the_form_and_the_live_preview_show_side_by_side() {
 }
 
 #[test]
-fn typing_marks_the_document_changed_updates_the_preview_and_enables_save() {
+fn typing_marks_the_document_changed_updates_the_preview_and_saves_by_itself() {
     let mut h = harness(editing());
     h.run_steps(2);
     h.get_by_label("Title").focus();
@@ -66,22 +66,23 @@ fn typing_marks_the_document_changed_updates_the_preview_and_enables_save() {
         h.state().0.state.editor.as_ref().unwrap().form.title,
         "Alpha v2"
     );
-
-    h.get_by_label("Save").click();
+    h.get_by_label("Title").type_text(" ");
     h.run_steps(2);
+
     assert!(
-        h.state()
-            .1
-            .iter()
-            .any(|e| matches!(e, Effect::SaveDocument { path, .. } if path == "s/alpha.md"))
+        h.state().0.state.editor.as_ref().unwrap().saving.is_some(),
+        "the space after the first word finished a token and a save started"
+    );
+    assert!(
+        h.query_by_label("Save").is_none(),
+        "there is no Save button"
     );
 }
 
 #[test]
-fn save_and_revert_are_disabled_until_there_is_something_to_save() {
+fn revert_is_disabled_until_there_is_something_to_revert() {
     let mut h = harness(editing());
     h.run_steps(2);
-    h.get_by_label("Save").click();
     h.get_by_label("Revert").click();
     h.run_steps(2);
     assert!(
@@ -209,7 +210,7 @@ fn priority_and_difficulty_are_chosen_on_the_page_and_saved_in_the_front_matter(
         (e.form.priority, e.form.difficulty),
         (Some(Priority::High), Some(Difficulty::Difficult))
     );
-    assert!(h.query_by_label("unsaved changes").is_some());
+    assert!(e.saving.is_some(), "a choice is saved at once");
     let saved = studyfrog_ui::edit_form::apply_form(&e.doc, &e.form).unwrap();
     assert_eq!(
         studyfrog_md::extra::extra_value(&saved, "priority").as_deref(),

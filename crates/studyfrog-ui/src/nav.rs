@@ -5,6 +5,16 @@ use crate::state::{Screen, State};
 
 /// Go to `screen` if allowed, asking for whatever data it shows.
 pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
+    let state = if screen == Screen::Editor {
+        state
+    } else {
+        let then = crate::msg::Msg::Navigate(screen);
+        let (state, waiting) = crate::editor_save::flush_before(state, then);
+        if let Some(effects) = waiting {
+            return (state, effects);
+        }
+        state
+    };
     let allowed = (screen == Screen::Welcome || screen == Screen::Help || state.vault.is_some())
         && (screen == Screen::Editor || !crate::editor::has_unsaved_changes(&state));
     if allowed && screen == Screen::Graph {

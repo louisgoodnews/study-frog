@@ -48,7 +48,7 @@ trust. Do not open the same vault on two computers at the same time.
 
 Yes, that is the point. StudyFrog notices changes within a second or two. If you edit a file in another editor while
 it is open in StudyFrog, StudyFrog will not overwrite your other edit when you save: it says the file changed, and
-you can use **Reload from disk**. See [[item-page]].
+you can use **Reload from disk** or **Keep mine**. See [[item-page]].
 
 ### How do I make a backup?
 

@@ -60,6 +60,7 @@ pub fn arrived(state: State, result: Result<Vec<DueReminder>, String>) -> (State
                     title: "Reminder".to_owned(),
                     detail: reminder_text(r),
                     action: ToastAction::OpenCalendar,
+                    expires_ms: None,
                 });
             }
             let mut effects = Vec::new();

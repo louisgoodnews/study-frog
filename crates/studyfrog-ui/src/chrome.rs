@@ -65,8 +65,6 @@ pub struct Chrome {
     pub notify_loaded: bool,
     /// The user chose Exit: the window is to be closed.
     pub quit: bool,
-    /// Exit was chosen while the editor holds unsaved changes: the question is showing.
-    pub confirm_quit: bool,
 }
 
 /// Messages of the chrome.

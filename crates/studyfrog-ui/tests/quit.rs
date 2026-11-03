@@ -1,5 +1,5 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
-//! The red Exit button: leaving at once, or asking first when the editor holds unsaved changes.
+//! The red Exit button: leaving at once, or after the editor's unsaved changes are saved.
 
 mod common;
 
@@ -18,11 +18,11 @@ fn quit(m: &mut studyfrog_ui::model::Model, q: QuitMsg) {
 fn exit_leaves_at_once_when_nothing_is_unsaved() {
     let mut m = open_model();
     quit(&mut m, QuitMsg::Ask);
-    assert!(m.state.chrome.quit && !m.state.chrome.confirm_quit);
+    assert!(m.state.chrome.quit);
 }
 
 #[test]
-fn exit_asks_first_with_unsaved_changes_and_keep_working_stays() {
+fn exit_saves_unsaved_changes_first_and_then_leaves() {
     let (_v, mut m, mut w) = common::flow::opened("quit");
     common::flow::send(&mut m, &mut w, Msg::OpenItem(studyfrog_core::uid::Uid(12)));
     apply(
@@ -30,13 +30,11 @@ fn exit_asks_first_with_unsaved_changes_and_keep_working_stays() {
         Msg::Edit(studyfrog_ui::msg::EditAction::Title("changed".into())),
     );
     assert!(studyfrog_ui::editor::has_unsaved_changes(&m.state));
-    quit(&mut m, QuitMsg::Ask);
-    assert!(!m.state.chrome.quit && m.state.chrome.confirm_quit);
-    quit(&mut m, QuitMsg::Cancel);
-    assert!(!m.state.chrome.quit && !m.state.chrome.confirm_quit);
-    quit(&mut m, QuitMsg::Ask);
-    quit(&mut m, QuitMsg::Confirm);
+    let fx = apply(&mut m, Msg::Chrome(ChromeMsg::Quit(QuitMsg::Ask)));
+    assert!(!m.state.chrome.quit, "not before the file is safe");
+    common::run_to_idle(&mut m, &mut w, fx);
     assert!(m.state.chrome.quit);
+    assert!(!studyfrog_ui::editor::has_unsaved_changes(&m.state));
 }
 
 #[test]

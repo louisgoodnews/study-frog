@@ -159,6 +159,7 @@ fn click_toast(state: State, i: usize) -> (State, Vec<Effect>) {
     state.toasts.remove(i);
     match toast.action {
         ToastAction::OpenVaultDialog => state.modal = Some(Modal::Vault),
+        ToastAction::Dismiss => {}
         ToastAction::OpenCalendar => return crate::nav::navigate(state, Screen::Calendar),
         ToastAction::StartTutorial => {
             return crate::tutorial::update(state, crate::tutorial::TutorialMsg::Start);

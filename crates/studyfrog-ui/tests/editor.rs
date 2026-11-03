@@ -114,7 +114,6 @@ fn open_edit_save_changes_the_file_but_keeps_everything_else() {
     assert!(text.contains("Rewritten, see [[Beta]]."));
     let e = m.state.editor.as_ref().unwrap();
     assert!(!is_dirty(e) && e.saving.is_none());
-    assert_eq!(m.state.notice.as_ref().unwrap().text, "Saved.");
 
     edit(&mut m, EditAction::Field(0, "second edit".into()));
     let fx = apply(&mut m, Msg::SaveClicked);
@@ -166,27 +165,29 @@ fn a_file_changed_elsewhere_blocks_the_save_until_reloaded() {
 }
 
 #[test]
-fn revert_and_the_unsaved_changes_guards() {
-    let (mut m, mut w, _dir) = open();
+fn revert_and_leaving_with_unsaved_changes() {
+    let (mut m, mut w, dir) = open();
     open_item(&mut m, &mut w, 0xA);
     edit(&mut m, EditAction::Tags(String::from("x, y")));
     assert!(has_unsaved_changes(&m.state));
-    apply(&mut m, Msg::CloseEditor);
+    let fx = apply(&mut m, Msg::CloseEditor);
+    assert!(
+        fx.iter()
+            .any(|e| matches!(e, studyfrog_ui::effect::Effect::SaveDocument { .. })),
+        "leaving saves first: {fx:?}"
+    );
     assert_eq!(
         m.state.screen,
         Screen::Editor,
-        "cannot leave with unsaved changes"
+        "and leaves once it is saved"
     );
-    assert!(m.state.notice.as_ref().unwrap().text.contains("unsaved"));
-    apply(&mut m, Msg::Navigate(Screen::Settings));
-    assert_eq!(m.state.screen, Screen::Editor, "navigation is blocked too");
-    let fx = apply(&mut m, Msg::OpenItem(Uid(0xB)));
-    assert!(
-        fx.iter()
-            .all(|e| matches!(e, studyfrog_ui::effect::Effect::Notifications(_))),
-        "so is opening another item (only the notice is stored): {fx:?}"
-    );
+    run_to_idle(&mut m, &mut w, fx);
+    assert_eq!(m.state.screen, Screen::Library);
+    let text = fs::read_to_string(dir.path.join("s/alpha.md")).unwrap();
+    assert!(text.contains("x") && text.contains("y"), "{text}");
 
+    open_item(&mut m, &mut w, 0xA);
+    edit(&mut m, EditAction::Tags(String::from("z")));
     apply(&mut m, Msg::RevertClicked);
     assert!(!has_unsaved_changes(&m.state));
     apply(&mut m, Msg::CloseEditor);

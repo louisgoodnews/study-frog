@@ -6,7 +6,7 @@ use studyfrog_core::uid::Uid;
 
 use crate::effect::Effect;
 use crate::msg::Msg;
-use crate::state::{Notice, NoticeKind, Screen, Selection, State};
+use crate::state::{Screen, Selection, State};
 
 /// Most places kept; the oldest go first.
 pub const MAX: usize = 50;
@@ -150,14 +150,6 @@ pub fn record(state: State, before: Option<Place>) -> State {
     state
 }
 
-fn refuse(state: State, text: &str) -> (State, Vec<Effect>) {
-    let notice = Some(Notice {
-        kind: NoticeKind::Error,
-        text: text.to_owned(),
-    });
-    (State { notice, ..state }, Vec::new())
-}
-
 fn go(state: State, index: usize) -> (State, Vec<Effect>) {
     let Some(place) = state.history.entries.get(index).cloned() else {
         return (state, Vec::new());
@@ -167,11 +159,10 @@ fn go(state: State, index: usize) -> (State, Vec<Effect>) {
         state.history.at = index;
         return (state, Vec::new());
     }
-    if crate::editor::has_unsaved_changes(&state) {
-        return refuse(
-            state,
-            "Save or revert your changes before going back to another place.",
-        );
+    let then = Msg::Chrome(crate::chrome::ChromeMsg::History(HistoryMsg::Go(index)));
+    let (state, waiting) = crate::editor_save::flush_before(state, then);
+    if let Some(effects) = waiting {
+        return (state, effects);
     }
     let mut state = state;
     state.history.at = index;

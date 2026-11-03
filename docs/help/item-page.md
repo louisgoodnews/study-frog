@@ -8,12 +8,17 @@ of the top bar, in the [[graph]], or through a `[[wikilink]]`.
 
 - **Back** returns to where you came from.
 - The file's path in the vault.
-- **unsaved changes** shows while you have edits that are not saved.
-- **Save** writes the file. **Revert** throws away your edits. **Reload from disk** reads the file again.
+- Next to it, StudyFrog says **unsaved changes**, **saving…** or **Not saved** with the reason.
+- **Revert** throws away your edits. **Reload from disk** reads the file again. There is no Save button.
+
+StudyFrog saves for you: when you finish a word (you type a space or a line break), when you change something other
+than text, and at the latest five seconds after your first unsaved edit. Pausing alone does not save. Leaving the
+item, opening another one or exiting saves first, and a small **Saved** note appears when you leave an item you
+changed. If a save fails, StudyFrog says why and tries again.
 
 Saving is safe. If the file was changed outside StudyFrog since you opened it (for example in another editor),
-StudyFrog does not overwrite it and tells you. Reload it, then make your edit again. If you try to leave with
-unsaved changes, StudyFrog asks you to save or revert first.
+StudyFrog does not overwrite it and tells you. Choose **Reload from disk** (your edits are dropped) or **Keep mine**
+(your edits replace the other change).
 
 ## The text
 

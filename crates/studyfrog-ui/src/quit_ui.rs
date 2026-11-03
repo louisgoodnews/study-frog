@@ -1,4 +1,4 @@
-//! Leaving StudyFrog from its own red button: at once, or after asking when the editor holds unsaved changes. Pure.
+//! Leaving StudyFrog from its own red button. Unsaved edits in the editor are saved first, then the window closes. Pure.
 
 use crate::chrome::Chrome;
 use crate::effect::Effect;
@@ -9,26 +9,20 @@ use crate::state::State;
 pub enum QuitMsg {
     /// The Exit button was pressed.
     Ask,
-    /// 'Exit anyway' was chosen.
-    Confirm,
-    /// 'Keep working' was chosen.
-    Cancel,
 }
 
-fn with(state: State, quit: bool, confirm_quit: bool) -> (State, Vec<Effect>) {
-    let chrome = Chrome {
-        quit,
-        confirm_quit,
-        ..state.chrome.clone()
-    };
-    (State { chrome, ..state }, Vec::new())
-}
-
-/// Handle the Exit button and its question.
+/// Handle the Exit button: close at once, or after the editor's edits are on disk.
 pub fn update(state: State, msg: QuitMsg) -> (State, Vec<Effect>) {
-    match msg {
-        QuitMsg::Ask if crate::editor::has_unsaved_changes(&state) => with(state, false, true),
-        QuitMsg::Ask | QuitMsg::Confirm => with(state, true, false),
-        QuitMsg::Cancel => with(state, false, false),
+    let QuitMsg::Ask = msg;
+    let then = crate::msg::Msg::Chrome(crate::chrome::ChromeMsg::Quit(QuitMsg::Ask));
+    match crate::editor_save::flush_before(state, then) {
+        (state, Some(effects)) => (state, effects),
+        (state, None) => {
+            let chrome = Chrome {
+                quit: true,
+                ..state.chrome.clone()
+            };
+            (State { chrome, ..state }, Vec::new())
+        }
     }
 }

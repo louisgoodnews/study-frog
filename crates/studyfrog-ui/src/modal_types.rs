@@ -82,6 +82,8 @@ pub struct Toast {
     pub detail: String,
     /// What a click does.
     pub action: ToastAction,
+    /// When it goes away by itself (Unix milliseconds); `None`: it stays until dismissed.
+    pub expires_ms: Option<i64>,
 }
 
 /// What clicking a toast does.
@@ -93,6 +95,8 @@ pub enum ToastAction {
     OpenCalendar,
     /// Start the first-run tutorial.
     StartTutorial,
+    /// Nothing: a click only dismisses it.
+    Dismiss,
 }
 
 /// What a create request produced.

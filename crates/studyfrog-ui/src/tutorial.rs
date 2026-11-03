@@ -205,6 +205,7 @@ pub fn offer(state: State) -> State {
         title: "New here? Take the first steps".to_owned(),
         detail: "A short tour: a stack, a card, a rehearsal and the calendar. Dismiss it to skip; it stays in Help.".to_owned(),
         action: ToastAction::StartTutorial,
+        expires_ms: None,
     });
     state
 }

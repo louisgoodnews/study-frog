@@ -149,8 +149,10 @@ pub enum Msg {
     DocumentLoaded(Uid, Result<LoadedDoc, String>),
     /// A field of the editor changed.
     Edit(EditAction),
-    /// "Save" was activated.
+    /// Save now (the editor saves by itself; this is for tests and the keyboard).
     SaveClicked,
+    /// "Keep mine" was activated after the file changed outside StudyFrog.
+    KeepMineClicked,
     /// The document was saved (or not).
     Saved(Result<Saved, String>),
     /// "Revert" was activated.

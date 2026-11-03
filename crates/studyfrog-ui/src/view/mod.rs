@@ -53,7 +53,6 @@ mod pdf_texture;
 mod popup;
 mod preview;
 mod profiles;
-mod quit;
 mod reports;
 mod reports_fam;
 mod reports_runs;
@@ -148,6 +147,5 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     tutorial::panel(state, ui, &mut out);
     toast::draw(state, ui, &mut out);
     modal::draw(state, ui, &mut out);
-    quit::draw(state, ui, &mut out);
     out
 }
