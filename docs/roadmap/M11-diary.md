@@ -15,6 +15,7 @@
     - TASK-0174 Self-assessment against measured results
   - **STORY-0073** A calmer look on every screen
     - TASK-0195 Calm the remaining screens
+    - TASK-0196 Navigation history (done), BUG-0005 Exit button cut off (done), BUG-0006 Roadmap too small (done)
 
 ## Priority order
 TASK-0170 first (the specification), then TASK-0171, TASK-0172, TASK-0173 and TASK-0174 in order.

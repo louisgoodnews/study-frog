@@ -58,7 +58,8 @@ fn tab_bar(ui: &mut egui::Ui, current: SettingsTab, out: &mut Vec<Msg>) {
         return;
     }
     for (key, by) in [(Key::ArrowLeft, -1), (Key::ArrowRight, 1)] {
-        if ui.input(|i| i.key_pressed(key)) {
+        // Alt+Left and Alt+Right are Back and Forward in the history, not tab keys.
+        if ui.input(|i| i.key_pressed(key) && !i.modifiers.alt) {
             out.push(Msg::SettingsTab(SettingsTabMsg::Step(by)));
         }
     }

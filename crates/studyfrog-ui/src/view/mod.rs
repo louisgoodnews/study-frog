@@ -40,6 +40,7 @@ pub mod modal_import;
 mod modal_size;
 mod modal_transfer;
 mod navbar;
+mod navbar_history;
 pub mod notifications;
 mod pdf;
 mod pdf_arrange;
@@ -121,6 +122,15 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         });
     if ui.input(|i| i.key_pressed(egui::Key::F1)) {
         out.push(Msg::Help(crate::help_types::HelpMsg::ForScreen));
+    }
+    let alt = |key| ui.input(|i| i.modifiers.alt && i.key_pressed(key));
+    for (key, m) in [
+        (egui::Key::ArrowLeft, crate::history::HistoryMsg::Back),
+        (egui::Key::ArrowRight, crate::history::HistoryMsg::Forward),
+    ] {
+        if alt(key) {
+            out.push(Msg::Chrome(crate::chrome::ChromeMsg::History(m)));
+        }
     }
     tutorial::panel(state, ui, &mut out);
     toast::draw(state, ui, &mut out);

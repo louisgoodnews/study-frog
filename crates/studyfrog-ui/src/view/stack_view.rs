@@ -127,7 +127,8 @@ fn tab_bar(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     for (key, by) in [(Key::ArrowLeft, -1), (Key::ArrowRight, 1)] {
-        if ui.input(|i| i.key_pressed(key)) {
+        // Alt+Left and Alt+Right are Back and Forward in the history, not tab keys.
+        if ui.input(|i| i.key_pressed(key) && !i.modifiers.alt) {
             send(out, StackViewMsg::Step(by));
         }
     }

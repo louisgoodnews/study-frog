@@ -36,6 +36,8 @@ pub enum Menu {
     Notifications,
     /// About, and closing the vault.
     Profile,
+    /// The places visited, to jump to.
+    History,
 }
 
 /// What the chrome shows.
@@ -93,6 +95,8 @@ pub enum ChromeMsg {
     NotificationsLoaded(Result<Vec<crate::notify::Notification>, String>),
     /// The Exit button was pressed, or the question after it was answered.
     Quit(crate::quit_ui::QuitMsg),
+    /// Back, Forward or a jump in the history.
+    History(crate::history::HistoryMsg),
 }
 
 fn with(state: State, chrome: Chrome) -> (State, Vec<Effect>) {
@@ -203,6 +207,7 @@ pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
         ChromeMsg::PdfResults(query, result) => pdf_results(state, query, result),
         ChromeMsg::Notify(m) => crate::notify::update(state, m),
         ChromeMsg::Quit(m) => crate::quit_ui::update(state, m),
+        ChromeMsg::History(m) => crate::history::update(state, m),
         ChromeMsg::NotificationsLoaded(r) => crate::notify::loaded(state, r),
         ChromeMsg::SearchClear => {
             let c = Chrome {

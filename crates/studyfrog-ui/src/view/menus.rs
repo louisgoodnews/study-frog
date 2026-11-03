@@ -19,13 +19,14 @@ pub fn draw(state: &State, ui: &mut egui::Ui, anchors: &[(Menu, Rect)], out: &mu
     };
     let width = match open {
         Menu::Notifications => 420.0,
+        Menu::History => 340.0,
         _ => 260.0,
     };
     let at = egui::pos2(
         (anchor.right() - width).max(anchor.left().min(8.0)),
         anchor.bottom() + 4.0,
     );
-    let at = if open == Menu::Vaults {
+    let at = if matches!(open, Menu::Vaults | Menu::History) {
         anchor.left_bottom() + egui::vec2(0.0, 4.0)
     } else {
         at
@@ -34,9 +35,29 @@ pub fn draw(state: &State, ui: &mut egui::Ui, anchors: &[(Menu, Rect)], out: &mu
         Menu::Vaults => vaults(state, ui, out),
         Menu::Notifications => crate::view::notifications::draw(state, ui, out),
         Menu::Profile => profile(state, ui, out),
+        Menu::History => history(state, ui, out),
     });
     if dismissed(ui, rect, *anchor) {
         close(out);
+    }
+}
+
+/// The places visited, newest first; the current one is marked.
+fn history(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let h = &state.history;
+    ui.strong("History");
+    if h.entries.is_empty() {
+        ui.weak("Nothing yet: the places you visit are listed here.");
+    }
+    for (i, place) in h.entries.iter().enumerate().rev() {
+        let text = crate::history::label(state, place);
+        let width = ui.available_width();
+        let row = egui::Button::selectable(i == h.at, text).min_size(egui::vec2(width, 26.0));
+        if ui.add(row).clicked() {
+            let go = crate::history::HistoryMsg::Go(i);
+            out.push(Msg::Chrome(ChromeMsg::History(go)));
+            close(out);
+        }
     }
 }
 

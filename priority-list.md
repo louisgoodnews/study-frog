@@ -40,6 +40,7 @@ owner's request and is listed under Next.
 ## Next: phase M11 (0.4.0)
 - [ ] 1. TASK-0170 to TASK-0174 Diary ([M11-diary](docs/roadmap/M11-diary.md))
 - [ ] 2. TASK-0195 Calm the remaining screens (STORY-0073)
+- [x] TASK-0196 Navigation history, BUG-0005 Exit button cut off, BUG-0006 Roadmap too small (done on main after 0.3.1)
 
 ## Feedback after 0.3.0 (released as 0.3.1 on 2026-11-03, EPIC-025)
 - [x] BUG-0002 Padding, BUG-0003 Create dialog header, BUG-0004 Home figures

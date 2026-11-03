@@ -12,8 +12,9 @@ use crate::stack_view_ui::StackViewMsg;
 use crate::state::{Selection, State};
 use crate::theme::{palette_of, tint};
 
-const ROW_H: f32 = 30.0;
-const HEAD_H: f32 = 22.0;
+const ROW_H: f32 = 38.0;
+const HEAD_H: f32 = 28.0;
+const BAR_H: f32 = 18.0;
 
 fn describe(r: &RoadRow) -> String {
     let kind = if r.folder.is_some() { "Stack" } else { "Item" };
@@ -42,10 +43,9 @@ fn axis_ticks(
     ui: &egui::Ui,
     canvas: Rect,
     (from, to): (i64, i64),
-    z: crate::stack_roadmap::Zoom,
+    (ppd, step): (f32, i64),
     view_x: (f32, f32),
 ) {
-    let (ppd, step) = (px_per_day(z), tick_days(z));
     let pal = palette_of(ui);
     let first = from - from.rem_euclid(step) + step;
     let mut day = first;
@@ -57,7 +57,7 @@ fn axis_ticks(
                 pos2(x + 2.0, canvas.top() + 2.0),
                 Align2::LEFT_TOP,
                 text,
-                FontId::proportional(10.5),
+                FontId::proportional(12.0),
                 pal.text_weak,
             );
             ui.painter().line_segment(
@@ -81,19 +81,25 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     }
     let z = state.library.stack_view.zoom;
     let (from, to) = axis(&list, today);
-    let ppd = px_per_day(z);
-    let size = vec2((to - from) as f32 * ppd, HEAD_H + list.len() as f32 * ROW_H);
+    // The chart takes all the room there is: a short span is stretched to the width, a short list to the height.
+    let span = (to - from).max(1) as f32;
+    let ppd = px_per_day(z).max((ui.available_width() - 24.0) / span);
+    let height = ui.available_height().max(240.0);
+    let size = vec2(
+        span * ppd,
+        (HEAD_H + list.len() as f32 * ROW_H).max(height - 12.0),
+    );
     let pal = palette_of(ui);
     egui::ScrollArea::both()
         .auto_shrink([false, false])
-        .max_height(ui.available_height().max(240.0))
+        .max_height(height)
         .show_viewport(ui, |ui, view| {
             let (canvas, _) = ui.allocate_exact_size(size, Sense::hover());
             axis_ticks(
                 ui,
                 canvas,
                 (from, to),
-                z,
+                (ppd, tick_days(z)),
                 (canvas.left() + view.left(), canvas.left() + view.right()),
             );
             let rows_in_view = visible(
@@ -106,7 +112,7 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
                 let r = &list[i];
                 let (x, w) = bar(r, from, ppd);
                 let top = canvas.top() + HEAD_H + i as f32 * ROW_H;
-                let rect = Rect::from_min_size(pos2(canvas.left() + x, top + 12.0), vec2(w, 14.0));
+                let rect = Rect::from_min_size(pos2(canvas.left() + x, top + 17.0), vec2(w, BAR_H));
                 let hit = ui.interact(rect, ui.scope_id().with(("road", i)), Sense::click());
                 let color = if r.folder.is_some() {
                     pal.accent
@@ -124,7 +130,7 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
                     pos2(label_x, top + 1.0),
                     Align2::LEFT_TOP,
                     text,
-                    FontId::proportional(11.5),
+                    FontId::proportional(13.0),
                     pal.text,
                 );
                 let name = describe(r);
@@ -146,7 +152,7 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
                 pos2(x + 3.0, canvas.top() + 12.0),
                 Align2::LEFT_TOP,
                 "Today",
-                FontId::proportional(10.5),
+                FontId::proportional(12.0),
                 pal.danger,
             );
         });

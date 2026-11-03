@@ -15,11 +15,7 @@ fn notice(kind: NoticeKind, text: impl Into<String>) -> Option<Notice> {
 
 /// Advance the state by one message. Every new notice also goes to the notification list.
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
-    let before = state.notice.clone();
-    let reload = crate::library_ui::wants_reload(&msg);
-    let (next, effects) = step(state, msg);
-    let (next, after) = crate::hooks::after(next, &before, reload);
-    (next, [effects, after].concat())
+    crate::hooks::around(state, msg, step)
 }
 
 fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {

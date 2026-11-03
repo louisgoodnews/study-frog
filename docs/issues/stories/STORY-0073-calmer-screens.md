@@ -21,7 +21,7 @@ Carry the layout rules of the first part over to the screens that were left.
 - [ ] Every screen follows the rules of docs/specs/ui-calm.md and the owner has looked at them
 
 ## Design Notes
-Tasks: TASK-0195.
+Tasks: TASK-0195, TASK-0196. Bugs BUG-0005 and BUG-0006 and the navigation history were added on 2026-11-03.
 
 ## Dependencies
 None.

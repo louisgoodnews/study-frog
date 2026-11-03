@@ -76,6 +76,14 @@ fn the_title_bar_has_three_named_window_buttons_in_a_row_with_close_last() {
         );
     }
     assert!(
+        close.x1 <= 1000.0,
+        "close is inside the 1000 point window, not cut off: {close:?}"
+    );
+    assert!(
+        max.x1 + 4.0 <= close.x0,
+        "a gap between maximise and close: {max:?} {close:?}"
+    );
+    assert!(
         (min.y0 - close.y0).abs() < 0.5 && (max.y0 - close.y0).abs() < 0.5,
         "one row"
     );

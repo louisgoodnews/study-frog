@@ -17,6 +17,7 @@ also written on the buttons, for example **Good (3)**. See [[rehearse]].
 
 ## Everywhere
 
+- **Alt+Left** and **Alt+Right**: go back and forward through the places you visited. See [[getting-started|Getting started]].
 - **Esc**: stop the run, close a menu, or clear the search.
 - **Enter** in the search field of the top bar: open the first search result.
 - **Tab**: move between controls. **Shift+Tab** moves back.

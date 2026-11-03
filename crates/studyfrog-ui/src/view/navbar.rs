@@ -16,64 +16,65 @@ use crate::view::kit;
 use crate::view::menus;
 
 const HEIGHT: f32 = 40.0;
-const LEFT_WIDTH: f32 = 330.0;
-const RIGHT_WIDTH: f32 = 150.0;
+const LEFT_WIDTH: f32 = 440.0;
 
 fn chrome(out: &mut Vec<Msg>, m: ChromeMsg) {
     out.push(Msg::Chrome(m));
 }
 
-/// The bar, then whichever menu is open.
+/// The bar, then whichever menu is open. The right-hand buttons are laid out first and anchored to the window's
+/// right edge, and the rest takes the room that is left, so nothing can push the window buttons out of the window.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let mut anchors: Vec<(Menu, Rect)> = Vec::new();
     Panel::top("navbar").show(ui, |ui| {
         super::window_frame::drag_area(ui, ui.max_rect());
         ui.horizontal(|ui| {
-            let total = ui.available_width();
             let signed_in = state.vault.is_some();
-            let controls = super::window_frame::CONTROLS_WIDTH;
-            let (left_w, right_w) = (
-                LEFT_WIDTH.min(total * 0.4),
-                controls + if signed_in { RIGHT_WIDTH } else { 40.0 },
-            );
-            let left_to_right = Layout::left_to_right(Align::Center);
-            // A section keeps its full width even when its content is narrower, so the sections
-            // stay where they are: left, centre, right.
-            let section =
-                |ui: &mut egui::Ui, w: f32, layout: Layout, add: &mut dyn FnMut(&mut egui::Ui)| {
-                    ui.allocate_ui_with_layout(vec2(w, HEIGHT), layout, |ui| {
-                        ui.set_min_size(vec2(w, HEIGHT));
-                        add(ui);
-                    });
-                };
-            section(ui, left_w, left_to_right, &mut |ui| {
-                brand_cluster(state, ui, out, &mut anchors)
-            });
-            let middle_w = (total - left_w - right_w - 2.0 * ui.spacing().item_spacing.x).max(0.0);
-            section(ui, middle_w, left_to_right, &mut |ui| {
+            let row = vec2(ui.available_width(), HEIGHT);
+            ui.allocate_ui_with_layout(row, Layout::right_to_left(Align::Center), |ui| {
+                super::window_frame::controls(ui, out);
+                ui.add_space(8.0);
                 if signed_in {
-                    let search_w = (middle_w * 0.8 - 90.0).clamp(160.0, 560.0);
-                    ui.add_space(((middle_w - search_w - 90.0) / 2.0).max(0.0));
-                    search_cluster(state, ui, out, search_w);
+                    right_cluster(state, ui, out, &mut anchors);
+                } else {
+                    help_button(state, ui, out);
                 }
+                ui.with_layout(Layout::left_to_right(Align::Center), |ui| {
+                    left_and_middle(state, ui, out, &mut anchors);
+                });
             });
-            section(
-                ui,
-                right_w,
-                Layout::right_to_left(Align::Center),
-                &mut |ui| {
-                    super::window_frame::controls(ui, out);
-                    ui.add_space(8.0);
-                    if signed_in {
-                        right_cluster(state, ui, out, &mut anchors);
-                    } else {
-                        help_button(state, ui, out);
-                    }
-                },
-            );
         });
     });
     menus::draw(state, ui, &anchors, out);
+}
+
+/// The brand on the left and the search in the middle of the room that is left.
+fn left_and_middle(
+    state: &State,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+    anchors: &mut Vec<(Menu, Rect)>,
+) {
+    let total = ui.available_width();
+    let left_w = LEFT_WIDTH.min(total * 0.4);
+    let middle_w = (total - left_w - ui.spacing().item_spacing.x).max(0.0);
+    let left_to_right = Layout::left_to_right(Align::Center);
+    // A section keeps its full width even when its content is narrower, so the sections stay where they are.
+    let section = |ui: &mut egui::Ui, w: f32, add: &mut dyn FnMut(&mut egui::Ui)| {
+        ui.allocate_ui_with_layout(vec2(w, HEIGHT), left_to_right, |ui| {
+            ui.set_min_size(vec2(w, HEIGHT));
+            ui.set_max_width(w);
+            add(ui);
+        });
+    };
+    section(ui, left_w, &mut |ui| brand_cluster(state, ui, out, anchors));
+    section(ui, middle_w, &mut |ui| {
+        if state.vault.is_some() {
+            let search_w = (middle_w * 0.8 - 90.0).clamp(160.0, 560.0);
+            ui.add_space(((middle_w - search_w - 90.0) / 2.0).max(0.0));
+            search_cluster(state, ui, out, search_w);
+        }
+    });
 }
 
 fn toggle(out: &mut Vec<Msg>, menu: Menu) {
@@ -107,6 +108,7 @@ fn brand_cluster(
             toggle(out, Menu::Vaults);
         }
         anchors.push((Menu::Vaults, switcher.rect));
+        super::navbar_history::buttons(state, ui, out, anchors);
     }
     frog(ui);
     let brand =

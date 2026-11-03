@@ -16,23 +16,13 @@ fn send(out: &mut Vec<Msg>, m: HelpMsg) {
     out.push(Msg::Help(m));
 }
 
-/// The name of a screen as the sidebar shows it.
+/// The name of a screen for "Back to ...": the sidebar's, with an article for the two without one.
 pub fn screen_name(screen: Screen) -> &'static str {
     match screen {
         Screen::Welcome => "the vault chooser",
-        Screen::Home => "Home",
-        Screen::Library => "Library",
-        Screen::Rehearse => "Rehearse",
-        Screen::Settings => "Settings",
         Screen::Editor => "the item",
-        Screen::Graph => "Graph",
-        Screen::Calendar => "Calendar",
-        Screen::Board => "Board",
-        Screen::Achievements => "Achievements",
-        Screen::Reports => "Reports",
-        Screen::Agent => "Assistant",
         Screen::Pdf => "the PDF",
-        Screen::Help => "Help",
+        other => crate::history::screen_title(other),
     }
 }
 

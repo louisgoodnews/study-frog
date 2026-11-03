@@ -39,6 +39,7 @@ pub mod graph;
 mod help_edit;
 pub mod help_types;
 pub mod help_ui;
+pub mod history;
 pub mod home_ui;
 pub mod hooks;
 pub mod host;

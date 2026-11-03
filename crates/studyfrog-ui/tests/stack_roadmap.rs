@@ -144,3 +144,25 @@ fn a_thousand_rows_lay_out_and_draw_inside_the_budget() {
         "a frame with 1000 rows took {per_frame} ms in a debug build"
     );
 }
+
+#[test]
+fn the_roadmap_stretches_over_the_room_there_is_instead_of_a_few_pixels() {
+    use egui_kittest::kittest::NodeT;
+    let fr = ["french", "French"];
+    let mut h = harness(model(vec![item(
+        1,
+        "Bonjour",
+        TODAY - 3,
+        Some(TODAY + 4),
+        &fr,
+    )]));
+    h.run_steps(6);
+    let b = h
+        .get_by_label_contains("Item Bonjour")
+        .accesskit_node()
+        .bounding_box()
+        .unwrap();
+    // Two days at ten pixels a day were 20 pixels; a short axis is now stretched over the window.
+    assert!(b.x1 - b.x0 > 60.0, "bar is {} px wide", b.x1 - b.x0);
+    assert!(b.y1 - b.y0 >= 16.0, "bar is {} px high", b.y1 - b.y0);
+}

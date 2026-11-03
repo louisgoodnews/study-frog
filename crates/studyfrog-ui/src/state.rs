@@ -160,6 +160,8 @@ pub struct State {
     pub planner: Planner,
     /// The help screen.
     pub help: crate::help_types::HelpState,
+    /// Where the user has been.
+    pub history: crate::history::History,
     /// The import and export dialog.
     pub transfer: crate::transfer_ui::TransferState,
     /// The kanban board.

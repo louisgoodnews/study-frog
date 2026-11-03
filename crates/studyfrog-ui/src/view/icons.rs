@@ -21,6 +21,12 @@ pub enum Glyph {
     Help,
     /// A cross.
     Close,
+    /// An arrow pointing left.
+    Back,
+    /// An arrow pointing right.
+    Forward,
+    /// A clock face.
+    History,
 }
 
 const SIZE: f32 = 32.0;
@@ -53,6 +59,18 @@ fn paint(ui: &egui::Ui, rect: Rect, glyph: Glyph, color: Color32) {
             p.circle_stroke(Pos2::new(c.x, c.y - 4.0), 4.0, stroke);
             let shoulders: Vec<Pos2> = arc(Pos2::new(c.x, c.y + 8.0), 8.0, 6.5, 180.0, 360.0);
             p.add(egui::Shape::line(shoulders, stroke));
+        }
+        Glyph::Back | Glyph::Forward => {
+            let s = if glyph == Glyph::Back { -1.0 } else { 1.0 };
+            let tip = Pos2::new(c.x + 6.0 * s, c.y);
+            p.line_segment([Pos2::new(c.x - 6.0 * s, c.y), tip], stroke);
+            p.line_segment([Pos2::new(c.x + 1.0 * s, c.y - 6.0), tip], stroke);
+            p.line_segment([Pos2::new(c.x + 1.0 * s, c.y + 6.0), tip], stroke);
+        }
+        Glyph::History => {
+            p.circle_stroke(c, 8.0, stroke);
+            p.line_segment([c, Pos2::new(c.x, c.y - 5.0)], stroke);
+            p.line_segment([c, Pos2::new(c.x + 4.0, c.y + 2.5)], stroke);
         }
         Glyph::Close => {
             let d = 5.0;

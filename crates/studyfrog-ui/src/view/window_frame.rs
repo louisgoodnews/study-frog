@@ -14,8 +14,6 @@ use crate::theme::palette_of;
 
 /// Width of the band at the window's edge that resizes it.
 const EDGE: f32 = 6.0;
-/// Width of the three window buttons together.
-pub const CONTROLS_WIDTH: f32 = 3.0 * 44.0 + 12.0;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Button {
@@ -86,6 +84,7 @@ pub fn controls(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if button(ui, Button::Close, "Exit StudyFrog").clicked() {
         out.push(Msg::Chrome(ChromeMsg::Quit(QuitMsg::Ask)));
     }
+    ui.add_space(6.0); // a gap, so that a click aimed at maximise cannot land on close
     let full = maximized(&ctx);
     let (kind, name) = if full {
         (Button::Restore, "Restore window size")

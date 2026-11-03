@@ -3,6 +3,27 @@
 use crate::effect::Effect;
 use crate::state::{Notice, State};
 
+/// What one update does: the next state and the work it asks for.
+pub type Stepped = (State, Vec<Effect>);
+
+/// Run `step` for `msg` and follow it with what the change makes necessary; the place the user was at before is
+/// noted for the history.
+pub fn around(
+    state: State,
+    msg: crate::msg::Msg,
+    step: fn(State, crate::msg::Msg) -> Stepped,
+) -> Stepped {
+    let before = state.notice.clone();
+    let there = crate::history::place_of(&state);
+    let reload = crate::library_ui::wants_reload(&msg);
+    let (next, effects) = step(state, msg);
+    let (next, after) = after(next, &before, reload);
+    (
+        crate::history::record(next, there),
+        [effects, after].concat(),
+    )
+}
+
 /// Follow a state change with what it makes necessary. `reload` says the message changed what the library shows.
 pub fn after(state: State, before: &Option<Notice>, reload: bool) -> (State, Vec<Effect>) {
     let (state, mut effects) = crate::notify::track(before, state);

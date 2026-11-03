@@ -7,6 +7,13 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Fixed
+- The window buttons are anchored to the window's right edge, so the red close button is no longer cut off, and there is a gap between maximise and close (BUG-0005).
+- The roadmap takes the width and the height there are, even when its dates are close together, with larger rows, bars and text (BUG-0006).
+
+### Added
+- Navigation history: the top bar has Back and Forward arrows and a History list (the screens, stacks and items visited, newest first, the current one marked), and Alt+Left and Alt+Right do the same; unsaved changes in the editor ask you to save or revert first (TASK-0196).
+
 ## [0.3.1] - 2026-11-03
 
 ### Fixed
