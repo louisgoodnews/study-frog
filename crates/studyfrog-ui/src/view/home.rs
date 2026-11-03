@@ -86,12 +86,10 @@ fn hero(h: &HomeSummary, items: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     kit::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.horizontal(|ui| {
+            ui.spacing_mut().item_spacing.x = 40.0;
             kit::stat(ui, &h.ready_today.to_string(), "items ready for today");
-            ui.add_space(18.0);
             kit::stat(ui, &format!("{} days", h.streak_days), "Streak");
-            ui.add_space(18.0);
             kit::stat(ui, &h.reviews_today.to_string(), "Reviews today");
-            ui.add_space(18.0);
             kit::stat(ui, &items.to_string(), "Items in your vault");
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                 if h.ready_today > 0 {

@@ -71,3 +71,13 @@ vault is refused. A broken file gives an error in the preview, never a crash.
 ## Related pages
 
 [[privacy]], [[library]], [[faq]].
+
+## Suggestions from this computer
+When the Import tab opens, StudyFrog looks in the usual places and lists what it found under **Found on this computer**:
+
+- **Obsidian vaults** from Obsidian's own list of vaults, with the number of Markdown files.
+- **Anki packages** (`.apkg` files) in your Downloads, Documents and Desktop folders.
+- **Anki profiles**. StudyFrog does not read Anki's own database (it is locked while Anki runs and its format changes);
+  export a deck from Anki as a package, with "Support older Anki versions" ticked, and it will show up as a package.
+
+Nothing is read except names and counts until you press **Use** next to an entry, and then you see the preview first.

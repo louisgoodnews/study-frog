@@ -39,3 +39,11 @@ owner's request and is listed under Next.
 
 ## Next: phase M11 (0.4.0)
 - [ ] 1. TASK-0170 to TASK-0174 Diary ([M11-diary](docs/roadmap/M11-diary.md))
+
+## Feedback after 0.3.0 (0.3.1, EPIC-025)
+- [x] BUG-0002 Padding, BUG-0003 Create dialog header, BUG-0004 Home figures
+- [x] TASK-0188 Ask before discarding a filled Create dialog
+- [x] TASK-0189 Red Exit button
+- [x] TASK-0191 Suggest Anki and Obsidian files to import
+- [ ] TASK-0190 Readable window buttons: blocked on the owner's choice (own title bar or the system's)
+- [ ] TASK-0192 Calmer UI: proposal written (`docs/specs/ui-calm.md`), waiting for the owner; the screens follow

@@ -43,10 +43,10 @@ fn the_question_mark_opens_the_page_of_the_screen_and_the_tree_opens_others() {
 }
 
 #[test]
-fn the_status_bar_help_button_and_search_work_without_a_vault() {
+fn the_help_button_and_search_work_without_a_vault() {
     let mut h = harness(Model::default());
     h.run();
-    h.get_by_label("Help").click();
+    h.get_by_label("Help for this screen (F1)").click();
     h.run();
     assert_eq!(h.state().0.state.screen, Screen::Help);
     assert_eq!(

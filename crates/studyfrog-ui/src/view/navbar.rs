@@ -17,7 +17,7 @@ use crate::view::menus;
 
 const HEIGHT: f32 = 40.0;
 const LEFT_WIDTH: f32 = 330.0;
-const RIGHT_WIDTH: f32 = 150.0;
+const RIGHT_WIDTH: f32 = 214.0;
 
 fn chrome(out: &mut Vec<Msg>, m: ChromeMsg) {
     out.push(Msg::Chrome(m));
@@ -162,6 +162,7 @@ fn right_cluster(
     out: &mut Vec<Msg>,
     anchors: &mut Vec<(Menu, Rect)>,
 ) {
+    exit_button(ui, out);
     let profile = icon_button(
         ui,
         Glyph::Person,
@@ -206,6 +207,19 @@ fn right_cluster(
         );
     }
     anchors.push((Menu::Notifications, bell.rect));
+}
+
+/// The red button that leaves StudyFrog.
+fn exit_button(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let red = Color32::from_rgb(200, 48, 48);
+    let button = egui::Button::new(RichText::new("Exit").color(Color32::WHITE).strong())
+        .fill(red)
+        .min_size(vec2(52.0, 28.0));
+    let r = ui.add(button).on_hover_text("Exit StudyFrog");
+    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Exit StudyFrog"));
+    if r.clicked() {
+        chrome(out, ChromeMsg::Quit(crate::quit_ui::QuitMsg::Ask));
+    }
 }
 
 /// The logo: a green frog face.

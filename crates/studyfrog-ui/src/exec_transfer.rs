@@ -101,6 +101,7 @@ fn export(
 /// Perform one job and report.
 pub fn run(w: &mut Worker, job: TransferJob, now_ns: i64) -> Msg {
     match job {
+        TransferJob::Discover => crate::transfer_found::look(),
         TransferJob::Browse(folder) => {
             let picked = if folder {
                 w.folder_picker.and_then(|p| p())

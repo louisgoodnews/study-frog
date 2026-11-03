@@ -4,13 +4,16 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (5) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (178) |
+| Backlog (5) | Ready (0) | In progress (0/3) | Review (2) | Blocked (1) | Done (184) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-| [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-| [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-| [TASK-0174](docs/issues/tasks/TASK-0174-self-assessment-against-measured-results.md) Self-assessment against measured results (3) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) | [TASK-0190](docs/issues/tasks/TASK-0190-readable-window-buttons.md) Readable window buttons (3) | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  | [TASK-0192](docs/issues/tasks/TASK-0192-plan-to-make-the-ui-calmer.md) Plan to make the UI calmer (3) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+| [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+| [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
+| [TASK-0174](docs/issues/tasks/TASK-0174-self-assessment-against-measured-results.md) Self-assessment against measured results (3) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+|  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+|  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+|  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
 |  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
 |  |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
 |  |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
@@ -184,6 +187,9 @@
 |  |  |  |  |  | [TASK-0185](docs/issues/tasks/TASK-0185-new-items-default-to-difficult-and-medium-priority.md) New items default to the highest difficulty and medium priority (1) |
 |  |  |  |  |  | [TASK-0186](docs/issues/tasks/TASK-0186-create-dialog-laid-out-like-jira.md) Create dialog laid out like Jira's (3) |
 |  |  |  |  |  | [TASK-0187](docs/issues/tasks/TASK-0187-markdown-editors-in-the-create-dialog-that-grow-by-dragging.md) Markdown editors in the create dialog that grow by dragging (3) |
+|  |  |  |  |  | [TASK-0188](docs/issues/tasks/TASK-0188-ask-before-discarding-a-filled-create-dialog.md) Ask before discarding a filled Create dialog (2) |
+|  |  |  |  |  | [TASK-0189](docs/issues/tasks/TASK-0189-in-ui-exit-button.md) In-UI exit button (2) |
+|  |  |  |  |  | [TASK-0191](docs/issues/tasks/TASK-0191-suggest-importing-found-anki-and-obsidian-files.md) Suggest importing found Anki and Obsidian files (5) |
 
 ## Stories
 
@@ -259,6 +265,7 @@
 | [STORY-0068](docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | backlog | 0/5 |
 | [STORY-0070](docs/issues/stories/STORY-0070-rehearsal-modes-for-countdown-and-count-up.md) Rehearsal modes for countdown and count up (8) | done | 4/4 |
 | [STORY-0071](docs/issues/stories/STORY-0071-create-dialog-like-jira.md) Create dialog like Jira (8) | done | 3/3 |
+| [STORY-0072](docs/issues/stories/STORY-0072-safer-simpler-ui-after-first-use.md) Safer and calmer UI after first use (8) | in_progress | 3/5 |
 
 ## Epics
 
@@ -288,3 +295,4 @@
 | [EPIC-022](docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | done | 1/1 |
 | [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | done | 15/15 |
 | [EPIC-024](docs/issues/epics/EPIC-024-diary-for-0-4-0.md) Diary for 0.4.0 | backlog | 0/1 |
+| [EPIC-025](docs/issues/epics/EPIC-025-feedback-fixes-for-0-3-1.md) Feedback fixes for 0.3.1 | in_progress | 0/1 |

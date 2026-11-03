@@ -82,3 +82,7 @@ calendar. See [[calendar]].
 - Learn the screens: [[home]], [[library]], [[stack-page]], [[reports]].
 - Read [[why-studyfrog|Why StudyFrog]] for the ideas behind the app.
 - Stuck? Try the [[faq]] or the [[glossary]].
+
+## Leaving StudyFrog
+The red **Exit** button at the right end of the top bar closes the app. If you are editing a document with unsaved
+changes, it asks first.

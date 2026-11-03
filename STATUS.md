@@ -56,7 +56,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   unverified from memory. No git remote is configured.
 
 ## Next
-- **0.3.0 (phase M10) is complete** except the diary, which the owner moved to 0.4.0 (phase M11, EPIC-024) on 2026-11-03. Item 19 (help: wiki, FAQ, tutorials, own pages, assistant proposals) is done. **Next:** TASK-0170, specify the diary (`docs/roadmap/M11-diary.md`).
+- **0.3.0 (phase M10) is released** (the diary moved to 0.4.0, phase M11). **0.3.1 (EPIC-025)** answers the owner's first use of 0.3.0: padding, the Create dialog header, the Home spacing, a discard question, a red Exit button and import suggestions are done; **waiting for the owner:** TASK-0190 (own title bar or the system's) and TASK-0192 (`docs/specs/ui-calm.md`). Then the diary, TASK-0170 (`docs/roadmap/M11-diary.md`).
 - **Open flag:** the help outline (`docs/help/README.md`, TASK-0161) shipped at the owner's release instruction without a separate review of the outline; the help screen and tutorial card were tested headless only.
 - **0.3.0 is planned** (phase M10, EPIC-023, `docs/roadmap/M10-usability-and-insight.md`): 15 stories and one bug (BUG-0001, commas in teacher names), all in backlog.
   The owner answered the open design questions on 2026-11-02 (accepted choices are listed in the phase file); what is still

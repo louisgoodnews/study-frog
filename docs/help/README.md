@@ -68,7 +68,7 @@ The first-run tutorial (`first-steps`) is offered once after the first vault ope
 repeated from the help screen.
 
 ## Help buttons
-The `?` in the top bar and the help button of the status bar open the page of the screen that is showing (`F1` too):
+The `?` in the top bar opens the page of the screen that is showing (`F1` too):
 Home `home`, Library `library` (or `stack-page` while a stack is open), Rehearse `rehearse`, Settings `settings`,
 Editor `item-page`, Graph `graph`, Calendar `calendar`, Board `board`, Achievements `achievements`, Reports `reports`,
 Assistant `assistant`, PDF `pdf`, the vault chooser `getting-started`.

@@ -50,12 +50,17 @@ fn type_combo(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 fn header(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    // The window controls have a row of their own, so the pickers below can never push them out.
+    ui.horizontal(|ui| {
+        ui.label(RichText::new("Create an item").size(16.0).strong());
+        let ctx = ui.ctx().clone();
+        super::modal_size::window_buttons(&ctx, f, ui, out);
+    });
+    ui.add_space(4.0);
     ui.horizontal(|ui| {
         modal_fields::parent_picker(state, f, ui, out);
         ui.separator();
         type_combo(f, ui, out);
-        let ctx = ui.ctx().clone();
-        super::modal_size::window_buttons(&ctx, f, ui, out);
     });
 }
 
@@ -178,9 +183,30 @@ fn footer(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 }
 
+/// 'Discard what you wrote?' with the two ways out, shown when closing was asked for with something written.
+fn discard_question(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let warning = crate::theme::palette_of(ui).warning;
+    ui.add_space(6.0);
+    egui::Frame::group(ui.style()).show(ui, |ui| {
+        ui.set_width(ui.available_width());
+        ui.colored_label(warning, "Discard what you wrote? It will be lost.");
+        ui.horizontal(|ui| {
+            if ui.button("Keep editing").clicked() {
+                send(out, ModalMsg::KeepEditing);
+            }
+            if ui.button("Discard").clicked() {
+                send(out, ModalMsg::Discard);
+            }
+        });
+    });
+}
+
 /// The dialog's content.
 pub fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     header(state, f, ui, out);
+    if f.confirm_discard {
+        discard_question(ui, out);
+    }
     ui.add_space(6.0);
     let room = (ui.ctx().content_rect().height() - 200.0).max(240.0);
     ui.style_mut().animation_time = 0.0;

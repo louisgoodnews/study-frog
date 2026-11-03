@@ -65,6 +65,7 @@ pub mod xfer_anki;
 pub mod xfer_anki_db;
 pub mod xfer_anki_text;
 pub mod xfer_csv;
+pub mod xfer_discover;
 pub mod xfer_export;
 pub mod xfer_import;
 pub mod xfer_json;

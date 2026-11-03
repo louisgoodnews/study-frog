@@ -44,6 +44,7 @@ fn form_new(state: &State, kind: Option<NewKind>) -> CreateForm {
         reminders: vec![1440],
         priority: studyfrog_core::priority::Priority::Medium,
         difficulty: studyfrog_core::event::Difficulty::Difficult,
+        confirm_discard: false,
     }
 }
 
@@ -188,13 +189,9 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             },
             Vec::new(),
         ),
-        ModalMsg::Close => (
-            State {
-                modal: None,
-                ..state
-            },
-            Vec::new(),
-        ),
+        ModalMsg::Close => crate::modal_discard::close(state),
+        ModalMsg::KeepEditing => crate::modal_discard::keep_editing(state),
+        ModalMsg::Discard => crate::modal_discard::discard(state),
         ModalMsg::SetKind(kind) => with_form(state, |f| CreateForm {
             kind,
             error: None,

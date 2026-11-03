@@ -45,6 +45,10 @@ pub enum TransferMsg {
     Preview,
     /// The preview arrived.
     Previewed(Result<Box<Preview>, String>),
+    /// The search for things to import finished.
+    Found(Vec<studyfrog_service::xfer_discover::Found>),
+    /// Use a suggestion: set the path and show the preview.
+    Pick(String),
     /// Write the import.
     Import,
     /// The import finished.
@@ -123,6 +127,11 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
                 ),
             }
         }
+        TransferMsg::Found(list) => crate::transfer_found::found(&mut state, list),
+        TransferMsg::Pick(path) => {
+            let effects = crate::transfer_found::pick(&mut state, path);
+            return (state, effects);
+        }
         TransferMsg::Policy(p) => t.policy = p,
         TransferMsg::WithSchedule(on) => t.with_schedule = on,
         TransferMsg::Preview => {
@@ -173,5 +182,6 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
             }
         }
     }
-    (state, Vec::new())
+    let effects = crate::transfer_found::want(&mut state);
+    (state, effects)
 }

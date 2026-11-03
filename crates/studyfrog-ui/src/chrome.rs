@@ -61,6 +61,10 @@ pub struct Chrome {
     pub notify_vault: Option<String>,
     /// The stored list has been read, so changes are stored too.
     pub notify_loaded: bool,
+    /// The user chose Exit: the window is to be closed.
+    pub quit: bool,
+    /// Exit was chosen while the editor holds unsaved changes: the question is showing.
+    pub confirm_quit: bool,
 }
 
 /// Messages of the chrome.
@@ -87,6 +91,8 @@ pub enum ChromeMsg {
     Notify(crate::notify::NotifyMsg),
     /// The stored notifications were read.
     NotificationsLoaded(Result<Vec<crate::notify::Notification>, String>),
+    /// The Exit button was pressed, or the question after it was answered.
+    Quit(crate::quit_ui::QuitMsg),
 }
 
 fn with(state: State, chrome: Chrome) -> (State, Vec<Effect>) {
@@ -196,6 +202,7 @@ pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
         ChromeMsg::SearchResults(query, result) => search_results(state, query, result),
         ChromeMsg::PdfResults(query, result) => pdf_results(state, query, result),
         ChromeMsg::Notify(m) => crate::notify::update(state, m),
+        ChromeMsg::Quit(m) => crate::quit_ui::update(state, m),
         ChromeMsg::NotificationsLoaded(r) => crate::notify::loaded(state, r),
         ChromeMsg::SearchClear => {
             let c = Chrome {

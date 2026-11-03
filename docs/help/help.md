@@ -6,7 +6,6 @@ your way around it.
 ## Opening help
 
 - The **?** button (**Help**) in the top bar opens the page for the screen you are on.
-- The help button in the status bar at the bottom does the same.
 - **F1** opens the page for the current screen from anywhere.
 
 For example, on the Calendar it opens [[calendar]], on a stack's page [[stack-page]], and on the welcome page

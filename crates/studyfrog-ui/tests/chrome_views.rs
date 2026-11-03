@@ -63,7 +63,10 @@ fn the_top_bar_has_every_control_named_and_the_sidebar_lists_the_screens() {
 fn without_a_vault_only_the_brand_and_help_are_shown() {
     let mut h = harness(Model::default());
     h.run();
-    assert!(h.query_all_by_label("StudyFrog").count() >= 1 && h.query_by_label("Help").is_some());
+    assert!(
+        h.query_all_by_label("StudyFrog").count() >= 1
+            && h.query_by_label("Help for this screen (F1)").is_some()
+    );
     for gone in [
         "Search items",
         "+ Create",

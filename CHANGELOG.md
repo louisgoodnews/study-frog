@@ -7,6 +7,20 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Fixed
+- Every screen has a wider margin (20 px at the sides, 14 px at the top) and the stack page no longer sits against the stack list (BUG-0002).
+- The Create dialog's header is two rows, the window controls on one and the stack and type on the other, so the type name is no longer cut off in the normal-width dialog (BUG-0003).
+- The four figures at the top of Home (items ready, streak, reviews, items) are spaced further apart (BUG-0004).
+
+### Changed
+- The status bar no longer has a Help button; the `?` in the top bar, Help in the sidebar and `F1` remain (TASK-0192).
+
+### Added
+- Cancel, the close button, Escape and a click outside the Create dialog ask "Discard what you wrote?" when a field has content or a changed value; an untouched dialog closes at once (TASK-0188).
+- A red Exit button at the right end of the top bar closes StudyFrog and asks first when the editor holds unsaved changes (TASK-0189).
+- The Import tab lists what it finds on the computer: Obsidian vaults (from Obsidian's own list, with the number of Markdown files), Anki packages in Downloads, Documents and Desktop, and Anki profiles with the hint to export a package; "Use" shows the preview for the chosen one and nothing is read before (TASK-0191).
+- A proposal for a calmer UI in `docs/specs/ui-calm.md` for the owner to accept (TASK-0192).
+
 ## [0.3.0] - 2026-11-03
 
 ### Fixed
@@ -26,7 +40,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   removal of STORY-0041 at the owner's request (TASK-0128).
 
 ### Added
-- Help inside the app (`F1`, the `?` in the top bar, the Help button of the status bar, or Help in the sidebar, with or without a vault): a page tree (Start, Screens, Reference, Your pages, Tutorials), the page for the screen that is showing, links between pages, Back and "Back to" the screen, and a search over titles and text. The 26 supplied pages are compiled in from `docs/help/` and read-only; a test fails when one links to a page that does not exist (TASK-0161, TASK-0162).
+- Help inside the app (`F1`, the `?` in the top bar, or Help in the sidebar, with or without a vault): a page tree (Start, Screens, Reference, Your pages, Tutorials), the page for the screen that is showing, links between pages, Back and "Back to" the screen, and a search over titles and text. The 26 supplied pages are compiled in from `docs/help/` and read-only; a test fails when one links to a page that does not exist (TASK-0161, TASK-0162).
 - The help pages themselves: Why StudyFrog, Getting started, Privacy and your data, a how-to for every screen, the FAQ, the glossary, keyboard shortcuts, the query language, familiarity and statuses (TASK-0165).
 - Own help pages: New page, Copy to my pages (from a supplied page), Edit, rename and Delete; each is a Markdown file in the vault's `wiki/` folder (not indexed as items, part of backups), searched and linked like the supplied pages (TASK-0163).
 - The assistant can read the user's help pages ("Also read my help pages" on its wiki tab, shown in the preview before Send) and propose new pages or edits; nothing changes until the user applies them, and supplied pages are never sent nor offered for change. Help and the assistant link to each other (TASK-0164).

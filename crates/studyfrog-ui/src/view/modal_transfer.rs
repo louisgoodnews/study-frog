@@ -189,6 +189,7 @@ fn preview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn import_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let t = &state.transfer;
+    super::modal_found::found(state, ui, out);
     ui.weak("Reads StudyFrog exports (json, zip), CSV or TSV cards, Anki packages (.apkg) and Obsidian vaults (a folder or a zip).");
     if let Some(text) = text_field(ui, "File or folder to import", &t.path, "/path/to/file", 1) {
         send(out, TransferMsg::Path(text));

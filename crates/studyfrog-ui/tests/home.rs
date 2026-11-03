@@ -4,7 +4,7 @@
 mod common;
 
 use common::views::{assert_all_named, harness, open_model};
-use egui_kittest::kittest::Queryable;
+use egui_kittest::kittest::{NodeT, Queryable};
 use studyfrog_calendar::session::EventKind;
 use studyfrog_core::plan::ItemKind;
 use studyfrog_core::uid::Uid;
@@ -176,5 +176,47 @@ fn the_needs_attention_card_lists_the_items_with_their_reasons_and_opens_one() {
     assert!(
         h.query_by_label("Needs attention").is_none(),
         "no card when nothing needs it"
+    );
+}
+
+fn rect_of(h: &egui_kittest::Harness<'_, common::views::App>, label: &str) -> eframe::egui::Rect {
+    let b = h
+        .get_by_label(label)
+        .accesskit_node()
+        .bounding_box()
+        .unwrap();
+    eframe::egui::Rect::from_min_max(
+        eframe::egui::pos2(b.x0 as f32, b.y0 as f32),
+        eframe::egui::pos2(b.x1 as f32, b.y1 as f32),
+    )
+}
+
+#[test]
+fn the_summary_figures_have_room_and_the_page_keeps_a_margin_from_the_sidebar() {
+    let mut h = harness(home_model(3));
+    h.run_steps(6);
+    let (ready, streak, reviews) = (
+        rect_of(&h, "items ready for today"),
+        rect_of(&h, "Streak"),
+        rect_of(&h, "Reviews today"),
+    );
+    assert!(
+        streak.left() - ready.right() >= 30.0,
+        "{ready:?} {streak:?}"
+    );
+    assert!(
+        reviews.left() - streak.right() >= 30.0,
+        "{streak:?} {reviews:?}"
+    );
+    let sidebar = rect_of(&h, "Library");
+    let title = h
+        .get_by_label_contains("Good morning")
+        .accesskit_node()
+        .bounding_box()
+        .unwrap();
+    assert!(
+        title.x0 as f32 - sidebar.right() >= 16.0,
+        "the page starts {} px after the sidebar button",
+        title.x0 as f32 - sidebar.right()
     );
 }

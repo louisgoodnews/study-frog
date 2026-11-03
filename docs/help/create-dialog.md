@@ -63,3 +63,8 @@ Every item made in the dialog also gets a card in the first column of the [[boar
   is listed under **Problems** in the library's **Overview**.
 
 See also [[getting-started|Getting started]] and the [[faq]].
+
+## Closing without losing your work
+If you wrote or changed something and then press **Cancel**, the close button, or **Esc**, StudyFrog asks
+**Discard what you wrote?** Choose **Keep editing** to go back, or **Discard** to close and lose it. A dialog you did
+not touch closes at once.

@@ -147,3 +147,5 @@ for names with commas (a proposal in BUG-0001).
   2026-11-03, when the owner chose to release 0.3.0 without it.
 
 **Status:** done; released as 0.3.0 on 2026-11-03 (notes in `docs/RELEASE_NOTES_0.3.0.md`).
+
+**0.3.1 (EPIC-025):** fixes and additions from the owner's first use of 0.3.0 on 2026-11-03: BUG-0002 to BUG-0004, STORY-0072 with TASK-0188 to TASK-0192.

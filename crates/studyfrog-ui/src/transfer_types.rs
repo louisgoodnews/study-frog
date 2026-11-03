@@ -87,6 +87,10 @@ pub struct TransferState {
     pub status: Option<String>,
     /// A job is running.
     pub busy: bool,
+    /// What was found to import, once the search ran.
+    pub found: Option<Vec<studyfrog_service::xfer_discover::Found>>,
+    /// The search is running.
+    pub looking: bool,
 }
 
 impl Default for TransferState {
@@ -104,6 +108,8 @@ impl Default for TransferState {
             preview: None,
             status: None,
             busy: false,
+            found: None,
+            looking: false,
         }
     }
 }
@@ -113,6 +119,8 @@ impl Default for TransferState {
 pub enum TransferJob {
     /// Ask for a file (or a folder).
     Browse(bool),
+    /// Look for Obsidian vaults and Anki files to suggest.
+    Discover,
     /// Read the file and say what an import would do.
     Preview(String, Option<String>),
     /// Read the file again and write it.

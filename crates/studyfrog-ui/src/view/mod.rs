@@ -35,6 +35,7 @@ mod menus;
 mod modal;
 mod modal_create;
 mod modal_fields;
+mod modal_found;
 pub mod modal_import;
 mod modal_size;
 mod modal_transfer;
@@ -51,6 +52,7 @@ mod pdf_texture;
 mod popup;
 mod preview;
 mod profiles;
+mod quit;
 mod reports;
 mod reports_fam;
 mod reports_runs;
@@ -95,28 +97,32 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     navbar::draw(state, ui, &mut out);
     sidebar::draw(state, ui, &mut out);
     bars::status(state, ui, &mut out);
-    egui::CentralPanel::default().show(ui, |ui| match state.screen {
-        Screen::Welcome => welcome::draw(state, ui, &mut out),
-        Screen::Home => home::draw(state, ui, &mut out),
-        Screen::Library => library::draw(state, ui, &mut out),
-        Screen::Rehearse if state.rehearse.run.is_some() => run::draw(state, ui, &mut out),
-        Screen::Rehearse => setup::draw(state, ui, &mut out),
-        Screen::Settings => settings::draw(state, ui, &mut out),
-        Screen::Editor => editor::draw(state, ui, &mut out),
-        Screen::Graph => graph::draw(state, ui, &mut out),
-        Screen::Calendar => calendar::draw(state, ui, &mut out),
-        Screen::Board => board::draw(state, ui, &mut out),
-        Screen::Achievements => achievements::draw(state, ui),
-        Screen::Agent => agent::draw(state, ui, &mut out),
-        Screen::Reports => reports::draw(state, ui, &mut out),
-        Screen::Pdf => pdf::draw(state, ui, &mut out),
-        Screen::Help => help::draw(state, ui, &mut out),
-    });
+    let page = egui::Frame::central_panel(ui.style()).inner_margin(egui::Margin::symmetric(20, 14));
+    egui::CentralPanel::default()
+        .frame(page)
+        .show(ui, |ui| match state.screen {
+            Screen::Welcome => welcome::draw(state, ui, &mut out),
+            Screen::Home => home::draw(state, ui, &mut out),
+            Screen::Library => library::draw(state, ui, &mut out),
+            Screen::Rehearse if state.rehearse.run.is_some() => run::draw(state, ui, &mut out),
+            Screen::Rehearse => setup::draw(state, ui, &mut out),
+            Screen::Settings => settings::draw(state, ui, &mut out),
+            Screen::Editor => editor::draw(state, ui, &mut out),
+            Screen::Graph => graph::draw(state, ui, &mut out),
+            Screen::Calendar => calendar::draw(state, ui, &mut out),
+            Screen::Board => board::draw(state, ui, &mut out),
+            Screen::Achievements => achievements::draw(state, ui),
+            Screen::Agent => agent::draw(state, ui, &mut out),
+            Screen::Reports => reports::draw(state, ui, &mut out),
+            Screen::Pdf => pdf::draw(state, ui, &mut out),
+            Screen::Help => help::draw(state, ui, &mut out),
+        });
     if ui.input(|i| i.key_pressed(egui::Key::F1)) {
         out.push(Msg::Help(crate::help_types::HelpMsg::ForScreen));
     }
     tutorial::panel(state, ui, &mut out);
     toast::draw(state, ui, &mut out);
     modal::draw(state, ui, &mut out);
+    quit::draw(state, ui, &mut out);
     out
 }

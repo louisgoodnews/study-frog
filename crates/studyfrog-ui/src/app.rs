@@ -43,6 +43,9 @@ pub fn app_ui(app: &mut StudyFrogApp, ui: &mut egui::Ui) {
         let _ = app.runtime.effects.send(effect);
     }
     close_after_smoke_frames(app, ui);
+    if app.model.state.chrome.quit {
+        ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
+    }
 }
 
 /// With `--smoke-frames N`, ask the window to close once N frames were drawn.

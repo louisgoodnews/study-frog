@@ -54,6 +54,8 @@ pub struct CreateForm {
     pub priority: studyfrog_core::priority::Priority,
     /// The difficulty of a card, note or question (the highest unless changed).
     pub difficulty: studyfrog_core::event::Difficulty,
+    /// Closing was asked for while something is written: the question 'Discard what you wrote?' is showing.
+    pub confirm_discard: bool,
 }
 
 /// A field of the create dialog.
@@ -115,8 +117,12 @@ pub enum ModalMsg {
     OpenVault,
     /// Open the import dialog for the open stack.
     OpenImport,
-    /// Close the open dialog.
+    /// Close the open dialog (a Create dialog with something written asks first).
     Close,
+    /// Answer the question before closing with 'Keep editing'.
+    KeepEditing,
+    /// Answer it with 'Discard': close the dialog and lose what was written.
+    Discard,
     /// Another kind of item.
     SetKind(NewKind),
     /// A field changed.
