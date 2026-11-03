@@ -17,6 +17,7 @@ fn item(uid: u128, fam: Option<f32>, due_in_hours: i64) -> Candidate<'static> {
         uid: Uid(uid),
         kind: ItemKind::Card,
         stack: Uid(1),
+        also_in: &[],
         tags: &[],
         position: uid as u32,
         memory: None,

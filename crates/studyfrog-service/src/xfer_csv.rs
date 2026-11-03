@@ -15,13 +15,27 @@ fn quote(s: &str) -> String {
     }
 }
 
-/// The CSV text of the cards and questions of a bundle.
+/// The CSV text of the cards and questions of a bundle. The `also_in` column (the other stacks, folders separated
+/// by semicolons) is there only when some item has references, so other files keep the six columns.
 pub fn to_csv(b: &Bundle) -> String {
-    let mut out = format!("{}\n", HEADER.join(","));
-    for i in b.items.iter().filter(|i| i.kind != ItemKind::Note) {
+    let items: Vec<_> = b
+        .items
+        .iter()
+        .filter(|i| i.kind != ItemKind::Note)
+        .collect();
+    let refs = items.iter().any(|i| !i.also_in.is_empty());
+    let mut head = HEADER.to_vec();
+    if refs {
+        head.push("also_in");
+    }
+    let mut out = format!("{}\n", head.join(","));
+    for i in items {
         let kind = crate::xfer_json::kind_word(i.kind);
-        let tags = i.tags.join(";");
-        let row = [i.stack.as_str(), kind, &i.title, &i.text, &i.answer, &tags];
+        let (tags, also) = (i.tags.join(";"), i.also_in.join(";"));
+        let mut row = vec![i.stack.as_str(), kind, &i.title, &i.text, &i.answer, &tags];
+        if refs {
+            row.push(&also);
+        }
         out.push_str(&row.iter().map(|c| quote(c)).collect::<Vec<_>>().join(","));
         out.push('\n');
     }

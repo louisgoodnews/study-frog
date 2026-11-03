@@ -113,6 +113,7 @@ fn blank(path: &str) -> Row {
         stacks: Vec::new(),
         subjects: Vec::new(),
         teachers: Vec::new(),
+        also_in: Vec::new(),
         tags: Vec::new(),
         priority: Priority::Medium,
         difficulty: None,

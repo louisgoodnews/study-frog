@@ -43,6 +43,8 @@ pub struct XItem {
     pub tags: Vec<String>,
     /// The folder of its stack.
     pub stack: String,
+    /// The folders of the other stacks that reference it.
+    pub also_in: Vec<String>,
     /// The status word it states.
     pub status: Option<String>,
     /// The priority word it states.
@@ -80,6 +82,7 @@ pub fn item(kind: ItemKind, stack: &str, text: &str, answer: &str) -> XItem {
         answer: answer.to_owned(),
         tags: Vec::new(),
         stack: stack.to_owned(),
+        also_in: Vec::new(),
         status: None,
         priority: None,
         difficulty: None,

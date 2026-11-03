@@ -46,6 +46,7 @@ fn the_mapping_the_user_chose_wins_and_a_kind_column_makes_notes_and_questions()
         tags: None,
         stack: None,
         kind: Some(2),
+        also_in: None,
     };
     let o = CsvOptions {
         header: Some(true),

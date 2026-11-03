@@ -25,6 +25,8 @@ pub struct Row {
     pub status: Status,
     /// The folder and the title of the item's stack and of every stack above it.
     pub stacks: Vec<String>,
+    /// The titles of the other stacks that reference the item.
+    pub also_in: Vec<String>,
     /// The subjects of the stack, inherited.
     pub subjects: Vec<String>,
     /// The teachers of those subjects.

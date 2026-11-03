@@ -25,6 +25,7 @@ fn row(path: &str, title: &str) -> Row {
         stacks: vec!["french".into(), "French".into()],
         subjects: Vec::new(),
         teachers: Vec::new(),
+        also_in: Vec::new(),
         tags: Vec::new(),
         priority: Priority::Medium,
         difficulty: None,

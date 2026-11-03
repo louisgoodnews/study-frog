@@ -22,6 +22,8 @@ pub enum Role {
     Stack,
     /// The kind.
     Kind,
+    /// The other stacks that reference the item.
+    AlsoIn,
 }
 
 /// A choice in the CSV settings.
@@ -46,6 +48,7 @@ fn set(map: &mut Mapping, role: Role, at: Option<usize>) {
         (Role::Tags, _) => map.tags = at,
         (Role::Stack, _) => map.stack = at,
         (Role::Kind, _) => map.kind = at,
+        (Role::AlsoIn, _) => map.also_in = at,
     }
 }
 

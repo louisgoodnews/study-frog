@@ -9,7 +9,7 @@ use studyfrog_core::status::{STATUSES, Status, effective_status, status_from_nam
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_store::error::StoreError;
-use studyfrog_store::item_meta::{ItemMeta, load_item_meta};
+use studyfrog_store::item_meta::{ItemMeta, in_stack, load_item_meta};
 use studyfrog_store::overview::{load_indexed_items, load_overview};
 use studyfrog_store::reviews::load_all_reviews_timed;
 
@@ -71,10 +71,6 @@ pub struct StackSummary {
     pub tree: Vec<SubStack>,
 }
 
-pub(crate) fn inside(folder: &str, stack: &str) -> bool {
-    folder == stack || folder.starts_with(&format!("{stack}/"))
-}
-
 pub(crate) fn status_of(m: &ItemMeta) -> Status {
     effective_status(
         m.status.as_deref().and_then(status_from_name),
@@ -114,10 +110,8 @@ pub fn stack_summary(
     now: UnixMs,
 ) -> Result<StackSummary, StoreError> {
     let meta = load_item_meta(conn)?;
-    let members: Vec<(&Uid, &ItemMeta)> = meta
-        .iter()
-        .filter(|(_, m)| m.stack.as_deref().is_some_and(|f| inside(f, folder)))
-        .collect();
+    let members: Vec<(&Uid, &ItemMeta)> =
+        meta.iter().filter(|(_, m)| in_stack(m, folder)).collect();
     let priority: HashMap<Uid, Priority> = load_indexed_items(conn)?
         .into_iter()
         .map(|i| (i.uid, i.priority))

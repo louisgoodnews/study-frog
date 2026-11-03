@@ -138,6 +138,12 @@ fn row_of((item, meta): (&IndexedItem, &ItemMeta), shared: &Shared, now: UnixMs)
         kind: item.kind,
         status,
         stacks: stack_chain(shared.stacks, meta.stack.as_deref()),
+        also_in: meta
+            .also_in
+            .iter()
+            .filter_map(|f| shared.stacks.iter().find(|s| s.folder == *f))
+            .map(|s| s.title.clone())
+            .collect(),
         subjects,
         teachers,
         tags: item.tags.clone(),

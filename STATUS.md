@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M0 to M10 complete; released 0.3.1 (fixes and a calmer UI after 0.3.0). **Date:** 2026-11-03. **Branch:** `main`.
+**Phase:** M0 to M10 complete; released 0.3.1 (fixes and a calmer UI after 0.3.0). **Date:** 2026-11-04. **Branch:** `main`.
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
@@ -56,7 +56,9 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   unverified from memory. No git remote is configured.
 
 ## Next
-- **0.3.0 and 0.3.1 (phase M10) are released.** 0.3.1 (EPIC-025) answered the owner's first use of 0.3.0 (title bar, layout, progress bar, discard question, import suggestions). **Next (0.4.0, phase M11):** after the owner's test of 0.3.1 the plan grew by EPIC-026 (Markdown editor, auto-save, appearance settings (EPIC-027: built; the dialogs and the PDF viewer were not checked in both themes), stack folders with items referenced by several stacks, the folders and items views, prompts for AI agents, imports that explain themselves); the proposed order is in `priority-list.md` and `docs/roadmap/M11-diary.md`. The diary (TASK-0170) and the calmer remaining screens (TASK-0195) follow.
+- **0.3.0 and 0.3.1 (phase M10) are released.** **Now (0.4.0, phase M11), built and committed on local `main`, not pushed and not released (the owner wants the whole priority list done first):** appearance settings, navigation history, list continuation, PDF names, auto-save with the "Saved" toast, Open on the created notice, import formats and examples, CSV mapping, standard prompts and the Prompts tab, running a prompt through the assistant, tables, underline, colour, a table of contents, code highlighting, text macros, ADR 0011, `referenced_by` with the `membership` view (schema v20), and the services, library column, JSON, CSV and import following the membership (TASK-0212).
+- **Next, in `priority-list.md` order:** TASK-0218 (schedules, due dates and reviews per stack: the big one, a schema change keyed by (item, stack)), TASK-0219 (familiarity and difficulty per stack, averaged), TASK-0213 (references in the interface), TASK-0217 (mark a folder as a stack), TASK-0220 (TOML and RON export), then the views (TASK-0202 spec, TASK-0203, TASK-0204), TASK-0195 (calm the remaining screens), the diary (TASK-0170 to TASK-0174), then the release steps of `docs/contributing/RELEASING.md` (version bump to 0.4.0, notes with the install steps, AppImage, tag, push).
+- **Open points for the owner:** ADR 0011 is marked accepted on the strength of the owner's decisions of 2026-11-03; the wording is Claude's. Not built or not tried: attaching PDF pages to a prompt run, a mapping remembered per file name, `also_in` in the query language. The auto-save, prompts, tables and macros were tested headless only.
 - **Not verified by hand:** the owner tried the title bar and the new layout on their GNOME/Wayland machine and was satisfied; the progress bar was seen at 0 done only (partial fill and repeats are tested headless). The benchmarks were not re-run for 0.3.1.
 - **Open flag:** the help outline (`docs/help/README.md`, TASK-0161) shipped at the owner's release instruction without a separate review of the outline; the help screen and tutorial card were tested headless only.
 - **0.3.0 is planned** (phase M10, EPIC-023, `docs/roadmap/M10-usability-and-insight.md`): 15 stories and one bug (BUG-0001, commas in teacher names), all in backlog.

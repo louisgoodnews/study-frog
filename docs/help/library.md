@@ -19,7 +19,7 @@ Every item is a row. The title opens the [[item-page|item page]].
 - **Sort**: click a column heading to sort by it, click again to reverse, and shift-click to add a second key. The
   direction is shown after the heading as `^` or `v`.
 - **Columns**: the **Columns** menu chooses which columns are shown: title, type, status, priority, difficulty,
-  familiarity, stack, subjects, tags, reviews, due, created, updated and path. Your choice is remembered.
+  familiarity, stack, also in (the other stacks that reference the item), subjects, tags, reviews, due, created, updated and path. Your choice is remembered.
 - The line above the list says how many items match, for example "50 of 1000 items".
 - Only the rows on screen are drawn, so even 10 000 items scroll smoothly.
 

@@ -35,6 +35,7 @@ pub fn candidates<'a>(
                 uid: it.uid,
                 kind: it.kind,
                 stack: it.stack,
+                also_in: &it.also_in,
                 tags: &it.tags,
                 position: it.position,
                 memory: scheduled.and_then(|s| s.memory),

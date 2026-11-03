@@ -33,6 +33,9 @@ fn item_json(i: &XItem, scheduling: bool) -> Value {
         map.insert(k.into(), json!(v));
     }
     map.insert("tags".into(), json!(i.tags));
+    if !i.also_in.is_empty() {
+        map.insert("also_in".into(), json!(i.also_in));
+    }
     if let Some(id) = i.id {
         map.insert("id".into(), json!(format_ulid(id)));
     }
@@ -107,6 +110,14 @@ fn item_of(v: &Value, n: usize) -> Result<XItem, String> {
                 .filter_map(|t| t.as_str().map(str::to_owned))
                 .collect()
         });
+    let also_in = v
+        .get("also_in")
+        .and_then(Value::as_array)
+        .map_or_else(Vec::new, |a| {
+            a.iter()
+                .filter_map(|t| t.as_str().map(str::to_owned))
+                .collect()
+        });
     let reviews = v
         .get("reviews")
         .and_then(Value::as_array)
@@ -119,6 +130,7 @@ fn item_of(v: &Value, n: usize) -> Result<XItem, String> {
         answer: text(v, "answer"),
         tags,
         stack: text(v, "stack"),
+        also_in,
         status: optional(v, "status"),
         priority: optional(v, "priority"),
         difficulty: optional(v, "difficulty"),

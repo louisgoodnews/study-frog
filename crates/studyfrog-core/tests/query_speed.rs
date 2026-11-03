@@ -30,6 +30,7 @@ fn rows(n: usize) -> Vec<Row> {
             stacks: vec![format!("stack{}", i % 40), format!("Stack {}", i % 40)],
             subjects: vec![format!("subject{}", i % 7)],
             teachers: vec![format!("Teacher {}", i % 5)],
+            also_in: Vec::new(),
             tags: vec![format!("tag{}", i % 11), "exam".to_owned()],
             priority: [Priority::Low, Priority::Medium, Priority::High][i % 3],
             difficulty: (i % 5 != 0).then_some(Difficulty::Medium),

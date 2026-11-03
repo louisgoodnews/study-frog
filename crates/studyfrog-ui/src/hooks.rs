@@ -13,16 +13,24 @@ pub fn around(
     msg: crate::msg::Msg,
     step: fn(State, crate::msg::Msg) -> Stepped,
 ) -> Stepped {
-    let before = state.notice.clone();
-    let there = crate::history::place_of(&state);
-    let reload = crate::library_ui::wants_reload(&msg);
-    let visit = crate::editor_leave::visit(&state);
-    let (next, effects) = step(state, msg);
-    let next = crate::editor_leave::after(visit, next);
-    let (next, after) = after(next, &before, reload);
-    let next = crate::history::record(next, there);
-    let (next, last) = crate::appearance_ui::remember_screen(next);
-    (next, [effects, after, last].concat())
+    let (mut state, mut msg) = (state, msg);
+    let mut all = Vec::new();
+    loop {
+        let before = state.notice.clone();
+        let there = crate::history::place_of(&state);
+        let reload = crate::library_ui::wants_reload(&msg);
+        let visit = crate::editor_leave::visit(&state);
+        let (next, effects) = step(state, msg);
+        let next = crate::editor_leave::after(visit, next);
+        let (next, after) = after(next, &before, reload);
+        let next = crate::history::record(next, there);
+        let (mut next, last) = crate::appearance_ui::remember_screen(next);
+        all.extend([effects, after, last].concat());
+        match next.replay.take() {
+            Some(again) => (state, msg) = (next, *again),
+            None => return (next, all),
+        }
+    }
 }
 
 /// Follow a state change with what it makes necessary. `reload` says the message changed what the library shows.

@@ -19,8 +19,10 @@ pub struct ItemMeta {
     pub title: String,
     /// Vault-relative path.
     pub path: String,
-    /// The folder of the owning stack, `None` for the inbox.
+    /// The folder of the owning (primary) stack, `None` for the inbox.
     pub stack: Option<String>,
+    /// The folders of the other stacks that reference the item.
+    pub also_in: Vec<String>,
     /// The `status` word from its front matter, if there is a valid one.
     pub status: Option<String>,
     /// When it was created.
@@ -66,6 +68,7 @@ pub fn load_item_meta(conn: &Connection) -> Result<HashMap<Uid, ItemMeta>, Store
             ))
         })
         .map_err(sql_err)?;
+    let mut also = crate::refs_index::referencing_folders(conn)?;
     let mut out = HashMap::new();
     for row in rows {
         let (
@@ -85,6 +88,7 @@ pub fn load_item_meta(conn: &Connection) -> Result<HashMap<Uid, ItemMeta>, Store
                 title,
                 path,
                 stack,
+                also_in: also.remove(&id).unwrap_or_default(),
                 status,
                 created_ms,
                 updated_ms,
@@ -95,4 +99,11 @@ pub fn load_item_meta(conn: &Connection) -> Result<HashMap<Uid, ItemMeta>, Store
         );
     }
     Ok(out)
+}
+
+/// Whether the item belongs to the stack at `folder` or to a stack inside it: through the folder it sits in, or
+/// because a stack there references it (ADR 0011).
+pub fn in_stack(m: &ItemMeta, folder: &str) -> bool {
+    let inside = |f: &str| f == folder || f.starts_with(&format!("{folder}/"));
+    m.stack.as_deref().is_some_and(inside) || m.also_in.iter().any(|f| inside(f))
 }

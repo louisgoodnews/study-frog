@@ -22,7 +22,11 @@ fn in_scope(folder: &str, scope: Option<&str>) -> bool {
     scope.is_none_or(|s| folder == s || folder.starts_with(&format!("{s}/")))
 }
 
-fn item_of(doc: &Doc, stack: &str, scheduling: Option<&[XReview]>) -> XItem {
+fn item_of(
+    doc: &Doc,
+    (stack, also_in): (&str, Vec<String>),
+    scheduling: Option<&[XReview]>,
+) -> XItem {
     let m = doc_meta(doc);
     let (kind, text, answer) = match doc {
         Doc::Card(d) => (ItemKind::Card, d.front.clone(), d.back.clone()),
@@ -38,6 +42,7 @@ fn item_of(doc: &Doc, stack: &str, scheduling: Option<&[XReview]>) -> XItem {
         answer,
         tags: m.tags.clone(),
         stack: stack.to_owned(),
+        also_in,
         status: extra_value(doc, "status"),
         priority: extra_value(doc, "priority"),
         difficulty: extra_value(doc, "difficulty"),
@@ -107,6 +112,12 @@ pub fn export_bundle(
         let Some(folder) = m.stack.as_deref().filter(|f| in_scope(f, scope)) else {
             continue;
         };
+        let also_in: Vec<String> = m
+            .also_in
+            .iter()
+            .filter(|f| in_scope(f, scope))
+            .cloned()
+            .collect();
         let reviews: Option<Vec<XReview>> = scheduling.then(|| {
             load_reviews(&session.conn, uid)
                 .unwrap_or_default()
@@ -120,7 +131,7 @@ pub fn export_bundle(
         });
         b.items.push(item_of(
             &load_document(session, uid)?.doc,
-            folder,
+            (folder, also_in),
             reviews.as_deref(),
         ));
     }

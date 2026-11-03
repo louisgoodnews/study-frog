@@ -1,8 +1,5 @@
 //! Import: writing a bundle into the vault after the dry run (`docs/specs/interchange.md`).
 
-use std::fs;
-use std::path::Path;
-
 use studyfrog_core::event::difficulty_from_name;
 use studyfrog_core::plan::ItemKind;
 use studyfrog_core::priority::priority_from_name;
@@ -22,7 +19,7 @@ use crate::import::nth;
 use crate::rerate::replay_fsrs;
 use crate::session::{ServiceError, VaultInfo, VaultSession, current_settings};
 use crate::settings::params_for;
-use crate::xfer_model::{Bundle, XItem, safe_folder};
+use crate::xfer_model::{Bundle, XItem};
 pub use crate::xfer_plan::{ImportPlan, MAX_ITEMS, PlanLine, Policy, Verdict, counts, plan_import};
 use crate::xfer_plan::{find, known, label};
 
@@ -93,7 +90,7 @@ fn doc_of(item: &XItem, uid: Uid, ids: IdSource, notes: &mut Vec<String>) -> Doc
     }
 }
 
-fn ensure_stacks(
+pub(crate) fn ensure_stacks(
     session: &VaultSession,
     folder: &str,
     b: &Bundle,
@@ -123,19 +120,6 @@ fn ensure_stacks(
         write_new(&file, &render_doc(&doc).map_err(render_error)?)?;
     }
     Ok(())
-}
-
-fn copy_files(session: &VaultSession, b: &Bundle) {
-    for (path, bytes) in &b.files {
-        let ok = safe_folder(path) && Path::new(path).extension().is_some();
-        let target = session.root.join(path);
-        if ok && !target.exists() {
-            if let Some(dir) = target.parent() {
-                let _ = fs::create_dir_all(dir);
-            }
-            let _ = fs::write(target, bytes);
-        }
-    }
 }
 
 /// What an import wrote.
@@ -185,6 +169,7 @@ pub fn apply_import(
     let k = known(session)?;
     let (mut created, mut replaced, mut skipped, mut stacks) = (0, 0, 0, 0);
     let mut notes = plan.warnings.clone();
+    let mut named: Vec<crate::xfer_refs::Named> = Vec::new();
     for (n, (item, line)) in b.items.iter().zip(&plan.lines).enumerate() {
         let (uid, path) = match (&line.verdict, policy) {
             (Verdict::Error(e), _) => {
@@ -219,6 +204,9 @@ pub fn apply_import(
             }
         };
         write_new(&session.root.join(&file), &text)?;
+        if !item.also_in.is_empty() {
+            named.push((file.clone(), item.also_in.clone()));
+        }
         if path.is_some() {
             replaced += 1;
         } else {
@@ -228,7 +216,13 @@ pub fn apply_import(
             }
         }
     }
-    copy_files(session, b);
+    crate::xfer_files::copy_files(session, b);
+    notes.extend(crate::xfer_refs::link_references(
+        session,
+        (&named, b),
+        ids,
+        &mut stacks,
+    )?);
     let info = refresh(session)?;
     Ok(ImportDone {
         created,

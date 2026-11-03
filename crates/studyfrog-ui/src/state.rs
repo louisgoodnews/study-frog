@@ -172,6 +172,9 @@ pub struct State {
     pub modal: Option<Modal>,
     /// Clickable in-app notifications.
     pub toasts: Vec<Toast>,
+    /// A message to apply right after the one being handled (what waited for a save to finish). Applied by
+    /// `hooks::around` in a loop, so a long chain never nests `update` calls on the stack.
+    pub replay: Option<Box<crate::msg::Msg>>,
     /// A standard prompt being run through the assistant.
     pub prompt_run: Box<crate::prompt_run::PromptRun>,
     /// Sidebar, menus, search and notifications.

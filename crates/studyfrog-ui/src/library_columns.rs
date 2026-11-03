@@ -24,6 +24,8 @@ pub enum Column {
     Familiarity,
     /// The stack.
     Stack,
+    /// The other stacks that reference the item.
+    AlsoIn,
     /// The subjects.
     Subjects,
     /// The tags.
@@ -41,7 +43,7 @@ pub enum Column {
 }
 
 /// Every column, with its stored word and its heading.
-pub const COLUMNS: [(Column, &str, &str); 14] = [
+pub const COLUMNS: [(Column, &str, &str); 15] = [
     (Column::Title, "title", "Title"),
     (Column::Type, "type", "Type"),
     (Column::Status, "status", "Status"),
@@ -49,6 +51,7 @@ pub const COLUMNS: [(Column, &str, &str); 14] = [
     (Column::Difficulty, "difficulty", "Difficulty"),
     (Column::Familiarity, "familiarity", "Familiarity"),
     (Column::Stack, "stack", "Stack"),
+    (Column::AlsoIn, "also_in", "Also in"),
     (Column::Subjects, "subjects", "Subjects"),
     (Column::Tags, "tags", "Tags"),
     (Column::Reviews, "reviews", "Reviews"),
@@ -115,7 +118,7 @@ pub fn column_field(c: Column) -> Option<Field> {
         Column::Created => Field::Created,
         Column::Updated => Field::Updated,
         Column::Path => Field::Path,
-        Column::Subjects | Column::Tags => return None,
+        Column::AlsoIn | Column::Subjects | Column::Tags => return None,
     })
 }
 
@@ -145,6 +148,7 @@ pub fn cell(row: &Row, c: Column) -> String {
             .familiarity
             .map_or_else(|| "–".to_owned(), |f| format!("{:.0} %", f * 100.0)),
         Column::Stack => row.stacks.last().cloned().unwrap_or_else(|| "–".to_owned()),
+        Column::AlsoIn => list(&row.also_in),
         Column::Subjects => list(&row.subjects),
         Column::Tags => list(&row.tags),
         Column::Reviews => row.reviews.to_string(),

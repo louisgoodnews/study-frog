@@ -17,6 +17,8 @@ pub struct Mapping {
     pub stack: Option<usize>,
     /// The kind: card, question or note.
     pub kind: Option<usize>,
+    /// Other stacks that reference the item (folders separated by semicolons).
+    pub also_in: Option<usize>,
 }
 
 /// What the user chose; every `None` is detected.

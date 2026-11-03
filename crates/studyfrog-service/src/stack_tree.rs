@@ -9,13 +9,13 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_store::due_dates::stack_statuses;
 use studyfrog_store::error::StoreError;
-use studyfrog_store::item_meta::ItemMeta;
+use studyfrog_store::item_meta::{ItemMeta, in_stack};
 use studyfrog_store::overview::StackRow;
 use studyfrog_store::sessions::load_sessions;
 
 use crate::fam_stacks::stack_percents;
 use crate::familiarity::pick_exam;
-use crate::stack_summary::{inside, status_of};
+use crate::stack_summary::status_of;
 
 const DAY_MS: i64 = 86_400_000;
 
@@ -73,7 +73,7 @@ pub(crate) fn tree(
         .map(|s| {
             let inner: Vec<_> = members
                 .iter()
-                .filter(|(_, m)| m.stack.as_deref().is_some_and(|f| inside(f, &s.folder)))
+                .filter(|(_, m)| in_stack(m, &s.folder))
                 .collect();
             let status = own
                 .get(&s.folder)

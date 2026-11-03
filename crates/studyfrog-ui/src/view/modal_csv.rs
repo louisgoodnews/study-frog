@@ -40,6 +40,7 @@ fn column_menu(info: &CsvInfo, ui: &mut egui::Ui, (role, label): (Role, &str), o
         Role::Tags => m.tags,
         Role::Stack => m.stack,
         Role::Kind => m.kind,
+        Role::AlsoIn => m.also_in,
     };
     let optional = !matches!(role, Role::Front | Role::Back);
     let shown = current
@@ -59,7 +60,25 @@ fn column_menu(info: &CsvInfo, ui: &mut egui::Ui, (role, label): (Role, &str), o
         });
 }
 
+/// The settings in rows that wrap, so the panel stays low and the buttons under it stay in reach.
 fn choices(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.horizontal_wrapped(|ui| format_choices(info, ui, out));
+    ui.horizontal_wrapped(|ui| {
+        for pair in [
+            (Role::Front, "Front"),
+            (Role::Back, "Back"),
+            (Role::Title, "Title"),
+            (Role::Tags, "Tags"),
+            (Role::Stack, "Stack"),
+            (Role::Kind, "Kind"),
+            (Role::AlsoIn, "Also in"),
+        ] {
+            column_menu(info, ui, pair, out);
+        }
+    });
+}
+
+fn format_choices(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let s = &info.sheet;
     ComboBox::from_label("Delimiter")
         .selected_text(delimiter_name(s.delimiter))
@@ -86,16 +105,6 @@ fn choices(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .changed()
     {
         send(out, CsvChange::Header(Some(header)));
-    }
-    for pair in [
-        (Role::Front, "Front"),
-        (Role::Back, "Back"),
-        (Role::Title, "Title"),
-        (Role::Tags, "Tags"),
-        (Role::Stack, "Stack"),
-        (Role::Kind, "Kind"),
-    ] {
-        column_menu(info, ui, pair, out);
     }
 }
 

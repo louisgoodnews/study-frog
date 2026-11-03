@@ -32,6 +32,7 @@ pub fn borrow(items: &[Owned]) -> Vec<Candidate<'_>> {
             uid: Uid(o.uid),
             kind: o.kind,
             stack: Uid(o.stack),
+            also_in: &[],
             tags: &o.tags,
             position: o.position,
             memory: o.memory,

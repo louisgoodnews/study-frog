@@ -16,8 +16,10 @@ pub struct Candidate<'a> {
     pub uid: Uid,
     /// Note, card or question.
     pub kind: ItemKind,
-    /// Owning stack.
+    /// Owning (primary) stack.
     pub stack: Uid,
+    /// The other stacks that reference the item (ADR 0011).
+    pub also_in: &'a [Uid],
     /// Tags, borrowed from the library.
     pub tags: &'a [String],
     /// Stable position in the library (path order); the base order of every sequence.

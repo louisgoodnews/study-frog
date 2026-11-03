@@ -22,6 +22,7 @@ fn item(uid: u128, priority: Priority, due_in_hours: Option<i64>) -> Candidate<'
         uid: Uid(uid),
         kind: ItemKind::Card,
         stack: Uid(1),
+        also_in: &[],
         tags: &[],
         position: uid as u32,
         memory: None,

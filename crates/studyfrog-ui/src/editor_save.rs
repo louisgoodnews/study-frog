@@ -143,7 +143,10 @@ fn carry_on(state: State, more: bool) -> (State, Vec<Effect>) {
     let mut state = state;
     let waiting = state.editor.as_mut().and_then(|e| e.after.take());
     match (dirty, waiting) {
-        (false, Some(then)) => crate::update::update(state, *then),
+        (false, Some(then)) => {
+            state.replay = Some(then);
+            (state, Vec::new())
+        }
         (_, waiting) => {
             if let Some(e) = &mut state.editor {
                 e.after = waiting;

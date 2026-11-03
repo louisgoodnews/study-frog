@@ -9,7 +9,7 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_md::doc::Doc;
 use studyfrog_md::ulid::{format_ulid, parse_ulid};
-use studyfrog_store::home::{IndexRow, item_index};
+use studyfrog_store::home::{IndexRow, item_index, row_in_stack};
 use studyfrog_store::overview::load_overview;
 
 use crate::content::{ItemContent, load_doc, load_item_content};
@@ -66,9 +66,8 @@ pub fn wiki_context(
         .map_err(store)?
         .into_iter()
         .filter(|i| {
-            i.stack
-                .as_deref()
-                .is_some_and(|s| out.stacks.iter().any(|(f, _)| f == s))
+            let there = |f: &str| out.stacks.iter().any(|(s, _)| s == f);
+            i.stack.as_deref().is_some_and(there) || i.also_in.iter().any(|f| there(f))
         })
         .collect();
     for row in rows {
@@ -98,12 +97,10 @@ pub fn exam_items(
 ) -> Result<Vec<ExamItem>, ServiceError> {
     let rows = item_index(&session.conn).map_err(ServiceError::Store)?;
     let mut out = Vec::new();
-    for row in rows.into_iter().filter(|r| {
-        r.kind != ItemKind::Note
-            && r.stack
-                .as_deref()
-                .is_some_and(|s| folders.iter().any(|f| inside(s, f)))
-    }) {
+    for row in rows
+        .into_iter()
+        .filter(|r| r.kind != ItemKind::Note && folders.iter().any(|f| row_in_stack(r, f)))
+    {
         if out.len() >= count {
             break;
         }

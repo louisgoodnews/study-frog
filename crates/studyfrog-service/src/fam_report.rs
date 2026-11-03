@@ -106,6 +106,7 @@ pub(crate) struct Scored {
     pub(crate) uid: Uid,
     pub(crate) title: String,
     pub(crate) folder: Option<String>,
+    pub(crate) also_in: Vec<String>,
     pub(crate) priority: studyfrog_core::priority::Priority,
     pub(crate) fam: Option<Familiarity>,
     pub(crate) why: String,
@@ -140,6 +141,7 @@ pub(crate) fn score_all(
             uid: item.uid,
             title: m.title.clone(),
             folder: m.stack.clone(),
+            also_in: m.also_in.clone(),
             priority: item.priority,
             fam: familiarity(&events, now, &ctx, &params),
             why: drivers(&events, &ctx, now),
@@ -184,10 +186,10 @@ pub(crate) fn group(name: String, members: &[&Scored]) -> FamGroup {
     }
 }
 
-pub(crate) fn inside(folder: &Option<String>, stack: &str) -> bool {
-    folder
-        .as_deref()
-        .is_some_and(|f| f == stack || f.starts_with(&format!("{stack}/")))
+/// Whether the scored item belongs to the stack at `stack` or inside it, through its folder or a reference.
+pub(crate) fn in_scored(s: &Scored, stack: &str) -> bool {
+    let below = |f: &str| f == stack || f.starts_with(&format!("{stack}/"));
+    s.folder.as_deref().is_some_and(below) || s.also_in.iter().any(|f| below(f))
 }
 
 /// The report at `now`.
@@ -208,7 +210,7 @@ pub fn familiarity_report(
             ..group(
                 st.title.clone(),
                 &all.iter()
-                    .filter(|s| inside(&s.folder, &st.folder))
+                    .filter(|s| in_scored(s, &st.folder))
                     .collect::<Vec<_>>(),
             )
         })

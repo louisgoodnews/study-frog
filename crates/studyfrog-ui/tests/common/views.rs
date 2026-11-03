@@ -136,6 +136,7 @@ pub fn lib_item(n: u128, title: &str) -> studyfrog_service::library_rows::Librar
             kind: ItemKind::Card,
             status: Status::New,
             stacks: vec!["french".into(), "French".into()],
+            also_in: Vec::new(),
             subjects: Vec::new(),
             teachers: Vec::new(),
             tags: Vec::new(),

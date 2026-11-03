@@ -7,7 +7,7 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_report::explore::{Perf, ReviewPoint, daily, perf_of};
 use studyfrog_report::latency::{FlipSample, flip_samples};
-use studyfrog_store::home::{IndexRow, item_index};
+use studyfrog_store::home::{IndexRow, item_index, row_in_stack};
 use studyfrog_store::overview::{StackRow, load_overview};
 use studyfrog_store::reports::{load_all_events, load_review_history};
 
@@ -21,16 +21,12 @@ pub const CHART_DAYS: usize = 30;
 /// Most review lines listed for one item.
 pub const MAX_HISTORY: usize = 100;
 
-fn inside(folder: &str, outer: &str) -> bool {
-    folder == outer || folder.starts_with(&format!("{outer}/"))
-}
-
 fn items_in<'a>(scope: &Scope, index: &'a [IndexRow]) -> Vec<&'a IndexRow> {
     index
         .iter()
         .filter(|i| match scope {
             Scope::Vault => true,
-            Scope::Stack(f) => i.stack.as_deref().is_some_and(|s| inside(s, f)),
+            Scope::Stack(f) => row_in_stack(i, f),
             Scope::Item(u) => i.uid == *u,
         })
         .collect()
@@ -105,7 +101,7 @@ fn rows_for(
     if let Scope::Stack(f) = scope {
         for i in index
             .iter()
-            .filter(|i| i.stack.as_deref() == Some(f.as_str()))
+            .filter(|i| i.stack.as_deref() == Some(f.as_str()) || i.also_in.iter().any(|x| x == f))
         {
             let perf = perf_for(&[i], reviews, samples);
             rows.push(Row {

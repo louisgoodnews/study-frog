@@ -73,3 +73,43 @@ pub fn reference_problems(conn: &Connection) -> Result<Vec<(String, String)>, St
         .map_err(sql_err)?;
     rows.collect::<Result<_, _>>().map_err(sql_err)
 }
+
+/// For each item (by uid text) the stacks that reference it besides its primary stack, as stack uids.
+pub fn referencing_stacks(
+    conn: &Connection,
+) -> Result<std::collections::HashMap<String, Vec<studyfrog_core::uid::Uid>>, StoreError> {
+    let mut stmt = conn
+        .prepare("SELECT item_uid, stack_uid FROM membership WHERE is_primary = 0 ORDER BY item_uid, stack_uid")
+        .map_err(sql_err)?;
+    let rows = stmt
+        .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))
+        .map_err(sql_err)?;
+    let mut out: std::collections::HashMap<String, Vec<studyfrog_core::uid::Uid>> =
+        Default::default();
+    for row in rows {
+        let (item, stack) = row.map_err(sql_err)?;
+        if let Some(uid) = parse_ulid(&stack) {
+            out.entry(item).or_default().push(uid);
+        }
+    }
+    Ok(out)
+}
+
+/// For each item (by uid text) the folders of the stacks that reference it besides its primary stack.
+pub fn referencing_folders(
+    conn: &Connection,
+) -> Result<std::collections::HashMap<String, Vec<String>>, StoreError> {
+    let sql =
+        "SELECT m.item_uid, s.folder FROM membership m JOIN stack_identity s ON s.uid = m.stack_uid
+               WHERE m.is_primary = 0 ORDER BY m.item_uid, s.folder";
+    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+    let rows = stmt
+        .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))
+        .map_err(sql_err)?;
+    let mut out: std::collections::HashMap<String, Vec<String>> = Default::default();
+    for row in rows {
+        let (item, folder) = row.map_err(sql_err)?;
+        out.entry(item).or_default().push(folder);
+    }
+    Ok(out)
+}

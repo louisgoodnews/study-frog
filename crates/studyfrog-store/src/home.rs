@@ -82,6 +82,8 @@ pub struct IndexRow {
     pub kind: studyfrog_core::plan::ItemKind,
     /// The folder of the stack it is in; `None` for the inbox.
     pub stack: Option<String>,
+    /// The folders of the other stacks that reference it.
+    pub also_in: Vec<String>,
 }
 
 /// Every item except stacks, in path order.
@@ -98,6 +100,7 @@ pub fn item_index(conn: &Connection) -> Result<Vec<IndexRow>, StoreError> {
             ))
         })
         .map_err(sql_err)?;
+    let mut also = crate::refs_index::referencing_folders(conn)?;
     let mut out = Vec::new();
     for row in rows {
         let (id, title, kind, stack) = row.map_err(sql_err)?;
@@ -109,8 +112,15 @@ pub fn item_index(conn: &Connection) -> Result<Vec<IndexRow>, StoreError> {
             uid,
             title,
             kind,
+            also_in: also.remove(&id).unwrap_or_default(),
             stack,
         });
     }
     Ok(out)
+}
+
+/// Whether the row belongs to the stack at `folder` or inside it, through its own folder or a reference.
+pub fn row_in_stack(i: &IndexRow, folder: &str) -> bool {
+    let inside = |f: &str| f == folder || f.starts_with(&format!("{folder}/"));
+    i.stack.as_deref().is_some_and(inside) || i.also_in.iter().any(|f| inside(f))
 }

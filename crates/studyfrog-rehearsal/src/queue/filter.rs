@@ -43,7 +43,9 @@ fn familiarity_ok(filter: &ItemFilter, c: &Candidate) -> bool {
 /// Whether `c` passes every predicate of `filter`.
 pub fn admits(filter: &ItemFilter, c: &Candidate, now: UnixMs) -> bool {
     (filter.kinds.is_empty() || filter.kinds.contains(&c.kind))
-        && (filter.stacks.is_empty() || filter.stacks.contains(&c.stack))
+        && (filter.stacks.is_empty()
+            || filter.stacks.contains(&c.stack)
+            || c.also_in.iter().any(|s| filter.stacks.contains(s)))
         && tags_ok(&filter.tags_any, c)
         && state_ok(filter.state, c, now)
         && difficulty_ok(filter, c)

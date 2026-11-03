@@ -11,13 +11,13 @@ option for now, **include scheduling** (the review history and the schedule). St
 One object: `format`, `version`, `exported` (RFC 3339), `scheduling` (bool), `stacks`, `items`.
 - stack: `folder` (the stack's vault-relative folder, `/`-separated), `title`, `description`, `status?`, `priority?`.
 - item: `id` (26-character id), `kind` (`note`, `card`, `question`), `title`, `stack` (a stack folder), `text` (note body, card front, question prompt),
-  `answer` (card back or question reference; empty for a note), `tags`, `status?`, `priority?`, `difficulty?`, `created?`, `updated?`, and
+  `answer` (card back or question reference; empty for a note), `tags`, `also_in?` (the folders of the other stacks that reference the item; an import writes them as `referenced_by`, creating a stack that does not exist), `status?`, `priority?`, `difficulty?`, `created?`, `updated?`, and
   only with `scheduling`: `reviews` (list of `{at, rating, elapsed_days}`; `at` in Unix milliseconds, `rating` one of `again`, `hard`, `good`, `easy`).
 - A reader ignores unknown keys, refuses a `version` it does not know, and treats a missing optional key as absent.
 - Pictures and PDFs travel in a **zip** beside the JSON: `export.json` and `files/<vault-relative path>`.
 
 ## CSV and TSV
-Header `stack,kind,title,front,back,tags` (tags separated by `;`). Cards and questions only. RFC 4180 quoting; a tab-separated file is read the same way.
+Header `stack,kind,title,front,back,tags` (tags separated by `;`), plus `also_in` (stack folders separated by `;`) when some item has references. Cards and questions only. RFC 4180 quoting; a tab-separated file is read the same way.
 
 ## Markdown
 The vault layout: one folder per stack with `_stack.md`, one file per item, with the front matter, in a zip with the pictures and PDFs.

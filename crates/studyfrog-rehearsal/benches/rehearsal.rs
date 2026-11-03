@@ -86,6 +86,7 @@ fn candidates(tags: &[String]) -> Vec<Candidate<'_>> {
                 uid: Uid(u128::from(i) + 1),
                 kind: ItemKind::Card,
                 stack: Uid(u128::from(i % 50) + 1),
+                also_in: &[],
                 tags,
                 position: i,
                 memory,

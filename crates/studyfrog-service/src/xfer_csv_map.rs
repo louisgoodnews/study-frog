@@ -26,6 +26,7 @@ const BACK: [&str; 6] = [
 const TITLE: [&str; 2] = ["title", "name"];
 const TAGS: [&str; 2] = ["tags", "tag"];
 const STACK: [&str; 4] = ["stack", "deck", "folder", "category"];
+const ALSO_IN: [&str; 4] = ["also_in", "also in", "alsoin", "references"];
 const KIND: [&str; 2] = ["kind", "type"];
 
 /// The text of the bytes: UTF-8 (a leading mark removed), or Latin-1 when forced or when the bytes are not UTF-8.
@@ -58,7 +59,7 @@ fn find(head: &[String], names: &[&str]) -> Option<usize> {
 
 fn looks_like_header(first: &[String]) -> bool {
     first.iter().any(|c| {
-        [&FRONT[..], &BACK, &TITLE, &TAGS, &STACK, &KIND]
+        [&FRONT[..], &BACK, &TITLE, &TAGS, &STACK, &KIND, &ALSO_IN]
             .iter()
             .any(|names| named(c, names))
     })
@@ -68,7 +69,11 @@ fn guess_map(head: &[String], header: bool) -> Option<Mapping> {
     let by_name = |names: &[&str]| header.then(|| find(head, names)).flatten();
     let (stack, kind) = (by_name(&STACK), by_name(&KIND));
     let (title, tags) = (by_name(&TITLE), by_name(&TAGS));
-    let taken: Vec<usize> = [stack, kind, title, tags].into_iter().flatten().collect();
+    let also_in = by_name(&ALSO_IN);
+    let taken: Vec<usize> = [stack, kind, title, tags, also_in]
+        .into_iter()
+        .flatten()
+        .collect();
     let mut free = (0..head.len()).filter(|i| !taken.contains(i));
     let front = by_name(&FRONT).or_else(|| free.next())?;
     let back = by_name(&BACK).or_else(|| free.find(|i| *i != front))?;
@@ -79,6 +84,7 @@ fn guess_map(head: &[String], header: bool) -> Option<Mapping> {
         tags,
         stack,
         kind,
+        also_in,
     })
 }
 
@@ -134,6 +140,12 @@ fn row_item(
         .split(';')
         .map(str::trim)
         .filter(|t| !t.is_empty())
+        .map(str::to_owned)
+        .collect();
+    it.also_in = cell(row, m.also_in)
+        .split(';')
+        .map(str::trim)
+        .filter(|f| !f.is_empty())
         .map(str::to_owned)
         .collect();
     Ok(it)

@@ -4,7 +4,7 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_store::error::StoreError;
 use studyfrog_store::overview::load_overview;
 
-use crate::fam_report::{Scored, group, inside, score_all};
+use crate::fam_report::{Scored, group, in_scored, score_all};
 
 /// The familiarity of each stack in percent, by folder (`None`: no item has a history).
 pub fn stack_percents(
@@ -16,10 +16,7 @@ pub fn stack_percents(
     Ok(stacks
         .iter()
         .map(|st| {
-            let members: Vec<&Scored> = all
-                .iter()
-                .filter(|s| inside(&s.folder, &st.folder))
-                .collect();
+            let members: Vec<&Scored> = all.iter().filter(|s| in_scored(s, &st.folder)).collect();
             (st.folder.clone(), group(st.title.clone(), &members).percent)
         })
         .collect())

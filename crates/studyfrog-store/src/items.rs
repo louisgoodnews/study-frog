@@ -75,6 +75,8 @@ pub struct IndexedItem {
     pub kind: studyfrog_core::plan::ItemKind,
     /// Owning stack, `Uid(0)` for the inbox.
     pub stack: Uid,
+    /// The other stacks that reference it.
+    pub also_in: Vec<Uid>,
     /// Tags.
     pub tags: Vec<String>,
     /// Position in path order, the base order of sequential runs.
@@ -105,6 +107,7 @@ fn tags_by_item(
 /// Every studiable item (stacks excluded) in path order, with its stack and tags.
 pub fn load_indexed_items(conn: &Connection) -> Result<Vec<IndexedItem>, StoreError> {
     let mut tags = tags_by_item(conn)?;
+    let mut also = crate::refs_index::referencing_stacks(conn)?;
     let stacks = stack_traits(conn)?;
     let sql = "SELECT i.uid, i.kind, s.uid, i.priority, i.difficulty, i.stack_path
                FROM item i LEFT JOIN stack_setting s ON s.folder = i.stack_path
@@ -136,6 +139,7 @@ pub fn load_indexed_items(conn: &Connection) -> Result<Vec<IndexedItem>, StoreEr
             stack: stack.as_deref().map_or(Ok(Uid(0)), |s| {
                 parse_ulid(s).ok_or_else(|| corrupt("ulid", s))
             })?,
+            also_in: also.remove(&id).unwrap_or_default(),
             tags: tags.remove(&id).unwrap_or_default(),
             position: position as u32,
             priority,
