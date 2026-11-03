@@ -8,7 +8,7 @@ parents: [STORY-0079]
 estimate: 5
 labels: [m11, ui]
 acceptance_criteria:
-  - "The item page shows the primary stack and the stacks that reference the item, with add and remove"
+  - "The item page shows the primary stack and the stacks that reference the item, with add and remove, and the schedule, due date and familiarity of each"
   - "An item can be added to another stack from the library's bulk bar and by dragging it onto a stack"
   - "A stack's pages mark the items that are only referenced (with their primary stack's name)"
   - "The Create dialog's parent stack stays the primary stack and offers an optional 'Also in' choice"
@@ -16,13 +16,13 @@ acceptance_criteria:
 ---
 
 ## Context
-The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0. On the same day the owner decided about stacks: an item can be referenced by several stacks, held in a `referenced_by` field, with the original parent as the primary reference; stacks are not folders per se, but a folder can be marked as a 'stack' folder and is then also treated as a stack, while a 'non-stack' folder is a normal folder.
+The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0, and decided about stacks the same day: an item can be referenced by several stacks, held in a `referenced_by` field, with the original parent as the primary reference; a folder can be marked as a stack folder, otherwise it is a normal folder; a normal folder inside a stack folder belongs to the nearest stack above it; the vault should be viewed and organized as in Obsidian's file explorer; and the schedule, the due date, the familiarity and other values of an item belong to each stack that references it, the item's overall value being the average over its references (Flashcard 100 in stack A with 5 weeks and in stack B with 3 weeks).
 
 ## Description
-How the user puts an item into more than one stack.
+How the user puts an item into more than one stack and sees what each stack makes of it.
 
 ## Acceptance Criteria
-- [ ] The item page shows the primary stack and the stacks that reference the item, with add and remove
+- [ ] The item page shows the primary stack and the stacks that reference the item, with add and remove, and the schedule, due date and familiarity of each
 - [ ] An item can be added to another stack from the library's bulk bar and by dragging it onto a stack
 - [ ] A stack's pages mark the items that are only referenced (with their primary stack's name)
 - [ ] The Create dialog's parent stack stays the primary stack and offers an optional 'Also in' choice
@@ -32,7 +32,7 @@ How the user puts an item into more than one stack.
 Builds on the bulk bar and the stack page's Backlog and List tabs.
 
 ## Dependencies
-TASK-0212.
+TASK-0212 and TASK-0218.
 
 ## Open Questions
 None.
