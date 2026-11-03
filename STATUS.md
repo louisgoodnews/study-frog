@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M0 to M10 complete; released 0.3.0 (usability and insight). **Date:** 2026-11-03. **Branch:** `main`.
+**Phase:** M0 to M10 complete; released 0.3.1 (fixes and a calmer UI after 0.3.0). **Date:** 2026-11-03. **Branch:** `main`.
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
@@ -56,7 +56,8 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   unverified from memory. No git remote is configured.
 
 ## Next
-- **0.3.0 (phase M10) is released** (the diary moved to 0.4.0, phase M11). **0.3.1 (EPIC-025)** answers the owner's first use of 0.3.0: padding, the Create dialog header, the Home spacing, a discard question, a red Exit button and import suggestions are done; **in review by the owner:** TASK-0190 (StudyFrog's own title bar: drag, snap and resize still to be tried under GNOME/Wayland) and TASK-0192 (the calmer UI, first part built: library, stack page, Home, rehearsal setup, settings, help; the rest follows, `docs/specs/ui-calm.md`). Then the diary, TASK-0170 (`docs/roadmap/M11-diary.md`).
+- **0.3.0 and 0.3.1 (phase M10) are released.** 0.3.1 (EPIC-025) answered the owner's first use of 0.3.0 (title bar, layout, progress bar, discard question, import suggestions). **Next (0.4.0, phase M11):** the diary, TASK-0170 (`docs/roadmap/M11-diary.md`), and the calmer look for the remaining screens, TASK-0195.
+- **Not verified by hand:** the owner tried the title bar and the new layout on their GNOME/Wayland machine and was satisfied; the progress bar was seen at 0 done only (partial fill and repeats are tested headless). The benchmarks were not re-run for 0.3.1.
 - **Open flag:** the help outline (`docs/help/README.md`, TASK-0161) shipped at the owner's release instruction without a separate review of the outline; the help screen and tutorial card were tested headless only.
 - **0.3.0 is planned** (phase M10, EPIC-023, `docs/roadmap/M10-usability-and-insight.md`): 15 stories and one bug (BUG-0001, commas in teacher names), all in backlog.
   The owner answered the open design questions on 2026-11-02 (accepted choices are listed in the phase file); what is still

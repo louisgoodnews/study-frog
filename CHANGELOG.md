@@ -7,6 +7,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-11-03
+
 ### Fixed
 - Scroll bars reserve their own width, so widgets and tables next to them no longer run under them (TASK-0193).
 - Rows of a name and a bar (priorities, ratings, familiarity spread) are aligned: the names share a column and every bar starts at the same place and has the same length, with its number on it; the numbers of Types and the due rows on Home line up as well (TASK-0192).

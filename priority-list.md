@@ -5,7 +5,7 @@ The order in which Claude works on the planned items of phase M10 (0.3.0), kept 
 [docs/roadmap/M10-usability-and-insight.md](docs/roadmap/M10-usability-and-insight.md). Tick an item when it is done and
 verified (`scripts/check.sh` passes), and report it to the owner. The owner may reorder the list at any time.
 
-Last updated: 2026-11-03. Phase M10 was released as 0.3.0 on 2026-11-03; the diary (item 20) moved to phase M11 (0.4.0) at the
+Last updated: 2026-11-03 (0.3.1 released). Phase M10 was released as 0.3.0 on 2026-11-03; the diary (item 20) moved to phase M11 (0.4.0) at the
 owner's request and is listed under Next.
 
 ## Wave 1: start now
@@ -39,12 +39,13 @@ owner's request and is listed under Next.
 
 ## Next: phase M11 (0.4.0)
 - [ ] 1. TASK-0170 to TASK-0174 Diary ([M11-diary](docs/roadmap/M11-diary.md))
+- [ ] 2. TASK-0195 Calm the remaining screens (STORY-0073)
 
-## Feedback after 0.3.0 (0.3.1, EPIC-025)
+## Feedback after 0.3.0 (released as 0.3.1 on 2026-11-03, EPIC-025)
 - [x] BUG-0002 Padding, BUG-0003 Create dialog header, BUG-0004 Home figures
 - [x] TASK-0188 Ask before discarding a filled Create dialog
 - [x] TASK-0189 Red Exit button
 - [x] TASK-0191 Suggest Anki and Obsidian files to import
-- [ ] TASK-0190 Own title bar: built and in review, waiting for the owner to try dragging, snapping and resizing on their machine
-- [ ] TASK-0192 Calmer UI: library, stack page, Home, rehearsal setup, settings and help done (`docs/specs/ui-calm.md`); the rest of the screens and the Create dialog follow
+- [x] TASK-0190 Own title bar (the owner tried it on 2026-11-03)
+- [x] TASK-0192 Calmer UI, first part: library, stack page, Home, rehearsal setup, settings and help (`docs/specs/ui-calm.md`); accepted by the owner, the rest is TASK-0195
 - [x] TASK-0193 Space between content and scroll bars, TASK-0194 Rehearsal progress bar against the open items

@@ -16,7 +16,7 @@ Phases M0 to M11. Each phase has entry criteria, an epic breakdown (every epic h
 | M9 | Documents (PDF) | EPIC-022 | [M9-documents](M9-documents.md) |
 | M10 | Usability and insight (0.3.0, released 2026-11-03) | EPIC-023 | [M10-usability-and-insight](M10-usability-and-insight.md) (priority order inside) |
 | M10 | 0.3.1 fixes | EPIC-025 | [M10](M10-usability-and-insight.md), last paragraph |
-| M11 | Diary (0.4.0) | EPIC-024 | [M11-diary](M11-diary.md) |
+| M11 | Diary and a calmer UI (0.4.0) | EPIC-024 | [M11-diary](M11-diary.md) |
 
 ## M0 Bootstrap
 

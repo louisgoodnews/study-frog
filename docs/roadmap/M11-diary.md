@@ -1,4 +1,4 @@
-# M11: Diary (0.4.0)
+# M11: Diary and a calmer UI (0.4.0)
 
 **Goal:** The user records how their learning feels and sees it next to what StudyFrog measured.
 
@@ -6,13 +6,15 @@
 
 ## Epics, stories, tasks
 
-- **EPIC-024** Diary for 0.4.0
+- **EPIC-024** Diary and a calmer UI for 0.4.0
   - **STORY-0068** Diary for self-reported progress (from EPIC-023; its design notes and the owner's answers of 2026-11-02 stand)
     - TASK-0170 Specify the diary
     - TASK-0171 Diary entries in the data model, Markdown and index
     - TASK-0172 Diary screen
     - TASK-0173 Prompt for an entry after a rehearsal
     - TASK-0174 Self-assessment against measured results
+  - **STORY-0073** A calmer look on every screen
+    - TASK-0195 Calm the remaining screens
 
 ## Priority order
 TASK-0170 first (the specification), then TASK-0171, TASK-0172, TASK-0173 and TASK-0174 in order.

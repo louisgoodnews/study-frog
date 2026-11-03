@@ -4,14 +4,14 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (5) | Ready (0) | In progress (0/3) | Review (3) | Blocked (0) | Done (186) |
+| Backlog (6) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (188) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  | [TASK-0190](docs/issues/tasks/TASK-0190-readable-window-buttons.md) Readable window buttons (3) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
-| [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |  |  | [TASK-0192](docs/issues/tasks/TASK-0192-plan-to-make-the-ui-calmer.md) Plan to make the UI calmer (3) |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+| [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+| [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 | [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
 | [TASK-0174](docs/issues/tasks/TASK-0174-self-assessment-against-measured-results.md) Self-assessment against measured results (3) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-|  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+| [TASK-0195](docs/issues/tasks/TASK-0195-calm-the-remaining-screens.md) Calm the remaining screens (5) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 |  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
 |  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
 |  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
@@ -189,7 +189,9 @@
 |  |  |  |  |  | [TASK-0187](docs/issues/tasks/TASK-0187-markdown-editors-in-the-create-dialog-that-grow-by-dragging.md) Markdown editors in the create dialog that grow by dragging (3) |
 |  |  |  |  |  | [TASK-0188](docs/issues/tasks/TASK-0188-ask-before-discarding-a-filled-create-dialog.md) Ask before discarding a filled Create dialog (2) |
 |  |  |  |  |  | [TASK-0189](docs/issues/tasks/TASK-0189-in-ui-exit-button.md) In-UI exit button (2) |
+|  |  |  |  |  | [TASK-0190](docs/issues/tasks/TASK-0190-readable-window-buttons.md) Readable window buttons (3) |
 |  |  |  |  |  | [TASK-0191](docs/issues/tasks/TASK-0191-suggest-importing-found-anki-and-obsidian-files.md) Suggest importing found Anki and Obsidian files (5) |
+|  |  |  |  |  | [TASK-0192](docs/issues/tasks/TASK-0192-plan-to-make-the-ui-calmer.md) Plan to make the UI calmer (3) |
 |  |  |  |  |  | [TASK-0193](docs/issues/tasks/TASK-0193-space-between-content-and-scroll-bars.md) Space between content and scroll bars (1) |
 |  |  |  |  |  | [TASK-0194](docs/issues/tasks/TASK-0194-rehearsal-progress-bar-against-open-items.md) Rehearsal progress bar against the open items (3) |
 
@@ -267,7 +269,8 @@
 | [STORY-0068](docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | backlog | 0/5 |
 | [STORY-0070](docs/issues/stories/STORY-0070-rehearsal-modes-for-countdown-and-count-up.md) Rehearsal modes for countdown and count up (8) | done | 4/4 |
 | [STORY-0071](docs/issues/stories/STORY-0071-create-dialog-like-jira.md) Create dialog like Jira (8) | done | 3/3 |
-| [STORY-0072](docs/issues/stories/STORY-0072-safer-simpler-ui-after-first-use.md) Safer and calmer UI after first use (8) | in_progress | 5/7 |
+| [STORY-0072](docs/issues/stories/STORY-0072-safer-simpler-ui-after-first-use.md) Safer and calmer UI after first use (8) | done | 7/7 |
+| [STORY-0073](docs/issues/stories/STORY-0073-calmer-screens.md) A calmer look on every screen (5) | backlog | 0/1 |
 
 ## Epics
 
@@ -296,5 +299,5 @@
 | [EPIC-021](docs/issues/epics/EPIC-021-knowledge-workspace.md) Knowledge workspace | done | 14/14 |
 | [EPIC-022](docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | done | 1/1 |
 | [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | done | 15/15 |
-| [EPIC-024](docs/issues/epics/EPIC-024-diary-for-0-4-0.md) Diary for 0.4.0 | backlog | 0/1 |
-| [EPIC-025](docs/issues/epics/EPIC-025-feedback-fixes-for-0-3-1.md) Feedback fixes for 0.3.1 | in_progress | 0/1 |
+| [EPIC-024](docs/issues/epics/EPIC-024-diary-for-0-4-0.md) Diary and a calmer UI for 0.4.0 | backlog | 0/2 |
+| [EPIC-025](docs/issues/epics/EPIC-025-feedback-fixes-for-0-3-1.md) Feedback fixes for 0.3.1 | done | 1/1 |

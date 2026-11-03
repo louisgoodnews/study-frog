@@ -1,12 +1,13 @@
 ---
 id: EPIC-024
 type: epic
-title: Diary for 0.4.0
+title: Diary and a calmer UI for 0.4.0
 status: backlog
 parents: []
 labels: [m11, ui]
 acceptance_criteria:
   - "The user can keep a diary of self-reported progress, prompted after a rehearsal and compared with the measured results"
+  - "Every screen has the calmer look of 0.3.1"
 ---
 
 ## Context
@@ -17,9 +18,10 @@ Let the user record how they feel their learning goes and set it against what St
 
 ## Acceptance Criteria
 - [ ] The user can keep a diary of self-reported progress, prompted after a rehearsal and compared with the measured results
+- [ ] Every screen has the calmer look of 0.3.1
 
 ## Design Notes
-Stories STORY-0068. Release target: 0.4.0. The design notes and the owner's answers of 2026-11-02 stay in STORY-0068.
+Stories STORY-0068 and STORY-0073. Release target: 0.4.0. The design notes and the owner's answers of 2026-11-02 stay in STORY-0068.
 
 ## Dependencies
 None.

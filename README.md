@@ -25,14 +25,14 @@ Written in Rust as a functional, data-oriented Cargo workspace (no OOP idioms).
   after you press Send.
 
 ## Status
-- **Released: 0.3.0** (2026-11-03): usability and insight (library, stack pages, statuses, familiarity, calendar
-  planning, rehearsal pacing, import and export, help). Notes: [docs/RELEASE_NOTES_0.3.0.md](docs/RELEASE_NOTES_0.3.0.md).
-  Earlier: [0.2.0](docs/RELEASE_NOTES_0.2.0.md) (PDF support) and [0.1.0](docs/RELEASE_NOTES_0.1.0.md).
-- **In progress: 0.3.1** (not released yet), from the first use of 0.3.0: a calmer, roomier UI (library, stack page,
-  Home, rehearsal setup, settings, help), aligned bars and rows, StudyFrog's own title bar with a red close button, a
-  discard question in the Create dialog and import suggestions. The rest of the screens follow
-  ([docs/specs/ui-calm.md](docs/specs/ui-calm.md)).
-- **Planned: 0.4.0**, a diary of self-reported progress next to the measured results.
+- **Released: 0.3.1** (2026-11-03): fixes and a calmer UI after the first use of 0.3.0: StudyFrog's own title bar, a
+  roomier layout with reading columns and aligned rows (library, stack page, Home, rehearsal setup, settings, help),
+  a progress bar in the rehearsal, a discard question in the Create dialog and import suggestions. Notes:
+  [docs/RELEASE_NOTES_0.3.1.md](docs/RELEASE_NOTES_0.3.1.md). Earlier: [0.3.0](docs/RELEASE_NOTES_0.3.0.md)
+  (usability and insight), [0.2.0](docs/RELEASE_NOTES_0.2.0.md) (PDF support) and
+  [0.1.0](docs/RELEASE_NOTES_0.1.0.md).
+- **Planned: 0.4.0**, a diary of self-reported progress next to the measured results, and the calmer look for the
+  screens not yet done (Calendar, Board, Reports, Achievements, Assistant, Graph, the Create dialog).
 - **Not verified by hand:** much of the UI was tested headless only; real-window behaviour is checked as it comes up.
   OCR for scanned PDFs, cloud sync and other platforms are not planned for now. The release notes list what each
   version was and was not checked with.
@@ -46,12 +46,12 @@ Linux on x86_64 with OpenGL and X11 or Wayland. Download from the
 
 ```sh
 # AppImage: one file
-sha256sum -c StudyFrog-0.3.0-x86_64.AppImage.sha256
-chmod +x StudyFrog-0.3.0-x86_64.AppImage && ./StudyFrog-0.3.0-x86_64.AppImage
+sha256sum -c StudyFrog-0.3.1-x86_64.AppImage.sha256
+chmod +x StudyFrog-0.3.1-x86_64.AppImage && ./StudyFrog-0.3.1-x86_64.AppImage
 
 # or the tarball
-sha256sum -c StudyFrog-0.3.0-x86_64.tar.gz.sha256
-tar -xzf StudyFrog-0.3.0-x86_64.tar.gz && ./StudyFrog-0.3.0/bin/studyfrog
+sha256sum -c StudyFrog-0.3.1-x86_64.tar.gz.sha256
+tar -xzf StudyFrog-0.3.1-x86_64.tar.gz && ./StudyFrog-0.3.1/bin/studyfrog
 ```
 The release notes have the full steps (menu entry, per-user install, removing it). To build from source:
 ```sh

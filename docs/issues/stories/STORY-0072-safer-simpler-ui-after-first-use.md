@@ -2,7 +2,7 @@
 id: STORY-0072
 type: story
 title: Safer and calmer UI after first use
-status: in_progress
+status: done
 epic: EPIC-025
 parents: [EPIC-025]
 estimate: 8
@@ -20,9 +20,9 @@ The owner tested 0.3.0 for a short while on 2026-11-03 and sent five screenshots
 Tasks TASK-0188 to TASK-0194.
 
 ## Acceptance Criteria
-- [ ] Cancelling a filled Create dialog asks first
-- [ ] StudyFrog has a red exit button, readable window buttons and suggests importing found Anki and Obsidian files
-- [ ] The owner has accepted a plan that makes the UI less dense
+- [x] Cancelling a filled Create dialog asks first
+- [x] StudyFrog has a red exit button, readable window buttons and suggests importing found Anki and Obsidian files
+- [x] The owner has accepted a plan that makes the UI less dense
 
 ## Design Notes
 
