@@ -85,6 +85,8 @@ pub enum Block {
         lang: String,
         /// The code.
         text: String,
+        /// The code cut into kinds for colouring; empty when the language is unknown.
+        tokens: Vec<crate::highlight::Token>,
     },
     /// A block quote.
     Quote(Vec<Block>),

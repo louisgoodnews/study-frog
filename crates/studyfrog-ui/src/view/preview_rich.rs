@@ -3,6 +3,7 @@
 
 use eframe::egui::{self, Align, Id, Layout, RichText, TextFormat, TextStyle, text::LayoutJob};
 use studyfrog_md::blocks::{Align as Column, Row, Span, plain_text};
+use studyfrog_md::highlight::{Kind, Token};
 use studyfrog_md::hue::Hue;
 
 use super::preview::spans_line;
@@ -153,4 +154,43 @@ pub fn table(
             }
         });
     ui.add_space(4.0);
+}
+
+/// The colour of a kind of code on the theme `ui` is drawn in; plain code and high contrast use the text colour.
+fn token_color(ui: &egui::Ui, kind: Kind) -> egui::Color32 {
+    let hue = match kind {
+        Kind::Keyword => Hue::Purple,
+        Kind::String => Hue::Green,
+        Kind::Comment => Hue::Grey,
+        Kind::Number => Hue::Orange,
+        Kind::Plain => return ui.visuals().text_color(),
+    };
+    hue_color_in(ui, hue)
+}
+
+/// A code block: monospace in a frame, with the highlighter's colours when the language is known. Comments are
+/// also italic, and every character of the code is still there to read, so colour is never the only carrier.
+pub fn code(ui: &mut egui::Ui, text: &str, tokens: &[Token]) {
+    let text = text.trim_end();
+    egui::Frame::group(ui.style()).show(ui, |ui| {
+        if tokens.is_empty() {
+            ui.add(egui::Label::new(RichText::new(text).monospace()).wrap());
+            return;
+        }
+        let mut job = LayoutJob::default();
+        job.wrap.max_width = ui.available_width();
+        let font = TextStyle::Monospace.resolve(ui.style());
+        let mut at = 0;
+        for t in tokens {
+            let end = (at + t.len).min(text.len());
+            if at >= end {
+                break;
+            }
+            let mut format = TextFormat::simple(font.clone(), token_color(ui, t.kind));
+            format.italics = t.kind == Kind::Comment;
+            job.append(&text[at..end], 0.0, format);
+            at = end;
+        }
+        ui.add(egui::Label::new(job).wrap());
+    });
 }

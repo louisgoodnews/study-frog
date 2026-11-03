@@ -2,7 +2,7 @@
 id: TASK-0198
 type: task
 title: Text macros that expand into Markdown
-status: backlog
+status: done
 epic: EPIC-026
 parents: [STORY-0074]
 estimate: 5
@@ -22,13 +22,15 @@ The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0: a
 Let the user type a short macro in the text and have it replaced by the Markdown it stands for.
 
 ## Acceptance Criteria
-- [ ] Typing {table} inserts a default table and {table:2x2} a table of 2 columns and 2 rows, with the cursor in the first cell
-- [ ] The macros for the owner's list exist: {table}, {table:CxR}, {toc}, {code}, {code:LANG}, {quote}, {image}, {color:NAME}
-- [ ] Macros are a table of plain data (name, argument pattern, expansion function) so that others can be added
-- [ ] The user can see which macros exist (a hint in the editor and a help page)
-- [ ] A macro expands when its closing brace is typed, never while it is still being typed
+- [x] Typing {table} inserts a default table and {table:2x2} a table of 2 columns and 2 rows, with the cursor in the first cell
+- [x] The macros for the owner's list exist: {table}, {table:CxR}, {toc}, {code}, {code:LANG}, {quote}, {image}, {color:NAME}
+- [x] Macros are a table of plain data (name, argument pattern, expansion function) so that others can be added
+- [x] The user can see which macros exist (a hint in the editor and a help page)
+- [x] A macro expands when its closing brace is typed, never while it is still being typed
 
 ## Design Notes
+Done as `md_macros.rs` (the table `MACROS`, `macro_before`, `expand_in`) and a hook in `view/md_editor/mod.rs`: a macro expands only when a single typed character completes `{name}` or `{name:arg}` at the caret, so pasting and deleting never expand one. Block macros get lines of their own. The hint is the `{ }` menu in the toolbar and the item-page help. The open question (closing brace or Tab) is answered by doing what the issue's design note said: the closing brace.
+
 Owner's answer (2026-11-03): the macros are those for the formatting features of TASK-0197, TASK-0214, TASK-0215 and TASK-0216. Following the owner's token-wise idea for saving (see TASK-0200) a macro is a token: it expands as soon as its closing brace is typed. Macros live in `md_macros.rs` as a list of records with one free function each; unknown names are left as typed. {color:NAME} wraps the selection or places an empty span; {image} opens the picture chooser.
 
 ## Dependencies

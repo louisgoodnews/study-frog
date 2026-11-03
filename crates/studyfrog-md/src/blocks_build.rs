@@ -143,7 +143,8 @@ fn end(b: &mut Builder, tag: TagEnd) {
         }
         TagEnd::CodeBlock => {
             if let Some((lang, text)) = b.code.take() {
-                push_block(b, Block::Code { lang, text });
+                let tokens = crate::highlight::highlight(&lang, &text);
+                push_block(b, Block::Code { lang, text, tokens });
             }
         }
         TagEnd::Emphasis => (flush_text(b), b.italic = b.italic.saturating_sub(1)).1,

@@ -3,6 +3,7 @@
 
 use proptest::prelude::*;
 use studyfrog_md::blocks::{Block, Link, ListItem, Span, Style, parse_blocks, plain_text};
+use studyfrog_md::highlight::highlight;
 use studyfrog_md::links::{Piece, split_wikilinks};
 
 fn paragraph(blocks: &[Block], i: usize) -> &[Span] {
@@ -51,7 +52,8 @@ fn wikilinks_become_link_spans_in_text_but_not_in_code() {
         blocks[1],
         Block::Code {
             lang: String::new(),
-            text: "[[Delta]]\n".into()
+            text: "[[Delta]]\n".into(),
+            tokens: Vec::new()
         }
     );
 }
@@ -121,7 +123,8 @@ fn quotes_code_blocks_and_hard_breaks() {
         blocks[1],
         Block::Code {
             lang: "rust".into(),
-            text: "let x = 1;\n".into()
+            text: "let x = 1;\n".into(),
+            tokens: highlight("rust", "let x = 1;\n")
         }
     );
     assert_eq!(plain_text(paragraph(&blocks, 2)), "line one\nline two");
@@ -159,7 +162,7 @@ proptest! {
             for b in blocks {
                 match b {
                     Block::Heading { spans, .. } | Block::Paragraph(spans) => out.push_str(&plain_text(spans)),
-                    Block::Code { lang, text } => {
+                    Block::Code { lang, text, .. } => {
                         out.push_str(lang);
                         out.push_str(text);
                     }

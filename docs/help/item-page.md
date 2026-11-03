@@ -42,6 +42,13 @@ In a list, **Enter** starts the next item (the next number, the same bullet, or 
   stays visible as typed.
 - A line with only `[TOC]` becomes a table of contents: the headings of the note, indented by level, that you can
   click to jump to. The file stores only the marker, never a copy of the headings.
+- **Code blocks** (three backticks, then a language) are coloured for python, r, rust, php, java, cpp (also c), toml,
+  json, html, csv and tsv: keywords, strings, comments and numbers. Comments are also italic and the code itself is never
+  changed, so nothing depends on colour. A fence without a language, or with another one, is drawn plain.
+- **Macros** save typing. Type one in the text; it turns into Markdown the moment you type the closing brace (a pasted
+  macro is left alone, and a name StudyFrog does not know stays as typed). The `{ }` button in the toolbar lists them:
+  `{table}` or `{table:3x4}` (columns by rows), `{toc}`, `{code}` or `{code:python}`, `{quote}`, `{image}` (opens the
+  picture chooser) and `{color:red}` (red, orange, green, blue, purple or grey).
 - **Picture** copies a png, jpg or gif into the vault's `assets/` folder and inserts it as
   `![alt](assets/name.png)`. Pictures show in the preview, on the item page and while rehearsing. Only pictures
   inside the vault are shown.

@@ -32,11 +32,7 @@ fn draw_block(ui: &mut egui::Ui, block: &Block, out: &mut Vec<Msg>, toc: &[rich:
         } => rich::table(ui, (aligns, header, rows), out),
         Block::Toc => rich::toc(ui, toc),
         Block::Paragraph(spans) => spans_line(ui, spans, None, out),
-        Block::Code { text, .. } => {
-            egui::Frame::group(ui.style()).show(ui, |ui| {
-                ui.add(egui::Label::new(RichText::new(text.trim_end()).monospace()).wrap());
-            });
-        }
+        Block::Code { text, tokens, .. } => rich::code(ui, text, tokens),
         Block::Quote(inner) => {
             ui.indent("quote", |ui| draw_all(ui, inner, out, toc));
         }

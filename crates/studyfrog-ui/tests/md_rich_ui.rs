@@ -109,3 +109,17 @@ fn the_table_of_contents_lists_the_headings_with_links_and_says_when_there_are_n
     let h = card("[TOC]\n\nno headings here", "x");
     assert!(h.query_by_label("This note has no headings yet.").is_some());
 }
+
+#[test]
+fn a_code_block_shows_its_whole_text_with_or_without_a_known_language() {
+    let known = card("```python\ndef f(x):  # note\n    return 'a' + 1\n```", "x");
+    assert!(known.query_by_label_contains("def f(x):").is_some());
+    assert!(
+        known.query_by_label_contains("# note").is_some(),
+        "the comment is still text"
+    );
+    let unknown = card("```brainfuck\n+++[->+<]\n```", "x");
+    assert!(unknown.query_by_label_contains("+++[->+<]").is_some());
+    let none = card("```\nplain code\n```", "x");
+    assert!(none.query_by_label_contains("plain code").is_some());
+}

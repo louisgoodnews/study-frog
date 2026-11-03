@@ -17,6 +17,25 @@ use blocks::blocks_of;
 use resize::{LINE, MAX_HEIGHT, MIN_HEIGHT, resize_grip};
 use toolbar::{set_selection, toolbar};
 
+/// A macro whose closing brace was just typed: the new text, the selection and whether to choose a picture.
+fn macro_at_caret(
+    ui: &egui::Ui,
+    text_id: egui::Id,
+    (before, now): (&str, &str),
+) -> Option<(String, (usize, usize), bool)> {
+    // Only a single typed character can finish a macro; deleting or pasting never expands one.
+    if now.chars().count() != before.chars().count() + 1 {
+        return None;
+    }
+    let range = TextEdit::load_state(ui.ctx(), text_id)?
+        .cursor
+        .char_range()?;
+    let caret: usize = range.primary.index.into();
+    let (span, e) = crate::md_macros::macro_before(now, caret)?;
+    let (text, sel) = crate::md_macros::expand_in(now, span, &e);
+    Some((text, sel, e.picture))
+}
+
 /// How the editor shows the text.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Mode {
@@ -92,6 +111,18 @@ pub fn md_editor(
                 body(&mut cols[0], &mut current, &mut changed);
                 rendered(&mut cols[1], &current, out);
             });
+        }
+    }
+    if changed
+        && mode != Mode::Preview
+        && let Some(done) = macro_at_caret(ui, text_id, (text, &current))
+    {
+        current = done.0;
+        ui.data_mut(|d| d.insert_temp(id.with("select"), done.1));
+        if done.2
+            && let Some(target) = image
+        {
+            out.push(Msg::PickImage(target));
         }
     }
     resize_grip(ui, (name, height_id), height);

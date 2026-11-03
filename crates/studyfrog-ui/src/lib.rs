@@ -60,6 +60,7 @@ pub mod library_ui;
 pub mod md_edit;
 pub mod md_edit_table;
 pub mod md_lists;
+pub mod md_macros;
 pub mod modal;
 mod modal_discard;
 pub mod modal_form;

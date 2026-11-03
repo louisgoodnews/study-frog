@@ -78,6 +78,16 @@ pub(super) fn toolbar(
         })
         .response
         .on_hover_text("Colour the selected text");
+        let macros = ui.menu_button("{ }", |ui| {
+            ui.weak("Type one; it turns into Markdown at the closing brace.");
+            for m in crate::md_macros::MACROS {
+                ui.label(format!("{}: {}", m.usage, m.help));
+            }
+        });
+        macros
+            .response
+            .widget_info(|| WidgetInfo::labeled(Role::Button, true, format!("Macros for {name}")));
+        macros.response.on_hover_text("Macros you can type");
         if let Some(target) = image {
             let r = ui.small_button("Picture");
             r.widget_info(|| {
