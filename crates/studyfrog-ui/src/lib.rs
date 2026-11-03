@@ -120,6 +120,7 @@ pub mod subjects_ui;
 pub mod summary;
 pub mod theme;
 pub mod theme_apply;
+pub mod transfer_csv;
 pub mod transfer_found;
 pub mod transfer_types;
 pub mod transfer_ui;

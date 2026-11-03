@@ -173,6 +173,9 @@ fn preview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         });
     }
+    if let Some(info) = &p.csv {
+        super::modal_csv::settings(info, ui, out);
+    }
     if p.scheduling {
         let mut on = t.with_schedule;
         if ui.checkbox(&mut on, "Import the review history").changed() {

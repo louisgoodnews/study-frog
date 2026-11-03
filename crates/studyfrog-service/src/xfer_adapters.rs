@@ -38,7 +38,8 @@ const JSON_LAYOUT: &str = "One JSON object with \"format\": \"studyfrog-export\"
 
 const ZIP_LAYOUT: &str = "A zip made by StudyFrog's JSON export (export.json and a files folder), or a zip of an Obsidian vault: Markdown files in folders.";
 
-const CSV_LAYOUT: &str = "Text with one card or question per row. The first row names the columns: front and back are required; stack (a folder), kind (card or question; empty means card), title and tags (separated by semicolons) are optional. Cells with commas or line breaks go in double quotes. Tab-separated text works too.";
+/// What a CSV or TSV file has to look like.
+pub const CSV_LAYOUT: &str = "Text with one card, question or note per row. A first row can name the columns: front (or question, term) and back (or answer, definition) are needed; stack (or deck), kind (card, question or note; empty means card), title and tags (separated by semicolons) are optional. Without a header the first two columns are the front and the back. The delimiter (comma, semicolon, tab or |) and the encoding (UTF-8 or Latin-1) are detected; in the import dialog you can choose which column means what. Cells with the delimiter or line breaks go in double quotes.";
 
 const ANKI_LAYOUT: &str = "An Anki package. In Anki choose File, Export, format Anki Deck Package (.apkg), and tick Support older Anki versions; tick Include scheduling information to bring your reviews. Each deck becomes a stack; basic and cloze notes become cards.";
 
@@ -55,7 +56,7 @@ fn json(bytes: &[u8]) -> Result<Bundle, String> {
 }
 
 fn csv(bytes: &[u8]) -> Result<Bundle, String> {
-    crate::xfer_csv::from_csv(text(bytes)?)
+    crate::xfer_csv_map::read_csv(bytes, &Default::default()).map(|r| r.bundle)
 }
 
 fn anki(bytes: &[u8]) -> Result<Bundle, String> {
@@ -120,6 +121,31 @@ pub fn adapter_for(name: &str) -> Option<&'static Adapter> {
     ADAPTERS
         .iter()
         .find(|a| a.extensions.contains(&ext.as_str()))
+}
+
+/// Whether the file is read as CSV or TSV (by its extension).
+pub fn is_csv_path(path: &Path) -> bool {
+    let name = path.file_name().map(|n| n.to_string_lossy().into_owned());
+    name.and_then(|n| adapter_for(&n))
+        .is_some_and(|a| a.name.starts_with("CSV"))
+}
+
+/// Read a CSV or TSV file with the user's choices; the result also tells how it was read and every problem.
+pub fn read_csv_source(
+    path: &Path,
+    options: &crate::xfer_csv_map::CsvOptions,
+) -> Result<crate::xfer_csv_map::CsvRead, String> {
+    let name = path
+        .file_name()
+        .map(|n| n.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let meta = fs::metadata(path).map_err(|e| format!("{name}: {e}"))?;
+    if meta.len() > MAX_ENTRY * 4 {
+        return Err(format!("{name} is too large to import"));
+    }
+    let bytes = fs::read(path).map_err(|e| format!("{name}: {e}"))?;
+    crate::xfer_csv_map::read_csv(&bytes, options)
+        .map_err(|e| format!("{name}: {e}. {} expects: {CSV_LAYOUT}", "CSV or TSV cards"))
 }
 
 /// Read a file or an Obsidian vault folder, and say which adapter read it.

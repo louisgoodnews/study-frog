@@ -25,7 +25,7 @@ fn the_list_of_formats_opens_and_saving_an_example_asks_for_a_file_write() {
     h.get_by_label("Which files can I import?").click();
     h.run_steps(6);
     assert!(
-        h.query_by_label_contains("front and back are required")
+        h.query_by_label_contains("Without a header the first two columns")
             .is_some()
     );
     assert!(

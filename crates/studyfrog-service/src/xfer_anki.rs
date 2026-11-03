@@ -70,8 +70,11 @@ fn open_collection(
     files: &[(String, Vec<u8>)],
 ) -> Result<(Connection, std::path::PathBuf), String> {
     let (_, data) = files.iter().find(|(p, _)| p == "collection.anki2" || p == "collection.anki21").ok_or("this is not an Anki package: it has no collection.anki2 (export from Anki with the legacy format, \"Support older Anki versions\")")?;
+    // A counter keeps two readers in one process (tests, or two imports) from sharing a file.
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+    let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
     let path = std::env::temp_dir().join(format!(
-        "studyfrog-anki-{}-{}.sqlite",
+        "studyfrog-anki-{}-{n}-{}.sqlite",
         std::process::id(),
         data.len()
     ));

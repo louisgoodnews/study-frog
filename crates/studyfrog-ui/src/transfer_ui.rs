@@ -7,7 +7,9 @@ use crate::effect::Effect;
 use crate::library_bulk::LibraryEffect;
 use crate::modal::Modal;
 use crate::state::{Notice, NoticeKind, State};
-pub use crate::transfer_types::{Format, Imported, Preview, Tab, TransferJob, TransferState};
+pub use crate::transfer_types::{
+    CsvInfo, Format, Imported, Preview, Tab, TransferJob, TransferState,
+};
 
 /// What happened in the dialog.
 #[derive(Debug, Clone, PartialEq)]
@@ -42,6 +44,8 @@ pub enum TransferMsg {
     SaveExample(usize),
     /// The sample file was written: its path, or why not.
     ExampleSaved(Result<String, String>),
+    /// Change how a CSV file is read.
+    Csv(crate::transfer_csv::CsvChange),
     /// Choose what to do with duplicates.
     Policy(Policy),
     /// Tick or untick the review history.
@@ -90,7 +94,7 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
         TransferMsg::BackToExport => t.choosing_mode = false,
         TransferMsg::Mode(advanced) => t.scheduling = advanced,
         TransferMsg::Destination(text) => t.destination = text,
-        TransferMsg::Path(text) => (t.path, t.preview) = (text, None),
+        TransferMsg::Path(text) => (t.path, t.preview, t.csv) = (text, None, Default::default()),
         TransferMsg::Browse(_, folder) => return (state, job(TransferJob::Browse(folder))),
         TransferMsg::Browsed(folder, Some(p)) => {
             let target = if folder && t.tab == Tab::Export {
@@ -99,7 +103,7 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
                 &mut t.path
             };
             *target = p;
-            t.preview = None;
+            (t.preview, t.csv) = (None, Default::default());
         }
         TransferMsg::Browsed(_, None) => {}
         TransferMsg::Export => {
@@ -164,13 +168,15 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
             let effects = crate::transfer_found::pick(&mut state, path);
             return (state, effects);
         }
+        TransferMsg::Csv(change) => return crate::transfer_csv::update(state, change),
         TransferMsg::Policy(p) => t.policy = p,
         TransferMsg::WithSchedule(on) => t.with_schedule = on,
         TransferMsg::Preview => {
             t.busy = true;
             t.status = None;
             let (path, scope) = (t.path.trim().to_owned(), t.scope.clone());
-            return (state, job(TransferJob::Preview(path, scope)));
+            let csv = t.csv.clone();
+            return (state, job(TransferJob::Preview(path, scope, csv)));
         }
         TransferMsg::Previewed(result) => {
             t.busy = false;
@@ -182,7 +188,7 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
         TransferMsg::Import => {
             t.busy = true;
             let (path, target, policy) = (t.path.trim().to_owned(), t.scope.clone(), t.policy);
-            let with_schedule = t.with_schedule;
+            let (with_schedule, csv) = (t.with_schedule, t.csv.clone());
             return (
                 state,
                 job(TransferJob::Import {
@@ -190,6 +196,7 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
                     target,
                     policy,
                     with_schedule,
+                    csv,
                 }),
             );
         }

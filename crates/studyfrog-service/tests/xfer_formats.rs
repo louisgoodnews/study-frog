@@ -35,10 +35,10 @@ fn an_unreadable_file_names_the_layout_that_was_expected() {
     let dir = std::env::temp_dir().join(format!("sf-formats-{}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();
     let file = dir.join("bad.csv");
-    std::fs::write(&file, "a,b\n1,2\n").unwrap();
+    std::fs::write(&file, "only one column\nanother\n").unwrap();
     let err = read_source(&file).unwrap_err();
     assert!(
-        err.contains("front and back") && err.contains("expects"),
+        err.contains("two columns") && err.contains("expects"),
         "{err}"
     );
     std::fs::remove_dir_all(&dir).ok();

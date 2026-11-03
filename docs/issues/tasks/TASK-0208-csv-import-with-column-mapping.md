@@ -2,7 +2,7 @@
 id: TASK-0208
 type: task
 title: CSV import with column mapping
-status: backlog
+status: done
 epic: EPIC-026
 parents: [STORY-0078]
 estimate: 5
@@ -22,13 +22,15 @@ The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0: a
 CSV import exists, but only for files whose header has `front` and `back` (and `stack`, `kind`, `title`, `tags`); anything else fails with one line. The owner's AI-made file failed for that reason.
 
 ## Acceptance Criteria
-- [ ] A CSV or TSV file with other column names, other orders or no header can be imported by choosing which column is the front, the back, the title, the tags and the stack
-- [ ] The delimiter and the text encoding are detected and can be changed, and the first rows are shown
-- [ ] Files with only two columns import as front and back; a column of kinds can make notes and questions
-- [ ] A problem names its row and column and what was expected, for all problems at once, not only the first
-- [ ] 'Copy the problems for the AI' puts a ready message on the clipboard that asks the AI to fix exactly those rows
+- [x] A CSV or TSV file with other column names, other orders or no header can be imported by choosing which column is the front, the back, the title, the tags and the stack
+- [x] The delimiter and the text encoding are detected and can be changed, and the first rows are shown
+- [x] Files with only two columns import as front and back; a column of kinds can make notes and questions
+- [x] A problem names its row and column and what was expected, for all problems at once, not only the first
+- [x] 'Copy the problems for the AI' puts a ready message on the clipboard that asks the AI to fix exactly those rows
 
 ## Design Notes
+Done as `xfer_csv_map.rs` (service: options, detection, mapping, all problems, AI message) and `transfer_csv.rs` plus `view/modal_csv.rs` (the settings under the preview, re-read on every change). Not done: remembering the mapping per file name pattern (a file's choices are forgotten when another file is chosen); a note's second column is ignored.
+
 Extend `xfer_csv.rs` with a read plan that takes a mapping and returns every problem; the dialog shows a mapping step between choosing the file and the preview; remember the mapping per file name pattern. The semicolon and tab delimiters, quotes and line breaks in cells are kept as now.
 
 ## Dependencies

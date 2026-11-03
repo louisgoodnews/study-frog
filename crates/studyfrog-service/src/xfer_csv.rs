@@ -1,8 +1,9 @@
-//! CSV and TSV: `stack,kind,title,front,back,tags` for cards and questions (`docs/specs/interchange.md`).
+//! CSV and TSV: `stack,kind,title,front,back,tags` for cards and questions (`docs/specs/interchange.md`). Writing, and
+//! the splitting into cells; reading with a column mapping is `xfer_csv_map`.
 
-use studyfrog_core::plan::{ItemKind, item_kind_from_name};
+use studyfrog_core::plan::ItemKind;
 
-use crate::xfer_model::{Bundle, XItem, item};
+use crate::xfer_model::Bundle;
 
 const HEADER: [&str; 6] = ["stack", "kind", "title", "front", "back", "tags"];
 
@@ -28,7 +29,7 @@ pub fn to_csv(b: &Bundle) -> String {
 }
 
 /// Split text into rows of cells with `delim`, honouring quotes (a doubled quote is a quote; a quoted cell may hold line breaks).
-fn rows(text: &str, delim: char) -> Vec<Vec<String>> {
+pub(crate) fn rows(text: &str, delim: char) -> Vec<Vec<String>> {
     let (mut out, mut row, mut cell, mut quoted) = (Vec::new(), Vec::new(), String::new(), false);
     let mut chars = text.chars().peekable();
     while let Some(c) = chars.next() {
@@ -56,53 +57,7 @@ fn rows(text: &str, delim: char) -> Vec<Vec<String>> {
         .collect()
 }
 
-/// Read CSV or TSV (the delimiter is the one the header uses).
+/// Read CSV or TSV text with everything detected (see [`crate::xfer_csv_map`] to choose the columns).
 pub fn from_csv(source: &str) -> Result<Bundle, String> {
-    let first = source.lines().next().unwrap_or_default();
-    let delim = if first.contains('\t') && !first.contains(',') {
-        '\t'
-    } else {
-        ','
-    };
-    let table = rows(source, delim);
-    let Some((head, body)) = table.split_first() else {
-        return Err("the file is empty".to_owned());
-    };
-    let col = |name: &str| {
-        head.iter()
-            .position(|h| h.trim().eq_ignore_ascii_case(name))
-    };
-    let (Some(front), Some(back)) = (col("front"), col("back")) else {
-        return Err("the first row must name the columns, at least front and back".to_owned());
-    };
-    let (stack, kind, title, tags) = (col("stack"), col("kind"), col("title"), col("tags"));
-    let mut b = Bundle::default();
-    for (n, r) in body.iter().enumerate() {
-        let get = |c: Option<usize>| c.and_then(|i| r.get(i)).map_or("", |s| s.trim());
-        let k = if get(kind).is_empty() {
-            Some(ItemKind::Card)
-        } else {
-            item_kind_from_name(get(kind)).filter(|k| *k != ItemKind::Note)
-        };
-        let Some(k) = k else {
-            b.warnings
-                .push(format!("row {}: the kind must be card or question", n + 2));
-            continue;
-        };
-        let mut it: XItem = item(
-            k,
-            get(stack),
-            r.get(front).map_or("", String::as_str),
-            r.get(back).map_or("", String::as_str),
-        );
-        it.title = get(title).to_owned();
-        it.tags = get(tags)
-            .split(';')
-            .map(str::trim)
-            .filter(|t| !t.is_empty())
-            .map(str::to_owned)
-            .collect();
-        b.items.push(it);
-    }
-    Ok(b)
+    crate::xfer_csv_map::read_csv(source.as_bytes(), &Default::default()).map(|r| r.bundle)
 }

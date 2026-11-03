@@ -5,16 +5,18 @@ use std::path::Path;
 
 use studyfrog_core::civil::{date_from_days, format_date};
 use studyfrog_service::create::fresh_id_source;
-use studyfrog_service::xfer_adapters::read_source;
+use studyfrog_service::xfer_adapters::{is_csv_path, read_csv_source, read_source};
 use studyfrog_service::xfer_csv::to_csv;
+use studyfrog_service::xfer_csv_map::{CsvOptions, problem_text};
 use studyfrog_service::xfer_export::{export_bundle, export_json_zip, export_markdown_zip};
 use studyfrog_service::xfer_import::apply_import;
+use studyfrog_service::xfer_model::Bundle;
 use studyfrog_service::xfer_plan::{counts, plan_import};
 
 use crate::exec::Worker;
 use crate::library_ui::LibraryMsg;
 use crate::msg::Msg;
-use crate::transfer_ui::{Format, Imported, Preview, TransferJob, TransferMsg};
+use crate::transfer_ui::{CsvInfo, Format, Imported, Preview, TransferJob, TransferMsg};
 
 const SHOWN_LINES: usize = 100;
 const EXTENSIONS: [&str; 6] = ["json", "zip", "csv", "tsv", "txt", "apkg"];
@@ -23,19 +25,53 @@ fn msg(m: TransferMsg) -> Msg {
     Msg::Library(LibraryMsg::Transfer(m))
 }
 
-fn preview(w: &Worker, path: &str, target: Option<&str>) -> Result<Box<Preview>, String> {
+/// A file read: its items, the name of the reader and, for CSV, how it was read.
+type Read = (Bundle, String, Option<Box<CsvInfo>>);
+
+/// Read the file; a CSV file with the user's choices, and then also how it was read.
+fn read(path: &str, csv: &CsvOptions) -> Result<Read, String> {
+    let path = Path::new(path);
+    if !is_csv_path(path) {
+        return read_source(path).map(|(b, a)| (b, a.to_owned(), None));
+    }
+    let r = read_csv_source(path, csv)?;
+    let info = CsvInfo {
+        sheet: r.sheet,
+        problems: r.problems,
+    };
+    Ok((
+        r.bundle,
+        "CSV or TSV cards".to_owned(),
+        Some(Box::new(info)),
+    ))
+}
+
+fn preview(
+    w: &Worker,
+    path: &str,
+    (target, csv): (Option<&str>, &CsvOptions),
+) -> Result<Box<Preview>, String> {
     let session = w.session.as_ref().ok_or("no vault is open")?;
-    let (bundle, adapter) = read_source(Path::new(path))?;
+    let (bundle, adapter, csv) = read(path, csv)?;
     let plan = plan_import(session, &bundle, target).map_err(|e| e.to_string())?;
     Ok(Box::new(Preview {
-        adapter: adapter.to_owned(),
+        adapter,
         total: plan.lines.len(),
         counts: counts(&plan),
         new_stacks: plan.new_stacks,
-        warnings: plan.warnings.clone(),
+        warnings: plan
+            .warnings
+            .iter()
+            .filter(|w| {
+                !csv.as_ref()
+                    .is_some_and(|c| c.problems.iter().any(|p| problem_text(p) == **w))
+            })
+            .cloned()
+            .collect(),
         scheduling: bundle.scheduling && bundle.items.iter().any(|i| !i.reviews.is_empty()),
         files: bundle.files.len(),
         lines: plan.lines.into_iter().take(SHOWN_LINES).collect(),
+        csv,
     }))
 }
 
@@ -46,11 +82,12 @@ fn import(
         Option<&str>,
         studyfrog_service::xfer_plan::Policy,
         bool,
+        &CsvOptions,
     ),
     now_ns: i64,
 ) -> Result<Box<Imported>, String> {
-    let (path, target, policy, with_schedule) = job;
-    let (bundle, _) = read_source(Path::new(path))?;
+    let (path, target, policy, with_schedule, csv) = job;
+    let (bundle, _, _) = read(path, csv)?;
     let session = w.session.as_mut().ok_or("no vault is open")?;
     let ids = fresh_id_source(u64::try_from(now_ns / 1_000_000).unwrap_or(0))
         .map_err(|e| e.to_string())?;
@@ -130,17 +167,20 @@ pub fn run(w: &mut Worker, job: TransferJob, now_ns: i64) -> Msg {
         TransferJob::SaveExample { folder, file, text } => msg(TransferMsg::ExampleSaved(
             save_example(&folder, &file, &text),
         )),
-        TransferJob::Preview(path, target) => {
-            msg(TransferMsg::Previewed(preview(w, &path, target.as_deref())))
-        }
+        TransferJob::Preview(path, target, csv) => msg(TransferMsg::Previewed(preview(
+            w,
+            &path,
+            (target.as_deref(), &csv),
+        ))),
         TransferJob::Import {
             path,
             target,
             policy,
             with_schedule,
+            csv,
         } => msg(TransferMsg::Imported(import(
             w,
-            (&path, target.as_deref(), policy, with_schedule),
+            (&path, target.as_deref(), policy, with_schedule, &csv),
             now_ns,
         ))),
         TransferJob::Export {

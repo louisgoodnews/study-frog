@@ -49,7 +49,7 @@ Proposed by Claude on 2026-11-03 after the owner's test of 0.3.1; the owner may 
 - [x] 4. TASK-0209 Tell the user which layouts and formats the importers read
 
 **Wave 2: new capabilities**
-- [ ] 5. TASK-0208 CSV import with column mapping (all problems at once)
+- [x] 5. TASK-0208 CSV import with column mapping (all problems at once)
 - [ ] 6. TASK-0205 Write the standard prompts (they hand-hold an AI to files StudyFrog reads), TASK-0206 Prompts screen (copy and export)
 - [ ] 7. TASK-0197 Tables, TASK-0215 Underline and colour, TASK-0216 Table of contents, TASK-0198 Text macros, TASK-0214 Code highlighting
 - [ ] 8. TASK-0207 Run a prompt with the assistant

@@ -43,6 +43,17 @@ pub struct Preview {
     pub scheduling: bool,
     /// Pictures and PDFs in the file.
     pub files: usize,
+    /// How a CSV or TSV file was read, with its problems.
+    pub csv: Option<Box<CsvInfo>>,
+}
+
+/// How a CSV or TSV file was read.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CsvInfo {
+    /// Delimiter, encoding, header, columns and the first rows.
+    pub sheet: studyfrog_service::xfer_csv_map::Sheet,
+    /// Every problem, for all rows.
+    pub problems: Vec<studyfrog_service::xfer_csv_map::Problem>,
 }
 
 /// What an import wrote.
@@ -91,6 +102,8 @@ pub struct TransferState {
     pub found: Option<Vec<studyfrog_service::xfer_discover::Found>>,
     /// The search is running.
     pub looking: bool,
+    /// What the user chose for reading a CSV file.
+    pub csv: studyfrog_service::xfer_csv_map::CsvOptions,
 }
 
 impl Default for TransferState {
@@ -110,6 +123,7 @@ impl Default for TransferState {
             busy: false,
             found: None,
             looking: false,
+            csv: Default::default(),
         }
     }
 }
@@ -122,7 +136,11 @@ pub enum TransferJob {
     /// Look for Obsidian vaults and Anki files to suggest.
     Discover,
     /// Read the file and say what an import would do.
-    Preview(String, Option<String>),
+    Preview(
+        String,
+        Option<String>,
+        studyfrog_service::xfer_csv_map::CsvOptions,
+    ),
     /// Read the file again and write it.
     Import {
         /// The file or folder.
@@ -133,6 +151,8 @@ pub enum TransferJob {
         policy: Policy,
         /// Import the reviews.
         with_schedule: bool,
+        /// How to read a CSV file.
+        csv: studyfrog_service::xfer_csv_map::CsvOptions,
     },
     /// Write a sample file of an importer.
     SaveExample {

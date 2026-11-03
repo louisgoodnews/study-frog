@@ -66,7 +66,7 @@ fn picking_a_suggestion_sets_the_path_and_asks_for_the_preview() {
     assert_eq!(
         fx,
         [Effect::Library(LibraryEffect::Transfer(
-            TransferJob::Preview("/home/u/Notes/Psych".into(), None)
+            TransferJob::Preview("/home/u/Notes/Psych".into(), None, Default::default())
         ))]
     );
 }

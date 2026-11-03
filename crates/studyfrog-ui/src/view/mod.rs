@@ -34,6 +34,7 @@ mod md_editor;
 mod menus;
 mod modal;
 mod modal_create;
+mod modal_csv;
 mod modal_fields;
 mod modal_formats;
 mod modal_found;

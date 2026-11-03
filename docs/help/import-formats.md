@@ -5,7 +5,7 @@ What the importers in the [[import-export|Import and export]] dialog read. The d
 same information: the prompts in StudyFrog use these layouts.
 
 ## CSV or TSV cards
-Text with one card or question per row. The first row names the columns: front and back are required; stack (a folder), kind (card or question; empty means card), title and tags (separated by semicolons) are optional. Cells with commas or line breaks go in double quotes. Tab-separated text works too.
+Text with one card, question or note per row. A first row can name the columns: front (or question, term) and back (or answer, definition) are needed; stack (or deck), kind (card, question or note; empty means card), title and tags (separated by semicolons) are optional. Without a header the first two columns are the front and the back. The delimiter (comma, semicolon, tab or |) and the encoding (UTF-8 or Latin-1) are detected; in the import dialog you can choose which column means what. Cells with the delimiter or line breaks go in double quotes.
 
 ```csv
 stack,kind,title,front,back,tags
@@ -13,7 +13,7 @@ french,card,,the cat,le chat,animals;nouns
 french,question,Plural,"What is the plural of ""cheval""?",chevaux,
 ```
 
-Problems in a file are reported with the row number, so you can fix them in a spreadsheet and try again.
+After **Preview**, the dialog shows the first rows and lets you choose the delimiter, the encoding, whether the first row is a header and which column is the front, the back, the title, the tags, the stack and the kind. Every problem is listed at once with its row and column, and **Copy the problems for the AI** puts a ready message on the clipboard that asks an AI to fix exactly those rows.
 
 ## StudyFrog export (JSON)
 One JSON object with "format": "studyfrog-export" and "version": 1, a "stacks" list (folder, title, description) and an "items" list. Each item has "kind" (note, card or question), "stack" (a folder), "title", "text" (a card's front), "answer" (its back) and "tags" (a list). The review history is read only when "scheduling" is true.

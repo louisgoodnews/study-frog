@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Fixed
+- Reading two Anki packages at the same time no longer shares one temporary file, which made the Anki import tests fail now and then.
 - The Board's columns share the width there is, and the new-card field leaves room for its button, so the last column and "Add card" no longer run off the right edge (TASK-0226).
 - PDFs are named by their file name in the Home card, the stack page, the search results and the viewer's header; the title inside the file is added only when it says something, so files whose title is a placeholder such as "PowerPoint-Präsentation" are told apart (BUG-0009).
 - Enter in the Markdown editor continues a list: the next number, the same bullet or an unchecked box for a task item, at the same indent (in the middle of an item it splits the item); Enter or Backspace on an empty item removes its marker and ends the list (BUG-0007).
@@ -19,6 +20,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The Markdown editor's code is split into a module of small files (`view/md_editor/`: toolbar, resizing, preview cache, list keys).
 
 ### Added
+- CSV and TSV import with column mapping: the delimiter, the encoding (UTF-8 or Latin-1), a header or none and which column is the front, back, title, tags, stack and kind are detected and can be changed under the preview, which shows the first rows; a two-column file is front and back; a kind column can make notes and questions; every problem is listed with its row and column, and "Copy the problems for the AI" puts a ready message on the clipboard (TASK-0208).
 - The import dialog lists the formats it reads with the layout each expects, an example and a Save example button; an unreadable file's error names the expected layout; the help has an Import formats page generated from the same table (TASK-0209).
 - The editor saves by itself when a word is finished (a space or line break is typed), when something other than text changes, and at the latest 5 seconds after the first unsaved edit; a pause alone saves nothing. Leaving, opening another item and exiting save first; a file changed outside StudyFrog is never overwritten (Reload from disk or Keep mine); a failed save is shown and retried (TASK-0200).
 - Leaving an item you changed shows a "Saved <title>" toast that goes away after about three seconds (TASK-0201).

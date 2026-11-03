@@ -46,7 +46,7 @@ The dialog has two tabs: **Export** and **Import**. **Cancel** closes it.
 An item already exists when an item with the same identity is in the vault, or a card or question with the same front
 and back is in the same stack. A cancel writes nothing.
 
-What each format has to look like, with examples, is on [[import-formats]].
+What each format has to look like, with examples, is on [[import-formats]]. For CSV files the preview lets you choose the delimiter, the encoding and which column is which, and lists every problem at once.
 
 ## From Anki
 

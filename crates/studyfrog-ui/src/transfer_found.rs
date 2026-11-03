@@ -35,10 +35,10 @@ pub fn found(state: &mut State, list: Vec<Found>) {
 pub fn pick(state: &mut State, path: String) -> Vec<Effect> {
     let t = &mut state.transfer;
     t.path = path.clone();
-    t.preview = None;
+    (t.preview, t.csv) = (None, Default::default());
     t.busy = true;
     t.status = None;
-    let job = TransferJob::Preview(path, t.scope.clone());
+    let job = TransferJob::Preview(path, t.scope.clone(), t.csv.clone());
     vec![Effect::Library(LibraryEffect::Transfer(job))]
 }
 
