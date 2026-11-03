@@ -14,7 +14,7 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         ui.weak("No report for this stack yet.");
         return;
     };
-    ui.heading("Familiarity");
+    crate::view::kit::section(ui, "Familiarity");
     let value = g
         .percent
         .map_or("no history yet".to_owned(), |p| format!("{p} %"));

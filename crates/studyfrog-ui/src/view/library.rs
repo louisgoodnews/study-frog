@@ -29,15 +29,21 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     Panel::left("stack-list")
         .default_size(220.0)
+        .size_range(170.0..=320.0)
         .show(ui, |ui| stack_list(state, ui, out));
-    match &state.browser.selection {
-        Selection::Nothing if state.library.show_overview => overview(state, ui, out),
-        _ => items::draw(state, ui, out),
-    }
+    egui::Frame::new()
+        .inner_margin(egui::Margin {
+            left: 16,
+            ..egui::Margin::ZERO
+        })
+        .show(ui, |ui| match &state.browser.selection {
+            Selection::Nothing if state.library.show_overview => overview(state, ui, out),
+            _ => items::draw(state, ui, out),
+        });
 }
 
 /// Nesting depth of each stack: how many stacks it sits inside.
-fn depth(stacks: &[StackRow], s: &StackRow) -> usize {
+pub(super) fn depth(stacks: &[StackRow], s: &StackRow) -> usize {
     let mut n = 0;
     let mut up = s.parent.as_deref();
     while let Some(p) = up {
@@ -52,13 +58,14 @@ fn depth(stacks: &[StackRow], s: &StackRow) -> usize {
 
 fn stack_list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(vault) = &state.vault else { return };
-    ui.heading("Stacks");
+    kit::caption(ui, "STACKS");
     let current = &state.browser.selection;
     for s in &vault.overview.stacks {
         let target = Selection::Stack(s.folder.clone());
         ui.horizontal(|ui| {
             ui.add_space(14.0 * depth(&vault.overview.stacks, s) as f32);
-            if ui.selectable_label(*current == target, &s.title).clicked() {
+            let row = egui::Button::selectable(*current == target, &s.title).truncate();
+            if ui.add(row).on_hover_text(&s.title).clicked() {
                 out.push(Msg::Select(target));
             }
         });

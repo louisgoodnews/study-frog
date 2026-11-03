@@ -8,6 +8,7 @@ use crate::help_ui::current;
 use crate::msg::Msg;
 use crate::state::{Screen, State};
 use crate::theme::palette_of;
+use crate::view::kit;
 
 const TREE_WIDTH: f32 = 230.0;
 
@@ -50,7 +51,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ScrollArea::vertical()
             .id_salt("help-page")
             .auto_shrink([false, false])
-            .show(ui, |ui| page(state, help, ui, out));
+            .show(ui, |ui| {
+                kit::column(ui, kit::READING_WIDTH, |ui| page(state, help, ui, out));
+            });
     });
 }
 
@@ -85,14 +88,14 @@ fn entry(ui: &mut egui::Ui, open: bool, title: &str, page: PageRef, out: &mut Ve
 fn tree(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let shown = current(&state.help);
     for (section, name) in SECTIONS {
-        ui.label(RichText::new(name).strong());
+        kit::caption(ui, name);
         for p in PAGES.iter().filter(|p| p.section == section) {
             let page = PageRef::Supplied(p.id.to_owned());
             entry(ui, shown == page, title_of(p.text, p.id), page, out);
         }
         ui.add_space(6.0);
     }
-    ui.label(RichText::new("Your pages").strong());
+    kit::caption(ui, "Your pages");
     for u in &state.help.user {
         let page = PageRef::User(u.file.clone());
         entry(ui, shown == page, user_title(u), page, out);

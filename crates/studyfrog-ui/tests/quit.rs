@@ -48,3 +48,39 @@ fn the_red_button_is_in_the_bar_with_a_name_and_the_button_works() {
     h.run();
     assert!(h.state().0.state.chrome.quit);
 }
+
+#[test]
+fn the_title_bar_has_three_named_window_buttons_in_a_row_with_close_last() {
+    use egui_kittest::kittest::NodeT;
+    let mut h = harness(open_model());
+    h.run();
+    let rect = |name: &str| {
+        h.get_by_label(name)
+            .accesskit_node()
+            .bounding_box()
+            .unwrap()
+    };
+    let (min, max, close) = (
+        rect("Minimize window"),
+        rect("Maximize window"),
+        rect("Exit StudyFrog"),
+    );
+    assert!(
+        min.x1 <= max.x0 && max.x1 <= close.x0,
+        "left to right: minimize, maximize, close"
+    );
+    for r in [min, max, close] {
+        assert!(
+            r.x1 - r.x0 >= 40.0 && r.y1 - r.y0 >= 28.0,
+            "large targets: {r:?}"
+        );
+    }
+    assert!(
+        (min.y0 - close.y0).abs() < 0.5 && (max.y0 - close.y0).abs() < 0.5,
+        "one row"
+    );
+    h.get_by_label("Minimize window").click();
+    h.get_by_label("Maximize window").click();
+    h.run();
+    assert!(!h.state().0.state.chrome.quit, "only close quits");
+}

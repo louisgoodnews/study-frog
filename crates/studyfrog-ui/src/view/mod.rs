@@ -84,6 +84,7 @@ mod toast;
 mod tutorial;
 mod welcome;
 pub(crate) mod widgets;
+pub(crate) mod window_frame;
 
 use eframe::egui;
 
@@ -94,6 +95,7 @@ use crate::state::{Screen, State};
 pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     let mut out = Vec::new();
     image::set_vault_root(ui.ctx(), state.vault.as_ref().map(|v| v.root.as_str()));
+    window_frame::frame(ui);
     navbar::draw(state, ui, &mut out);
     sidebar::draw(state, ui, &mut out);
     bars::status(state, ui, &mut out);

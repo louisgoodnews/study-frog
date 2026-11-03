@@ -137,7 +137,7 @@ pub fn apply(ctx: &egui::Context) {
             s.spacing.indent = 18.0;
             s.spacing.window_margin = egui::Margin::same(16);
             s.text_styles = [
-                (TextStyle::Heading, FontId::proportional(24.0)),
+                (TextStyle::Heading, FontId::proportional(22.0)),
                 (TextStyle::Body, FontId::proportional(15.0)),
                 (TextStyle::Button, FontId::proportional(15.0)),
                 (TextStyle::Small, FontId::proportional(12.5)),

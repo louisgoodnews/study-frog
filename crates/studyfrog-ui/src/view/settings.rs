@@ -8,6 +8,7 @@ use crate::app_settings_ui::{SHOWN, SettingsTab, SettingsTabMsg, current_tab, ta
 use crate::msg::Msg;
 use crate::reading_test::{ReadingTestMsg, TEXT, TestPhase, current_wpm};
 use crate::state::State;
+use crate::view::kit;
 
 /// A part of a tab: draws one group of settings.
 pub type Section = fn(&State, &mut egui::Ui, &mut Vec<Msg>);
@@ -33,10 +34,12 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     egui::ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
-            for section in sections_of(tab) {
-                section(state, ui, out);
-                ui.add_space(8.0);
-            }
+            kit::column(ui, 860.0, |ui| {
+                for section in sections_of(tab) {
+                    section(state, ui, out);
+                    ui.add_space(12.0);
+                }
+            });
         });
 }
 
@@ -63,7 +66,7 @@ fn tab_bar(ui: &mut egui::Ui, current: SettingsTab, out: &mut Vec<Msg>) {
 
 /// Whether the app records how long items are viewed.
 fn view_tracking(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.heading("Familiarity");
+    crate::view::kit::section(ui, "Familiarity");
     let mut on = !state.app.views_untracked;
     if ui
         .checkbox(&mut on, "Record how long I look at items")
@@ -76,7 +79,7 @@ fn view_tracking(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 /// Import and export of the library or a stack.
 fn transfer(_: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.heading("Import and export");
+    crate::view::kit::section(ui, "Import and export");
     ui.weak("Write the library or a stack as JSON, CSV or Markdown, or read a file, an Anki package or an Obsidian vault, with a preview first.");
     ui.horizontal(|ui| {
         for (label, tab) in [
@@ -98,7 +101,7 @@ fn replay(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
 
 /// The scheduler settings the vault uses (read-only) and where to change them.
 fn scheduling(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
-    ui.heading("Scheduling");
+    crate::view::kit::section(ui, "Scheduling");
     let Some(vault) = &state.vault else { return };
     if let Some(e) = &vault.settings_error {
         ui.colored_label(
@@ -107,41 +110,44 @@ fn scheduling(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
         );
     }
     let s = &vault.settings;
-    Grid::new("settings").num_columns(2).show(ui, |ui| {
-        ui.label("Default scheduler");
-        ui.label(scheduler_name(s.scheduler));
-        ui.end_row();
-        ui.label("Target retention (FSRS)");
-        ui.label(format!("{}", s.request_retention));
-        ui.end_row();
-        ui.label("Maximum interval (days)");
-        ui.label(s.maximum_interval_days.to_string());
-        ui.end_row();
-        ui.label("Familiarity strength");
-        ui.label(if s.familiarity_strength > 0.0 {
-            format!("{} (0 switches it off)", s.familiarity_strength)
-        } else {
-            "off".to_owned()
+    Grid::new("settings")
+        .num_columns(2)
+        .spacing([32.0, 10.0])
+        .show(ui, |ui| {
+            ui.label("Default scheduler");
+            ui.label(scheduler_name(s.scheduler));
+            ui.end_row();
+            ui.label("Target retention (FSRS)");
+            ui.label(format!("{}", s.request_retention));
+            ui.end_row();
+            ui.label("Maximum interval (days)");
+            ui.label(s.maximum_interval_days.to_string());
+            ui.end_row();
+            ui.label("Familiarity strength");
+            ui.label(if s.familiarity_strength > 0.0 {
+                format!("{} (0 switches it off)", s.familiarity_strength)
+            } else {
+                "off".to_owned()
+            });
+            ui.end_row();
+            ui.label("Familiarity threshold");
+            ui.label(if s.familiarity_threshold < 1.0 {
+                format!(
+                    "{} % (due items above it are left out)",
+                    (s.familiarity_threshold * 100.0).round()
+                )
+            } else {
+                "off".to_owned()
+            });
+            ui.end_row();
+            ui.label("FSRS weights");
+            ui.label(if s.weights.is_some() {
+                "custom"
+            } else {
+                "published defaults"
+            });
+            ui.end_row();
         });
-        ui.end_row();
-        ui.label("Familiarity threshold");
-        ui.label(if s.familiarity_threshold < 1.0 {
-            format!(
-                "{} % (due items above it are left out)",
-                (s.familiarity_threshold * 100.0).round()
-            )
-        } else {
-            "off".to_owned()
-        });
-        ui.end_row();
-        ui.label("FSRS weights");
-        ui.label(if s.weights.is_some() {
-            "custom"
-        } else {
-            "published defaults"
-        });
-        ui.end_row();
-    });
     ui.add_space(8.0);
     ui.weak("Edit studyfrog.toml in the vault folder, and _stack.toml next to a stack, to change these (familiarity_strength, familiarity_threshold, and familiarity = false to switch it off for one stack).");
 }
@@ -152,7 +158,7 @@ fn test_msg(out: &mut Vec<Msg>, m: ReadingTestMsg) {
 
 /// Where the reading-speed baseline comes from, and the test that measures it.
 fn reading_speed(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.heading("Reading speed");
+    crate::view::kit::section(ui, "Reading speed");
     let source = if state.app.reading_wpm.is_some() {
         "measured"
     } else {
@@ -205,7 +211,7 @@ fn idle(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 /// How typed answers are compared, and the thresholds that turn reading time into suggestions.
 fn answer_comparison(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.heading("Answer comparison");
+    crate::view::kit::section(ui, "Answer comparison");
     ui.horizontal(|ui| {
         for (engine, label) in [
             (AnswerEngine::Auto, "Language model when installed"),

@@ -8,16 +8,20 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Fixed
+- Rows of a name and a bar (priorities, ratings, familiarity spread) are aligned: the names share a column and every bar starts at the same place and has the same length, with its number on it; the numbers of Types and the due rows on Home line up as well (TASK-0192).
 - Every screen has a wider margin (20 px at the sides, 14 px at the top) and the stack page no longer sits against the stack list (BUG-0002).
 - The Create dialog's header is two rows, the window controls on one and the stack and type on the other, so the type name is no longer cut off in the normal-width dialog (BUG-0003).
 - The four figures at the top of Home (items ready, streak, reviews, items) are spaced further apart (BUG-0004).
 
 ### Changed
+- StudyFrog draws its own title bar: the top bar moves the window when dragged (the window manager does the moving, so snapping works) and maximises it on a double click, with large minimise, maximise and a red close button (which replaces the separate Exit button and asks about unsaved changes); the edges resize the window (TASK-0190).
+- A calmer, easier to read layout: a reading column for the rehearsal setup, Settings and help; grouped cards and captions instead of large headings; the rehearsal setup keeps its Back and Next buttons in view; the library's search is one row and its stack list has a fixed width; the stack page has one primary button and a "More actions" menu, and a two-column Summary (TASK-0192, `docs/specs/ui-calm.md`).
 - The status bar no longer has a Help button; the `?` in the top bar, Help in the sidebar and `F1` remain (TASK-0192).
 
 ### Added
+- `studyfrog --screenshot FILE [--screen NAME] [--size WxH]` saves a PNG of a screen of the running app and exits, for looking at the real rendering (`home`, `library`, `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `stack:<folder>`) (TASK-0192).
 - Cancel, the close button, Escape and a click outside the Create dialog ask "Discard what you wrote?" when a field has content or a changed value; an untouched dialog closes at once (TASK-0188).
-- A red Exit button at the right end of the top bar closes StudyFrog and asks first when the editor holds unsaved changes (TASK-0189).
+- A red button at the right end of the top bar ("Exit StudyFrog") closes StudyFrog and asks first when the editor holds unsaved changes (TASK-0189).
 - The Import tab lists what it finds on the computer: Obsidian vaults (from Obsidian's own list, with the number of Markdown files), Anki packages in Downloads, Documents and Desktop, and Anki profiles with the hint to export a package; "Use" shows the preview for the chosen one and nothing is read before (TASK-0191).
 - A proposal for a calmer UI in `docs/specs/ui-calm.md` for the owner to accept (TASK-0192).
 

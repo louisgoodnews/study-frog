@@ -3,7 +3,7 @@
 
 use std::f32::consts::TAU;
 
-use eframe::egui::{self, ProgressBar, Stroke, vec2};
+use eframe::egui::{self, Stroke, vec2};
 use studyfrog_core::priority::{PRIORITIES, priority_name};
 use studyfrog_core::status::{STATUSES, status_label};
 use studyfrog_service::stack_summary::{Activity, Happened, StackSummary, SubStack, WINDOW_DAYS};
@@ -14,17 +14,21 @@ use crate::theme::palette_of;
 use crate::view::kit;
 
 fn cards(s: &StackSummary, ui: &mut egui::Ui) {
-    ui.horizontal_wrapped(|ui| {
-        for (n, caption) in [
-            (
-                s.completed,
-                format!("completed in the last {WINDOW_DAYS} days"),
-            ),
-            (s.updated, format!("updated in the last {WINDOW_DAYS} days")),
-            (s.created, format!("created in the last {WINDOW_DAYS} days")),
-            (s.due_soon, format!("due in the next {WINDOW_DAYS} days")),
-        ] {
-            kit::card(ui, |ui| kit::stat(ui, &n.to_string(), &caption));
+    let figures = [
+        (
+            s.completed,
+            format!("completed in the last {WINDOW_DAYS} days"),
+        ),
+        (s.updated, format!("updated in the last {WINDOW_DAYS} days")),
+        (s.created, format!("created in the last {WINDOW_DAYS} days")),
+        (s.due_soon, format!("due in the next {WINDOW_DAYS} days")),
+    ];
+    ui.columns(figures.len(), |cols| {
+        for (col, (n, caption)) in cols.iter_mut().zip(&figures) {
+            kit::card(col, |ui| {
+                ui.set_width(ui.available_width());
+                kit::stat(ui, &n.to_string(), caption)
+            });
         }
     });
 }
@@ -76,21 +80,23 @@ fn ring(s: &StackSummary, ui: &mut egui::Ui) {
 
 fn priorities(s: &StackSummary, ui: &mut egui::Ui) {
     let top = s.priorities.iter().copied().max().unwrap_or(0).max(1) as f32;
-    for (p, n) in PRIORITIES.iter().zip(s.priorities) {
-        ui.horizontal(|ui| {
-            ui.label(priority_name(*p));
-            ui.add(
-                ProgressBar::new(n as f32 / top)
-                    .desired_width(220.0)
-                    .text(n.to_string()),
-            );
-        });
-    }
+    let rows: Vec<kit::BarRow> = PRIORITIES
+        .iter()
+        .zip(s.priorities)
+        .map(|(p, n)| kit::BarRow {
+            label: priority_name(*p).to_owned(),
+            fraction: n as f32 / top,
+            text: n.to_string(),
+            color: None,
+        })
+        .collect();
+    kit::bar_rows(ui, "stack-priorities", &rows);
 }
 
 fn types(s: &StackSummary, ui: &mut egui::Ui) {
     egui::Grid::new("stack-types")
         .num_columns(2)
+        .spacing([32.0, 8.0])
         .show(ui, |ui| {
             for (name, n) in [
                 ("Notes", s.types[0]),
@@ -157,24 +163,20 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     };
     let now_ms = state.wall_ms;
     cards(s, ui);
-    ui.add_space(8.0);
-    kit::section(ui, "Status overview");
-    ring(s, ui);
-    ui.add_space(8.0);
-    kit::section(ui, "Priorities");
-    priorities(s, ui);
-    ui.add_space(8.0);
-    kit::section(ui, "Types");
-    types(s, ui);
-    ui.add_space(8.0);
-    kit::section(ui, "Activity");
-    feed(s, now_ms, ui, out);
-    ui.add_space(8.0);
-    kit::section(ui, "Sub-stacks");
-    if s.substacks.is_empty() {
-        ui.weak("No stacks inside this one.");
-    }
-    for sub in &s.substacks {
-        substack(sub, ui, out);
-    }
+    ui.columns(2, |cols| {
+        let (left, right) = cols.split_at_mut(1);
+        let (left, right) = (&mut left[0], &mut right[0]);
+        kit::group(left, "Status overview", |ui| ring(s, ui));
+        kit::group(left, "Activity", |ui| feed(s, now_ms, ui, out));
+        kit::group(right, "Priorities", |ui| priorities(s, ui));
+        kit::group(right, "Types", |ui| types(s, ui));
+        kit::group(right, "Sub-stacks", |ui| {
+            if s.substacks.is_empty() {
+                ui.weak("No stacks inside this one.");
+            }
+            for sub in &s.substacks {
+                substack(sub, ui, out);
+            }
+        });
+    });
 }

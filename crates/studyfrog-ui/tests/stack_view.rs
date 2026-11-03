@@ -109,7 +109,7 @@ fn the_header_names_its_actions_and_the_summary_shows_every_number_as_text() {
     for text in [
         "All items",
         "French",
-        "Details",
+        "More actions",
         "New item",
         "Start rehearsal",
         "Summary",
@@ -149,6 +149,8 @@ fn the_actions_do_what_they_say() {
     assert_eq!(h.state().0.state.screen, Screen::Rehearse);
 
     let mut h = harness(open_french());
+    h.run_steps(4);
+    h.get_by_label("More actions").click();
     h.run_steps(4);
     h.get_by_label("Details").click();
     h.run_steps(4);
@@ -204,4 +206,37 @@ fn through_the_worker_the_summary_arrives_and_the_status_chip_writes_the_stack_f
         .unwrap()
         .status;
     assert_eq!(row, Some(Status::Paused));
+}
+
+#[test]
+fn the_priority_bars_line_up_in_one_column_and_have_one_length() {
+    use egui_kittest::kittest::NodeT;
+    let mut m = open_french();
+    m.state.library.stack_view.summary = Some((
+        "french".into(),
+        m.state.library.generation,
+        Box::new(summary()),
+    ));
+    let mut h = harness(m);
+    h.run_steps(6);
+    let bars: Vec<_> = h
+        .query_all_by_role(eframe::egui::accesskit::Role::ProgressIndicator)
+        .filter_map(|n| n.accesskit_node().bounding_box())
+        .collect();
+    assert!(bars.len() >= 5, "five priority bars, found {}", bars.len());
+    let first = bars[0];
+    for b in &bars[..5] {
+        assert!(
+            (b.x0 - first.x0).abs() < 0.5,
+            "starts differ: {} vs {}",
+            b.x0,
+            first.x0
+        );
+        assert!(
+            (b.x1 - first.x1).abs() < 0.5,
+            "lengths differ: {} vs {}",
+            b.x1,
+            first.x1
+        );
+    }
 }

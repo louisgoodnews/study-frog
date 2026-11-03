@@ -107,7 +107,7 @@ fn hero(h: &HomeSummary, items: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 pub(super) fn column_card(ui: &mut egui::Ui, fill: f32, add: impl FnOnce(&mut egui::Ui)) {
     kit::card(ui, |ui| {
         ui.set_width(ui.available_width());
-        ui.set_min_height(fill);
+        ui.set_min_height(fill.min(280.0));
         add(ui);
     });
 }
@@ -156,18 +156,27 @@ fn stacks_waiting(h: &HomeSummary, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if waiting.is_empty() {
         ui.weak("Nothing is waiting in any stack.");
     }
-    for s in waiting.into_iter().take(6) {
-        ui.horizontal_wrapped(|ui| {
-            ui.label(RichText::new(&s.title).strong());
-            if s.due > 0 {
-                kit::pill(ui, &format!("{} due", s.due), p.warning);
-            }
-            if s.new > 0 {
-                kit::pill(ui, &format!("{} new", s.new), p.accent);
-            }
-            if ui.button(format!("Rehearse {}", s.title)).clicked() {
-                out.push(Msg::Home(HomeMsg::RehearseStack(s.folder.clone())));
+    egui::Grid::new("home-waiting")
+        .num_columns(3)
+        .spacing([16.0, 10.0])
+        .show(ui, |ui| {
+            for s in waiting.into_iter().take(6) {
+                ui.label(RichText::new(&s.title).strong());
+                ui.horizontal(|ui| {
+                    if s.due > 0 {
+                        kit::pill(ui, &format!("{} due", s.due), p.warning);
+                    }
+                    if s.new > 0 {
+                        kit::pill(ui, &format!("{} new", s.new), p.accent);
+                    }
+                });
+                let name = format!("Rehearse {}", s.title);
+                let button = ui.button("Rehearse");
+                button.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, &name));
+                if button.clicked() {
+                    out.push(Msg::Home(HomeMsg::RehearseStack(s.folder.clone())));
+                }
+                ui.end_row();
             }
         });
-    }
 }

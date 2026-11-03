@@ -30,7 +30,7 @@ fn verdict_text(r: &ReplayReport) -> String {
 
 /// The section.
 pub fn draw(state: &State, ui: &mut egui::Ui) {
-    ui.heading("Does familiarity help?");
+    crate::view::kit::section(ui, "Does familiarity help?");
     let Some(b) = &state.reports else {
         ui.weak("Checking your review history…");
         return;

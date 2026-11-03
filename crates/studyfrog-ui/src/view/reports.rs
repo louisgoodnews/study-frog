@@ -95,7 +95,7 @@ fn memory(state: &State, ui: &mut egui::Ui) {
 
 fn retention(r: &ReportBundle, ui: &mut egui::Ui) {
     ui.add_space(8.0);
-    ui.heading("Retention");
+    crate::view::kit::section(ui, "Retention");
     ui.weak("How often an item was recalled, by the time since its previous review.");
     for b in r.retention.iter().filter(|b| b.reviews > 0) {
         let rate = retention_rate(b).unwrap_or(0.0);
@@ -120,7 +120,7 @@ fn stats_line(s: &LatencyStats) -> String {
 
 fn latency(r: &ReportBundle, ui: &mut egui::Ui) {
     ui.add_space(8.0);
-    ui.heading("Time to answer");
+    crate::view::kit::section(ui, "Time to answer");
     let Some(stats) = &r.latency else {
         ui.label("No answer times recorded yet.");
         return;
@@ -157,7 +157,7 @@ fn backtest_line(b: &BacktestReport) -> String {
 
 fn forecast(r: &ReportBundle, ui: &mut egui::Ui) {
     ui.add_space(8.0);
-    ui.heading("Reviews ahead");
+    crate::view::kit::section(ui, "Reviews ahead");
     let total: f32 = r.forecast.iter().sum();
     ui.label(format!(
         "About {total:.0} reviews in the next {} days.",

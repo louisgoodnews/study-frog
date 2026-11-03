@@ -45,5 +45,5 @@ owner's request and is listed under Next.
 - [x] TASK-0188 Ask before discarding a filled Create dialog
 - [x] TASK-0189 Red Exit button
 - [x] TASK-0191 Suggest Anki and Obsidian files to import
-- [ ] TASK-0190 Readable window buttons: blocked on the owner's choice (own title bar or the system's)
-- [ ] TASK-0192 Calmer UI: proposal written (`docs/specs/ui-calm.md`), waiting for the owner; the screens follow
+- [ ] TASK-0190 Own title bar: built and in review, waiting for the owner to try dragging, snapping and resizing on their machine
+- [ ] TASK-0192 Calmer UI: library, stack page, Home, rehearsal setup, settings and help done (`docs/specs/ui-calm.md`); the rest of the screens and the Create dialog follow

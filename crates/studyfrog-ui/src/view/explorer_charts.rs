@@ -34,21 +34,21 @@ pub(super) fn ratings(p: &Perf, ui: &mut egui::Ui) {
     let pal = palette_of(ui);
     let colors = [pal.danger, pal.warning, pal.success, pal.accent];
     kit::section(ui, "How the reviews were rated");
-    for (i, name) in ["Again", "Hard", "Good", "Easy"].into_iter().enumerate() {
-        let share = if p.reviews == 0 {
-            0.0
-        } else {
-            p.ratings[i] as f32 / p.reviews as f32
-        };
-        ui.horizontal(|ui| {
-            ui.colored_label(colors[i], format!("{name}: {}", p.ratings[i]));
-            ui.add(
-                egui::ProgressBar::new(share)
-                    .fill(colors[i])
-                    .desired_height(8.0),
-            );
-        });
-    }
+    let rows: Vec<kit::BarRow> = ["Again", "Hard", "Good", "Easy"]
+        .into_iter()
+        .enumerate()
+        .map(|(i, name)| kit::BarRow {
+            label: format!("{name}: {}", p.ratings[i]),
+            fraction: if p.reviews == 0 {
+                0.0
+            } else {
+                p.ratings[i] as f32 / p.reviews as f32
+            },
+            text: String::new(),
+            color: Some(colors[i]),
+        })
+        .collect();
+    kit::bar_rows(ui, "explorer-ratings", &rows);
 }
 
 /// Bars for the last days: the height is the number of reviews, the lower part the good ones.

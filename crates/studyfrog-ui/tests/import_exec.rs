@@ -128,6 +128,8 @@ fn the_import_dialog_offers_card_types_and_files_only_when_extensions_exist() {
         h.query_by_label("Card front").is_none(),
         "the page holds no card form any more"
     );
+    h.get_by_label("More actions").click();
+    h.run();
     h.get_by_label("Import…").click();
     h.run();
     assert_all_named(&h, "import dialog");

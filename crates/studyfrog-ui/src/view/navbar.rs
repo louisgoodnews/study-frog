@@ -17,7 +17,7 @@ use crate::view::menus;
 
 const HEIGHT: f32 = 40.0;
 const LEFT_WIDTH: f32 = 330.0;
-const RIGHT_WIDTH: f32 = 214.0;
+const RIGHT_WIDTH: f32 = 150.0;
 
 fn chrome(out: &mut Vec<Msg>, m: ChromeMsg) {
     out.push(Msg::Chrome(m));
@@ -27,12 +27,14 @@ fn chrome(out: &mut Vec<Msg>, m: ChromeMsg) {
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let mut anchors: Vec<(Menu, Rect)> = Vec::new();
     Panel::top("navbar").show(ui, |ui| {
+        super::window_frame::drag_area(ui, ui.max_rect());
         ui.horizontal(|ui| {
             let total = ui.available_width();
             let signed_in = state.vault.is_some();
+            let controls = super::window_frame::CONTROLS_WIDTH;
             let (left_w, right_w) = (
                 LEFT_WIDTH.min(total * 0.4),
-                if signed_in { RIGHT_WIDTH } else { 40.0 },
+                controls + if signed_in { RIGHT_WIDTH } else { 40.0 },
             );
             let left_to_right = Layout::left_to_right(Align::Center);
             // A section keeps its full width even when its content is narrower, so the sections
@@ -60,6 +62,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 right_w,
                 Layout::right_to_left(Align::Center),
                 &mut |ui| {
+                    super::window_frame::controls(ui, out);
+                    ui.add_space(8.0);
                     if signed_in {
                         right_cluster(state, ui, out, &mut anchors);
                     } else {
@@ -162,7 +166,6 @@ fn right_cluster(
     out: &mut Vec<Msg>,
     anchors: &mut Vec<(Menu, Rect)>,
 ) {
-    exit_button(ui, out);
     let profile = icon_button(
         ui,
         Glyph::Person,
@@ -207,19 +210,6 @@ fn right_cluster(
         );
     }
     anchors.push((Menu::Notifications, bell.rect));
-}
-
-/// The red button that leaves StudyFrog.
-fn exit_button(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let red = Color32::from_rgb(200, 48, 48);
-    let button = egui::Button::new(RichText::new("Exit").color(Color32::WHITE).strong())
-        .fill(red)
-        .min_size(vec2(52.0, 28.0));
-    let r = ui.add(button).on_hover_text("Exit StudyFrog");
-    r.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Exit StudyFrog"));
-    if r.clicked() {
-        chrome(out, ChromeMsg::Quit(crate::quit_ui::QuitMsg::Ask));
-    }
 }
 
 /// The logo: a green frog face.

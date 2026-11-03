@@ -44,7 +44,7 @@ pub(super) fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.allocate_ui(
         egui::vec2(
             ui.available_width(),
-            (ui.available_height() * 0.6).max(260.0),
+            (ui.available_height() - 16.0).max(260.0),
         ),
         |ui| {
             crate::view::library_table::draw(state, ui, out);

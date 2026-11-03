@@ -19,35 +19,43 @@ fn go(out: &mut Vec<Msg>, step: SetupStep) {
     out.push(Msg::SetupStep(step));
 }
 
-/// The whole screen.
+/// The whole screen: the steps scroll, the Back and Next buttons stay in view.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let step = state.rehearse.step;
-    egui::ScrollArea::vertical().show(ui, |ui| {
-        ui.label(RichText::new("Rehearse").size(26.0).strong());
-        step_bar(step, ui, out);
-        ui.add_space(8.0);
-        let (title, hint) = match step {
-            SetupStep::What => (
-                "What do you want to rehearse?",
-                "Pick stacks, or leave all unticked for everything.",
-            ),
-            SetupStep::How => (
-                "How do you want to rehearse?",
-                "Start from a preset, then adjust.",
-            ),
-            SetupStep::Review => ("Ready?", "Check your choices, then begin."),
-        };
-        ui.label(RichText::new(title).size(19.0).strong());
-        ui.label(RichText::new(hint).color(palette_of(ui).text_weak));
-        ui.add_space(6.0);
-        match step {
-            SetupStep::What => setup_what::draw(state, ui, out),
-            SetupStep::How => setup_how::draw(state, ui, out),
-            SetupStep::Review => setup_review::draw(state, ui, out),
-        }
-        ui.add_space(10.0);
-        navigation(state, ui, out);
-    });
+    egui::Panel::bottom("setup-nav")
+        .show_separator_line(false)
+        .frame(egui::Frame::new().inner_margin(egui::Margin::symmetric(0, 8)))
+        .show(ui, |ui| {
+            kit::column(ui, kit::READING_WIDTH, |ui| navigation(state, ui, out));
+        });
+    egui::ScrollArea::vertical()
+        .auto_shrink([false, false])
+        .show(ui, |ui| {
+            kit::column(ui, kit::READING_WIDTH, |ui| {
+                ui.label(RichText::new("Rehearse").size(26.0).strong());
+                step_bar(step, ui, out);
+                ui.add_space(12.0);
+                let (title, hint) = match step {
+                    SetupStep::What => (
+                        "What do you want to rehearse?",
+                        "Pick stacks, or leave all unticked for everything.",
+                    ),
+                    SetupStep::How => (
+                        "How do you want to rehearse?",
+                        "Start from a preset, then adjust.",
+                    ),
+                    SetupStep::Review => ("Ready?", "Check your choices, then begin."),
+                };
+                ui.label(RichText::new(title).size(19.0).strong());
+                ui.label(RichText::new(hint).color(palette_of(ui).text_weak));
+                match step {
+                    SetupStep::What => setup_what::draw(state, ui, out),
+                    SetupStep::How => setup_how::draw(state, ui, out),
+                    SetupStep::Review => setup_review::draw(state, ui, out),
+                }
+                ui.add_space(16.0);
+            });
+        });
 }
 
 fn step_bar(current: SetupStep, ui: &mut egui::Ui, out: &mut Vec<Msg>) {

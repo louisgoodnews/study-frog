@@ -15,10 +15,35 @@ pub struct StudyFrogApp {
     pub runtime: Runtime,
     /// When set, close the window after this many frames (smoke tests).
     pub smoke_frames: Option<u32>,
+    /// When set, take a picture of a screen and exit (`--screenshot`).
+    pub shot: Option<crate::app_shot::Shot>,
+}
+
+/// How the window is opened.
+#[derive(Debug, Clone, Default)]
+pub struct RunOptions {
+    /// Close the window after this many frames.
+    pub smoke_frames: Option<u32>,
+    /// Take a picture of a screen and exit.
+    pub shot: Option<crate::app_shot::Shot>,
+    /// The window's inner size in points; `None`: 960 by 640.
+    pub size: Option<(f32, f32)>,
 }
 
 /// Create the app and ask the worker for the saved settings.
 pub fn app_new(ctx: egui::Context, smoke_frames: Option<u32>, host: Host) -> StudyFrogApp {
+    app_new_with(
+        ctx,
+        RunOptions {
+            smoke_frames,
+            ..RunOptions::default()
+        },
+        host,
+    )
+}
+
+/// Create the app with all the options.
+pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> StudyFrogApp {
     crate::theme::apply(&ctx);
     egui_extras::install_image_loaders(&ctx);
     let mut model = Model::default();
@@ -28,7 +53,8 @@ pub fn app_new(ctx: egui::Context, smoke_frames: Option<u32>, host: Host) -> Stu
     StudyFrogApp {
         model,
         runtime,
-        smoke_frames,
+        smoke_frames: options.smoke_frames,
+        shot: options.shot,
     }
 }
 
@@ -39,6 +65,9 @@ pub fn app_ui(app: &mut StudyFrogApp, ui: &mut egui::Ui) {
         effects.extend(apply(&mut app.model, msg));
     }
     effects.extend(frame(&mut app.model, ui));
+    if let Some(shot) = app.shot.as_mut() {
+        effects.extend(crate::app_shot::step(shot, &mut app.model, ui));
+    }
     for effect in effects {
         let _ = app.runtime.effects.send(effect);
     }
@@ -68,15 +97,29 @@ impl eframe::App for StudyFrogApp {
 
 /// Open the window and run until it is closed. `smoke_frames` closes it after that many frames.
 pub fn run(smoke_frames: Option<u32>, host: Host) -> eframe::Result {
-    let options = eframe::NativeOptions {
+    run_with(
+        RunOptions {
+            smoke_frames,
+            ..RunOptions::default()
+        },
+        host,
+    )
+}
+
+/// Open the window with `options` and run until it is closed.
+pub fn run_with(options: RunOptions, host: Host) -> eframe::Result {
+    let (w, h) = options.size.unwrap_or((960.0, 640.0));
+    let native = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_inner_size([960.0, 640.0])
+            .with_inner_size([w, h])
+            .with_min_inner_size([640.0, 420.0])
+            .with_decorations(false)
             .with_title("StudyFrog"),
         ..Default::default()
     };
     eframe::run_native(
         "StudyFrog",
-        options,
-        Box::new(move |cc| Ok(Box::new(app_new(cc.egui_ctx.clone(), smoke_frames, host)))),
+        native,
+        Box::new(move |cc| Ok(Box::new(app_new_with(cc.egui_ctx.clone(), options, host)))),
     )
 }

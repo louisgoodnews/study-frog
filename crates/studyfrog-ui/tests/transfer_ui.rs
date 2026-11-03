@@ -39,6 +39,8 @@ fn the_dialog_opens_from_the_stack_page_the_create_dialog_and_settings() {
     );
     let mut h = harness(model);
     h.run_steps(4);
+    h.get_by_label("More actions").click();
+    h.run_steps(4);
     h.get_by_label("Import or export…").click();
     h.run_steps(4);
     assert!(matches!(h.state().0.state.modal, Some(Modal::Transfer)));

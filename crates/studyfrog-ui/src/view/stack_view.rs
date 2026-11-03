@@ -9,6 +9,7 @@ use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::stack_view_ui::{StackTab, StackViewMsg, TABS, tab_of};
 use crate::state::{Selection, State};
+use crate::view::kit;
 use crate::view::status_ui::status_menu;
 
 fn send(out: &mut Vec<Msg>, m: StackViewMsg) {
@@ -49,17 +50,29 @@ fn actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg
         if let Some(pick) = status_menu(ui, stack.status, None) {
             send(out, StackViewMsg::SetStatus(stack.uid, pick));
         }
-        if ui.button("Details").clicked() {
-            out.push(Msg::OpenItem(stack.uid));
-        }
         if ui.button("New item").clicked() {
             out.push(Msg::Modal(ModalMsg::OpenCreate));
+        }
+        if kit::primary_button(ui, "Start rehearsal").clicked() {
+            out.push(Msg::Home(HomeMsg::RehearseStack(stack.folder.clone())));
+        }
+        more_actions(state, stack, ui, out);
+    });
+}
+
+/// The rarely used actions of a stack, out of the way in a menu.
+fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.menu_button("More actions", |ui| {
+        if ui.button("Details").clicked() {
+            out.push(Msg::OpenItem(stack.uid));
+            ui.close();
         }
         let ext = &state.extensions;
         if !(ext.card_types.is_empty() && ext.importers.is_empty())
             && ui.button("Import…").clicked()
         {
             out.push(Msg::Modal(ModalMsg::OpenImport));
+            ui.close();
         }
         if ui.button("Import or export…").clicked() {
             let open = crate::transfer_ui::TransferMsg::Open(
@@ -67,9 +80,7 @@ fn actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg
                 Some(stack.folder.clone()),
             );
             out.push(Msg::Library(LibraryMsg::Transfer(open)));
-        }
-        if ui.button("Start rehearsal").clicked() {
-            out.push(Msg::Home(HomeMsg::RehearseStack(stack.folder.clone())));
+            ui.close();
         }
     });
 }

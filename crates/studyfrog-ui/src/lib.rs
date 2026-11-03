@@ -10,6 +10,7 @@ pub mod agent_types;
 pub mod agent_ui;
 pub mod app;
 pub mod app_settings_ui;
+pub mod app_shot;
 pub mod backup_ui;
 pub mod browse;
 pub mod chrome;
@@ -119,4 +120,4 @@ pub mod update;
 pub mod view;
 pub mod view_time;
 
-pub use app::run;
+pub use app::{RunOptions, run, run_with};

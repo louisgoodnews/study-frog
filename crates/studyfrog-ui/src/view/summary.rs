@@ -122,20 +122,20 @@ fn counts(run: &RunView, ui: &mut egui::Ui) {
             }
         });
         ui.add_space(6.0);
-        for (i, name) in ["Again", "Hard", "Good", "Easy"].into_iter().enumerate() {
-            let share = if rated == 0 {
-                0.0
-            } else {
-                s.rated[i] as f32 / rated as f32
-            };
-            ui.horizontal(|ui| {
-                ui.colored_label(colors[i], format!("{name}: {}", s.rated[i]));
-                ui.add(
-                    egui::ProgressBar::new(share)
-                        .fill(colors[i])
-                        .desired_height(8.0),
-                );
-            });
-        }
+        let rows: Vec<kit::BarRow> = ["Again", "Hard", "Good", "Easy"]
+            .into_iter()
+            .enumerate()
+            .map(|(i, name)| kit::BarRow {
+                label: format!("{name}: {}", s.rated[i]),
+                fraction: if rated == 0 {
+                    0.0
+                } else {
+                    s.rated[i] as f32 / rated as f32
+                },
+                text: String::new(),
+                color: Some(colors[i]),
+            })
+            .collect();
+        kit::bar_rows(ui, "summary-ratings", &rows);
     });
 }
