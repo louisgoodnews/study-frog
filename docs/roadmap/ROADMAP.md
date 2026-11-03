@@ -289,4 +289,4 @@ See [M10-usability-and-insight](M10-usability-and-insight.md), with the priority
 The diary (STORY-0068, TASK-0170 to TASK-0174) moved to M11 on 2026-11-03.
 
 ## M11 Diary, a calmer UI, writing and prompts (0.4.0)
-See [M11-diary](M11-diary.md): EPIC-024 (STORY-0068, STORY-0073) and EPIC-026 (STORY-0074 to STORY-0079, BUG-0007, BUG-0008, TASK-0197 to TASK-0216).
+See [M11-diary](M11-diary.md): EPIC-024 (STORY-0068, STORY-0073) and EPIC-026 (STORY-0074 to STORY-0079, BUG-0007, BUG-0008, TASK-0197 to TASK-0217).

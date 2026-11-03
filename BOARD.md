@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (28) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (191) |
+| Backlog (29) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (191) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -27,14 +27,14 @@
 | [TASK-0207](docs/issues/tasks/TASK-0207-run-a-prompt-with-the-connected-assistant-and-an-attached-file.md) Run a prompt with the connected assistant and an attached file (5) |  |  |  |  | [TASK-0013](docs/issues/tasks/TASK-0013-stack-note-card-question-structs.md) Stack, Note, Card, Question structs (3) |
 | [TASK-0208](docs/issues/tasks/TASK-0208-csv-import-with-column-mapping.md) CSV import with column mapping (5) |  |  |  |  | [TASK-0014](docs/issues/tasks/TASK-0014-review-and-rating-types.md) Review and Rating types (2) |
 | [TASK-0209](docs/issues/tasks/TASK-0209-tell-the-user-which-layouts-and-formats-the-importers-read.md) Tell the user which layouts and formats the importers read (3) |  |  |  |  | [TASK-0015](docs/issues/tasks/TASK-0015-run-and-event-types.md) Run and event types (3) |
-| [TASK-0210](docs/issues/tasks/TASK-0210-decide-how-a-stack-points-to-its-contents-adr-and-spec.md) Decide how a stack points to its contents (ADR and spec) (3) |  |  |  |  | [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) |
-| [TASK-0211](docs/issues/tasks/TASK-0211-stack-file-format-reading-and-migration.md) Stack file format, reading and migration (8) |  |  |  |  | [TASK-0017](docs/issues/tasks/TASK-0017-fsrs-property-and-golden-tests.md) FSRS property and golden tests (3) |
-| [TASK-0212](docs/issues/tasks/TASK-0212-services-follow-the-new-membership.md) Services follow the new membership (8) |  |  |  |  | [TASK-0018](docs/issues/tasks/TASK-0018-sm-2-functions.md) SM-2 functions (3) |
-| [TASK-0213](docs/issues/tasks/TASK-0213-stack-membership-in-the-interface.md) Stack membership in the interface (5) |  |  |  |  | [TASK-0019](docs/issues/tasks/TASK-0019-srs-criterion-benchmark.md) SRS criterion benchmark (2) |
+| [TASK-0210](docs/issues/tasks/TASK-0210-decide-the-stack-folder-and-reference-rules-adr-and-spec.md) Decide the stack folder and reference rules (ADR and spec) (3) |  |  |  |  | [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) |
+| [TASK-0211](docs/issues/tasks/TASK-0211-referenced-by-in-the-file-format-the-index-and-the-vault-checks.md) The referenced_by field in the file format, the index and the vault checks (5) |  |  |  |  | [TASK-0017](docs/issues/tasks/TASK-0017-fsrs-property-and-golden-tests.md) FSRS property and golden tests (3) |
+| [TASK-0212](docs/issues/tasks/TASK-0212-services-follow-the-membership.md) Services follow the membership (8) |  |  |  |  | [TASK-0018](docs/issues/tasks/TASK-0018-sm-2-functions.md) SM-2 functions (3) |
+| [TASK-0213](docs/issues/tasks/TASK-0213-references-in-the-interface.md) References in the interface (5) |  |  |  |  | [TASK-0019](docs/issues/tasks/TASK-0019-srs-criterion-benchmark.md) SRS criterion benchmark (2) |
 | [TASK-0214](docs/issues/tasks/TASK-0214-code-blocks-with-language-highlighting.md) Code blocks with language highlighting (5) |  |  |  |  | [TASK-0020](docs/issues/tasks/TASK-0020-schema-structs-and-validation.md) Schema structs and validation (3) |
 | [TASK-0215](docs/issues/tasks/TASK-0215-underline-and-text-colour.md) Underline and text colour (3) |  |  |  |  | [TASK-0021](docs/issues/tasks/TASK-0021-fence-splitter-and-serde-saphyr-parsing.md) Fence splitter and serde-saphyr parsing (3) |
 | [TASK-0216](docs/issues/tasks/TASK-0216-automatic-table-of-contents.md) Automatic table of contents (3) |  |  |  |  | [TASK-0022](docs/issues/tasks/TASK-0022-round-trip-property-test.md) Round-trip property test (3) |
-|  |  |  |  |  | [TASK-0023](docs/issues/tasks/TASK-0023-wikilink-extraction.md) Wikilink extraction (3) |
+| [TASK-0217](docs/issues/tasks/TASK-0217-mark-a-folder-as-a-stack-or-as-a-normal-folder.md) Mark a folder as a stack or as a normal folder (3) |  |  |  |  | [TASK-0023](docs/issues/tasks/TASK-0023-wikilink-extraction.md) Wikilink extraction (3) |
 |  |  |  |  |  | [TASK-0024](docs/issues/tasks/TASK-0024-card-and-question-section-split.md) Card and question section split (2) |
 |  |  |  |  |  | [TASK-0025](docs/issues/tasks/TASK-0025-initial-schema.md) Initial schema (3) |
 |  |  |  |  |  | [TASK-0026](docs/issues/tasks/TASK-0026-migration-runner.md) Migration runner (2) |
@@ -279,7 +279,7 @@
 | [STORY-0076](docs/issues/stories/STORY-0076-organize-the-vault-as-folders-and-files.md) Organize the vault as folders and files (8) | backlog | 0/3 |
 | [STORY-0077](docs/issues/stories/STORY-0077-prompts-for-ai-agents.md) Prompts for AI agents (8) | backlog | 0/3 |
 | [STORY-0078](docs/issues/stories/STORY-0078-imports-that-explain-themselves.md) Imports that explain themselves (5) | backlog | 0/2 |
-| [STORY-0079](docs/issues/stories/STORY-0079-stacks-as-files-that-point-to-their-contents.md) Stacks as files that point to their contents (8) | backlog | 0/4 |
+| [STORY-0079](docs/issues/stories/STORY-0079-stack-folders-and-items-referenced-by-several-stacks.md) Stack folders and items referenced by several stacks (8) | backlog | 0/5 |
 
 ## Epics
 

@@ -54,8 +54,8 @@ Proposed by Claude on 2026-11-03 after the owner's test of 0.3.1; the owner may 
 - [ ] 8. TASK-0207 Run a prompt with the assistant
 
 **Wave 3: larger, specify first**
-- [ ] 9. TASK-0210 Decide how a stack points to its contents (ADR; the owner: folders are folders, a stack is a file that points to its contents)
-- [ ] 10. TASK-0202 Specify the folders and items views, then TASK-0211 to TASK-0213 (the model change) and TASK-0203, TASK-0204
+- [ ] 9. TASK-0210 Decide the stack folder and reference rules (ADR; the owner: a folder can be marked as a stack, an item can be referenced by several stacks)
+- [ ] 10. TASK-0211 to TASK-0213 and TASK-0217 (references and the stack mark), then TASK-0202 (views spec), TASK-0203 and TASK-0204
 - [ ] 11. TASK-0195 Calm the remaining screens (STORY-0073)
 - [ ] 12. TASK-0170 to TASK-0174 Diary
 - [x] TASK-0196 Navigation history, BUG-0005 Exit button cut off, BUG-0006 Roadmap too small (done on main after 0.3.1)

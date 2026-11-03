@@ -29,11 +29,12 @@
     - TASK-0199 Open the new item from the notification that says it was created
     - TASK-0200 Auto-save in the editor and no Save button
     - TASK-0201 Item saved toast when leaving the editor
-  - **STORY-0079** Stacks as files that point to their contents (the owner's decision of 2026-11-03: folders are only folders)
-    - TASK-0210 Decide how a stack points to its contents (ADR and spec)
-    - TASK-0211 Stack file format, reading and migration
-    - TASK-0212 Services follow the new membership
-    - TASK-0213 Stack membership in the interface
+  - **STORY-0079** Stack folders and items referenced by several stacks (the owner's decisions of 2026-11-03)
+    - TASK-0210 Decide the stack folder and reference rules (ADR and spec)
+    - TASK-0211 The referenced_by field in the file format, the index and the vault checks
+    - TASK-0212 Services follow the membership
+    - TASK-0213 References in the interface
+    - TASK-0217 Mark a folder as a stack or as a normal folder
   - **STORY-0076** Organize the vault as folders and files
     - TASK-0202 Specify the folders and items views
     - TASK-0203 Folder operations in the service (create, rename, move, delete)
@@ -51,10 +52,10 @@ Proposed by Claude on 2026-11-03; the owner may reorder.
 
 1. **Small and painful now:** BUG-0007, BUG-0008, TASK-0199, TASK-0200 and TASK-0201 (writing and saving), TASK-0209 (say what imports expect).
 2. **Next:** TASK-0208 (CSV mapping, with all problems at once), TASK-0205 and TASK-0206 (prompts that hand-hold an AI, and copying them), TASK-0197, TASK-0215 and TASK-0216 (tables, underline and colour, table of contents), TASK-0198 (macros), TASK-0214 (code highlighting), TASK-0207 (prompts through the assistant).
-3. **Larger, decide first:** TASK-0210 (the ADR on stacks as files that point to their contents) before anything else in this wave; then TASK-0202 (views spec), TASK-0211 to TASK-0213 (the model change), TASK-0203 and TASK-0204 (folders and items views), TASK-0195 (the remaining screens). The model change is the largest and riskiest item of 0.4.0: after the ADR the owner decides whether its implementation stays in 0.4.0 or moves to 0.5.0.
+3. **Larger, decide first:** TASK-0210 (the ADR on stack folders and references) before anything else in this wave; then TASK-0211 to TASK-0213 and TASK-0217 (the model change, no vault migration needed), TASK-0202, TASK-0203 and TASK-0204 (folders and items views), TASK-0195 (the remaining screens). The model change touches queues, summaries, reports and the importers but is much smaller than a new vault layout would have been; it still fits 0.4.0 if the ADR is quick.
 4. **The diary:** TASK-0170 first (the specification), then TASK-0171, TASK-0172, TASK-0173 and TASK-0174 in order.
 
-Dependencies: TASK-0205 and TASK-0208 use the layouts of TASK-0209; TASK-0201 needs TASK-0200; TASK-0198 needs the syntax of TASK-0197, TASK-0214, TASK-0215 and TASK-0216; TASK-0202 needs TASK-0210; TASK-0211 to TASK-0213 need TASK-0210 and each other in order; TASK-0203 and TASK-0204 need TASK-0202 and TASK-0211.
+Dependencies: TASK-0205 and TASK-0208 use the layouts of TASK-0209; TASK-0201 needs TASK-0200; TASK-0198 needs the syntax of TASK-0197, TASK-0214, TASK-0215 and TASK-0216; TASK-0211 to TASK-0213 and TASK-0217 need TASK-0210 and follow each other in order; TASK-0202 needs TASK-0210; TASK-0203 and TASK-0204 need TASK-0202, TASK-0211 and TASK-0217.
 
 **Exit criteria:**
 - Enter continues lists, tables and macros work, the editor saves by itself and says so, and a new item opens from its notification
