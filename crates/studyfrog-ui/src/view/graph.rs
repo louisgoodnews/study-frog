@@ -16,11 +16,11 @@ const MAX_LABELS: usize = 150;
 /// How many items the accessible list offers.
 const LIST_LIMIT: usize = 200;
 
-fn kind_color(kind: ItemKind) -> Color32 {
+fn kind_color(p: &crate::theme::Palette, kind: ItemKind) -> Color32 {
     match kind {
-        ItemKind::Note => Color32::from_rgb(90, 150, 230),
-        ItemKind::Card => Color32::from_rgb(90, 190, 120),
-        ItemKind::Question => Color32::from_rgb(230, 160, 70),
+        ItemKind::Note => p.alt,
+        ItemKind::Card => p.success,
+        ItemKind::Question => p.warning,
     }
 }
 
@@ -90,6 +90,7 @@ fn canvas(g: &GraphState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn paint(g: &GraphState, ui: &egui::Ui, rect: egui::Rect) {
     let painter = ui.painter_at(rect);
+    let pal = crate::theme::palette_of(ui);
     painter.rect_filled(rect, 4.0, ui.visuals().extreme_bg_color);
     let c = rect.center();
     let at = |i: usize| Pos2::new(c.x + g.sx[i], c.y + g.sy[i]);
@@ -115,7 +116,7 @@ fn paint(g: &GraphState, ui: &egui::Ui, rect: egui::Rect) {
             } else {
                 NODE_RADIUS
             },
-            kind_color(node.kind),
+            kind_color(&pal, node.kind),
         );
         if hovered || (g.view.zoom >= LABEL_ZOOM && labels < MAX_LABELS) {
             labels += 1;

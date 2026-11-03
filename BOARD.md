@@ -4,9 +4,9 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (30) | Ready (0) | In progress (1/3) | Review (1) | Blocked (0) | Done (200) |
+| Backlog (30) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (201) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  | [TASK-0226](docs/issues/tasks/TASK-0226-make-every-screen-right-in-both-themes.md) Make every screen right in both themes (5) | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
 | [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 | [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
@@ -205,6 +205,7 @@
 |  |  |  |  |  | [TASK-0223](docs/issues/tasks/TASK-0223-appearance-tab-in-settings.md) Appearance tab in Settings (3) |
 |  |  |  |  |  | [TASK-0224](docs/issues/tasks/TASK-0224-interface-size-and-density.md) Interface size and density (5) |
 |  |  |  |  |  | [TASK-0225](docs/issues/tasks/TASK-0225-accent-colour-high-contrast-and-reduced-motion.md) Accent colour, high contrast and reduced motion (5) |
+|  |  |  |  |  | [TASK-0226](docs/issues/tasks/TASK-0226-make-every-screen-right-in-both-themes.md) Make every screen right in both themes (5) |
 |  |  |  |  |  | [TASK-0227](docs/issues/tasks/TASK-0227-start-up-and-window-settings.md) Start-up and window settings (3) |
 
 ## Stories
@@ -289,7 +290,7 @@
 | [STORY-0077](docs/issues/stories/STORY-0077-prompts-for-ai-agents.md) Prompts for AI agents (8) | backlog | 0/3 |
 | [STORY-0078](docs/issues/stories/STORY-0078-imports-that-explain-themselves.md) Imports that explain themselves (5) | backlog | 0/2 |
 | [STORY-0079](docs/issues/stories/STORY-0079-stack-folders-and-items-referenced-by-several-stacks.md) Stack folders and items referenced by several stacks (8) | backlog | 0/8 |
-| [STORY-0080](docs/issues/stories/STORY-0080-dark-light-and-system-theme.md) Dark, light and system theme (8) | in_progress | 2/3 |
+| [STORY-0080](docs/issues/stories/STORY-0080-dark-light-and-system-theme.md) Dark, light and system theme (8) | done | 3/3 |
 | [STORY-0081](docs/issues/stories/STORY-0081-display-and-window-settings.md) Display and window settings (8) | done | 4/4 |
 
 ## Epics
@@ -322,4 +323,4 @@
 | [EPIC-024](docs/issues/epics/EPIC-024-diary-for-0-4-0.md) Diary and a calmer UI for 0.4.0 | backlog | 0/2 |
 | [EPIC-025](docs/issues/epics/EPIC-025-feedback-fixes-for-0-3-1.md) Feedback fixes for 0.3.1 | done | 1/1 |
 | [EPIC-026](docs/issues/epics/EPIC-026-writing-saving-organizing-and-prompts-for-0-4-0.md) Writing, saving, organizing and prompts for 0.4.0 | backlog | 0/6 |
-| [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | in_progress | 1/2 |
+| [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | done | 2/2 |

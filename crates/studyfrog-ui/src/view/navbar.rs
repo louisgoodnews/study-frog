@@ -201,14 +201,14 @@ fn right_cluster(
     let n = unread(&state.chrome);
     if n > 0 {
         let badge = egui::pos2(bell.rect.right() - 4.0, bell.rect.top() + 6.0);
-        ui.painter()
-            .circle_filled(badge, 7.0, Color32::from_rgb(210, 60, 60));
+        let p = palette_of(ui);
+        ui.painter().circle_filled(badge, 7.0, p.danger);
         ui.painter().text(
             badge,
             egui::Align2::CENTER_CENTER,
             n.min(9).to_string(),
             egui::FontId::proportional(10.0),
-            Color32::WHITE,
+            p.background,
         );
     }
     anchors.push((Menu::Notifications, bell.rect));

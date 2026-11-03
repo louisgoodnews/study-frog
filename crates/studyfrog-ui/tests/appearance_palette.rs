@@ -57,7 +57,7 @@ fn every_palette_meets_the_contrast_rules_for_text_and_controls() {
                     contrast(p.border, p.panel) >= if high_contrast { 4.5 } else { 1.2 },
                     "border: {who}"
                 );
-                for c in [p.success, p.warning, p.danger] {
+                for c in [p.success, p.warning, p.danger, p.alt] {
                     assert!(contrast(c, p.surface) >= 3.0, "status colour {c:?}: {who}");
                 }
             }

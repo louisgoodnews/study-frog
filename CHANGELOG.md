@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Fixed
+- The Board's columns share the width there is, and the new-card field leaves room for its button, so the last column and "Add card" no longer run off the right edge (TASK-0226).
 - PDFs are named by their file name in the Home card, the stack page, the search results and the viewer's header; the title inside the file is added only when it says something, so files whose title is a placeholder such as "PowerPoint-Präsentation" are told apart (BUG-0009).
 - Enter in the Markdown editor continues a list: the next number, the same bullet or an unchecked box for a task item, at the same indent (in the middle of an item it splits the item); Enter or Backspace on an empty item removes its marker and ends the list (BUG-0007).
 - Bullets, numbers and check boxes in the preview are level with the first line of their item (BUG-0008).
@@ -18,6 +19,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The Markdown editor's code is split into a module of small files (`view/md_editor/`: toolbar, resizing, preview cache, list keys).
 
 ### Added
+- `studyfrog --screenshot FILE --theme dark|light|system` takes the picture in a theme, whatever is saved (TASK-0226).
+- Colours in the views come from the theme: the calendar's appointments and the graph's notes use a new theme colour, the notification badge the palette's red, and a test fails when a view writes a colour of its own (TASK-0226).
 - Appearance settings (Settings > Appearance, the theme also in the profile menu): dark, light or follow the system; the interface size (70 to 200 percent, also with Ctrl and plus, minus and 0) and the text size; compact, comfortable or spacious density; six accent colours; high contrast; reduced motion; the screen to open first (Home, Library or the one used last); the sidebar folded at start; and the window's size and place remembered. Every change shows at once and is saved at once, with no restart, and the saved look and window are used from the first frame. The settings are in an `[appearance]` table of `app.toml` (`docs/specs/appearance.md`) (TASK-0221 to TASK-0225, TASK-0227).
 - Navigation history: the top bar has Back and Forward arrows and a History list (the screens, stacks and items visited, newest first, the current one marked), and Alt+Left and Alt+Right do the same; unsaved changes in the editor ask you to save or revert first (TASK-0196).
 

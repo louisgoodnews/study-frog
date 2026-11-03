@@ -39,7 +39,7 @@ pub fn kind_color(p: &Palette, kind: EventKind) -> Color32 {
     match kind {
         EventKind::Study => p.accent,
         EventKind::Task => p.success,
-        EventKind::Appointment => Color32::from_rgb(176, 132, 232),
+        EventKind::Appointment => p.alt,
         EventKind::Exam => p.danger,
         EventKind::Deadline => p.warning,
     }

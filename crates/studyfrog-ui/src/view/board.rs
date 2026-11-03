@@ -35,14 +35,16 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
     });
     ui.horizontal(|ui| {
-        if let Some(t) = text_field(
-            ui,
-            "New card title",
-            &k.new_title,
-            "added to the first column",
-            1,
-        ) {
-            send(out, BoardMsg::NewTitle(t));
+        let label = ui.label("New card title");
+        let mut title = k.new_title.clone();
+        // The button must stay on screen: the field takes what is left of the row.
+        let room = (ui.available_width() - 110.0).max(120.0);
+        let field = egui::TextEdit::singleline(&mut title)
+            .hint_text("added to the first column")
+            .desired_width(room);
+        ui.add(field).labelled_by(label.id);
+        if title != k.new_title {
+            send(out, BoardMsg::NewTitle(title));
         }
         if ui.button("Add card").clicked() {
             send(out, BoardMsg::Add);
@@ -54,13 +56,26 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if board.columns.is_empty() {
         return;
     }
-    egui::ScrollArea::vertical().show(ui, |ui| {
-        ui.columns(board.columns.len(), |cols| {
-            for (i, col) in board.columns.iter().enumerate() {
-                column(state, col, &mut cols[i], out);
-            }
+    // Every column gets an equal share of the width there is (less the scroll bar's room), so none runs off the edge.
+    let n = board.columns.len() as f32;
+    let gap = ui.spacing().item_spacing.x;
+    let width = ((ui.available_width() - 16.0 - gap * (n - 1.0)) / n).max(160.0);
+    egui::ScrollArea::both()
+        .auto_shrink([false, false])
+        .show(ui, |ui| {
+            ui.horizontal_top(|ui| {
+                for col in &board.columns {
+                    ui.allocate_ui_with_layout(
+                        egui::vec2(width, 0.0),
+                        egui::Layout::top_down(egui::Align::Min),
+                        |ui| {
+                            ui.set_width(width);
+                            column(state, col, ui, out);
+                        },
+                    );
+                }
+            });
         });
-    });
 }
 
 fn count_text(col: &Column) -> String {

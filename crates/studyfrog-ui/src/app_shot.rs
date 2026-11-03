@@ -26,6 +26,13 @@ pub struct Shot {
     pub screen: Option<String>,
     /// Frames drawn so far.
     pub frames: u32,
+    /// The theme to take the picture in, whatever the saved settings say (nothing is saved).
+    pub theme: Option<studyfrog_core::appearance::ThemeChoice>,
+}
+
+/// The theme named on the command line: `dark`, `light` or `system`.
+pub fn theme_arg(word: &str) -> Option<studyfrog_core::appearance::ThemeChoice> {
+    studyfrog_core::appearance::theme_from_name(word)
 }
 
 fn screen_named(name: &str) -> Option<Screen> {
@@ -69,6 +76,9 @@ fn save(path: &std::path::Path, image: &egui::ColorImage) -> Result<(), String> 
 /// One frame of the capture: go to the screen, ask for the picture, write it when it arrives, then close.
 pub fn step(shot: &mut Shot, model: &mut Model, ui: &egui::Ui) -> Vec<crate::effect::Effect> {
     shot.frames += 1;
+    if let Some(t) = shot.theme {
+        model.state.app.appearance.theme = t;
+    }
     let ctx = ui.ctx();
     ctx.request_repaint();
     let mut effects = Vec::new();

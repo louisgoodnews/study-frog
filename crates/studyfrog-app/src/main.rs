@@ -1,7 +1,7 @@
 //! StudyFrog binary entry point.
 //!
 //! `studyfrog --smoke-frames N` draws N frames and exits (for CI under a virtual display).
-//! `studyfrog --screenshot FILE [--screen NAME] [--size WxH]` saves a PNG of a screen and exits (`home`, `library`,
+//! `studyfrog --screenshot FILE [--screen NAME] [--size WxH] [--theme dark|light|system]` saves a PNG of a screen and exits (`home`, `library`,
 //! `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `run`, or `stack:<folder>`).
 
 use std::process::ExitCode;
@@ -27,6 +27,7 @@ fn options(args: &[String]) -> RunOptions {
             path: path.into(),
             screen: value(args, "--screen").map(str::to_owned),
             frames: 0,
+            theme: value(args, "--theme").and_then(studyfrog_ui::app_shot::theme_arg),
         }),
         size: size(args),
     }

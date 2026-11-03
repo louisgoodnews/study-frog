@@ -32,6 +32,8 @@ pub struct Palette {
     pub warning: Color32,
     /// Wrong / overdue / error.
     pub danger: Color32,
+    /// A fourth colour that is not the accent, for kinds that need one (appointments, notes in the graph).
+    pub alt: Color32,
 }
 
 const fn rgb(r: u8, g: u8, b: u8) -> Color32 {
@@ -79,6 +81,7 @@ fn base(dark: bool, high_contrast: bool) -> Palette {
             success: rgb(95, 191, 122),
             warning: rgb(224, 168, 74),
             danger: rgb(224, 108, 108),
+            alt: rgb(184, 146, 247),
         },
         (true, true) => Palette {
             background: rgb(0, 0, 0),
@@ -93,6 +96,7 @@ fn base(dark: bool, high_contrast: bool) -> Palette {
             success: rgb(120, 220, 150),
             warning: rgb(255, 196, 90),
             danger: rgb(255, 130, 130),
+            alt: rgb(208, 178, 255),
         },
         (false, false) => Palette {
             background: rgb(244, 245, 247),
@@ -107,6 +111,7 @@ fn base(dark: bool, high_contrast: bool) -> Palette {
             success: rgb(46, 139, 87),
             warning: rgb(183, 121, 31),
             danger: rgb(192, 57, 43),
+            alt: rgb(111, 66, 193),
         },
         (false, true) => Palette {
             background: rgb(255, 255, 255),
@@ -121,6 +126,7 @@ fn base(dark: bool, high_contrast: bool) -> Palette {
             success: rgb(10, 100, 55),
             warning: rgb(140, 84, 0),
             danger: rgb(160, 20, 10),
+            alt: rgb(84, 44, 168),
         },
     }
 }

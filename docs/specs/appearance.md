@@ -41,6 +41,7 @@ for the other keys); unknown keys in the table are errors too.
   had before. At start-up the saved window and the saved look are used before the first frame.
 
 ## Not in this version
-A language setting, custom fonts, a custom accent colour, and a different theme per vault. The check of every screen in
-both themes (TASK-0226) is not finished: the palette contrast is tested and several screens were looked at, but each
-screen is not.
+A language setting, custom fonts, a custom accent colour, and a different theme per vault. Colours in views come from
+the palette (`tests/no_hardcoded_colours.rs` fails otherwise); the contrast of every palette is tested. Screens were
+looked at in both themes with `studyfrog --screenshot FILE --screen NAME --theme dark|light`; the Create dialog, the
+import and export dialog and the PDF viewer were not.
