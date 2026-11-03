@@ -81,15 +81,30 @@ pub fn section(ui: &mut egui::Ui, title: &str) {
     ui.add_space(2.0);
 }
 
-/// A thin bar showing `fraction` (0 to 1) of the way, with a name for screen readers.
-pub fn progress(ui: &mut egui::Ui, fraction: f32, name: &str) {
+/// A full-width bar with `text` centred on it; screen readers hear `name` and the text. The filled part is the
+/// theme's tinted accent, so the text keeps its normal colour and stays readable at any fill.
+pub fn progress_with_text(ui: &mut egui::Ui, fraction: f32, text: &str, name: &str) {
     let p = palette_of(ui);
-    let bar = egui::ProgressBar::new(fraction.clamp(0.0, 1.0))
-        .desired_height(8.0)
-        .fill(p.accent)
-        .text(RichText::new("").size(1.0));
-    ui.add(bar)
-        .widget_info(|| egui::WidgetInfo::labeled(egui::Role::ProgressIndicator, true, name));
+    ui.add_space(4.0);
+    let (rect, response) =
+        ui.allocate_exact_size(vec2(ui.available_width(), 24.0), egui::Sense::hover());
+    let radius = CornerRadius::same(12);
+    ui.painter().rect_filled(rect, radius, p.surface_hover);
+    let fill = fraction.clamp(0.0, 1.0);
+    if fill > 0.0 {
+        let width = (rect.width() * fill).max(rect.height());
+        let done = egui::Rect::from_min_size(rect.min, vec2(width, rect.height()));
+        ui.painter().rect_filled(done, radius, tint(p.accent, 110));
+    }
+    ui.painter().text(
+        rect.center(),
+        egui::Align2::CENTER_CENTER,
+        text,
+        egui::FontId::proportional(14.0),
+        p.text,
+    );
+    let label = format!("{name}: {text}");
+    response.widget_info(|| egui::WidgetInfo::labeled(egui::Role::ProgressIndicator, true, &label));
 }
 
 /// Widest a column of reading or form content is drawn, however wide the window is.

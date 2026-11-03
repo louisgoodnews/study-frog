@@ -47,3 +47,4 @@ owner's request and is listed under Next.
 - [x] TASK-0191 Suggest Anki and Obsidian files to import
 - [ ] TASK-0190 Own title bar: built and in review, waiting for the owner to try dragging, snapping and resizing on their machine
 - [ ] TASK-0192 Calmer UI: library, stack page, Home, rehearsal setup, settings and help done (`docs/specs/ui-calm.md`); the rest of the screens and the Create dialog follow
+- [x] TASK-0193 Space between content and scroll bars, TASK-0194 Rehearsal progress bar against the open items

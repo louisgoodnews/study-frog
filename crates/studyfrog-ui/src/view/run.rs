@@ -126,10 +126,11 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
             }
         });
     });
-    let done = position.saturating_sub(1) + usize::from(s.phase == ItemPhase::Revealed);
-    kit::progress(
+    let p = crate::run_progress::progress(s);
+    kit::progress_with_text(
         ui,
-        done as f32 / s.queue.len().max(1) as f32,
+        crate::run_progress::fraction(p),
+        &crate::run_progress::text(p),
         "Run progress",
     );
 }

@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Fixed
+- Scroll bars reserve their own width, so widgets and tables next to them no longer run under them (TASK-0193).
 - Rows of a name and a bar (priorities, ratings, familiarity spread) are aligned: the names share a column and every bar starts at the same place and has the same length, with its number on it; the numbers of Types and the due rows on Home line up as well (TASK-0192).
 - Every screen has a wider margin (20 px at the sides, 14 px at the top) and the stack page no longer sits against the stack list (BUG-0002).
 - The Create dialog's header is two rows, the window controls on one and the stack and type on the other, so the type name is no longer cut off in the normal-width dialog (BUG-0003).
@@ -19,7 +20,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The status bar no longer has a Help button; the `?` in the top bar, Help in the sidebar and `F1` remain (TASK-0192).
 
 ### Added
-- `studyfrog --screenshot FILE [--screen NAME] [--size WxH]` saves a PNG of a screen of the running app and exits, for looking at the real rendering (`home`, `library`, `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `stack:<folder>`) (TASK-0192).
+- The rehearsal screen has a full-width progress bar with "N done · M left" counted against the items still open: an item with its answer showing is still open until it is rated or skipped, and items put back to repeat count as open and are named (TASK-0194).
+- `studyfrog --screenshot FILE [--screen NAME] [--size WxH]` saves a PNG of a screen of the running app and exits, for looking at the real rendering (`home`, `library`, `rehearse`, `run`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `stack:<folder>`) (TASK-0192).
 - Cancel, the close button, Escape and a click outside the Create dialog ask "Discard what you wrote?" when a field has content or a changed value; an untouched dialog closes at once (TASK-0188).
 - A red button at the right end of the top bar ("Exit StudyFrog") closes StudyFrog and asks first when the editor holds unsaved changes (TASK-0189).
 - The Import tab lists what it finds on the computer: Obsidian vaults (from Obsidian's own list, with the number of Markdown files), Anki packages in Downloads, Documents and Desktop, and Anki profiles with the hint to export a package; "Use" shows the preview for the chosen one and nothing is read before (TASK-0191).

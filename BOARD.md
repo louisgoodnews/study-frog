@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (5) | Ready (0) | In progress (0/3) | Review (3) | Blocked (0) | Done (184) |
+| Backlog (5) | Ready (0) | In progress (0/3) | Review (3) | Blocked (0) | Done (186) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  | [TASK-0190](docs/issues/tasks/TASK-0190-readable-window-buttons.md) Readable window buttons (3) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -190,6 +190,8 @@
 |  |  |  |  |  | [TASK-0188](docs/issues/tasks/TASK-0188-ask-before-discarding-a-filled-create-dialog.md) Ask before discarding a filled Create dialog (2) |
 |  |  |  |  |  | [TASK-0189](docs/issues/tasks/TASK-0189-in-ui-exit-button.md) In-UI exit button (2) |
 |  |  |  |  |  | [TASK-0191](docs/issues/tasks/TASK-0191-suggest-importing-found-anki-and-obsidian-files.md) Suggest importing found Anki and Obsidian files (5) |
+|  |  |  |  |  | [TASK-0193](docs/issues/tasks/TASK-0193-space-between-content-and-scroll-bars.md) Space between content and scroll bars (1) |
+|  |  |  |  |  | [TASK-0194](docs/issues/tasks/TASK-0194-rehearsal-progress-bar-against-open-items.md) Rehearsal progress bar against the open items (3) |
 
 ## Stories
 
@@ -265,7 +267,7 @@
 | [STORY-0068](docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | backlog | 0/5 |
 | [STORY-0070](docs/issues/stories/STORY-0070-rehearsal-modes-for-countdown-and-count-up.md) Rehearsal modes for countdown and count up (8) | done | 4/4 |
 | [STORY-0071](docs/issues/stories/STORY-0071-create-dialog-like-jira.md) Create dialog like Jira (8) | done | 3/3 |
-| [STORY-0072](docs/issues/stories/STORY-0072-safer-simpler-ui-after-first-use.md) Safer and calmer UI after first use (8) | in_progress | 3/5 |
+| [STORY-0072](docs/issues/stories/STORY-0072-safer-simpler-ui-after-first-use.md) Safer and calmer UI after first use (8) | in_progress | 5/7 |
 
 ## Epics
 

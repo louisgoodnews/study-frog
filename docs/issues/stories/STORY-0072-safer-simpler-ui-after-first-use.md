@@ -17,7 +17,7 @@ acceptance_criteria:
 The owner tested 0.3.0 for a short while on 2026-11-03 and sent five screenshots with a list of observations: missing padding, a crowded Create dialog header, no confirmation when cancelling a filled dialog, no import suggestions, hard-to-read window buttons, no in-app exit button, a cramped streak and an overall dense UI.
 
 ## Description
-Tasks TASK-0188 to TASK-0192.
+Tasks TASK-0188 to TASK-0194.
 
 ## Acceptance Criteria
 - [ ] Cancelling a filled Create dialog asks first

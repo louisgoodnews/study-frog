@@ -2,7 +2,7 @@
 //!
 //! `studyfrog --smoke-frames N` draws N frames and exits (for CI under a virtual display).
 //! `studyfrog --screenshot FILE [--screen NAME] [--size WxH]` saves a PNG of a screen and exits (`home`, `library`,
-//! `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `stack:<folder>`).
+//! `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `run`, or `stack:<folder>`).
 
 use std::process::ExitCode;
 

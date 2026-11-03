@@ -12,7 +12,9 @@ use crate::state::{Screen, Selection};
 /// Frames to wait for the vault to open and its data to load before going to the screen.
 const SETTLE: u32 = 40;
 /// Frames to wait on the screen before taking the picture.
-const DRAW: u32 = 20;
+const DRAW: u32 = 40;
+/// Frames after going to `run` before its run is started (the count of matching items must have arrived).
+const START: u32 = 10;
 
 /// What to capture.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -20,7 +22,7 @@ pub struct Shot {
     /// Where to write the PNG.
     pub path: PathBuf,
     /// The screen: `home`, `library`, `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or
-    /// `stack:<folder>`; `None` keeps the first screen.
+    /// `run` (opens Rehearse and starts a run of everything), or `stack:<folder>`; `None` keeps the first screen.
     pub screen: Option<String>,
     /// Frames drawn so far.
     pub frames: u32,
@@ -39,6 +41,7 @@ fn screen_named(name: &str) -> Option<Screen> {
         "agent" => Screen::Agent,
         "achievements" => Screen::Achievements,
         "graph" => Screen::Graph,
+        "run" => Screen::Rehearse,
         _ => return None,
     })
 }
@@ -71,6 +74,9 @@ pub fn step(shot: &mut Shot, model: &mut Model, ui: &egui::Ui) -> Vec<crate::eff
     let mut effects = Vec::new();
     if let (SETTLE, Some(name)) = (shot.frames, shot.screen.clone()) {
         effects = go(model, &name);
+    }
+    if shot.frames == SETTLE + START && shot.screen.as_deref() == Some("run") {
+        effects = apply(model, Msg::StartRunClicked);
     }
     if shot.frames == SETTLE + DRAW {
         let (path, done) = (shot.path.clone(), ctx.clone());

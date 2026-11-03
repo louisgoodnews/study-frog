@@ -93,6 +93,7 @@ pub mod reminder_ui;
 pub mod reports;
 pub mod review;
 pub mod run_clock;
+pub mod run_progress;
 pub mod run_results;
 pub mod run_state;
 pub mod run_time;

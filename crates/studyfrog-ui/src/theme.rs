@@ -135,6 +135,9 @@ pub fn apply(ctx: &egui::Context) {
             s.spacing.button_padding = egui::vec2(12.0, 6.0);
             s.spacing.interact_size.y = 30.0;
             s.spacing.indent = 18.0;
+            // A floating scroll bar reserves its own width, so content never runs under it.
+            s.spacing.scroll.floating_allocated_width = 12.0;
+            s.spacing.scroll.bar_outer_margin = 4.0;
             s.spacing.window_margin = egui::Margin::same(16);
             s.text_styles = [
                 (TextStyle::Heading, FontId::proportional(22.0)),
