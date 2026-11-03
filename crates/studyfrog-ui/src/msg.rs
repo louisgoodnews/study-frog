@@ -68,6 +68,8 @@ pub enum Msg {
     VaultPolled(Result<Option<VaultInfo>, String>),
     /// A message of the assistant screen.
     Agent(crate::agent_types::AgentMsg),
+    /// The prompts for an AI.
+    Prompts(crate::prompts_ui::PromptsMsg),
     /// The PDF viewer.
     Pdf(crate::pdf_types::PdfMsg),
     /// A message about profiles.

@@ -130,6 +130,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),
         Effect::SearchItems(query) => search(w, query),
         Effect::Help(e) => crate::exec_help::run(w, e),
+        Effect::Prompts(e) => crate::exec_prompts::run(w, e),
         Effect::LoadHome => exec_run::home(w, now_ns),
         e @ (Effect::LoadAgent
         | Effect::SaveConnection { .. }

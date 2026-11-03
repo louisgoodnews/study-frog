@@ -55,3 +55,23 @@ fn the_answer_of_the_write_is_told_in_a_notice() {
     apply(&mut m, t(TransferMsg::ExampleSaved(Err("no space".into()))));
     assert!(m.state.notice.as_ref().unwrap().text.contains("no space"));
 }
+
+#[test]
+fn the_csv_entry_offers_a_prompt_and_the_way_to_all_of_them() {
+    let mut m = open_model();
+    apply(&mut m, t(TransferMsg::Open(Tab::Import, None)));
+    let mut h = harness(m);
+    h.run_steps(6);
+    h.get_by_label("Which files can I import?").click();
+    h.run_steps(6);
+    assert!(
+        h.query_by_label("Copy a prompt that makes this file")
+            .is_some()
+    );
+    h.get_by_label("More prompts…").click();
+    h.run_steps(6);
+    let s = &h.state().0.state;
+    assert_eq!(s.screen, studyfrog_ui::state::Screen::Agent);
+    assert_eq!(s.agent.tab, studyfrog_ui::agent_types::AgentTab::Prompts);
+    assert!(s.modal.is_none());
+}

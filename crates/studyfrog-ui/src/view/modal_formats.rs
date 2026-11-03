@@ -3,8 +3,11 @@
 use eframe::egui::{self, RichText};
 use studyfrog_service::xfer_adapters::{ADAPTERS, OBSIDIAN_LAYOUT};
 
+use crate::agent_types::{AgentMsg, AgentTab};
 use crate::library_ui::LibraryMsg;
+use crate::modal::ModalMsg;
 use crate::msg::Msg;
+use crate::state::Screen;
 use crate::theme::palette_of;
 use crate::transfer_ui::TransferMsg;
 
@@ -23,8 +26,31 @@ fn format_entry(ui: &mut egui::Ui, i: usize, out: &mut Vec<Msg>) {
                 TransferMsg::SaveExample(i),
             )));
         }
+        if a.name.starts_with("CSV") {
+            prompt_buttons(ui, out);
+        }
     }
     ui.add_space(8.0);
+}
+
+/// For a CSV file: a prompt that makes an AI write one, and the way to all the prompts.
+fn prompt_buttons(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.horizontal(|ui| {
+        if ui
+            .button("Copy a prompt that makes this file")
+            .on_hover_text("Paste it into an AI chat and attach your material.")
+            .clicked()
+            && let Some(p) = studyfrog_service::prompts::PROMPTS.first()
+        {
+            ui.ctx()
+                .copy_text(studyfrog_service::prompts::prompt_of(p).text);
+        }
+        if ui.button("More prompts…").clicked() {
+            out.push(Msg::Agent(AgentMsg::Tab(AgentTab::Prompts)));
+            out.push(Msg::Modal(ModalMsg::Close));
+            out.push(Msg::Navigate(Screen::Agent));
+        }
+    });
 }
 
 /// The list of formats, folded away until asked for.

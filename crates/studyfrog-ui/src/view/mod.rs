@@ -3,6 +3,7 @@
 mod achievements;
 mod agent;
 mod agent_exam;
+mod agent_prompts;
 mod agent_wiki;
 mod backup;
 mod bars;

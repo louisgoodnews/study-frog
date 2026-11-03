@@ -2,11 +2,8 @@
 
 use studyfrog_board::ops::BoardOp;
 use studyfrog_calendar::session::Session;
-use studyfrog_core::plan::RunPlan;
-use studyfrog_core::review::Rating;
-use studyfrog_core::run::RunMode;
-use studyfrog_core::settings::AppSettings;
-use studyfrog_core::uid::Uid;
+use studyfrog_core::{plan::RunPlan, review::Rating};
+use studyfrog_core::{run::RunMode, settings::AppSettings, uid::Uid};
 use studyfrog_md::doc::Doc;
 use studyfrog_rehearsal::input::StepOutput;
 use studyfrog_service::rehearse::StepContext;
@@ -118,6 +115,8 @@ pub enum Effect {
         /// Priority and difficulty chosen.
         choices: crate::modal_types::Choices,
     },
+    /// Write prompt files.
+    Prompts(crate::prompts_ui::PromptsEffect),
     /// Read what the home screen shows.
     LoadHome,
     /// Read the assistant's connections.

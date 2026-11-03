@@ -2,7 +2,7 @@
 id: TASK-0206
 type: task
 title: Prompts screen with copy and export
-status: backlog
+status: done
 epic: EPIC-026
 parents: [STORY-0077]
 estimate: 3
@@ -21,12 +21,14 @@ The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0: a
 Make the prompts easy to reach for use outside the application, right where the user is about to import.
 
 ## Acceptance Criteria
-- [ ] A Prompts section (in the Assistant screen and linked from Help and from the import dialog) lists the prompts and each has Copy to clipboard and Save as .md
-- [ ] All prompts can be exported into a folder in one step
-- [ ] Copy works without a connection to any assistant
-- [ ] The import dialog offers 'Copy a prompt that makes this file' next to each format
+- [x] A Prompts section (in the Assistant screen and linked from Help and from the import dialog) lists the prompts and each has Copy to clipboard and Save as .md
+- [x] All prompts can be exported into a folder in one step
+- [x] Copy works without a connection to any assistant
+- [x] The import dialog offers 'Copy a prompt that makes this file' next to each format
 
 ## Design Notes
+Done as the Prompts tab of the Assistant screen (`view/agent_prompts.rs`, `prompts_ui.rs`, `exec_prompts.rs`), a help page `prompts`, and in the import dialog's CSV entry a button that copies the flashcards prompt and one to the tab. The other formats have no button because the prompts make CSV only.
+
 A pure registry of prompts as plain data; the clipboard through egui; the file dialog through the host as for backups.
 
 ## Dependencies

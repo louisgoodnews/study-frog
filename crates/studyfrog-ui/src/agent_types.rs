@@ -18,6 +18,8 @@ pub enum AgentTab {
     Wiki,
     /// Being examined.
     Exam,
+    /// Ready-made prompts for an AI.
+    Prompts,
 }
 
 /// The form for a new connection.

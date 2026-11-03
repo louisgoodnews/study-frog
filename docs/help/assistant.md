@@ -4,7 +4,8 @@ The assistant connects StudyFrog to an AI model. It can read stacks you choose a
 questions or edits, which you accept one by one. It can also examine you. The assistant is optional: StudyFrog works
 fully without it. Open **Assistant** in the sidebar.
 
-The screen has three tabs: **Connections**, **Work the vault** and **Exam me**.
+The screen has four tabs: **Connections**, **Work the vault**, **Exam me** and **Prompts**. The Prompts tab holds
+ready-made prompts for any AI chat, to copy or save: see [[prompts]].
 
 ## Connections
 

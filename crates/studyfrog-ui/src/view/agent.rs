@@ -26,6 +26,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     (AgentTab::Connections, "Connections"),
                     (AgentTab::Wiki, "Work the vault"),
                     (AgentTab::Exam, "Exam me"),
+                    (AgentTab::Prompts, "Prompts"),
                 ] {
                     if ui.selectable_label(a.tab == tab, label).clicked() {
                         send(out, AgentMsg::Tab(tab));
@@ -39,6 +40,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 AgentTab::Connections => connections(state, ui, out),
                 AgentTab::Wiki => agent_wiki::wiki(state, ui, out),
                 AgentTab::Exam => crate::view::agent_exam::exam(state, ui, out),
+                AgentTab::Prompts => crate::view::agent_prompts::prompts_tab(ui, out),
             }
         });
 }
