@@ -1,17 +1,9 @@
 //! The pure update function: `(State, Msg) -> (State, Vec<Effect>)`. No I/O, no clock, no egui.
 
-use studyfrog_core::settings::with_opened_vault;
-
 use crate::effect::Effect;
 use crate::msg::Msg;
-use crate::state::{Notice, NoticeKind, Screen, State, VaultInfo};
-
-fn notice(kind: NoticeKind, text: impl Into<String>) -> Option<Notice> {
-    Some(Notice {
-        kind,
-        text: text.into(),
-    })
-}
+use crate::state::{Screen, State};
+use crate::vault_ui::{open, open_typed_path, started, vault_opened};
 
 /// Advance the state by one message. Every new notice also goes to the notification list.
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
@@ -127,6 +119,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Activity => crate::view_time::activity(state),
         Msg::Library(m) => crate::library_ui::update(state, m),
         Msg::Help(m) => crate::help_ui::update(state, m),
+        Msg::Appearance(m) => crate::appearance_ui::update(state, m),
         Msg::SetTrackViews(on) => crate::app_settings_ui::set_track_views(state, on),
         run @ (Msg::StartRunClicked
         | Msg::RunReady(_)
@@ -138,109 +131,5 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::Rerated(..)
         | Msg::StepRecorded(_)
         | Msg::LeaveRun) => crate::run_update::update(state, run),
-    }
-}
-
-/// The in-app invitation to choose a vault, shown instead of asking for a path up front.
-fn vault_toast() -> crate::modal::Toast {
-    crate::modal::Toast {
-        title: "Set up your vault".to_owned(),
-        detail: "Choose the folder StudyFrog keeps your notes in.".to_owned(),
-        action: crate::modal::ToastAction::OpenVaultDialog,
-    }
-}
-
-pub(crate) fn started(
-    state: State,
-    app: studyfrog_core::settings::AppSettings,
-    error: Option<String>,
-) -> (State, Vec<Effect>) {
-    let notice =
-        error.and_then(|e| notice(NoticeKind::Error, format!("App settings not used: {e}")));
-    let last = app.vault.clone();
-    let mut library = state.library.clone();
-    if let Some(text) = &app.library_columns {
-        library.columns = crate::library_ui::columns_from_text(text);
-    }
-    let state = State {
-        path_input: last.clone().unwrap_or_default(),
-        app,
-        notice,
-        library,
-        ..state
-    };
-    match last {
-        Some(path) => open(state, path),
-        None => (
-            State {
-                toasts: vec![vault_toast()],
-                ..state
-            },
-            Vec::new(),
-        ),
-    }
-}
-
-fn open_typed_path(state: State) -> (State, Vec<Effect>) {
-    let path = state.path_input.trim().to_owned();
-    if path.is_empty() {
-        let notice = notice(NoticeKind::Error, "Enter the path of a vault folder first.");
-        return (State { notice, ..state }, Vec::new());
-    }
-    open(state, path)
-}
-
-fn open(state: State, path: String) -> (State, Vec<Effect>) {
-    if state.opening {
-        return (state, Vec::new());
-    }
-    (
-        State {
-            opening: true,
-            notice: None,
-            ..state
-        },
-        vec![Effect::OpenVault(path)],
-    )
-}
-
-fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<Effect>) {
-    match result {
-        Ok(info) => {
-            let app = with_opened_vault(&state.app, &info.root);
-            let state = crate::tutorial::offer(State {
-                screen: Screen::Home,
-                home: None,
-                reminder_ticks: 0,
-                modal: None,
-                toasts: Vec::new(),
-                vault: Some(info),
-                app,
-                opening: false,
-                notice: None,
-                ..state
-            });
-            (
-                state.clone(),
-                vec![
-                    Effect::SaveAppSettings(state.app),
-                    Effect::LoadHome,
-                    Effect::LoadSubjects,
-                ],
-            )
-        }
-        Err(e) => {
-            let notice = notice(NoticeKind::Error, format!("Could not open the vault: {e}"));
-            (
-                State {
-                    opening: false,
-                    screen: Screen::Welcome,
-                    vault: None,
-                    notice,
-                    ..state
-                },
-                Vec::new(),
-            )
-        }
     }
 }

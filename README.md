@@ -20,6 +20,7 @@ Written in Rust as a functional, data-oriented Cargo workspace (no OOP idioms).
 - **PDFs** you can read, search, highlight, rearrange, and turn into notes and cards.
 - **Import and export** as JSON, CSV or Markdown; import from Anki packages and Obsidian vaults, with suggestions from
   what it finds on your computer.
+- **Appearance settings**: dark, light or follow the system, interface and text size, density, accent colours, high contrast, reduced motion, the start screen and the remembered window, all applied at once.
 - **Help inside the app** (`F1`): how-to pages, FAQ, your own pages in the vault, and a first-steps tutorial.
 - **Assistant** (optional): proposes notes, cards and edits that change nothing until you apply them; sends text only
   after you press Send.

@@ -44,9 +44,12 @@ pub fn app_new(ctx: egui::Context, smoke_frames: Option<u32>, host: Host) -> Stu
 
 /// Create the app with all the options.
 pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> StudyFrogApp {
-    crate::theme::apply(&ctx);
+    // The saved look is installed before the first frame, so there is no flash of the default one.
+    let saved = crate::window_watch::saved_appearance();
+    crate::theme_apply::install(&ctx, &saved);
     egui_extras::install_image_loaders(&ctx);
     let mut model = Model::default();
+    model.state.app.appearance = saved;
     model.state.extensions = extensions_of(&host.registry);
     let runtime = spawn(ctx, host);
     let _ = runtime.effects.send(Effect::LoadAppSettings);
@@ -108,13 +111,8 @@ pub fn run(smoke_frames: Option<u32>, host: Host) -> eframe::Result {
 
 /// Open the window with `options` and run until it is closed.
 pub fn run_with(options: RunOptions, host: Host) -> eframe::Result {
-    let (w, h) = options.size.unwrap_or((960.0, 640.0));
     let native = eframe::NativeOptions {
-        viewport: egui::ViewportBuilder::default()
-            .with_inner_size([w, h])
-            .with_min_inner_size([640.0, 420.0])
-            .with_decorations(false)
-            .with_title("StudyFrog"),
+        viewport: viewport_for(&options),
         ..Default::default()
     };
     eframe::run_native(
@@ -122,4 +120,33 @@ pub fn run_with(options: RunOptions, host: Host) -> eframe::Result {
         native,
         Box::new(move |cc| Ok(Box::new(app_new_with(cc.egui_ctx.clone(), options, host)))),
     )
+}
+
+/// The window to open: the size asked for, else the remembered one (when remembering is on and it can be read), else a
+/// default; the remembered place and maximised state go with it.
+fn viewport_for(options: &RunOptions) -> egui::ViewportBuilder {
+    let saved = crate::window_watch::saved_appearance();
+    let remembered = options
+        .size
+        .is_none()
+        .then_some(saved.window)
+        .flatten()
+        .filter(|_| saved.remember_window);
+    let (w, h) = match (options.size, remembered) {
+        (Some(size), _) => size,
+        (None, Some(r)) => (r.width as f32, r.height as f32),
+        (None, None) => (960.0, 640.0),
+    };
+    let mut view = egui::ViewportBuilder::default()
+        .with_inner_size([w, h])
+        .with_min_inner_size([640.0, 420.0])
+        .with_decorations(false)
+        .with_title("StudyFrog");
+    if let Some(r) = remembered {
+        if let (Some(x), Some(y)) = (r.x, r.y) {
+            view = view.with_position([x as f32, y as f32]);
+        }
+        view = view.with_maximized(r.maximized);
+    }
+    view
 }

@@ -74,11 +74,7 @@ fn every_tab_has_a_unique_key_and_label_that_read_back() {
         assert_eq!(tab_from_key(tab_key(tab)), Some(tab));
         assert!(!tab_label(tab).is_empty());
     }
-    for tab in [
-        SettingsTab::General,
-        SettingsTab::Appearance,
-        SettingsTab::Notifications,
-    ] {
+    for tab in [SettingsTab::General, SettingsTab::Notifications] {
         assert!(!SHOWN.contains(&tab));
     }
 }

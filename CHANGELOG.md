@@ -18,6 +18,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The Markdown editor's code is split into a module of small files (`view/md_editor/`: toolbar, resizing, preview cache, list keys).
 
 ### Added
+- Appearance settings (Settings > Appearance, the theme also in the profile menu): dark, light or follow the system; the interface size (70 to 200 percent, also with Ctrl and plus, minus and 0) and the text size; compact, comfortable or spacious density; six accent colours; high contrast; reduced motion; the screen to open first (Home, Library or the one used last); the sidebar folded at start; and the window's size and place remembered. Every change shows at once and is saved at once, with no restart, and the saved look and window are used from the first frame. The settings are in an `[appearance]` table of `app.toml` (`docs/specs/appearance.md`) (TASK-0221 to TASK-0225, TASK-0227).
 - Navigation history: the top bar has Back and Forward arrows and a History list (the screens, stacks and items visited, newest first, the current one marked), and Alt+Left and Alt+Right do the same; unsaved changes in the editor ask you to save or revert first (TASK-0196).
 
 ## [0.3.1] - 2026-11-03

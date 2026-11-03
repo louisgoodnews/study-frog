@@ -2,7 +2,7 @@
 id: STORY-0080
 type: story
 title: Dark, light and system theme
-status: backlog
+status: in_progress
 epic: EPIC-027
 parents: [EPIC-027]
 estimate: 8

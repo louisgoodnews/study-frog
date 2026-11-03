@@ -2,7 +2,7 @@
 id: EPIC-027
 type: epic
 title: Appearance and UI settings
-status: backlog
+status: in_progress
 parents: []
 labels: [m11, ui]
 acceptance_criteria:

@@ -119,6 +119,8 @@ pub struct AppSettings {
     pub stack_tabs: Vec<String>,
     /// The first-run tutorial has been offered (it is offered once).
     pub tutorial_offered: bool,
+    /// Theme, size, colours, start-up and window.
+    pub appearance: crate::appearance::Appearance,
 }
 
 /// Most stacks whose tab is remembered.

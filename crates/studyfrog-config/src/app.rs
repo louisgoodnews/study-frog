@@ -29,6 +29,7 @@ struct RawApp {
     calendar_reviews: Option<bool>,
     stack_tabs: Option<Vec<String>>,
     tutorial_offered: Option<bool>,
+    appearance: Option<crate::app_appearance::RawAppearance>,
 }
 
 /// `value` if it is inside `range`, else an error naming the key and its line.
@@ -97,6 +98,7 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
         calendar_reviews_off: raw.calendar_reviews == Some(false),
         stack_tabs: raw.stack_tabs.unwrap_or_default(),
         tutorial_offered: raw.tutorial_offered == Some(true),
+        appearance: crate::app_appearance::parse(text, raw.appearance)?,
     })
 }
 
@@ -147,5 +149,6 @@ pub fn render_app_settings(s: &AppSettings) -> String {
     if let Some(tab) = &s.settings_tab {
         out.push_str(&format!("settings_tab = {}\n", toml_string(tab)));
     }
+    out.push_str(&crate::app_appearance::render(&s.appearance));
     out
 }

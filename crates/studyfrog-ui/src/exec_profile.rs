@@ -41,7 +41,7 @@ pub fn startup(w: &mut Worker) -> Vec<Msg> {
 }
 
 fn changed(result: Result<(Profiles, AppSettings), String>) -> Msg {
-    Msg::Profile(ProfileMsg::Changed(result))
+    Msg::Profile(ProfileMsg::Changed(result.map(Box::new)))
 }
 
 /// Use `name`: remember it as the current profile and read its settings.

@@ -27,8 +27,9 @@ pub enum SettingsTab {
 }
 
 /// The tabs that have settings today, in order. A tab joins this list when its first setting arrives.
-pub const SHOWN: [SettingsTab; 5] = [
+pub const SHOWN: [SettingsTab; 6] = [
     SettingsTab::Study,
+    SettingsTab::Appearance,
     SettingsTab::Rehearsal,
     SettingsTab::Answers,
     SettingsTab::Data,

@@ -206,6 +206,8 @@ pub enum Msg {
     Activity,
     /// Recording how long items are viewed was switched on or off.
     SetTrackViews(bool),
+    /// An appearance or start-up setting changed.
+    Appearance(crate::appearance_ui::AppearanceMsg),
     /// Something happened on the help screen.
     Help(crate::help_types::HelpMsg),
     /// A tab of the settings screen was chosen or stepped to.

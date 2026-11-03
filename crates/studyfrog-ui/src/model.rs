@@ -21,6 +21,8 @@ pub struct Model {
     pub state: State,
     /// egui time of the last `Tick`.
     pub last_tick: f64,
+    /// The window as last seen and since when, to save it once it has settled.
+    pub window_seen: Option<(studyfrog_core::appearance::WindowState, f64)>,
 }
 
 /// Run one message through `update`; returns the effects it asks for.
@@ -34,6 +36,7 @@ pub fn apply(model: &mut Model, msg: Msg) -> Vec<Effect> {
 /// apply everything. Returns the effects to execute.
 pub fn frame(model: &mut Model, ui: &mut egui::Ui) -> Vec<Effect> {
     let now = ui.input(|i| i.time);
+    crate::theme_apply::sync(ui.ctx(), &model.state.app.appearance);
     model.state.now = now;
     model.state.wall_ms = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
@@ -42,6 +45,13 @@ pub fn frame(model: &mut Model, ui: &mut egui::Ui) -> Vec<Effect> {
     if ui.input(|i| !i.events.is_empty() || i.pointer.is_moving() || i.pointer.any_down()) {
         msgs.push(Msg::Activity);
     }
+    let window = crate::window_watch::watch(
+        &mut model.window_seen,
+        ui.ctx(),
+        now,
+        &model.state.app.appearance,
+    );
+    msgs.extend(window.map(Msg::Appearance));
     if now - model.last_tick >= TICK_SECONDS {
         model.last_tick = now;
         msgs.push(Msg::Tick);

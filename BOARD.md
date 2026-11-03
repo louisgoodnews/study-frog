@@ -4,9 +4,9 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (37) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (194) |
+| Backlog (30) | Ready (0) | In progress (1/3) | Review (1) | Blocked (0) | Done (200) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  | [TASK-0226](docs/issues/tasks/TASK-0226-make-every-screen-right-in-both-themes.md) Make every screen right in both themes (5) | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
 | [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 | [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
@@ -36,13 +36,13 @@
 | [TASK-0218](docs/issues/tasks/TASK-0218-schedules-due-dates-and-reviews-per-stack.md) Schedules, due dates and reviews per stack (8) |  |  |  |  | [TASK-0019](docs/issues/tasks/TASK-0019-srs-criterion-benchmark.md) SRS criterion benchmark (2) |
 | [TASK-0219](docs/issues/tasks/TASK-0219-familiarity-and-difficulty-per-stack-averaged-on-the-item.md) Familiarity and difficulty per stack, averaged on the item (5) |  |  |  |  | [TASK-0020](docs/issues/tasks/TASK-0020-schema-structs-and-validation.md) Schema structs and validation (3) |
 | [TASK-0220](docs/issues/tasks/TASK-0220-export-formats-toml-and-ron-next-to-json.md) Export formats TOML and RON next to JSON (3) |  |  |  |  | [TASK-0021](docs/issues/tasks/TASK-0021-fence-splitter-and-serde-saphyr-parsing.md) Fence splitter and serde-saphyr parsing (3) |
-| [TASK-0221](docs/issues/tasks/TASK-0221-specify-the-appearance-and-ui-settings.md) Specify the appearance and UI settings (2) |  |  |  |  | [TASK-0022](docs/issues/tasks/TASK-0022-round-trip-property-test.md) Round-trip property test (3) |
-| [TASK-0222](docs/issues/tasks/TASK-0222-choose-the-theme-dark-light-or-follow-the-system.md) Choose the theme (dark, light or follow the system) (3) |  |  |  |  | [TASK-0023](docs/issues/tasks/TASK-0023-wikilink-extraction.md) Wikilink extraction (3) |
-| [TASK-0223](docs/issues/tasks/TASK-0223-appearance-tab-in-settings.md) Appearance tab in Settings (3) |  |  |  |  | [TASK-0024](docs/issues/tasks/TASK-0024-card-and-question-section-split.md) Card and question section split (2) |
-| [TASK-0224](docs/issues/tasks/TASK-0224-interface-size-and-density.md) Interface size and density (5) |  |  |  |  | [TASK-0025](docs/issues/tasks/TASK-0025-initial-schema.md) Initial schema (3) |
-| [TASK-0225](docs/issues/tasks/TASK-0225-accent-colour-high-contrast-and-reduced-motion.md) Accent colour, high contrast and reduced motion (5) |  |  |  |  | [TASK-0026](docs/issues/tasks/TASK-0026-migration-runner.md) Migration runner (2) |
-| [TASK-0226](docs/issues/tasks/TASK-0226-make-every-screen-right-in-both-themes.md) Make every screen right in both themes (5) |  |  |  |  | [TASK-0027](docs/issues/tasks/TASK-0027-vault-scanner.md) Vault scanner (5) |
-| [TASK-0227](docs/issues/tasks/TASK-0227-start-up-and-window-settings.md) Start-up and window settings (3) |  |  |  |  | [TASK-0028](docs/issues/tasks/TASK-0028-incremental-reindex.md) Incremental reindex (5) |
+|  |  |  |  |  | [TASK-0022](docs/issues/tasks/TASK-0022-round-trip-property-test.md) Round-trip property test (3) |
+|  |  |  |  |  | [TASK-0023](docs/issues/tasks/TASK-0023-wikilink-extraction.md) Wikilink extraction (3) |
+|  |  |  |  |  | [TASK-0024](docs/issues/tasks/TASK-0024-card-and-question-section-split.md) Card and question section split (2) |
+|  |  |  |  |  | [TASK-0025](docs/issues/tasks/TASK-0025-initial-schema.md) Initial schema (3) |
+|  |  |  |  |  | [TASK-0026](docs/issues/tasks/TASK-0026-migration-runner.md) Migration runner (2) |
+|  |  |  |  |  | [TASK-0027](docs/issues/tasks/TASK-0027-vault-scanner.md) Vault scanner (5) |
+|  |  |  |  |  | [TASK-0028](docs/issues/tasks/TASK-0028-incremental-reindex.md) Incremental reindex (5) |
 |  |  |  |  |  | [TASK-0029](docs/issues/tasks/TASK-0029-file-watcher.md) File watcher (3) |
 |  |  |  |  |  | [TASK-0030](docs/issues/tasks/TASK-0030-run-input-types-and-transition-errors.md) Run input types and transition errors (2) |
 |  |  |  |  |  | [TASK-0031](docs/issues/tasks/TASK-0031-transition-functions.md) Transition functions (5) |
@@ -200,6 +200,12 @@
 |  |  |  |  |  | [TASK-0193](docs/issues/tasks/TASK-0193-space-between-content-and-scroll-bars.md) Space between content and scroll bars (1) |
 |  |  |  |  |  | [TASK-0194](docs/issues/tasks/TASK-0194-rehearsal-progress-bar-against-open-items.md) Rehearsal progress bar against the open items (3) |
 |  |  |  |  |  | [TASK-0196](docs/issues/tasks/TASK-0196-navigation-history.md) Navigation history (5) |
+|  |  |  |  |  | [TASK-0221](docs/issues/tasks/TASK-0221-specify-the-appearance-and-ui-settings.md) Specify the appearance and UI settings (2) |
+|  |  |  |  |  | [TASK-0222](docs/issues/tasks/TASK-0222-choose-the-theme-dark-light-or-follow-the-system.md) Choose the theme (dark, light or follow the system) (3) |
+|  |  |  |  |  | [TASK-0223](docs/issues/tasks/TASK-0223-appearance-tab-in-settings.md) Appearance tab in Settings (3) |
+|  |  |  |  |  | [TASK-0224](docs/issues/tasks/TASK-0224-interface-size-and-density.md) Interface size and density (5) |
+|  |  |  |  |  | [TASK-0225](docs/issues/tasks/TASK-0225-accent-colour-high-contrast-and-reduced-motion.md) Accent colour, high contrast and reduced motion (5) |
+|  |  |  |  |  | [TASK-0227](docs/issues/tasks/TASK-0227-start-up-and-window-settings.md) Start-up and window settings (3) |
 
 ## Stories
 
@@ -283,8 +289,8 @@
 | [STORY-0077](docs/issues/stories/STORY-0077-prompts-for-ai-agents.md) Prompts for AI agents (8) | backlog | 0/3 |
 | [STORY-0078](docs/issues/stories/STORY-0078-imports-that-explain-themselves.md) Imports that explain themselves (5) | backlog | 0/2 |
 | [STORY-0079](docs/issues/stories/STORY-0079-stack-folders-and-items-referenced-by-several-stacks.md) Stack folders and items referenced by several stacks (8) | backlog | 0/8 |
-| [STORY-0080](docs/issues/stories/STORY-0080-dark-light-and-system-theme.md) Dark, light and system theme (8) | backlog | 0/3 |
-| [STORY-0081](docs/issues/stories/STORY-0081-display-and-window-settings.md) Display and window settings (8) | backlog | 0/4 |
+| [STORY-0080](docs/issues/stories/STORY-0080-dark-light-and-system-theme.md) Dark, light and system theme (8) | in_progress | 2/3 |
+| [STORY-0081](docs/issues/stories/STORY-0081-display-and-window-settings.md) Display and window settings (8) | done | 4/4 |
 
 ## Epics
 
@@ -316,4 +322,4 @@
 | [EPIC-024](docs/issues/epics/EPIC-024-diary-for-0-4-0.md) Diary and a calmer UI for 0.4.0 | backlog | 0/2 |
 | [EPIC-025](docs/issues/epics/EPIC-025-feedback-fixes-for-0-3-1.md) Feedback fixes for 0.3.1 | done | 1/1 |
 | [EPIC-026](docs/issues/epics/EPIC-026-writing-saving-organizing-and-prompts-for-0-4-0.md) Writing, saving, organizing and prompts for 0.4.0 | backlog | 0/6 |
-| [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | backlog | 0/2 |
+| [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | in_progress | 1/2 |

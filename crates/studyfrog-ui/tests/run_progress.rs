@@ -76,7 +76,7 @@ fn the_screen_shows_the_bar_with_its_numbers() {
 #[test]
 fn scroll_bars_reserve_their_own_width_so_content_keeps_clear_of_them() {
     let ctx = eframe::egui::Context::default();
-    studyfrog_ui::theme::apply(&ctx);
+    studyfrog_ui::theme_apply::apply(&ctx);
     for theme in [eframe::egui::Theme::Dark, eframe::egui::Theme::Light] {
         let scroll = ctx.style_of(theme).spacing.scroll;
         assert!(scroll.floating_allocated_width >= 10.0, "{theme:?}");

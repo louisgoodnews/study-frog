@@ -18,10 +18,9 @@ pub fn around(
     let reload = crate::library_ui::wants_reload(&msg);
     let (next, effects) = step(state, msg);
     let (next, after) = after(next, &before, reload);
-    (
-        crate::history::record(next, there),
-        [effects, after].concat(),
-    )
+    let next = crate::history::record(next, there);
+    let (next, last) = crate::appearance_ui::remember_screen(next);
+    (next, [effects, after, last].concat())
 }
 
 /// Follow a state change with what it makes necessary. `reload` says the message changed what the library shows.

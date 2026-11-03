@@ -2,6 +2,7 @@
 
 pub mod achievements;
 pub mod app;
+mod app_appearance;
 pub mod backup;
 pub mod error;
 pub mod filters;

@@ -87,6 +87,9 @@ fn vaults(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 fn profile(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.strong(format!("StudyFrog {}", env!("CARGO_PKG_VERSION")));
     ui.separator();
+    ui.label("Theme");
+    super::settings_appearance::theme_choice(state, ui, out);
+    ui.separator();
     super::profiles::draw(state, ui, out);
     ui.separator();
     if ui.button("Close vault").clicked() {

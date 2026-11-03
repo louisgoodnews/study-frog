@@ -36,7 +36,7 @@ pub enum ProfileMsg {
     /// Forget the question.
     CancelDelete,
     /// A profile change finished: the profiles and the settings now in use.
-    Changed(Result<(Profiles, AppSettings), String>),
+    Changed(Result<Box<(Profiles, AppSettings)>, String>),
 }
 
 fn failed(state: State, text: String) -> (State, Vec<Effect>) {
@@ -85,7 +85,10 @@ pub fn update(state: State, msg: ProfileMsg) -> (State, Vec<Effect>) {
             None => (state, Vec::new()),
         },
         ProfileMsg::Changed(Err(e)) => failed(state, format!("The profile change failed: {e}")),
-        ProfileMsg::Changed(Ok((list, app))) => changed(state, list, app),
+        ProfileMsg::Changed(Ok(both)) => {
+            let (list, app) = *both;
+            changed(state, list, app)
+        }
     }
 }
 
@@ -111,5 +114,5 @@ fn changed(state: State, list: Profiles, app: AppSettings) -> (State, Vec<Effect
         modal: None,
         ..state
     };
-    crate::update::started(state, app, None)
+    crate::vault_ui::started(state, app, None)
 }

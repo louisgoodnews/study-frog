@@ -56,7 +56,10 @@ fn creating_checks_the_name_and_switching_closes_the_vault_and_opens_the_profile
         vault: Some("/v/school".into()),
         ..AppSettings::default()
     };
-    let fx = apply(&mut m, Msg::Profile(ProfileMsg::Changed(Ok((school, app)))));
+    let fx = apply(
+        &mut m,
+        Msg::Profile(ProfileMsg::Changed(Ok(Box::new((school, app))))),
+    );
     assert_eq!(m.state.profiles.list.current, "School");
     assert!(
         m.state.vault.is_none() && m.state.screen == Screen::Welcome
@@ -138,9 +141,10 @@ fn the_worker_starts_with_the_profile_in_use_and_gives_a_new_one_its_own_folder(
         matches!(&start[1], Msg::Started { app, .. } if app.vault.as_deref() == Some("/v/default"))
     );
     let made = execute(&mut w, Effect::CreateProfile("Exam prep".into()), 0);
-    let Msg::Profile(ProfileMsg::Changed(Ok((p, app)))) = &made[0] else {
+    let Msg::Profile(ProfileMsg::Changed(Ok(both))) = &made[0] else {
         panic!("{:?}", made[0])
     };
+    let (p, app) = &**both;
     assert_eq!((p.current.as_str(), app.vault.clone()), ("Exam prep", None));
     assert!(
         root.join("profiles/exam-prep/app.toml").is_file() && root.join("profiles.toml").is_file()
@@ -150,9 +154,10 @@ fn the_worker_starts_with_the_profile_in_use_and_gives_a_new_one_its_own_folder(
         Some(root.join("profiles/exam-prep").as_path())
     );
     let back = execute(&mut w, Effect::SwitchProfile("Default".into()), 0);
-    let Msg::Profile(ProfileMsg::Changed(Ok((_, app)))) = &back[0] else {
+    let Msg::Profile(ProfileMsg::Changed(Ok(both))) = &back[0] else {
         panic!("{:?}", back[0])
     };
+    let app = &both.1;
     assert_eq!(
         app.vault.as_deref(),
         Some("/v/default"),

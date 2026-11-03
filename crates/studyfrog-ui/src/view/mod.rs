@@ -62,6 +62,7 @@ mod run_card;
 mod run_timer;
 mod session_form;
 mod settings;
+mod settings_appearance;
 mod settings_replay;
 mod setup;
 mod setup_how;
@@ -89,6 +90,7 @@ pub(crate) mod window_frame;
 
 use eframe::egui;
 
+use crate::appearance_ui::AppearanceMsg;
 use crate::msg::Msg;
 use crate::state::{Screen, State};
 
@@ -122,6 +124,17 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         });
     if ui.input(|i| i.key_pressed(egui::Key::F1)) {
         out.push(Msg::Help(crate::help_types::HelpMsg::ForScreen));
+    }
+    let zoom = |key| ui.input(|i| i.modifiers.command && !i.modifiers.alt && i.key_pressed(key));
+    for (key, m) in [
+        (egui::Key::Plus, AppearanceMsg::ZoomStep(1)),
+        (egui::Key::Equals, AppearanceMsg::ZoomStep(1)),
+        (egui::Key::Minus, AppearanceMsg::ZoomStep(-1)),
+        (egui::Key::Num0, AppearanceMsg::ZoomReset),
+    ] {
+        if zoom(key) {
+            out.push(Msg::Appearance(m));
+        }
     }
     let alt = |key| ui.input(|i| i.modifiers.alt && i.key_pressed(key));
     for (key, m) in [
