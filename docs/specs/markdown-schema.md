@@ -21,6 +21,14 @@ vault/
 | `aliases` | list of string | no | extra link targets |
 | `created`, `updated` | RFC 3339 datetime | no | set by app |
 
+## Stacks, folders and references
+(Decided in [ADR 0011](../adr/0011-stack-folders-and-references.md).) A folder is a **stack** when it holds `_stack.md` and
+a **normal folder** otherwise. An item's **primary stack** is the nearest stack folder above its file, none meaning the
+Inbox. The optional key `referenced_by` on a note, card or question lists the *other* stacks that reference it, by stack
+id (a ULID): `referenced_by: [01HZ..., 01HY...]`. It never lists the primary stack or a stack twice, and a reference to a
+stack that does not exist is a vault problem. The file holds nothing else about stacks: the memory, schedule, due date,
+familiarity and difficulty of an item in each stack live in the database, never in the file.
+
 ## Per kind
 **stack** (`_stack.md`): `description` (string). Stack *settings* (scheduler, retention, daily limits)
 are not front-matter: they live in `_stack.toml` ([config-files](config-files.md)). Old files that still carry
@@ -74,4 +82,4 @@ Body: prompt, `???`, reference answer.
 
 ## Front-matter keys the app writes
 Besides `id`, `kind`, `title`, `tags`, `aliases`, `created` and `updated`: `priority` (`lowest` to `highest`),
-`difficulty` (`easy`, `medium`, `difficult`), `status` (planned: `new`, `learning`, `reviewing`, `done`, `paused`; see [status](status.md)) and, on a stack, `subjects` (comma-separated, or a flow sequence of double-quoted names when a name holds a comma, a quote, a backslash, a bracket or blanks at its ends: `subjects: ["Statistics, advanced", Maths]`; see `studyfrog_md::names`). Unknown keys are kept.
+`difficulty` (`easy`, `medium`, `difficult`), `status` (planned: `new`, `learning`, `reviewing`, `done`, `paused`; see [status](status.md)) and, on a stack, `subjects` (comma-separated, or a flow sequence of double-quoted names when a name holds a comma, a quote, a backslash, a bracket or blanks at its ends: `subjects: ["Statistics, advanced", Maths]`; see `studyfrog_md::names`). Unknown keys are kept. `referenced_by` (a flow sequence of stack ids) is written only when an item has references; see above.

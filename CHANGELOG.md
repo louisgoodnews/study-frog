@@ -17,6 +17,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The roadmap takes the width and the height there are, even when its dates are close together, with larger rows, bars and text (BUG-0006).
 
 ### Changed
+- Decided and written down: stack folders, items referenced by several stacks and an independent memory per stack ([ADR 0011](docs/adr/0011-stack-folders-and-references.md), `markdown-schema.md`, `srs-algorithm.md`; TASK-0210). The implementation follows in TASK-0211 and the tasks after it.
 - The Markdown editor's code is split into a module of small files (`view/md_editor/`: toolbar, resizing, preview cache, list keys).
 
 ### Added

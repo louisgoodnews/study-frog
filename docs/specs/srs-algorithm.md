@@ -56,6 +56,19 @@ SM-2 is implemented alongside as a baseline for tests and as a user-selectable s
 - Golden test: py-fsrs `test_review_card` (13 ratings, default parameters, no fuzz) reproduced exactly.
 - criterion bench: scheduling 100k cards.
 
+## Memory per stack
+(Decided in [ADR 0011](../adr/0011-stack-folders-and-references.md); implemented by TASK-0218 and TASK-0219.) An item can be
+referenced by several stacks, and each stack that holds it has its own independent `MemState` (or SM-2 state), due
+date, familiarity and difficulty for it, computed with that stack's scheduler, retention, limits and weights. The values live in the
+database and are never written into the card's file. The overall familiarity and difficulty of an item are the average over its
+references (difficulty marks easy, medium and difficult count as 1, 2 and 3).
+
+In a run over several stacks a card is queued once and is due if it is due in any selected stack. One rating writes one
+review for every selected stack that holds the card (also where it was not yet due: an early review is scheduled like any
+early review) and none for a stack outside the selection. The pure scheduler functions do not change; each stack's call
+gets that stack's state, settings and time since its last review. Existing schedules and reviews belong to the item's
+primary stack after the migration.
+
 ## Choosing the algorithm
 FSRS-6 is the default; SM-2 is selectable per stack (`scheduler = "sm2"` in `_stack.toml`) or for the whole
 vault (`[srs] scheduler` in `studyfrog.toml`). Both write to the same `review` history; their state lives in
