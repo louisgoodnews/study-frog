@@ -112,6 +112,9 @@ pub fn chat(
     };
     match purpose {
         ChatPurpose::Exam => agent(AgentMsg::ExamReplied(reply)),
+        ChatPurpose::Prompt => Msg::Prompts(crate::prompts_ui::PromptsMsg::Run(
+            crate::prompt_run::PromptRunMsg::Replied(reply),
+        )),
         ChatPurpose::Wiki(uids, stacks) => {
             agent(AgentMsg::WikiReplied(reply.and_then(|t| {
                 crate::agent_ui::read_proposal(&t, &uids, &stacks)

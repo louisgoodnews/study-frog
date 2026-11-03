@@ -20,6 +20,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The Markdown editor's code is split into a module of small files (`view/md_editor/`: toolbar, resizing, preview cache, list keys).
 
 ### Added
+- Run a standard prompt through the connected assistant: choose a prompt and a text file, read exactly what would be sent, press Send, read the answer and import its CSV through the preview; if the preview finds problems, "Ask the assistant to fix these" prepares a message with those rows, sent only after Send (TASK-0207).
 - Code blocks with a language (python, r, rust, php, java, cpp, c, toml, json, html, xml, csv, tsv) are coloured: keywords, strings, comments and numbers, in colours that read well in both themes; other languages are drawn plain (TASK-0214).
 - Text macros: `{table}`, `{table:3x4}`, `{toc}`, `{code}`, `{code:python}`, `{quote}`, `{image}` and `{color:red}` turn into Markdown when the closing brace is typed; the `{ }` button in the toolbar lists them (TASK-0198).
 - Tables (pipe tables with column alignment), underline, text colours from a small palette that works in both themes, strikethrough and an automatic table of contents (a line `[TOC]`) in the Markdown preview, the item page, the cards of a run and help; the toolbar has Table, Underline, Strikethrough and Colour. Underline and colour are kept as the small HTML other readers understand; any other HTML stays visible as typed (TASK-0197, TASK-0215, TASK-0216).

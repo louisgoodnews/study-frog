@@ -7,6 +7,8 @@ use studyfrog_service::xfer_csv_map::{ai_message, problem_text};
 
 use crate::library_ui::LibraryMsg;
 use crate::msg::Msg;
+use crate::prompt_run::PromptRunMsg;
+use crate::prompts_ui::PromptsMsg;
 use crate::transfer_csv::{CsvChange, Role};
 use crate::transfer_ui::{CsvInfo, TransferMsg};
 
@@ -119,7 +121,7 @@ fn rows(info: &CsvInfo, ui: &mut egui::Ui) {
         });
 }
 
-fn problems(info: &CsvInfo, ui: &mut egui::Ui) {
+fn problems(info: &CsvInfo, can_fix: bool, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let n = info.problems.len();
     ui.colored_label(
         ui.visuals().error_fg_color,
@@ -142,10 +144,18 @@ fn problems(info: &CsvInfo, ui: &mut egui::Ui) {
     if ui.button("Copy the problems for the AI").clicked() {
         ui.ctx().copy_text(ai_message(CSV_LAYOUT, &info.problems));
     }
+    if can_fix
+        && ui
+            .button("Ask the assistant to fix these")
+            .on_hover_text("Shows the message first; it is sent only when you press Send.")
+            .clicked()
+    {
+        out.push(Msg::Prompts(PromptsMsg::Run(PromptRunMsg::AskToFix)));
+    }
 }
 
 /// The settings, the first rows and the problems of a CSV or TSV file.
-pub fn settings(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+pub fn settings(info: &CsvInfo, can_fix: bool, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     egui::CollapsingHeader::new("How the file is read (CSV)")
         .id_salt("csv-settings")
         .default_open(true)
@@ -153,7 +163,7 @@ pub fn settings(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             choices(info, ui, out);
             rows(info, ui);
             if !info.problems.is_empty() {
-                problems(info, ui);
+                problems(info, can_fix, ui, out);
             }
         });
 }

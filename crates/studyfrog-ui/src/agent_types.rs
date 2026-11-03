@@ -243,4 +243,6 @@ pub enum ChatPurpose {
     Wiki(Vec<String>, Vec<String>),
     /// An exam turn.
     Exam,
+    /// A standard prompt run with an attached file.
+    Prompt,
 }

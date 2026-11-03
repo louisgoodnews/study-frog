@@ -34,7 +34,7 @@ fn entry(p: &Prompt, id: &'static str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 /// The tab.
-pub fn prompts_tab(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+pub fn prompts_tab(state: &crate::state::State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let weak = palette_of(ui).text_weak;
     ui.label(RichText::new("Prompts for any AI chat. Copy one, attach your file (notes, code, data or text from a PDF) and paste the answer into a file ending in .csv; then import it. No connection to an assistant is needed.").color(weak));
     if ui.button("Save all prompts to a folder…").clicked() {
@@ -44,4 +44,5 @@ pub fn prompts_tab(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     for (p, source) in prompts().iter().zip(studyfrog_service::prompts::PROMPTS) {
         entry(p, source.id, ui, out);
     }
+    crate::view::agent_prompt_run::run(state, ui, out);
 }

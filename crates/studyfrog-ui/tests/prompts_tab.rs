@@ -97,3 +97,23 @@ fn saving_writes_one_markdown_file_per_prompt_into_the_chosen_folder_or_nothing_
             .starts_with("Saved 6 prompts")
     );
 }
+
+#[test]
+fn the_tab_offers_to_run_a_prompt_and_shows_what_would_be_sent_before_the_send_button() {
+    let mut m = on_the_tab();
+    let out = vec![studyfrog_agent::provider::Message {
+        role: studyfrog_agent::provider::Role::User,
+        content: "PROMPT TEXT and the attached file".into(),
+    }];
+    m.state.prompt_run.outgoing = Some(out);
+    let mut h = harness(m);
+    h.run_steps(6);
+    assert!(
+        h.query_by_label("Run a prompt with the assistant")
+            .is_some()
+    );
+    assert!(h.query_by_label("Show what will be sent").is_some());
+    assert!(h.query_by_label("Send").is_some() && h.query_by_label("Don't send").is_some());
+    assert!(h.query_by_label_contains("This will be sent to").is_some());
+    assert_all_named(&h, "prompt run");
+}

@@ -104,3 +104,44 @@ pub fn file_name(p: &Prompt) -> String {
 pub fn file_text(p: &Prompt) -> String {
     format!("# {}\n\n{}\n\n{}\n", p.title, p.summary, p.text)
 }
+
+/// At most this many characters of an attached file go to the assistant.
+pub const ATTACH_LIMIT: usize = 60_000;
+
+/// The attached text cut to [`ATTACH_LIMIT`] characters, and whether it was cut.
+pub fn clip(text: &str) -> (String, bool) {
+    match text.char_indices().nth(ATTACH_LIMIT) {
+        Some((end, _)) => (text[..end].to_owned(), true),
+        None => (text.to_owned(), false),
+    }
+}
+
+/// The message that gives the assistant the prompt and the file.
+pub fn run_message(prompt: &Prompt, file_name: &str, file_text: &str) -> String {
+    format!(
+        "{}\n\n---\nThe attached file is `{file_name}`. Its text follows.\n\n{file_text}\n",
+        prompt.text
+    )
+}
+
+/// The CSV in an assistant's reply: the first csv code block, or else a code block that starts with the header.
+pub fn csv_of_reply(reply: &str) -> Option<String> {
+    let mut rest = reply;
+    while let Some(open) = rest.find("```") {
+        let after = &rest[open + 3..];
+        let (info, body) = after.split_once('\n')?;
+        let end = body.find("```")?;
+        let block = &body[..end];
+        let is_csv = info.trim().eq_ignore_ascii_case("csv") || block.starts_with("stack,kind,");
+        if is_csv {
+            return Some(block.to_owned());
+        }
+        rest = &body[end + 3..];
+    }
+    None
+}
+
+/// Why the assistant could not do it, when it answered `PROBLEM: ...`.
+pub fn problem_of_reply(reply: &str) -> Option<&str> {
+    reply.trim().strip_prefix("PROBLEM:").map(str::trim)
+}

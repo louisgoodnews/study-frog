@@ -86,3 +86,37 @@ fn the_prompts_name_the_same_columns_as_the_importer_reads() {
     assert!(file_name(&p).ends_with("-flashcards.md"));
     assert!(file_text(&p).starts_with("# Create flashcards from a file\n"));
 }
+
+#[test]
+fn the_csv_of_a_reply_is_found_with_or_without_chatter_and_a_problem_is_recognised() {
+    use studyfrog_service::prompts::{
+        ATTACH_LIMIT, clip, csv_of_reply, problem_of_reply, run_message,
+    };
+    let csv = "stack,kind,title,front,back,tags\na,card,,q,a,\n";
+    assert_eq!(
+        csv_of_reply(&format!("Here you go:\n```csv\n{csv}```\nEnjoy")).as_deref(),
+        Some(csv)
+    );
+    assert_eq!(
+        csv_of_reply(&format!("```\n{csv}```")).as_deref(),
+        Some(csv)
+    );
+    assert_eq!(
+        csv_of_reply("```python\nprint(1)\n```\n```csv\nx\n```").as_deref(),
+        Some("x\n")
+    );
+    assert!(
+        csv_of_reply("no block at all").is_none() && csv_of_reply("```csv\nunclosed").is_none()
+    );
+    assert_eq!(
+        problem_of_reply("PROBLEM: the file is empty"),
+        Some("the file is empty")
+    );
+    assert!(problem_of_reply("```csv\n```").is_none());
+    let (kept, cut) = clip(&"é".repeat(ATTACH_LIMIT + 5));
+    assert!(cut && kept.chars().count() == ATTACH_LIMIT);
+    assert!(!clip("short").1);
+    let p = prompt_of(&PROMPTS[0]);
+    let m = run_message(&p, "notes.txt", "hello");
+    assert!(m.starts_with(&p.text) && m.contains("`notes.txt`") && m.trim_end().ends_with("hello"));
+}

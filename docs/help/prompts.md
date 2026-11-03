@@ -22,4 +22,12 @@ the [[assistant|Assistant]] screen, and in the import dialog under **Which files
 4. In StudyFrog open **Import** and choose that file. The preview shows what would be made, and any problem with its
    row and column; **Copy the problems for the AI** gives you a message to send back so the AI fixes exactly those rows.
 
+## Running a prompt with your own assistant
+If you connected a model on the **Connections** tab, the lower part of the **Prompts** tab runs a prompt for you:
+choose a prompt and a file (a text, source or data file; for a PDF copy its text into a .txt file first), press
+**Show what will be sent**, read the text, and press **Send**. Nothing is sent before that, and not to a provider you
+did not allow. When the answer arrives, **Import this answer…** opens the import preview. If the preview lists
+problems, **Ask the assistant to fix these** prepares a message with exactly those rows; you read it and press Send
+again.
+
 If the AI says `PROBLEM:`, the attached file was not enough; attach more or something else.

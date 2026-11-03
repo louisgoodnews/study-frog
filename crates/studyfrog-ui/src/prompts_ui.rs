@@ -11,6 +11,8 @@ pub enum PromptsMsg {
     Save(&'static str),
     /// Save every prompt into a folder to choose.
     SaveAll,
+    /// A step of running a prompt through the assistant.
+    Run(crate::prompt_run::PromptRunMsg),
     /// The files were written: the folder and the count, `None` when the folder dialog was cancelled, or why not.
     Saved(Result<Option<String>, String>),
 }
@@ -20,6 +22,12 @@ pub enum PromptsMsg {
 pub enum PromptsEffect {
     /// Ask for a folder and write the prompts with these ids into it.
     Export(Vec<&'static str>),
+    /// Ask for a file to attach.
+    Browse,
+    /// Read this file to attach it.
+    Read(String),
+    /// Write the CSV of an answer to a file to import.
+    WriteReply(String),
 }
 
 fn say(state: State, kind: NoticeKind, text: String) -> (State, Vec<Effect>) {
@@ -46,6 +54,7 @@ pub fn update(state: State, msg: PromptsMsg) -> (State, Vec<Effect>) {
                 .collect();
             (state, vec![Effect::Prompts(PromptsEffect::Export(ids))])
         }
+        PromptsMsg::Run(m) => crate::prompt_run::update(state, m),
         PromptsMsg::Saved(Ok(Some(text))) => say(state, NoticeKind::Info, text),
         PromptsMsg::Saved(Ok(None)) => (state, Vec::new()),
         PromptsMsg::Saved(Err(e)) => say(

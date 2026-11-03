@@ -172,6 +172,8 @@ pub struct State {
     pub modal: Option<Modal>,
     /// Clickable in-app notifications.
     pub toasts: Vec<Toast>,
+    /// A standard prompt being run through the assistant.
+    pub prompt_run: Box<crate::prompt_run::PromptRun>,
     /// Sidebar, menus, search and notifications.
     pub chrome: Chrome,
     /// The registered importers and card types.
