@@ -134,6 +134,15 @@ pub enum TransferJob {
         /// Import the reviews.
         with_schedule: bool,
     },
+    /// Write a sample file of an importer.
+    SaveExample {
+        /// The folder to write to (empty: Documents, or the home folder).
+        folder: String,
+        /// The file name.
+        file: String,
+        /// The text.
+        text: String,
+    },
     /// Write an export.
     Export {
         /// The folder to write to.

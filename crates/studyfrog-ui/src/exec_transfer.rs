@@ -98,6 +98,20 @@ fn export(
     Ok(target.display().to_string())
 }
 
+/// Write a sample file into `folder`, or the user's Documents folder, or the home folder.
+fn save_example(folder: &str, file: &str, text: &str) -> Result<String, String> {
+    let home = std::env::var_os("HOME").map(std::path::PathBuf::from);
+    let documents = home.as_ref().map(|h| h.join("Documents"));
+    let dir = [Some(Path::new(folder).to_path_buf()), documents, home]
+        .into_iter()
+        .flatten()
+        .find(|d| !d.as_os_str().is_empty() && d.is_dir())
+        .ok_or("there is no folder to write to; choose one under Export")?;
+    let target = dir.join(file);
+    fs::write(&target, text).map_err(|e| format!("{}: {e}", target.display()))?;
+    Ok(target.display().to_string())
+}
+
 /// Perform one job and report.
 pub fn run(w: &mut Worker, job: TransferJob, now_ns: i64) -> Msg {
     match job {
@@ -113,6 +127,9 @@ pub fn run(w: &mut Worker, job: TransferJob, now_ns: i64) -> Msg {
                 picked.map(|p| p.display().to_string()),
             ))
         }
+        TransferJob::SaveExample { folder, file, text } => msg(TransferMsg::ExampleSaved(
+            save_example(&folder, &file, &text),
+        )),
         TransferJob::Preview(path, target) => {
             msg(TransferMsg::Previewed(preview(w, &path, target.as_deref())))
         }

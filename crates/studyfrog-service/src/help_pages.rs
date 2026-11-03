@@ -32,6 +32,7 @@ pub const PAGES: &[HelpPage] = &[
     page!("pdf", Screens),
     page!("settings", Screens),
     page!("import-export", Screens),
+    page!("import-formats", Screens),
     page!("notifications", Screens),
     page!("help", Screens),
     page!("faq", Reference),

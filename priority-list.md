@@ -46,7 +46,7 @@ Proposed by Claude on 2026-11-03 after the owner's test of 0.3.1; the owner may 
 - [x] 1. BUG-0007 Enter in a list does not continue it, BUG-0008 Bullets sit higher than their text
 - [x] 2. TASK-0199 Open the new item from its "created" notification
 - [x] 3. TASK-0200 Auto-save token by token (on a whitespace, at the latest after 5 seconds) and no Save button, then TASK-0201 "Saved" toast when leaving the editor
-- [ ] 4. TASK-0209 Tell the user which layouts and formats the importers read
+- [x] 4. TASK-0209 Tell the user which layouts and formats the importers read
 
 **Wave 2: new capabilities**
 - [ ] 5. TASK-0208 CSV import with column mapping (all problems at once)

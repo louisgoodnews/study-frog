@@ -35,6 +35,7 @@ mod menus;
 mod modal;
 mod modal_create;
 mod modal_fields;
+mod modal_formats;
 mod modal_found;
 pub mod modal_import;
 mod modal_size;

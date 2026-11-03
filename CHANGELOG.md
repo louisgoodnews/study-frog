@@ -19,6 +19,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The Markdown editor's code is split into a module of small files (`view/md_editor/`: toolbar, resizing, preview cache, list keys).
 
 ### Added
+- The import dialog lists the formats it reads with the layout each expects, an example and a Save example button; an unreadable file's error names the expected layout; the help has an Import formats page generated from the same table (TASK-0209).
 - The editor saves by itself when a word is finished (a space or line break is typed), when something other than text changes, and at the latest 5 seconds after the first unsaved edit; a pause alone saves nothing. Leaving, opening another item and exiting save first; a file changed outside StudyFrog is never overwritten (Reload from disk or Keep mine); a failed save is shown and retried (TASK-0200).
 - Leaving an item you changed shows a "Saved <title>" toast that goes away after about three seconds (TASK-0201).
 - The notice after Create has an Open button that opens the new item, and the same entry in the notification list keeps that link (TASK-0199).

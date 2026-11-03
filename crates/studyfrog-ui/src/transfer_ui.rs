@@ -1,5 +1,6 @@
 //! The import and export dialog: state, messages and update. Pure; the worker reads and writes the files.
 
+use studyfrog_service::xfer_adapters::ADAPTERS;
 use studyfrog_service::xfer_plan::Policy;
 
 use crate::effect::Effect;
@@ -37,6 +38,10 @@ pub enum TransferMsg {
     Export,
     /// The export finished: the path written, or why not.
     Exported(Result<String, String>),
+    /// Write the sample file of the importer with this number (see `ADAPTERS`).
+    SaveExample(usize),
+    /// The sample file was written: its path, or why not.
+    ExampleSaved(Result<String, String>),
     /// Choose what to do with duplicates.
     Policy(Policy),
     /// Tick or untick the review history.
@@ -127,6 +132,33 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
                 ),
             }
         }
+        TransferMsg::SaveExample(i) => {
+            let example = ADAPTERS.get(i).and_then(|a| a.example);
+            let Some(ex) = example else {
+                return (state, Vec::new());
+            };
+            let folder = t.destination.clone();
+            return (
+                state,
+                job(TransferJob::SaveExample {
+                    folder,
+                    file: ex.file.to_owned(),
+                    text: ex.text.to_owned(),
+                }),
+            );
+        }
+        TransferMsg::ExampleSaved(result) => match result {
+            Ok(path) => say(
+                &mut state,
+                format!("Saved the example to {path}."),
+                NoticeKind::Info,
+            ),
+            Err(e) => say(
+                &mut state,
+                format!("Could not save the example: {e}"),
+                NoticeKind::Error,
+            ),
+        },
         TransferMsg::Found(list) => crate::transfer_found::found(&mut state, list),
         TransferMsg::Pick(path) => {
             let effects = crate::transfer_found::pick(&mut state, path);
