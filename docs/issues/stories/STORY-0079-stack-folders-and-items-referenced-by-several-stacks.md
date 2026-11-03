@@ -29,7 +29,7 @@ Today a folder with a `_stack.md` is a stack, its items are the files inside it,
 - [ ] Existing vaults keep working: the old schedule becomes the primary stack's
 
 ## Design Notes
-Tasks TASK-0210 to TASK-0213, TASK-0217, TASK-0218 and TASK-0219. The decision record comes first; the schedule change (TASK-0218) is the riskiest part: a schema migration, the scheduler and the queues.
+Tasks TASK-0210 to TASK-0213, TASK-0217, TASK-0218, TASK-0219 and TASK-0220. The decision record comes first; the schedule change (TASK-0218) is the riskiest part: a schema migration, the scheduler and the queues.
 
 ## Dependencies
 None.

@@ -55,7 +55,7 @@ Proposed by Claude on 2026-11-03 after the owner's test of 0.3.1; the owner may 
 
 **Wave 3: larger, specify first**
 - [ ] 9. TASK-0210 Decide the stack folder and reference rules (ADR; the owner: a folder can be marked as a stack, an item can be referenced by several stacks)
-- [ ] 10. TASK-0211 to TASK-0213 and TASK-0217 (references, the stack mark and the per-stack schedule: TASK-0218, TASK-0219), then TASK-0202 (views spec), TASK-0203 and TASK-0204
+- [ ] 10. TASK-0211 to TASK-0213 and TASK-0217 (references, the stack mark and the per-stack schedule: TASK-0218, TASK-0219, TASK-0220), then TASK-0202 (views spec), TASK-0203 and TASK-0204
 - [ ] 11. TASK-0195 Calm the remaining screens (STORY-0073)
 - [ ] 12. TASK-0170 to TASK-0174 Diary
 - [x] TASK-0196 Navigation history, BUG-0005 Exit button cut off, BUG-0006 Roadmap too small (done on main after 0.3.1)
