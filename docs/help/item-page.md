@@ -30,10 +30,18 @@ The **Title** is at the top. Below it is a Markdown editor for every text of the
 - a stack has a description.
 
 Each editor has a toolbar and three views: **Write**, **Split** (text and preview side by side) and **Preview**.
-The toolbar has **Heading**, **Bold**, **Italic**, **Code**, **Quote**, **Bullet list**, **Numbered list**,
-**Rule**, **Link**, **Link to a note** and **Picture**.
+The toolbar has **Bold**, **Italic**, **Underline**, **Strikethrough**, **Colour**, **Code**, **Heading**, **Quote**,
+**Bullet list**, **Numbered list**, **Link**, **Link to a note**, **Table**, **Rule** and **Picture**.
 In a list, **Enter** starts the next item (the next number, the same bullet, or an unchecked box for a task) and **Enter** or **Backspace** on an empty item ends the list.
 
+- **Table** inserts a small table (`| a | b |` rows under a header row). Put `:---`, `:---:` or `---:` in the second row
+  to align a column left, centre or right. Cells can hold bold, italic and links.
+- **Underline** and **Colour** are not Markdown, so the file keeps them as small HTML that other readers still
+  understand: `<u>text</u>` and `<span style="color:#c0392b">text</span>`. The colours are red, orange, green, blue,
+  purple and grey; each is shown a little darker on the light theme and lighter on the dark one. Any other HTML
+  stays visible as typed.
+- A line with only `[TOC]` becomes a table of contents: the headings of the note, indented by level, that you can
+  click to jump to. The file stores only the marker, never a copy of the headings.
 - **Picture** copies a png, jpg or gif into the vault's `assets/` folder and inserts it as
   `![alt](assets/name.png)`. Pictures show in the preview, on the item page and while rehearsing. Only pictures
   inside the vault are shown.

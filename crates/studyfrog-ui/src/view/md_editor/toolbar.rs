@@ -6,10 +6,13 @@ use super::Mode;
 use crate::image_ui::ImageTarget;
 use crate::md_edit::{Cmd, apply_cmd};
 use crate::msg::Msg;
+use studyfrog_md::hue::{HUES, hue_name};
 
-const TOOLS: [(Cmd, &str, &str); 10] = [
+const TOOLS: [(Cmd, &str, &str); 13] = [
     (Cmd::Bold, "B", "Bold"),
     (Cmd::Italic, "I", "Italic"),
+    (Cmd::Underline, "U", "Underline"),
+    (Cmd::Strike, "S", "Strikethrough"),
     (Cmd::Code, "<>", "Code"),
     (Cmd::Heading, "H", "Heading"),
     (Cmd::Bullet, "List", "Bullet list"),
@@ -17,6 +20,7 @@ const TOOLS: [(Cmd, &str, &str); 10] = [
     (Cmd::Quote, "Quote", "Quote"),
     (Cmd::Link, "Link", "Link"),
     (Cmd::WikiLink, "[[ ]]", "Link to a note"),
+    (Cmd::Table, "Table", "Table"),
     (Cmd::Rule, "---", "Rule"),
 ];
 
@@ -54,14 +58,26 @@ pub(super) fn toolbar(
             let r = ui.small_button(label);
             r.widget_info(|| WidgetInfo::labeled(Role::Button, true, format!("{tip} in {name}")));
             if r.on_hover_text(tip).clicked() {
-                let sel = TextEdit::load_state(ui.ctx(), text_id)
-                    .and_then(|s| s.cursor.char_range())
-                    .map_or((text.chars().count(), text.chars().count()), |r| {
-                        (r.primary.index.into(), r.secondary.index.into())
-                    });
-                edited = Some(apply_cmd(text, sel, cmd));
+                edited = Some(apply_cmd(text, selection(ui, text_id, text), cmd));
             }
         }
+        ui.menu_button("Colour", |ui| {
+            for hue in HUES {
+                let label = hue_name(hue);
+                let r = ui.button(label);
+                r.widget_info(|| {
+                    let what = format!("Text colour {label} in {name}");
+                    WidgetInfo::labeled(Role::Button, true, what)
+                });
+                if r.clicked() {
+                    let sel = selection(ui, text_id, text);
+                    edited = Some(apply_cmd(text, sel, Cmd::Color(hue)));
+                    ui.close();
+                }
+            }
+        })
+        .response
+        .on_hover_text("Colour the selected text");
         if let Some(target) = image {
             let r = ui.small_button("Picture");
             r.widget_info(|| {
@@ -73,6 +89,15 @@ pub(super) fn toolbar(
         }
     });
     edited
+}
+
+/// The selected characters of the text field (the end of the text when it has no cursor yet).
+fn selection(ui: &egui::Ui, text_id: Id, text: &str) -> (usize, usize) {
+    TextEdit::load_state(ui.ctx(), text_id)
+        .and_then(|s| s.cursor.char_range())
+        .map_or((text.chars().count(), text.chars().count()), |r| {
+            (r.primary.index.into(), r.secondary.index.into())
+        })
 }
 
 pub(super) fn set_selection(ui: &egui::Ui, text_id: Id, (a, b): (usize, usize)) {

@@ -80,3 +80,38 @@ fn out_of_range_selections_are_clamped_not_a_panic() {
     assert_eq!(apply_cmd("ab", (9, 12), Cmd::Bold).0, "ab**bold**");
     assert_eq!(apply_cmd("", (3, 1), Cmd::Bullet).0, "- ");
 }
+
+#[test]
+fn strike_underline_and_colour_wrap_the_selection_with_the_markers_the_file_keeps() {
+    use studyfrog_md::hue::Hue;
+    let (t, sel) = apply_cmd("a word b", (2, 6), Cmd::Strike);
+    assert_eq!((t.as_str(), sel), ("a ~~word~~ b", (4, 8)));
+    let (t, _) = apply_cmd("a word b", (2, 6), Cmd::Underline);
+    assert_eq!(t, "a <u>word</u> b");
+    let (t, _) = apply_cmd("a word b", (2, 6), Cmd::Color(Hue::Red));
+    assert_eq!(t, "a <span style=\"color:#c0392b\">word</span> b");
+    let (t, sel) = apply_cmd("", (0, 0), Cmd::Underline);
+    assert_eq!((t.as_str(), sel), ("<u>underlined</u>", (3, 13)));
+}
+
+#[test]
+fn the_table_goes_on_lines_of_its_own_with_the_first_header_cell_selected() {
+    let (t, (a, b)) = apply_cmd("", (0, 0), Cmd::Table);
+    assert_eq!(t, "| Column 1 | Column 2 |\n|---|---|\n| | |\n");
+    assert_eq!(
+        t.chars().skip(a).take(b - a).collect::<String>(),
+        "Column 1"
+    );
+    let (t, _) = apply_cmd("text", (4, 4), Cmd::Table);
+    assert!(t.starts_with("text\n\n| Column 1"), "{t:?}");
+    let (t, _) = apply_cmd("ab", (1, 1), Cmd::Table);
+    assert!(
+        t.starts_with("a\n\n| ") && t.ends_with("| | |\n\nb") || t.ends_with("| | |\nb"),
+        "{t:?}"
+    );
+    let blocks = studyfrog_md::blocks::parse_blocks(&apply_cmd("", (0, 0), Cmd::Table).0);
+    assert!(matches!(
+        blocks[0],
+        studyfrog_md::blocks::Block::Table { .. }
+    ));
+}

@@ -165,7 +165,12 @@ proptest! {
                     }
                     Block::Quote(inner) => collect(inner, out),
                     Block::List { items, .. } => items.iter().for_each(|i| collect(&i.blocks, out)),
-                    Block::Rule => {}
+                    Block::Rule | Block::Toc => {}
+                    Block::Table { header, rows, .. } => {
+                        for cell in header.iter().chain(rows.iter().flatten()) {
+                            out.push_str(&plain_text(cell));
+                        }
+                    }
                 }
             }
         }
@@ -207,7 +212,9 @@ fn style_default_is_plain() {
             bold: false,
             italic: false,
             strike: false,
-            code: false
+            code: false,
+            underline: false,
+            color: None
         }
     );
 }

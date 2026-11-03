@@ -4,7 +4,9 @@ use pulldown_cmark::{CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
 
 use crate::blocks::{Block, Link, ListItem, Span, Style};
 use crate::blocks_heading::level;
-use crate::links::{Piece, split_wikilinks};
+use crate::blocks_table::TableAcc;
+use crate::blocks_text::{end_image, flush_text, style};
+use crate::hue::Hue;
 
 enum Frame {
     Root(Vec<Block>),
@@ -18,73 +20,22 @@ enum Frame {
 }
 
 #[derive(Default)]
-struct Builder {
+pub(crate) struct Builder {
     stack: Vec<Frame>,
-    spans: Vec<Span>,
-    text: String,
-    bold: u32,
-    italic: u32,
-    strike: u32,
-    link: Option<Link>,
+    pub(crate) spans: Vec<Span>,
+    pub(crate) text: String,
+    pub(crate) bold: u32,
+    pub(crate) italic: u32,
+    pub(crate) strike: u32,
+    pub(crate) underline: u32,
+    pub(crate) colors: Vec<Hue>,
+    pub(crate) link: Option<Link>,
     code: Option<(String, String)>,
     heading: Option<u8>,
+    pub(crate) table: Option<TableAcc>,
 }
 
-fn style(b: &Builder) -> Style {
-    Style {
-        bold: b.bold > 0,
-        italic: b.italic > 0,
-        strike: b.strike > 0,
-        code: false,
-    }
-}
-
-/// Turn the pending text into spans, splitting out wikilinks (never inside an explicit link).
-fn flush_text(b: &mut Builder) {
-    if b.text.is_empty() {
-        return;
-    }
-    let text = std::mem::take(&mut b.text);
-    let base = Span {
-        text: String::new(),
-        style: style(b),
-        link: b.link.clone(),
-    };
-    if b.link.is_some() {
-        b.spans.push(Span { text, ..base });
-        return;
-    }
-    for piece in split_wikilinks(&text) {
-        let span = match piece {
-            Piece::Text(t) => Span {
-                text: t.to_owned(),
-                ..base.clone()
-            },
-            Piece::Link { target, shown } => Span {
-                text: shown.to_owned(),
-                link: Some(Link::Wiki(target.to_owned())),
-                ..base.clone()
-            },
-        };
-        b.spans.push(span);
-    }
-}
-
-/// An image without a description still needs a span to carry its path.
-fn end_image(b: &mut Builder) {
-    flush_text(b);
-    if !b.spans.last().is_some_and(|s| s.link == b.link) {
-        let empty = Span {
-            text: String::new(),
-            style: style(b),
-            link: b.link.clone(),
-        };
-        b.spans.push(empty);
-    }
-    b.link = None;
-}
-
-fn push_block(b: &mut Builder, block: Block) {
+pub(crate) fn push_block(b: &mut Builder, block: Block) {
     match b.stack.last_mut() {
         Some(Frame::Root(v) | Frame::Quote(v)) => v.push(block),
         Some(Frame::Item(item)) => item.blocks.push(block),
@@ -92,12 +43,22 @@ fn push_block(b: &mut Builder, block: Block) {
     }
 }
 
+/// A paragraph that is only `[TOC]` asks for the table of contents.
+fn is_toc(spans: &[Span]) -> bool {
+    matches!(spans, [s] if s.link.is_none() && s.text.trim().eq_ignore_ascii_case("[toc]"))
+}
+
 /// Pending inline content that was not wrapped in a paragraph (tight list items) becomes one.
 fn flush_paragraph(b: &mut Builder) {
     flush_text(b);
     if !b.spans.is_empty() {
         let spans = std::mem::take(&mut b.spans);
-        push_block(b, Block::Paragraph(spans));
+        let block = if is_toc(&spans) {
+            Block::Toc
+        } else {
+            Block::Paragraph(spans)
+        };
+        push_block(b, block);
     }
 }
 
@@ -136,7 +97,7 @@ fn start(b: &mut Builder, tag: Tag) {
             flush_text(b);
             b.link = Some(Link::Url(dest_url.to_string()));
         }
-        _ => {}
+        other => crate::blocks_table::start(b, &other),
     }
 }
 
@@ -193,7 +154,7 @@ fn end(b: &mut Builder, tag: TagEnd) {
             flush_text(b);
             b.link = None;
         }
-        _ => {}
+        other => crate::blocks_table::end(b, other),
     }
 }
 
@@ -218,7 +179,7 @@ fn event(b: &mut Builder, ev: Event) {
         }
         Event::SoftBreak => b.text.push(' '),
         Event::HardBreak => b.text.push('\n'),
-        Event::Html(t) | Event::InlineHtml(t) => b.text.push_str(&t),
+        Event::Html(t) | Event::InlineHtml(t) => crate::blocks_table::html(b, &t),
         Event::Rule => {
             flush_paragraph(b);
             push_block(b, Block::Rule);
@@ -238,7 +199,8 @@ pub(crate) fn build(markdown: &str) -> Vec<Block> {
         stack: vec![Frame::Root(Vec::new())],
         ..Builder::default()
     };
-    let options = Options::ENABLE_STRIKETHROUGH | Options::ENABLE_TASKLISTS;
+    let options =
+        Options::ENABLE_STRIKETHROUGH | Options::ENABLE_TASKLISTS | Options::ENABLE_TABLES;
     for ev in Parser::new_ext(markdown, options) {
         event(&mut b, ev);
     }

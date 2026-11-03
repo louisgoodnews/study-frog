@@ -3,6 +3,8 @@
 pub mod blocks;
 mod blocks_build;
 mod blocks_heading;
+mod blocks_table;
+mod blocks_text;
 pub mod build;
 pub mod codeblock;
 pub mod doc;
@@ -10,6 +12,7 @@ pub mod error;
 pub mod extra;
 pub mod fence;
 pub mod goals;
+pub mod hue;
 pub mod links;
 pub mod names;
 pub mod parse;

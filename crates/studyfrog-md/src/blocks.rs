@@ -1,6 +1,8 @@
 //! Markdown to a small block-and-span model for previews. Pure. CommonMark comes from
 //! `pulldown-cmark` (a hard general problem, P10); wikilinks are added here.
 
+use crate::hue::Hue;
+
 /// Inline formatting of a span.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Style {
@@ -12,6 +14,10 @@ pub struct Style {
     pub strike: bool,
     /// Inline code.
     pub code: bool,
+    /// Underlined (`<u>`).
+    pub underline: bool,
+    /// A text colour (a coloured `<span>`).
+    pub color: Option<Hue>,
 }
 
 /// Where a link points.
@@ -45,6 +51,22 @@ pub struct ListItem {
     pub blocks: Vec<Block>,
 }
 
+/// How a table column is aligned.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Align {
+    /// Not stated: left.
+    None,
+    /// Left.
+    Left,
+    /// Centred.
+    Center,
+    /// Right.
+    Right,
+}
+
+/// A row of a table: one list of spans per cell.
+pub type Row = Vec<Vec<Span>>;
+
 /// A block of the document.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Block {
@@ -77,6 +99,17 @@ pub enum Block {
     },
     /// A thematic break.
     Rule,
+    /// A pipe table.
+    Table {
+        /// The alignment of each column.
+        aligns: Vec<Align>,
+        /// The header row.
+        header: Row,
+        /// The other rows.
+        rows: Vec<Row>,
+    },
+    /// `[TOC]`: the list of the headings goes here.
+    Toc,
 }
 
 /// Parse Markdown into blocks. Never fails; unsupported constructs degrade to plain text.

@@ -172,7 +172,12 @@ fn wiki_targets(blocks: &[Block], into: &mut Vec<String>) {
             Block::Heading { spans: s, .. } | Block::Paragraph(s) => spans(s, into),
             Block::Quote(inner) => wiki_targets(inner, into),
             Block::List { items, .. } => items.iter().for_each(|i| wiki_targets(&i.blocks, into)),
-            Block::Code { .. } | Block::Rule => {}
+            Block::Table { header, rows, .. } => {
+                for cell in header.iter().chain(rows.iter().flatten()) {
+                    spans(cell, into);
+                }
+            }
+            Block::Code { .. } | Block::Rule | Block::Toc => {}
         }
     }
 }

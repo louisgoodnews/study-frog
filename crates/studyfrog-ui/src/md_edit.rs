@@ -1,6 +1,8 @@
 //! Markdown editing commands: what the toolbar buttons do to the text and the selection. Positions
 //! are character indices, as in egui's text cursor. Pure.
 
+use studyfrog_md::hue::{Hue, span_open};
+
 /// A formatting command.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Cmd {
@@ -26,12 +28,20 @@ pub enum Cmd {
     Quote,
     /// A horizontal rule on its own line.
     Rule,
+    /// `~~strikethrough~~`
+    Strike,
+    /// `<u>underline</u>`
+    Underline,
+    /// A coloured span.
+    Color(Hue),
+    /// A small pipe table on its own lines.
+    Table,
 }
 
 /// The text and the selection (start, end) after a command.
 pub type Edited = (String, (usize, usize));
 
-fn clamp(chars: &[char], (a, b): (usize, usize)) -> (usize, usize) {
+pub(crate) fn clamp(chars: &[char], (a, b): (usize, usize)) -> (usize, usize) {
     (a.min(b).min(chars.len()), a.max(b).min(chars.len()))
 }
 
@@ -136,6 +146,10 @@ pub fn apply_cmd(text: &str, sel: (usize, usize), cmd: Cmd) -> Edited {
         Cmd::Bullet => prefix_lines(&chars, sel, "- ", false),
         Cmd::Numbered => prefix_lines(&chars, sel, "1. ", true),
         Cmd::Quote => prefix_lines(&chars, sel, "> ", false),
+        Cmd::Strike => wrap(&chars, sel, ("~~", "~~"), "struck out"),
+        Cmd::Underline => wrap(&chars, sel, ("<u>", "</u>"), "underlined"),
+        Cmd::Color(hue) => wrap(&chars, sel, (&span_open(hue), "</span>"), "coloured"),
+        Cmd::Table => crate::md_edit_table::insert(&chars, sel),
         Cmd::Rule => {
             let (a, b) = clamp(&chars, sel);
             let head: String = chars[..a].iter().collect();

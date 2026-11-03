@@ -55,6 +55,7 @@ mod pdf_side;
 mod pdf_texture;
 mod popup;
 mod preview;
+mod preview_rich;
 mod profiles;
 mod reports;
 mod reports_fam;
