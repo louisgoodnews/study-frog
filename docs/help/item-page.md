@@ -27,6 +27,7 @@ The **Title** is at the top. Below it is a Markdown editor for every text of the
 Each editor has a toolbar and three views: **Write**, **Split** (text and preview side by side) and **Preview**.
 The toolbar has **Heading**, **Bold**, **Italic**, **Code**, **Quote**, **Bullet list**, **Numbered list**,
 **Rule**, **Link**, **Link to a note** and **Picture**.
+In a list, **Enter** starts the next item (the next number, the same bullet, or an unchecked box for a task) and **Enter** or **Backspace** on an empty item ends the list.
 
 - **Picture** copies a png, jpg or gif into the vault's `assets/` folder and inserts it as
   `![alt](assets/name.png)`. Pictures show in the preview, on the item page and while rehearsing. Only pictures

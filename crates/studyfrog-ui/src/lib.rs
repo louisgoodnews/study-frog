@@ -54,6 +54,7 @@ pub mod library_search;
 pub mod library_sort;
 pub mod library_ui;
 pub mod md_edit;
+pub mod md_lists;
 pub mod modal;
 mod modal_discard;
 pub mod modal_form;

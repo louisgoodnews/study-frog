@@ -8,8 +8,13 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Fixed
+- Enter in the Markdown editor continues a list: the next number, the same bullet or an unchecked box for a task item, at the same indent (in the middle of an item it splits the item); Enter or Backspace on an empty item removes its marker and ends the list (BUG-0007).
+- Bullets, numbers and check boxes in the preview are level with the first line of their item (BUG-0008).
 - The window buttons are anchored to the window's right edge, so the red close button is no longer cut off, and there is a gap between maximise and close (BUG-0005).
 - The roadmap takes the width and the height there are, even when its dates are close together, with larger rows, bars and text (BUG-0006).
+
+### Changed
+- The Markdown editor's code is split into a module of small files (`view/md_editor/`: toolbar, resizing, preview cache, list keys).
 
 ### Added
 - Navigation history: the top bar has Back and Forward arrows and a History list (the screens, stacks and items visited, newest first, the current one marked), and Alt+Left and Alt+Right do the same; unsaved changes in the editor ask you to save or revert first (TASK-0196).

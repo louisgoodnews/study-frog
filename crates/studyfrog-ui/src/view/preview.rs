@@ -1,6 +1,6 @@
 //! Drawing the preview blocks. The blocks are parsed once when the text changes, never per frame.
 
-use eframe::egui::{self, RichText};
+use eframe::egui::{self, Align, Layout, RichText, vec2};
 use studyfrog_md::blocks::{Block, Link, ListItem, Span};
 
 use crate::msg::Msg;
@@ -54,7 +54,15 @@ fn list_item(ui: &mut egui::Ui, item: &ListItem, marker: String, out: &mut Vec<M
             Some(false) => "☐".to_owned(),
             None => marker,
         };
-        ui.label(mark);
+        // A paragraph's first line sits in a row at least as tall as a button, with its text in the middle of
+        // it; the marker gets a row of the same height so that it is level with that line.
+        let row = vec2(
+            ui.spacing().interact_size.x.min(28.0),
+            ui.spacing().interact_size.y,
+        );
+        ui.allocate_ui_with_layout(row, Layout::left_to_right(Align::Center), |ui| {
+            ui.label(mark);
+        });
         ui.vertical(|ui| draw_blocks(ui, &item.blocks, out));
     });
 }
