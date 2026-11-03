@@ -59,6 +59,8 @@ pub struct Created {
     pub title: String,
     /// Its vault-relative path.
     pub path: String,
+    /// Its id, when known (so a notice can open it).
+    pub uid: Option<studyfrog_core::uid::Uid>,
 }
 
 fn parent_dir(session: &VaultSession, folder: &str) -> Result<std::path::PathBuf, ServiceError> {
@@ -160,6 +162,7 @@ pub fn create_item(
         "source",
         item.source.map(|s| format!("\"{s}\"")).as_deref(),
     );
+    let uid = studyfrog_md::doc::doc_meta(&doc).uid;
     let text = render_doc(&doc).map_err(render_error)?;
     let rel_of = |name: &str| match item.parent {
         Some(folder) => format!("{folder}/{name}"),
@@ -174,5 +177,12 @@ pub fn create_item(
         write_new(&base.join(&name), &text)?;
         rel_of(&name)
     };
-    Ok((refresh(session)?, Created { title, path }))
+    Ok((
+        refresh(session)?,
+        Created {
+            title,
+            path,
+            uid: Some(uid),
+        },
+    ))
 }

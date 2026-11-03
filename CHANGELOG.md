@@ -19,6 +19,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The Markdown editor's code is split into a module of small files (`view/md_editor/`: toolbar, resizing, preview cache, list keys).
 
 ### Added
+- The notice after Create has an Open button that opens the new item, and the same entry in the notification list keeps that link (TASK-0199).
 - `studyfrog --screenshot FILE --theme dark|light|system` takes the picture in a theme, whatever is saved (TASK-0226).
 - Colours in the views come from the theme: the calendar's appointments and the graph's notes use a new theme colour, the notification badge the palette's red, and a test fails when a view writes a colour of its own (TASK-0226).
 - Appearance settings (Settings > Appearance, the theme also in the profile menu): dark, light or follow the system; the interface size (70 to 200 percent, also with Ctrl and plus, minus and 0) and the text size; compact, comfortable or spacious density; six accent colours; high contrast; reduced motion; the screen to open first (Home, Library or the one used last); the sidebar folded at start; and the window's size and place remembered. Every change shows at once and is saved at once, with no restart, and the saved look and window are used from the first frame. The settings are in an `[appearance]` table of `app.toml` (`docs/specs/appearance.md`) (TASK-0221 to TASK-0225, TASK-0227).

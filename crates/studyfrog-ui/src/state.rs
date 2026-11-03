@@ -133,6 +133,8 @@ pub struct State {
     pub vault: Option<VaultInfo>,
     /// Status-bar message.
     pub notice: Option<Notice>,
+    /// The item the notice with this text opens (the notice shows an Open button while it is the one showing).
+    pub notice_link: Option<(String, studyfrog_core::uid::Uid)>,
     /// A vault is being opened.
     pub opening: bool,
     /// A change check is running in the background.

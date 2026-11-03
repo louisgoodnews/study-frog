@@ -120,7 +120,12 @@ pub fn track(before: &Option<Notice>, state: State) -> (State, Vec<Effect>) {
     let Some(n) = state.notice.clone().filter(|n| Some(n) != before.as_ref()) else {
         return (state, effects);
     };
-    let (state, more) = push(state, (n.kind, n.text), None);
+    let target = state
+        .notice_link
+        .as_ref()
+        .filter(|(text, _)| *text == n.text)
+        .map(|(_, uid)| NotifyTarget::Item(*uid));
+    let (state, more) = push(state, (n.kind, n.text), target);
     effects.extend(more);
     (state, effects)
 }

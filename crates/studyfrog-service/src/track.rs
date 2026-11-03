@@ -197,6 +197,7 @@ pub fn track_cards(
         let created = Created {
             title: title.clone(),
             path: format!("{folder}/{title}.md"),
+            uid: None,
         };
         if let Err(e) = add_to_board(
             session,

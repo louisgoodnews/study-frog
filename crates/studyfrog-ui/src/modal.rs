@@ -117,11 +117,14 @@ fn created(state: State, result: Result<Box<CreateOutcome>, String>) -> (State, 
                     text: format!("Created \"{}\".", created.title),
                 },
             });
+            let text = notice.as_ref().map(|n| n.text.clone());
+            let link = created.uid.zip(text).map(|(uid, t)| (t, uid));
             let new_stack = (form.kind == NewKind::Stack && !form.another)
                 .then(|| created.path.trim_end_matches("/_stack.md").to_owned());
             let mut state = State {
                 vault: Some(info),
                 notice,
+                notice_link: link,
                 ..state
             };
             state.modal = if form.another {

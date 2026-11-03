@@ -31,6 +31,7 @@ fn outcome(path: &str, title: &str, m: &Model) -> Result<Box<CreateOutcome>, Str
         created: Created {
             title: title.into(),
             path: path.into(),
+            uid: None,
         },
         warnings: Vec::new(),
     }))
