@@ -38,8 +38,24 @@ owner's request and is listed under Next.
 - [x] 21. TASK-0185 to TASK-0187 Create dialog like Jira and defaults for new items
 
 ## Next: phase M11 (0.4.0)
-- [ ] 1. TASK-0170 to TASK-0174 Diary ([M11-diary](docs/roadmap/M11-diary.md))
-- [ ] 2. TASK-0195 Calm the remaining screens (STORY-0073)
+Proposed by Claude on 2026-11-03 after the owner's test of 0.3.1; the owner may reorder. Reasons and dependencies are in
+[M11-diary](docs/roadmap/M11-diary.md).
+
+**Wave 1: small and painful now**
+- [ ] 1. BUG-0007 Enter in a list does not continue it, BUG-0008 Bullets sit higher than their text
+- [ ] 2. TASK-0199 Open the new item from its "created" notification
+- [ ] 3. TASK-0200 Auto-save and no Save button, then TASK-0201 "Item saved" toast
+- [ ] 4. TASK-0209 Tell the user which layouts and formats the importers read
+
+**Wave 2: new capabilities**
+- [ ] 5. TASK-0208 CSV import with column mapping
+- [ ] 6. TASK-0197 Tables and more Markdown, then TASK-0198 Text macros
+- [ ] 7. TASK-0205 Write the standard prompts, TASK-0206 Prompts screen (copy and export), TASK-0207 Run a prompt with the assistant
+
+**Wave 3: larger, specify first**
+- [ ] 8. TASK-0202 Specify the folders and items views, then TASK-0203 and TASK-0204
+- [ ] 9. TASK-0195 Calm the remaining screens (STORY-0073)
+- [ ] 10. TASK-0170 to TASK-0174 Diary
 - [x] TASK-0196 Navigation history, BUG-0005 Exit button cut off, BUG-0006 Roadmap too small (done on main after 0.3.1)
 
 ## Feedback after 0.3.0 (released as 0.3.1 on 2026-11-03, EPIC-025)

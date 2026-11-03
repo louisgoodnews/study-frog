@@ -16,7 +16,7 @@ Phases M0 to M11. Each phase has entry criteria, an epic breakdown (every epic h
 | M9 | Documents (PDF) | EPIC-022 | [M9-documents](M9-documents.md) |
 | M10 | Usability and insight (0.3.0, released 2026-11-03) | EPIC-023 | [M10-usability-and-insight](M10-usability-and-insight.md) (priority order inside) |
 | M10 | 0.3.1 fixes | EPIC-025 | [M10](M10-usability-and-insight.md), last paragraph |
-| M11 | Diary and a calmer UI (0.4.0) | EPIC-024 | [M11-diary](M11-diary.md) |
+| M11 | Diary, a calmer UI, writing and prompts (0.4.0) | EPIC-024, EPIC-026 | [M11-diary](M11-diary.md) |
 
 ## M0 Bootstrap
 
@@ -288,5 +288,5 @@ See [M9-documents](M9-documents.md): EPIC-022, STORY-0054 and TASK-0109 to TASK-
 See [M10-usability-and-insight](M10-usability-and-insight.md), with the priority order in four waves: EPIC-023, STORY-0055 to STORY-0070, BUG-0001 and TASK-0126 to TASK-0184.
 The diary (STORY-0068, TASK-0170 to TASK-0174) moved to M11 on 2026-11-03.
 
-## M11 Diary (0.4.0)
-See [M11-diary](M11-diary.md): EPIC-024, STORY-0068 and TASK-0170 to TASK-0174.
+## M11 Diary, a calmer UI, writing and prompts (0.4.0)
+See [M11-diary](M11-diary.md): EPIC-024 (STORY-0068, STORY-0073) and EPIC-026 (STORY-0074 to STORY-0078, BUG-0007, BUG-0008, TASK-0197 to TASK-0209).
