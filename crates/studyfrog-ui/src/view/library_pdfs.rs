@@ -5,6 +5,7 @@ use studyfrog_store::pdf_index::PdfRow;
 
 use crate::msg::Msg;
 use crate::pdf_library_types::LibraryMsg;
+use crate::pdf_names::{file_name, informative_title};
 use crate::pdf_types::PdfMsg;
 use crate::state::State;
 use crate::view::kit;
@@ -19,10 +20,6 @@ fn pages_word(row: &PdfRow) -> String {
         (None, 1) => "1 page".to_owned(),
         (None, n) => format!("{n} pages"),
     }
-}
-
-fn file_name(path: &str) -> &str {
-    path.rsplit('/').next().unwrap_or(path)
 }
 
 fn rename_row(state: &State, row: &PdfRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
@@ -54,11 +51,13 @@ fn rename_row(state: &State, row: &PdfRow, ui: &mut egui::Ui, out: &mut Vec<Msg>
 fn row(state: &State, row: &PdfRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         kit::pill(ui, "pdf", crate::theme::palette_of(ui).accent);
-        let label = format!("{} ({})", row.title, pages_word(row));
+        let label = format!("{} ({})", file_name(&row.path), pages_word(row));
         if ui.link(label).on_hover_text(&row.path).clicked() {
             out.push(Msg::Pdf(PdfMsg::Open(row.path.clone(), 0)));
         }
-        ui.weak(file_name(&row.path));
+        if let Some(title) = informative_title(&row.path, &row.title) {
+            ui.weak(title);
+        }
         if ui.small_button("Rename").clicked() {
             send(out, LibraryMsg::StartRename(row.path.clone()));
         }
@@ -107,10 +106,15 @@ pub fn recent_card(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.set_width(ui.available_width());
         ui.label(RichText::new("PDF files").strong());
         for r in rows.into_iter().take(5) {
-            let label = format!("{} ({})", r.title, pages_word(r));
-            if ui.link(label).on_hover_text(&r.path).clicked() {
-                out.push(Msg::Pdf(PdfMsg::Open(r.path.clone(), 0)));
-            }
+            ui.horizontal_wrapped(|ui| {
+                let label = format!("{} ({})", file_name(&r.path), pages_word(r));
+                if ui.link(label).on_hover_text(&r.path).clicked() {
+                    out.push(Msg::Pdf(PdfMsg::Open(r.path.clone(), 0)));
+                }
+                if let Some(title) = informative_title(&r.path, &r.title) {
+                    ui.weak(title);
+                }
+            });
         }
     });
 }

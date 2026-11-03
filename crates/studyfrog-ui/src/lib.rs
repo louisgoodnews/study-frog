@@ -80,6 +80,7 @@ pub mod pdf_link_ui;
 pub mod pdf_load;
 pub mod pdf_mark_types;
 pub mod pdf_marks_ui;
+pub mod pdf_names;
 pub mod pdf_select;
 pub mod pdf_types;
 pub mod pdf_ui;

@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Fixed
+- PDFs are named by their file name in the Home card, the stack page, the search results and the viewer's header; the title inside the file is added only when it says something, so files whose title is a placeholder such as "PowerPoint-Präsentation" are told apart (BUG-0009).
 - Enter in the Markdown editor continues a list: the next number, the same bullet or an unchecked box for a task item, at the same indent (in the middle of an item it splits the item); Enter or Backspace on an empty item removes its marker and ends the list (BUG-0007).
 - Bullets, numbers and check boxes in the preview are level with the first line of their item (BUG-0008).
 - The window buttons are anchored to the window's right edge, so the red close button is no longer cut off, and there is a gap between maximise and close (BUG-0005).

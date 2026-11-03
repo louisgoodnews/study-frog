@@ -49,14 +49,26 @@
   - **STORY-0078** Imports that explain themselves
     - TASK-0208 CSV import with column mapping
     - TASK-0209 Tell the user which layouts and formats the importers read
+- **EPIC-027** Appearance and UI settings (asked for by the owner on 2026-11-03)
+  - **STORY-0080** Dark, light and system theme
+    - TASK-0221 Specify the appearance and UI settings
+    - TASK-0222 Choose the theme (dark, light or follow the system)
+    - TASK-0226 Make every screen right in both themes
+  - **STORY-0081** Display and window settings
+    - TASK-0223 Appearance tab in Settings
+    - TASK-0224 Interface size and density
+    - TASK-0225 Accent colour, high contrast and reduced motion
+    - TASK-0227 Start-up and window settings
+- **BUG-0009** PDF lists show a placeholder title instead of the file name (done)
 
 ## Priority order
 Proposed by Claude on 2026-11-03; the owner may reorder.
 
 1. **Small and painful now:** BUG-0007, BUG-0008, TASK-0199, TASK-0200 and TASK-0201 (writing and saving), TASK-0209 (say what imports expect).
 2. **Next:** TASK-0208 (CSV mapping, with all problems at once), TASK-0205 and TASK-0206 (prompts that hand-hold an AI, and copying them), TASK-0197, TASK-0215 and TASK-0216 (tables, underline and colour, table of contents), TASK-0198 (macros), TASK-0214 (code highlighting), TASK-0207 (prompts through the assistant).
-3. **Larger, decide first:** TASK-0210 (the ADR on stack folders and references) before anything else in this wave; then TASK-0211 to TASK-0213, TASK-0217, TASK-0218, TASK-0219 and TASK-0220 (the model change; vault files need no migration, the database does), TASK-0202, TASK-0203 and TASK-0204 (folders and items views), TASK-0195 (the remaining screens). The reference part is modest, but the owner's per-stack schedule (TASK-0218 and TASK-0219) changes how reviews and schedules are stored and queued: the owner should decide after the ADR whether that part stays in 0.4.0 or moves to 0.5.0, with the references and the stack mark shipping first.
-4. **The diary:** TASK-0170 first (the specification), then TASK-0171, TASK-0172, TASK-0173 and TASK-0174 in order.
+3. **Appearance (EPIC-027):** TASK-0221 (the spec), then TASK-0222 (the theme choice, small and visible) and TASK-0226 (both themes right), then TASK-0223 to TASK-0225 and TASK-0227.
+4. **Larger, decide first:** TASK-0210 (the ADR on stack folders and references) before anything else in this wave; then TASK-0211 to TASK-0213, TASK-0217, TASK-0218, TASK-0219 and TASK-0220 (the model change; vault files need no migration, the database does), TASK-0202, TASK-0203 and TASK-0204 (folders and items views), TASK-0195 (the remaining screens). The reference part is modest, but the owner's per-stack schedule (TASK-0218 and TASK-0219) changes how reviews and schedules are stored and queued: the owner should decide after the ADR whether that part stays in 0.4.0 or moves to 0.5.0, with the references and the stack mark shipping first.
+5. **The diary:** TASK-0170 first (the specification), then TASK-0171, TASK-0172, TASK-0173 and TASK-0174 in order.
 
 Dependencies: TASK-0205 and TASK-0208 use the layouts of TASK-0209; TASK-0201 needs TASK-0200; TASK-0198 needs the syntax of TASK-0197, TASK-0214, TASK-0215 and TASK-0216; TASK-0211 to TASK-0213, TASK-0217, TASK-0218 and TASK-0219 need TASK-0210 and follow each other in order (TASK-0218 and TASK-0219 need TASK-0212); TASK-0202 needs TASK-0210; TASK-0203 and TASK-0204 need TASK-0202, TASK-0211 and TASK-0217.
 

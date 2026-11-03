@@ -115,7 +115,7 @@ fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if ui.button("Back to library").clicked() {
             msg(out, PdfMsg::Close);
         }
-        ui.label(RichText::new(&view.title).strong());
+        ui.label(RichText::new(crate::pdf_names::label(&view.path, &view.title)).strong());
         ui.separator();
         navigation(view, ui, out);
         ui.separator();

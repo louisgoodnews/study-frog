@@ -130,9 +130,10 @@ pub fn search_results(state: &State, ui: &mut egui::Ui, field: Rect, out: &mut V
 /// PDFs and pages that match the search, under the items.
 fn pdf_hits(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     for hit in &state.chrome.pdf_results {
+        let name = crate::pdf_names::label(&hit.path, &hit.title);
         let label = match hit.page {
-            Some(p) => format!("PDF · {} · page {p}\n{}", hit.title, hit.snippet),
-            None => format!("PDF · {}", hit.title),
+            Some(p) => format!("PDF · {name} · page {p}\n{}", hit.snippet),
+            None => format!("PDF · {name}"),
         };
         if ui.button(label).clicked() {
             let page = hit.page.map_or(0, |p| p - 1);

@@ -42,6 +42,7 @@ Proposed by Claude on 2026-11-03 after the owner's test of 0.3.1; the owner may 
 [M11-diary](docs/roadmap/M11-diary.md).
 
 **Wave 1: small and painful now**
+- [x] BUG-0009 PDF lists name the file (done)
 - [x] 1. BUG-0007 Enter in a list does not continue it, BUG-0008 Bullets sit higher than their text
 - [ ] 2. TASK-0199 Open the new item from its "created" notification
 - [ ] 3. TASK-0200 Auto-save token by token (on a whitespace, at the latest after 5 seconds) and no Save button, then TASK-0201 "Saved" toast when leaving the editor
@@ -52,6 +53,7 @@ Proposed by Claude on 2026-11-03 after the owner's test of 0.3.1; the owner may 
 - [ ] 6. TASK-0205 Write the standard prompts (they hand-hold an AI to files StudyFrog reads), TASK-0206 Prompts screen (copy and export)
 - [ ] 7. TASK-0197 Tables, TASK-0215 Underline and colour, TASK-0216 Table of contents, TASK-0198 Text macros, TASK-0214 Code highlighting
 - [ ] 8. TASK-0207 Run a prompt with the assistant
+- [ ] 8b. EPIC-027 Appearance: TASK-0221 (spec), TASK-0222 (dark, light or system), TASK-0226 (both themes right), then TASK-0223 to TASK-0225 and TASK-0227
 
 **Wave 3: larger, specify first**
 - [ ] 9. TASK-0210 Decide the stack folder and reference rules (ADR; the owner: a folder can be marked as a stack, an item can be referenced by several stacks)
