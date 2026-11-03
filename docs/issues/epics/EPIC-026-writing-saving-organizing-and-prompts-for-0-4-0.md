@@ -7,7 +7,7 @@ parents: []
 labels: [m11, ui]
 acceptance_criteria:
   - "Writing in the Markdown editor is quicker and nothing is lost: lists continue, tables and macros exist, edits are saved by themselves"
-  - "The vault can be organized as folders and files apart from the item view"
+  - "The vault can be organized as folders and files apart from the item view, and a stack is a file that points to its contents"
   - "The user can copy or export ready-made prompts for AI agents, and imports say which layouts and formats they read"
 ---
 
@@ -19,11 +19,11 @@ Make writing and organizing in StudyFrog smoother and let the user bring in mate
 
 ## Acceptance Criteria
 - [ ] Writing in the Markdown editor is quicker and nothing is lost: lists continue, tables and macros exist, edits are saved by themselves
-- [ ] The vault can be organized as folders and files apart from the item view
+- [ ] The vault can be organized as folders and files apart from the item view, and a stack is a file that points to its contents
 - [ ] The user can copy or export ready-made prompts for AI agents, and imports say which layouts and formats they read
 
 ## Design Notes
-Stories STORY-0074 to STORY-0077 and BUG-0007 and BUG-0008. Release target: 0.4.0 together with EPIC-024 (diary, calmer screens). The order proposed by Claude is in `priority-list.md`; the owner may reorder.
+Stories STORY-0074 to STORY-0079 and BUG-0007 and BUG-0008. Release target: 0.4.0 together with EPIC-024 (diary, calmer screens). The order proposed by Claude is in `priority-list.md`; the owner may reorder.
 
 ## Dependencies
 None.

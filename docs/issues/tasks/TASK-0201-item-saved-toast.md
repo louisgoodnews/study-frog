@@ -1,34 +1,34 @@
 ---
 id: TASK-0201
 type: task
-title: Item saved toast
+title: Item saved toast when leaving the editor
 status: backlog
 epic: EPIC-026
 parents: [STORY-0075]
 estimate: 2
 labels: [m11, ui]
 acceptance_criteria:
-  - "A toast says that the item was saved after every save, replaces the one before it and goes away by itself after about two seconds"
-  - "It does not add an entry to the notification list for every auto-save"
-  - "A failed save raises an error notice that stays"
+  - "Leaving the editor after at least one save shows a toast 'Saved <title>' that goes away by itself after about three seconds"
+  - "No toast appears for each auto-save while the user is editing, and none when nothing was saved"
+  - "A failed save raises an error notice that stays until dismissed"
 ---
 
 ## Context
-The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0: a better Markdown editor, saving and creating, organizing the vault, prompts for AI agents and clearer imports.
+The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0: a better Markdown editor, saving and creating, organizing the vault, prompts for AI agents and clearer imports. The owner answered the open questions the same day (recorded below).
 
 ## Description
-The user wants to see that their work was saved.
+The user wants to see that their work was saved without being told after every word.
 
 ## Acceptance Criteria
-- [ ] A toast says that the item was saved after every save, replaces the one before it and goes away by itself after about two seconds
-- [ ] It does not add an entry to the notification list for every auto-save
-- [ ] A failed save raises an error notice that stays
+- [ ] Leaving the editor after at least one save shows a toast 'Saved <title>' that goes away by itself after about three seconds
+- [ ] No toast appears for each auto-save while the user is editing, and none when nothing was saved
+- [ ] A failed save raises an error notice that stays until dismissed
 
 ## Design Notes
-Toasts today stay until dismissed; add an optional lifetime to `Toast` and let the update drop it when `State.now` passes it. Whether saves go to the list at all is open.
+Owner's answer (2026-11-03): a toast on every auto-save is too noisy; perhaps one when leaving the edit view. The editor counts the saves of the visit; leaving (back, another screen, another item, exit) raises the toast. Toasts today stay until dismissed; give `Toast` an optional lifetime that the update drops when `State.now` passes it.
 
 ## Dependencies
 TASK-0200.
 
 ## Open Questions
-One toast for every auto-save may be noisy while typing; should the first save of a session show it and the rest only a small 'Saved' mark in the editor's header?
+None.

@@ -23,7 +23,7 @@ Offer two views of the same vault: the folders and files as they are on disk, an
 - [ ] An Items view shows the items as they are, as now, and the two views are told apart in the navigation
 
 ## Design Notes
-Tasks TASK-0202 to TASK-0204.
+Tasks TASK-0202 to TASK-0204. Depends on STORY-0079: the owner decided on 2026-11-03 that folders are only folders and a stack is a file that points to its contents.
 
 ## Dependencies
 None.

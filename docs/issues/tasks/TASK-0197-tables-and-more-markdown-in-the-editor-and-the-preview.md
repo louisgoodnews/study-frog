@@ -8,27 +8,29 @@ parents: [STORY-0074]
 estimate: 5
 labels: [m11, ui, md]
 acceptance_criteria:
-  - "The parser reads pipe tables (with alignment) and the preview draws them with a header row"
-  - "The toolbar has a Table button that inserts a table"
-  - "The list of other features chosen with the owner (see the open question) works in both the editor and the preview, and round-trips through save"
+  - "The parser reads pipe tables (with column alignment) and the preview draws them with a header row"
+  - "The toolbar has a Table button, and buttons for strikethrough, underline and text colour next to bold and italic"
+  - "Bold, italic, strikethrough, quotes (also nested) and inline images keep working and are checked in the preview and in the cards of a run"
+  - "Everything round-trips through save: the file stays readable in other Markdown tools"
 ---
 
 ## Context
-The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0: a better Markdown editor, saving and creating, organizing the vault, prompts for AI agents and clearer imports.
+The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0: a better Markdown editor, saving and creating, organizing the vault, prompts for AI agents and clearer imports. The owner answered the open questions the same day (recorded below).
 
 ## Description
-Add tables and further CommonMark and GitHub-flavoured features to `studyfrog-md` blocks and to the preview, so a card or a note can hold them.
+Tables are missing and the toolbar lacks some formatting the owner wants. Owner's list (2026-11-03): tables, italic, bold, underline, overstrike (strikethrough), text colour, code with specific languages, quotes, inline images, an automatic table of contents.
 
 ## Acceptance Criteria
-- [ ] The parser reads pipe tables (with alignment) and the preview draws them with a header row
-- [ ] The toolbar has a Table button that inserts a table
-- [ ] The list of other features chosen with the owner (see the open question) works in both the editor and the preview, and round-trips through save
+- [ ] The parser reads pipe tables (with column alignment) and the preview draws them with a header row
+- [ ] The toolbar has a Table button, and buttons for strikethrough, underline and text colour next to bold and italic
+- [ ] Bold, italic, strikethrough, quotes (also nested) and inline images keep working and are checked in the preview and in the cards of a run
+- [ ] Everything round-trips through save: the file stays readable in other Markdown tools
 
 ## Design Notes
-A `Block::Table` with a header, alignments and rows in `studyfrog-md`; the renderer uses a grid with the theme's spacing; unknown Markdown is kept verbatim as now. Cards in a rehearsal show tables too.
+Already there: bold, italic, code, quote, links, wikilinks, rule and pictures (`md_edit.rs`, `blocks.rs`), strikethrough in the preview but not on the toolbar. New: `Block::Table` (header, alignments, rows) in `studyfrog-md`, drawn as a grid; the toolbar buttons. Underline and colour are not Markdown: write them as the small HTML a reader of the file can still understand (`<u>text</u>` and `<span style="color:#c0392b">text</span>`), accept only that whitelist and show anything else as text. Code blocks with languages are TASK-0214, the table of contents TASK-0216, underline and colour details TASK-0215. Inline images exist (`![alt](path)` and the Picture button); see the question.
 
 ## Dependencies
 None.
 
 ## Open Questions
-Which "etc." does the owner want besides tables: nested lists, footnotes, definition lists, task lists with nesting, highlighted code blocks, math, callouts, a table of contents?
+Inline images are there today. What is missing: pasting from the clipboard, a width, alignment, a caption?

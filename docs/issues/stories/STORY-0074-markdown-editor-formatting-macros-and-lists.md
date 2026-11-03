@@ -10,6 +10,7 @@ labels: [m11, ui, md]
 acceptance_criteria:
   - "Tables can be written, previewed and inserted from the toolbar"
   - "Typing a macro such as {table} or {table:2x2} inserts its Markdown"
+  - "Code blocks are highlighted by language, text can be underlined and coloured, and a note can show an automatic table of contents"
   - "Enter continues a list and the markers sit level with their text"
 ---
 
@@ -22,10 +23,11 @@ Make the Markdown editor and its preview complete enough that the user does not 
 ## Acceptance Criteria
 - [ ] Tables can be written, previewed and inserted from the toolbar
 - [ ] Typing a macro such as {table} or {table:2x2} inserts its Markdown
+- [ ] Code blocks are highlighted by language, text can be underlined and coloured, and a note can show an automatic table of contents
 - [ ] Enter continues a list and the markers sit level with their text
 
 ## Design Notes
-Tasks TASK-0197 and TASK-0198, bugs BUG-0007 and BUG-0008.
+Tasks TASK-0197, TASK-0198, TASK-0214, TASK-0215 and TASK-0216, bugs BUG-0007 and BUG-0008.
 
 ## Dependencies
 None.
