@@ -132,7 +132,14 @@ fn problems(conn: &Connection) -> Result<Vec<Problem>, StoreError> {
             })
         })
         .map_err(sql_err)?;
-    rows.collect::<Result<_, _>>().map_err(sql_err)
+    let mut all: Vec<Problem> = rows.collect::<Result<_, _>>().map_err(sql_err)?;
+    let refs = crate::refs_index::reference_problems(conn)?;
+    all.extend(
+        refs.into_iter()
+            .map(|(path, message)| Problem { path, message }),
+    );
+    all.sort_by(|a, b| a.path.cmp(&b.path));
+    Ok(all)
 }
 
 /// Read the overview from the index.

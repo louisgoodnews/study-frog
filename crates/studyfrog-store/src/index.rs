@@ -174,6 +174,7 @@ fn write_item(
         ],
     )?;
     write_tags(tx, &uid, &meta.tags)?;
+    crate::refs_index::write_refs(tx, &uid, doc)?;
     if matches!(doc, Doc::Stack(_)) {
         run(
             tx,

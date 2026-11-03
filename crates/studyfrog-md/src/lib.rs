@@ -20,6 +20,7 @@ pub mod links;
 pub mod names;
 pub mod parse;
 pub mod raw;
+pub mod refs;
 pub mod render;
 pub mod rfc3339;
 pub mod sections;

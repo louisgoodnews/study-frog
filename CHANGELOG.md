@@ -21,6 +21,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The Markdown editor's code is split into a module of small files (`view/md_editor/`: toolbar, resizing, preview cache, list keys).
 
 ### Added
+- An item can say which other stacks reference it (`referenced_by`, a list of stack ids in its front matter); the index has a table and a view of which items belong to which stack, and the vault check reports a reference to a stack that does not exist, to the item's own stack or listed twice. Vaults without the key read as before (TASK-0211).
 - Run a standard prompt through the connected assistant: choose a prompt and a text file, read exactly what would be sent, press Send, read the answer and import its CSV through the preview; if the preview finds problems, "Ask the assistant to fix these" prepares a message with those rows, sent only after Send (TASK-0207).
 - Code blocks with a language (python, r, rust, php, java, cpp, c, toml, json, html, xml, csv, tsv) are coloured: keywords, strings, comments and numbers, in colours that read well in both themes; other languages are drawn plain (TASK-0214).
 - Text macros: `{table}`, `{table:3x4}`, `{toc}`, `{code}`, `{code:python}`, `{quote}`, `{image}` and `{color:red}` turn into Markdown when the closing brace is typed; the `{ }` button in the toolbar lists them (TASK-0198).

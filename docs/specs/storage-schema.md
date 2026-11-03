@@ -114,3 +114,13 @@ turns runs left idle, running or paused into `aborted` and closes their log with
 - `review.answer_ms`, `review.expected_ms` and `item_view.expected_ms` (version 17): how long the answer was on screen before a rating (paused time left out) and how long its words
   should take to read at the user's speed, and the reading time of the text that was viewed; `NULL` for reviews and views from before. Familiarity uses them.
 - `item.body` (version 18): the text of each item (front and back, or the body), for the library's text search. The migration marks every file so the next scan reads and indexes it again.
+
+## Schema v20: items referenced by several stacks (TASK-0211, ADR 0011)
+- `item_ref(item_uid, stack_uid, times)` holds what an item's `referenced_by` says, as written (`times` counts an id
+  listed twice). It cascades with its item and is rebuilt with the file. Stacks reference nothing.
+- The view `membership(stack_uid, item_uid, is_primary)` is what the services read: an item belongs to its primary stack
+  (the stack whose folder, or an ancestor folder, holds the file; `stack_identity.folder = item.stack_path`) and to every
+  **existing** stack in its `item_ref` rows, unless that is its primary stack. Loose items (the Inbox) are in no stack.
+- Vault problems for references are computed from `item_ref` (`refs_index::reference_problems`): a stack that does not
+  exist, the item's own primary stack, a stack listed twice. They appear in the vault overview with the other problems.
+- The migration marks every file to be read again once, so the table fills on the next scan.
