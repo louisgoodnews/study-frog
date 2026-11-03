@@ -3,6 +3,7 @@
 pub mod achievements;
 pub mod agent;
 pub mod agent_apply;
+pub mod agent_help;
 pub mod agent_pdf;
 pub mod agent_vault;
 pub mod attention;
@@ -25,6 +26,9 @@ pub mod fam_stacks;
 pub mod familiarity;
 pub mod filters;
 pub mod goals;
+pub mod help;
+mod help_pages;
+pub mod help_user;
 pub mod home;
 pub mod images;
 pub mod import;

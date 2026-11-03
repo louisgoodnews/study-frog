@@ -64,6 +64,7 @@ pub fn info() -> VaultInfo {
 
 pub fn open_model() -> Model {
     let mut m = Model::default();
+    m.state.app.tutorial_offered = true; // the first-run offer has its own tests
     apply(&mut m, Msg::VaultOpened(Ok(info())));
     apply(&mut m, Msg::Navigate(studyfrog_ui::state::Screen::Library));
     m

@@ -3,10 +3,10 @@ id: TASK-0170
 type: task
 title: Specify the diary
 status: backlog
-epic: EPIC-023
+epic: EPIC-024
 parents: [STORY-0068]
 estimate: 2
-labels: [m10, docs, decision]
+labels: [m11, docs, decision]
 acceptance_criteria:
   - "docs/specs/diary.md defines the file format, the full set of rating scales and their wording, user-defined scales, the links and the prompt after a run"
   - "The owner has accepted the wording of the scales"

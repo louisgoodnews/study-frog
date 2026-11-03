@@ -129,6 +129,7 @@ fn app_settings_round_trip_awkward_paths_and_track_recent_vaults() {
         library_columns: Some("title,status,due".into()),
         calendar_reviews_off: true,
         stack_tabs: vec!["french:list".into(), "a/b:summary".into()],
+        tutorial_offered: true,
     };
     assert_eq!(parse_app_settings(&render_app_settings(&s)), Ok(s));
     assert_eq!(parse_app_settings("").unwrap(), AppSettings::default());
@@ -154,7 +155,7 @@ fn app_settings_round_trip_awkward_paths_and_track_recent_vaults() {
 proptest! {
     #[test]
     fn any_vault_path_round_trips(path in "\\PC{0,40}") {
-        let s = AppSettings { vault: Some(path.clone()), recent: vec![path], reading_wpm: None, answer_engine: Default::default(), reading: Default::default(), settings_tab: None, views_untracked: false, library_columns: None, calendar_reviews_off: false, stack_tabs: Vec::new(), };
+        let s = AppSettings { vault: Some(path.clone()), recent: vec![path], reading_wpm: None, answer_engine: Default::default(), reading: Default::default(), settings_tab: None, views_untracked: false, library_columns: None, calendar_reviews_off: false, stack_tabs: Vec::new(), tutorial_offered: false, };
         prop_assert_eq!(parse_app_settings(&render_app_settings(&s)), Ok(s));
     }
 }

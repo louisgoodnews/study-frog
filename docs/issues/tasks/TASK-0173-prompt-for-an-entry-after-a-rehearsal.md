@@ -3,10 +3,10 @@ id: TASK-0173
 type: task
 title: Prompt for an entry after a rehearsal
 status: backlog
-epic: EPIC-023
+epic: EPIC-024
 parents: [STORY-0068]
 estimate: 2
-labels: [m10, ui, rehearsal]
+labels: [m11, ui, rehearsal]
 acceptance_criteria:
   - "The run summary offers a short entry form with the ratings, skippable with one key, and the entry links to the run"
   - "Skipping never blocks or delays leaving the summary"

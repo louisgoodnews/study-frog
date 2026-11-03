@@ -67,7 +67,7 @@ issue view are the visual reference for the library, the stack overview and the 
     - TASK-0167 Anki importer
     - TASK-0168 Obsidian vault importer
     - TASK-0169 Document how to write a format adapter
-  - **STORY-0068** Diary for self-reported progress
+  - **STORY-0068** Diary for self-reported progress (moved to EPIC-024, phase M11, on 2026-11-03)
     - TASK-0170 Specify the diary
     - TASK-0171 Diary entries in the data model, Markdown and index
     - TASK-0172 Diary screen
@@ -143,4 +143,7 @@ for names with commas (a proposal in BUG-0001).
 - The app has a help area with the vision, a FAQ and tutorials, a first-run tutorial and the user's own pages, which the assistant can propose edits to
 - Runs can be set up as a countdown or a count up, and the review shows the mode and the time used
 - BUG-0001 is fixed
-- The diary records self-reported progress and a report sets it against measured results
+- ~~The diary records self-reported progress and a report sets it against measured results~~: moved to M11 (0.4.0) on
+  2026-11-03, when the owner chose to release 0.3.0 without it.
+
+**Status:** done; released as 0.3.0 on 2026-11-03 (notes in `docs/RELEASE_NOTES_0.3.0.md`).

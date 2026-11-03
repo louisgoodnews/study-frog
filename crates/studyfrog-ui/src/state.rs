@@ -47,6 +47,8 @@ pub enum Screen {
     Reports,
     /// A PDF file open for reading.
     Pdf,
+    /// The help pages.
+    Help,
 }
 
 /// Severity of a notice.
@@ -156,6 +158,8 @@ pub struct State {
     pub graph: Option<GraphState>,
     /// The calendar.
     pub planner: Planner,
+    /// The help screen.
+    pub help: crate::help_types::HelpState,
     /// The import and export dialog.
     pub transfer: crate::transfer_ui::TransferState,
     /// The kanban board.

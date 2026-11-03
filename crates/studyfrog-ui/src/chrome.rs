@@ -34,8 +34,6 @@ pub enum Menu {
     Vaults,
     /// Recent notices.
     Notifications,
-    /// Shortcuts and where things are.
-    Help,
     /// About, and closing the vault.
     Profile,
 }

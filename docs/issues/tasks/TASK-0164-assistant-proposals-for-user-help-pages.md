@@ -2,7 +2,7 @@
 id: TASK-0164
 type: task
 title: Assistant proposals for user help pages
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0066]
 estimate: 3
@@ -20,9 +20,9 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Extend the assistant's proposal changes to wiki pages and add the links.
 
 ## Acceptance Criteria
-- [ ] The assistant can read the user's help pages (shown first, sent only after Send, as for PDF pages) and propose a new page or an edit
-- [ ] A proposal changes nothing until the user confirms it, and supplied pages are never offered for change
-- [ ] The help area links to the assistant screen and back
+- [x] The assistant can read the user's help pages (shown first, sent only after Send, as for PDF pages) and propose a new page or an edit
+- [x] A proposal changes nothing until the user confirms it, and supplied pages are never offered for change
+- [x] The help area links to the assistant screen and back
 
 ## Design Notes
 None.

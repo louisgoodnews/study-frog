@@ -5,7 +5,8 @@ The order in which Claude works on the planned items of phase M10 (0.3.0), kept 
 [docs/roadmap/M10-usability-and-insight.md](docs/roadmap/M10-usability-and-insight.md). Tick an item when it is done and
 verified (`scripts/check.sh` passes), and report it to the owner. The owner may reorder the list at any time.
 
-Last updated: 2026-11-02.
+Last updated: 2026-11-03. Phase M10 was released as 0.3.0 on 2026-11-03; the diary (item 20) moved to phase M11 (0.4.0) at the
+owner's request and is listed under Next.
 
 ## Wave 1: start now
 - [x] 1. [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Names with commas cannot be used
@@ -32,6 +33,9 @@ Last updated: 2026-11-02.
 - [x] 16. TASK-0152 to TASK-0156 Stack sub-views
 - [x] 17. TASK-0181 and TASK-0182 Rehearsal mode screens and reports
 - [x] 18. TASK-0157 to TASK-0160 Import and export, then TASK-0167 to TASK-0169 Anki and Obsidian
-- [ ] 19. TASK-0161 to TASK-0166 Help: wiki, FAQ, tutorials
-- [ ] 20. TASK-0170 to TASK-0174 Diary
+- [x] 19. TASK-0161 to TASK-0166 Help: wiki, FAQ, tutorials
+- [ ] 20. ~~TASK-0170 to TASK-0174 Diary~~ moved to 0.4.0 (see below)
 - [x] 21. TASK-0185 to TASK-0187 Create dialog like Jira and defaults for new items
+
+## Next: phase M11 (0.4.0)
+- [ ] 1. TASK-0170 to TASK-0174 Diary ([M11-diary](docs/roadmap/M11-diary.md))

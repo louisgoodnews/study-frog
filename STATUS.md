@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M0 to M9 complete; released 0.2.0 (PDF support). **Date:** 2026-10-31. **Branch:** `main`.
+**Phase:** M0 to M10 complete; released 0.3.0 (usability and insight). **Date:** 2026-11-03. **Branch:** `main`.
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
@@ -56,7 +56,8 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   unverified from memory. No git remote is configured.
 
 ## Next
-- **Active (0.3.0 wave 3):** library (item 12) and the calendar planner (item 13) are done; the Create dialog redesign and item defaults (item 21) are done; item 14 (familiarity in queues, Home, reports and the replay) is done; item 15 (stack overview: Summary and List tabs) is done; item 16 (the stack tabs Backlog, Roadmap, Board, Calendar, Reports, Sub-stacks, Goals) is done; item 17 (rehearsal modes: countdown and count up in setup, on the screen and in the reports) is done; item 18 (import and export, Anki and Obsidian importers) is done; next is item 19, help: wiki, FAQ and tutorials (TASK-0161 to TASK-0166).
+- **0.3.0 (phase M10) is complete** except the diary, which the owner moved to 0.4.0 (phase M11, EPIC-024) on 2026-11-03. Item 19 (help: wiki, FAQ, tutorials, own pages, assistant proposals) is done. **Next:** TASK-0170, specify the diary (`docs/roadmap/M11-diary.md`).
+- **Open flag:** the help outline (`docs/help/README.md`, TASK-0161) shipped at the owner's release instruction without a separate review of the outline; the help screen and tutorial card were tested headless only.
 - **0.3.0 is planned** (phase M10, EPIC-023, `docs/roadmap/M10-usability-and-insight.md`): 15 stories and one bug (BUG-0001, commas in teacher names), all in backlog.
   The owner answered the open design questions on 2026-11-02 (accepted choices are listed in the phase file); what is still
   open is in each story's Open Questions. The familiarity and FSRS model is researched and decided (`docs/research/familiarity-and-fsrs.md`: relative factor, on from the start).

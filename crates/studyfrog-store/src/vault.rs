@@ -19,8 +19,11 @@ pub struct VaultFile {
     pub mtime_ns: i64,
 }
 
-/// Every `.md` file under `root`, sorted by relative path. Hidden entries (leading `.`) and
-/// symlinks are skipped.
+/// The folder at the vault root that holds the user's help pages. Its Markdown files are not items.
+pub const WIKI_DIR: &str = "wiki";
+
+/// Every `.md` file under `root`, sorted by relative path. Hidden entries (leading `.`), symlinks
+/// and the help pages in [`WIKI_DIR`] are skipped.
 pub fn list_markdown(root: &Path) -> Result<Vec<VaultFile>, StoreError> {
     list_files(root, "md")
 }
@@ -56,7 +59,7 @@ fn visit(
         return Ok(());
     }
     let kind = entry.file_type().map_err(|e| io_err(&path, &e))?;
-    if kind.is_dir() {
+    if kind.is_dir() && !(ext == "md" && path == root.join(WIKI_DIR)) {
         return walk(root, &path, ext, found);
     }
     if kind.is_file()

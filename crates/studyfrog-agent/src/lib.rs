@@ -7,4 +7,5 @@ pub mod exam;
 pub mod provider;
 pub mod settings;
 pub mod wiki;
+pub mod wiki_pages;
 pub mod wire;

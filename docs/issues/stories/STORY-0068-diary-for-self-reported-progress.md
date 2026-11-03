@@ -3,10 +3,10 @@ id: STORY-0068
 type: story
 title: Diary for self-reported progress
 status: backlog
-epic: EPIC-023
-parents: [EPIC-023]
+epic: EPIC-024
+parents: [EPIC-024]
 estimate: 8
-labels: [m10, ui, core, md, report]
+labels: [m11, ui, core, md, report]
 acceptance_criteria:
   - "The user can write diary entries with ratings of performance, success, confidence, effort, focus, mood, stress, energy, motivation, understanding, satisfaction and sleep and free text, and link them to stacks, items, runs and exams"
   - "Entries are Markdown files in the vault, listed by day and searchable"

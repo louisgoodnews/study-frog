@@ -3,10 +3,10 @@ id: TASK-0174
 type: task
 title: Self-assessment against measured results
 status: backlog
-epic: EPIC-023
+epic: EPIC-024
 parents: [STORY-0068]
 estimate: 3
-labels: [m10, report, ui]
+labels: [m11, report, ui]
 acceptance_criteria:
   - "A report shows self-rated performance next to accuracy and familiarity over time and says how many entries it uses"
   - "A test on a simulated history shows the calibration measure is computed correctly"

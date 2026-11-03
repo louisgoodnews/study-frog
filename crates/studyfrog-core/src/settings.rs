@@ -117,6 +117,8 @@ pub struct AppSettings {
     pub calendar_reviews_off: bool,
     /// The tab each stack was last left on, as `folder:tab` (at most [`MAX_STACK_TABS`]).
     pub stack_tabs: Vec<String>,
+    /// The first-run tutorial has been offered (it is offered once).
+    pub tutorial_offered: bool,
 }
 
 /// Most stacks whose tab is remembered.

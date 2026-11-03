@@ -3,10 +3,10 @@ id: TASK-0172
 type: task
 title: Diary screen
 status: backlog
-epic: EPIC-023
+epic: EPIC-024
 parents: [STORY-0068]
 estimate: 5
-labels: [m10, ui]
+labels: [m11, ui]
 acceptance_criteria:
   - "The screen lists entries by day with a month view, filters by stack and rating, edits an entry in the Markdown editor, and Settings chooses which rating scales the form shows and defines new ones"
   - "Home can show a quiet 'no entry yet today' hint that Settings switches off"

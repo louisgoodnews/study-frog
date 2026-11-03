@@ -1,6 +1,6 @@
 # Roadmap
 
-Phases M0 to M10. Each phase has entry criteria, an epic breakdown (every epic has at least one story, every story at least one task) and **exit criteria**: what must be demonstrably working. Issue files for a phase are created when it becomes next (M0 seeded now); until then the tree below is the plan of record.
+Phases M0 to M11. Each phase has entry criteria, an epic breakdown (every epic has at least one story, every story at least one task) and **exit criteria**: what must be demonstrably working. Issue files for a phase are created when it becomes next (M0 seeded now); until then the tree below is the plan of record.
 
 | Phase | Name | Epics | Detail |
 |---|---|---|---|
@@ -14,7 +14,8 @@ Phases M0 to M10. Each phase has entry criteria, an epic breakdown (every epic h
 | M7 | Achievements and reporting | EPIC-014, EPIC-015 | [M7-achievements-and-reporting](M7-achievements-and-reporting.md) |
 | M8 | Extensibility and plugin boundaries | EPIC-016, EPIC-017 | [M8-extensibility-and-plugin-boundaries](M8-extensibility-and-plugin-boundaries.md) |
 | M9 | Documents (PDF) | EPIC-022 | [M9-documents](M9-documents.md) |
-| M10 | Usability and insight (0.3.0) | EPIC-023 | [M10-usability-and-insight](M10-usability-and-insight.md) (priority order inside) |
+| M10 | Usability and insight (0.3.0, released 2026-11-03) | EPIC-023 | [M10-usability-and-insight](M10-usability-and-insight.md) (priority order inside) |
+| M11 | Diary (0.4.0) | EPIC-024 | [M11-diary](M11-diary.md) |
 
 ## M0 Bootstrap
 
@@ -284,3 +285,7 @@ See [M9-documents](M9-documents.md): EPIC-022, STORY-0054 and TASK-0109 to TASK-
 
 ## M10 Usability and insight (0.3.0)
 See [M10-usability-and-insight](M10-usability-and-insight.md), with the priority order in four waves: EPIC-023, STORY-0055 to STORY-0070, BUG-0001 and TASK-0126 to TASK-0184.
+The diary (STORY-0068, TASK-0170 to TASK-0174) moved to M11 on 2026-11-03.
+
+## M11 Diary (0.4.0)
+See [M11-diary](M11-diary.md): EPIC-024, STORY-0068 and TASK-0170 to TASK-0174.

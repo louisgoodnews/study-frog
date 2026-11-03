@@ -156,6 +156,9 @@ fn click_toast(state: State, i: usize) -> (State, Vec<Effect>) {
     match toast.action {
         ToastAction::OpenVaultDialog => state.modal = Some(Modal::Vault),
         ToastAction::OpenCalendar => return crate::nav::navigate(state, Screen::Calendar),
+        ToastAction::StartTutorial => {
+            return crate::tutorial::update(state, crate::tutorial::TutorialMsg::Start);
+        }
     }
     (state, Vec::new())
 }

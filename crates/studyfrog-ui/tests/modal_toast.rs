@@ -74,7 +74,10 @@ fn opening_a_vault_closes_the_dialog_and_clears_the_toasts() {
     apply(
         &mut m,
         Msg::Started {
-            app: AppSettings::default(),
+            app: AppSettings {
+                tutorial_offered: true,
+                ..AppSettings::default()
+            },
             error: None,
         },
     );

@@ -28,6 +28,7 @@ struct RawApp {
     library_columns: Option<String>,
     calendar_reviews: Option<bool>,
     stack_tabs: Option<Vec<String>>,
+    tutorial_offered: Option<bool>,
 }
 
 /// `value` if it is inside `range`, else an error naming the key and its line.
@@ -95,6 +96,7 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
         library_columns: raw.library_columns,
         calendar_reviews_off: raw.calendar_reviews == Some(false),
         stack_tabs: raw.stack_tabs.unwrap_or_default(),
+        tutorial_offered: raw.tutorial_offered == Some(true),
     })
 }
 
@@ -132,6 +134,9 @@ pub fn render_app_settings(s: &AppSettings) -> String {
     if !s.stack_tabs.is_empty() {
         let items: Vec<String> = s.stack_tabs.iter().map(|t| toml_string(t)).collect();
         out.push_str(&format!("stack_tabs = [{}]\n", items.join(", ")));
+    }
+    if s.tutorial_offered {
+        out.push_str("tutorial_offered = true\n");
     }
     if s.calendar_reviews_off {
         out.push_str("calendar_reviews = false\n");

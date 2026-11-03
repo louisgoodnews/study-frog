@@ -23,7 +23,7 @@ const BAR: [&str; 8] = [
     "Search items",
     "+ Create",
     "Notifications",
-    "Help",
+    "Help for this screen (F1)",
     "Application settings",
     "Profile and vault",
 ];
@@ -154,18 +154,14 @@ fn the_vault_switcher_offers_the_other_recent_vaults() {
 }
 
 #[test]
-fn the_help_and_profile_menus_explain_the_keys_and_close_the_vault() {
-    let mut h = harness(open_model());
+fn the_help_button_opens_help_and_the_profile_menu_closes_the_vault() {
+    let mut m = open_model();
+    m.state.toasts.clear();
+    let mut h = harness(m);
     h.run();
-    h.get_by_label("Help").click();
+    h.get_by_label("Help for this screen (F1)").click();
     h.run();
-    for text in [
-        "Keyboard",
-        "show the answer",
-        "rate Again, Hard, Good, Easy",
-    ] {
-        assert!(h.query_by_label(text).is_some(), "missing {text}");
-    }
+    assert_eq!(h.state().0.state.screen, studyfrog_ui::state::Screen::Help);
     h.get_by_label("Profile and vault").click();
     h.run();
     assert!(h.query_by_label_contains("StudyFrog 0.").is_some());

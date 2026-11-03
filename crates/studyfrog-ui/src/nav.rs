@@ -5,7 +5,7 @@ use crate::state::{Screen, State};
 
 /// Go to `screen` if allowed, asking for whatever data it shows.
 pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
-    let allowed = (screen == Screen::Welcome || state.vault.is_some())
+    let allowed = (screen == Screen::Welcome || screen == Screen::Help || state.vault.is_some())
         && (screen == Screen::Editor || !crate::editor::has_unsaved_changes(&state));
     if allowed && screen == Screen::Graph {
         (State { screen, ..state }, vec![Effect::LoadGraph])
@@ -20,8 +20,12 @@ pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
                 crate::pdf_library_ui::load(),
             ],
         )
+    } else if allowed && screen == Screen::Help {
+        let page = crate::help_ui::current(&state.help);
+        crate::help_ui::open_at(state, page)
     } else if allowed && screen == Screen::Agent {
-        (State { screen, ..state }, vec![Effect::LoadAgent])
+        let pages = Effect::Help(crate::help_types::HelpEffect::Load);
+        (State { screen, ..state }, vec![Effect::LoadAgent, pages])
     } else if allowed && screen == Screen::Reports {
         let ask = crate::explorer_ui::refresh(&state);
         (State { screen, ..state }, vec![Effect::BuildReports, ask])

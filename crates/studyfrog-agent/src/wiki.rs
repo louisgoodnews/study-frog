@@ -52,6 +52,20 @@ pub enum Change {
         /// The id of the PDF page it comes from, when the model was given PDF pages.
         source: Option<String>,
     },
+    /// A new help page of the user, in the vault's `wiki/` folder.
+    CreatePage {
+        /// The file name without `.md`.
+        name: String,
+        /// The Markdown.
+        text: String,
+    },
+    /// New text for one of the user's help pages (never a supplied page).
+    UpdatePage {
+        /// The file name without `.md`.
+        name: String,
+        /// The Markdown.
+        text: String,
+    },
     /// New text for parts of an item (`body`, `front`, `back`, `prompt` or `reference`).
     UpdateItem {
         /// The item's id as text.
@@ -95,6 +109,7 @@ pub fn wiki_system() -> String {
      Items with an id that starts with pdf: are pages of a PDF file; when a card or question comes from one, \
      give its id as \"source\". Use only the stack folders and ids that appear in the vault listing."
         .to_owned()
+        + crate::wiki_pages::PAGE_RULES
 }
 
 /// The user turn: what to do, the stacks, and the items.
@@ -121,7 +136,7 @@ pub fn json_in(reply: &str) -> Option<Value> {
         .flatten()
 }
 
-fn text_of(v: &Value, key: &str) -> Option<String> {
+pub(crate) fn text_of(v: &Value, key: &str) -> Option<String> {
     v.get(key)
         .and_then(Value::as_str)
         .map(str::trim)
@@ -129,7 +144,7 @@ fn text_of(v: &Value, key: &str) -> Option<String> {
         .map(str::to_owned)
 }
 
-fn line_of(v: &Value, key: &str) -> Option<String> {
+pub(crate) fn line_of(v: &Value, key: &str) -> Option<String> {
     text_of(v, key).filter(|s| s.chars().count() <= 200 && !s.chars().any(char::is_control))
 }
 
@@ -187,6 +202,7 @@ fn change_of(v: &Value, uids: &[String], stacks: &[String]) -> Result<Change, St
             }
             Ok(Change::UpdateItem { uid, fields })
         }
+        "create_page" | "update_page" => crate::wiki_pages::page_change(action, v, uids),
         other => Err(format!("an unknown action \"{other}\"")),
     }
 }

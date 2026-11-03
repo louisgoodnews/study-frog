@@ -17,7 +17,10 @@ pub(crate) fn prepared(
     ctx: Result<Box<studyfrog_service::agent_vault::WikiContext>, String>,
 ) -> (State, Vec<Effect>) {
     let ctx = match ctx {
-        Ok(c) => c,
+        Ok(c) if state.agent.help_pages => {
+            studyfrog_service::agent_help::with_help_pages(*c, &state.help.user)
+        }
+        Ok(c) => *c,
         Err(e) => return fail(state, e),
     };
     let pending = Pending {

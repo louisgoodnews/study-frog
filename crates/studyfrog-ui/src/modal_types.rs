@@ -89,6 +89,8 @@ pub enum ToastAction {
     OpenVaultDialog,
     /// Open the calendar.
     OpenCalendar,
+    /// Start the first-run tutorial.
+    StartTutorial,
 }
 
 /// What a create request produced.

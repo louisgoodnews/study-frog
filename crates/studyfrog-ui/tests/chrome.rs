@@ -48,13 +48,13 @@ fn one_menu_is_open_at_a_time_and_opening_the_bell_marks_notices_seen() {
     let mut m = open_model();
     chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Profile));
     assert_eq!(m.state.chrome.menu, Some(Menu::Profile));
-    chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Help));
+    chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Vaults));
     assert_eq!(
         m.state.chrome.menu,
-        Some(Menu::Help),
+        Some(Menu::Vaults),
         "another menu replaces it"
     );
-    chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Help));
+    chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Vaults));
     assert_eq!(m.state.chrome.menu, None, "the same button closes it");
     chrome(&mut m, ChromeMsg::ToggleMenu(Menu::Profile));
     chrome(&mut m, ChromeMsg::CloseMenu);

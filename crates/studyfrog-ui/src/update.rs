@@ -130,6 +130,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::SettingsTab(m) => crate::app_settings_ui::update(state, m),
         Msg::Activity => crate::view_time::activity(state),
         Msg::Library(m) => crate::library_ui::update(state, m),
+        Msg::Help(m) => crate::help_ui::update(state, m),
         Msg::SetTrackViews(on) => crate::app_settings_ui::set_track_views(state, on),
         run @ (Msg::StartRunClicked
         | Msg::RunReady(_)
@@ -211,22 +212,22 @@ fn vault_opened(state: State, result: Result<VaultInfo, String>) -> (State, Vec<
     match result {
         Ok(info) => {
             let app = with_opened_vault(&state.app, &info.root);
-            let state = State {
+            let state = crate::tutorial::offer(State {
                 screen: Screen::Home,
                 home: None,
                 reminder_ticks: 0,
                 modal: None,
                 toasts: Vec::new(),
                 vault: Some(info),
-                app: app.clone(),
+                app,
                 opening: false,
                 notice: None,
                 ..state
-            };
+            });
             (
-                state,
+                state.clone(),
                 vec![
-                    Effect::SaveAppSettings(app),
+                    Effect::SaveAppSettings(state.app),
                     Effect::LoadHome,
                     Effect::LoadSubjects,
                 ],

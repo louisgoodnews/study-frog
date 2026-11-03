@@ -69,6 +69,10 @@ fn describe(c: &Change) -> (String, String) {
             format!("New question in {stack}: {prompt}"),
             format!("Prompt: {prompt}\nReference answer: {reference}"),
         ),
+        Change::CreatePage { name, text } => (format!("New help page \"{name}\""), text.clone()),
+        Change::UpdatePage { name, text } => {
+            (format!("Change your help page \"{name}\""), text.clone())
+        }
         Change::UpdateItem { uid, fields } => (
             format!("Change item {uid}"),
             fields
@@ -85,6 +89,7 @@ pub fn wiki(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let a = &state.agent;
     scope(state, ui, out);
     pdf_scope(state, ui, out);
+    help_scope(state, ui, out);
     if let Some(t) = text_field(ui, "What should the assistant do?", &a.instruction, "", 3) {
         send(out, AgentMsg::Instruction(t));
     }
@@ -203,6 +208,21 @@ fn pdf_scope(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.label(format!("Also reading {path}, {pages}. The cards and questions it proposes keep a link to the page."));
         if ui.small_button("Stop reading it").clicked() {
             send(out, AgentMsg::ClearPdfPages);
+        }
+    });
+}
+
+/// Whether the user's help pages are read too, and the way to the help screen.
+fn help_scope(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.horizontal_wrapped(|ui| {
+        let n = state.help.user.len();
+        let mut on = state.agent.help_pages;
+        let label = format!("Also read my help pages ({n})");
+        if ui.checkbox(&mut on, label).changed() {
+            send(out, AgentMsg::UseHelpPages(on));
+        }
+        if ui.link("Open help").clicked() {
+            out.push(Msg::Navigate(crate::state::Screen::Help));
         }
     });
 }

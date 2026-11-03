@@ -1,6 +1,6 @@
 //! What the top-bar menus contain, and the search results under the search field.
 
-use eframe::egui::{self, Rect, RichText};
+use eframe::egui::{self, Rect};
 use studyfrog_core::plan::item_kind_name;
 
 use crate::chrome::{ChromeMsg, Menu};
@@ -8,17 +8,6 @@ use crate::msg::Msg;
 use crate::pdf_types::PdfMsg;
 use crate::state::State;
 use crate::view::popup::{close, dismissed, popup};
-
-const SHORTCUTS: [(&str, &str); 8] = [
-    ("Space", "show the answer"),
-    ("1 2 3 4", "rate Again, Hard, Good, Easy"),
-    ("E  M  D", "mark the item easy, medium or difficult"),
-    ("S", "skip the item"),
-    ("P", "pause or resume"),
-    ("Esc", "stop the run, close a menu, clear the search"),
-    ("Enter", "open the first search result"),
-    ("Tab", "move between controls"),
-];
 
 /// The menu that is open, under its button.
 pub fn draw(state: &State, ui: &mut egui::Ui, anchors: &[(Menu, Rect)], out: &mut Vec<Msg>) {
@@ -29,7 +18,6 @@ pub fn draw(state: &State, ui: &mut egui::Ui, anchors: &[(Menu, Rect)], out: &mu
         return;
     };
     let width = match open {
-        Menu::Help => 340.0,
         Menu::Notifications => 420.0,
         _ => 260.0,
     };
@@ -45,7 +33,6 @@ pub fn draw(state: &State, ui: &mut egui::Ui, anchors: &[(Menu, Rect)], out: &mu
     let rect = popup(ui, "navbar-menu", at, width, |ui| match open {
         Menu::Vaults => vaults(state, ui, out),
         Menu::Notifications => crate::view::notifications::draw(state, ui, out),
-        Menu::Help => help(ui),
         Menu::Profile => profile(state, ui, out),
     });
     if dismissed(ui, rect, *anchor) {
@@ -74,19 +61,6 @@ fn vaults(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         out.push(Msg::CloseVault);
         close(out);
     }
-}
-
-fn help(ui: &mut egui::Ui) {
-    ui.strong("Keyboard");
-    egui::Grid::new("shortcuts").num_columns(2).show(ui, |ui| {
-        for (keys, what) in SHORTCUTS {
-            ui.label(RichText::new(keys).monospace());
-            ui.label(what);
-            ui.end_row();
-        }
-    });
-    ui.separator();
-    ui.weak("Typed answers are compared by similarity: a high match is not a check of the facts.");
 }
 
 fn profile(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {

@@ -84,6 +84,11 @@ pub fn update(state: State, msg: AgentMsg) -> (State, Vec<Effect>) {
             tab: crate::agent_types::AgentTab::Wiki,
             ..a
         }),
+        AgentMsg::UseHelpPages(on) => with(state, |a| AgentState {
+            help_pages: on,
+            tab: crate::agent_types::AgentTab::Wiki,
+            ..a
+        }),
         AgentMsg::ClearPdfPages => with(state, |a| AgentState {
             pdf_pages: None,
             ..a
@@ -144,13 +149,13 @@ pub fn update(state: State, msg: AgentMsg) -> (State, Vec<Effect>) {
                 reviewing: None,
                 ..a
             });
-            notice(
-                State {
-                    vault: Some(info),
-                    ..state
-                },
-                text,
-            )
+            let state = State {
+                vault: Some(info),
+                ..state
+            };
+            let (state, mut effects) = notice(state, text);
+            effects.push(Effect::Help(crate::help_types::HelpEffect::Load));
+            (state, effects)
         }
         AgentMsg::Discard => with(state, |a| AgentState {
             pending: None,

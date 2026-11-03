@@ -6,6 +6,7 @@ use eframe::egui::{
 };
 
 use crate::chrome::{ChromeMsg, Menu, unread, vault_label};
+use crate::help_types::HelpMsg;
 use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::state::{Screen, State};
@@ -62,7 +63,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     if signed_in {
                         right_cluster(state, ui, out, &mut anchors);
                     } else {
-                        help_button(state, ui, out, &mut anchors);
+                        help_button(state, ui, out);
                     }
                 },
             );
@@ -142,22 +143,16 @@ fn search_cluster(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f
     }
 }
 
-fn help_button(
-    state: &State,
-    ui: &mut egui::Ui,
-    out: &mut Vec<Msg>,
-    anchors: &mut Vec<(Menu, Rect)>,
-) {
+fn help_button(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let help = icon_button(
         ui,
         Glyph::Help,
-        "Help",
-        state.chrome.menu == Some(Menu::Help),
+        "Help for this screen (F1)",
+        state.screen == Screen::Help,
     );
     if help.clicked() {
-        toggle(out, Menu::Help);
+        out.push(Msg::Help(HelpMsg::ForScreen));
     }
-    anchors.push((Menu::Help, help.rect));
 }
 
 /// Right to left: profile, settings, help, notifications.
@@ -187,7 +182,7 @@ fn right_cluster(
     {
         out.push(Msg::Navigate(Screen::Settings));
     }
-    help_button(state, ui, out, anchors);
+    help_button(state, ui, out);
     let bell = icon_button(
         ui,
         Glyph::Bell,

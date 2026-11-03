@@ -2,7 +2,7 @@
 id: TASK-0165
 type: task
 title: Write the vision, getting started and FAQ pages
-status: backlog
+status: done
 epic: EPIC-023
 parents: [STORY-0066]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Write the pages in plain language for users.
 
 ## Acceptance Criteria
-- [ ] Why StudyFrog, Getting started, a how-to for each screen, the FAQ and the glossary exist as pages
-- [ ] Every feature in the changelog since 0.1.0 is covered by a page or a FAQ entry
+- [x] Why StudyFrog, Getting started, a how-to for each screen, the FAQ and the glossary exist as pages
+- [x] Every feature in the changelog since 0.1.0 is covered by a page or a FAQ entry
 
 ## Design Notes
 None.

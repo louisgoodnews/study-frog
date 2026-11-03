@@ -11,8 +11,6 @@ use studyfrog_md::doc::Doc;
 use studyfrog_rehearsal::input::StepOutput;
 use studyfrog_service::rehearse::StepContext;
 
-use crate::state::Selection;
-
 /// Work to do outside the pure update.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Effect {
@@ -47,9 +45,9 @@ pub enum Effect {
     /// Persist the per-user app settings.
     SaveAppSettings(AppSettings),
     /// List the items of a stack (or the inbox).
-    LoadItems(Selection),
+    LoadItems(crate::state::Selection),
     /// Count the items of a stack and its sub-stacks by status.
-    LoadStatusCounts(Selection),
+    LoadStatusCounts(crate::state::Selection),
     /// Read every item of the vault as a row of the library list.
     LoadLibrary,
     /// Bulk edits and saved filters of the library.
@@ -234,6 +232,8 @@ pub enum Effect {
     },
     /// Find the item a wikilink points to.
     ResolveLink(String),
+    /// Read or write the user's help pages.
+    Help(crate::help_types::HelpEffect),
     /// Something the PDF viewer needs.
     Pdf(crate::pdf_types::PdfEffect),
     /// Create a card in the stack at `folder`.

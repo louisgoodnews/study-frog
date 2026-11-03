@@ -5,7 +5,7 @@ use eframe::egui::{self, Panel};
 use crate::msg::Msg;
 use crate::state::{Screen, State};
 
-const SCREENS: [(Screen, &str); 10] = [
+const SCREENS: [(Screen, &str); 11] = [
     (Screen::Home, "Home"),
     (Screen::Library, "Library"),
     (Screen::Calendar, "Calendar"),
@@ -16,6 +16,7 @@ const SCREENS: [(Screen, &str); 10] = [
     (Screen::Graph, "Graph"),
     (Screen::Rehearse, "Rehearse"),
     (Screen::Settings, "Settings"),
+    (Screen::Help, "Help"),
 ];
 
 /// The screen list on the left, shown while a vault is open and the sidebar is not folded away.

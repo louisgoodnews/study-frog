@@ -3,10 +3,10 @@ id: TASK-0171
 type: task
 title: Diary entries in the data model, Markdown and index
 status: backlog
-epic: EPIC-023
+epic: EPIC-024
 parents: [STORY-0068]
 estimate: 3
-labels: [m10, core, md, store]
+labels: [m11, core, md, store]
 acceptance_criteria:
   - "A diary entry reads and writes as Markdown with its ratings, links and pictures and survives a round trip"
   - "The index lists entries by day and finds them by text and by linked item"

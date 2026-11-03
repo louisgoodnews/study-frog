@@ -15,6 +15,8 @@ mod editor;
 mod explorer;
 mod explorer_charts;
 mod graph;
+mod help;
+mod help_edit;
 mod home;
 mod home_cards;
 mod icons;
@@ -77,6 +79,7 @@ mod subjects;
 mod summary;
 mod summary_items;
 mod toast;
+mod tutorial;
 mod welcome;
 pub(crate) mod widgets;
 
@@ -107,7 +110,12 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         Screen::Agent => agent::draw(state, ui, &mut out),
         Screen::Reports => reports::draw(state, ui, &mut out),
         Screen::Pdf => pdf::draw(state, ui, &mut out),
+        Screen::Help => help::draw(state, ui, &mut out),
     });
+    if ui.input(|i| i.key_pressed(egui::Key::F1)) {
+        out.push(Msg::Help(crate::help_types::HelpMsg::ForScreen));
+    }
+    tutorial::panel(state, ui, &mut out);
     toast::draw(state, ui, &mut out);
     modal::draw(state, ui, &mut out);
     out

@@ -16,5 +16,6 @@ pub fn after(state: State, before: &Option<Notice>, reload: bool) -> (State, Vec
     effects.extend(goals);
     let (state, data) = crate::stack_view_ui::sync_data(state);
     effects.extend(data);
+    let state = crate::tutorial::sync(state);
     (state, effects)
 }

@@ -14,6 +14,7 @@ pub fn opened(label: &str) -> (TempDir, Model, Worker) {
     let vault = sample_vault(label);
     let mut worker = worker_new(None);
     let mut model = Model::default();
+    model.state.app.tutorial_offered = true;
     let path = vault.path.display().to_string();
     run_to_idle(&mut model, &mut worker, vec![Effect::OpenVault(path)]);
     assert!(model.state.vault.is_some());

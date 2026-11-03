@@ -89,6 +89,8 @@ pub struct AgentState {
     pub instruction: String,
     /// Pages of a PDF to read as well: path, first and last page (0-based).
     pub pdf_pages: Option<(String, usize, usize)>,
+    /// Read the user's own help pages as well.
+    pub help_pages: bool,
     /// A wiki request waiting for the go-ahead.
     pub pending: Option<Pending>,
     /// A proposal being reviewed.
@@ -121,6 +123,7 @@ impl Default for AgentState {
             },
             instruction: "Organise these notes: add an Index note, link related notes, and make flashcards of the key facts.".to_owned(),
             pdf_pages: None,
+            help_pages: false,
             pending: None,
             reviewing: None,
             applied: None,
@@ -174,6 +177,8 @@ pub enum AgentMsg {
     UsePdfPages(String, usize, usize),
     /// Do not read PDF pages.
     ClearPdfPages,
+    /// Read the user's help pages as well, or not.
+    UseHelpPages(bool),
     /// Look at what a wiki request would send.
     PrepareWiki,
     /// That is ready: what would be sent.
