@@ -33,6 +33,13 @@ Run on the same machine (i9-11900K), release profile, each crate's benchmark on 
 | `graph_5k` projection | 1.7 us | n/a |
 | comparison latency (language model, release test) | p50 30.2 ms, p95 33.9 ms | p95 < 150 ms |
 
+**0.3.0 release run (2026-11-03, a slower machine than the baselines above):** every bench ran about 2x slower than the
+table, including ones whose code did not change (`sm2_schedule_100k` 1.53 ms, was 0.69 ms). Measured: `fsrs_schedule_100k`
+6.6 ms (budget < 10 ms), `vault_10k` cold reindex 1.04 s (< 3 s), warm 122 ms, `graph_5k` layout step **8.9 ms (budget
+< 8 ms)** and projection 2.7 us, rehearsal queues of 10k items 0.16 to 1.3 ms. The graph budget is missed on this machine
+only; `studyfrog-graph` has not changed since M4, so no regression is claimed, but it was not re-measured on the
+baseline machine. The language-model latency test was not run (model not installed).
+
 The rehearsal and report benchmarks ran to completion (rehearsal steps 33 us to 570 us per case, reports 0.36 ms to
 6.2 ms); their cases are named in the crates' `benches/`.
 

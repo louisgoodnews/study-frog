@@ -7,6 +7,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-03
+
 ### Fixed
 - Teacher and subject names may contain commas ("Prof. Dr. Künkelmann, Harry"): a stack's `subjects` list is written as a
   quoted list when needed and read back whole, and the Settings screen refuses a name that cannot be stored before saving,
