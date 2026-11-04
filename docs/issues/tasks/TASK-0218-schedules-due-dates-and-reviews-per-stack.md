@@ -2,7 +2,7 @@
 id: TASK-0218
 type: task
 title: Schedules, due dates and reviews per stack
-status: review
+status: done
 epic: EPIC-026
 parents: [STORY-0079]
 estimate: 8

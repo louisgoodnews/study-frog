@@ -6,17 +6,34 @@ use studyfrog_core::civil::{date_from_days, format_date};
 use crate::editor::Editor;
 use crate::theme::palette_of;
 use crate::view::kit;
+use studyfrog_service::fam_refs::{overall, per_stack};
 
 /// The card; nothing for an item with no history.
 pub fn card(e: &Editor, ui: &mut egui::Ui) {
     let Some(curve) = e.curve.as_ref().filter(|c| !c.points.is_empty()) else {
         return;
     };
-    let now = curve.points.last().map_or(0, |p| p.percent);
+    let average = overall(&curve.references).0;
+    let now = average.map_or_else(
+        || curve.points.last().map_or(0, |p| p.percent),
+        |f| (f * 100.0).round() as u8,
+    );
     kit::section(ui, "Familiarity");
     kit::card(ui, |ui| {
         ui.set_width(ui.available_width());
-        ui.label(egui::RichText::new(format!("Familiarity {now} %")).strong());
+        let several = curve.references.len() > 1;
+        let label = if several {
+            "Familiarity (average)"
+        } else {
+            "Familiarity"
+        };
+        ui.label(egui::RichText::new(format!("{label} {now} %")).strong());
+        if several {
+            if let Some(d) = overall(&curve.references).1 {
+                ui.weak(format!("Average difficulty {d:.1}"));
+            }
+            ui.weak(per_stack(&curve.references));
+        }
         if !curve.drivers.is_empty() {
             ui.weak(&curve.drivers);
         }

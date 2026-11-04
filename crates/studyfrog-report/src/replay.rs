@@ -68,6 +68,8 @@ pub struct Bin {
 pub struct ReplayReport {
     /// Reviews scored (every review after an item's first).
     pub scored: usize,
+    /// How many histories were replayed: one for every item in every stack that reviewed it.
+    pub histories: usize,
     /// The verdict.
     pub verdict: Verdict,
     /// The strength and half-stability used for the adjusted predictions (fitted, or the defaults).
@@ -237,6 +239,7 @@ pub fn replay(items: &[ReplayItem], params: &Params) -> ReplayReport {
     };
     ReplayReport {
         scored: all.len(),
+        histories: items.len(),
         verdict,
         used,
         loss: (plain, adj),

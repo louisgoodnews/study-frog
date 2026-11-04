@@ -41,6 +41,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui) {
         return;
     }
     ui.weak(format!(
+        "{} review(s) in {} history(ies), one for each item in each stack that reviewed it.",
+        r.scored, r.histories
+    ));
+    ui.weak(format!(
         "Log loss on the tested part (lower is better): plain {:.3}, with familiarity {:.3}.",
         r.loss.0, r.loss.1
     ));

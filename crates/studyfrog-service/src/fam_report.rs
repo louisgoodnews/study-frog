@@ -1,20 +1,14 @@
 //! The familiarity report: the spread of values, the least familiar items per stack and per subject, and the value of one
 //! item over time. Each row says which inputs drove its value.
 
-use studyfrog_core::status::{effective_status, status_from_name};
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
-use studyfrog_report::familiarity::{
-    FamContext, FamEvent, Familiarity, fam_params_default, familiarity, stack_familiarity,
-};
+use studyfrog_report::familiarity::{FamContext, FamEvent, Familiarity, stack_familiarity};
 use studyfrog_store::error::StoreError;
 use studyfrog_store::item_meta::load_item_meta;
 use studyfrog_store::overview::{StackRow, load_indexed_items, load_overview};
-use studyfrog_store::reviews::load_all_reviews_timed;
-use studyfrog_store::views::load_all_views;
 
-use crate::fam_all::fam_context;
-use crate::library_rows::{events_of, exams};
+use crate::fam_refs::{average_over, reference_scores};
 use crate::subjects::stack_subjects;
 
 const DAY_MS: i64 = 86_400_000;
@@ -112,39 +106,30 @@ pub(crate) struct Scored {
     pub(crate) why: String,
 }
 
+/// One entry for every (item, stack): the stack's own value of the item. `also_in` is empty, the stack is `folder`.
 pub(crate) fn score_all(
     conn: &rusqlite::Connection,
-    stacks: &[StackRow],
+    _stacks: &[StackRow],
     now: UnixMs,
 ) -> Result<Vec<Scored>, StoreError> {
-    let by_folder = exams(conn, stacks, now.0.div_euclid(DAY_MS))?;
-    let (reviews, views) = (load_all_reviews_timed(conn)?, load_all_views(conn)?);
     let meta = load_item_meta(conn)?;
-    let params = fam_params_default();
+    let priority: std::collections::HashMap<Uid, _> = load_indexed_items(conn)?
+        .into_iter()
+        .map(|i| (i.uid, i.priority))
+        .collect();
     let mut out = Vec::new();
-    for item in load_indexed_items(conn)? {
-        let Some(m) = meta.get(&item.uid) else {
+    for s in reference_scores(conn, now)? {
+        let (Some(m), Some(priority)) = (meta.get(&s.uid), priority.get(&s.uid)) else {
             continue;
         };
-        let status = effective_status(
-            m.status.as_deref().and_then(status_from_name),
-            m.reviews > 0,
-        );
-        let exam = m
-            .stack
-            .as_ref()
-            .and_then(|f| by_folder.get(f))
-            .map(|d| UnixMs(d * DAY_MS));
-        let ctx = fam_context(&item, status, exam);
-        let events = events_of(reviews.get(&item.uid), views.get(&item.uid));
         out.push(Scored {
-            uid: item.uid,
+            uid: s.uid,
             title: m.title.clone(),
-            folder: m.stack.clone(),
-            also_in: m.also_in.clone(),
-            priority: item.priority,
-            fam: familiarity(&events, now, &ctx, &params),
-            why: drivers(&events, &ctx, now),
+            folder: s.folder,
+            also_in: Vec::new(),
+            priority: *priority,
+            fam: s.fam,
+            why: drivers(&s.events, &s.ctx, now),
         });
     }
     Ok(out)
@@ -200,8 +185,17 @@ pub fn familiarity_report(
     let stacks = load_overview(conn)?.stacks;
     let all = score_all(conn, &stacks, now)?;
     let mut spread = [0_u32; 10];
-    for f in all.iter().filter_map(|s| s.fam) {
-        spread[usize::from((percent(f.value) / 10).min(9))] += 1;
+    let mut by_item: std::collections::BTreeMap<Uid, Vec<f32>> = std::collections::BTreeMap::new();
+    for s in &all {
+        let values = by_item.entry(s.uid).or_default();
+        values.extend(s.fam.map(|f| f.value));
+    }
+    let averages: Vec<Option<f32>> = by_item
+        .values()
+        .map(|v| average_over(v.iter().copied()))
+        .collect();
+    for v in averages.iter().flatten() {
+        spread[usize::from((percent(*v) / 10).min(9))] += 1;
     }
     let per_stack = stacks
         .iter()
@@ -237,7 +231,7 @@ pub fn familiarity_report(
         .collect();
     Ok(FamReport {
         spread,
-        unscored: all.iter().filter(|s| s.fam.is_none()).count(),
+        unscored: averages.iter().filter(|v| v.is_none()).count(),
         stacks: per_stack,
         subjects: per_subject,
     })

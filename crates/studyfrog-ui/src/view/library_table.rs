@@ -136,7 +136,12 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                                 out.push(Msg::OpenItem(item.uid));
                             }
                         } else {
-                            ui.label(RichText::new(text).color(weak));
+                            let label = ui.label(RichText::new(text).color(weak));
+                            if *c == Column::Familiarity && item.references.len() > 1 {
+                                label.on_hover_text(studyfrog_service::fam_refs::per_stack(
+                                    &item.references,
+                                ));
+                            }
                         }
                     });
                 }

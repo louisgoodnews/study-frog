@@ -128,6 +128,7 @@ pub fn lib_item(n: u128, title: &str) -> studyfrog_service::library_rows::Librar
     use studyfrog_core::query_eval::Row;
     use studyfrog_core::status::Status;
     studyfrog_service::library_rows::LibraryItem {
+        references: Vec::new(),
         uid: Uid(n),
         row: Row {
             path: format!("french/{n}.md"),

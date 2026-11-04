@@ -8,14 +8,14 @@ use studyfrog_core::query_eval::Row;
 use studyfrog_core::status::{effective_status, status_from_name};
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
-use studyfrog_report::familiarity::{FamEvent, fam_params_default, familiarity};
+use studyfrog_report::familiarity::FamEvent;
 use studyfrog_store::item_meta::{ItemMeta, load_item_meta};
 use studyfrog_store::items::{IndexedItem, load_indexed_items};
 use studyfrog_store::overview::{StackRow, load_overview};
-use studyfrog_store::reviews::{TimedReview, load_all_reviews_timed};
+use studyfrog_store::reviews::TimedReview;
 use studyfrog_store::sessions::load_sessions;
-use studyfrog_store::views::load_all_views;
 
+use crate::fam_refs::{RefView, overall, reference_scores, views_by_item};
 use crate::familiarity::pick_exam;
 use crate::session::{ServiceError, VaultSession};
 use crate::subjects::{load_subjects, stack_subjects, subjects_with_teachers};
@@ -30,6 +30,8 @@ pub struct LibraryItem {
     pub uid: Uid,
     /// What a query can ask about it.
     pub row: Row,
+    /// What each stack that holds it makes of it; the row's familiarity is their average.
+    pub references: Vec<RefView>,
 }
 
 /// A stack's folder and title and those of every stack above it, for `stack = ...`.
@@ -114,7 +116,7 @@ fn day_of(ms: Option<i64>) -> Option<i64> {
     ms.map(|m| m.div_euclid(DAY_MS))
 }
 
-fn row_of((item, meta): (&IndexedItem, &ItemMeta), shared: &Shared, now: UnixMs) -> Row {
+fn row_of((item, meta): (&IndexedItem, &ItemMeta), shared: &Shared, refs: &[RefView]) -> Row {
     let status = effective_status(
         meta.status.as_deref().and_then(status_from_name),
         meta.reviews > 0,
@@ -124,13 +126,6 @@ fn row_of((item, meta): (&IndexedItem, &ItemMeta), shared: &Shared, now: UnixMs)
         .into_iter()
         .filter_map(|(_, t)| t)
         .collect();
-    let exam = meta
-        .stack
-        .as_ref()
-        .and_then(|f| shared.exams.get(f))
-        .map(|d| UnixMs(d * DAY_MS));
-    let ctx = crate::fam_all::fam_context(item, status, exam);
-    let events = events_of(shared.reviews.get(&item.uid), shared.views.get(&item.uid));
     Row {
         path: meta.path.clone(),
         title: meta.title.clone(),
@@ -149,7 +144,7 @@ fn row_of((item, meta): (&IndexedItem, &ItemMeta), shared: &Shared, now: UnixMs)
         tags: item.tags.clone(),
         priority: item.priority,
         difficulty: item.difficulty,
-        familiarity: familiarity(&events, now, &ctx, &fam_params_default()).map(|f| f.value),
+        familiarity: overall(refs).0,
         due_day: day_of(meta.due_ms),
         reviews: meta.reviews,
         created_day: day_of(meta.created_ms),
@@ -161,9 +156,6 @@ fn row_of((item, meta): (&IndexedItem, &ItemMeta), shared: &Shared, now: UnixMs)
 struct Shared<'a> {
     stacks: &'a [StackRow],
     book: studyfrog_config::subjects::SubjectBook,
-    exams: HashMap<String, i64>,
-    reviews: HashMap<Uid, Vec<TimedReview>>,
-    views: HashMap<Uid, Vec<studyfrog_core::views::ViewEvent>>,
 }
 
 /// Every item of the vault (stacks excluded) as a row, in path order.
@@ -178,19 +170,21 @@ fn rows_of(session: &VaultSession, now: UnixMs) -> Result<Vec<LibraryItem>, Stor
     let conn = &session.conn;
     let stacks = load_overview(conn)?.stacks;
     let shared = Shared {
-        exams: exams(conn, &stacks, now.0.div_euclid(DAY_MS))?,
         book: load_subjects(session).0,
-        reviews: load_all_reviews_timed(conn)?,
-        views: load_all_views(conn)?,
         stacks: &stacks,
     };
+    let mut refs = views_by_item(&reference_scores(conn, now)?, &stacks);
     let meta = load_item_meta(conn)?;
     let rows = load_indexed_items(conn)?
         .iter()
         .filter_map(|item| {
-            meta.get(&item.uid).map(|m| LibraryItem {
-                uid: item.uid,
-                row: row_of((item, m), &shared, now),
+            meta.get(&item.uid).map(|m| {
+                let references = refs.remove(&item.uid).unwrap_or_default();
+                LibraryItem {
+                    uid: item.uid,
+                    row: row_of((item, m), &shared, &references),
+                    references,
+                }
             })
         })
         .collect();

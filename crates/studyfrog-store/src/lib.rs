@@ -26,6 +26,7 @@ pub mod refs_index;
 pub mod reindex;
 pub mod reports;
 pub mod reviews;
+pub mod reviews_by_stack;
 pub mod run_load;
 pub mod runs;
 pub mod scan;

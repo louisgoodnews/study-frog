@@ -11,6 +11,7 @@ use studyfrog_store::reviews::load_all_reviews_timed;
 use studyfrog_store::views::load_all_views;
 
 use crate::fam_all::fam_context;
+use crate::fam_refs::{RefView, reference_scores, views_by_item};
 use crate::fam_report::{drivers, percent};
 use crate::library_rows::{events_of, exams};
 
@@ -26,12 +27,14 @@ pub struct CurvePoint {
 }
 
 /// An item's value now, over time, and what drove it.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ItemCurve {
     /// After each event, and now.
     pub points: Vec<CurvePoint>,
     /// The inputs behind the value now.
     pub drivers: String,
+    /// What each stack that holds the item makes of it; the value now is their average.
+    pub references: Vec<RefView>,
 }
 
 fn at(e: &FamEvent) -> UnixMs {
@@ -56,6 +59,7 @@ pub fn item_curve(
         return Ok(ItemCurve {
             points: Vec::new(),
             drivers: String::new(),
+            references: Vec::new(),
         });
     };
     let status = effective_status(
@@ -87,8 +91,16 @@ pub fn item_curve(
             percent: percent(f.value),
         });
     }
+    let scores: Vec<_> = reference_scores(conn, now)?
+        .into_iter()
+        .filter(|s| s.uid == uid)
+        .collect();
+    let references = views_by_item(&scores, &stacks)
+        .remove(&uid)
+        .unwrap_or_default();
     Ok(ItemCurve {
         points,
         drivers: drivers(&events, &ctx, now),
+        references,
     })
 }

@@ -19,7 +19,7 @@ use studyfrog_store::stack_scope::stack_homes;
 
 use crate::day::DayWindow;
 use crate::expiry::{expired_stacks, today_of, without_expired};
-use crate::fam_all::item_familiarities;
+use crate::fam_all::reference_familiarities;
 use crate::queue_data::StackSchedules;
 use crate::settings::{params_for, scheduler_for};
 
@@ -50,7 +50,7 @@ fn merged(it: &IndexedItem, sched: &StackSchedules, selection: &[Uid]) -> (Uid, 
 pub fn candidates<'a>(
     items: &'a [IndexedItem],
     (sched, selection): (&StackSchedules, &[Uid]),
-    fams: &HashMap<Uid, f32>,
+    fams: &HashMap<(Uid, Uid), f32>,
 ) -> Vec<Candidate<'a>> {
     items
         .iter()
@@ -68,7 +68,7 @@ pub fn candidates<'a>(
                 last_review: scheduled.map(|s| s.last_review),
                 priority: it.priority,
                 difficulty_hint: it.difficulty,
-                familiarity: fams.get(&it.uid).copied(),
+                familiarity: fams.get(&(it.uid, stack)).copied(),
             }
         })
         .collect()
@@ -146,7 +146,7 @@ pub fn new_run(conn: &Connection, req: NewRun, vault: &VaultSettings) -> Result<
     }
     let plan = with_threshold(req.plan.clone(), vault);
     let fams = if needs_familiarity(&plan) {
-        item_familiarities(conn, &items, req.now)?
+        reference_familiarities(conn, &items, req.now)?
     } else {
         HashMap::new()
     };
