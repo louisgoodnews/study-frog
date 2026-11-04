@@ -107,14 +107,13 @@ pub fn stack_limits(conn: &Connection) -> Result<HashMap<Uid, StackLimits>, Stor
 }
 
 const COUNTS_SQL: &str = "
-WITH first AS (SELECT item_uid, MIN(at_ms) AS first_at FROM review GROUP BY item_uid)
+WITH first AS (SELECT item_uid, stack_uid, MIN(at_ms) AS first_at FROM review GROUP BY item_uid, stack_uid)
 SELECT s.uid,
        COUNT(DISTINCT CASE WHEN f.first_at >= ?1 THEN r.item_uid END),
        COUNT(DISTINCT CASE WHEN f.first_at < ?1 THEN r.item_uid END)
 FROM review r
-JOIN first f ON f.item_uid = r.item_uid
-JOIN item i ON i.uid = r.item_uid
-JOIN stack_setting s ON s.folder = i.stack_path
+JOIN first f ON f.item_uid = r.item_uid AND f.stack_uid = r.stack_uid
+JOIN stack_setting s ON s.uid = r.stack_uid
 WHERE r.at_ms >= ?1 AND r.at_ms < ?2
 GROUP BY s.uid";
 
@@ -149,25 +148,29 @@ pub fn daily_counts(
     Ok(counts)
 }
 
+/// A row of `stack_setting`: the stack, its scheduler name, retention override and familiarity switch.
+pub(crate) type ItemHomeRow = (String, Option<String>, Option<f32>, Option<bool>);
+
+pub(crate) fn home_of_row(
+    (stack, scheduler, request_retention, familiarity): ItemHomeRow,
+) -> Result<ItemHome, StoreError> {
+    Ok(ItemHome {
+        stack: uid_of(&stack)?,
+        scheduler: scheduler_of(scheduler)?,
+        request_retention,
+        familiarity,
+    })
+}
+
 /// Home of one item, if it sits in a stack. A single indexed lookup, cheap enough per rating.
 pub fn item_home(conn: &Connection, item: Uid) -> Result<Option<ItemHome>, StoreError> {
     let sql = "SELECT s.uid, s.scheduler, s.request_retention, s.familiarity
                FROM item i JOIN stack_setting s ON s.folder = i.stack_path WHERE i.uid = ?1";
     let found = conn.query_row(sql, [studyfrog_md::ulid::format_ulid(item)], |r| {
-        Ok((
-            r.get::<_, String>(0)?,
-            r.get::<_, Option<String>>(1)?,
-            r.get::<_, Option<f32>>(2)?,
-            r.get::<_, Option<bool>>(3)?,
-        ))
+        Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?))
     });
     match found {
-        Ok((stack, scheduler, request_retention, familiarity)) => Ok(Some(ItemHome {
-            stack: uid_of(&stack)?,
-            scheduler: scheduler_of(scheduler)?,
-            request_retention,
-            familiarity,
-        })),
+        Ok(row) => home_of_row(row).map(Some),
         Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
         Err(e) => Err(sql_err(e)),
     }

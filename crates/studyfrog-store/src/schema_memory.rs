@@ -63,3 +63,11 @@ CREATE VIEW sm2_primary AS
     LEFT JOIN stack_identity s ON s.folder = i.stack_path
     WHERE m.stack_uid = COALESCE(s.uid, '00000000000000000000000000');
 ";
+
+/// Step 22: the reviews as the screens that count per item see them. A rating given in several stacks is written as
+/// one row per stack; the first row has no `rating_id` and the others carry its id, so the view `review_once` shows
+/// the rating once (the primary stack's row when it took part).
+pub(crate) const V22: &str = "
+ALTER TABLE review ADD COLUMN rating_id INTEGER;
+CREATE VIEW review_once AS SELECT * FROM review WHERE rating_id IS NULL;
+";

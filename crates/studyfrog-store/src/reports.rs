@@ -24,7 +24,7 @@ pub struct HistoryRow {
 /// Every review, oldest first.
 pub fn load_review_history(conn: &Connection) -> Result<Vec<HistoryRow>, StoreError> {
     let mut stmt = conn
-        .prepare("SELECT item_uid, rating, at_ms, elapsed_days FROM review ORDER BY at_ms, id")
+        .prepare("SELECT item_uid, rating, at_ms, elapsed_days FROM review_once ORDER BY at_ms, id")
         .map_err(sql_err)?;
     let rows = stmt
         .query_map([], |r| {

@@ -12,29 +12,54 @@ use studyfrog_rehearsal::queue::build::build_queue;
 use studyfrog_rehearsal::queue::candidate::{Budget, Budgets, Candidate};
 use studyfrog_store::error::StoreError;
 use studyfrog_store::overview::{IndexedItem, load_indexed_items};
-use studyfrog_store::schedule::load_schedules;
-use studyfrog_store::settings::{daily_counts, item_homes, stack_limits};
+use studyfrog_store::schedule::Scheduled;
+use studyfrog_store::schedule_stacks::load_stack_schedules;
+use studyfrog_store::settings::{daily_counts, stack_limits};
+use studyfrog_store::stack_scope::stack_homes;
 
 use crate::day::DayWindow;
 use crate::expiry::{expired_stacks, today_of, without_expired};
 use crate::fam_all::item_familiarities;
-use crate::queue_data::Schedules;
+use crate::queue_data::StackSchedules;
 use crate::settings::{params_for, scheduler_for};
 
-/// Queue candidates from the indexed items and their schedules.
+/// The schedule a run sees for an item, from the selected stacks that hold it: the earliest due date among them,
+/// and none (a new item) when any of them has never scheduled it. Also the stack that schedule belongs to.
+fn merged(it: &IndexedItem, sched: &StackSchedules, selection: &[Uid]) -> (Uid, Option<Scheduled>) {
+    let holders: Vec<Uid> = std::iter::once(it.stack)
+        .chain(it.also_in.iter().copied())
+        .filter(|s| selection.is_empty() || selection.contains(s))
+        .collect();
+    let found: Vec<(Uid, Option<&Scheduled>)> = holders
+        .iter()
+        .map(|s| (*s, sched.get(&(it.uid, *s))))
+        .collect();
+    if found.iter().any(|(_, s)| s.is_none()) {
+        let new_in = found.iter().find(|(_, s)| s.is_none()).map(|(s, _)| *s);
+        return (new_in.unwrap_or(it.stack), None);
+    }
+    found
+        .into_iter()
+        .filter_map(|(stack, s)| s.map(|s| (stack, *s)))
+        .min_by_key(|(_, s)| s.due)
+        .map_or((it.stack, None), |(stack, s)| (stack, Some(s)))
+}
+
+/// Queue candidates from the indexed items and their schedules in the stacks the run covers. An item held by
+/// several of them is one candidate, due when it is due in any, counted against the stack that makes it due.
 pub fn candidates<'a>(
     items: &'a [IndexedItem],
-    sched: &Schedules,
+    (sched, selection): (&StackSchedules, &[Uid]),
     fams: &HashMap<Uid, f32>,
 ) -> Vec<Candidate<'a>> {
     items
         .iter()
         .map(|it| {
-            let scheduled = sched.get(&it.uid);
+            let (stack, scheduled) = merged(it, sched, selection);
             Candidate {
                 uid: it.uid,
                 kind: it.kind,
-                stack: it.stack,
+                stack,
                 also_in: &it.also_in,
                 tags: &it.tags,
                 position: it.position,
@@ -108,8 +133,8 @@ fn needs_familiarity(plan: &RunPlan) -> bool {
 /// Build a not-yet-started run: reads items, schedules and stack limits from the index and applies
 /// the plan. No file is read.
 pub fn new_run(conn: &Connection, req: NewRun, vault: &VaultSettings) -> Result<Run, StoreError> {
-    let homes = item_homes(conn)?;
-    let sched = load_schedules(conn, |uid| scheduler_for(vault, homes.get(&uid)))?;
+    let homes = stack_homes(conn)?;
+    let sched = load_stack_schedules(conn, |stack| scheduler_for(vault, homes.get(&stack)))?;
     let budgets = Budgets {
         global: req.global_budget,
         per_stack: stack_budgets(conn, req.day)?,
@@ -126,7 +151,7 @@ pub fn new_run(conn: &Connection, req: NewRun, vault: &VaultSettings) -> Result<
         HashMap::new()
     };
     let queue = build_queue(
-        &candidates(&items, &sched, &fams),
+        &candidates(&items, (&sched, &req.plan.filter.stacks), &fams),
         &plan,
         req.now,
         &budgets,

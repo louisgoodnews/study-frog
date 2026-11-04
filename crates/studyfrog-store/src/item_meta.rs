@@ -41,7 +41,7 @@ pub struct ItemMeta {
 pub fn load_item_meta(conn: &Connection) -> Result<HashMap<Uid, ItemMeta>, StoreError> {
     let sql = "SELECT i.uid, i.kind, i.title, i.path, i.stack_path, i.status, i.created_ms, i.updated_ms,
                       COALESCE(i.body, ''), COALESCE(m.due_ms, s.due_ms),
-                      (SELECT COUNT(*) FROM review r WHERE r.item_uid = i.uid)
+                      (SELECT COUNT(*) FROM review_once r WHERE r.item_uid = i.uid)
                FROM item i LEFT JOIN mem_primary m ON m.item_uid = i.uid LEFT JOIN sm2_primary s ON s.item_uid = i.uid
                WHERE i.kind != 'stack'";
     let mut stmt = conn.prepare(sql).map_err(sql_err)?;

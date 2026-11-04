@@ -30,8 +30,19 @@ pub fn insert_review_in(
     stack: Uid,
     timing: Option<(u32, u32)>,
 ) -> Result<(), StoreError> {
+    insert_review_of(conn, r, (stack, None), timing).map(drop)
+}
+
+/// Append a review made in one stack as part of a rating: `first` is the id of the rating's first row, `None` for
+/// the first. Returns the new row's id.
+pub fn insert_review_of(
+    conn: &Connection,
+    r: &Review,
+    (stack, first): (Uid, Option<i64>),
+    timing: Option<(u32, u32)>,
+) -> Result<i64, StoreError> {
     conn.prepare_cached(
-        "INSERT INTO review (item_uid, rating, at_ms, elapsed_days, answer_ms, expected_ms, stack_uid) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+        "INSERT INTO review (item_uid, rating, at_ms, elapsed_days, answer_ms, expected_ms, stack_uid, rating_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
     )
     .and_then(|mut s| {
         s.execute(params![
@@ -41,10 +52,11 @@ pub fn insert_review_in(
             r.elapsed_days,
             timing.map(|t| t.0),
             timing.map(|t| t.1),
-            format_ulid(stack)
+            format_ulid(stack),
+            first
         ])
     })
-    .map(drop)
+    .map(|_| conn.last_insert_rowid())
     .map_err(sql_err)
 }
 
@@ -56,8 +68,8 @@ pub fn set_latest_review_rating(
     rating: Rating,
 ) -> Result<bool, StoreError> {
     conn.execute(
-        "UPDATE review SET rating = ?1 WHERE item_uid = ?2 AND at_ms = \
-         (SELECT MAX(at_ms) FROM review WHERE item_uid = ?2)",
+        "UPDATE review SET rating = ?1 WHERE item_uid = ?2 AND COALESCE(rating_id, id) = \
+         (SELECT id FROM review_once WHERE item_uid = ?2 ORDER BY at_ms DESC, id DESC LIMIT 1)",
         params![rating_value(rating), format_ulid(item)],
     )
     .map(|n| n > 0)
@@ -68,7 +80,7 @@ pub fn set_latest_review_rating(
 pub fn load_reviews(conn: &Connection, item: Uid) -> Result<Vec<Review>, StoreError> {
     let mut stmt = conn
         .prepare(
-            "SELECT rating, at_ms, elapsed_days FROM review WHERE item_uid = ?1 ORDER BY at_ms, id",
+            "SELECT rating, at_ms, elapsed_days FROM review_once WHERE item_uid = ?1 ORDER BY at_ms, id",
         )
         .map_err(sql_err)?;
     let rows = stmt
@@ -98,7 +110,7 @@ pub type TimedReview = (Review, Option<(u32, u32)>);
 pub fn load_reviews_timed(conn: &Connection, item: Uid) -> Result<Vec<TimedReview>, StoreError> {
     let mut stmt = conn
         .prepare(
-            "SELECT rating, at_ms, elapsed_days, answer_ms, expected_ms FROM review WHERE item_uid = ?1 ORDER BY at_ms, id",
+            "SELECT rating, at_ms, elapsed_days, answer_ms, expected_ms FROM review_once WHERE item_uid = ?1 ORDER BY at_ms, id",
         )
         .map_err(sql_err)?;
     let rows = stmt
@@ -134,7 +146,7 @@ pub fn load_all_reviews_timed(
 ) -> Result<std::collections::HashMap<Uid, Vec<TimedReview>>, StoreError> {
     let mut stmt = conn
         .prepare(
-            "SELECT item_uid, rating, at_ms, elapsed_days, answer_ms, expected_ms FROM review ORDER BY item_uid, at_ms, id",
+            "SELECT item_uid, rating, at_ms, elapsed_days, answer_ms, expected_ms FROM review_once ORDER BY item_uid, at_ms, id",
         )
         .map_err(sql_err)?;
     let rows = stmt
@@ -162,6 +174,41 @@ pub fn load_all_reviews_timed(
             elapsed_days,
         };
         out.entry(item).or_default().push((review, timing));
+    }
+    Ok(out)
+}
+
+/// The reviews an item has in one stack, oldest first, each with its timing when it was recorded.
+pub fn load_reviews_timed_in(
+    conn: &Connection,
+    (item, stack): (Uid, Uid),
+) -> Result<Vec<TimedReview>, StoreError> {
+    let mut stmt = conn
+        .prepare(
+            "SELECT rating, at_ms, elapsed_days, answer_ms, expected_ms FROM review \
+             WHERE item_uid = ?1 AND stack_uid = ?2 ORDER BY at_ms, id",
+        )
+        .map_err(sql_err)?;
+    let rows = stmt
+        .query_map([format_ulid(item), format_ulid(stack)], |r| {
+            Ok((
+                (r.get::<_, u8>(0)?, r.get::<_, i64>(1)?, r.get::<_, f32>(2)?),
+                r.get::<_, Option<u32>>(3)?.zip(r.get::<_, Option<u32>>(4)?),
+            ))
+        })
+        .map_err(sql_err)?;
+    let mut out = Vec::new();
+    for row in rows {
+        let ((rating, at, elapsed_days), timing) = row.map_err(sql_err)?;
+        let rating = rating_from_value(rating)
+            .ok_or_else(|| StoreError::Corrupt(format!("rating: {rating}")))?;
+        let review = Review {
+            item,
+            rating,
+            at: UnixMs(at),
+            elapsed_days,
+        };
+        out.push((review, timing));
     }
     Ok(out)
 }

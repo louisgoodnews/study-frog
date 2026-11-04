@@ -5,7 +5,7 @@ use crate::schema_early::{V2, V3};
 use crate::schema_later::{
     V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19,
 };
-use crate::schema_memory::V21;
+use crate::schema_memory::{V21, V22};
 use crate::schema_refs::V20;
 
 /// All migrations, oldest first.
@@ -114,6 +114,11 @@ pub const MIGRATIONS: &[Migration] = &[
         version: 21,
         name: "memory per stack",
         sql: V21,
+    },
+    Migration {
+        version: 22,
+        name: "reviews per item",
+        sql: V22,
     },
 ];
 

@@ -64,7 +64,7 @@ pub fn count_reviews_between(
     end_ms: i64,
 ) -> Result<u32, StoreError> {
     conn.query_row(
-        "SELECT COUNT(*) FROM review WHERE at_ms >= ?1 AND at_ms < ?2",
+        "SELECT COUNT(*) FROM review_once WHERE at_ms >= ?1 AND at_ms < ?2",
         [start_ms, end_ms],
         |r| r.get(0),
     )

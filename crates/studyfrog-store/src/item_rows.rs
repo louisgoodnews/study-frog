@@ -7,7 +7,7 @@ use crate::error::StoreError;
 use crate::items::ItemRow;
 
 /// The columns every item list selects, in the order `raw_item` reads them.
-pub(crate) const ITEM_COLS: &str = "i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms) AS due, i.status,\n    EXISTS(SELECT 1 FROM review r WHERE r.item_uid = i.uid)";
+pub(crate) const ITEM_COLS: &str = "i.uid, i.title, i.kind, i.path, COALESCE(m.due_ms, s.due_ms) AS due, i.status,\n    EXISTS(SELECT 1 FROM review_once r WHERE r.item_uid = i.uid)";
 
 pub(crate) type RawItem = (
     String,

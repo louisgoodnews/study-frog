@@ -225,7 +225,7 @@ pub fn status_counts(
         .replace('\\', "\\\\")
         .replace('%', "\\%")
         .replace('_', "\\_");
-    let sql = "SELECT COALESCE(i.status, CASE WHEN EXISTS(SELECT 1 FROM review r WHERE r.item_uid = i.uid)
+    let sql = "SELECT COALESCE(i.status, CASE WHEN EXISTS(SELECT 1 FROM review_once r WHERE r.item_uid = i.uid)
                     THEN 'learning' ELSE 'new' END), COUNT(*)
                FROM item i
                WHERE i.kind != 'stack' AND (i.stack_path = ?1 OR i.stack_path LIKE ?2 ESCAPE '\\')

@@ -29,7 +29,7 @@ fn uid_of(text: &str) -> Result<Uid, StoreError> {
 pub fn load_review_rows(conn: &Connection) -> Result<Vec<ReviewRow>, StoreError> {
     let mut stmt = conn
         .prepare(
-            "SELECT r.item_uid, s.uid, r.rating, r.at_ms FROM review r \
+            "SELECT r.item_uid, s.uid, r.rating, r.at_ms FROM review_once r \
              LEFT JOIN item i ON i.uid = r.item_uid \
              LEFT JOIN stack_identity s ON s.folder = i.stack_path \
              ORDER BY r.at_ms, r.id",

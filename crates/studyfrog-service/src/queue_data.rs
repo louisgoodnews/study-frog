@@ -7,3 +7,6 @@ use studyfrog_store::schedule::Scheduled;
 
 /// Schedule of each scheduled item, whatever algorithm scheduled it.
 pub type Schedules = HashMap<Uid, Scheduled>;
+
+/// Schedule of each (item, stack) pair, whatever algorithm scheduled it.
+pub type StackSchedules = HashMap<(Uid, Uid), Scheduled>;

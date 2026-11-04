@@ -3,8 +3,8 @@
 use std::collections::HashMap;
 
 pub use crate::reviews::{
-    TimedReview, insert_review, insert_review_in, insert_review_timed, load_reviews,
-    load_reviews_timed, set_latest_review_rating,
+    TimedReview, insert_review, insert_review_in, insert_review_of, insert_review_timed,
+    load_reviews, load_reviews_timed, load_reviews_timed_in, set_latest_review_rating,
 };
 pub use crate::schedule_primary::{
     load_mem_state, load_sm2_state, primary_stack, save_mem_state, save_sm2_state,

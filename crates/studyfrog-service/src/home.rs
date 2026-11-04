@@ -18,8 +18,8 @@ use studyfrog_store::home::{RunRow, count_reviews_between, recent_runs};
 use studyfrog_store::overview::{
     IndexedItem, ItemRow, due_items, load_indexed_items, load_overview, recent_items,
 };
-use studyfrog_store::schedule::load_schedules;
-use studyfrog_store::settings::item_homes;
+use studyfrog_store::schedule_stacks::load_stack_schedules;
+use studyfrog_store::stack_scope::stack_homes;
 
 use crate::attention::needs_attention;
 use crate::day::DayWindow;
@@ -151,21 +151,23 @@ pub fn home_summary(
     let store = ServiceError::Store;
     let conn = &session.conn;
     let vault = current_settings(session);
-    let homes = item_homes(conn).map_err(store)?;
-    let sched =
-        load_schedules(conn, |uid| scheduler_for(&vault, homes.get(&uid))).map_err(store)?;
+    let homes = stack_homes(conn).map_err(store)?;
+    let sched = load_stack_schedules(conn, |stack| scheduler_for(&vault, homes.get(&stack)))
+        .map_err(store)?;
     let expired = expired_stacks(conn, today_of(day)).map_err(store)?;
     let items = without_expired(load_indexed_items(conn).map_err(store)?, &expired);
-    let cands = candidates(&items, &sched, &HashMap::new());
     let overview = load_overview(conn).map_err(ServiceError::Store)?;
 
+    let cands = candidates(&items, (&sched, &[]), &HashMap::new());
     let mut per: HashMap<Uid, (usize, usize)> = HashMap::new();
-    for c in &cands {
-        let e = per.entry(c.stack).or_default();
-        match c.due {
-            Some(due) if due <= now => e.0 += 1,
-            None => e.1 += 1,
-            Some(_) => {}
+    for it in &items {
+        for stack in std::iter::once(it.stack).chain(it.also_in.iter().copied()) {
+            let e = per.entry(stack).or_default();
+            match sched.get(&(it.uid, stack)).map(|s| s.due) {
+                Some(due) if due <= now => e.0 += 1,
+                None => e.1 += 1,
+                Some(_) => {}
+            }
         }
     }
     let stacks: Vec<StackDue> = overview

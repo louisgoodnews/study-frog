@@ -20,7 +20,7 @@ use studyfrog_srs::params::Params;
 
 use crate::rehearse::RatingTiming;
 use studyfrog_store::error::{StoreError, sql_err};
-use studyfrog_store::schedule::{StoredMem, StoredSm2, load_reviews_timed};
+use studyfrog_store::schedule::{StoredMem, StoredSm2, load_reviews_timed_in};
 use studyfrog_store::sessions::load_sessions;
 use studyfrog_store::settings::ItemHome;
 use studyfrog_store::views::load_views;
@@ -62,10 +62,11 @@ fn familiarity_after(
         answer_ms: t.map(|t| t.0),
         expected_ms: t.map(|t| t.1),
     };
-    let mut events: Vec<FamEvent> = load_reviews_timed(conn, item)?
-        .into_iter()
-        .map(past)
-        .collect();
+    let mut events: Vec<FamEvent> =
+        load_reviews_timed_in(conn, (item, home.map_or(Uid(0), |h| h.stack)))?
+            .into_iter()
+            .map(past)
+            .collect();
     events.push(FamEvent::Rating {
         at: now,
         rating,

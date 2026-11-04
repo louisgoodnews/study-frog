@@ -14,9 +14,9 @@ use studyfrog_rehearsal::session::Session;
 use studyfrog_store::error::{StoreError, sql_err};
 use studyfrog_store::runs::{abort_unfinished_runs, append_events, insert_run, set_run_state};
 use studyfrog_store::schedule::{
-    insert_review_timed, load_mem_state, load_sm2_state, save_mem_state, save_sm2_state,
+    insert_review_of, load_mem_state_in, load_sm2_state_in, save_mem_state_in, save_sm2_state_in,
 };
-use studyfrog_store::settings::item_home;
+use studyfrog_store::stack_scope::{holders_of, rated_stacks, stack_home};
 
 use studyfrog_md::ulid::compose_ulid;
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
@@ -88,46 +88,70 @@ pub fn record_step(
     if ctx.effect == ScheduleEffect::UpdateSchedule {
         for e in &out.events {
             if let (EventKind::ItemRated(rating), Some(item)) = (&e.kind, e.item) {
-                rate_item(&tx, item, (*rating, ctx.timing), now, vault)?;
+                let stacks = rated_stacks(&tx, ctx.run, item)?;
+                rate_item_in(&tx, (item, &stacks), (*rating, ctx.timing), now, vault)?;
             }
         }
     }
     tx.commit().map_err(sql_err)
 }
 
+/// A rating outside any run (the assistant's exam): it counts in every stack that holds the item.
 pub(crate) fn rate_item(
     conn: &Connection,
     item: Uid,
-    (rating, timing): (Rating, Option<RatingTiming>),
+    given: (Rating, Option<RatingTiming>),
     now: UnixMs,
     vault: &VaultSettings,
 ) -> Result<(), StoreError> {
-    let home = item_home(conn, item)?;
+    let stacks = holders_of(conn, item)?;
+    rate_item_in(conn, (item, &stacks), given, now, vault)
+}
+
+/// One rating, written as one review and one new memory state for every stack in `stacks`, each with that stack's
+/// own scheduler, retention and history.
+pub(crate) fn rate_item_in(
+    conn: &Connection,
+    (item, stacks): (Uid, &[Uid]),
+    given: (Rating, Option<RatingTiming>),
+    now: UnixMs,
+    vault: &VaultSettings,
+) -> Result<(), StoreError> {
+    let mut first = None;
+    for stack in stacks {
+        let id = rate_in_stack(conn, (item, *stack, first), given, now, vault)?;
+        first = first.or(Some(id));
+    }
+    Ok(())
+}
+
+fn rate_in_stack(
+    conn: &Connection,
+    (item, stack, first): (Uid, Uid, Option<i64>),
+    (rating, timing): (Rating, Option<RatingTiming>),
+    now: UnixMs,
+    vault: &VaultSettings,
+) -> Result<i64, StoreError> {
+    let key = (item, stack);
+    let home = stack_home(conn, stack)?;
+    let timed = timing.map(|t| (t.answer_ms, t.expected_ms));
+    let given = (item, rating, timing);
     match scheduler_for(vault, home.as_ref()) {
         Scheduler::Fsrs => {
             let params = params_for(vault, home.and_then(|h| h.request_retention));
-            let prev = load_mem_state(conn, item)?;
+            let prev = load_mem_state_in(conn, key)?;
             let (review, mut mem) = apply_rating(prev.as_ref(), item, rating, now, &params);
-            let given = (item, rating, timing);
             retime_fsrs(conn, &mut mem, given, (&params, vault, home.as_ref()))?;
-            let timed = timing.map(|t| (t.answer_ms, t.expected_ms));
-            insert_review_timed(conn, &review, timed)?;
-            save_mem_state(conn, item, &mem)
+            let id = insert_review_of(conn, &review, (stack, first), timed)?;
+            save_mem_state_in(conn, key, &mem).map(|()| id)
         }
         Scheduler::Sm2 => {
-            let prev = load_sm2_state(conn, item)?;
-            let (review, mut state) = apply_rating_sm2(
-                prev.as_ref(),
-                item,
-                rating,
-                now,
-                vault.maximum_interval_days,
-            );
-            let given = (item, rating, timing);
+            let prev = load_sm2_state_in(conn, key)?;
+            let max = vault.maximum_interval_days;
+            let (review, mut state) = apply_rating_sm2(prev.as_ref(), item, rating, now, max);
             retime_sm2(conn, &mut state, given, (vault, home.as_ref()))?;
-            let timed = timing.map(|t| (t.answer_ms, t.expected_ms));
-            insert_review_timed(conn, &review, timed)?;
-            save_sm2_state(conn, item, &state)
+            let id = insert_review_of(conn, &review, (stack, first), timed)?;
+            save_sm2_state_in(conn, key, &state).map(|()| id)
         }
     }
 }
