@@ -57,7 +57,7 @@ Proposed by Claude on 2026-11-03 after the owner's test of 0.3.1; the owner may 
 
 **Wave 3: larger, specify first**
 - [x] 9. TASK-0210 Decide the stack folder and reference rules (ADR; the owner: a folder can be marked as a stack, an item can be referenced by several stacks)
-- [ ] 10. TASK-0211 to TASK-0213 and TASK-0217 (references, the stack mark and the per-stack schedule: TASK-0218, TASK-0219, TASK-0220), then TASK-0202 (views spec), TASK-0203 and TASK-0204
+- [ ] 10. TASK-0211 to TASK-0213 and TASK-0217 (references, the stack mark and the per-stack schedule: TASK-0218 is built and in review, TASK-0219, TASK-0220), then TASK-0202 (views spec), TASK-0203 and TASK-0204
 - [ ] 11. TASK-0195 Calm the remaining screens (STORY-0073)
 - [ ] 11b. TASK-0228 to TASK-0232 Export notes to PDF (STORY-0082, asked for by the owner on 2026-11-04; the spec and ADR first, the owner decides whether it stays in 0.4.0)
 - [ ] 12. TASK-0170 to TASK-0174 Diary

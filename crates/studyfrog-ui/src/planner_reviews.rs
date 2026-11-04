@@ -25,8 +25,8 @@ pub struct MoveForm {
 pub enum ReviewEffect {
     /// Read the plan between two local days (counted from 1970-01-01).
     Load(i64, i64),
-    /// Make these items due on a local day.
-    Move(Vec<Uid>, i64),
+    /// Make these items due on a local day in a stack (`None`: the Inbox).
+    Move(Option<Uid>, Vec<Uid>, i64),
     /// Put the due dates of a move back.
     Undo(Vec<Prior>),
 }
@@ -113,7 +113,10 @@ fn move_to(state: State, stack: Option<Uid>, from: i64, to: i64) -> (State, Vec<
     if from == to || items.is_empty() {
         return (state, Vec::new());
     }
-    (state, vec![Effect::Reviews(ReviewEffect::Move(items, to))])
+    (
+        state,
+        vec![Effect::Reviews(ReviewEffect::Move(stack, items, to))],
+    )
 }
 
 fn confirm(state: State) -> (State, Vec<Effect>) {

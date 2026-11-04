@@ -4,10 +4,10 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (18) | Ready (0) | In progress (1/3) | Review (1) | Blocked (0) | Done (217) |
+| Backlog (18) | Ready (0) | In progress (0/3) | Review (2) | Blocked (0) | Done (217) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  | [TASK-0218](docs/issues/tasks/TASK-0218-schedules-due-dates-and-reviews-per-stack.md) Schedules, due dates and reviews per stack (8) | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  | [TASK-0218](docs/issues/tasks/TASK-0218-schedules-due-dates-and-reviews-per-stack.md) Schedules, due dates and reviews per stack (8) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
 | [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 | [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
 | [TASK-0174](docs/issues/tasks/TASK-0174-self-assessment-against-measured-results.md) Self-assessment against measured results (3) |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |

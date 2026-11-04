@@ -157,6 +157,8 @@ fn split_wikilinks_handles_escapes_and_junk() {
 proptest! {
     #[test]
     fn parsing_never_panics_and_keeps_the_visible_text(text in "[a-zA-Z .,\n#*_`>\\[\\]-]{0,120}") {
+        // A link shows its title and drops its `#section`, so a `#` next to a link is not visible text.
+        prop_assume!(!(text.contains("[[") && text.contains('#')));
         let blocks = parse_blocks(&text);
         fn collect(blocks: &[Block], out: &mut String) {
             for b in blocks {

@@ -7,9 +7,11 @@ use studyfrog_core::civil::{date_from_days, format_date};
 use studyfrog_core::status::{effective_status, skips_schedule, status_from_name};
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
-use studyfrog_store::due_dates::{Dues, load_dues, set_dues, stack_statuses};
+use studyfrog_store::due_dates::{Dues, load_dues_in, set_dues_in, stack_statuses};
 use studyfrog_store::item_meta::load_item_meta;
 use studyfrog_store::overview::{StackRow, load_overview};
+use studyfrog_store::schedule_stacks::load_stack_schedules;
+use studyfrog_store::stack_scope::stack_homes;
 
 use crate::library_rows::exams;
 use crate::session::{ServiceError, VaultSession};
@@ -20,6 +22,8 @@ use crate::timezone::{local_day_of, local_day_start};
 pub struct Prior {
     /// The item.
     pub item: Uid,
+    /// The stack whose schedule was moved.
+    pub stack: Uid,
     /// What its states said.
     pub dues: Dues,
 }
@@ -67,21 +71,32 @@ pub fn plan_reviews(
     let statuses = stack_statuses(conn).map_err(ServiceError::Store)?;
     let mut sizes: HashMap<Option<Uid>, usize> = HashMap::new();
     let mut planned = Vec::new();
-    for (uid, meta) in load_item_meta(conn).map_err(ServiceError::Store)? {
-        let stack = uid_of(&stacks, meta.stack.as_ref());
-        *sizes.entry(stack).or_default() += 1;
-        let Some(due) = meta.due_ms else { continue };
+    let vault = crate::session::current_settings(session);
+    let homes = stack_homes(conn).map_err(store)?;
+    let sched = load_stack_schedules(conn, |stack| {
+        crate::settings::scheduler_for(&vault, homes.get(&stack))
+    })
+    .map_err(store)?;
+    for (uid, meta) in load_item_meta(conn).map_err(store)? {
         let status = effective_status(meta.status.as_deref().and_then(status_from_name), true);
-        planned.push(PlanItem {
-            uid,
-            stack,
-            due_day: local_day_of(UnixMs(due)),
-            status,
-            stack_skips: meta
-                .stack
-                .as_deref()
-                .is_some_and(|f| stack_skips(&statuses, f)),
-        });
+        let folders = meta.stack.iter().chain(meta.also_in.iter());
+        for folder in folders
+            .map(Some)
+            .chain(meta.stack.is_none().then_some(None))
+        {
+            let stack = uid_of(&stacks, folder);
+            *sizes.entry(stack).or_default() += 1;
+            let Some(due) = sched.get(&(uid, stack.unwrap_or(Uid(0)))).map(|s| s.due.0) else {
+                continue;
+            };
+            planned.push(PlanItem {
+                uid,
+                stack,
+                due_day: local_day_of(UnixMs(due)),
+                status,
+                stack_skips: folder.is_some_and(|f| stack_skips(&statuses, f)),
+            });
+        }
     }
     Ok(plan_entries(&planned, &sizes, days))
 }
@@ -89,52 +104,43 @@ pub fn plan_reviews(
 /// The warning for putting items of these stacks on `to_day`, if an exam or deadline comes before it.
 fn warning_for(
     session: &VaultSession,
-    items: &[Uid],
-    to_day: i64,
-    today: i64,
+    stack: Option<Uid>,
+    (to_day, today): (i64, i64),
 ) -> Result<Option<String>, ServiceError> {
     let conn = &session.conn;
     let stacks = load_overview(conn).map_err(ServiceError::Store)?.stacks;
-    let meta = load_item_meta(conn).map_err(ServiceError::Store)?;
     let by_folder = exams(conn, &stacks, today).map_err(ServiceError::Store)?;
-    let mut hits: Vec<(String, i64)> = Vec::new();
-    for folder in items.iter().filter_map(|u| meta.get(u)?.stack.as_ref()) {
-        let exam = by_folder
-            .get(folder)
-            .copied()
-            .filter(|d| *d >= today && *d < to_day);
-        let title = stacks
-            .iter()
-            .find(|s| s.folder == *folder)
-            .map(|s| s.title.clone());
-        if let (Some(d), Some(t)) = (exam, title)
-            && !hits.iter().any(|(x, _)| *x == t)
-        {
-            hits.push((t, d));
-        }
-    }
-    let said: Vec<String> = hits
+    let Some(own) = stacks.iter().find(|s| Some(s.uid) == stack) else {
+        return Ok(None);
+    };
+    let exam = by_folder
+        .get(&own.folder)
+        .copied()
+        .filter(|d| *d >= today && *d < to_day);
+    let said: Vec<String> = exam
         .iter()
-        .map(|(t, d)| format!("{t} ({})", format_date(date_from_days(*d))))
+        .map(|d| format!("{} ({})", own.title, format_date(date_from_days(*d))))
         .collect();
     Ok((!said.is_empty())
         .then(|| format!("That is after the exam or due date of {}.", said.join(", "))))
 }
 
-/// Make the items due on `to_day` (the start of that local day) and keep everything else of their schedule.
-/// Items in no schedule are left out of the count. A move is undone with [`undo_move`].
+/// Make the items due on `to_day` (the start of that local day) in one stack (`None` for the Inbox) and keep
+/// everything else of their schedule there; other stacks' schedules of the same items stay as they are. Items with
+/// no schedule in the stack are left out of the count. A move is undone with [`undo_move`].
 pub fn move_reviews(
     session: &VaultSession,
-    items: &[Uid],
+    (stack, items): (Option<Uid>, &[Uid]),
     to_day: i64,
     now: UnixMs,
 ) -> Result<Moved, ServiceError> {
     let due = local_day_start(to_day)
         .0
         .max(now.0.min(local_day_start(to_day).0));
+    let key = stack.unwrap_or(Uid(0));
     let mut undo = Vec::new();
     for item in items {
-        let before = load_dues(&session.conn, *item).map_err(ServiceError::Store)?;
+        let before = load_dues_in(&session.conn, (*item, key)).map_err(ServiceError::Store)?;
         if before.fsrs.is_none() && before.sm2.is_none() {
             continue;
         }
@@ -142,13 +148,14 @@ pub fn move_reviews(
             fsrs: before.fsrs.map(|_| due),
             sm2: before.sm2.map(|_| due),
         };
-        set_dues(&session.conn, *item, moved).map_err(ServiceError::Store)?;
+        set_dues_in(&session.conn, (*item, key), moved).map_err(ServiceError::Store)?;
         undo.push(Prior {
             item: *item,
+            stack: key,
             dues: before,
         });
     }
-    let warning = warning_for(session, items, to_day, local_day_of(now))?;
+    let warning = warning_for(session, stack, (to_day, local_day_of(now)))?;
     Ok(Moved {
         moved: undo.len(),
         undo,
@@ -159,7 +166,7 @@ pub fn move_reviews(
 /// Put the due dates back as a move found them.
 pub fn undo_move(session: &VaultSession, undo: &[Prior]) -> Result<(), ServiceError> {
     for p in undo {
-        set_dues(&session.conn, p.item, p.dues).map_err(ServiceError::Store)?;
+        set_dues_in(&session.conn, (p.item, p.stack), p.dues).map_err(ServiceError::Store)?;
     }
     Ok(())
 }

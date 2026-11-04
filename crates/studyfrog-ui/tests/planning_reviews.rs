@@ -24,6 +24,11 @@ fn review(m: ReviewMsg) -> Msg {
     Msg::Plan(PlanMsg::Reviews(m))
 }
 
+fn moved(to: i64) -> [Effect; 1] {
+    let items = (10..14).map(Uid).collect();
+    [Effect::Reviews(ReviewEffect::Move(Some(Uid(1)), items, to))]
+}
+
 fn today() -> studyfrog_core::civil::Date {
     date_new(2026, 10, 12).unwrap()
 }
@@ -99,13 +104,7 @@ fn dropping_an_entry_moves_its_items_and_the_past_is_refused() {
         })
     };
     let fx = apply(&mut m, drop(day + 5));
-    assert_eq!(
-        fx,
-        [Effect::Reviews(ReviewEffect::Move(
-            (10..14).map(Uid).collect(),
-            day + 5
-        ))]
-    );
+    assert_eq!(fx, moved(day + 5));
     assert!(
         apply(&mut m, drop(day + 3)).is_empty(),
         "the same day is nothing to do"
@@ -124,15 +123,10 @@ fn a_typed_date_moves_a_result_shows_its_warning_and_undo_goes_back() {
     assert!(apply(&mut m, review(ReviewMsg::Confirm)).is_empty());
     apply(&mut m, review(ReviewMsg::MoveText("2026-10-20".into())));
     let fx = apply(&mut m, review(ReviewMsg::Confirm));
-    assert_eq!(
-        fx,
-        [Effect::Reviews(ReviewEffect::Move(
-            (10..14).map(Uid).collect(),
-            day + 8
-        ))]
-    );
+    assert_eq!(fx, moved(day + 8));
 
     let prior = Prior {
+        stack: Uid(1),
         item: Uid(10),
         dues: Dues {
             fsrs: Some(5),

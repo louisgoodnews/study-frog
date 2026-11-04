@@ -156,7 +156,7 @@ fn a_move_changes_only_the_due_date_and_can_be_undone() {
 
     let moved = move_reviews(
         &s,
-        &[Uid(0xA), Uid(0xC), Uid(0xE)],
+        (Some(Uid(1)), &[Uid(0xA), Uid(0xC), Uid(0xE)]),
         today() + 9,
         UnixMs(NOW),
     )
@@ -192,14 +192,16 @@ fn a_moved_item_is_not_due_until_its_day_and_a_move_past_the_exam_warns() {
     schedule(&mut s);
     save_session(&mut s.conn, &exam(today() + 6)).unwrap();
 
-    let ok = move_reviews(&s, &[Uid(0xA)], today() + 6, UnixMs(NOW)).unwrap();
+    let ok = move_reviews(&s, (Some(Uid(1)), &[Uid(0xA)]), today() + 6, UnixMs(NOW)).unwrap();
     assert!(
         ok.warning.is_none(),
         "on the day of the exam is not past it"
     );
-    let late = move_reviews(&s, &[Uid(0xA), Uid(0xD)], today() + 7, UnixMs(NOW)).unwrap();
+    let late = move_reviews(&s, (Some(Uid(1)), &[Uid(0xA)]), today() + 7, UnixMs(NOW)).unwrap();
     let w = late.warning.expect("a warning");
     assert!(w.contains("French") && !w.contains("Maths"), "{w}");
+    let other = move_reviews(&s, (Some(Uid(2)), &[Uid(0xD)]), today() + 7, UnixMs(NOW)).unwrap();
+    assert!(other.warning.is_none(), "Maths has no exam");
     let due = load_mem_state(&s.conn, Uid(0xA)).unwrap().unwrap().due;
     assert!(due.0 > NOW, "not due before its new day");
 }

@@ -123,11 +123,16 @@ pub fn review_plan(w: &Worker, days: (i64, i64)) -> Msg {
 }
 
 /// Make the items due on a local day.
-pub fn move_reviews(w: &Worker, items: &[Uid], day: i64, now_ns: i64) -> Msg {
+pub fn move_reviews(
+    w: &Worker,
+    (stack, items): (Option<Uid>, &[Uid]),
+    day: i64,
+    now_ns: i64,
+) -> Msg {
     use crate::planner_reviews::ReviewMsg;
     let now = UnixMs(now_ns / 1_000_000);
     let result = match &w.session {
-        Some(s) => studyfrog_service::review_plan::move_reviews(s, items, day, now)
+        Some(s) => studyfrog_service::review_plan::move_reviews(s, (stack, items), day, now)
             .map(Box::new)
             .map_err(|e| e.to_string()),
         None => Err(NO_VAULT.to_owned()),
@@ -154,7 +159,7 @@ pub fn reviews_effect(
     use crate::planner_reviews::ReviewEffect;
     match effect {
         ReviewEffect::Load(from, to) => review_plan(w, (from, to)),
-        ReviewEffect::Move(items, day) => move_reviews(w, &items, day, now_ns),
+        ReviewEffect::Move(stack, items, day) => move_reviews(w, (stack, &items), day, now_ns),
         ReviewEffect::Undo(undo) => undo_move(w, &undo),
     }
 }
