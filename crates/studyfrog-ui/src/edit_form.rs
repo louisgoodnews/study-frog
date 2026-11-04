@@ -8,6 +8,7 @@ use studyfrog_core::status::Status;
 use studyfrog_md::doc::Doc;
 use studyfrog_md::extra::{extra_value, with_extra};
 use studyfrog_md::names::{extra_names, with_extra_names};
+use studyfrog_md::refs::{references_of, with_references};
 use studyfrog_md::status::{status_of, with_status};
 
 /// One multi-line text area.
@@ -38,6 +39,31 @@ pub struct EditForm {
     pub status: Option<Status>,
     /// The subjects a stack names (empty for other kinds and for a stack that names none).
     pub subjects: Vec<String>,
+    /// The other stacks that reference this item (by stack UID string).
+    pub referenced_by: Vec<String>,
+}
+
+/// A change in the editor.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum EditAction {
+    /// The title field.
+    Title(String),
+    /// The tags field.
+    Tags(String),
+    /// A text area, by index.
+    Field(usize, String),
+    /// The item's own priority; `None` takes the stack's.
+    Priority(Option<Priority>),
+    /// The item's own difficulty; `None` takes the stack's.
+    Difficulty(Option<Difficulty>),
+    /// The item's own status; `None` leaves it to the history.
+    Status(Option<Status>),
+    /// A subject of a stack on or off.
+    Subject(String, bool),
+    /// Add a reference to this stack (by stack UID string).
+    AddReference(String),
+    /// Remove a reference to this stack (by stack UID string).
+    RemoveReference(String),
 }
 
 fn field(label: &'static str, text: &str, rows: usize) -> EditField {
@@ -70,6 +96,7 @@ pub fn form_from_doc(doc: &Doc) -> EditForm {
                 field("Body", &d.body, 10),
             ],
         ),
+        Doc::Diary(d) => (&d.meta, vec![field("Body", &d.body, 16)]),
     };
     EditForm {
         title: meta.title.clone(),
@@ -79,6 +106,7 @@ pub fn form_from_doc(doc: &Doc) -> EditForm {
         difficulty: extra_value(doc, "difficulty").and_then(|w| difficulty_from_name(&w)),
         status: status_of(doc),
         subjects: extra_names(doc, "subjects"),
+        referenced_by: references_of(doc),
     }
 }
 
@@ -137,9 +165,13 @@ pub fn apply_form(doc: &Doc, form: &EditForm) -> Result<Doc, String> {
             single_line("the description", &text(form, 0))?;
             (d.description, d.body) = (text(form, 0), text(form, 1));
         }
+        Doc::Diary(d) => {
+            (d.meta.title, d.meta.tags, d.body) = (form.title.clone(), tags, text(form, 0));
+        }
     }
     let out = with_extra(&out, "priority", form.priority.map(priority_name));
     let out = with_extra(&out, "difficulty", form.difficulty.map(difficulty_name));
+    let out = with_references(&out, &form.referenced_by);
     let out = if form.status == status_of(doc) {
         out
     } else {

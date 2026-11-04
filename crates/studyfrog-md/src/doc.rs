@@ -1,7 +1,12 @@
 //! Parsed documents: one struct per kind, plus verbatim unknown keys.
 //! Stack membership comes from the folder, so docs carry no stack reference.
 
+use std::collections::BTreeMap;
+
+use studyfrog_core::civil::Date;
+use studyfrog_core::diary::RatingValue;
 use studyfrog_core::meta::Meta;
+use studyfrog_core::uid::Uid;
 
 /// An unknown top-level key kept verbatim so a rewrite never loses user data.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -72,6 +77,33 @@ pub struct QuestionDoc {
     pub extra: Vec<RawEntry>,
 }
 
+/// A diary entry file.
+#[derive(Debug, Clone, PartialEq)]
+pub struct DiaryDoc {
+    /// Common fields.
+    pub meta: Meta,
+    /// Civil date.
+    pub date: Date,
+    /// Explicit title from front-matter; `None` when defaulted.
+    pub custom_title: Option<String>,
+    /// Study time in minutes.
+    pub study_minutes: Option<u32>,
+    /// Self-assessment ratings.
+    pub ratings: BTreeMap<String, RatingValue>,
+    /// Linked rehearsal runs.
+    pub runs: Vec<Uid>,
+    /// Linked stacks.
+    pub stacks: Vec<String>,
+    /// Linked items.
+    pub items: Vec<Uid>,
+    /// Linked exams.
+    pub exams: Vec<String>,
+    /// Reflections Markdown body.
+    pub body: String,
+    /// Unknown keys.
+    pub extra: Vec<RawEntry>,
+}
+
 /// Any parsed file.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Doc {
@@ -83,6 +115,8 @@ pub enum Doc {
     Card(CardDoc),
     /// A question.
     Question(QuestionDoc),
+    /// A diary entry.
+    Diary(DiaryDoc),
 }
 
 /// The `kind` front-matter value.
@@ -96,6 +130,8 @@ pub enum Kind {
     Card,
     /// `question`
     Question,
+    /// `diary`
+    Diary,
 }
 
 /// Name as written in front-matter.
@@ -105,14 +141,21 @@ pub fn kind_name(kind: Kind) -> &'static str {
         Kind::Note => "note",
         Kind::Card => "card",
         Kind::Question => "question",
+        Kind::Diary => "diary",
     }
 }
 
 /// Inverse of [`kind_name`].
 pub fn kind_from_name(name: &str) -> Option<Kind> {
-    [Kind::Stack, Kind::Note, Kind::Card, Kind::Question]
-        .into_iter()
-        .find(|k| kind_name(*k) == name)
+    [
+        Kind::Stack,
+        Kind::Note,
+        Kind::Card,
+        Kind::Question,
+        Kind::Diary,
+    ]
+    .into_iter()
+    .find(|k| kind_name(*k) == name)
 }
 
 /// The kind of a parsed document.
@@ -122,11 +165,34 @@ pub fn doc_kind(doc: &Doc) -> Kind {
         Doc::Note(_) => Kind::Note,
         Doc::Card(_) => Kind::Card,
         Doc::Question(_) => Kind::Question,
+        Doc::Diary(_) => Kind::Diary,
     }
 }
 
 const COMMON: [&str; 7] = [
     "id", "kind", "title", "tags", "aliases", "created", "updated",
+];
+
+const DIARY_OWN: [&str; 19] = [
+    "date",
+    "study_minutes",
+    "runs",
+    "stacks",
+    "items",
+    "exams",
+    "performance",
+    "success",
+    "confidence",
+    "effort",
+    "focus",
+    "energy",
+    "difficulty",
+    "satisfaction",
+    "understanding",
+    "mood",
+    "stress",
+    "motivation",
+    "sleep",
 ];
 
 /// Keys this kind understands; every other top-level key is preserved as an unknown entry.
@@ -136,6 +202,7 @@ pub fn known_keys(kind: Kind) -> Vec<&'static str> {
         Kind::Note => &["rehearse_title"],
         Kind::Card => &["reversible"],
         Kind::Question => &["accepted", "rubric", "min_score"],
+        Kind::Diary => &DIARY_OWN,
     };
     COMMON.iter().chain(own).copied().collect()
 }
@@ -147,6 +214,7 @@ pub fn doc_meta(doc: &Doc) -> &Meta {
         Doc::Note(d) => &d.meta,
         Doc::Card(d) => &d.meta,
         Doc::Question(d) => &d.meta,
+        Doc::Diary(d) => &d.meta,
     }
 }
 
@@ -157,5 +225,8 @@ pub fn doc_texts(doc: &Doc) -> Vec<&str> {
         Doc::Note(d) => vec![&d.body],
         Doc::Card(d) => vec![&d.front, &d.back],
         Doc::Question(d) => vec![&d.prompt, &d.reference],
+        Doc::Diary(d) => vec![&d.body],
     }
 }
+
+pub use crate::build_diary::{diary_doc_to_entry, diary_entry_to_doc};

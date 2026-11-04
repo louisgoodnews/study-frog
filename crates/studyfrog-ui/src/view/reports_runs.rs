@@ -63,8 +63,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.weak("No runs to show.");
     }
     egui::ScrollArea::vertical().show(ui, |ui| {
-        for r in shown {
-            ui.label(line(r));
-        }
+        crate::view::kit::column(ui, crate::view::kit::READING_WIDTH, |ui| {
+            for r in shown {
+                ui.label(line(r));
+            }
+        });
     });
 }

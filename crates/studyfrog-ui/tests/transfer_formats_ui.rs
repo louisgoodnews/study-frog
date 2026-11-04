@@ -3,7 +3,7 @@
 
 mod common;
 
-use common::views::{assert_all_named, harness, open_model};
+use common::views::{assert_all_named, open_model};
 use egui_kittest::kittest::Queryable;
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::library_bulk::LibraryEffect;
@@ -14,6 +14,19 @@ use studyfrog_ui::transfer_ui::{Tab, TransferJob, TransferMsg};
 
 fn t(m: TransferMsg) -> Msg {
     Msg::Library(LibraryMsg::Transfer(m))
+}
+
+fn harness(
+    model: studyfrog_ui::model::Model,
+) -> egui_kittest::Harness<'static, common::views::App> {
+    egui_kittest::Harness::builder()
+        .with_size(eframe::egui::vec2(1000.0, 1600.0))
+        .build_ui_state(
+            |ui, (model, effects): &mut common::views::App| {
+                effects.extend(studyfrog_ui::model::frame(model, ui))
+            },
+            (model, Vec::new()),
+        )
 }
 
 #[test]
@@ -54,6 +67,39 @@ fn the_answer_of_the_write_is_told_in_a_notice() {
     assert!(m.state.notice.as_ref().unwrap().text.contains("/h/x.csv"));
     apply(&mut m, t(TransferMsg::ExampleSaved(Err("no space".into()))));
     assert!(m.state.notice.as_ref().unwrap().text.contains("no space"));
+}
+
+#[test]
+fn toml_and_ron_examples_can_be_saved() {
+    let mut m = open_model();
+    apply(&mut m, t(TransferMsg::Open(Tab::Import, None)));
+    let mut h = harness(m);
+    h.run_steps(6);
+    h.get_by_label("Which files can I import?").click();
+    h.run_steps(6);
+    h.get_by_label("Save example (studyfrog-example.toml)")
+        .click();
+    h.run_steps(4);
+    let wrote_toml = h.state().1.iter().any(|e| {
+        matches!(
+            e,
+            Effect::Library(LibraryEffect::Transfer(TransferJob::SaveExample { file, .. }))
+                if file == "studyfrog-example.toml"
+        )
+    });
+    assert!(wrote_toml);
+
+    h.get_by_label("Save example (studyfrog-example.ron)")
+        .click();
+    h.run_steps(4);
+    let wrote_ron = h.state().1.iter().any(|e| {
+        matches!(
+            e,
+            Effect::Library(LibraryEffect::Transfer(TransferJob::SaveExample { file, .. }))
+                if file == "studyfrog-example.ron"
+        )
+    });
+    assert!(wrote_ron);
 }
 
 #[test]

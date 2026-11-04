@@ -12,6 +12,7 @@ pub mod limits;
 pub mod links;
 pub mod render;
 pub mod text;
+pub mod write;
 
 use std::sync::Arc;
 

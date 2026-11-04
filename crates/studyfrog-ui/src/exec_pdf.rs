@@ -41,11 +41,12 @@ fn bytes_of(w: &mut Worker, rel: &str) -> Result<PdfBytes, String> {
         return Ok(bytes.clone());
     }
     let session = w.session.as_ref().ok_or("no vault is open")?;
-    if !is_vault_pdf(rel) {
-        return Err("only PDF files inside the vault can be opened".to_owned());
-    }
-    let data =
-        std::fs::read(session.root.join(rel)).map_err(|e| format!("cannot read the file: {e}"))?;
+    let path = if is_vault_pdf(rel) {
+        session.root.join(rel)
+    } else {
+        std::path::PathBuf::from(rel)
+    };
+    let data = std::fs::read(&path).map_err(|e| format!("cannot read the file: {e}"))?;
     let bytes: PdfBytes = Arc::new(data);
     w.pdf_bytes = Some((rel.to_owned(), bytes.clone()));
     Ok(bytes)
@@ -161,6 +162,7 @@ pub fn run(w: &mut Worker, effect: PdfEffect, now_ns: i64) -> Msg {
         ))),
         PdfEffect::LoadMarks(path) => load_marks_msg(w, &path),
         PdfEffect::SaveMarks { path, marks } => save_marks_msg(w, &path, &marks),
+        PdfEffect::Export(job) => crate::exec_pdf_export::run(w, job),
     }
 }
 

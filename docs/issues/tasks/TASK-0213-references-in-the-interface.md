@@ -2,7 +2,7 @@
 id: TASK-0213
 type: task
 title: References in the interface
-status: backlog
+status: done
 epic: EPIC-026
 parents: [STORY-0079]
 estimate: 5
@@ -22,11 +22,11 @@ The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0, a
 How the user puts an item into more than one stack and sees what each stack makes of it.
 
 ## Acceptance Criteria
-- [ ] The item page shows the primary stack and the stacks that reference the item, with add and remove, and the schedule, due date and familiarity of each
-- [ ] An item can be added to another stack from the library's bulk bar and by dragging it onto a stack
-- [ ] A stack's pages mark the items that are only referenced (with their primary stack's name)
-- [ ] The Create dialog's parent stack stays the primary stack and offers an optional 'Also in' choice
-- [ ] Every action has an accessible name and a keyboard route
+- [x] The item page shows the primary stack and the stacks that reference the item, with add and remove, and the schedule, due date and familiarity of each
+- [x] An item can be added to another stack from the library's bulk bar and by dragging it onto a stack
+- [x] A stack's pages mark the items that are only referenced (with their primary stack's name)
+- [x] The Create dialog's parent stack stays the primary stack and offers an optional 'Also in' choice
+- [x] Every action has an accessible name and a keyboard route
 
 ## Design Notes
 Builds on the bulk bar and the stack page's Backlog and List tabs.

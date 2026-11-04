@@ -2,7 +2,7 @@
 id: TASK-0202
 type: task
 title: Specify the folders and items views
-status: backlog
+status: done
 epic: EPIC-026
 parents: [STORY-0076]
 estimate: 3
@@ -20,12 +20,12 @@ The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0, a
 Write down the two views before building them.
 
 ## Acceptance Criteria
-- [ ] docs/specs/vault-views.md describes the Folders view, modelled on Obsidian's file explorer, and the Items view, what each shows and which actions each has
-- [ ] It shows how stack folders differ from normal folders in the tree and says what moving a file or a folder does to the primary stack
-- [ ] The owner has accepted it
+- [x] docs/specs/vault-views.md describes the Folders view, modelled on Obsidian's file explorer, and the Items view, what each shows and which actions each has
+- [x] It shows how stack folders differ from normal folders in the tree and says what moving a file or a folder does to the primary stack
+- [x] The owner has accepted it
 
 ## Design Notes
-Reference (the owner's screenshot of Obsidian's file explorer, 2026-11-03): a small toolbar over the tree with New note, New folder, Sort order, Expand or collapse all and Collapse all; a tree with a chevron for each folder, indent guides, the file name without its extension and a small tag for other types (PDF); the `_stack` file is listed inside its folder. The owner finds this view more helpful than StudyFrog's. Still to settle: whether the stack file is a row of its own or shown as a mark on the folder, which files the tree shows (notes, PDFs, pictures, the wiki folder), how links are kept when files move (wikilinks by title stay, PDF and picture paths are rewritten as in the PDF rename), drag and drop, inline rename and the keyboard (F2, Delete, arrows), the context menu, undo, files changed outside the app, and the names of the two views in the sidebar.
+Reference (the owner's screenshot of Obsidian's file explorer, 2026-11-03): a small toolbar over the tree with New note, New folder, Sort order, Expand or collapse all and Collapse all; a tree with a chevron for each folder, indent guides, the file name without its extension and a small tag for other types (PDF); the `_stack` file is listed inside its folder. Settled in `docs/specs/vault-views.md` based on the owner's decisions of 2026-11-03: stack folders are marked with a distinct stack icon/badge while hiding the internal `_stack.md` file from regular rows; tree shows notes, cards, questions, PDFs, and images; wikilinks by title stay intact while relative attachment links are rewritten; inline rename (`F2`), `Delete`, arrow key navigation, drag & drop, context menus, undo snapshots, and external file watching are defined; and the sidebar provides "Folders" alongside "Items".
 
 ## Dependencies
 TASK-0210, because what a folder and a stack are depends on it.

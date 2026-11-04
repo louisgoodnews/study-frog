@@ -20,6 +20,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let response = egui::Modal::new(egui::Id::unique("dialog")).show(ui.ctx(), |ui| {
         ui.set_width(match modal {
             Modal::Create(f) => super::modal_size::width(ui.ctx(), f.kind),
+            Modal::PdfExport(_) => 620.0,
             _ => WIDTH,
         });
         match modal {
@@ -27,6 +28,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             Modal::Vault => vault(state, ui, out),
             Modal::Import => super::modal_import::import(state, ui, out),
             Modal::Transfer => super::modal_transfer::transfer(state, ui, out),
+            Modal::ConfirmUnmark(plan) => super::modal_unmark::draw(plan, ui, out),
+            Modal::PdfExport(form) => super::modal_pdf_export::draw(state, form, ui, out),
         }
     });
     if response.should_close() {

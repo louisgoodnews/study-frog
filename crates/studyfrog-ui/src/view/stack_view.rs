@@ -82,6 +82,18 @@ fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Ve
             out.push(Msg::Library(LibraryMsg::Transfer(open)));
             ui.close();
         }
+        if ui.button("Export to PDF…").clicked() {
+            out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Export(
+                crate::pdf_export_types::PdfExportMsg::Open(
+                    studyfrog_service::pdf_export::ExportTarget::Stack(stack.folder.clone()),
+                ),
+            )));
+            ui.close();
+        }
+        if ui.button("Make normal folder…").clicked() {
+            out.push(Msg::Modal(ModalMsg::AskUnmark(stack.folder.clone())));
+            ui.close();
+        }
     });
 }
 

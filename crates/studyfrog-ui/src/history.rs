@@ -53,6 +53,7 @@ pub fn screen_title(screen: Screen) -> &'static str {
     match screen {
         Screen::Welcome => "Vault chooser",
         Screen::Home => "Home",
+        Screen::Folders => "Folders",
         Screen::Agent => "Assistant",
         Screen::Library => "Library",
         Screen::Rehearse => "Rehearse",
@@ -63,6 +64,7 @@ pub fn screen_title(screen: Screen) -> &'static str {
         Screen::Board => "Board",
         Screen::Achievements => "Achievements",
         Screen::Reports => "Reports",
+        Screen::Diary => "Diary",
         Screen::Pdf => "PDF",
         Screen::Help => "Help",
     }
@@ -170,12 +172,14 @@ fn go(state: State, index: usize) -> (State, Vec<Effect>) {
     match place {
         Place::Screen(screen) => crate::nav::navigate(state, screen),
         Place::Stack(folder) => {
-            let (state, mut effects) = crate::nav::navigate(state, Screen::Library);
-            let (state, more) = crate::update::update(state, Msg::Select(Selection::Stack(folder)));
-            effects.extend(more);
+            let (mut state, effects) = crate::nav::navigate(state, Screen::Library);
+            state.replay = Some(Box::new(Msg::Select(Selection::Stack(folder))));
             (state, effects)
         }
-        Place::Item(uid) => crate::update::update(state, Msg::OpenItem(uid)),
+        Place::Item(uid) => {
+            state.replay = Some(Box::new(Msg::OpenItem(uid)));
+            (state, Vec::new())
+        }
     }
 }
 

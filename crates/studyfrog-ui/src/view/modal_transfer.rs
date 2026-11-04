@@ -1,12 +1,13 @@
 //! The import and export dialog: pick the format and the scope, see the preview, choose what to do with duplicates, see the result.
 
-use eframe::egui::{self, ComboBox};
+use eframe::egui::{self, ComboBox, RichText};
 use studyfrog_service::xfer_plan::{Policy, Verdict};
 
 use crate::library_ui::LibraryMsg;
 use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::state::State;
+use crate::theme::palette_of;
 use crate::transfer_ui::{Format, Tab, TransferMsg};
 use crate::view::widgets::text_field;
 
@@ -20,31 +21,17 @@ fn scope_menu(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, label: &str)
         .iter()
         .flat_map(|v| v.overview.stacks.iter())
         .collect();
+    let (none, name) = if label == "Export" {
+        ("Whole library", "Export what")
+    } else {
+        ("As the file says", "Import into")
+    };
     let current = state
         .transfer
         .scope
         .as_ref()
         .and_then(|f| stacks.iter().find(|s| s.folder == *f))
-        .map_or_else(
-            || {
-                if label == "Export" {
-                    "Whole library".to_owned()
-                } else {
-                    "As the file says".to_owned()
-                }
-            },
-            |s| s.title.clone(),
-        );
-    let none = if label == "Export" {
-        "Whole library"
-    } else {
-        "As the file says"
-    };
-    let name = if label == "Export" {
-        "Export what"
-    } else {
-        "Import into"
-    };
+        .map_or_else(|| none.to_owned(), |s| s.title.clone());
     ComboBox::from_label(name)
         .selected_text(current)
         .show_ui(ui, |ui| {
@@ -97,9 +84,11 @@ fn export_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     scope_menu(state, ui, out, "Export");
-    ui.horizontal(|ui| {
+    ui.horizontal_wrapped(|ui| {
         for (f, label) in [
             (Format::Json, "JSON with pictures (zip)"),
+            (Format::Toml, "TOML"),
+            (Format::Ron, "RON"),
             (Format::Csv, "CSV (cards and questions)"),
             (Format::Markdown, "Markdown files (zip)"),
         ] {
@@ -108,6 +97,11 @@ fn export_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
     });
+    let note = match t.format {
+        Format::Markdown => "Markdown files (import as an Obsidian vault or open directly).",
+        _ => "Can be imported back into StudyFrog.",
+    };
+    ui.label(RichText::new(note).small().color(palette_of(ui).text_weak));
     if let Some(text) = text_field(
         ui,
         "Write to folder",
@@ -126,6 +120,14 @@ fn export_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .clicked()
         {
             send(out, TransferMsg::AskMode);
+        }
+        if ui.button("Export to PDF…").clicked() {
+            let target = studyfrog_service::pdf_export::ExportTarget::Stack(
+                t.scope.clone().unwrap_or_default(),
+            );
+            out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Export(
+                crate::pdf_export_types::PdfExportMsg::Open(target),
+            )));
         }
     });
 }

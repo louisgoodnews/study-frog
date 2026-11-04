@@ -20,7 +20,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     egui::ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
-            ui.label(RichText::new("Assistant").size(26.0).strong());
+            ui.label(RichText::new("Assistant").size(17.0).strong());
+            ui.add_space(4.0);
             ui.horizontal(|ui| {
                 for (tab, label) in [
                     (AgentTab::Connections, "Connections"),
@@ -36,12 +37,13 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             if let Some(e) = &a.error {
                 ui.colored_label(ui.visuals().error_fg_color, e);
             }
-            match a.tab {
+            ui.add_space(8.0);
+            kit::column(ui, 860.0, |ui| match a.tab {
                 AgentTab::Connections => connections(state, ui, out),
                 AgentTab::Wiki => agent_wiki::wiki(state, ui, out),
                 AgentTab::Exam => crate::view::agent_exam::exam(state, ui, out),
                 AgentTab::Prompts => crate::view::agent_prompts::prompts_tab(state, ui, out),
-            }
+            });
         });
 }
 
@@ -94,6 +96,7 @@ fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 }
             });
         });
+        ui.add_space(8.0);
     }
     new_connection(state, ui, out);
 }
@@ -101,45 +104,47 @@ fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 fn new_connection(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let f = &state.agent.form;
     ui.add_space(8.0);
-    kit::section(ui, "New connection");
-    ui.horizontal(|ui| {
-        for p in PROTOCOLS {
-            if ui
-                .selectable_label(f.protocol == p, protocol_name(p))
-                .clicked()
-            {
-                send(out, AgentMsg::Form(FormEdit::Protocol(p)));
+    kit::group(ui, "New connection", |ui| {
+        ui.horizontal(|ui| {
+            for p in PROTOCOLS {
+                if ui
+                    .selectable_label(f.protocol == p, protocol_name(p))
+                    .clicked()
+                {
+                    send(out, AgentMsg::Form(FormEdit::Protocol(p)));
+                }
+            }
+        });
+        for (label, value, hint, make) in [
+            (
+                "Connection name",
+                &f.name,
+                "e.g. Local Llama",
+                FormEdit::Name as fn(String) -> FormEdit,
+            ),
+            ("Address", &f.base_url, "", FormEdit::BaseUrl),
+            (
+                "Model",
+                &f.model,
+                "e.g. llama3.2 or gpt-4o",
+                FormEdit::Model,
+            ),
+        ] {
+            if let Some(t) = text_field(ui, label, value, hint, 1) {
+                send(out, AgentMsg::Form(make(t)));
             }
         }
-    });
-    for (label, value, hint, make) in [
-        (
-            "Connection name",
-            &f.name,
-            "e.g. Local Llama",
-            FormEdit::Name as fn(String) -> FormEdit,
-        ),
-        ("Address", &f.base_url, "", FormEdit::BaseUrl),
-        (
-            "Model",
-            &f.model,
-            "e.g. llama3.2 or gpt-4o",
-            FormEdit::Model,
-        ),
-    ] {
-        if let Some(t) = text_field(ui, label, value, hint, 1) {
-            send(out, AgentMsg::Form(make(t)));
+        let name = ui.label("API key (not needed for a local model)");
+        let mut key = f.key.clone();
+        let edit = egui::TextEdit::singleline(&mut key)
+            .password(true)
+            .desired_width(f32::INFINITY);
+        if ui.add(edit).labelled_by(name.id).changed() {
+            send(out, AgentMsg::Form(FormEdit::Key(key)));
         }
-    }
-    let name = ui.label("API key (not needed for a local model)");
-    let mut key = f.key.clone();
-    let edit = egui::TextEdit::singleline(&mut key)
-        .password(true)
-        .desired_width(f32::INFINITY);
-    if ui.add(edit).labelled_by(name.id).changed() {
-        send(out, AgentMsg::Form(FormEdit::Key(key)));
-    }
-    if kit::primary_button(ui, "Add connection").clicked() {
-        send(out, AgentMsg::AddConnection);
-    }
+        ui.add_space(4.0);
+        if kit::primary_button(ui, "Add connection").clicked() {
+            send(out, AgentMsg::AddConnection);
+        }
+    });
 }

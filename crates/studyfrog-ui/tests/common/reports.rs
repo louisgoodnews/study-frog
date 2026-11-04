@@ -78,5 +78,6 @@ pub fn bundle() -> ReportBundle {
             }),
             simulated: true,
         },
+        calibration: studyfrog_report::calibration::calibration_report(&[], &[]),
     }
 }

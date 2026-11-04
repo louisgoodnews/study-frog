@@ -108,6 +108,11 @@ const UPSERT_FILE: &str = "INSERT INTO file (path, size, mtime_ns, hash, uid, er
     VALUES (?1, ?2, ?3, ?4, ?5, ?6)
     ON CONFLICT(path) DO UPDATE SET size = ?2, mtime_ns = ?3, hash = ?4, uid = ?5, error = ?6";
 
+fn has_diary(tx: &Transaction) -> bool {
+    tx.pragma_query_value(None, "user_version", |row| row.get::<_, u32>(0))
+        .is_ok_and(|v| v >= 23)
+}
+
 /// Write the outcome of reading one file: an item with links and tags, or an error entry.
 pub fn write_scanned(tx: &Transaction, f: &ScannedFile) -> Result<(), StoreError> {
     let (uid, error) = match &f.outcome {
@@ -133,7 +138,14 @@ pub fn write_scanned(tx: &Transaction, f: &ScannedFile) -> Result<(), StoreError
         "DELETE FROM stack_identity WHERE path = ?1",
         [&file.rel],
     )?;
+    if has_diary(tx) {
+        run(tx, "DELETE FROM diary_entries WHERE path = ?1", [&file.rel])?;
+    }
     match &f.outcome {
+        Ok(Doc::Diary(diary)) if has_diary(tx) => {
+            crate::diary::write_diary_entry(tx, &file.rel, file.mtime_ns, diary)
+        }
+        Ok(Doc::Diary(_)) => Ok(()),
         Ok(doc) => write_item(tx, &file.rel, f.stack.as_deref(), doc),
         Err(_) => Ok(()),
     }

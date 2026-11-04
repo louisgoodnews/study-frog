@@ -41,6 +41,7 @@ queries).
 | `assistant` | Assistant | all | `docs/specs/agent.md` |
 | `graph` | Graph | all | CHANGELOG |
 | `pdf` | PDFs | all | `docs/specs/pdf.md` |
+| `pdf-export` | Export to PDF | all | `docs/specs/pdf-export.md` |
 | `settings` | Settings | all | `docs/specs/config-files.md`, CHANGELOG |
 | `import-export` | Import and export | all | `docs/specs/interchange.md` |
 | `prompts` | Prompts for an AI | all | `docs/prompts/` |

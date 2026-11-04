@@ -4,25 +4,25 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (17) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (219) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (236) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
-| [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
-| [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
-| [TASK-0174](docs/issues/tasks/TASK-0174-self-assessment-against-measured-results.md) Self-assessment against measured results (3) |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
-| [TASK-0195](docs/issues/tasks/TASK-0195-calm-the-remaining-screens.md) Calm the remaining screens (5) |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
-| [TASK-0202](docs/issues/tasks/TASK-0202-specify-the-folders-and-items-views.md) Specify the folders and items views (3) |  |  |  |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
-| [TASK-0203](docs/issues/tasks/TASK-0203-folder-operations-in-the-service-create-rename-move-delete.md) Folder operations in the service (create, rename, move, delete) (5) |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
-| [TASK-0204](docs/issues/tasks/TASK-0204-folders-view-and-items-view-in-the-application.md) Folders view and Items view in the application (8) |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
-| [TASK-0213](docs/issues/tasks/TASK-0213-references-in-the-interface.md) References in the interface (5) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-| [TASK-0217](docs/issues/tasks/TASK-0217-mark-a-folder-as-a-stack-or-as-a-normal-folder.md) Mark a folder as a stack or as a normal folder (3) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-| [TASK-0220](docs/issues/tasks/TASK-0220-export-formats-toml-and-ron-next-to-json.md) Export formats TOML and RON next to JSON (3) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-| [TASK-0228](docs/issues/tasks/TASK-0228-specify-the-markdown-to-pdf-export.md) Specify the Markdown to PDF export and choose the writer (ADR) (3) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
-| [TASK-0229](docs/issues/tasks/TASK-0229-markdown-layout-and-pdf-writer.md) Markdown layout and PDF writer (8) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
-| [TASK-0230](docs/issues/tasks/TASK-0230-export-use-cases-for-pdf.md) Export use cases for PDF in the service (5) |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
-| [TASK-0231](docs/issues/tasks/TASK-0231-export-to-pdf-in-the-application.md) Export to PDF in the application (5) |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
-| [TASK-0232](docs/issues/tasks/TASK-0232-pdf-export-documentation-tests-and-release-notes.md) Documentation, help and release notes for the PDF export (2) |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
+|  |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+|  |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+|  |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+|  |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
+|  |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
+|  |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
+|  |  |  |  |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
+|  |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
+|  |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
+|  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+|  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+|  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+|  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+|  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
+|  |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
+|  |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
+|  |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
 |  |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
 |  |  |  |  |  | [TASK-0010](docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
 |  |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
@@ -183,6 +183,11 @@
 |  |  |  |  |  | [TASK-0167](docs/issues/tasks/TASK-0167-anki-importer.md) Anki importer (5) |
 |  |  |  |  |  | [TASK-0168](docs/issues/tasks/TASK-0168-obsidian-vault-importer.md) Obsidian vault importer (3) |
 |  |  |  |  |  | [TASK-0169](docs/issues/tasks/TASK-0169-document-how-to-write-a-format-adapter.md) Document how to write a format adapter (2) |
+|  |  |  |  |  | [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |
+|  |  |  |  |  | [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |
+|  |  |  |  |  | [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |
+|  |  |  |  |  | [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |
+|  |  |  |  |  | [TASK-0174](docs/issues/tasks/TASK-0174-self-assessment-against-measured-results.md) Self-assessment against measured results (3) |
 |  |  |  |  |  | [TASK-0179](docs/issues/tasks/TASK-0179-specify-the-rehearsal-modes.md) Specify the rehearsal modes (2) |
 |  |  |  |  |  | [TASK-0180](docs/issues/tasks/TASK-0180-countdown-and-count-up-in-the-run-state-machine.md) Countdown and count up in the run state machine (5) |
 |  |  |  |  |  | [TASK-0181](docs/issues/tasks/TASK-0181-mode-and-timer-in-run-setup-and-on-the-rehearsal-screen.md) Mode and timer in run setup and on the rehearsal screen (3) |
@@ -199,12 +204,16 @@
 |  |  |  |  |  | [TASK-0192](docs/issues/tasks/TASK-0192-plan-to-make-the-ui-calmer.md) Plan to make the UI calmer (3) |
 |  |  |  |  |  | [TASK-0193](docs/issues/tasks/TASK-0193-space-between-content-and-scroll-bars.md) Space between content and scroll bars (1) |
 |  |  |  |  |  | [TASK-0194](docs/issues/tasks/TASK-0194-rehearsal-progress-bar-against-open-items.md) Rehearsal progress bar against the open items (3) |
+|  |  |  |  |  | [TASK-0195](docs/issues/tasks/TASK-0195-calm-the-remaining-screens.md) Calm the remaining screens (5) |
 |  |  |  |  |  | [TASK-0196](docs/issues/tasks/TASK-0196-navigation-history.md) Navigation history (5) |
 |  |  |  |  |  | [TASK-0197](docs/issues/tasks/TASK-0197-tables-and-more-markdown-in-the-editor-and-the-preview.md) Tables and more Markdown in the editor and the preview (5) |
 |  |  |  |  |  | [TASK-0198](docs/issues/tasks/TASK-0198-text-macros-that-expand-into-markdown.md) Text macros that expand into Markdown (5) |
 |  |  |  |  |  | [TASK-0199](docs/issues/tasks/TASK-0199-open-the-new-item-from-the-notification-that-says-it-was-created.md) Open the new item from the notification that says it was created (3) |
 |  |  |  |  |  | [TASK-0200](docs/issues/tasks/TASK-0200-auto-save-in-the-editor-and-no-save-button.md) Auto-save in the editor and no Save button (5) |
 |  |  |  |  |  | [TASK-0201](docs/issues/tasks/TASK-0201-item-saved-toast.md) Item saved toast when leaving the editor (2) |
+|  |  |  |  |  | [TASK-0202](docs/issues/tasks/TASK-0202-specify-the-folders-and-items-views.md) Specify the folders and items views (3) |
+|  |  |  |  |  | [TASK-0203](docs/issues/tasks/TASK-0203-folder-operations-in-the-service-create-rename-move-delete.md) Folder operations in the service (create, rename, move, delete) (5) |
+|  |  |  |  |  | [TASK-0204](docs/issues/tasks/TASK-0204-folders-view-and-items-view-in-the-application.md) Folders view and Items view in the application (8) |
 |  |  |  |  |  | [TASK-0205](docs/issues/tasks/TASK-0205-write-the-standard-prompts.md) Write the standard prompts (5) |
 |  |  |  |  |  | [TASK-0206](docs/issues/tasks/TASK-0206-prompts-screen-copy-and-export.md) Prompts screen with copy and export (3) |
 |  |  |  |  |  | [TASK-0207](docs/issues/tasks/TASK-0207-run-a-prompt-with-the-connected-assistant-and-an-attached-file.md) Run a prompt with the connected assistant and an attached file (5) |
@@ -213,11 +222,14 @@
 |  |  |  |  |  | [TASK-0210](docs/issues/tasks/TASK-0210-decide-the-stack-folder-and-reference-rules-adr-and-spec.md) Decide the stack folder and reference rules (ADR and spec) (3) |
 |  |  |  |  |  | [TASK-0211](docs/issues/tasks/TASK-0211-the-referenced-by-field-in-the-file-format-the-index-and-the-vault-che.md) The referenced_by field in the file format, the index and the vault checks (5) |
 |  |  |  |  |  | [TASK-0212](docs/issues/tasks/TASK-0212-services-follow-the-membership.md) Services follow the membership (8) |
+|  |  |  |  |  | [TASK-0213](docs/issues/tasks/TASK-0213-references-in-the-interface.md) References in the interface (5) |
 |  |  |  |  |  | [TASK-0214](docs/issues/tasks/TASK-0214-code-blocks-with-language-highlighting.md) Code blocks with language highlighting (5) |
 |  |  |  |  |  | [TASK-0215](docs/issues/tasks/TASK-0215-underline-and-text-colour.md) Underline and text colour (3) |
 |  |  |  |  |  | [TASK-0216](docs/issues/tasks/TASK-0216-automatic-table-of-contents.md) Automatic table of contents (3) |
+|  |  |  |  |  | [TASK-0217](docs/issues/tasks/TASK-0217-mark-a-folder-as-a-stack-or-as-a-normal-folder.md) Mark a folder as a stack or as a normal folder (3) |
 |  |  |  |  |  | [TASK-0218](docs/issues/tasks/TASK-0218-schedules-due-dates-and-reviews-per-stack.md) Schedules, due dates and reviews per stack (8) |
 |  |  |  |  |  | [TASK-0219](docs/issues/tasks/TASK-0219-familiarity-and-difficulty-per-stack-averaged-on-the-item.md) Familiarity and difficulty per stack, averaged on the item (5) |
+|  |  |  |  |  | [TASK-0220](docs/issues/tasks/TASK-0220-export-formats-toml-and-ron-next-to-json.md) Export formats TOML and RON next to JSON (3) |
 |  |  |  |  |  | [TASK-0221](docs/issues/tasks/TASK-0221-specify-the-appearance-and-ui-settings.md) Specify the appearance and UI settings (2) |
 |  |  |  |  |  | [TASK-0222](docs/issues/tasks/TASK-0222-choose-the-theme-dark-light-or-follow-the-system.md) Choose the theme (dark, light or follow the system) (3) |
 |  |  |  |  |  | [TASK-0223](docs/issues/tasks/TASK-0223-appearance-tab-in-settings.md) Appearance tab in Settings (3) |
@@ -225,6 +237,11 @@
 |  |  |  |  |  | [TASK-0225](docs/issues/tasks/TASK-0225-accent-colour-high-contrast-and-reduced-motion.md) Accent colour, high contrast and reduced motion (5) |
 |  |  |  |  |  | [TASK-0226](docs/issues/tasks/TASK-0226-make-every-screen-right-in-both-themes.md) Make every screen right in both themes (5) |
 |  |  |  |  |  | [TASK-0227](docs/issues/tasks/TASK-0227-start-up-and-window-settings.md) Start-up and window settings (3) |
+|  |  |  |  |  | [TASK-0228](docs/issues/tasks/TASK-0228-specify-the-markdown-to-pdf-export.md) Specify the Markdown to PDF export and choose the writer (ADR) (3) |
+|  |  |  |  |  | [TASK-0229](docs/issues/tasks/TASK-0229-markdown-layout-and-pdf-writer.md) Markdown layout and PDF writer (8) |
+|  |  |  |  |  | [TASK-0230](docs/issues/tasks/TASK-0230-export-use-cases-for-pdf.md) Export use cases for PDF in the service (5) |
+|  |  |  |  |  | [TASK-0231](docs/issues/tasks/TASK-0231-export-to-pdf-in-the-application.md) Export to PDF in the application (5) |
+|  |  |  |  |  | [TASK-0232](docs/issues/tasks/TASK-0232-pdf-export-documentation-tests-and-release-notes.md) Documentation, help and release notes for the PDF export (2) |
 
 ## Stories
 
@@ -297,20 +314,20 @@
 | [STORY-0065](docs/issues/stories/STORY-0065-import-and-export-in-json-and-other-formats.md) Import and export in JSON and other formats (8) | done | 4/4 |
 | [STORY-0066](docs/issues/stories/STORY-0066-built-in-wiki-faq-and-tutorials.md) Built-in wiki, FAQ and tutorials (8) | done | 6/6 |
 | [STORY-0067](docs/issues/stories/STORY-0067-importers-for-anki-and-obsidian.md) Importers for Anki and Obsidian (8) | done | 3/3 |
-| [STORY-0068](docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | backlog | 0/5 |
+| [STORY-0068](docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | done | 5/5 |
 | [STORY-0070](docs/issues/stories/STORY-0070-rehearsal-modes-for-countdown-and-count-up.md) Rehearsal modes for countdown and count up (8) | done | 4/4 |
 | [STORY-0071](docs/issues/stories/STORY-0071-create-dialog-like-jira.md) Create dialog like Jira (8) | done | 3/3 |
 | [STORY-0072](docs/issues/stories/STORY-0072-safer-simpler-ui-after-first-use.md) Safer and calmer UI after first use (8) | done | 7/7 |
-| [STORY-0073](docs/issues/stories/STORY-0073-calmer-screens.md) A calmer look on every screen (5) | backlog | 3/4 |
+| [STORY-0073](docs/issues/stories/STORY-0073-calmer-screens.md) A calmer look on every screen (5) | done | 4/4 |
 | [STORY-0074](docs/issues/stories/STORY-0074-markdown-editor-formatting-macros-and-lists.md) Markdown editor, formatting, macros and lists (8) | done | 7/7 |
 | [STORY-0075](docs/issues/stories/STORY-0075-create-and-edit-without-losing-work.md) Create and edit without losing work (8) | done | 3/3 |
-| [STORY-0076](docs/issues/stories/STORY-0076-organize-the-vault-as-folders-and-files.md) Organize the vault as folders and files (8) | backlog | 0/3 |
+| [STORY-0076](docs/issues/stories/STORY-0076-organize-the-vault-as-folders-and-files.md) Organize the vault as folders and files (8) | done | 3/3 |
 | [STORY-0077](docs/issues/stories/STORY-0077-prompts-for-ai-agents.md) Prompts for AI agents (8) | done | 3/3 |
 | [STORY-0078](docs/issues/stories/STORY-0078-imports-that-explain-themselves.md) Imports that explain themselves (5) | done | 2/2 |
-| [STORY-0079](docs/issues/stories/STORY-0079-stack-folders-and-items-referenced-by-several-stacks.md) Stack folders and items referenced by several stacks (8) | backlog | 5/8 |
+| [STORY-0079](docs/issues/stories/STORY-0079-stack-folders-and-items-referenced-by-several-stacks.md) Stack folders and items referenced by several stacks (8) | done | 8/8 |
 | [STORY-0080](docs/issues/stories/STORY-0080-dark-light-and-system-theme.md) Dark, light and system theme (8) | done | 3/3 |
 | [STORY-0081](docs/issues/stories/STORY-0081-display-and-window-settings.md) Display and window settings (8) | done | 4/4 |
-| [STORY-0082](docs/issues/stories/STORY-0082-export-notes-to-pdf.md) Export notes to PDF (8) | backlog | 0/5 |
+| [STORY-0082](docs/issues/stories/STORY-0082-export-notes-to-pdf.md) Export notes to PDF (8) | done | 5/5 |
 
 ## Epics
 
@@ -339,7 +356,7 @@
 | [EPIC-021](docs/issues/epics/EPIC-021-knowledge-workspace.md) Knowledge workspace | done | 14/14 |
 | [EPIC-022](docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | done | 1/1 |
 | [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | done | 15/15 |
-| [EPIC-024](docs/issues/epics/EPIC-024-diary-for-0-4-0.md) Diary and a calmer UI for 0.4.0 | backlog | 0/2 |
+| [EPIC-024](docs/issues/epics/EPIC-024-diary-for-0-4-0.md) Diary and a calmer UI for 0.4.0 | done | 2/2 |
 | [EPIC-025](docs/issues/epics/EPIC-025-feedback-fixes-for-0-3-1.md) Feedback fixes for 0.3.1 | done | 1/1 |
-| [EPIC-026](docs/issues/epics/EPIC-026-writing-saving-organizing-and-prompts-for-0-4-0.md) Writing, saving, organizing and prompts for 0.4.0 | backlog | 4/7 |
+| [EPIC-026](docs/issues/epics/EPIC-026-writing-saving-organizing-and-prompts-for-0-4-0.md) Writing, saving, organizing and prompts for 0.4.0 | done | 7/7 |
 | [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | done | 2/2 |

@@ -26,7 +26,8 @@ fn kind_color(p: &crate::theme::Palette, kind: ItemKind) -> Color32 {
 
 /// Header, canvas and the accessible item list.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.heading("Link graph");
+    ui.label(egui::RichText::new("Link graph").size(17.0).strong());
+    ui.add_space(4.0);
     let Some(g) = &state.graph else {
         ui.label("Loading the graph…");
         return;
@@ -44,6 +45,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     canvas(g, ui, out);
+    ui.add_space(6.0);
     if let Some(i) = g.hovered {
         ui.label(format!("Pointing at: {}", g.graph.nodes[i].title));
     }
@@ -91,7 +93,13 @@ fn canvas(g: &GraphState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 fn paint(g: &GraphState, ui: &egui::Ui, rect: egui::Rect) {
     let painter = ui.painter_at(rect);
     let pal = crate::theme::palette_of(ui);
-    painter.rect_filled(rect, 4.0, ui.visuals().extreme_bg_color);
+    painter.rect(
+        rect,
+        8.0,
+        ui.visuals().extreme_bg_color,
+        Stroke::new(1.0, pal.border),
+        egui::StrokeKind::Inside,
+    );
     let c = rect.center();
     let at = |i: usize| Pos2::new(c.x + g.sx[i], c.y + g.sy[i]);
     let visible = rect.expand(40.0);

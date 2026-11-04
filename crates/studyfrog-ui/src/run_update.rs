@@ -125,6 +125,9 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
         effects.extend(prefetch(&mut run));
         if is_over(&run) {
             effects.push(Effect::CheckAchievements);
+            if run.diary_prompt.is_none() {
+                run.diary_prompt = Some(crate::diary_prompt::prompt_new(&state, &run));
+            }
         }
         let mut ctx = step_context(&run.session);
         ctx.timing = rated_item.and_then(|item| rating_timing(&run, item));

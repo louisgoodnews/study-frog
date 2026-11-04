@@ -9,6 +9,7 @@ fn entries(doc: &Doc) -> &[RawEntry] {
         Doc::Note(d) => &d.extra,
         Doc::Card(d) => &d.extra,
         Doc::Question(d) => &d.extra,
+        Doc::Diary(d) => &d.extra,
     }
 }
 
@@ -18,6 +19,7 @@ fn entries_mut(doc: &mut Doc) -> &mut Vec<RawEntry> {
         Doc::Note(d) => &mut d.extra,
         Doc::Card(d) => &mut d.extra,
         Doc::Question(d) => &mut d.extra,
+        Doc::Diary(d) => &mut d.extra,
     }
 }
 

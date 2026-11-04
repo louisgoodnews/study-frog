@@ -161,9 +161,12 @@ pub fn update(state: State, msg: LibraryMsg) -> (State, Vec<Effect>) {
     (state, Vec::new())
 }
 
-fn in_scope(row: &Row, selection: &Selection) -> bool {
+fn in_scope(row: &Row, selection: &Selection, stack_title: Option<&str>) -> bool {
     match selection {
-        Selection::Stack(folder) => row.stacks.iter().step_by(2).any(|s| s == folder),
+        Selection::Stack(folder) => {
+            row.stacks.iter().step_by(2).any(|s| s == folder)
+                || stack_title.is_some_and(|t| row.also_in.iter().any(|x| x == t))
+        }
         Selection::Inbox => row.stacks.is_empty(),
         Selection::Nothing => true,
     }
@@ -206,11 +209,20 @@ pub fn sync(state: State, reload: bool) -> (State, Vec<Effect>) {
     if state.library.shown_for.as_ref() != Some(&key) {
         let today = state.wall_ms.div_euclid(86_400_000);
         let selection = key.1.clone();
+        let stack_title = match &selection {
+            Selection::Stack(folder) => state
+                .vault
+                .as_ref()
+                .and_then(|v| v.overview.stacks.iter().find(|s| s.folder == *folder))
+                .map(|s| s.title.as_str()),
+            _ => None,
+        };
         match crate::library_search::effective(&state) {
             Ok(q) => {
                 state.library.query_error = None;
-                state.library.shown =
-                    run_filtered(&q, &state.library.rows, today, &|r| in_scope(r, &selection));
+                state.library.shown = run_filtered(&q, &state.library.rows, today, &|r| {
+                    in_scope(r, &selection, stack_title)
+                });
             }
             Err(e) => state.library.query_error = Some(e),
         }
@@ -218,7 +230,7 @@ pub fn sync(state: State, reload: bool) -> (State, Vec<Effect>) {
             .library
             .rows
             .iter()
-            .filter(|r| in_scope(r, &selection));
+            .filter(|r| in_scope(r, &selection, stack_title));
         state.library.scope_total = scope.count();
         state.library.shown_for = Some(key);
     }

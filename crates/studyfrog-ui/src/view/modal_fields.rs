@@ -77,3 +77,90 @@ pub(super) fn parent_picker(state: &State, f: &CreateForm, ui: &mut egui::Ui, ou
         .response
         .widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, label));
 }
+
+pub(super) fn also_in_picker(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if f.kind == NewKind::Stack {
+        return;
+    }
+    let stacks = state
+        .vault
+        .as_ref()
+        .map(|v| stack_labels(&v.overview))
+        .unwrap_or_default();
+    let none = "Also in: none";
+    let current = f
+        .also_in
+        .as_ref()
+        .and_then(|p| stacks.iter().find(|(folder, _)| folder == p))
+        .map_or(none.to_owned(), |(_, label)| format!("Also in: {label}"));
+    let picker = ComboBox::from_id_salt("also-in-stack")
+        .selected_text(current)
+        .width(180.0)
+        .show_ui(ui, |ui| {
+            if ui.selectable_label(f.also_in.is_none(), none).clicked() {
+                send(out, ModalMsg::SetAlsoIn(None));
+            }
+            for (folder, label) in &stacks {
+                if f.parent.as_deref() != Some(folder)
+                    && ui
+                        .selectable_label(f.also_in.as_deref() == Some(folder), label)
+                        .clicked()
+                {
+                    send(out, ModalMsg::SetAlsoIn(Some(folder.clone())));
+                }
+            }
+        });
+    picker
+        .response
+        .widget_info(|| WidgetInfo::labeled(Role::ComboBox, true, "Also in (optional)"));
+}
+
+const DIFFICULTIES: [studyfrog_core::event::Difficulty; 3] = [
+    studyfrog_core::event::Difficulty::Easy,
+    studyfrog_core::event::Difficulty::Medium,
+    studyfrog_core::event::Difficulty::Difficult,
+];
+
+fn choice<T: Copy + PartialEq>(
+    ui: &mut egui::Ui,
+    label: &str,
+    (current, options): (T, &[(T, &str)]),
+) -> Option<T> {
+    let shown = options
+        .iter()
+        .find(|(v, _)| *v == current)
+        .map_or("", |(_, n)| *n);
+    let mut picked = None;
+    ComboBox::from_label(label)
+        .selected_text(shown)
+        .show_ui(ui, |ui| {
+            for (v, name) in options {
+                if ui.selectable_label(current == *v, *name).clicked() {
+                    picked = Some(*v);
+                }
+            }
+        });
+    picked
+}
+
+pub(super) fn metadata_fields(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    use studyfrog_core::event::difficulty_name;
+    use studyfrog_core::priority::{PRIORITIES, Priority, priority_name};
+    ui.horizontal_wrapped(|ui| {
+        let priorities: Vec<(Priority, &str)> =
+            PRIORITIES.iter().map(|p| (*p, priority_name(*p))).collect();
+        if let Some(p) = choice(ui, "Priority", (f.priority, &priorities)) {
+            send(out, ModalMsg::SetPriority(p));
+        }
+        let levels: Vec<(_, &str)> = DIFFICULTIES
+            .iter()
+            .map(|d| (*d, difficulty_name(*d)))
+            .collect();
+        if let Some(d) = choice(ui, "Difficulty", (f.difficulty, &levels)) {
+            send(out, ModalMsg::SetDifficulty(d));
+        }
+    });
+    if let Some(t) = crate::view::widgets::text_field(ui, "Tags", &f.tags, "comma separated", 1) {
+        send(out, ModalMsg::Edit(Field::Tags, t));
+    }
+}

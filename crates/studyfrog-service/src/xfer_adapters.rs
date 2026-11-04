@@ -55,6 +55,14 @@ fn json(bytes: &[u8]) -> Result<Bundle, String> {
     crate::xfer_json::from_json(text(bytes)?)
 }
 
+fn toml(bytes: &[u8]) -> Result<Bundle, String> {
+    crate::xfer_toml::from_toml(text(bytes)?)
+}
+
+fn ron(bytes: &[u8]) -> Result<Bundle, String> {
+    crate::xfer_ron::from_ron(text(bytes)?)
+}
+
 fn csv(bytes: &[u8]) -> Result<Bundle, String> {
     crate::xfer_csv_map::read_csv(bytes, &Default::default()).map(|r| r.bundle)
 }
@@ -63,13 +71,22 @@ fn anki(bytes: &[u8]) -> Result<Bundle, String> {
     crate::xfer_anki::from_apkg(bytes)
 }
 
-/// A zip is a StudyFrog JSON export (it holds `export.json`) or else an Obsidian vault of Markdown files.
+/// A zip is a StudyFrog export (export.json, export.toml, export.ron) or an Obsidian vault.
 fn zip(bytes: &[u8]) -> Result<Bundle, String> {
     let files = read_zip(bytes)?;
-    let Some((_, doc)) = files.iter().find(|(p, _)| p == "export.json") else {
+    let parsed = if let Some((_, doc)) = files.iter().find(|(p, _)| p == "export.json") {
+        Some(json(doc))
+    } else if let Some((_, doc)) = files.iter().find(|(p, _)| p == "export.toml") {
+        Some(toml(doc))
+    } else if let Some((_, doc)) = files.iter().find(|(p, _)| p == "export.ron") {
+        Some(ron(doc))
+    } else {
+        None
+    };
+    let Some(res) = parsed else {
         return crate::xfer_obsidian::from_entries(&files);
     };
-    let mut b = json(doc)?;
+    let mut b = res?;
     b.files = files
         .into_iter()
         .filter_map(|(p, d)| p.strip_prefix("files/").map(|r| (r.to_owned(), d)))
@@ -78,7 +95,7 @@ fn zip(bytes: &[u8]) -> Result<Bundle, String> {
 }
 
 /// Every adapter, in the order the file dialog lists them.
-pub const ADAPTERS: [Adapter; 4] = [
+pub const ADAPTERS: [Adapter; 6] = [
     Adapter {
         name: "StudyFrog export (JSON)",
         extensions: &["json"],
@@ -88,6 +105,26 @@ pub const ADAPTERS: [Adapter; 4] = [
             text: JSON_EXAMPLE,
         }),
         read: json,
+    },
+    Adapter {
+        name: "StudyFrog export (TOML)",
+        extensions: &["toml"],
+        layout: crate::xfer_toml::TOML_LAYOUT,
+        example: Some(Example {
+            file: "studyfrog-example.toml",
+            text: crate::xfer_toml::TOML_EXAMPLE,
+        }),
+        read: toml,
+    },
+    Adapter {
+        name: "StudyFrog export (RON)",
+        extensions: &["ron"],
+        layout: crate::xfer_ron::RON_LAYOUT,
+        example: Some(Example {
+            file: "studyfrog-example.ron",
+            text: crate::xfer_ron::RON_EXAMPLE,
+        }),
+        read: ron,
     },
     Adapter {
         name: "StudyFrog export or Obsidian vault (zip)",
@@ -157,7 +194,7 @@ pub fn read_source(path: &Path) -> Result<(Bundle, &'static str), String> {
         .file_name()
         .map(|n| n.to_string_lossy().into_owned())
         .unwrap_or_default();
-    let adapter = adapter_for(&name).ok_or_else(|| format!("{name}: no importer reads this kind of file; supported: json, zip, csv, tsv, apkg or an Obsidian vault folder"))?;
+    let adapter = adapter_for(&name).ok_or_else(|| format!("{name}: no importer reads this kind of file; supported: json, toml, ron, zip, csv, tsv, apkg or an Obsidian vault folder"))?;
     let meta = fs::metadata(path).map_err(|e| format!("{name}: {e}"))?;
     if meta.len() > MAX_ENTRY * 4 {
         return Err(format!("{name} is too large to import"));

@@ -108,11 +108,26 @@ pub fn rows(lib: &LibraryState, stacks: &[StackRow], folder: &str, today: i64) -
     let mut items: Vec<RoadRow> = lib
         .items
         .iter()
-        .filter(|i| i.row.stacks.len() >= 2 && i.row.stacks[i.row.stacks.len() - 2] == folder)
+        .filter(|i| {
+            (i.row.stacks.len() >= 2 && i.row.stacks[i.row.stacks.len() - 2] == folder)
+                || i.references
+                    .iter()
+                    .any(|r| r.folder.as_deref() == Some(folder))
+        })
         .map(|i| {
             let (start, end) = item_span(&i.row, today);
+            let title = if !i.row.stacks.iter().step_by(2).any(|s| s == folder) {
+                let from = i
+                    .references
+                    .iter()
+                    .find(|r| r.primary)
+                    .map_or("Inbox", |r| r.title.as_str());
+                format!("{} (from {from})", i.row.title)
+            } else {
+                i.row.title.clone()
+            };
             RoadRow {
-                title: i.row.title.clone(),
+                title,
                 depth: 0,
                 uid: Some(i.uid),
                 folder: None,

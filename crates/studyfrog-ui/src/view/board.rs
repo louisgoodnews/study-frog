@@ -9,6 +9,7 @@ use crate::kanban::{BoardMsg, CardEdit};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::{palette_of, tint};
+use crate::view::kit;
 use crate::view::widgets::text_field;
 
 const MIN_COLUMN_HEIGHT: f32 = 320.0;
@@ -19,7 +20,8 @@ fn send(out: &mut Vec<Msg>, m: BoardMsg) {
 
 /// Heading, controls, the columns, and the card editor when a card is open.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.heading("Board");
+    ui.label(RichText::new("Board").size(17.0).strong());
+    ui.add_space(4.0);
     let k = &state.kanban;
     let Some(board) = &k.board else {
         ui.label("Loading the board…");
@@ -46,7 +48,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if title != k.new_title {
             send(out, BoardMsg::NewTitle(title));
         }
-        if ui.button("Add card").clicked() {
+        if kit::primary_button(ui, "Add card").clicked() {
             send(out, BoardMsg::Add);
         }
     });
@@ -197,8 +199,7 @@ fn card_buttons(card: &Card, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 fn card_editor(state: &State, e: &CardEdit, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.group(|ui| {
-        ui.heading("Edit card");
+    kit::group(ui, "Edit card", |ui| {
         if let Some(t) = text_field(ui, "Card title", &e.title, "", 1) {
             send(out, BoardMsg::EditTitle(t));
         }
@@ -210,7 +211,7 @@ fn card_editor(state: &State, e: &CardEdit, ui: &mut egui::Ui, out: &mut Vec<Msg
         }
         stack_picker(state, e.stack, ui, out);
         ui.horizontal(|ui| {
-            if ui.button("Save card").clicked() {
+            if kit::primary_button(ui, "Save card").clicked() {
                 send(out, BoardMsg::SaveCard);
             }
             if ui.button("Close card").clicked() {

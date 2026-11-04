@@ -145,6 +145,9 @@ pub fn build_doc(
     body: &str,
     blocks: &[Block],
 ) -> Result<Doc, ParseError> {
+    if kind == Kind::Diary {
+        return crate::build_diary::build_diary(raw, extra, body, blocks);
+    }
     let meta = build_meta(&mut raw, blocks)?;
     match kind {
         Kind::Stack => Ok(build_stack(meta, raw, extra, body)),
@@ -167,5 +170,6 @@ pub fn build_doc(
                 extra,
             }))
         }
+        Kind::Diary => unreachable!(),
     }
 }

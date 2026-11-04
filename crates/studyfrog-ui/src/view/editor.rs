@@ -57,6 +57,16 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.label(RichText::new(&e.path).color(palette_of(ui).text_weak));
         status(e, dirty, ui);
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            ui.menu_button("More actions", |ui| {
+                if ui.button("Export to PDF…").clicked() {
+                    out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Export(
+                        crate::pdf_export_types::PdfExportMsg::Open(
+                            studyfrog_service::pdf_export::ExportTarget::SingleItem(e.uid),
+                        ),
+                    )));
+                    ui.close();
+                }
+            });
             if e.conflict && ui.button("Keep mine").clicked() {
                 out.push(Msg::KeepMineClicked);
             }

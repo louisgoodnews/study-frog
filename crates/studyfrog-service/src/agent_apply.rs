@@ -37,6 +37,7 @@ fn set_field(doc: &mut Doc, field: &str, text: &str) -> bool {
         (Doc::Question(d), "prompt") => d.prompt = text.to_owned(),
         (Doc::Question(d), "reference") => d.reference = text.to_owned(),
         (Doc::Stack(d), "body") => d.body = text.to_owned(),
+        (Doc::Diary(d), "body") => d.body = text.to_owned(),
         _ => return false,
     }
     true
@@ -113,6 +114,7 @@ fn create(session: &mut VaultSession, change: &Change, ids: IdSource) -> Result<
         parent: Some(stack.as_str()),
         priority: None,
         difficulty: None,
+        also_in: None,
     };
     create_item(session, &item, ids).map(|_| ())
 }

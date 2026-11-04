@@ -1,6 +1,6 @@
 //! The bar above the table: the Filters menu, saving a filter, and the actions on the selected rows.
 
-use eframe::egui;
+use eframe::egui::{self, Role, WidgetInfo};
 use studyfrog_core::event::{Difficulty, difficulty_name};
 use studyfrog_core::priority::{PRIORITIES, priority_name};
 use studyfrog_core::status::{STATUSES, status_label};
@@ -76,11 +76,28 @@ fn menus(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
     });
-    let stacks = state.vault.iter().flat_map(|v| v.overview.stacks.iter());
+    let stacks_move = state.vault.iter().flat_map(|v| v.overview.stacks.iter());
     ui.menu_button("Move to stack", |ui| {
-        for s in stacks {
-            if ui.button(&s.title).clicked() {
+        for s in stacks_move {
+            let r = ui.button(&s.title);
+            r.widget_info(|| {
+                WidgetInfo::labeled(Role::Button, true, format!("Move to stack {}", s.title))
+            });
+            if r.clicked() {
                 apply(out, BulkEdit::MoveTo(s.folder.clone()));
+                ui.close();
+            }
+        }
+    });
+    let stacks_add = state.vault.iter().flat_map(|v| v.overview.stacks.iter());
+    ui.menu_button("Add to stack", |ui| {
+        for s in stacks_add {
+            let r = ui.button(&s.title);
+            r.widget_info(|| {
+                WidgetInfo::labeled(Role::Button, true, format!("Add to stack {}", s.title))
+            });
+            if r.clicked() {
+                apply(out, BulkEdit::AddTo(s.folder.clone()));
                 ui.close();
             }
         }
@@ -138,6 +155,15 @@ pub fn bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.label(format!("{n} selected"));
         menus(state, ui, out);
         tags(state, ui, out);
+        if ui.button("Export to PDF…").clicked() {
+            out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Export(
+                crate::pdf_export_types::PdfExportMsg::Open(
+                    studyfrog_service::pdf_export::ExportTarget::Selection(
+                        lib.selected.iter().copied().collect(),
+                    ),
+                ),
+            )));
+        }
         delete(state, ui, out);
         if ui.button("Clear selection").clicked() {
             send(out, BulkMsg::SelectAll(false));

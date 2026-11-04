@@ -2,6 +2,8 @@
 //! backtest of that projection. All pure; the service layer reads the history and calls these.
 
 pub mod backtest;
+pub mod calibration;
+pub mod calibration_types;
 pub mod explore;
 pub mod familiarity;
 mod familiarity_types;

@@ -76,6 +76,8 @@ pub enum Msg {
     Profile(crate::profile_ui::ProfileMsg),
     /// A message of the backup section.
     Backup(crate::backup_ui::BackupMsg),
+    /// A message of the diary screen.
+    Diary(crate::diary_msg::DiaryMsg),
     /// A message of the performance explorer.
     Explorer(crate::explorer_ui::ExplorerMsg),
     /// The user asked to add a picture to a text area.
@@ -216,26 +218,11 @@ pub enum Msg {
     Help(crate::help_types::HelpMsg),
     /// A tab of the settings screen was chosen or stepped to.
     SettingsTab(crate::app_settings_ui::SettingsTabMsg),
+    /// File explorer folders screen.
+    Folders(crate::folders_types::FoldersMsg),
 }
 
-/// A change in the editor.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum EditAction {
-    /// The title field.
-    Title(String),
-    /// The tags field.
-    Tags(String),
-    /// A text area, by index.
-    Field(usize, String),
-    /// The item's own priority; `None` takes the stack's.
-    Priority(Option<studyfrog_core::priority::Priority>),
-    /// The item's own difficulty; `None` takes the stack's.
-    Difficulty(Option<studyfrog_core::event::Difficulty>),
-    /// The item's own status; `None` leaves it to the history.
-    Status(Option<studyfrog_core::status::Status>),
-    /// A subject of a stack on or off.
-    Subject(String, bool),
-}
+pub use crate::edit_form::EditAction;
 
 /// Which field of the new-card form.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

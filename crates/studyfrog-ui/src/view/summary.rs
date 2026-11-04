@@ -10,6 +10,7 @@ use studyfrog_slm::score::Verdict;
 use crate::msg::Msg;
 use crate::review::review_rows;
 use crate::run_state::RunView;
+use crate::state::State;
 use crate::summary::summarize;
 use crate::theme::palette_of;
 use crate::view::{kit, summary_items};
@@ -39,8 +40,39 @@ pub(crate) fn rating_text(r: Option<Rating>) -> &'static str {
     r.map_or("-", rating_name)
 }
 
+fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
+    if ui.ctx().egui_wants_keyboard_input() {
+        return;
+    }
+    let pressed = |k: egui::Key| ui.input(|i| i.key_pressed(k));
+    if pressed(egui::Key::Escape) {
+        let active = run
+            .diary_prompt
+            .as_ref()
+            .is_none_or(|p| !p.skipped && !p.saved);
+        if active {
+            out.push(Msg::Diary(crate::diary_msg::DiaryMsg::PromptSkip));
+        } else {
+            out.push(Msg::LeaveRun);
+        }
+    }
+    if pressed(egui::Key::Space) {
+        out.push(Msg::LeaveRun);
+    }
+    if pressed(egui::Key::Enter) {
+        let active = run
+            .diary_prompt
+            .as_ref()
+            .is_none_or(|p| !p.skipped && !p.saved);
+        if active {
+            out.push(Msg::Diary(crate::diary_msg::DiaryMsg::PromptSubmit));
+        }
+    }
+}
+
 /// Heading and the way back on top, the counts, then one card per item in a scrolling list.
-pub fn draw(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    shortcuts(run, ui, out);
     let stopped = run.session.run.state == RunState::Aborted;
     ui.horizontal(|ui| {
         let title = if stopped {
@@ -64,31 +96,25 @@ pub fn draw(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .iter()
             .sum::<usize>() as u32,
     ));
-    ui.weak(crate::run_time::run_line(
-        run.session.run.plan.pacing,
-        studyfrog_rehearsal::pacing::run_active_ms(&run.events),
-        summarize(&run.events, &run.latencies)
-            .rated
-            .iter()
-            .sum::<usize>() as u32,
-    ));
     let updates = run.session.run.plan.effect == ScheduleEffect::UpdateSchedule;
     if !updates {
         ui.weak("Practice only: your schedule was not changed.");
     }
     let rows = review_rows(run);
-    if rows.is_empty() {
-        return;
+    if !rows.is_empty() {
+        ui.add_space(4.0);
+        kit::section(ui, "Review");
+        egui::ScrollArea::vertical()
+            .auto_shrink([false, false])
+            .max_height(140.0)
+            .show(ui, |ui| {
+                for row in &rows {
+                    summary_items::card(run, row, updates, ui, out);
+                }
+            });
     }
-    ui.add_space(8.0);
-    kit::section(ui, "Review");
-    egui::ScrollArea::vertical()
-        .auto_shrink([false, false])
-        .show(ui, |ui| {
-            for row in &rows {
-                summary_items::card(run, row, updates, ui, out);
-            }
-        });
+    ui.add_space(4.0);
+    crate::view::run_diary_prompt::draw(state, run, ui, out);
 }
 
 fn counts(run: &RunView, ui: &mut egui::Ui) {

@@ -25,6 +25,8 @@ pub enum Screen {
     Welcome,
     /// What is ready today and what happened lately.
     Home,
+    /// Physical filesystem hierarchy on disk.
+    Folders,
     /// The assistant: connections, wiki proposals and exams.
     Agent,
     /// Stacks and items of the open vault.
@@ -45,6 +47,8 @@ pub enum Screen {
     Achievements,
     /// Retention, answer times and the review forecast.
     Reports,
+    /// Self-assessment reflections, ratings, and diary notes.
+    Diary,
     /// A PDF file open for reading.
     Pdf,
     /// The help pages.
@@ -152,6 +156,8 @@ pub struct State {
     pub wall_ms: i64,
     /// The document open for editing.
     pub editor: Option<Editor>,
+    /// The physical filesystem explorer.
+    pub folders: crate::folders_types::FoldersState,
     /// The list of the library.
     pub library: crate::library_ui::LibraryState,
     /// The visit to the item on the page that is being timed.
@@ -203,4 +209,6 @@ pub struct State {
     pub pdf_library: crate::pdf_library_types::PdfLibrary,
     /// The PDF open in the viewer.
     pub pdf: Option<crate::pdf_types::PdfView>,
+    /// The diary screen and configuration.
+    pub diary: crate::diary_types::DiaryState,
 }

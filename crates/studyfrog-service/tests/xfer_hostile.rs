@@ -94,7 +94,15 @@ fn the_adapter_table_picks_a_reader_by_extension_and_refuses_the_unknown() {
     assert_eq!(adapter_for("a.APKG").unwrap().name, "Anki package");
     assert_eq!(adapter_for("x.tsv").unwrap().name, "CSV or TSV cards");
     assert!(adapter_for("x.docx").is_none() && adapter_for("noextension").is_none());
-    assert_eq!(ADAPTERS.len(), 4);
+    assert_eq!(
+        adapter_for("test.toml").unwrap().name,
+        "StudyFrog export (TOML)"
+    );
+    assert_eq!(
+        adapter_for("test.ron").unwrap().name,
+        "StudyFrog export (RON)"
+    );
+    assert_eq!(ADAPTERS.len(), 6);
     let dir = std::env::temp_dir().join(format!("studyfrog-adapters-{}", std::process::id()));
     let _ = fs::remove_dir_all(&dir);
     fs::create_dir_all(&dir).unwrap();

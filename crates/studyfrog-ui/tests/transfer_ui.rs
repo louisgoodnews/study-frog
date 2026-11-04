@@ -161,6 +161,26 @@ fn an_export_asks_for_the_mode_and_only_the_advanced_mode_writes_the_review_hist
     send(
         &mut model,
         &mut worker,
+        t(TransferMsg::Format(Format::Toml)),
+    );
+    send(&mut model, &mut worker, t(TransferMsg::Export));
+    assert!(
+        std::fs::read_dir(&out)
+            .unwrap()
+            .flatten()
+            .any(|e| e.path().extension().is_some_and(|x| x == "toml"))
+    );
+    send(&mut model, &mut worker, t(TransferMsg::Format(Format::Ron)));
+    send(&mut model, &mut worker, t(TransferMsg::Export));
+    assert!(
+        std::fs::read_dir(&out)
+            .unwrap()
+            .flatten()
+            .any(|e| e.path().extension().is_some_and(|x| x == "ron"))
+    );
+    send(
+        &mut model,
+        &mut worker,
         t(TransferMsg::Destination("/no/such/folder".into())),
     );
     send(&mut model, &mut worker, t(TransferMsg::Export));

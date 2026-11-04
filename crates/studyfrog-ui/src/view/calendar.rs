@@ -68,9 +68,10 @@ fn side(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>
     let p = &state.planner;
     ui.label(
         RichText::new(format!("Sessions on {}", format_date(p.selected)))
-            .size(18.0)
+            .size(17.0)
             .strong(),
     );
+    ui.add_space(4.0);
     let day: Vec<&Occurrence> = p
         .shown
         .iter()
@@ -91,13 +92,14 @@ fn side(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>
             occurrence_row(state, (s, o), ui, out);
         }
     }
+    ui.add_space(8.0);
     if kit::primary_button(ui, "Add to calendar").clicked() {
         plan(out, PlanMsg::New);
     }
-    ui.add_space(10.0);
+    ui.add_space(14.0);
     kit::section(ui, "Planned reviews");
     super::calendar_reviews::side_section(state, scope, ui, out);
-    ui.add_space(10.0);
+    ui.add_space(14.0);
     kit::section(ui, "Coming up");
     upcoming(state, scope, ui);
 }
@@ -156,16 +158,8 @@ fn occurrence_row(
             ui.label(RichText::new(&s.title).strong());
         });
         ui.label(format!("{when}{stack}"));
+        ui.add_space(4.0);
         ui.horizontal_wrapped(|ui| {
-            if ui.button(format!("Edit {}", s.title)).clicked() {
-                plan(out, PlanMsg::Edit(s.id));
-            }
-            if ui.button(format!("Delete {}", s.title)).clicked() {
-                plan(out, PlanMsg::Delete(s.id));
-            }
-            if s.repeat != Repeat::Never && ui.button(format!("Skip {} today", s.title)).clicked() {
-                plan(out, PlanMsg::Skip(s.id, o.date));
-            }
             if s.kind == EventKind::Study
                 && ui
                     .button(format!("Start rehearsal for {}", s.title))
@@ -173,6 +167,18 @@ fn occurrence_row(
             {
                 plan(out, PlanMsg::Rehearse(s.id));
             }
+            if ui.small_button(format!("Edit {}", s.title)).clicked() {
+                plan(out, PlanMsg::Edit(s.id));
+            }
+            if s.repeat != Repeat::Never
+                && ui.small_button(format!("Skip {} today", s.title)).clicked()
+            {
+                plan(out, PlanMsg::Skip(s.id, o.date));
+            }
+            if ui.small_button(format!("Delete {}", s.title)).clicked() {
+                plan(out, PlanMsg::Delete(s.id));
+            }
         });
     });
+    ui.add_space(6.0);
 }

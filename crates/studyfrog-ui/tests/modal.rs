@@ -125,6 +125,7 @@ fn submitting_sends_one_request_with_clean_values_and_a_second_press_waits() {
             tags: vec!["geo".into(), "easy".into()],
             parent: Some("french".into()),
             due: None,
+            also_in: None,
             choices: (Some(Priority::Medium), Some(Difficulty::Difficult)),
         }]
     );

@@ -37,7 +37,8 @@ fn the_top_bar_has_every_control_named_and_the_sidebar_lists_the_screens() {
     }
     for screen in [
         "Home",
-        "Library",
+        "Folders",
+        "Items",
         "Calendar",
         "Board",
         "Achievements",
@@ -72,7 +73,8 @@ fn without_a_vault_only_the_brand_and_help_are_shown() {
         "+ Create",
         "Notifications",
         "Show or hide the sidebar",
-        "Library",
+        "Folders",
+        "Items",
     ] {
         assert!(h.query_by_label(gone).is_none(), "{gone} needs a vault");
     }

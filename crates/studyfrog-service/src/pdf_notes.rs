@@ -167,6 +167,7 @@ pub fn note_from_pdf(
         source: Some(&source),
         priority: None,
         difficulty: None,
+        also_in: None,
     };
     create_item(session, &item, ids)
 }
@@ -227,6 +228,7 @@ pub fn item_from_pdf(
         source: Some(&source),
         priority: None,
         difficulty: None,
+        also_in: None,
     };
     create_item(session, &item, ids)
 }

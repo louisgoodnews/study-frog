@@ -3,6 +3,50 @@
 use crate::effect::Effect;
 use crate::state::{Screen, State};
 
+fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
+    match screen {
+        Screen::Graph => (State { screen, ..state }, vec![Effect::LoadGraph]),
+        Screen::Calendar => (State { screen, ..state }, vec![Effect::LoadSessions]),
+        Screen::Folders => (
+            State { screen, ..state },
+            vec![
+                Effect::Folders(crate::folders_types::FolderEffect::Scan),
+                Effect::LoadLibrary,
+                crate::pdf_library_ui::load(),
+            ],
+        ),
+        Screen::Home | Screen::Library => (
+            State { screen, ..state },
+            vec![
+                Effect::LoadHome,
+                Effect::LoadSessions,
+                crate::pdf_library_ui::load(),
+            ],
+        ),
+        Screen::Help => {
+            let page = crate::help_ui::current(&state.help);
+            crate::help_ui::open_at(state, page)
+        }
+        Screen::Agent => {
+            let pages = Effect::Help(crate::help_types::HelpEffect::Load);
+            (State { screen, ..state }, vec![Effect::LoadAgent, pages])
+        }
+        Screen::Reports => {
+            let ask = crate::explorer_ui::refresh(&state);
+            (State { screen, ..state }, vec![Effect::BuildReports, ask])
+        }
+        Screen::Settings => (State { screen, ..state }, vec![Effect::BuildReports]),
+        Screen::Diary => (
+            State { screen, ..state },
+            vec![Effect::Diary(crate::diary_types::DiaryEffect::LoadEntries)],
+        ),
+        Screen::Achievements => (State { screen, ..state }, vec![Effect::CheckAchievements]),
+        Screen::Board => (State { screen, ..state }, vec![Effect::LoadBoard]),
+        Screen::Rehearse => crate::setup::refresh_preview(State { screen, ..state }),
+        _ => (State { screen, ..state }, Vec::new()),
+    }
+}
+
 /// Go to `screen` if allowed, asking for whatever data it shows.
 pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
     let state = if screen == Screen::Editor {
@@ -17,38 +61,8 @@ pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
     };
     let allowed = (screen == Screen::Welcome || screen == Screen::Help || state.vault.is_some())
         && (screen == Screen::Editor || !crate::editor::has_unsaved_changes(&state));
-    if allowed && screen == Screen::Graph {
-        (State { screen, ..state }, vec![Effect::LoadGraph])
-    } else if allowed && screen == Screen::Calendar {
-        (State { screen, ..state }, vec![Effect::LoadSessions])
-    } else if allowed && (screen == Screen::Home || screen == Screen::Library) {
-        (
-            State { screen, ..state },
-            vec![
-                Effect::LoadHome,
-                Effect::LoadSessions,
-                crate::pdf_library_ui::load(),
-            ],
-        )
-    } else if allowed && screen == Screen::Help {
-        let page = crate::help_ui::current(&state.help);
-        crate::help_ui::open_at(state, page)
-    } else if allowed && screen == Screen::Agent {
-        let pages = Effect::Help(crate::help_types::HelpEffect::Load);
-        (State { screen, ..state }, vec![Effect::LoadAgent, pages])
-    } else if allowed && screen == Screen::Reports {
-        let ask = crate::explorer_ui::refresh(&state);
-        (State { screen, ..state }, vec![Effect::BuildReports, ask])
-    } else if allowed && screen == Screen::Settings {
-        (State { screen, ..state }, vec![Effect::BuildReports])
-    } else if allowed && screen == Screen::Achievements {
-        (State { screen, ..state }, vec![Effect::CheckAchievements])
-    } else if allowed && screen == Screen::Board {
-        (State { screen, ..state }, vec![Effect::LoadBoard])
-    } else if allowed && screen == Screen::Rehearse {
-        crate::setup::refresh_preview(State { screen, ..state })
-    } else if allowed {
-        (State { screen, ..state }, Vec::new())
+    if allowed {
+        screen_effects(state, screen)
     } else {
         (state, Vec::new())
     }

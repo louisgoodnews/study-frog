@@ -1,12 +1,12 @@
 //! The data of the dialogs and toasts, and the small pure functions about it.
 
-use studyfrog_core::civil::parse_date;
 use studyfrog_service::create_more::{Created, NewKind};
 use studyfrog_store::overview::VaultOverview;
 
 use crate::state::VaultInfo;
 
 /// Which modal is open.
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, PartialEq)]
 pub enum Modal {
     /// Make a stack, note, card or question.
@@ -17,6 +17,10 @@ pub enum Modal {
     Import,
     /// Export part of the library or import a file with a preview.
     Transfer,
+    /// Confirm turning a stack into a normal folder.
+    ConfirmUnmark(Box<studyfrog_service::stack_mark::UnmarkPlan>),
+    /// Export items or stacks to PDF.
+    PdfExport(Box<crate::pdf_export_types::PdfExportState>),
 }
 
 /// The priority and difficulty the user chose; `None` leaves the default.
@@ -40,6 +44,8 @@ pub struct CreateForm {
     pub tags: String,
     /// The stack it goes into (vault-relative folder).
     pub parent: Option<String>,
+    /// Another stack that references the item (vault-relative folder, optional).
+    pub also_in: Option<String>,
     /// Keep the dialog open for the next one.
     pub another: bool,
     /// Why the last attempt was refused.
@@ -56,6 +62,8 @@ pub struct CreateForm {
     pub difficulty: studyfrog_core::event::Difficulty,
     /// Closing was asked for while something is written: the question 'Discard what you wrote?' is showing.
     pub confirm_discard: bool,
+    /// When creating a stack/folder: whether to mark it as a stack (`_stack.md`).
+    pub is_stack: bool,
 }
 
 /// A field of the create dialog.
@@ -87,7 +95,7 @@ pub struct Toast {
 }
 
 /// What clicking a toast does.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ToastAction {
     /// Open the vault dialog.
     OpenVaultDialog,
@@ -97,6 +105,12 @@ pub enum ToastAction {
     StartTutorial,
     /// Nothing: a click only dismisses it.
     Dismiss,
+    /// Undo a mark or unmark operation.
+    UndoMark(studyfrog_service::bulk::Snapshot),
+    /// Open the PDF viewer for a file.
+    OpenPdf(String),
+    /// Open the folder of a file on disk.
+    OpenFolder(String),
 }
 
 /// What a create request produced.
@@ -133,6 +147,8 @@ pub enum ModalMsg {
     Edit(Field, String),
     /// Another parent stack.
     SetParent(Option<String>),
+    /// Another referencing stack (optional).
+    SetAlsoIn(Option<String>),
     /// "Create another" changed.
     SetAnother(bool),
     /// Choose the priority.
@@ -149,6 +165,35 @@ pub enum ModalMsg {
     ToastClicked(usize),
     /// A toast was dismissed.
     ToastDismissed(usize),
+    /// Ask to unmark the stack at `folder`.
+    AskUnmark(String),
+    /// The unmark plan was loaded.
+    UnmarkPlanLoaded(Result<Box<studyfrog_service::stack_mark::UnmarkPlan>, String>),
+    /// Confirm unmarking the stack at `folder`.
+    ConfirmUnmark(String),
+    /// Mark an existing normal folder as a stack.
+    MarkAsStack(String),
+    /// An unmark operation finished.
+    Unmarked(
+        Result<
+            (
+                VaultInfo,
+                studyfrog_service::bulk::Snapshot,
+                studyfrog_service::stack_mark::UnmarkPlan,
+            ),
+            String,
+        >,
+    ),
+    /// A mark operation finished.
+    Marked(Result<(VaultInfo, studyfrog_service::bulk::Snapshot, Created), String>),
+    /// Undo a mark or unmark operation.
+    UndoMark(studyfrog_service::bulk::Snapshot),
+    /// An undo operation finished.
+    MarkUndone(Result<VaultInfo, String>),
+    /// A normal folder was created.
+    CreatedFolder(Result<(VaultInfo, String), String>),
+    /// Set whether a folder is a stack folder.
+    SetIsStack(bool),
 }
 
 /// The stacks as (folder, "Parent / Child" label), in tree order.
@@ -178,22 +223,4 @@ pub fn stack_labels(o: &VaultOverview) -> Vec<(String, String)> {
         .collect()
 }
 
-/// Why the form cannot be submitted yet, in words for the user.
-pub fn problem(f: &CreateForm) -> Option<&'static str> {
-    let blank = |s: &str| s.trim().is_empty();
-    match f.kind {
-        NewKind::Stack | NewKind::Note if blank(&f.title) => Some("Give it a title."),
-        NewKind::Card if blank(&f.text) || blank(&f.answer) => {
-            Some("A card needs a front and a back.")
-        }
-        NewKind::Question if blank(&f.text) || blank(&f.answer) => {
-            Some("A question needs a prompt and a reference answer.")
-        }
-        NewKind::Stack if !blank(&f.due) && parse_date(f.due.trim()).is_none() => {
-            Some("The due date must look like 2026-12-31.")
-        }
-        NewKind::Stack => None,
-        _ if f.parent.is_none() => Some("Choose the stack it goes into."),
-        _ => None,
-    }
-}
+pub use crate::modal_form::problem;

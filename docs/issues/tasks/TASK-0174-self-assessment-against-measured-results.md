@@ -2,7 +2,7 @@
 id: TASK-0174
 type: task
 title: Self-assessment against measured results
-status: backlog
+status: done
 epic: EPIC-024
 parents: [STORY-0068]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add the data functions and the report view.
 
 ## Acceptance Criteria
-- [ ] A report shows self-rated performance next to accuracy and familiarity over time and says how many entries it uses
-- [ ] A test on a simulated history shows the calibration measure is computed correctly
+- [x] A report shows self-rated performance next to accuracy and familiarity over time and says how many entries it uses
+- [x] A test on a simulated history shows the calibration measure is computed correctly
 
 ## Design Notes
 None.

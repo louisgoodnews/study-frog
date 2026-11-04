@@ -205,7 +205,7 @@ fn open(state: State, id: u64) -> (State, Vec<Effect>) {
         .iter()
         .find(|n| n.id == id)
         .and_then(|n| n.target);
-    let (mut state, mut effects) = update(state, NotifyMsg::MarkRead(id, true));
+    let (mut state, effects) = update(state, NotifyMsg::MarkRead(id, true));
     state.chrome.menu = state.chrome.menu.filter(|m| *m != Menu::Notifications);
     let follow = match target {
         Some(NotifyTarget::Screen(s)) => Some(Msg::Navigate(s)),
@@ -213,9 +213,7 @@ fn open(state: State, id: u64) -> (State, Vec<Effect>) {
         None => None,
     };
     if let Some(msg) = follow {
-        let (next, more) = crate::update::update(state, msg);
-        state = next;
-        effects.extend(more);
+        state.replay = Some(Box::new(msg));
     }
     (state, effects)
 }

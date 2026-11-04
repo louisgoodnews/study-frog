@@ -24,24 +24,28 @@ pub enum SettingsTab {
     Data,
     /// Teachers and subjects.
     Subjects,
+    /// Diary self-assessment scales and hints.
+    Diary,
 }
 
 /// The tabs that have settings today, in order. A tab joins this list when its first setting arrives.
-pub const SHOWN: [SettingsTab; 6] = [
+pub const SHOWN: [SettingsTab; 7] = [
     SettingsTab::Study,
     SettingsTab::Appearance,
     SettingsTab::Rehearsal,
     SettingsTab::Answers,
+    SettingsTab::Diary,
     SettingsTab::Data,
     SettingsTab::Subjects,
 ];
 
-const KEYS: [(SettingsTab, &str, &str); 8] = [
+const KEYS: [(SettingsTab, &str, &str); 9] = [
     (SettingsTab::General, "general", "General"),
     (SettingsTab::Appearance, "appearance", "Appearance"),
     (SettingsTab::Study, "study", "Study and scheduling"),
     (SettingsTab::Rehearsal, "rehearsal", "Rehearsal"),
     (SettingsTab::Answers, "answers", "Answers and AI"),
+    (SettingsTab::Diary, "diary", "Diary and reflections"),
     (SettingsTab::Notifications, "notifications", "Notifications"),
     (SettingsTab::Data, "data", "Data"),
     (SettingsTab::Subjects, "subjects", "Subjects and teachers"),

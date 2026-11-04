@@ -2,7 +2,7 @@
 id: TASK-0173
 type: task
 title: Prompt for an entry after a rehearsal
-status: backlog
+status: done
 epic: EPIC-024
 parents: [STORY-0068]
 estimate: 2
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add the prompt to the summary screen.
 
 ## Acceptance Criteria
-- [ ] The run summary offers a short entry form with the ratings, skippable with one key, and the entry links to the run
-- [ ] Skipping never blocks or delays leaving the summary
+- [x] The run summary offers a short entry form with the ratings, skippable with one key, and the entry links to the run
+- [x] Skipping never blocks or delays leaving the summary
 
 ## Design Notes
 None.

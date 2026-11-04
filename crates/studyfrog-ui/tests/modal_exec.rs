@@ -28,6 +28,7 @@ fn the_executor_creates_nested_stacks_and_items_and_reports_refusals() {
             tags: vec![],
             parent: parent.map(str::to_owned),
             due: None,
+            also_in: None,
             choices: (None, None),
         };
     let msgs = execute(

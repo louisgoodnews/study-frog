@@ -53,6 +53,7 @@ fn item<'a>(kind: NewKind, title: &'a str, parent: Option<&'a str>) -> NewItem<'
         parent,
         priority: None,
         difficulty: None,
+        also_in: None,
     }
 }
 

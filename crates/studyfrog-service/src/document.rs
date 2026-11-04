@@ -91,6 +91,7 @@ fn with_updated(doc: &Doc, now: UnixMs) -> Doc {
         Doc::Note(d) => d.meta.updated = Some(now),
         Doc::Card(d) => d.meta.updated = Some(now),
         Doc::Question(d) => d.meta.updated = Some(now),
+        Doc::Diary(d) => d.meta.updated = Some(now),
     }
     debug_assert_eq!(doc_meta(&doc).updated, Some(now));
     doc

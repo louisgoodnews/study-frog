@@ -70,6 +70,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.add_space(10.0);
             home_cards::attention_card(h, ui, out);
             ui.add_space(10.0);
+            crate::view::diary::home_hint::draw(state, ui, out);
+            ui.add_space(10.0);
             let fill = (viewport - (ui.cursor().top() - top) - 76.0).max(MIN_COLUMN_HEIGHT);
             ui.columns(3, |c| {
                 due_column(h, fill, &mut c[0], out);

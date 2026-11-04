@@ -24,7 +24,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     };
     if is_over(run) {
-        crate::view::summary::draw(run, ui, out);
+        crate::view::summary::draw(state, run, ui, out);
         return;
     }
     shortcuts(run, ui, out);

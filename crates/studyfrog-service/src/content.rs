@@ -58,6 +58,13 @@ fn content_of(doc: &Doc) -> ItemContent {
             previous: None,
             source: None,
         },
+        Doc::Diary(d) => ItemContent {
+            prompt: title.clone(),
+            title,
+            answer: shown(&d.body),
+            previous: None,
+            source: None,
+        },
     }
 }
 

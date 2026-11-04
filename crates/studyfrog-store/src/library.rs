@@ -121,6 +121,7 @@ pub fn build_library(scan: &Scan) -> Library {
             Doc::Note(d) => push_note(&mut lib, d, stack),
             Doc::Card(d) => push_card(&mut lib, d, stack),
             Doc::Question(d) => push_question(&mut lib, d, stack),
+            Doc::Diary(_) => {}
         }
     }
     lib

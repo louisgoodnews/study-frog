@@ -62,13 +62,24 @@ fn stack_list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let current = &state.browser.selection;
     for s in &vault.overview.stacks {
         let target = Selection::Stack(s.folder.clone());
-        ui.horizontal(|ui| {
-            ui.add_space(14.0 * depth(&vault.overview.stacks, s) as f32);
-            let row = egui::Button::selectable(*current == target, &s.title).truncate();
-            if ui.add(row).on_hover_text(&s.title).clicked() {
-                out.push(Msg::Select(target));
-            }
-        });
+        let (_, dropped) =
+            ui.dnd_drop_zone::<studyfrog_core::uid::Uid, ()>(egui::Frame::new(), |ui| {
+                ui.horizontal(|ui| {
+                    ui.add_space(14.0 * depth(&vault.overview.stacks, s) as f32);
+                    let row = egui::Button::selectable(*current == target, &s.title).truncate();
+                    if ui.add(row).on_hover_text(&s.title).clicked() {
+                        out.push(Msg::Select(target));
+                    }
+                });
+            });
+        if let Some(uid) = dropped {
+            out.push(Msg::Library(LibraryMsg::Bulk(
+                crate::library_bulk::BulkMsg::MoveOne(
+                    *uid,
+                    studyfrog_service::bulk::BulkEdit::AddTo(s.folder.clone()),
+                ),
+            )));
+        }
     }
     let inbox = vault.overview.inbox_items;
     if inbox > 0
@@ -132,8 +143,19 @@ fn stack_cards(o: &VaultOverview, default: Scheduler, ui: &mut egui::Ui, out: &m
         ui.columns(COLUMNS, |cols| {
             for (col, s) in cols.iter_mut().zip(row) {
                 let id = format!("stack-card-{}", s.folder);
-                if kit::card_button(col, &id, |ui| stack_card(o, s, default, ui)) {
-                    out.push(Msg::Select(Selection::Stack(s.folder.clone())));
+                let (_, dropped) =
+                    col.dnd_drop_zone::<studyfrog_core::uid::Uid, ()>(egui::Frame::new(), |ui| {
+                        if kit::card_button(ui, &id, |ui| stack_card(o, s, default, ui)) {
+                            out.push(Msg::Select(Selection::Stack(s.folder.clone())));
+                        }
+                    });
+                if let Some(uid) = dropped {
+                    out.push(Msg::Library(LibraryMsg::Bulk(
+                        crate::library_bulk::BulkMsg::MoveOne(
+                            *uid,
+                            studyfrog_service::bulk::BulkEdit::AddTo(s.folder.clone()),
+                        ),
+                    )));
                 }
             }
         });

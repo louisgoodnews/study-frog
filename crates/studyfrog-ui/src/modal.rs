@@ -4,49 +4,12 @@ use studyfrog_service::create_more::NewKind;
 
 use crate::browse::reload;
 use crate::effect::Effect;
-use crate::modal_form::{due_of, tags_of, toggled};
+use crate::modal_form::{due_of, form_new, tags_of, toggled};
 use crate::state::{Notice, NoticeKind, Screen, Selection, State};
 
 pub use crate::modal_types::{
     CreateForm, CreateOutcome, Field, Modal, ModalMsg, Toast, ToastAction, problem, stack_labels,
 };
-
-fn default_parent(state: &State) -> Option<String> {
-    match &state.browser.selection {
-        Selection::Stack(f) => Some(f.clone()),
-        _ => state
-            .vault
-            .as_ref()
-            .and_then(|v| v.overview.stacks.first().map(|s| s.folder.clone())),
-    }
-}
-
-fn form_new(state: &State, kind: Option<NewKind>) -> CreateForm {
-    let has_stacks = state
-        .vault
-        .as_ref()
-        .is_some_and(|v| !v.overview.stacks.is_empty());
-    CreateForm {
-        kind: kind.unwrap_or(if has_stacks {
-            NewKind::Card
-        } else {
-            NewKind::Stack
-        }),
-        title: String::new(),
-        text: String::new(),
-        answer: String::new(),
-        tags: String::new(),
-        parent: default_parent(state),
-        another: false,
-        error: None,
-        busy: false,
-        due: String::new(),
-        reminders: vec![1440],
-        priority: studyfrog_core::priority::Priority::Medium,
-        difficulty: studyfrog_core::event::Difficulty::Difficult,
-        confirm_discard: false,
-    }
-}
 
 fn with_form(state: State, f: impl FnOnce(CreateForm) -> CreateForm) -> (State, Vec<Effect>) {
     let modal = match &state.modal {
@@ -69,6 +32,18 @@ fn submit(state: State) -> (State, Vec<Effect>) {
             ..f
         });
     }
+    if form.kind == NewKind::Stack && !form.is_stack {
+        let effect = Effect::StackMark(crate::stack_mark_ui::StackMarkEffect::CreateFolder {
+            parent: form.parent.clone(),
+            name: form.title.trim().to_owned(),
+        });
+        let (state, _) = with_form(state, |f| CreateForm {
+            busy: true,
+            error: None,
+            ..f
+        });
+        return (state, vec![effect]);
+    }
     let effect = Effect::CreateItem {
         kind: form.kind,
         title: form.title.trim().to_owned(),
@@ -76,6 +51,7 @@ fn submit(state: State) -> (State, Vec<Effect>) {
         answer: form.answer.clone(),
         tags: tags_of(&form.tags),
         parent: form.parent.clone(),
+        also_in: form.also_in.clone(),
         due: due_of(&form),
         choices: if form.kind == NewKind::Stack {
             (None, None)
@@ -164,6 +140,16 @@ fn click_toast(state: State, i: usize) -> (State, Vec<Effect>) {
         ToastAction::StartTutorial => {
             return crate::tutorial::update(state, crate::tutorial::TutorialMsg::Start);
         }
+        ToastAction::UndoMark(snap) => {
+            return (
+                state,
+                vec![Effect::StackMark(
+                    crate::stack_mark_ui::StackMarkEffect::Undo(snap),
+                )],
+            );
+        }
+        ToastAction::OpenPdf(path) => return crate::pdf_ui::open(state, path, 0),
+        ToastAction::OpenFolder(_) => return crate::nav::navigate(state, Screen::Folders),
     }
     (state, Vec::new())
 }
@@ -229,6 +215,11 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             error: None,
             ..f
         }),
+        ModalMsg::SetAlsoIn(also_in) => with_form(state, |f| CreateForm {
+            also_in,
+            error: None,
+            ..f
+        }),
         ModalMsg::SetAnother(another) => with_form(state, |f| CreateForm { another, ..f }),
         ModalMsg::SetPriority(priority) => with_form(state, |f| CreateForm { priority, ..f }),
         ModalMsg::SetDifficulty(difficulty) => with_form(state, |f| CreateForm { difficulty, ..f }),
@@ -246,5 +237,6 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             }
             (state, Vec::new())
         }
+        other => crate::modal_mark::update(state, other),
     }
 }

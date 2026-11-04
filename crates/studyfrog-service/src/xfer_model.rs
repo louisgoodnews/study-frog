@@ -26,6 +26,30 @@ pub struct XReview {
     pub elapsed_days: f32,
 }
 
+/// What one stack makes of an item when exported with scheduling.
+#[derive(Debug, Clone, PartialEq)]
+pub struct XStackMemory {
+    /// The stack folder (or "Inbox").
+    pub stack: String,
+    /// "own" or "referenced".
+    pub source: String,
+    /// FSRS difficulty in this stack.
+    pub difficulty: Option<f32>,
+    /// Familiarity value (0.0 to 1.0) in this stack.
+    pub familiarity: Option<f32>,
+    /// Next due date in Unix milliseconds.
+    pub due: Option<i64>,
+}
+
+/// Overall average memory values for an item across its referencing stacks.
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct XAverage {
+    /// Average familiarity.
+    pub familiarity: Option<f32>,
+    /// Average FSRS difficulty.
+    pub difficulty: Option<f32>,
+}
+
 /// A note, card or question.
 #[derive(Debug, Clone, PartialEq)]
 pub struct XItem {
@@ -53,6 +77,10 @@ pub struct XItem {
     pub difficulty: Option<String>,
     /// Its reviews, when scheduling is included.
     pub reviews: Vec<XReview>,
+    /// Per-stack memory values when exported with scheduling.
+    pub stacks: Vec<XStackMemory>,
+    /// Average values when exported with scheduling.
+    pub average: Option<XAverage>,
     /// Front-matter keys of the source that StudyFrog keeps as they are (`key`, one-line `value`).
     pub extra: Vec<(String, String)>,
 }
@@ -87,6 +115,8 @@ pub fn item(kind: ItemKind, stack: &str, text: &str, answer: &str) -> XItem {
         priority: None,
         difficulty: None,
         reviews: Vec::new(),
+        stacks: Vec::new(),
+        average: None,
         extra: Vec::new(),
     }
 }

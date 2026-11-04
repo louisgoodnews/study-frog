@@ -3,11 +3,8 @@
 
 use std::path::PathBuf;
 
-use studyfrog_core::plan::RunPlan;
-use studyfrog_core::run::RunMode;
-use studyfrog_core::settings::AppSettings;
-use studyfrog_core::time::UnixMs;
-use studyfrog_core::uid::Uid;
+#[rustfmt::skip]
+use studyfrog_core::{plan::RunPlan, run::RunMode, settings::AppSettings, time::UnixMs, uid::Uid};
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 use studyfrog_service::queue::{NewRun, preview_queue};
 use studyfrog_service::session::{VaultSession, current_settings, open_vault};
@@ -118,6 +115,8 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::RecordView(v) => return crate::exec_items::record_view(w, v, now_ns),
         Effect::LoadLibrary => crate::exec_items::library(w, now_ns),
         Effect::Library(e) => crate::exec_library::run(w, e, now_ns),
+        Effect::StackMark(e) => return crate::exec_mark::execute(w, e, now_ns),
+        Effect::Folders(e) => return crate::exec_folders::execute(w, e, now_ns),
         Effect::Notifications(op) => return crate::exec_items::notifications(w, op, now_ns),
         Effect::LoadStatusCounts(selection) => crate::exec_items::counts(w, &selection),
         Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
@@ -131,6 +130,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::SearchItems(query) => search(w, query),
         Effect::Help(e) => crate::exec_help::run(w, e),
         Effect::Prompts(e) => crate::exec_prompts::run(w, e),
+        Effect::Diary(e) => return crate::exec_diary::execute(w, e, now_ns),
         Effect::LoadHome => exec_run::home(w, now_ns),
         e @ (Effect::LoadAgent
         | Effect::SaveConnection { .. }
@@ -158,13 +158,14 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             answer,
             tags,
             parent,
+            also_in,
             due,
             choices,
         } => exec_import::create_item(
             w,
             kind,
             [&title, &text, &answer],
-            (&tags, parent.as_deref(), due.as_ref()),
+            (&tags, parent.as_deref(), also_in.as_deref(), due.as_ref()),
             choices,
             now_ns,
         ),

@@ -141,6 +141,22 @@ fn what_cannot_be_changed_is_skipped_with_a_reason_and_a_bad_target_is_refused()
 }
 
 #[test]
+fn adding_to_a_stack_records_a_reference_and_undo_reverses_it() {
+    let d = vault("add-to");
+    let (mut s, _) = open_vault(d.0.to_str().unwrap()).unwrap();
+    let done = bulk_apply(&mut s, &[Uid(10)], &BulkEdit::AddTo("b".into()), NOW).unwrap();
+    assert_eq!(done.changed, 1);
+    let text = read(&d, "a/one.md");
+    assert!(text.contains("referenced_by: ["), "{text}");
+    assert!(text.contains(&ulid(2)));
+
+    // Undo restores the original file
+    bulk_undo(&mut s, &done.undo).unwrap();
+    let text_after = read(&d, "a/one.md");
+    assert!(!text_after.contains("referenced_by"), "{text_after}");
+}
+
+#[test]
 fn saved_filters_are_kept_in_the_vault_and_replaced_by_name() {
     let d = vault("filters");
     let (s, _) = open_vault(d.0.to_str().unwrap()).unwrap();

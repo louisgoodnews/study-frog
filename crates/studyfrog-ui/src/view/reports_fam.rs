@@ -54,8 +54,12 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     };
     egui::ScrollArea::vertical().show(ui, |ui| {
-        spread(&b.familiarity, ui);
-        groups("By stack", &b.familiarity.stacks, ui, out);
-        groups("By subject", &b.familiarity.subjects, ui, out);
+        crate::view::kit::column(ui, crate::view::kit::READING_WIDTH, |ui| {
+            spread(&b.familiarity, ui);
+            ui.add_space(16.0);
+            groups("By stack", &b.familiarity.stacks, ui, out);
+            ui.add_space(16.0);
+            groups("By subject", &b.familiarity.subjects, ui, out);
+        });
     });
 }

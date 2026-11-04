@@ -2,7 +2,7 @@
 id: TASK-0170
 type: task
 title: Specify the diary
-status: backlog
+status: done
 epic: EPIC-024
 parents: [STORY-0068]
 estimate: 2
@@ -19,11 +19,11 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Write the diary down before building it.
 
 ## Acceptance Criteria
-- [ ] docs/specs/diary.md defines the file format, the full set of rating scales and their wording, user-defined scales, the links and the prompt after a run
-- [ ] The owner has accepted the wording of the scales
+- [x] docs/specs/diary.md defines the file format, the full set of rating scales and their wording, user-defined scales, the links and the prompt after a run
+- [x] The owner has accepted the wording of the scales
 
 ## Design Notes
-None.
+Specified in `docs/specs/diary.md`. Wording of the rating scales accepted by the owner.
 
 ## Dependencies
 None.

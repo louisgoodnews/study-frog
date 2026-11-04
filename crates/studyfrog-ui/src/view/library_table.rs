@@ -1,13 +1,13 @@
 //! The table of items under the search bar: sortable columns, a count and rows that are only built when they scroll into view.
 
-use eframe::egui::{self, Align, Layout, RichText, Role, WidgetInfo};
+use eframe::egui::{self, Align, Id, Layout, RichText, Role, WidgetInfo};
 use egui_extras::{Column as Col, TableBuilder};
 use studyfrog_core::query::Order;
 
 use crate::library_bulk::BulkMsg;
 use crate::library_ui::{COLUMNS, Column, LibraryMsg, cell, column_field, column_label};
 use crate::msg::Msg;
-use crate::state::State;
+use crate::state::{Selection, State};
 use crate::theme::palette_of;
 use studyfrog_service::library_rows::LibraryItem;
 
@@ -132,9 +132,32 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     row.col(|ui| {
                         let text = cell(&item.row, *c);
                         if *c == Column::Title {
-                            if ui.link(&text).clicked() {
-                                out.push(Msg::OpenItem(item.uid));
-                            }
+                            ui.dnd_drag_source(
+                                Id::unique(("library-item", item.uid)),
+                                item.uid,
+                                |ui| {
+                                    ui.horizontal(|ui| {
+                                        if ui.link(&text).clicked() {
+                                            out.push(Msg::OpenItem(item.uid));
+                                        }
+                                        if let Selection::Stack(folder) = &state.browser.selection
+                                            && !item
+                                                .row
+                                                .stacks
+                                                .iter()
+                                                .step_by(2)
+                                                .any(|s| s == folder)
+                                        {
+                                            let from = item
+                                                .references
+                                                .iter()
+                                                .find(|r| r.primary)
+                                                .map_or("Inbox", |r| r.title.as_str());
+                                            ui.weak(format!("(from {from})"));
+                                        }
+                                    });
+                                },
+                            );
                         } else {
                             let label = ui.label(RichText::new(text).color(weak));
                             if *c == Column::Familiarity && item.references.len() > 1 {

@@ -20,18 +20,22 @@ pub struct Backlog {
     pub not_planned: Vec<usize>,
 }
 
-fn in_stack(chain: &[String], folder: &str) -> bool {
-    chain.iter().step_by(2).any(|s| s == folder)
+fn in_stack(item: &studyfrog_service::library_rows::LibraryItem, folder: &str) -> bool {
+    item.row.stacks.iter().step_by(2).any(|s| s == folder)
+        || item
+            .references
+            .iter()
+            .any(|r| r.folder.as_deref() == Some(folder))
 }
 
 /// The backlog of the stack at `folder` (its sub-stacks included) on day `today`.
 pub fn backlog(lib: &LibraryState, folder: &str, today: i64) -> Backlog {
     let mut out = Backlog::default();
     for (i, item) in lib.items.iter().enumerate() {
-        let row = &item.row;
-        if !in_stack(&row.stacks, folder) {
+        if !in_stack(item, folder) {
             continue;
         }
+        let row = &item.row;
         let soon = row.due_day.is_some_and(|d| d <= today + HORIZON_DAYS);
         match row.status {
             Status::Done => {}

@@ -65,6 +65,8 @@ pub struct ReportBundle {
     pub replay: studyfrog_report::replay::ReplayReport,
     /// The latest runs with their mode, pacing and time.
     pub runs: Vec<crate::run_history::RunSummary>,
+    /// Metacognitive self-assessment calibration against measured performance.
+    pub calibration: studyfrog_report::calibration::CalibrationReport,
 }
 
 fn day_of(ms: i64, offset_minutes: i32) -> i64 {
@@ -172,5 +174,12 @@ pub fn build_reports(
         familiarity: crate::fam_report::familiarity_report(&session.conn, now).map_err(store)?,
         replay: crate::fam_replay::replay_history(&session.conn, now, &params).map_err(store)?,
         runs: crate::run_history::run_history(&session.conn).map_err(store)?,
+        calibration: crate::calibration_report::build_calibration_report(
+            &session.conn,
+            &rows,
+            now,
+            offset_minutes,
+        )
+        .map_err(store)?,
     })
 }

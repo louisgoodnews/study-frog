@@ -3,8 +3,8 @@
 //! the Enlarge button, and every editor can be made taller by dragging its lower edge.
 
 use eframe::egui::{self, Align, ComboBox, Layout, RichText, Role, TextEdit, WidgetInfo};
-use studyfrog_core::event::{Difficulty, difficulty_name};
-use studyfrog_core::priority::{PRIORITIES, Priority, priority_name};
+use studyfrog_core::event::Difficulty;
+use studyfrog_core::priority::Priority;
 use studyfrog_service::create_more::NewKind;
 
 use crate::image_ui::ImageTarget;
@@ -21,7 +21,6 @@ const KINDS: [(NewKind, &str); 4] = [
     (NewKind::Question, "Question"),
     (NewKind::Stack, "Stack"),
 ];
-const DIFFICULTIES: [Difficulty; 3] = [Difficulty::Easy, Difficulty::Medium, Difficulty::Difficult];
 
 fn send(out: &mut Vec<Msg>, m: ModalMsg) {
     out.push(Msg::Modal(m));
@@ -59,6 +58,7 @@ fn header(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     ui.add_space(4.0);
     ui.horizontal(|ui| {
         modal_fields::parent_picker(state, f, ui, out);
+        modal_fields::also_in_picker(state, f, ui, out);
         ui.separator();
         type_combo(f, ui, out);
     });
@@ -95,6 +95,9 @@ fn title_field(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 fn editors(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if f.kind == NewKind::Stack && !f.is_stack {
+        return;
+    }
     let ((text_label, text_hint), answer_label) = labels(f.kind);
     let (rows, mode) = match f.kind {
         NewKind::Note => (14, Mode::Split),
@@ -112,50 +115,31 @@ fn editors(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-fn choice<T: Copy + PartialEq>(
-    ui: &mut egui::Ui,
-    label: &str,
-    (current, options): (T, &[(T, &str)]),
-) -> Option<T> {
-    let shown = options
-        .iter()
-        .find(|(v, _)| *v == current)
-        .map_or("", |(_, n)| *n);
-    let mut picked = None;
-    ComboBox::from_label(label)
-        .selected_text(shown)
-        .show_ui(ui, |ui| {
-            for (v, name) in options {
-                if ui.selectable_label(current == *v, *name).clicked() {
-                    picked = Some(*v);
-                }
-            }
-        });
-    picked
-}
-
 fn fields(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    if f.kind != NewKind::Stack {
-        ui.horizontal_wrapped(|ui| {
-            let priorities: Vec<(Priority, &str)> =
-                PRIORITIES.iter().map(|p| (*p, priority_name(*p))).collect();
-            if let Some(p) = choice(ui, "Priority", (f.priority, &priorities)) {
-                send(out, ModalMsg::SetPriority(p));
-            }
-            let levels: Vec<(Difficulty, &str)> = DIFFICULTIES
-                .iter()
-                .map(|d| (*d, difficulty_name(*d)))
-                .collect();
-            if let Some(d) = choice(ui, "Difficulty", (f.difficulty, &levels)) {
-                send(out, ModalMsg::SetDifficulty(d));
-            }
-        });
+    if f.kind == NewKind::Card {
+        let has_extra = !f.tags.is_empty()
+            || f.priority != Priority::Medium
+            || f.difficulty != Difficulty::Difficult;
+        ui.add_space(4.0);
+        egui::CollapsingHeader::new("More fields")
+            .default_open(has_extra)
+            .show(ui, |ui| modal_fields::metadata_fields(f, ui, out));
+        return;
     }
-    if let Some(t) = text_field(ui, "Tags", &f.tags, "comma separated", 1) {
-        send(out, ModalMsg::Edit(Field::Tags, t));
+    if f.kind != NewKind::Stack {
+        modal_fields::metadata_fields(f, ui, out);
     }
     if f.kind == NewKind::Stack {
-        modal_fields::due_fields(state, f, ui, out);
+        if let Some(t) = text_field(ui, "Tags", &f.tags, "comma separated", 1) {
+            send(out, ModalMsg::Edit(Field::Tags, t));
+        }
+        let mut is_stack = f.is_stack;
+        if ui.checkbox(&mut is_stack, "Mark as stack folder").changed() {
+            send(out, ModalMsg::SetIsStack(is_stack));
+        }
+        if f.is_stack {
+            modal_fields::due_fields(state, f, ui, out);
+        }
     }
 }
 

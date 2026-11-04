@@ -18,6 +18,10 @@ pub enum Tab {
 pub enum Format {
     /// A zip with `export.json` and the pictures and PDFs.
     Json,
+    /// A TOML export file.
+    Toml,
+    /// A RON (Rusty Object Notation) export file.
+    Ron,
     /// Cards and questions as CSV.
     Csv,
     /// The vault's Markdown files in a zip.

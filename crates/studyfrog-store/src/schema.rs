@@ -1,6 +1,7 @@
 //! Schema as data. See `docs/specs/storage-schema.md`.
 
 use crate::migrate::Migration;
+use crate::schema_diary::V23;
 use crate::schema_early::{V2, V3};
 use crate::schema_later::{
     V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19,
@@ -119,6 +120,11 @@ pub const MIGRATIONS: &[Migration] = &[
         version: 22,
         name: "reviews per item",
         sql: V22,
+    },
+    Migration {
+        version: 23,
+        name: "diary entries and links",
+        sql: V23,
     },
 ];
 

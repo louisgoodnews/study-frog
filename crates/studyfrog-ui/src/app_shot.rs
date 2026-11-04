@@ -45,6 +45,7 @@ fn screen_named(name: &str) -> Option<Screen> {
         "calendar" => Screen::Calendar,
         "board" => Screen::Board,
         "reports" => Screen::Reports,
+        "diary" => Screen::Diary,
         "agent" => Screen::Agent,
         "achievements" => Screen::Achievements,
         "graph" => Screen::Graph,
@@ -61,6 +62,9 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
             Msg::Select(Selection::Stack(folder.to_owned())),
         ));
         return fx;
+    }
+    if name == "create" {
+        return apply(model, Msg::Modal(crate::modal_types::ModalMsg::OpenCreate));
     }
     screen_named(name).map_or_else(Vec::new, |s| apply(model, Msg::Navigate(s)))
 }

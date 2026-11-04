@@ -18,6 +18,52 @@ fn non_empty(items: &[String]) -> Option<Vec<String>> {
     (!items.is_empty()).then(|| items.to_vec())
 }
 
+fn uids(list: &[studyfrog_core::uid::Uid]) -> Option<Vec<String>> {
+    (!list.is_empty()).then(|| list.iter().map(|u| format_ulid(*u)).collect())
+}
+
+fn rating_score(
+    ratings: &std::collections::BTreeMap<String, studyfrog_core::diary::RatingValue>,
+    key: &str,
+) -> Option<u8> {
+    match ratings.get(key) {
+        Some(studyfrog_core::diary::RatingValue::Int(n)) if (1..=5).contains(n) => Some(*n as u8),
+        _ => None,
+    }
+}
+
+fn raw_for_diary(d: &crate::doc::DiaryDoc) -> Result<RawFront, RenderError> {
+    Ok(RawFront {
+        id: Some(format_ulid(d.meta.uid)),
+        kind: Some("diary".to_owned()),
+        date: Some(studyfrog_core::civil::format_date(d.date)),
+        title: d.custom_title.clone(),
+        tags: non_empty(&d.meta.tags),
+        aliases: non_empty(&d.meta.aliases),
+        created: stamp(d.meta.created)?,
+        updated: stamp(d.meta.updated)?,
+        study_minutes: d.study_minutes,
+        performance: rating_score(&d.ratings, "performance"),
+        success: rating_score(&d.ratings, "success"),
+        confidence: rating_score(&d.ratings, "confidence"),
+        effort: rating_score(&d.ratings, "effort"),
+        focus: rating_score(&d.ratings, "focus"),
+        energy: rating_score(&d.ratings, "energy"),
+        difficulty: rating_score(&d.ratings, "difficulty"),
+        satisfaction: rating_score(&d.ratings, "satisfaction"),
+        understanding: rating_score(&d.ratings, "understanding"),
+        mood: rating_score(&d.ratings, "mood"),
+        stress: rating_score(&d.ratings, "stress"),
+        motivation: rating_score(&d.ratings, "motivation"),
+        sleep: rating_score(&d.ratings, "sleep"),
+        runs: uids(&d.runs),
+        stacks: non_empty(&d.stacks),
+        items: uids(&d.items),
+        exams: non_empty(&d.exams),
+        ..RawFront::default()
+    })
+}
+
 fn stamp(at: Option<UnixMs>) -> Result<Option<String>, RenderError> {
     at.map(|t| format_rfc3339(t).ok_or(RenderError::TimestampOutOfRange))
         .transpose()
@@ -84,6 +130,10 @@ fn parts(doc: &Doc) -> Result<Parts<'_>, RenderError> {
                 &d.extra,
                 Cow::Owned(card_body(&d.prompt, &d.reference)?),
             ))
+        }
+        Doc::Diary(d) => {
+            let raw = raw_for_diary(d)?;
+            Ok((raw, &d.extra, Cow::Borrowed(&d.body)))
         }
     }
 }

@@ -47,6 +47,7 @@ fn item(
         parent,
         priority: None,
         difficulty: None,
+        also_in: None,
     }
 }
 

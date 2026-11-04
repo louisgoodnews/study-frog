@@ -1,13 +1,6 @@
 //! Side effects `update` asks for, as plain data. The executor performs them and answers with a `Msg`.
-
-use studyfrog_board::ops::BoardOp;
-use studyfrog_calendar::session::Session;
-use studyfrog_core::{plan::RunPlan, review::Rating};
-use studyfrog_core::{run::RunMode, settings::AppSettings, uid::Uid};
-use studyfrog_md::doc::Doc;
-use studyfrog_rehearsal::input::StepOutput;
-use studyfrog_service::rehearse::StepContext;
-
+#[rustfmt::skip]
+use {studyfrog_board::ops::BoardOp, studyfrog_calendar::session::Session, studyfrog_core::{plan::RunPlan, review::Rating, run::RunMode, settings::AppSettings, uid::Uid}, studyfrog_md::doc::Doc, studyfrog_rehearsal::input::StepOutput, studyfrog_service::rehearse::StepContext};
 /// Work to do outside the pure update.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Effect {
@@ -110,6 +103,8 @@ pub enum Effect {
         tags: Vec<String>,
         /// The stack it goes into.
         parent: Option<String>,
+        /// Another stack that references the item (optional).
+        also_in: Option<String>,
         /// For a stack: due date and reminders.
         due: Option<studyfrog_service::track::DueDate>,
         /// Priority and difficulty chosen.
@@ -165,7 +160,7 @@ pub enum Effect {
     CreateProfile(String),
     /// Switch to another profile.
     SwitchProfile(String),
-    /// Delete a profile and its settings and keys (not its vault).
+    /// Delete a profile and its settings and keys.
     DeleteProfile(String),
     /// Ask where to put a backup of the vault and write it.
     Backup {
@@ -235,6 +230,12 @@ pub enum Effect {
     Help(crate::help_types::HelpEffect),
     /// Something the PDF viewer needs.
     Pdf(crate::pdf_types::PdfEffect),
+    /// Marking or unmarking stack folders.
+    StackMark(crate::stack_mark_ui::StackMarkEffect),
+    /// File explorer operations.
+    Folders(crate::folders_types::FolderEffect),
+    /// Diary operations.
+    Diary(crate::diary_types::DiaryEffect),
     /// Create a card in the stack at `folder`.
     CreateCard {
         /// Vault-relative stack folder.

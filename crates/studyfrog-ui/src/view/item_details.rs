@@ -20,6 +20,7 @@ fn kind_word(doc: &Doc) -> &'static str {
         Doc::Card(_) => "card",
         Doc::Question(_) => "question",
         Doc::Stack(_) => "stack",
+        Doc::Diary(_) => "diary",
     }
 }
 
@@ -32,9 +33,6 @@ pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>)
             ui.label("Kind");
             kit::pill(ui, kind_word(&e.doc), p.accent);
         });
-        if let Some(stack) = stack_path(state, &e.path) {
-            ui.label(format!("In {stack}"));
-        }
         if let Some(t) = text_field(ui, "Tags (comma separated)", &e.form.tags, "", 1) {
             out.push(Msg::Edit(EditAction::Tags(t)));
         }
@@ -51,6 +49,7 @@ pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         }
     });
     ui.add_space(10.0);
+    crate::view::item_stacks::card(state, e, ui, out);
     crate::view::item_fam::card(e, ui);
     links(e, ui, out);
     ui.add_space(10.0);
@@ -145,17 +144,6 @@ fn difficulty_row(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
     });
-}
-
-/// "French / Verbs": the titles of the stacks the file sits in.
-fn stack_path(state: &State, path: &str) -> Option<String> {
-    let overview = &state.vault.as_ref()?.overview;
-    let labels = crate::modal::stack_labels(overview);
-    let folder = path.rsplit_once('/').map_or("", |(f, _)| f);
-    labels
-        .into_iter()
-        .find(|(f, _)| f == folder)
-        .map(|(_, l)| l)
 }
 
 fn wiki_targets(blocks: &[Block], into: &mut Vec<String>) {

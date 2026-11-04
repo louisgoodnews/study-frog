@@ -43,6 +43,8 @@ pub struct RefScore {
     pub ctx: FamContext,
     /// The FSRS difficulty of the item in this stack, if it has FSRS state there.
     pub difficulty: Option<f32>,
+    /// The FSRS stability of the item in this stack (its schedule in days).
+    pub stability: Option<f32>,
     /// When the item is next due in this stack.
     pub due: Option<UnixMs>,
     /// How many reviews this stack has of it.
@@ -107,6 +109,7 @@ pub fn reference_scores(
                 events,
                 ctx,
                 difficulty: kept.and_then(|s| s.memory).map(|m| m.difficulty),
+                stability: kept.and_then(|s| s.memory).map(|m| m.stability),
                 due: kept.map(|s| s.due),
                 reviews: own.map_or(0, |r| r.len() as u32),
             });
@@ -134,6 +137,8 @@ pub fn item_averages(scores: &[RefScore]) -> HashMap<Uid, f32> {
 pub struct RefView {
     /// The stack (`Uid(0)` for the Inbox).
     pub stack: Uid,
+    /// The stack's folder, `None` for the Inbox.
+    pub folder: Option<String>,
     /// The stack's title, "Inbox" for loose items.
     pub title: String,
     /// The source: the item's own stack (`true`) or a stack that references it.
@@ -144,6 +149,8 @@ pub struct RefView {
     pub percent: Option<u8>,
     /// The FSRS difficulty in this stack.
     pub difficulty: Option<f32>,
+    /// The FSRS stability in this stack (schedule in days).
+    pub stability: Option<f32>,
     /// When it is next due in this stack, in milliseconds.
     pub due_ms: Option<i64>,
     /// How many reviews this stack has of it.
@@ -160,11 +167,13 @@ pub fn views_by_item(scores: &[RefScore], stacks: &[StackRow]) -> HashMap<Uid, V
             .map_or_else(|| "Inbox".to_owned(), |st| st.title.clone());
         out.entry(s.uid).or_default().push(RefView {
             stack: s.stack,
+            folder: s.folder.clone(),
             title,
             primary: s.primary,
             value: s.fam.map(|f| f.value),
             percent: s.fam.map(|f| ((f.value * 100.0).round() as u8).min(100)),
             difficulty: s.difficulty,
+            stability: s.stability,
             due_ms: s.due.map(|d| d.0),
             reviews: s.reviews,
         });

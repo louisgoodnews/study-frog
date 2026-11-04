@@ -32,7 +32,12 @@ fn every_control_on_every_screen_has_an_accessible_name() {
         "the path field is labelled"
     );
 
-    for screen in [Screen::Library, Screen::Rehearse, Screen::Settings] {
+    for screen in [
+        Screen::Library,
+        Screen::Rehearse,
+        Screen::Settings,
+        Screen::Diary,
+    ] {
         let mut m = open_model();
         apply(&mut m, Msg::Navigate(screen));
         m.state.notice = Some(studyfrog_ui::state::Notice {

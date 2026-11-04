@@ -25,6 +25,7 @@ fn item(kind: NewKind, title: &'static str, parent: Option<&'static str>) -> New
         parent,
         priority: None,
         difficulty: None,
+        also_in: None,
     }
 }
 

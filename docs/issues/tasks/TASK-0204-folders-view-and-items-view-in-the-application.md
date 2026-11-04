@@ -2,7 +2,7 @@
 id: TASK-0204
 type: task
 title: Folders view and Items view in the application
-status: backlog
+status: done
 epic: EPIC-026
 parents: [STORY-0076]
 estimate: 8
@@ -20,9 +20,9 @@ The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0, a
 The Folders view for organizing and the Items view for working with the items, as two screens.
 
 ## Acceptance Criteria
-- [ ] The sidebar offers Folders and Items; Items is the library as it is now
-- [ ] Folders is a file explorer like Obsidian's: toolbar, tree with chevrons and indent guides, stack folders told apart from normal folders; it creates, renames (in place), moves (drag and drop and a menu) and deletes folders and files, marks a folder as a stack or as normal, and opens a file
-- [ ] Every action is available from the keyboard and has an accessible name
+- [x] The sidebar offers Folders and Items; Items is the library as it is now
+- [x] Folders is a file explorer like Obsidian's: toolbar, tree with chevrons and indent guides, stack folders told apart from normal folders; it creates, renames (in place), moves (drag and drop and a menu) and deletes folders and files, marks a folder as a stack or as normal, and opens a file
+- [x] Every action is available from the keyboard and has an accessible name
 
 ## Design Notes
 A tree widget that draws only the rows in view (the vault can hold thousands of files); look at the owner's reference in TASK-0202.

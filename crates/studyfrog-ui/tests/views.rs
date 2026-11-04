@@ -106,7 +106,7 @@ fn navigation_switches_screens_and_close_vault_returns_to_welcome() {
     h.get_by_label("Rehearse").click();
     h.run();
     assert_eq!(h.state().0.state.screen, Screen::Rehearse);
-    h.get_by_label("Library").click();
+    h.get_by_label("Items").click();
     h.run();
     assert_eq!(h.state().0.state.screen, Screen::Library);
 
@@ -119,7 +119,7 @@ fn navigation_switches_screens_and_close_vault_returns_to_welcome() {
         (Screen::Welcome, true)
     );
     assert!(
-        h.query_by_label("Library").is_none(),
+        h.query_by_label("Items").is_none() && h.query_by_label("Folders").is_none(),
         "no navigation without a vault"
     );
 }

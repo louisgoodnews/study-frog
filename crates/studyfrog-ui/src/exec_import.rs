@@ -94,12 +94,19 @@ pub fn from_card_type(
     }
 }
 
+type ItemOpts<'a> = (
+    &'a [String],
+    Option<&'a str>,
+    Option<&'a str>,
+    Option<&'a DueDate>,
+);
+
 /// Create one item from the create dialog.
 pub fn create_item(
     w: &mut Worker,
     kind: NewKind,
     [title, text, answer]: [&str; 3],
-    (tags, parent, due): (&[String], Option<&str>, Option<&DueDate>),
+    (tags, parent, also_in, due): ItemOpts<'_>,
     (priority, difficulty): (
         Option<studyfrog_core::priority::Priority>,
         Option<studyfrog_core::event::Difficulty>,
@@ -119,6 +126,7 @@ pub fn create_item(
         parent,
         priority,
         difficulty,
+        also_in,
     };
     let result = ids(now_ns)
         .and_then(|ids| create_tracked(session, &item, due, ids))

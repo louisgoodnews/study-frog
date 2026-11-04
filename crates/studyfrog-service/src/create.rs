@@ -138,7 +138,7 @@ pub(crate) fn render_error(e: RenderError) -> ServiceError {
 }
 
 /// Bring the index up to date after a write and describe the vault.
-pub(crate) fn refresh(session: &mut VaultSession) -> Result<VaultInfo, ServiceError> {
+pub fn refresh(session: &mut VaultSession) -> Result<VaultInfo, ServiceError> {
     reindex(&mut session.conn, &session.root).map_err(ServiceError::Store)?;
     session.poll = prime(&session.root).map_err(ServiceError::Store)?;
     vault_info(&session.root, &session.conn)

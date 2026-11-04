@@ -15,6 +15,7 @@ pub fn page_for(state: &State) -> &'static str {
     match state.screen {
         Screen::Welcome | Screen::Help => FIRST_PAGE,
         Screen::Home => "home",
+        Screen::Folders => "library",
         Screen::Library if matches!(state.browser.selection, Selection::Stack(_)) => "stack-page",
         Screen::Library => "library",
         Screen::Rehearse => "rehearse",
@@ -25,6 +26,7 @@ pub fn page_for(state: &State) -> &'static str {
         Screen::Board => "board",
         Screen::Achievements => "achievements",
         Screen::Reports => "reports",
+        Screen::Diary => "reports",
         Screen::Agent => "assistant",
         Screen::Pdf => "pdf",
     }

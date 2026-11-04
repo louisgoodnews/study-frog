@@ -15,9 +15,11 @@ hayro.workspace = true
 pdf_oxide.workspace = true
 lopdf.workspace = true
 image.workspace = true
+studyfrog-md.workspace = true
 
 [dev-dependencies]
 criterion.workspace = true
+proptest.workspace = true
 
 [[bench]]
 name = "pdf"

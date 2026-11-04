@@ -49,6 +49,7 @@ fn item(
         parent,
         priority: None,
         difficulty: None,
+        also_in: None,
     }
 }
 
@@ -205,4 +206,19 @@ fn the_same_title_twice_gets_a_distinct_file_name_in_the_same_stack() {
         d.0.join("french-2/_stack.md").is_file(),
         "a second top-level stack of that name"
     );
+}
+
+#[test]
+fn create_item_with_also_in_writes_referenced_by() {
+    let (d, mut s) = vault("also-in");
+    make(&mut s, 1, item(NewKind::Stack, "French", "", "", None)).unwrap();
+    make(&mut s, 2, item(NewKind::Stack, "German", "", "", None)).unwrap();
+    let mut card = item(NewKind::Card, "Word", "Chat", "Cat", Some("french"));
+    card.also_in = Some("german");
+    make(&mut s, 3, card).unwrap();
+    let text = std::fs::read_to_string(d.0.join("french/word.md")).unwrap();
+    assert!(text.contains("referenced_by: ["), "{text}");
+    let expected_ulid = studyfrog_md::ulid::compose_ulid(ids(2).now_ms, ids(2).random);
+    let ulid_str = studyfrog_md::ulid::format_ulid(expected_ulid);
+    assert!(text.contains(&ulid_str));
 }

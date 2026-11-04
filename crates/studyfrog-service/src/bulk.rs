@@ -36,6 +36,8 @@ pub enum BulkEdit {
     RemoveTag(String),
     /// Move to the stack with this folder.
     MoveTo(String),
+    /// Add to the stack with this folder as a reference.
+    AddTo(String),
     /// Delete the files.
     Delete,
 }
@@ -67,6 +69,7 @@ fn tags_of(doc: &mut Doc) -> &mut Vec<String> {
         Doc::Note(d) => &mut d.meta.tags,
         Doc::Card(d) => &mut d.meta.tags,
         Doc::Question(d) => &mut d.meta.tags,
+        Doc::Diary(d) => &mut d.meta.tags,
     }
 }
 
@@ -77,6 +80,7 @@ fn stamped(doc: &Doc, now: UnixMs) -> Doc {
         Doc::Note(d) => d.meta.updated = Some(now),
         Doc::Card(d) => d.meta.updated = Some(now),
         Doc::Question(d) => d.meta.updated = Some(now),
+        Doc::Diary(d) => d.meta.updated = Some(now),
     }
     doc
 }
@@ -88,7 +92,7 @@ fn edited(doc: &Doc, edit: &BulkEdit) -> Option<Doc> {
         BulkEdit::Priority(p) => with_extra(doc, "priority", Some(priority_name(*p))),
         BulkEdit::Difficulty(d) => with_extra(doc, "difficulty", Some(difficulty_name(*d))),
         BulkEdit::AddTag(_) | BulkEdit::RemoveTag(_) => doc.clone(),
-        BulkEdit::MoveTo(_) | BulkEdit::Delete => return None,
+        BulkEdit::MoveTo(_) | BulkEdit::AddTo(_) | BulkEdit::Delete => return None,
     };
     match edit {
         BulkEdit::AddTag(t) if !tags_of(&mut out).contains(t) => tags_of(&mut out).push(t.clone()),
@@ -106,6 +110,35 @@ fn free_name(dir: &Path, name: &str) -> String {
         .chain((2..).map(|n| format!("{stem}-{n}{dot}{ext}")))
         .find(|n| !dir.join(n).exists())
         .unwrap_or_else(|| name.to_owned())
+}
+
+fn add_ref(
+    session: &VaultSession,
+    (doc, path, folder, before): (&Doc, &str, &str, &str),
+    now: UnixMs,
+    undo: &mut Snapshot,
+) -> Result<(), ServiceError> {
+    let stacks = load_overview(&session.conn)
+        .map_err(ServiceError::Store)?
+        .stacks;
+    let Some(st) = stacks.iter().find(|s| s.folder == folder) else {
+        return Err(ServiceError::Invalid(format!(
+            "there is no stack \"{folder}\""
+        )));
+    };
+    if path.starts_with(&format!("{folder}/")) {
+        return Ok(());
+    }
+    let id = studyfrog_md::ulid::format_ulid(st.uid);
+    let mut refs = studyfrog_md::refs::references_of(doc);
+    if refs.contains(&id) {
+        return Ok(());
+    }
+    refs.push(id);
+    let doc = studyfrog_md::refs::with_references(doc, &refs);
+    let text = render_doc(&stamped(&doc, now)).map_err(|e| ServiceError::Invalid(e.to_string()))?;
+    undo.0.push((path.to_owned(), Some(before.to_owned())));
+    write_new(&session.root.join(path), &text)
 }
 
 fn move_to(session: &VaultSession, path: &str, folder: &str) -> Result<String, ServiceError> {
@@ -142,6 +175,9 @@ fn one(
             undo.0.push((target, None));
             Ok(())
         }
+        BulkEdit::AddTo(folder) => {
+            add_ref(session, (&loaded.doc, path, folder, &before), now, undo)
+        }
         field => {
             let doc = edited(&loaded.doc, field).map(|d| stamped(&d, now));
             let text = doc
@@ -166,7 +202,7 @@ pub fn bulk_apply(
     edit: &BulkEdit,
     now: UnixMs,
 ) -> Result<BulkDone, ServiceError> {
-    if let BulkEdit::MoveTo(folder) = edit {
+    if let BulkEdit::MoveTo(folder) | BulkEdit::AddTo(folder) = edit {
         let stacks = load_overview(&session.conn)
             .map_err(ServiceError::Store)?
             .stacks;

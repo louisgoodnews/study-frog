@@ -12,11 +12,13 @@ use studyfrog_store::reviews::load_reviews;
 
 use crate::document::load_document;
 use crate::session::{ServiceError, VaultSession};
-use crate::xfer_model::{Bundle, XItem, XReview, XStack};
+use crate::xfer_model::{Bundle, XAverage, XItem, XReview, XStack, XStackMemory};
 use crate::xfer_zip::write_zip;
 
 const FILE_EXTS: [&str; 5] = ["png", "jpg", "jpeg", "gif", "pdf"];
 const MAX_FILES: usize = 2_000;
+
+type SchedData<'a> = (&'a [XReview], Vec<XStackMemory>, Option<XAverage>);
 
 fn in_scope(folder: &str, scope: Option<&str>) -> bool {
     scope.is_none_or(|s| folder == s || folder.starts_with(&format!("{s}/")))
@@ -25,7 +27,7 @@ fn in_scope(folder: &str, scope: Option<&str>) -> bool {
 fn item_of(
     doc: &Doc,
     (stack, also_in): (&str, Vec<String>),
-    scheduling: Option<&[XReview]>,
+    scheduling: Option<SchedData<'_>>,
 ) -> XItem {
     let m = doc_meta(doc);
     let (kind, text, answer) = match doc {
@@ -33,6 +35,11 @@ fn item_of(
         Doc::Question(d) => (ItemKind::Question, d.prompt.clone(), d.reference.clone()),
         Doc::Note(d) => (ItemKind::Note, d.body.clone(), String::new()),
         Doc::Stack(d) => (ItemKind::Note, d.body.clone(), String::new()),
+        Doc::Diary(d) => (ItemKind::Note, d.body.clone(), String::new()),
+    };
+    let (reviews, stacks, average) = match scheduling {
+        Some((r, s, a)) => (r.to_vec(), s, a),
+        None => (Vec::new(), Vec::new(), None),
     };
     XItem {
         id: Some(m.uid),
@@ -46,7 +53,9 @@ fn item_of(
         status: extra_value(doc, "status"),
         priority: extra_value(doc, "priority"),
         difficulty: extra_value(doc, "difficulty"),
-        reviews: scheduling.map_or_else(Vec::new, <[XReview]>::to_vec),
+        reviews,
+        stacks,
+        average,
         extra: Vec::new(),
     }
 }
@@ -86,8 +95,8 @@ pub fn export_bundle(
         scheduling,
         ..Bundle::default()
     };
-    for s in load_overview(&session.conn)
-        .map_err(store)?
+    let overview = load_overview(&session.conn).map_err(store)?;
+    for s in overview
         .stacks
         .iter()
         .filter(|s| in_scope(&s.folder, scope))
@@ -103,6 +112,17 @@ pub fn export_bundle(
             description,
         });
     }
+    let per_stack = if scheduling {
+        let now = studyfrog_core::time::UnixMs(
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map_or(0, |d| d.as_millis() as i64),
+        );
+        let scores = crate::fam_refs::reference_scores(&session.conn, now).unwrap_or_default();
+        crate::fam_refs::views_by_item(&scores, &overview.stacks)
+    } else {
+        std::collections::HashMap::new()
+    };
     let mut metas: Vec<_> = load_item_meta(&session.conn)
         .map_err(ServiceError::Store)?
         .into_iter()
@@ -118,8 +138,8 @@ pub fn export_bundle(
             .filter(|f| in_scope(f, scope))
             .cloned()
             .collect();
-        let reviews: Option<Vec<XReview>> = scheduling.then(|| {
-            load_reviews(&session.conn, uid)
+        let sched = scheduling.then(|| {
+            let revs: Vec<XReview> = load_reviews(&session.conn, uid)
                 .unwrap_or_default()
                 .iter()
                 .map(|r| XReview {
@@ -127,12 +147,41 @@ pub fn export_bundle(
                     rating: r.rating,
                     elapsed_days: r.elapsed_days,
                 })
-                .collect()
+                .collect();
+            let (mems, avg) = match per_stack.get(&uid) {
+                Some(v_list) => {
+                    let (fam, diff) = crate::fam_refs::overall(v_list);
+                    let avg = (fam.is_some() || diff.is_some()).then_some(XAverage {
+                        familiarity: fam,
+                        difficulty: diff,
+                    });
+                    let mems = v_list
+                        .iter()
+                        .map(|v| XStackMemory {
+                            stack: v.folder.clone().unwrap_or_else(|| "Inbox".to_owned()),
+                            source: if v.primary {
+                                "own".into()
+                            } else {
+                                "referenced".into()
+                            },
+                            difficulty: v.difficulty,
+                            familiarity: v.value,
+                            due: v.due_ms,
+                        })
+                        .collect();
+                    (mems, avg)
+                }
+                None => (Vec::new(), None),
+            };
+            (revs, mems, avg)
         });
+        let sched_param = sched
+            .as_ref()
+            .map(|(r, s, a)| (r.as_slice(), s.clone(), a.clone()));
         b.items.push(item_of(
             &load_document(session, uid)?.doc,
             (folder, also_in),
-            reviews.as_deref(),
+            sched_param,
         ));
     }
     let base = scope.map_or_else(|| session.root.clone(), |s| session.root.join(s));

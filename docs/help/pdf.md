@@ -86,4 +86,4 @@ names it.
 
 ## Related pages
 
-[[library]], [[create-dialog]], [[faq]].
+[[library]], [[create-dialog]], [[faq]], [[pdf-export]].

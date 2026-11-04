@@ -31,6 +31,9 @@ fn the_create_dialog_offers_the_four_kinds_with_their_own_fields() {
     }
     h.get_by_label("Card").click();
     h.run_steps(8);
+    assert!(h.query_by_label("More fields").is_some());
+    h.get_by_label("More fields").click();
+    h.run_steps(4);
     for field in [
         "Title",
         "Front",

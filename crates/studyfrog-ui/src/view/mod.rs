@@ -12,10 +12,12 @@ mod board;
 pub(crate) mod calendar;
 mod calendar_grid;
 mod calendar_reviews;
-mod date_picker;
+pub(crate) mod date_picker;
+pub mod diary;
 mod editor;
 mod explorer;
 mod explorer_charts;
+pub mod folders;
 mod graph;
 mod help;
 mod help_edit;
@@ -25,6 +27,7 @@ mod icons;
 pub(crate) mod image;
 mod item_details;
 mod item_fam;
+pub mod item_stacks;
 mod items;
 pub(crate) mod kit;
 mod library;
@@ -41,8 +44,11 @@ mod modal_fields;
 mod modal_formats;
 mod modal_found;
 pub mod modal_import;
+pub mod modal_pdf_export;
+pub mod modal_pdf_preview;
 mod modal_size;
 mod modal_transfer;
+mod modal_unmark;
 mod navbar;
 mod navbar_history;
 pub mod notifications;
@@ -59,10 +65,12 @@ mod preview;
 mod preview_rich;
 mod profiles;
 mod reports;
+mod reports_calibration;
 mod reports_fam;
 mod reports_runs;
 mod run;
 mod run_card;
+mod run_diary_prompt;
 mod run_timer;
 mod session_form;
 mod settings;
@@ -112,6 +120,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
         .show(ui, |ui| match state.screen {
             Screen::Welcome => welcome::draw(state, ui, &mut out),
             Screen::Home => home::draw(state, ui, &mut out),
+            Screen::Folders => folders::draw(state, ui, &mut out),
             Screen::Library => library::draw(state, ui, &mut out),
             Screen::Rehearse if state.rehearse.run.is_some() => run::draw(state, ui, &mut out),
             Screen::Rehearse => setup::draw(state, ui, &mut out),
@@ -123,6 +132,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
             Screen::Achievements => achievements::draw(state, ui),
             Screen::Agent => agent::draw(state, ui, &mut out),
             Screen::Reports => reports::draw(state, ui, &mut out),
+            Screen::Diary => diary::draw(state, ui, &mut out),
             Screen::Pdf => pdf::draw(state, ui, &mut out),
             Screen::Help => help::draw(state, ui, &mut out),
         });

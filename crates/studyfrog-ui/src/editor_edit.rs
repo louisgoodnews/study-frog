@@ -64,6 +64,14 @@ pub(crate) fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
                     e.form.subjects.push(name);
                 }
             }
+            EditAction::AddReference(id) => {
+                if !e.form.referenced_by.contains(&id) {
+                    e.form.referenced_by.push(id);
+                }
+            }
+            EditAction::RemoveReference(id) => {
+                e.form.referenced_by.retain(|x| x != &id);
+            }
             EditAction::Field(i, text) => {
                 if let Some(f) = e.form.fields.get_mut(i) {
                     finished = token_done(&f.text, &text);

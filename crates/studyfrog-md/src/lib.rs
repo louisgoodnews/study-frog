@@ -6,6 +6,7 @@ mod blocks_heading;
 mod blocks_table;
 mod blocks_text;
 pub mod build;
+pub mod build_diary;
 pub mod codeblock;
 pub mod doc;
 pub mod error;

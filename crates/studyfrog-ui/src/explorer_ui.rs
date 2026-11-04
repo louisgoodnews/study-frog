@@ -15,6 +15,8 @@ pub enum ReportTab {
     Memory,
     /// How familiar the user is with the items.
     Familiarity,
+    /// Self-assessment calibration against measured performance.
+    Calibration,
     /// The history of runs.
     Runs,
 }

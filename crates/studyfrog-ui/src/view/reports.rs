@@ -1,7 +1,7 @@
 //! The reports: retention by time since the last review, how long answers take, and the review
 //! load ahead. Every bar carries its numbers as text, so nothing depends on seeing the bar.
 
-use eframe::egui::{self, ProgressBar};
+use eframe::egui::{self, RichText};
 use studyfrog_core::event::{Difficulty, difficulty_name};
 use studyfrog_report::latency::{EDGES_MS, LatencyStats};
 use studyfrog_report::retention::{RetentionBucket, retention_rate};
@@ -10,6 +10,7 @@ use studyfrog_service::reports::{BacktestReport, ReportBundle};
 use crate::explorer_ui::{ExplorerMsg, ReportTab};
 use crate::msg::Msg;
 use crate::state::State;
+use crate::view::kit::{self, BarRow, READING_WIDTH};
 
 fn seconds(ms: u32) -> String {
     format!("{:.1} s", f64::from(ms) / 1000.0)
@@ -40,25 +41,16 @@ fn day_label(i: usize) -> String {
     }
 }
 
-fn bar(ui: &mut egui::Ui, label: &str, fraction: f32, text: String) {
-    ui.horizontal(|ui| {
-        ui.label(label);
-        ui.add(
-            ProgressBar::new(fraction.clamp(0.0, 1.0))
-                .desired_width(240.0)
-                .text(text),
-        );
-    });
-}
-
 /// The tabs, then either the performance explorer or the three memory reports.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.heading("Reports");
+    ui.label(RichText::new("Reports").size(17.0).strong());
+    ui.add_space(4.0);
     ui.horizontal(|ui| {
         for (tab, label) in [
             (ReportTab::Performance, "Performance"),
             (ReportTab::Memory, "Memory and forecast"),
             (ReportTab::Familiarity, "Familiarity"),
+            (ReportTab::Calibration, "Self-assessment"),
             (ReportTab::Runs, "Runs"),
         ] {
             if ui
@@ -73,6 +65,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ReportTab::Performance => crate::view::explorer::draw(state, ui, out),
         ReportTab::Memory => memory(state, ui),
         ReportTab::Familiarity => crate::view::reports_fam::draw(state, ui, out),
+        ReportTab::Calibration => crate::view::reports_calibration::draw(state, ui, out),
         ReportTab::Runs => crate::view::reports_runs::draw(state, ui, out),
     }
 }
@@ -87,25 +80,35 @@ fn memory(state: &State, ui: &mut egui::Ui) {
         ui.label("There are no reviews yet. Rehearse a few items and come back.");
     }
     egui::ScrollArea::vertical().show(ui, |ui| {
-        retention(r, ui);
-        latency(r, ui);
-        forecast(r, ui);
+        kit::column(ui, READING_WIDTH, |ui| {
+            retention(r, ui);
+            ui.add_space(16.0);
+            latency(r, ui);
+            ui.add_space(16.0);
+            forecast(r, ui);
+        });
     });
 }
 
 fn retention(r: &ReportBundle, ui: &mut egui::Ui) {
     ui.add_space(8.0);
-    crate::view::kit::section(ui, "Retention");
+    kit::section(ui, "Retention");
     ui.weak("How often an item was recalled, by the time since its previous review.");
-    for b in r.retention.iter().filter(|b| b.reviews > 0) {
-        let rate = retention_rate(b).unwrap_or(0.0);
-        bar(
-            ui,
-            &bucket_label(b),
-            rate,
-            format!("{:.0} % of {}", rate * 100.0, b.reviews),
-        );
-    }
+    let rows: Vec<_> = r
+        .retention
+        .iter()
+        .filter(|b| b.reviews > 0)
+        .map(|b| {
+            let rate = retention_rate(b).unwrap_or(0.0);
+            BarRow {
+                label: bucket_label(b),
+                fraction: rate,
+                text: format!("{:.0} % of {}", rate * 100.0, b.reviews),
+                color: None,
+            }
+        })
+        .collect();
+    kit::bar_rows(ui, "reports-retention", &rows);
 }
 
 fn stats_line(s: &LatencyStats) -> String {
@@ -120,16 +123,26 @@ fn stats_line(s: &LatencyStats) -> String {
 
 fn latency(r: &ReportBundle, ui: &mut egui::Ui) {
     ui.add_space(8.0);
-    crate::view::kit::section(ui, "Time to answer");
+    kit::section(ui, "Time to answer");
     let Some(stats) = &r.latency else {
         ui.label("No answer times recorded yet.");
         return;
     };
     ui.label(stats_line(stats));
     let most = r.histogram.iter().copied().max().unwrap_or(1).max(1);
-    for (i, n) in r.histogram.iter().enumerate().filter(|(_, n)| **n > 0) {
-        bar(ui, &bin_label(i), *n as f32 / most as f32, n.to_string());
-    }
+    let rows: Vec<_> = r
+        .histogram
+        .iter()
+        .enumerate()
+        .filter(|(_, n)| **n > 0)
+        .map(|(i, n)| BarRow {
+            label: bin_label(i),
+            fraction: *n as f32 / most as f32,
+            text: n.to_string(),
+            color: None,
+        })
+        .collect();
+    kit::bar_rows(ui, "reports-latency", &rows);
     for m in &r.by_mark {
         let name = m
             .mark
@@ -157,16 +170,26 @@ fn backtest_line(b: &BacktestReport) -> String {
 
 fn forecast(r: &ReportBundle, ui: &mut egui::Ui) {
     ui.add_space(8.0);
-    crate::view::kit::section(ui, "Reviews ahead");
+    kit::section(ui, "Reviews ahead");
     let total: f32 = r.forecast.iter().sum();
     ui.label(format!(
         "About {total:.0} reviews in the next {} days.",
         r.forecast.len()
     ));
     let most = r.forecast.iter().copied().fold(1.0_f32, f32::max);
-    for (i, n) in r.forecast.iter().take(7).enumerate() {
-        bar(ui, &day_label(i), n / most, format!("{n:.0}"));
-    }
+    let rows: Vec<_> = r
+        .forecast
+        .iter()
+        .take(7)
+        .enumerate()
+        .map(|(i, n)| BarRow {
+            label: day_label(i),
+            fraction: n / most,
+            text: format!("{n:.0}"),
+            color: None,
+        })
+        .collect();
+    kit::bar_rows(ui, "reports-forecast", &rows);
     for (week, chunk) in r.forecast.chunks(7).enumerate().skip(1) {
         let week_total: f32 = chunk.iter().sum();
         ui.label(format!(

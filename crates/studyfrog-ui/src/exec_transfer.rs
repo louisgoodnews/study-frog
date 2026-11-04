@@ -19,7 +19,7 @@ use crate::msg::Msg;
 use crate::transfer_ui::{CsvInfo, Format, Imported, Preview, TransferJob, TransferMsg};
 
 const SHOWN_LINES: usize = 100;
-const EXTENSIONS: [&str; 6] = ["json", "zip", "csv", "tsv", "txt", "apkg"];
+const EXTENSIONS: [&str; 8] = ["json", "toml", "ron", "zip", "csv", "tsv", "txt", "apkg"];
 
 fn msg(m: TransferMsg) -> Msg {
     Msg::Library(LibraryMsg::Transfer(m))
@@ -122,6 +122,16 @@ fn export(
                 &export_bundle(session, scope, scheduling).map_err(|e| e.to_string())?,
                 &exported,
             ),
+        ),
+        Format::Toml => (
+            "toml",
+            export_bundle(session, scope, scheduling)
+                .map(|b| studyfrog_service::xfer_toml::to_toml(&b, &exported).into_bytes()),
+        ),
+        Format::Ron => (
+            "ron",
+            export_bundle(session, scope, scheduling)
+                .map(|b| studyfrog_service::xfer_ron::to_ron(&b, &exported).into_bytes()),
         ),
         Format::Csv => (
             "csv",

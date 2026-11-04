@@ -158,4 +158,6 @@ pub enum PdfMsg {
     Extract(crate::pdf_extract_types::ExtractMsg),
     /// Rearranging into a new file.
     Arrange(crate::pdf_arrange_types::ArrangeMsg),
+    /// Exporting notes or stacks to PDF.
+    Export(crate::pdf_export_types::PdfExportMsg),
 }

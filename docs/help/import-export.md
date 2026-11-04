@@ -72,7 +72,7 @@ vault is refused. A broken file gives an error in the preview, never a crash.
 
 ## Related pages
 
-[[privacy]], [[library]], [[faq]].
+[[privacy]], [[library]], [[faq]], [[pdf-export]].
 
 ## Suggestions from this computer
 When the Import tab opens, StudyFrog looks in the usual places and lists what it found under **Found on this computer**:

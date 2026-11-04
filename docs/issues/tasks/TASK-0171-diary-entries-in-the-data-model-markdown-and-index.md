@@ -2,7 +2,7 @@
 id: TASK-0171
 type: task
 title: Diary entries in the data model, Markdown and index
-status: backlog
+status: done
 epic: EPIC-024
 parents: [STORY-0068]
 estimate: 3
@@ -19,8 +19,8 @@ The owner asked on 2026-11-02 for the 0.3.0 release to focus on usability and in
 Add the entry type, the schema, the scanner support and the index table.
 
 ## Acceptance Criteria
-- [ ] A diary entry reads and writes as Markdown with its ratings, links and pictures and survives a round trip
-- [ ] The index lists entries by day and finds them by text and by linked item
+- [x] A diary entry reads and writes as Markdown with its ratings, links and pictures and survives a round trip
+- [x] The index lists entries by day and finds them by text and by linked item
 
 ## Design Notes
 None.

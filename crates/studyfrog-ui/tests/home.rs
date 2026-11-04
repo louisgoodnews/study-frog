@@ -208,7 +208,7 @@ fn the_summary_figures_have_room_and_the_page_keeps_a_margin_from_the_sidebar() 
         reviews.left() - streak.right() >= 30.0,
         "{streak:?} {reviews:?}"
     );
-    let sidebar = rect_of(&h, "Library");
+    let sidebar = rect_of(&h, "Items");
     let title = h
         .get_by_label_contains("Good morning")
         .accesskit_node()

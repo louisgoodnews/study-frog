@@ -34,7 +34,7 @@ fn move_to(out: &mut Vec<Msg>, uid: Uid, up_next: bool) {
 
 fn column(
     state: &State,
-    title: &str,
+    (folder, title): (&str, &str),
     items: &[usize],
     up_next: bool,
     ui: &mut egui::Ui,
@@ -61,6 +61,14 @@ fn column(
                 ui.dnd_drag_source(Id::unique(("backlog", item.uid)), item.uid, |ui| {
                     ui.label(&name);
                 });
+                if !item.row.stacks.iter().step_by(2).any(|s| s == folder) {
+                    let from = item
+                        .references
+                        .iter()
+                        .find(|r| r.primary)
+                        .map_or("Inbox", |r| r.title.as_str());
+                    ui.weak(format!("(from {from})"));
+                }
                 if ui.link(format!("Open {name}")).clicked() {
                     out.push(Msg::OpenItem(item.uid));
                 }
@@ -86,10 +94,17 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     let b = backlog(&state.library, folder, today);
     ui.weak("Drag an item between the lists, or use its button. Up next makes an item Learning; Not yet planned puts it on hold.");
     ui.columns(2, |cols| {
-        column(state, "Up next", &b.up_next, true, &mut cols[0], out);
         column(
             state,
-            "Not yet planned",
+            (folder, "Up next"),
+            &b.up_next,
+            true,
+            &mut cols[0],
+            out,
+        );
+        column(
+            state,
+            (folder, "Not yet planned"),
             &b.not_planned,
             false,
             &mut cols[1],

@@ -45,6 +45,8 @@ pub struct RunView {
     pub scored: Option<Scored>,
     /// `State::now` when the run started; engine time is measured from here.
     pub started_time: f64,
+    /// The post-rehearsal diary prompt, if shown or active.
+    pub diary_prompt: Option<crate::diary_prompt::RunDiaryPrompt>,
 }
 
 /// A fresh view of a not-yet-started session.
@@ -62,6 +64,7 @@ pub fn run_view_new(session: Session, started_time: f64) -> RunView {
         scores: HashMap::new(),
         scored: None,
         started_time,
+        diary_prompt: None,
     }
 }
 

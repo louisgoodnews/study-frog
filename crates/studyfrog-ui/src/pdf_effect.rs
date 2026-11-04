@@ -91,4 +91,6 @@ pub enum PdfEffect {
         /// All of its marks.
         marks: Vec<studyfrog_config::pdf_marks::PdfMark>,
     },
+    /// Exporting items or stacks to PDF.
+    Export(crate::pdf_export_types::PdfExportJob),
 }

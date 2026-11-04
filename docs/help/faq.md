@@ -175,6 +175,19 @@ is not available yet. See [[pdf]].
 
 Never. Highlights and notes go into a separate file next to the PDF; rearranged pages are saved as a new file.
 
+### How do I export my notes or stacks to PDF?
+
+Open an item page or stack page and choose **Export to PDF…** from the **...** (More actions) menu, or select multiple
+items in the library and use **Export to PDF…** in the bulk actions bar. The dialog offers page size (A4, Letter),
+margins, base font size, title page, table of contents, page numbers, and answer visibility for flashcards and
+questions. See [[pdf-export]].
+
+### What formatting does PDF export support, and what is left out?
+
+The export renders headings, pipe tables with column alignment, syntax-highlighted code blocks, underline and the six
+palette colors, bullet and task lists, blockquotes, bookmarks, web links and internal wikilinks, and pictures.
+Arbitrary HTML tags, multi-column layouts, and complex non-Latin scripts are not supported. See [[pdf-export]].
+
 ## The assistant
 
 ### Does StudyFrog send my notes to an AI company?

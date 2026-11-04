@@ -65,9 +65,13 @@ fn the_stack_and_the_type_are_in_the_header_and_the_editors_and_the_dialog_can_b
         "Resize the dialog",
         "Enlarge the dialog",
         "More",
-        "Priority",
-        "Difficulty",
+        "More fields",
     ] {
+        assert!(h.query_all_by_label(name).count() >= 1, "missing {name}");
+    }
+    h.get_by_label("More fields").click();
+    h.run_steps(4);
+    for name in ["Priority", "Difficulty"] {
         assert!(h.query_all_by_label(name).count() >= 1, "missing {name}");
     }
     h.get_by_label("Enlarge the dialog").click();

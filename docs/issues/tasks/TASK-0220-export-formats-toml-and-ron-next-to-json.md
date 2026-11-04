@@ -2,7 +2,7 @@
 id: TASK-0220
 type: task
 title: Export formats TOML and RON next to JSON
-status: backlog
+status: done
 epic: EPIC-026
 parents: [STORY-0079]
 estimate: 3
@@ -20,9 +20,9 @@ The owner tested the 0.3.1 build on 2026-11-03 and listed what to do in 0.4.0, a
 The owner: exports could be JSON, TOML or RON, since the per-stack values stay in the database until exported.
 
 ## Acceptance Criteria
-- [ ] The export dialog offers JSON, TOML and RON for the library or a stack, with the same data: items, references and, in the advanced mode, the per-stack values (`source`, `difficulty`, `familiarity`, due date) with the average and the review history
-- [ ] The three formats read back to the same bundle where the importer reads them, and the dialog says which formats can be imported again
-- [ ] Files of the three formats are valid for other tools, checked by parsing them with the standard crates in the tests
+- [x] The export dialog offers JSON, TOML and RON for the library or a stack, with the same data: items, references and, in the advanced mode, the per-stack values (`source`, `difficulty`, `familiarity`, due date) with the average and the review history
+- [x] The three formats read back to the same bundle where the importer reads them, and the dialog says which formats can be imported again
+- [x] Files of the three formats are valid for other tools, checked by parsing them with the standard crates in the tests
 
 ## Design Notes
 Build or buy (P10): the `toml` crate is already in the workspace; for RON compare the `ron` crate with a small writer (export only is a plain data dump); record the choice in the task. Import: JSON today; TOML and RON need a reader, which the crates give; an in-house RON reader is not worth it. The table of adapters of TASK-0209 lists the three formats with their layouts.

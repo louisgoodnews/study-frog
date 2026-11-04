@@ -621,6 +621,9 @@ name = "bitflags"
 version = "2.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3ded4057c258ba199e2d26386d3af3780957ecaee6c4ef4041c6b4b8b97c0b06"
+dependencies = [
+ "serde_core",
+]
 
 [[package]]
 name = "block-buffer"
@@ -4639,6 +4642,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "ron"
+version = "0.12.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "97b3fe97c18ff24299ea56f802c5693eb34266fb0bc8317f4e101debc8a3ceaf"
+dependencies = [
+ "bitflags 2.13.2",
+ "serde",
+ "serde_derive",
+ "typeid",
+ "unicode-ident",
+]
+
+[[package]]
 name = "rsqlite-vfs"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5152,7 +5168,7 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "studyfrog-achieve"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "proptest",
  "studyfrog-core",
@@ -5160,7 +5176,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-agent"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -5170,7 +5186,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-app"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "rfd",
  "studyfrog-agent",
@@ -5184,7 +5200,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-board"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "proptest",
  "studyfrog-core",
@@ -5192,7 +5208,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-calendar"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "proptest",
  "studyfrog-core",
@@ -5200,7 +5216,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-candle"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "candle-core",
  "candle-nn",
@@ -5212,7 +5228,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-config"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "proptest",
  "serde",
@@ -5222,21 +5238,21 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-core"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "proptest",
 ]
 
 [[package]]
 name = "studyfrog-ext"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "proptest",
 ]
 
 [[package]]
 name = "studyfrog-ext-example"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "proptest",
  "studyfrog-ext",
@@ -5244,7 +5260,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-graph"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "criterion",
  "dhat",
@@ -5253,7 +5269,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-md"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "proptest",
  "pulldown-cmark",
@@ -5264,7 +5280,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-net"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "studyfrog-agent",
  "ureq",
@@ -5272,18 +5288,20 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-pdf"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "criterion",
  "hayro",
  "image",
  "lopdf",
  "pdf_oxide",
+ "proptest",
+ "studyfrog-md",
 ]
 
 [[package]]
 name = "studyfrog-rehearsal"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "criterion",
  "proptest",
@@ -5293,7 +5311,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-report"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "criterion",
  "proptest",
@@ -5303,12 +5321,14 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-service"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "chrono",
  "image",
  "lopdf",
+ "ron",
  "rusqlite",
+ "serde",
  "serde_json",
  "studyfrog-achieve",
  "studyfrog-agent",
@@ -5324,12 +5344,13 @@ dependencies = [
  "studyfrog-slm",
  "studyfrog-srs",
  "studyfrog-store",
+ "toml",
  "zip 9.2.0",
 ]
 
 [[package]]
 name = "studyfrog-slm"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "criterion",
  "proptest",
@@ -5339,7 +5360,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-srs"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "criterion",
  "proptest",
@@ -5348,11 +5369,12 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-store"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "criterion",
  "proptest",
  "rusqlite",
+ "serde_json",
  "studyfrog-board",
  "studyfrog-calendar",
  "studyfrog-config",
@@ -5362,7 +5384,7 @@ dependencies = [
 
 [[package]]
 name = "studyfrog-ui"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "eframe",
  "egui_extras",
@@ -5646,6 +5668,7 @@ dependencies = [
  "serde_spanned",
  "toml_datetime",
  "toml_parser",
+ "toml_writer",
  "winnow",
 ]
 
@@ -5678,6 +5701,12 @@ checksum = "baa693a8032d7e1cada7d0041e96126df243179ff061456783ac7f12bda4744c"
 dependencies = [
  "winnow",
 ]
+
+[[package]]
+name = "toml_writer"
+version = "1.2.0+spec-1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "009dbb7700f11c55ef83aebbe4c0e9cf1f1ac0844bd8d6f00dc38f302026e13a"
 
 [[package]]
 name = "tracing"
@@ -5748,6 +5777,12 @@ name = "typed-path"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9ce898823d8cd0f028662d2f349694b1af0a5cc9be83f1d213a00d3147445e1e"
+
+[[package]]
+name = "typeid"
+version = "1.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bc7d623258602320d5c55d1bc22793b57daff0ec7efc270ea7d55ce1d5f5471c"
 
 [[package]]
 name = "typenum"

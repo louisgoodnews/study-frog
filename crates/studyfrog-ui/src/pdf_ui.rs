@@ -25,7 +25,8 @@ pub(crate) fn fail(state: State, text: String) -> (State, Vec<Effect>) {
     (State { notice, ..state }, Vec::new())
 }
 
-fn open(state: State, path: String, page: usize) -> (State, Vec<Effect>) {
+/// Open a PDF file in the viewer.
+pub fn open(state: State, path: String, page: usize) -> (State, Vec<Effect>) {
     let (state, mut effects) = crate::nav::navigate(state, Screen::Pdf);
     if state.screen != Screen::Pdf {
         return (state, effects);
@@ -191,6 +192,7 @@ pub fn update(state: State, msg: PdfMsg) -> (State, Vec<Effect>) {
         PdfMsg::Extract(m) => crate::pdf_extract_ui::update(state, m),
         PdfMsg::Arrange(m) => crate::pdf_arrange_ui::update(state, m),
         PdfMsg::Marks(m) => crate::pdf_marks_ui::update(state, m),
+        PdfMsg::Export(m) => crate::pdf_export_ui::update(state, m),
         PdfMsg::ShowSide(side) => (
             State {
                 pdf: state.pdf.clone().map(|v| PdfView { side, ..v }),

@@ -186,6 +186,9 @@ fn the_side_column_lists_the_items_that_link_here() {
     let mut h = harness(m);
     h.run_steps(2);
     assert!(h.query_by_label("Linked from").is_some());
+    let node = h.get_by_label("Flashcard about Alpha");
+    node.scroll_to_me();
+    h.run();
     h.get_by_label("Flashcard about Alpha").click();
     h.run_steps(2);
     assert!(h.state().1.contains(&Effect::LoadDocument(Uid(9))));

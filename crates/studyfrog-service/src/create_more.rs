@@ -4,7 +4,10 @@
 use studyfrog_core::items::DEFAULT_MIN_SCORE;
 use studyfrog_md::doc::{CardDoc, Doc, NoteDoc, QuestionDoc, StackDoc};
 use studyfrog_md::extra::with_extra;
+use studyfrog_md::refs::with_references;
 use studyfrog_md::render::render_doc;
+use studyfrog_md::ulid::format_ulid;
+use studyfrog_store::overview::load_overview;
 use studyfrog_store::stackmap::STACK_FILE;
 
 use crate::create::{
@@ -50,6 +53,8 @@ pub struct NewItem<'a> {
     pub priority: Option<studyfrog_core::priority::Priority>,
     /// The difficulty the user chose; `None` leaves the default (difficult; a stack states none).
     pub difficulty: Option<studyfrog_core::event::Difficulty>,
+    /// Another stack that references this item (optional).
+    pub also_in: Option<&'a str>,
 }
 
 /// What was created.
@@ -162,6 +167,23 @@ pub fn create_item(
         "source",
         item.source.map(|s| format!("\"{s}\"")).as_deref(),
     );
+    let doc = if let Some(also) = item.also_in.filter(|s| !s.is_empty()) {
+        let stacks = load_overview(&session.conn)
+            .map_err(ServiceError::Store)?
+            .stacks;
+        if let Some(target) = stacks.iter().find(|s| s.folder == also) {
+            if item.parent != Some(also) {
+                let id = format_ulid(target.uid);
+                with_references(&doc, &[id])
+            } else {
+                doc
+            }
+        } else {
+            doc
+        }
+    } else {
+        doc
+    };
     let uid = studyfrog_md::doc::doc_meta(&doc).uid;
     let text = render_doc(&doc).map_err(render_error)?;
     let rel_of = |name: &str| match item.parent {

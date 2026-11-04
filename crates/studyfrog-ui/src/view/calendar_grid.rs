@@ -48,7 +48,7 @@ pub fn kind_color(p: &Palette, kind: EventKind) -> Color32 {
 pub fn month(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = &state.planner;
     ui.horizontal_wrapped(|ui| {
-        ui.label(RichText::new("Calendar").size(24.0));
+        ui.label(RichText::new("Calendar").size(17.0).strong());
         ui.add_space(12.0);
         if ui.button("Previous month").clicked() {
             plan(out, PlanMsg::Month(-1));

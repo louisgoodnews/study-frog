@@ -21,6 +21,7 @@ pub fn sections_of(tab: SettingsTab) -> &'static [Section] {
         SettingsTab::Answers => &[answer_comparison],
         SettingsTab::Data => &[crate::view::backup::draw, transfer],
         SettingsTab::Subjects => &[crate::view::subjects::draw],
+        SettingsTab::Diary => &[crate::view::diary::settings::draw],
         SettingsTab::Appearance => &[
             super::settings_appearance::theme_section,
             super::settings_appearance::size_section,

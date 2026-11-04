@@ -4,6 +4,7 @@
 *.sqlite
 *.sqlite-journal
 *.db
+.agents/
 .idea/
 .vscode/
 .DS_Store

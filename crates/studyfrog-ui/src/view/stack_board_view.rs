@@ -19,10 +19,20 @@ fn move_to(out: &mut Vec<Msg>, uid: Uid, status: Status) {
     ))));
 }
 
-fn card(uid: Uid, title: &str, status: Status, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+fn card(
+    uid: Uid,
+    title: &str,
+    status: Status,
+    from: Option<&str>,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+) {
     ui.dnd_drag_source(Id::unique(("board-card", uid)), uid, |ui| {
         ui.label(title);
     });
+    if let Some(primary) = from {
+        ui.weak(format!("(from {primary})"));
+    }
     ui.horizontal(|ui| {
         if ui.link(format!("Open {title}")).clicked() {
             out.push(Msg::OpenItem(uid));
@@ -45,7 +55,13 @@ fn column(state: &State, folder: &str, status: Status, ui: &mut egui::Ui, out: &
         .library
         .items
         .iter()
-        .filter(|i| i.row.status == status && i.row.stacks.iter().step_by(2).any(|c| c == folder))
+        .filter(|i| {
+            i.row.status == status
+                && (i.row.stacks.iter().step_by(2).any(|c| c == folder)
+                    || i.references
+                        .iter()
+                        .any(|r| r.folder.as_deref() == Some(folder)))
+        })
         .collect();
     ui.label(egui::RichText::new(format!("{} ({})", status_label(status), members.len())).strong());
     let zone = Frame::new()
@@ -56,7 +72,15 @@ fn column(state: &State, folder: &str, status: Status, ui: &mut egui::Ui, out: &
         ui.set_min_height(100.0);
         ui.set_width(ui.available_width());
         for i in &members {
-            card(i.uid, &i.row.title, status, ui, out);
+            let from = if !i.row.stacks.iter().step_by(2).any(|c| c == folder) {
+                i.references
+                    .iter()
+                    .find(|r| r.primary)
+                    .map(|r| r.title.as_str())
+            } else {
+                None
+            };
+            card(i.uid, &i.row.title, status, from, ui, out);
         }
     });
     if let Some(uid) = dropped {

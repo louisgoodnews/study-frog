@@ -7,11 +7,13 @@ use studyfrog_service::fam_refs::{RefView, per_stack};
 fn view(title: &str, primary: bool, percent: u8, difficulty: f32, due_days: i64) -> RefView {
     RefView {
         stack: Uid(1),
+        folder: None,
         title: title.into(),
         primary,
         value: Some(f32::from(percent) / 100.0),
         percent: Some(percent),
         difficulty: Some(difficulty),
+        stability: None,
         due_ms: Some(due_days * 86_400_000),
         reviews: 3,
     }
