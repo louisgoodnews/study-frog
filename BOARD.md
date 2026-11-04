@@ -4,9 +4,9 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (14) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (217) |
+| Backlog (13) | Ready (0) | In progress (1/3) | Review (1) | Blocked (0) | Done (217) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |  | [TASK-0218](docs/issues/tasks/TASK-0218-schedules-due-dates-and-reviews-per-stack.md) Schedules, due dates and reviews per stack (8) | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
 | [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 | [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
@@ -17,9 +17,9 @@
 | [TASK-0204](docs/issues/tasks/TASK-0204-folders-view-and-items-view-in-the-application.md) Folders view and Items view in the application (8) |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
 | [TASK-0213](docs/issues/tasks/TASK-0213-references-in-the-interface.md) References in the interface (5) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 | [TASK-0217](docs/issues/tasks/TASK-0217-mark-a-folder-as-a-stack-or-as-a-normal-folder.md) Mark a folder as a stack or as a normal folder (3) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-| [TASK-0218](docs/issues/tasks/TASK-0218-schedules-due-dates-and-reviews-per-stack.md) Schedules, due dates and reviews per stack (8) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-| [TASK-0219](docs/issues/tasks/TASK-0219-familiarity-and-difficulty-per-stack-averaged-on-the-item.md) Familiarity and difficulty per stack, averaged on the item (5) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
-| [TASK-0220](docs/issues/tasks/TASK-0220-export-formats-toml-and-ron-next-to-json.md) Export formats TOML and RON next to JSON (3) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
+| [TASK-0219](docs/issues/tasks/TASK-0219-familiarity-and-difficulty-per-stack-averaged-on-the-item.md) Familiarity and difficulty per stack, averaged on the item (5) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+| [TASK-0220](docs/issues/tasks/TASK-0220-export-formats-toml-and-ron-next-to-json.md) Export formats TOML and RON next to JSON (3) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+|  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
 |  |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
 |  |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
 |  |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |

@@ -3,8 +3,11 @@
 use std::collections::HashMap;
 
 pub use crate::reviews::{
-    TimedReview, insert_review, insert_review_timed, load_reviews, load_reviews_timed,
-    set_latest_review_rating,
+    TimedReview, insert_review, insert_review_in, insert_review_timed, load_reviews,
+    load_reviews_timed, set_latest_review_rating,
+};
+pub use crate::schedule_primary::{
+    load_mem_state, load_sm2_state, primary_stack, save_mem_state, save_sm2_state,
 };
 use rusqlite::{Connection, params};
 use studyfrog_core::memory::{MemState, Sm2State};
@@ -39,11 +42,14 @@ fn mem_of((stability, difficulty, due, last): MemRow) -> StoredMem {
     }
 }
 
-/// The memory state of one item, if it has been scheduled.
-pub fn load_mem_state(conn: &Connection, item: Uid) -> Result<Option<StoredMem>, StoreError> {
-    let sql =
-        "SELECT stability, difficulty, due_ms, last_review_ms FROM mem_state WHERE item_uid = ?1";
-    let found = conn.query_row(sql, [format_ulid(item)], |r| {
+/// The memory state of one item in one stack, if it has been scheduled there.
+pub fn load_mem_state_in(
+    conn: &Connection,
+    (item, stack): (Uid, Uid),
+) -> Result<Option<StoredMem>, StoreError> {
+    let sql = "SELECT stability, difficulty, due_ms, last_review_ms FROM mem_state \
+               WHERE item_uid = ?1 AND stack_uid = ?2";
+    let found = conn.query_row(sql, [format_ulid(item), format_ulid(stack)], |r| {
         Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?))
     });
     match found {
@@ -53,21 +59,25 @@ pub fn load_mem_state(conn: &Connection, item: Uid) -> Result<Option<StoredMem>,
     }
 }
 
-/// Insert or replace the memory state of an item.
-pub fn save_mem_state(conn: &Connection, item: Uid, m: &StoredMem) -> Result<(), StoreError> {
+/// Insert or replace the memory state of an item in one stack.
+pub fn save_mem_state_in(
+    conn: &Connection,
+    (item, stack): (Uid, Uid),
+    m: &StoredMem,
+) -> Result<(), StoreError> {
     conn.prepare_cached(
-        "INSERT INTO mem_state (item_uid, stability, difficulty, due_ms, last_review_ms) VALUES (?1, ?2, ?3, ?4, ?5)
-         ON CONFLICT(item_uid) DO UPDATE SET stability = ?2, difficulty = ?3, due_ms = ?4, last_review_ms = ?5",
+        "INSERT INTO mem_state (item_uid, stack_uid, stability, difficulty, due_ms, last_review_ms) VALUES (?1, ?6, ?2, ?3, ?4, ?5)
+         ON CONFLICT(item_uid, stack_uid) DO UPDATE SET stability = ?2, difficulty = ?3, due_ms = ?4, last_review_ms = ?5",
     )
-    .and_then(|mut s| s.execute(params![format_ulid(item), m.state.stability, m.state.difficulty, m.due.0, m.last_review.0]))
+    .and_then(|mut s| s.execute(params![format_ulid(item), m.state.stability, m.state.difficulty, m.due.0, m.last_review.0, format_ulid(stack)]))
     .map(drop)
     .map_err(sql_err)
 }
 
-/// Every scheduled item, for building queues.
+/// The FSRS state of every item in its primary stack, for building queues.
 pub fn load_all_mem_states(conn: &Connection) -> Result<HashMap<Uid, StoredMem>, StoreError> {
     let mut stmt = conn
-        .prepare("SELECT item_uid, stability, difficulty, due_ms, last_review_ms FROM mem_state")
+        .prepare("SELECT item_uid, stability, difficulty, due_ms, last_review_ms FROM mem_primary")
         .map_err(sql_err)?;
     let rows = stmt
         .query_map([], |r| {
@@ -97,10 +107,14 @@ pub struct StoredSm2 {
     pub last_review: UnixMs,
 }
 
-/// The SM-2 state of one item, if it has been scheduled with SM-2.
-pub fn load_sm2_state(conn: &Connection, item: Uid) -> Result<Option<StoredSm2>, StoreError> {
-    let sql = "SELECT ease, repetitions, interval_days, due_ms, last_review_ms FROM sm2_state WHERE item_uid = ?1";
-    let found = conn.query_row(sql, [format_ulid(item)], sm2_row);
+/// The SM-2 state of one item in one stack, if it has been scheduled there with SM-2.
+pub fn load_sm2_state_in(
+    conn: &Connection,
+    (item, stack): (Uid, Uid),
+) -> Result<Option<StoredSm2>, StoreError> {
+    let sql = "SELECT ease, repetitions, interval_days, due_ms, last_review_ms FROM sm2_state \
+               WHERE item_uid = ?1 AND stack_uid = ?2";
+    let found = conn.query_row(sql, [format_ulid(item), format_ulid(stack)], sm2_row);
     match found {
         Ok(stored) => Ok(Some(stored)),
         Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
@@ -120,16 +134,20 @@ fn sm2_row(r: &rusqlite::Row) -> rusqlite::Result<StoredSm2> {
     })
 }
 
-/// Insert or replace the SM-2 state of an item.
-pub fn save_sm2_state(conn: &Connection, item: Uid, m: &StoredSm2) -> Result<(), StoreError> {
+/// Insert or replace the SM-2 state of an item in one stack.
+pub fn save_sm2_state_in(
+    conn: &Connection,
+    (item, stack): (Uid, Uid),
+    m: &StoredSm2,
+) -> Result<(), StoreError> {
     conn.prepare_cached(
-        "INSERT INTO sm2_state (item_uid, ease, repetitions, interval_days, due_ms, last_review_ms)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6)
-         ON CONFLICT(item_uid) DO UPDATE SET ease = ?2, repetitions = ?3, interval_days = ?4, due_ms = ?5,
+        "INSERT INTO sm2_state (item_uid, ease, repetitions, interval_days, due_ms, last_review_ms, stack_uid)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+         ON CONFLICT(item_uid, stack_uid) DO UPDATE SET ease = ?2, repetitions = ?3, interval_days = ?4, due_ms = ?5,
              last_review_ms = ?6",
     )
     .and_then(|mut s| {
-        s.execute(params![format_ulid(item), m.state.ease, m.state.repetitions, m.state.interval_days, m.due.0, m.last_review.0])
+        s.execute(params![format_ulid(item), m.state.ease, m.state.repetitions, m.state.interval_days, m.due.0, m.last_review.0, format_ulid(stack)])
     })
     .map(drop)
     .map_err(sql_err)
@@ -147,8 +165,7 @@ pub struct Scheduled {
 }
 
 fn all_sm2(conn: &Connection) -> Result<HashMap<Uid, StoredSm2>, StoreError> {
-    let sql =
-        "SELECT ease, repetitions, interval_days, due_ms, last_review_ms, item_uid FROM sm2_state";
+    let sql = "SELECT ease, repetitions, interval_days, due_ms, last_review_ms, item_uid FROM sm2_primary";
     let mut stmt = conn.prepare(sql).map_err(sql_err)?;
     let rows = stmt
         .query_map([], |r| Ok((sm2_row(r)?, r.get::<_, String>(5)?)))

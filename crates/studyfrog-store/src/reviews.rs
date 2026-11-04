@@ -19,8 +19,19 @@ pub fn insert_review_timed(
     r: &Review,
     timing: Option<(u32, u32)>,
 ) -> Result<(), StoreError> {
+    let stack = crate::schedule::primary_stack(conn, r.item)?;
+    insert_review_in(conn, r, stack, timing)
+}
+
+/// Append a review made in one stack.
+pub fn insert_review_in(
+    conn: &Connection,
+    r: &Review,
+    stack: Uid,
+    timing: Option<(u32, u32)>,
+) -> Result<(), StoreError> {
     conn.prepare_cached(
-        "INSERT INTO review (item_uid, rating, at_ms, elapsed_days, answer_ms, expected_ms) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+        "INSERT INTO review (item_uid, rating, at_ms, elapsed_days, answer_ms, expected_ms, stack_uid) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
     )
     .and_then(|mut s| {
         s.execute(params![
@@ -29,22 +40,24 @@ pub fn insert_review_timed(
             r.at.0,
             r.elapsed_days,
             timing.map(|t| t.0),
-            timing.map(|t| t.1)
+            timing.map(|t| t.1),
+            format_ulid(stack)
         ])
     })
     .map(drop)
     .map_err(sql_err)
 }
 
-/// Replace the rating of the item's latest review. Returns false when the item has no review.
+/// Replace the rating of the item's latest review, in every stack it was written for. Returns false when the item
+/// has no review.
 pub fn set_latest_review_rating(
     conn: &Connection,
     item: Uid,
     rating: Rating,
 ) -> Result<bool, StoreError> {
     conn.execute(
-        "UPDATE review SET rating = ?1 WHERE id = \
-         (SELECT id FROM review WHERE item_uid = ?2 ORDER BY at_ms DESC, id DESC LIMIT 1)",
+        "UPDATE review SET rating = ?1 WHERE item_uid = ?2 AND at_ms = \
+         (SELECT MAX(at_ms) FROM review WHERE item_uid = ?2)",
         params![rating_value(rating), format_ulid(item)],
     )
     .map(|n| n > 0)

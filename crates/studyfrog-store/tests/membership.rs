@@ -141,7 +141,7 @@ fn an_index_from_before_gets_the_table_and_reads_every_file_again() {
     )
     .unwrap();
     migrate(&mut conn, MIGRATIONS).unwrap();
-    assert_eq!(schema_version(&conn).unwrap(), 20);
+    assert_eq!(schema_version(&conn).unwrap(), MIGRATIONS.len() as u32);
     let (mtime, hash): (i64, i64) = conn
         .query_row("SELECT mtime_ns, hash FROM file", [], |r| {
             Ok((r.get(0)?, r.get(1)?))

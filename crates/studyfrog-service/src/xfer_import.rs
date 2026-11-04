@@ -170,6 +170,7 @@ pub fn apply_import(
     let (mut created, mut replaced, mut skipped, mut stacks) = (0, 0, 0, 0);
     let mut notes = plan.warnings.clone();
     let mut named: Vec<crate::xfer_refs::Named> = Vec::new();
+    let mut histories: Vec<(Uid, &XItem)> = Vec::new();
     for (n, (item, line)) in b.items.iter().zip(&plan.lines).enumerate() {
         let (uid, path) = match (&line.verdict, policy) {
             (Verdict::Error(e), _) => {
@@ -212,7 +213,7 @@ pub fn apply_import(
         } else {
             created += 1;
             if with_schedule && !item.reviews.is_empty() {
-                insert_reviews(session, uid, item);
+                histories.push((uid, item));
             }
         }
     }
@@ -224,6 +225,10 @@ pub fn apply_import(
         &mut stacks,
     )?);
     let info = refresh(session)?;
+    // After the reindex, so each history lands in the stack the item now lives in.
+    for (uid, item) in histories {
+        insert_reviews(session, uid, item);
+    }
     Ok(ImportDone {
         created,
         replaced,

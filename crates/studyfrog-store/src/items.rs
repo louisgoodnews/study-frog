@@ -31,7 +31,7 @@ pub struct ItemRow {
 pub fn list_items(conn: &Connection, folder: Option<&str>) -> Result<Vec<ItemRow>, StoreError> {
     let sql = format!(
         "SELECT {ITEM_COLS}
-               FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
+               FROM item i LEFT JOIN mem_primary m ON m.item_uid = i.uid LEFT JOIN sm2_primary s ON s.item_uid = i.uid
                WHERE i.stack_path IS ?1 AND i.kind != 'stack' ORDER BY i.path"
     );
     let mut stmt = conn.prepare(&sql).map_err(sql_err)?;
@@ -56,7 +56,7 @@ pub fn search_items(
         .replace('_', "\\_");
     let sql = format!(
         "SELECT {ITEM_COLS}
-               FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
+               FROM item i LEFT JOIN mem_primary m ON m.item_uid = i.uid LEFT JOIN sm2_primary s ON s.item_uid = i.uid
                WHERE i.kind != 'stack' AND i.title LIKE ?1 ESCAPE '\\'
                ORDER BY (i.title LIKE ?2 ESCAPE '\\') DESC, i.title COLLATE NOCASE, i.path LIMIT ?3"
     );
@@ -177,7 +177,7 @@ pub fn linking_to(conn: &Connection, title: &str, except: Uid) -> Result<Vec<Ite
     let sql = format!(
         "SELECT DISTINCT {ITEM_COLS}
                FROM link l JOIN item i ON i.uid = l.src_uid
-               LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
+               LEFT JOIN mem_primary m ON m.item_uid = i.uid LEFT JOIN sm2_primary s ON s.item_uid = i.uid
                WHERE l.target = ?1 COLLATE NOCASE AND i.kind != 'stack' AND i.uid != ?2
                ORDER BY i.title COLLATE NOCASE, i.path"
     );
@@ -191,7 +191,7 @@ pub fn linking_to(conn: &Connection, title: &str, except: Uid) -> Result<Vec<Ite
 pub fn due_items(conn: &Connection, now_ms: i64, limit: usize) -> Result<Vec<ItemRow>, StoreError> {
     let sql = format!(
         "SELECT {ITEM_COLS}
-               FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
+               FROM item i LEFT JOIN mem_primary m ON m.item_uid = i.uid LEFT JOIN sm2_primary s ON s.item_uid = i.uid
                WHERE i.kind != 'stack' AND COALESCE(m.due_ms, s.due_ms) <= ?1 ORDER BY due, i.path LIMIT ?2"
     );
     let mut stmt = conn.prepare(&sql).map_err(sql_err)?;
@@ -206,7 +206,7 @@ pub fn due_items(conn: &Connection, now_ms: i64, limit: usize) -> Result<Vec<Ite
 pub fn recent_items(conn: &Connection, limit: usize) -> Result<Vec<ItemRow>, StoreError> {
     let sql = format!(
         "SELECT {ITEM_COLS}
-               FROM item i LEFT JOIN mem_state m ON m.item_uid = i.uid LEFT JOIN sm2_state s ON s.item_uid = i.uid
+               FROM item i LEFT JOIN mem_primary m ON m.item_uid = i.uid LEFT JOIN sm2_primary s ON s.item_uid = i.uid
                WHERE i.kind != 'stack' ORDER BY COALESCE(i.updated_ms, i.created_ms, 0) DESC, i.path LIMIT ?1"
     );
     let mut stmt = conn.prepare(&sql).map_err(sql_err)?;
