@@ -44,9 +44,12 @@ fn tab_separated_text_becomes_cards_with_tags_and_skips_headers() {
 
 #[test]
 fn bug_0011_benchmark_csv_and_prompt_header() {
-    let csv = "stack,kind,title,front,back,tags\npsychologie/multivariate-verfahren,card,,Welche Variable wird in Regressionsanalysen als Regressand bezeichnet?,Die abhängige Variable Y.,Regression;Grundbegriffe\n";
+    let csv = "stack,kind,title,front,back,tags\n\
+        psychologie/multivariate-verfahren,card,,Welche Variable wird in Regressionsanalysen als Regressand bezeichnet?,Die abhängige Variable Y.,Regression;Grundbegriffe\n\
+        psychologie/multivariate-verfahren,card,,Wie lautet die Gleichung einer zweifachen linearen Regression für die Zufallsvariablen X, Y und Z?,E(Y|X, Z) = beta_0 + beta_1 * X + beta_2 * Z.,Multiple_Regression;Zweifache_Regression\n\
+        psychologie/multivariate-verfahren,card,,Was versteht man unter dem Begriff multiple Determiniertheit im Kontext von Regressionen?,Dass eine Variable in der Realität fast nie nur von einer einzigen, sondern von mehreren (meist unbekannten) anderen Variablen beeinflusst wird.,Multiple_Regression;Grundbegriffe\n";
     let cards = import_csv(csv).unwrap();
-    assert_eq!(cards.len(), 1);
+    assert_eq!(cards.len(), 3);
     assert_eq!(
         cards[0].front,
         "Welche Variable wird in Regressionsanalysen als Regressand bezeichnet?"
@@ -54,6 +57,23 @@ fn bug_0011_benchmark_csv_and_prompt_header() {
     assert_eq!(cards[0].back, "Die abhängige Variable Y.");
     assert_eq!(cards[0].title, "");
     assert_eq!(cards[0].tags, ["Regression", "Grundbegriffe"]);
+    assert_eq!(
+        cards[1].front,
+        "Wie lautet die Gleichung einer zweifachen linearen Regression für die Zufallsvariablen X, Y und Z?"
+    );
+    assert_eq!(
+        cards[1].back,
+        "E(Y|X, Z) = beta_0 + beta_1 * X + beta_2 * Z."
+    );
+    assert_eq!(
+        cards[1].tags,
+        ["Multiple_Regression", "Zweifache_Regression"]
+    );
+    assert_eq!(
+        cards[2].back,
+        "Dass eine Variable in der Realität fast nie nur von einer einzigen, sondern von mehreren (meist unbekannten) anderen Variablen beeinflusst wird."
+    );
+    assert_eq!(cards[2].tags, ["Multiple_Regression", "Grundbegriffe"]);
 }
 
 #[test]

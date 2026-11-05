@@ -97,6 +97,10 @@ fn a_new_item_that_went_by_fast_is_suggested_hard_and_a_normal_pace_suggests_not
         review_rows(slow.state.rehearse.run.as_ref().unwrap())[0].suggestion,
         None
     );
+    let mut h = harness(slow);
+    h.run();
+    assert!(h.query_by_label("Suggested rating: Good").is_some());
+    assert!(h.query_by_label("20 words in 6.0 s").is_some());
 }
 
 #[test]

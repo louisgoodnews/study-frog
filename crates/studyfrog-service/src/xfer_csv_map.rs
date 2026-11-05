@@ -151,6 +151,23 @@ fn row_item(
     Ok(it)
 }
 
+fn normalize_row(row: &[String], m: &Mapping, cols: usize, delim: char) -> Vec<String> {
+    if delim != ',' || cols == 0 || row.len() <= cols || m.back != m.front + 1 || m.back >= cols {
+        return row.to_vec();
+    }
+    let trail = cols - (m.back + 1);
+    let mid = &row[m.front..row.len() - trail];
+    let split = mid[..mid.len() - 1]
+        .iter()
+        .position(|s| s.trim_end().ends_with('?'))
+        .unwrap_or(0);
+    let mut out = row[..m.front].to_vec();
+    out.push(mid[..=split].join(","));
+    out.push(mid[split + 1..].join(","));
+    out.extend_from_slice(&row[row.len() - trail..]);
+    out
+}
+
 /// Read a CSV or TSV file with the options; whatever is not chosen is detected. `Err` only when no reading is
 /// possible at all (an empty file, or fewer than two columns).
 pub fn read_csv(bytes: &[u8], o: &CsvOptions) -> Result<CsvRead, String> {
@@ -169,7 +186,11 @@ pub fn read_csv(bytes: &[u8], o: &CsvOptions) -> Result<CsvRead, String> {
     let map = o.map.or_else(|| guess_map(first, header)).ok_or_else(|| {
         "it needs at least two columns: the front and the back of each card".to_owned()
     })?;
-    let body = &table[usize::from(header)..];
+    let cols = if header { names.len() } else { 0 };
+    let body: Vec<Vec<String>> = table[usize::from(header)..]
+        .iter()
+        .map(|r| normalize_row(r, &map, cols, delimiter))
+        .collect();
     let mut bundle = Bundle::default();
     let mut problems = Vec::new();
     for (i, row) in body.iter().enumerate() {
@@ -179,7 +200,7 @@ pub fn read_csv(bytes: &[u8], o: &CsvOptions) -> Result<CsvRead, String> {
         }
     }
     bundle.warnings = problems.iter().map(problem_text).collect();
-    let first_rows = body.iter().take(SHOWN_ROWS).cloned().collect();
+    let first_rows = body.into_iter().take(SHOWN_ROWS).collect();
     let sheet = Sheet {
         delimiter,
         latin1,

@@ -11,36 +11,34 @@ fn sniff_delimiter(text: &str, preferred: Option<char>) -> char {
     for line in text.lines().map(str::trim).filter(|l| !l.is_empty()) {
         if let Some(c) = line.strip_prefix('#') {
             let l = c.to_ascii_lowercase();
-            if l.contains("separator:tab") || l.contains("separator:\\t") {
-                return '\t';
-            } else if l.contains("separator:comma") || l.contains("separator:,") {
-                return ',';
-            } else if l.contains("separator:semicolon") || l.contains("separator:;") {
-                return ';';
+            for (pat, ch) in [
+                ("separator:tab", '\t'),
+                ("separator:\\t", '\t'),
+                ("separator:comma", ','),
+                ("separator:,", ','),
+                ("separator:semicolon", ';'),
+                ("separator:;", ';'),
+            ] {
+                if l.contains(pat) {
+                    return ch;
+                }
             }
             continue;
         }
-        let (mut tabs, mut commas, mut semis, mut in_q) = (0usize, 0usize, 0usize, false);
+        let (mut counts, mut in_q) = ([0usize; 3], false);
         for c in line.chars() {
             if c == '"' {
                 in_q = !in_q;
             } else if !in_q {
-                match c {
-                    '\t' => tabs += 1,
-                    ',' => commas += 1,
-                    ';' => semis += 1,
-                    _ => {}
+                for (i, d) in ['\t', ',', ';'].into_iter().enumerate() {
+                    counts[i] += usize::from(c == d);
                 }
             }
         }
-        if tabs > 0 {
-            return '\t';
-        }
-        if commas > 0 {
-            return ',';
-        }
-        if semis > 0 {
-            return ';';
+        for (count, ch) in counts.into_iter().zip(['\t', ',', ';']) {
+            if count > 0 {
+                return ch;
+            }
         }
         break;
     }
@@ -58,9 +56,8 @@ fn clean(field: &str) -> String {
 fn parse_tags(raw: &str) -> Vec<String> {
     let raw = raw.trim();
     if raw.is_empty() {
-        return Vec::new();
-    }
-    if raw.contains(';') {
+        Vec::new()
+    } else if raw.contains(';') {
         raw.split(';')
             .map(str::trim)
             .filter(|s| !s.is_empty())
@@ -77,59 +74,49 @@ fn parse_rows(text: &str, delimiter: char) -> Result<Vec<RawRow>, String> {
     let (mut in_q, mut in_comment, mut quoted) = (false, false, false);
     let (mut field, mut row, mut at_start) = (String::new(), Vec::new(), true);
 
+    let flush = |rows: &mut Vec<RawRow>, row: &mut Vec<String>, field: &mut String, quoted, sl| {
+        if !row.is_empty() || !field.trim().is_empty() || quoted {
+            row.push(std::mem::take(field));
+            rows.push(RawRow {
+                line: sl,
+                fields: std::mem::take(row),
+            });
+        }
+        field.clear();
+    };
     while let Some(c) = chars.next() {
+        let is_nl = c == '\n'
+            || (c == '\r' && {
+                chars.next_if_eq(&'\n');
+                true
+            });
         if in_comment {
-            if c == '\n' || (c == '\r' && chars.next_if_eq(&'\n').is_some()) {
-                line += 1;
-                in_comment = false;
-                at_start = true;
-                start_line = line;
+            if is_nl {
+                (line, in_comment, at_start, start_line) = (line + 1, false, true, line + 1);
             }
-            continue;
-        }
-        if !in_q && at_start && c == '#' {
+        } else if !in_q && at_start && c == '#' {
             in_comment = true;
-            continue;
-        }
-        if in_q {
-            if c == '"' {
-                if chars.next_if_eq(&'"').is_some() {
-                    field.push('"');
-                } else {
-                    in_q = false;
-                }
-            } else if c == '\n' || (c == '\r' && chars.next_if_eq(&'\n').is_some()) {
+        } else if in_q {
+            if c == '"' && chars.next_if_eq(&'"').is_some() {
+                field.push('"');
+            } else if c == '"' {
+                in_q = false;
+            } else if is_nl {
                 line += 1;
                 field.push('\n');
             } else {
                 field.push(c);
             }
         } else if c == '"' && field.trim().is_empty() && !quoted {
-            in_q = true;
-            quoted = true;
+            (in_q, quoted) = (true, true);
             field.clear();
         } else if c == delimiter {
-            row.push(field);
-            field = String::new();
-            quoted = false;
-            at_start = false;
-        } else if c == '\n' || c == '\r' {
-            if c == '\r' {
-                chars.next_if_eq(&'\n');
-            }
+            row.push(std::mem::take(&mut field));
+            (quoted, at_start) = (false, false);
+        } else if is_nl {
             line += 1;
-            at_start = true;
-            if !row.is_empty() || !field.trim().is_empty() || quoted {
-                row.push(field);
-                rows.push(RawRow {
-                    line: start_line,
-                    fields: row,
-                });
-                row = Vec::new();
-            }
-            field = String::new();
-            quoted = false;
-            start_line = line;
+            flush(&mut rows, &mut row, &mut field, quoted, start_line);
+            (at_start, quoted, start_line) = (true, false, line);
         } else {
             field.push(c);
             at_start = false;
@@ -138,13 +125,7 @@ fn parse_rows(text: &str, delimiter: char) -> Result<Vec<RawRow>, String> {
     if in_q {
         return Err(format!("line {start_line}: unclosed quote"));
     }
-    if !row.is_empty() || !field.trim().is_empty() || quoted {
-        row.push(field);
-        rows.push(RawRow {
-            line: start_line,
-            fields: row,
-        });
-    }
+    flush(&mut rows, &mut row, &mut field, quoted, start_line);
     Ok(rows)
 }
 
@@ -180,62 +161,76 @@ fn detect_header(row: &[String]) -> Result<Option<Mapping>, String> {
     }
 }
 
+fn normalize_row(fields: &[String], m: &Mapping, cols: usize, delim: char) -> Vec<String> {
+    if delim != ',' || cols == 0 || fields.len() <= cols || m.back != m.front + 1 || m.back >= cols
+    {
+        return fields.to_vec();
+    }
+    let trail = cols - (m.back + 1);
+    let mid = &fields[m.front..fields.len() - trail];
+    let split = mid[..mid.len() - 1]
+        .iter()
+        .position(|s| s.trim_end().ends_with('?'))
+        .unwrap_or(0);
+    let mut out = fields[..m.front].to_vec();
+    out.push(mid[..=split].join(","));
+    out.push(mid[split + 1..].join(","));
+    out.extend_from_slice(&fields[fields.len() - trail..]);
+    out
+}
+
 /// Parse delimited text (CSV or TSV) into flashcards with RFC 4180 rules.
 pub fn parse_delimited(text: &str, preferred: Option<char>) -> Result<Vec<ImportedCard>, String> {
-    let rows = parse_rows(text, sniff_delimiter(text, preferred))?;
-    if rows.is_empty() {
+    let delim = sniff_delimiter(text, preferred);
+    let rows = parse_rows(text, delim)?;
+    let Some(first) = rows.first() else {
         return Ok(Vec::new());
-    }
-    let (m, start_idx) =
-        match detect_header(&rows[0].fields).map_err(|e| format!("line {}: {e}", rows[0].line))? {
-            Some(m) => (m, 1),
-            None => (
-                Mapping {
-                    front: 0,
-                    back: 1,
-                    title: None,
-                    tags: Some(2),
-                },
-                0,
-            ),
-        };
-    let mut cards = Vec::with_capacity(rows.len().saturating_sub(start_idx));
-    for r in &rows[start_idx..] {
-        if r.fields.len() <= m.front || r.fields.len() <= m.back {
-            return Err(format!(
-                "line {}: a card needs at least a front and a back",
-                r.line
-            ));
-        }
-        let (front, back) = (clean(&r.fields[m.front]), clean(&r.fields[m.back]));
-        if front.is_empty() {
-            return Err(format!(
-                "line {}: the front of a card cannot be empty",
-                r.line
-            ));
-        }
-        if back.is_empty() {
-            return Err(format!(
-                "line {}: the back of a card cannot be empty",
-                r.line
-            ));
-        }
-        let title = m
-            .title
-            .and_then(|i| r.fields.get(i))
-            .map(|t| clean(t))
-            .unwrap_or_default();
-        let tags = m
-            .tags
-            .and_then(|i| r.fields.get(i))
-            .map(|t| parse_tags(t))
-            .unwrap_or_default();
-        cards.push(ImportedCard {
-            front,
-            back,
-            title,
-            tags,
-        });
-    }
-    Ok(cards)
+    };
+    let head = detect_header(&first.fields).map_err(|e| format!("line {}: {e}", first.line))?;
+    let (start_idx, cols) = if head.is_some() {
+        (1, first.fields.len())
+    } else {
+        (0, 0)
+    };
+    let m = head.unwrap_or(Mapping {
+        front: 0,
+        back: 1,
+        title: None,
+        tags: Some(2),
+    });
+    rows[start_idx..]
+        .iter()
+        .map(|r| {
+            let f = normalize_row(&r.fields, &m, cols, delim);
+            if f.len() <= m.front.max(m.back) {
+                return Err(format!(
+                    "line {}: a card needs at least a front and a back",
+                    r.line
+                ));
+            }
+            let (front, back) = (clean(&f[m.front]), clean(&f[m.back]));
+            for (val, side) in [(&front, "front"), (&back, "back")] {
+                if val.is_empty() {
+                    return Err(format!(
+                        "line {}: the {side} of a card cannot be empty",
+                        r.line
+                    ));
+                }
+            }
+            let title = m
+                .title
+                .and_then(|i| f.get(i))
+                .map_or_else(String::new, |t| clean(t));
+            let tags = m
+                .tags
+                .and_then(|i| f.get(i))
+                .map_or_else(Vec::new, |t| parse_tags(t));
+            Ok(ImportedCard {
+                front,
+                back,
+                title,
+                tags,
+            })
+        })
+        .collect()
 }

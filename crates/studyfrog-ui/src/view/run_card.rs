@@ -52,6 +52,8 @@ fn markdown(
     out: &mut Vec<Msg>,
 ) {
     ui.scope(|ui| {
+        ui.set_max_width(ui.available_width());
+        ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
         ui.style_mut()
             .text_styles
             .insert(TextStyle::Body, FontId::proportional(size));

@@ -7,6 +7,12 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-11-05
+
+### Fixed
+- Rehearsal card prompts and answers now wrap cleanly across spans (`TextWrapMode::Wrap`) and scroll vertically when taller than the viewport, and CSV rows containing unquoted commas inside `front` or `back` fields (such as LLM-generated 6-column `stack,kind,title,front,back,tags` outputs) automatically reconstruct the full question, answer, and tags instead of truncating at the first comma (BUG-0012).
+- The rehearsal result (`Run finished`) screen is wrapped in an outer vertical `ScrollArea`, the `Review` section stretches dynamically with viewport height inside its own inner `ScrollArea` (instead of being capped at 140 px), and every review item card always displays `Suggested rating:` alongside reading word count and time even when no rating override is needed (BUG-0013).
+
 ## [0.4.1] - 2026-11-05
 
 ### Fixed

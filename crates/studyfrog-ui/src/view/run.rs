@@ -30,23 +30,28 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     shortcuts(run, ui, out);
     top_strip(state, run, ui, out);
     ui.add_space(14.0);
-    ui.vertical_centered(|ui| {
-        ui.set_max_width(CARD_WIDTH);
-        kit::card(ui, |ui| {
-            ui.set_width(ui.available_width());
-            if run.session.run.state == RunState::Paused {
-                paused(ui, out);
-            } else {
-                item(run, ui, out);
-            }
+    egui::ScrollArea::vertical()
+        .id_salt("rehearsal-card-scroll")
+        .auto_shrink([false, false])
+        .show(ui, |ui| {
+            ui.vertical_centered(|ui| {
+                ui.set_max_width(CARD_WIDTH);
+                kit::card(ui, |ui| {
+                    ui.set_width(ui.available_width());
+                    if run.session.run.state == RunState::Paused {
+                        paused(ui, out);
+                    } else {
+                        item(run, ui, out);
+                    }
+                });
+                ui.add_space(10.0);
+                ui.label(
+                    RichText::new(HINTS)
+                        .color(palette_of(ui).text_weak)
+                        .size(12.5),
+                );
+            });
         });
-        ui.add_space(10.0);
-        ui.label(
-            RichText::new(HINTS)
-                .color(palette_of(ui).text_weak)
-                .size(12.5),
-        );
-    });
 }
 
 const CARD_WIDTH: f32 = 760.0;

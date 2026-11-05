@@ -16,11 +16,21 @@ pub fn card(run: &RunView, row: &ReviewRow, updates: bool, ui: &mut egui::Ui, ou
     let p = palette_of(ui);
     kit::card(ui, |ui| {
         ui.set_width(ui.available_width());
+        ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
         ui.label(RichText::new(&row.title).strong());
         ui.horizontal_wrapped(|ui| {
             ui.label(format!("Previous rating: {}", rating_text(row.previous)));
             ui.label(format!("Your mark: {}", mark_name(row.marked)));
             ui.label(format!("Your rating: {}", rating_text(row.rated)));
+            if row.suggestion.is_none() {
+                ui.label(format!("Suggested rating: {}", rating_text(row.rated)));
+                if let Some((words, tenths)) = row.reading {
+                    ui.weak(format!(
+                        "{words} words in {:.1} s",
+                        f64::from(tenths) / 10.0
+                    ));
+                }
+            }
             if let Some((pct, v)) = row.answer_match {
                 kit::pill(ui, &format!("{pct} % ({})", verdict_label(v)), p.accent);
             }

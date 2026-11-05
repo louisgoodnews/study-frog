@@ -103,3 +103,23 @@ fn nothing_usable_is_an_error_not_a_crash() {
     assert!(read_csv(b"single\nvalues\n", &CsvOptions::default()).is_err());
     let _ = read_csv(&[0xff, 0x00, 0x22], &CsvOptions::default());
 }
+
+#[test]
+fn unquoted_commas_in_llm_csv_rows_are_reconstructed() {
+    let csv = "stack,kind,title,front,back,tags\n\
+        psychologie/multivariate-verfahren,card,,Wie lautet die Gleichung einer zweifachen linearen Regression für die Zufallsvariablen X, Y und Z?,E(Y|X, Z) = beta_0 + beta_1 * X + beta_2 * Z.,Multiple_Regression;Zweifache_Regression\n";
+    let r = read(csv, &CsvOptions::default());
+    assert_eq!(r.bundle.items.len(), 1);
+    assert_eq!(
+        r.bundle.items[0].text,
+        "Wie lautet die Gleichung einer zweifachen linearen Regression für die Zufallsvariablen X, Y und Z?"
+    );
+    assert_eq!(
+        r.bundle.items[0].answer,
+        "E(Y|X, Z) = beta_0 + beta_1 * X + beta_2 * Z."
+    );
+    assert_eq!(
+        r.bundle.items[0].tags,
+        ["Multiple_Regression", "Zweifache_Regression"]
+    );
+}

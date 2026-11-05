@@ -73,48 +73,61 @@ fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
 /// Heading and the way back on top, the counts, then one card per item in a scrolling list.
 pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     shortcuts(run, ui, out);
-    let stopped = run.session.run.state == RunState::Aborted;
-    ui.horizontal(|ui| {
-        let title = if stopped {
-            "Run stopped"
-        } else {
-            "Run finished"
-        };
-        ui.label(RichText::new(title).size(26.0).strong());
-        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if kit::primary_button(ui, "Back to setup").clicked() {
-                out.push(Msg::LeaveRun);
-            }
-        });
-    });
-    counts(run, ui);
-    ui.weak(crate::run_time::run_line(
-        run.session.run.plan.pacing,
-        studyfrog_rehearsal::pacing::run_active_ms(&run.events),
-        summarize(&run.events, &run.latencies)
-            .rated
-            .iter()
-            .sum::<usize>() as u32,
-    ));
-    let updates = run.session.run.plan.effect == ScheduleEffect::UpdateSchedule;
-    if !updates {
-        ui.weak("Practice only: your schedule was not changed.");
-    }
-    let rows = review_rows(run);
-    if !rows.is_empty() {
-        ui.add_space(4.0);
-        kit::section(ui, "Review");
-        egui::ScrollArea::vertical()
-            .auto_shrink([false, false])
-            .max_height(140.0)
-            .show(ui, |ui| {
-                for row in &rows {
-                    summary_items::card(run, row, updates, ui, out);
-                }
+    let outer_h = ui.available_height();
+    egui::ScrollArea::vertical()
+        .id_salt("summary-outer-scroll")
+        .auto_shrink([false, false])
+        .show(ui, |ui| {
+            let stopped = run.session.run.state == RunState::Aborted;
+            ui.horizontal(|ui| {
+                let title = if stopped {
+                    "Run stopped"
+                } else {
+                    "Run finished"
+                };
+                ui.label(RichText::new(title).size(26.0).strong());
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    if kit::primary_button(ui, "Back to setup").clicked() {
+                        out.push(Msg::LeaveRun);
+                    }
+                });
             });
-    }
-    ui.add_space(4.0);
-    crate::view::run_diary_prompt::draw(state, run, ui, out);
+            counts(run, ui);
+            ui.weak(crate::run_time::run_line(
+                run.session.run.plan.pacing,
+                studyfrog_rehearsal::pacing::run_active_ms(&run.events),
+                summarize(&run.events, &run.latencies)
+                    .rated
+                    .iter()
+                    .sum::<usize>() as u32,
+            ));
+            let updates = run.session.run.plan.effect == ScheduleEffect::UpdateSchedule;
+            if !updates {
+                ui.weak("Practice only: your schedule was not changed.");
+            }
+            let rows = review_rows(run);
+            if !rows.is_empty() {
+                ui.add_space(4.0);
+                kit::section(ui, "Review");
+                let diary_active = run
+                    .diary_prompt
+                    .as_ref()
+                    .is_some_and(|p| !p.skipped && !p.saved);
+                let reserve_bottom = if diary_active { 190.0 } else { 36.0 };
+                let review_height = (outer_h - 240.0 - reserve_bottom).max(240.0);
+                egui::ScrollArea::vertical()
+                    .id_salt("summary-review-scroll")
+                    .auto_shrink([false, true])
+                    .max_height(review_height)
+                    .show(ui, |ui| {
+                        for row in &rows {
+                            summary_items::card(run, row, updates, ui, out);
+                        }
+                    });
+            }
+            ui.add_space(4.0);
+            crate::view::run_diary_prompt::draw(state, run, ui, out);
+        });
 }
 
 fn counts(run: &RunView, ui: &mut egui::Ui) {

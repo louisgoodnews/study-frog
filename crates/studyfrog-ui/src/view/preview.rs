@@ -128,6 +128,8 @@ pub(super) fn spans_line(
     out: &mut Vec<Msg>,
 ) {
     ui.horizontal_wrapped(|ui| {
+        ui.set_max_width(ui.available_width());
+        ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
         ui.spacing_mut().item_spacing.x = 0.0;
         for span in spans {
             let text = styled(ui, span, heading);
