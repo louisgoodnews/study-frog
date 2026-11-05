@@ -17,7 +17,7 @@ Phases M0 to M12. Each phase has entry criteria, an epic breakdown (every epic h
 | M10 | Usability and insight (0.3.0, released 2026-11-03) | EPIC-023 | [M10-usability-and-insight](M10-usability-and-insight.md) (priority order inside) |
 | M10 | 0.3.1 fixes | EPIC-025 | [M10](M10-usability-and-insight.md), last paragraph |
 | M11 | Diary, a calmer UI, writing, prompts and appearance (0.4.0) | EPIC-024, EPIC-026, EPIC-027 | [M11-diary](M11-diary.md) |
-| M12 | External models, PDF viewer fixes and optimization, Python modding API, and expanded achievements (0.5.0) | EPIC-028, EPIC-029 | [M12-models-and-extensibility](M12-models-and-extensibility.md) |
+| M12 | External models, PDF viewer fixes and optimization, Python modding API, achievements, and prompt expansion (0.5.0) | EPIC-028, EPIC-029, EPIC-030 | [M12-models-and-extensibility](M12-models-and-extensibility.md) |
 
 ## M0 Bootstrap
 
@@ -314,4 +314,10 @@ See [M12-models-and-extensibility](M12-models-and-extensibility.md).
 - **EPIC-029** Expanded achievements and per-stack progression
   - **STORY-0086** Expanded achievement catalog and milestone tiers
   - **STORY-0087** Per-stack achievement UI and filtering
+- **EPIC-030** Prompt expansion
+  - **STORY-0088** Multi-level file explanation prompt
+  - **STORY-0089** Interactive file examination and feedback prompt
+  - **STORY-0090** Socratic dialogue and active inquiry prompt
+  - **STORY-0091** Concept mapping and prerequisite analysis prompt
+  - **STORY-0092** Prompt library categorization and parameterized execution UI
 

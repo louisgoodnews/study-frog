@@ -334,6 +334,11 @@
 | [STORY-0085](docs/issues/stories/STORY-0085-performance-optimization-in-studyfrog-pdf-viewer.md) Performance optimization in StudyFrog pdf-viewer (5) | backlog | 0/0 |
 | [STORY-0086](docs/issues/stories/STORY-0086-expanded-achievement-catalog-and-milestone-tiers.md) Expanded achievement catalog and milestone tiers (3) | backlog | 0/0 |
 | [STORY-0087](docs/issues/stories/STORY-0087-per-stack-achievement-ui-and-filtering.md) Per-stack achievement UI and filtering (3) | backlog | 0/0 |
+| [STORY-0088](docs/issues/stories/STORY-0088-multi-level-file-explanation-prompt.md) Multi-level file explanation prompt (3) | backlog | 0/0 |
+| [STORY-0089](docs/issues/stories/STORY-0089-interactive-file-examination-and-feedback-prompt.md) Interactive file examination and feedback prompt (3) | backlog | 0/0 |
+| [STORY-0090](docs/issues/stories/STORY-0090-socratic-dialogue-and-active-inquiry-prompt.md) Socratic dialogue and active inquiry prompt (3) | backlog | 0/0 |
+| [STORY-0091](docs/issues/stories/STORY-0091-concept-mapping-and-prerequisite-analysis-prompt.md) Concept mapping and prerequisite analysis prompt (3) | backlog | 0/0 |
+| [STORY-0092](docs/issues/stories/STORY-0092-prompt-library-categorization-and-parameterized-execution-ui.md) Prompt library categorization and parameterized execution UI (3) | backlog | 0/0 |
 
 ## Epics
 
@@ -368,3 +373,4 @@
 | [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | done | 2/2 |
 | [EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md) Extensibility, plugin modding, and Python API | backlog | 0/3 |
 | [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md) Expanded achievements and per-stack progression | backlog | 0/2 |
+| [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md) Prompt expansion | backlog | 0/5 |

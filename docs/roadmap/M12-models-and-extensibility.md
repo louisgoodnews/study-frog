@@ -35,6 +35,26 @@
     - Filtering in the achievements screen (All, Global, or specific Stack)
     - Stack browser achievement progress pills and summary badges
     - Grouped/badged layout for clean readability across multiple stacks
+- **EPIC-030** Prompt expansion
+  - **STORY-0088** Multi-level file explanation prompt
+    - Selectable explanation depth: Intuitive Analogy (ELI5), Core Concepts, and Technical Deep-Dive
+    - Clear structured Markdown notes with tags ready for vault import
+  - **STORY-0089** Interactive file examination and feedback prompt
+    - Interactive oral/written diagnostic exam based on an attached document
+    - Evaluation rubric covering accuracy, omissions, and model answer elaboration
+    - Follow-up flashcard and question recommendations targeting identified gaps
+  - **STORY-0090** Socratic dialogue and active inquiry prompt
+    - Step-by-step questioning model leading the learner to discover core conclusions
+    - Misconception detection with counter-examples and guided hints
+    - Concluding dialogue synthesis note exportable to vault
+  - **STORY-0091** Concept mapping and prerequisite analysis prompt
+    - Prerequisite knowledge dependency chains extracted from dense texts
+    - Conceptual contrast tables distinguishing easily conflated terms
+    - Markdown notes formatted with wikilinks for the vault graph
+  - **STORY-0092** Prompt library categorization and parameterized execution UI
+    - Grouped library categories: Content Generation, Interactive Tutoring & Exam, and Analysis
+    - Interactive parameter controls in the Assistant Prompts UI
+    - Search and workflow filtering
 
 ## Priority order
 
@@ -43,9 +63,11 @@
 3. **Model integrations:** STORY-0083 (Google Gemini) and STORY-0084 (Deepseek) expanding external model connectivity for vault assistance and exams.
 4. **Extensibility & modding:** EPIC-028 Python API, subprocess JSON-RPC bridge, cron scheduler, event triggers, and built-in interactive console.
 5. **Achievements expansion:** EPIC-029 (STORY-0086, STORY-0087) tiered achievement catalog, per-stack progression milestones, and achievements UI filtering.
+6. **Prompt expansion:** EPIC-030 (STORY-0088 to STORY-0092) multi-level explanation, oral exams, Socratic dialogue, concept mapping, and categorized prompt UI.
 
 **Exit criteria:**
 - External model API integration for Google Gemini and Deepseek functioning in the Assistant and Rehearsal Exam screens
 - PDF viewer pages remain crisp and legible across all zoom settings and fit modes; rendering performance meets 60 fps target
 - Python API exposed for StudyFrog, enabling modding plugins and automation via cron triggers, event listeners, or in-app console
 - Tiered default achievements and per-stack filtering functioning in the achievements screen and stack browser
+- Expanded prompt library with categorized navigation, parameterized controls, multi-level explanations, interactive exams, Socratic dialogues, and concept mapping templates functional in the Assistant
