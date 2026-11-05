@@ -2,7 +2,7 @@
 id: TASK-0067
 type: task
 title: Linux packaging (AppImage)
-status: review
+status: done
 epic: EPIC-017
 parents: [STORY-0032]
 estimate: 5
@@ -21,7 +21,7 @@ Linux packaging (AppImage).
 
 ## Acceptance Criteria
 - [x] `scripts/package-appimage.sh` assembles an AppDir and packs an AppImage
-- [ ] A CI workflow checks the repository and builds the AppImage as an artifact
+- [x] A CI workflow checks the repository and builds the AppImage as an artifact
 - [x] The AppImage was built and started
 
 ## Design Notes

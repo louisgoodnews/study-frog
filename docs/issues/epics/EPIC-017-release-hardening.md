@@ -2,7 +2,7 @@
 id: EPIC-017
 type: epic
 title: Release hardening
-status: in_progress
+status: done
 parents: []
 labels: [m8, release]
 acceptance_criteria:
@@ -17,8 +17,8 @@ Make the application shippable.
 Release hardening.
 
 ## Acceptance Criteria
-- [ ] Profiling pass done; all benchmarks within budget
-- [ ] A Linux package builds from CI
+- [x] Profiling pass done; all benchmarks within budget
+- [x] A Linux package builds from CI
 
 ## Design Notes
 Children: STORY-0032.

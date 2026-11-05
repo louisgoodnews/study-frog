@@ -2,7 +2,7 @@
 id: STORY-0032
 type: story
 title: Performance and packaging
-status: in_progress
+status: done
 epic: EPIC-017
 parents: [EPIC-017]
 estimate: 5
@@ -19,8 +19,8 @@ acceptance_criteria:
 Performance and packaging.
 
 ## Acceptance Criteria
-- [ ] Every benchmark inside its budget
-- [ ] An AppImage built by a script and by CI
+- [x] Every benchmark inside its budget
+- [x] An AppImage built by a script and by CI
 
 ## Design Notes
 Children: TASK-0066, TASK-0067.

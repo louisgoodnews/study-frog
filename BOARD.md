@@ -4,9 +4,9 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (236) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (237) |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+|  |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
 |  |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 |  |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
@@ -81,6 +81,7 @@
 |  |  |  |  |  | [TASK-0064](docs/issues/tasks/TASK-0064-registry-as-plain-data.md) Registry as plain data (2) |
 |  |  |  |  |  | [TASK-0065](docs/issues/tasks/TASK-0065-example-extension-crate.md) Example card type and importer (5) |
 |  |  |  |  |  | [TASK-0066](docs/issues/tasks/TASK-0066-profiling-pass.md) Profiling pass (3) |
+|  |  |  |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |
 |  |  |  |  |  | [TASK-0068](docs/issues/tasks/TASK-0068-run-plan-types-in-core.md) Run plan types in core (3) |
 |  |  |  |  |  | [TASK-0069](docs/issues/tasks/TASK-0069-practice-orders.md) Practice orders (5) |
 |  |  |  |  |  | [TASK-0070](docs/issues/tasks/TASK-0070-queue-filters.md) Queue filters (3) |
@@ -278,7 +279,7 @@
 | [STORY-0029](docs/issues/stories/STORY-0029-forecasting.md) Forecasting (8) | done | 2/2 |
 | [STORY-0030](docs/issues/stories/STORY-0030-extension-traits.md) Extension points (5) | done | 2/2 |
 | [STORY-0031](docs/issues/stories/STORY-0031-example-extension.md) Example extension (5) | done | 1/1 |
-| [STORY-0032](docs/issues/stories/STORY-0032-performance-and-packaging.md) Performance and packaging (5) | in_progress | 1/2 |
+| [STORY-0032](docs/issues/stories/STORY-0032-performance-and-packaging.md) Performance and packaging (5) | done | 2/2 |
 | [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
 | [STORY-0034](docs/issues/stories/STORY-0034-stack-settings-sm-2-budgets-and-filter-persistence.md) Stack settings, SM-2, budgets and filter persistence (8) | done | 4/4 |
 | [STORY-0035](docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 12/12 |
@@ -349,7 +350,7 @@
 | [EPIC-014](docs/issues/epics/EPIC-014-achievements.md) Achievements | done | 2/2 |
 | [EPIC-015](docs/issues/epics/EPIC-015-reporting-and-forecasting.md) Reporting and forecasting | done | 2/2 |
 | [EPIC-016](docs/issues/epics/EPIC-016-plugin-boundaries.md) Plugin boundaries | done | 2/2 |
-| [EPIC-017](docs/issues/epics/EPIC-017-release-hardening.md) Release hardening | in_progress | 0/1 |
+| [EPIC-017](docs/issues/epics/EPIC-017-release-hardening.md) Release hardening | done | 1/1 |
 | [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |
 | [EPIC-019](docs/issues/epics/EPIC-019-rehearsal-insights.md) Rehearsal insights | done | 1/1 |
 | [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 4/4 |
