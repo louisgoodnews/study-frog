@@ -55,6 +55,11 @@
     - Grouped library categories: Content Generation, Interactive Tutoring & Exam, and Analysis
     - Interactive parameter controls in the Assistant Prompts UI
     - Search and workflow filtering
+    - TASK-0233 Move prompt library to standalone left sidebar navigation
+  - **BUG-0011** Importer only accepts TSV format and fails on CSV prompt outputs
+    - Auto-detect CSV vs TSV delimiters
+    - Seamlessly import multi-column prompt outputs (stack,kind,title,front,back,tags)
+    - Handle quoted strings, linebreaks, and semicolon-delimited tags cleanly
 
 ## Priority order
 

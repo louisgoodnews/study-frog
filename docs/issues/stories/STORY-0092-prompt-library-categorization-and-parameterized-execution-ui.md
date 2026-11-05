@@ -35,6 +35,7 @@ Upgrade the Prompts tab in `studyfrog-ui` and prompt representation in `studyfro
 - [ ] Users can filter and search prompts by title, category, or intended workflow
 
 ## Design Notes
+- Child task: TASK-0233: Move prompt library to standalone left sidebar navigation.
 - Files: `crates/studyfrog-service/src/prompts.rs`, `crates/studyfrog-ui/src/view/agent_prompts.rs`, `crates/studyfrog-ui/src/prompts_ui.rs`.
 - Adhere to UI guidelines and line count limits (keep all modified `.rs` files ≤ 250 lines).
 - Release target: version 0.5.0 (Phase M12).

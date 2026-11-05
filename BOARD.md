@@ -4,11 +4,11 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (1) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (237) |
+| Backlog (3) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (237) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-|  |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
-|  |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+| [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+| [TASK-0233](docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Move prompt library to standalone left sidebar navigation (2) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 |  |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
 |  |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
 |  |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
@@ -338,7 +338,7 @@
 | [STORY-0089](docs/issues/stories/STORY-0089-interactive-file-examination-and-feedback-prompt.md) Interactive file examination and feedback prompt (3) | backlog | 0/0 |
 | [STORY-0090](docs/issues/stories/STORY-0090-socratic-dialogue-and-active-inquiry-prompt.md) Socratic dialogue and active inquiry prompt (3) | backlog | 0/0 |
 | [STORY-0091](docs/issues/stories/STORY-0091-concept-mapping-and-prerequisite-analysis-prompt.md) Concept mapping and prerequisite analysis prompt (3) | backlog | 0/0 |
-| [STORY-0092](docs/issues/stories/STORY-0092-prompt-library-categorization-and-parameterized-execution-ui.md) Prompt library categorization and parameterized execution UI (3) | backlog | 0/0 |
+| [STORY-0092](docs/issues/stories/STORY-0092-prompt-library-categorization-and-parameterized-execution-ui.md) Prompt library categorization and parameterized execution UI (3) | backlog | 0/1 |
 
 ## Epics
 

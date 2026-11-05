@@ -39,6 +39,7 @@ Child issues planned for version 0.5.0:
 - STORY-0090: Socratic dialogue and active inquiry tutor prompt
 - STORY-0091: Concept mapping and prerequisite analysis prompt
 - STORY-0092: Prompt library categorization and parameterized execution UI
+- BUG-0011: Importer only accepts TSV format and fails on CSV prompt outputs
 
 Crate touchpoints:
 - `docs/prompts/`: Add new template markdown files (`explain.md`, `exam.md`, `socratic.md`, `concept_map.md`).

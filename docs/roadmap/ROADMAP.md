@@ -320,4 +320,6 @@ See [M12-models-and-extensibility](M12-models-and-extensibility.md).
   - **STORY-0090** Socratic dialogue and active inquiry prompt
   - **STORY-0091** Concept mapping and prerequisite analysis prompt
   - **STORY-0092** Prompt library categorization and parameterized execution UI
+    - TASK-0233 Move prompt library to standalone left sidebar navigation
+  - **BUG-0011** Importer only accepts TSV format and fails on CSV prompt outputs
 
