@@ -52,3 +52,54 @@ pub fn open(state: State, stack: Uid) -> (State, Vec<Effect>) {
     };
     navigate(State { planner, ..state }, Screen::Calendar)
 }
+
+/// Set, update or clear a stack's due date directly without leaving the current screen.
+pub fn set_due_date(
+    state: State,
+    stack: Uid,
+    date: Option<Date>,
+    mut reminders: Vec<u32>,
+) -> (State, Vec<Effect>) {
+    let existing = deadline_of(&state.planner.sessions, stack).cloned();
+    match (existing, date) {
+        (Some(mut session), Some(d)) => {
+            reminders.sort_unstable();
+            reminders.dedup();
+            session.start.date = d;
+            session.reminders = reminders;
+            (state, vec![Effect::SaveSession(session)])
+        }
+        (None, Some(d)) => {
+            if reminders.is_empty() {
+                reminders.push(1440);
+            }
+            reminders.sort_unstable();
+            reminders.dedup();
+            let title = state
+                .vault
+                .iter()
+                .flat_map(|v| v.overview.stacks.iter())
+                .find(|s| s.uid == stack)
+                .map_or_else(|| "Due".to_owned(), |s| format!("Due: {}", s.title));
+            let session = Session {
+                id: Uid(0),
+                title,
+                stack: Some(stack),
+                start: studyfrog_core::civil::LocalTime {
+                    date: d,
+                    minute: studyfrog_service::track::DEFAULT_DUE_MINUTE,
+                },
+                duration_min: 15,
+                repeat: studyfrog_calendar::session::Repeat::Never,
+                ends: studyfrog_calendar::session::Ends::Forever,
+                cancelled: Vec::new(),
+                notes: String::new(),
+                kind: EventKind::Deadline,
+                reminders,
+            };
+            (state, vec![Effect::SaveSession(session)])
+        }
+        (Some(entry), None) => (state, vec![Effect::DeleteSession(entry.id)]),
+        (None, None) => (state, Vec::new()),
+    }
+}

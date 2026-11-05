@@ -17,7 +17,8 @@ Phases M0 to M12. Each phase has entry criteria, an epic breakdown (every epic h
 | M10 | Usability and insight (0.3.0, released 2026-11-03) | EPIC-023 | [M10-usability-and-insight](M10-usability-and-insight.md) (priority order inside) |
 | M10 | 0.3.1 fixes | EPIC-025 | [M10](M10-usability-and-insight.md), last paragraph |
 | M11 | Diary, a calmer UI, writing, prompts and appearance (0.4.0) | EPIC-024, EPIC-026, EPIC-027 | [M11-diary](M11-diary.md) |
-| M12 | External models, PDF viewer fixes and optimization, Python modding API, achievements, and prompt expansion (0.5.0) | EPIC-028, EPIC-029, EPIC-030 | [M12-models-and-extensibility](M12-models-and-extensibility.md) |
+| M11 | 0.4.1 Details notebook tabs, create workflow, vault switcher, and CSV import | EPIC-031 | [M11-diary](M11-diary.md) |
+| M12 | External models, PDF viewer fixes and optimization, Python modding API, achievements, prompt expansion, item keys, colorization, and reporting export (0.5.0) | EPIC-028, EPIC-029, EPIC-030, EPIC-032 | [M12-models-and-extensibility](M12-models-and-extensibility.md) |
 
 ## M0 Bootstrap
 
@@ -289,8 +290,9 @@ See [M9-documents](M9-documents.md): EPIC-022, STORY-0054 and TASK-0109 to TASK-
 See [M10-usability-and-insight](M10-usability-and-insight.md), with the priority order in four waves: EPIC-023, STORY-0055 to STORY-0070, BUG-0001 and TASK-0126 to TASK-0184.
 The diary (STORY-0068, TASK-0170 to TASK-0174) moved to M11 on 2026-11-03.
 
-## M11 Diary, a calmer UI, writing and prompts (0.4.0)
+## M11 Diary, a calmer UI, writing and prompts (0.4.0 / 0.4.1)
 See [M11-diary](M11-diary.md): EPIC-024 (STORY-0068, STORY-0073) and EPIC-026 (STORY-0074 to STORY-0079, BUG-0007, BUG-0008, TASK-0197 to TASK-0220) and EPIC-027 (STORY-0080, STORY-0081, TASK-0221 to TASK-0227). STORY-0082 (PDF export, TASK-0228 to TASK-0232) was added to EPIC-026 on 2026-11-04.
+0.4.1 adds EPIC-031: STORY-0093 (details view notebook overhaul), STORY-0094 (create menu due date and priority), STORY-0095 (note creation modal expansion and write view), STORY-0099 (simplify vault switcher menu), and BUG-0011 (CSV/TSV importer auto-detection).
 
 ## M12 External models, PDF viewer fixes and optimization, and Python modding API (0.5.0)
 
@@ -298,7 +300,7 @@ External model integrations, high-performance legible PDF reading, and applicati
 
 See [M12-models-and-extensibility](M12-models-and-extensibility.md).
 
-**Entry:** M11 exit met (0.4.0 released).
+**Entry:** M11 exit met (0.4.0 / 0.4.1 released).
 
 **Exit criteria:**
 - External model API integration for Google Gemini and Deepseek functioning in the Assistant and Rehearsal Exam screens
@@ -321,5 +323,8 @@ See [M12-models-and-extensibility](M12-models-and-extensibility.md).
   - **STORY-0091** Concept mapping and prerequisite analysis prompt
   - **STORY-0092** Prompt library categorization and parameterized execution UI
     - TASK-0233 Move prompt library to standalone left sidebar navigation
-  - **BUG-0011** Importer only accepts TSV format and fails on CSV prompt outputs
+- **EPIC-032** Item keys, colorization, and reporting export
+  - **STORY-0096** Item keys for querying
+  - **STORY-0097** Item colorization with color picker and viewer background styling
+  - **STORY-0098** Reporting export as CSV
 

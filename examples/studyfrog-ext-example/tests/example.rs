@@ -4,6 +4,7 @@
 use proptest::prelude::*;
 use studyfrog_ext::registry::{find_card_type, importer_for_file, registry_new};
 use studyfrog_ext_example::cloze::expand_cloze;
+use studyfrog_ext_example::csv::import_csv;
 use studyfrog_ext_example::register;
 use studyfrog_ext_example::tsv::import_tsv;
 
@@ -15,6 +16,7 @@ fn registering_adds_both_extension_points_once() {
         importer_for_file(&r, "deck.tsv").unwrap().id,
         "tab-separated"
     );
+    assert_eq!(importer_for_file(&r, "deck.csv").unwrap().id, "csv");
     assert_eq!(
         find_card_type(&r, "cloze").unwrap().name,
         "Cloze (fill in the gaps)"
@@ -41,12 +43,77 @@ fn tab_separated_text_becomes_cards_with_tags_and_skips_headers() {
 }
 
 #[test]
+fn bug_0011_benchmark_csv_and_prompt_header() {
+    let csv = "stack,kind,title,front,back,tags\npsychologie/multivariate-verfahren,card,,Welche Variable wird in Regressionsanalysen als Regressand bezeichnet?,Die abhängige Variable Y.,Regression;Grundbegriffe\n";
+    let cards = import_csv(csv).unwrap();
+    assert_eq!(cards.len(), 1);
+    assert_eq!(
+        cards[0].front,
+        "Welche Variable wird in Regressionsanalysen als Regressand bezeichnet?"
+    );
+    assert_eq!(cards[0].back, "Die abhängige Variable Y.");
+    assert_eq!(cards[0].title, "");
+    assert_eq!(cards[0].tags, ["Regression", "Grundbegriffe"]);
+}
+
+#[test]
+fn csv_with_quotes_and_commas_in_content() {
+    let csv = "stack,kind,title,front,back,tags\nfrench,card,,\"Quelle est la règle, en général?\",\"C'est la règle \"\"standard\"\".\",grammaire;base\n";
+    let cards = import_csv(csv).unwrap();
+    assert_eq!(cards[0].front, "Quelle est la règle, en général?");
+    assert_eq!(cards[0].back, "C'est la règle \"standard\".");
+    assert_eq!(cards[0].tags, ["grammaire", "base"]);
+}
+
+#[test]
+fn headerless_tsv_and_csv_import() {
+    let tsv = "Term 1\tDefinition 1\nTerm 2\tDefinition 2\ttag1 tag2\n";
+    let cards = import_tsv(tsv).unwrap();
+    assert_eq!(cards.len(), 2);
+    assert_eq!(cards[0].front, "Term 1");
+    assert_eq!(cards[0].tags, Vec::<String>::new());
+    assert_eq!(cards[1].tags, ["tag1", "tag2"]);
+
+    let csv = "\"Question 1, with comma\",\"Answer 1\"\n\"Question 2\",\"Answer 2\",\"tag;tag2\"\n";
+    let cards = import_csv(csv).unwrap();
+    assert_eq!(cards.len(), 2);
+    assert_eq!(cards[0].front, "Question 1, with comma");
+    assert_eq!(cards[1].tags, ["tag", "tag2"]);
+}
+
+#[test]
+fn cross_format_delimiter_auto_detection() {
+    let csv = "front,back,tags\nWhat is 2+2?,4,math\n";
+    let cards = import_tsv(csv).unwrap();
+    assert_eq!(cards[0].front, "What is 2+2?");
+
+    let tsv = "front\tback\ttags\nWhat is 3+3?\t6\tmath\n";
+    let cards = import_csv(tsv).unwrap();
+    assert_eq!(cards[0].front, "What is 3+3?");
+}
+
+#[test]
 fn a_bad_line_is_reported_with_its_number() {
     let e = import_tsv("a\tb\nonly one column\nc\td\n").unwrap_err();
     assert!(e.starts_with("line 2:"), "{e}");
     assert!(
         import_tsv("front\t\n").unwrap_err().contains("line 1"),
         "an empty back is refused"
+    );
+    assert!(
+        import_csv("\"unclosed quote,front,back")
+            .unwrap_err()
+            .contains("unclosed quote")
+    );
+    assert!(
+        import_csv(",back\n")
+            .unwrap_err()
+            .contains("front of a card cannot be empty")
+    );
+    assert!(
+        import_csv("stack,kind,title\na,b,c\n")
+            .unwrap_err()
+            .contains("header must contain front and back columns")
     );
 }
 
@@ -97,6 +164,7 @@ proptest! {
     #[test]
     fn nothing_panics_and_a_front_never_leaks_its_own_gap(src in "[a-z {}:c0-9]{0,40}") {
         let _ = import_tsv(&src);
+        let _ = import_csv(&src);
         if let Ok(cards) = expand_cloze(&src) {
             prop_assert!(!cards.is_empty());
             prop_assert!(cards.iter().all(|c| !c.front.contains("**")));

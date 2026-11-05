@@ -181,3 +181,37 @@ fn ticks_never_stack_polls_and_resume_after_a_reply() {
     h.run_steps(8);
     assert_eq!(polls(&h), 2, "after the reply, the next tick polls again");
 }
+
+#[test]
+fn vault_switcher_shows_clean_folder_names_and_disambiguates_duplicates() {
+    let mut m = open_model();
+    m.state.app.recent = vec![
+        "/home/user/Studium/WiSe/Kognitive Neurowissenschaft".into(),
+        "/home/user/Studium/WiSe/Psychologische Diagnostik".into(),
+        "/home/user/Master/WiSe/Psychologische Diagnostik".into(),
+    ];
+    apply(
+        &mut m,
+        Msg::Chrome(studyfrog_ui::chrome::ChromeMsg::ToggleMenu(
+            studyfrog_ui::chrome::Menu::Vaults,
+        )),
+    );
+    let mut h = harness(m);
+    h.run();
+    assert!(
+        h.query_by_label("Kognitive Neurowissenschaft").is_some(),
+        "unique vault shows only its folder basename"
+    );
+    assert!(
+        h.query_by_label("Psychologische Diagnostik · Studium")
+            .is_some()
+            && h.query_by_label("Psychologische Diagnostik · Master")
+                .is_some(),
+        "clashing vault basenames disambiguate with the differing ancestor"
+    );
+    h.get_by_label("Kognitive Neurowissenschaft").click();
+    h.run_steps(3);
+    assert!(h.state().1.contains(&Effect::OpenVault(
+        "/home/user/Studium/WiSe/Kognitive Neurowissenschaft".into()
+    )));
+}

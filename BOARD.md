@@ -4,17 +4,18 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (3) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (237) |
+| Backlog (2) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (238) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
-| [TASK-0233](docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Move prompt library to standalone left sidebar navigation (2) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+| [TASK-0233](docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Move prompt library to standalone left sidebar navigation (2) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+|  |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 |  |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
 |  |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
 |  |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
 |  |  |  |  |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
 |  |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
 |  |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
+|  |  |  |  |  | [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |
 |  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 |  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
@@ -339,6 +340,13 @@
 | [STORY-0090](docs/issues/stories/STORY-0090-socratic-dialogue-and-active-inquiry-prompt.md) Socratic dialogue and active inquiry prompt (3) | backlog | 0/0 |
 | [STORY-0091](docs/issues/stories/STORY-0091-concept-mapping-and-prerequisite-analysis-prompt.md) Concept mapping and prerequisite analysis prompt (3) | backlog | 0/0 |
 | [STORY-0092](docs/issues/stories/STORY-0092-prompt-library-categorization-and-parameterized-execution-ui.md) Prompt library categorization and parameterized execution UI (3) | backlog | 0/1 |
+| [STORY-0093](docs/issues/stories/STORY-0093-details-view-notebook-overhaul.md) Details view notebook overhaul with tabs and stack due date editing (5) | done | 0/0 |
+| [STORY-0094](docs/issues/stories/STORY-0094-create-menu-due-date-and-priority.md) Create menu due date and priority assignment for stacks and other creatable items (3) | done | 0/0 |
+| [STORY-0095](docs/issues/stories/STORY-0095-note-creation-modal-expansion-and-write-view.md) Note creation modal full-window expansion and default write view (3) | done | 0/0 |
+| [STORY-0096](docs/issues/stories/STORY-0096-item-keys-for-querying.md) Item keys for querying (5) | backlog | 0/0 |
+| [STORY-0097](docs/issues/stories/STORY-0097-item-colorization-with-color-picker-and-viewer-background-styling.md) Item colorization with color picker and viewer background styling (3) | backlog | 0/0 |
+| [STORY-0098](docs/issues/stories/STORY-0098-reporting-export-as-csv.md) Reporting export as CSV (3) | backlog | 0/0 |
+| [STORY-0099](docs/issues/stories/STORY-0099-simplify-vault-switcher-menu.md) Simplify vault switcher menu (3) | done | 0/0 |
 
 ## Epics
 
@@ -374,3 +382,5 @@
 | [EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md) Extensibility, plugin modding, and Python API | backlog | 0/3 |
 | [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md) Expanded achievements and per-stack progression | backlog | 0/2 |
 | [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md) Prompt expansion | backlog | 0/5 |
+| [EPIC-031](docs/issues/epics/EPIC-031-details-tabs-create-workflow-csv-import.md) Details tabs, create workflow, and CSV import for 0.4.1 | done | 4/4 |
+| [EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md) Item keys, colorization, and reporting export | backlog | 0/3 |

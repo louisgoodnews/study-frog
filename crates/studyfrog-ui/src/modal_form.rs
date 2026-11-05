@@ -64,7 +64,7 @@ pub(crate) fn tags_of(text: &str) -> Vec<String> {
 }
 
 pub(crate) fn due_of(form: &CreateForm) -> Option<DueDate> {
-    let date = parse_date(form.due.trim()).filter(|_| form.kind == NewKind::Stack)?;
+    let date = parse_date(form.due.trim())?;
     Some(DueDate {
         date,
         minute: DEFAULT_DUE_MINUTE,
@@ -75,6 +75,9 @@ pub(crate) fn due_of(form: &CreateForm) -> Option<DueDate> {
 /// Why the form cannot be submitted yet, in words for the user.
 pub fn problem(f: &CreateForm) -> Option<&'static str> {
     let blank = |s: &str| s.trim().is_empty();
+    if !blank(&f.due) && parse_date(f.due.trim()).is_none() {
+        return Some("The due date must look like 2026-12-31.");
+    }
     match f.kind {
         NewKind::Stack | NewKind::Note if blank(&f.title) => Some("Give it a title."),
         NewKind::Card if blank(&f.text) || blank(&f.answer) => {
@@ -82,9 +85,6 @@ pub fn problem(f: &CreateForm) -> Option<&'static str> {
         }
         NewKind::Question if blank(&f.text) || blank(&f.answer) => {
             Some("A question needs a prompt and a reference answer.")
-        }
-        NewKind::Stack if !blank(&f.due) && parse_date(f.due.trim()).is_none() => {
-            Some("The due date must look like 2026-12-31.")
         }
         NewKind::Stack => None,
         _ if f.parent.is_none() => Some("Choose the stack it goes into."),

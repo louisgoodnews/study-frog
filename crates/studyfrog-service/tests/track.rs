@@ -117,8 +117,8 @@ fn a_stack_with_a_due_date_puts_a_deadline_with_reminders_on_the_calendar() {
 }
 
 #[test]
-fn a_non_stack_ignores_a_due_date() {
-    let (_d, mut s) = vault("ignore");
+fn a_non_stack_with_a_due_date_puts_a_deadline_on_the_calendar() {
+    let (_d, mut s) = vault("note-due");
     let due = DueDate {
         date: date_new(2027, 3, 1).unwrap(),
         minute: 540,
@@ -131,7 +131,13 @@ fn a_non_stack_ignores_a_due_date() {
         ids(5),
     )
     .unwrap();
-    assert!(list_sessions(&s).unwrap().is_empty());
+    let all = list_sessions(&s).unwrap();
+    assert_eq!(all.len(), 1);
+    assert_eq!(
+        (all[0].kind, all[0].title.as_str()),
+        (EventKind::Deadline, "Due: Idea")
+    );
+    assert_eq!(all[0].stack, Some(Uid(1)));
 }
 
 #[test]

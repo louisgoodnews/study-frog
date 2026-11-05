@@ -46,7 +46,7 @@ mod modal_found;
 pub mod modal_import;
 pub mod modal_pdf_export;
 pub mod modal_pdf_preview;
-mod modal_size;
+pub mod modal_size;
 mod modal_transfer;
 mod modal_unmark;
 mod navbar;

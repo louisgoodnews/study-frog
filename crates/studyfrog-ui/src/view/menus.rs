@@ -20,6 +20,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, anchors: &[(Menu, Rect)], out: &mu
     let width = match open {
         Menu::Notifications => 420.0,
         Menu::History => 340.0,
+        Menu::Vaults => 300.0,
         _ => 260.0,
     };
     let at = egui::pos2(
@@ -61,10 +62,50 @@ fn history(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
+fn segments(path: &str) -> Vec<&str> {
+    path.split(['/', '\\']).filter(|s| !s.is_empty()).collect()
+}
+
+/// Short, human-readable label for a vault path; appends a disambiguating ancestor when
+/// another recent vault has the same folder name.
+pub fn vault_label(path: &str, recent: &[String]) -> String {
+    let segs = segments(path);
+    let Some(&name) = segs.last() else {
+        return path.to_owned();
+    };
+    let clashes: Vec<Vec<&str>> = recent
+        .iter()
+        .filter(|p| p.as_str() != path)
+        .map(|p| segments(p))
+        .filter(|s| s.last() == Some(&name))
+        .collect();
+    if clashes.is_empty() {
+        return name.to_owned();
+    }
+    for &anc in segs.iter().rev().skip(1) {
+        if clashes
+            .iter()
+            .any(|c| !c.iter().rev().skip(1).any(|&x| x == anc))
+        {
+            return format!("{name} · {anc}");
+        }
+    }
+    segs.iter()
+        .rev()
+        .nth(1)
+        .map_or_else(|| name.to_owned(), |p| format!("{name} · {p}"))
+}
+
 fn vaults(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.strong("Vaults");
     if let Some(v) = &state.vault {
-        ui.label(format!("Open: {}", v.name));
+        let width = ui.available_width();
+        let active = egui::Button::selectable(true, &v.name).min_size(egui::vec2(width, 28.0));
+        ui.add(active).on_hover_text(&v.root);
+        if let Some(&parent) = segments(&v.root).iter().rev().nth(1) {
+            ui.weak(parent);
+        }
+        ui.add_space(4.0);
     }
     for path in state
         .app
@@ -72,13 +113,19 @@ fn vaults(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .iter()
         .filter(|p| Some(p.as_str()) != state.vault.as_ref().map(|v| v.root.as_str()))
     {
-        if ui.button(path.as_str()).clicked() {
+        let label = vault_label(path, &state.app.recent);
+        let width = ui.available_width();
+        let row = egui::Button::selectable(false, label).min_size(egui::vec2(width, 28.0));
+        if ui.add(row).on_hover_text(path.as_str()).clicked() {
             out.push(Msg::OpenRecent(path.clone()));
             close(out);
         }
     }
     ui.separator();
-    if ui.button("Open another vault…").clicked() {
+    let width = ui.available_width();
+    let open_other =
+        egui::Button::selectable(false, "Open another vault…").min_size(egui::vec2(width, 28.0));
+    if ui.add(open_other).clicked() {
         out.push(Msg::CloseVault);
         close(out);
     }

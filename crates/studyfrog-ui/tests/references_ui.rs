@@ -90,6 +90,8 @@ fn the_item_page_shows_primary_and_referenced_stacks_with_add_and_remove() {
 
     let mut h = harness(m);
     h.run_steps(4);
+    h.get_by_label("Relations").click();
+    h.run_steps(2);
     assert!(h.query_by_label("Stacks & references").is_some());
     assert!(h.query_by_label("Remove from German").is_some());
     assert!(h.query_by_label("Add to stack…").is_some());

@@ -53,11 +53,10 @@ fn submit(state: State) -> (State, Vec<Effect>) {
         parent: form.parent.clone(),
         also_in: form.also_in.clone(),
         due: due_of(&form),
-        choices: if form.kind == NewKind::Stack {
-            (None, None)
-        } else {
-            (Some(form.priority), Some(form.difficulty))
-        },
+        choices: (
+            Some(form.priority),
+            (form.kind != NewKind::Stack).then_some(form.difficulty),
+        ),
     };
     let (state, _) = with_form(state, |f| CreateForm {
         busy: true,

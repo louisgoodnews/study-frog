@@ -100,14 +100,15 @@ fn put_on_board(
     }
 }
 
-/// A deadline for a stack on the calendar, with its reminders.
+/// A deadline on the calendar, with its reminders.
 pub fn add_deadline(
     session: &mut VaultSession,
     info: &VaultInfo,
-    (created, due): (&Created, &DueDate),
+    (kind, created, parent): (NewKind, &Created, Option<&str>),
+    due: &DueDate,
     ids: IdSource,
 ) -> Result<(), ServiceError> {
-    let stack = folder_of(NewKind::Stack, created, None).and_then(|f| stack_uid(info, &f));
+    let stack = folder_of(kind, created, parent).and_then(|f| stack_uid(info, &f));
     let mut random = ids.random;
     random[8] ^= 0x5a;
     let mut reminders = due.reminders.clone();
@@ -144,7 +145,7 @@ pub struct Tracked {
     pub warnings: Vec<String>,
 }
 
-/// Create an item, then give it a board card and, for a stack with a due date, a calendar deadline.
+/// Create an item, then give it a board card and, for an item with a due date, a calendar deadline.
 /// The item is kept even when the follow-ups fail; the failures come back as warnings.
 pub fn create_tracked(
     session: &mut VaultSession,
@@ -154,15 +155,12 @@ pub fn create_tracked(
 ) -> Result<Tracked, ServiceError> {
     let (info, created) = create_item(session, item, ids)?;
     let mut warnings = Vec::new();
-    let board = add_to_board(session, &info, (item.kind, &created, item.parent), ids);
-    if let Err(e) = board {
+    if let Err(e) = add_to_board(session, &info, (item.kind, &created, item.parent), ids) {
         warnings.push(format!("it was not added to the board: {e}"));
     }
-    let deadline = match (item.kind, due) {
-        (NewKind::Stack, Some(due)) => add_deadline(session, &info, (&created, due), ids),
-        _ => Ok(()),
-    };
-    if let Err(e) = deadline {
+    if let Some(due) = due
+        && let Err(e) = add_deadline(session, &info, (item.kind, &created, item.parent), due, ids)
+    {
         warnings.push(format!("the due date was not added to the calendar: {e}"));
     }
     Ok(Tracked {

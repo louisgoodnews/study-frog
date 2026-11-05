@@ -148,12 +148,11 @@ fn the_vault_switcher_offers_the_other_recent_vaults() {
     h.run();
     h.get_by_label("Switch vault").click();
     h.run();
-    assert!(h.query_by_label("Open: notes").is_some());
     assert!(
         h.query_by_label("/v/notes").is_none(),
-        "the open vault is not offered again"
+        "the open vault is not offered as a raw path"
     );
-    h.get_by_label("/v/other").click();
+    h.get_by_label("other").click();
     h.run();
     assert!(h.state().1.contains(&Effect::OpenVault("/v/other".into())));
 }

@@ -11,6 +11,9 @@ use crate::msg::Msg;
 use crate::state::{Notice, NoticeKind, Screen, State};
 
 /// A document open for editing.
+pub type EditorState = Editor;
+
+/// A document open for editing.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Editor {
     /// The item.

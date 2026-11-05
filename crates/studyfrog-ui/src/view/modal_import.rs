@@ -58,7 +58,7 @@ fn from_file(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui,
         "File to import",
         &state.browser.import_path,
-        "/path/to/file.tsv",
+        "/path/to/cards.csv or .tsv",
         1,
     ) {
         out.push(Msg::ImportPathEdited(text));

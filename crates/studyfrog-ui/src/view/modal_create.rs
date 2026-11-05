@@ -40,6 +40,7 @@ fn type_combo(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .show_ui(ui, |ui| {
             for (kind, label) in KINDS {
                 if ui.selectable_label(f.kind == kind, label).clicked() {
+                    super::modal_size::reset(ui.ctx());
                     send(out, ModalMsg::SetKind(kind));
                 }
             }
@@ -100,7 +101,7 @@ fn editors(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     let ((text_label, text_hint), answer_label) = labels(f.kind);
     let (rows, mode) = match f.kind {
-        NewKind::Note => (14, Mode::Split),
+        NewKind::Note => (16, Mode::Write),
         _ => (5, Mode::Write),
     };
     ui.weak(text_hint);
@@ -119,23 +120,27 @@ fn fields(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     if f.kind == NewKind::Card {
         let has_extra = !f.tags.is_empty()
             || f.priority != Priority::Medium
-            || f.difficulty != Difficulty::Difficult;
+            || f.difficulty != Difficulty::Difficult
+            || !f.due.is_empty();
         ui.add_space(4.0);
         egui::CollapsingHeader::new("More fields")
             .default_open(has_extra)
-            .show(ui, |ui| modal_fields::metadata_fields(f, ui, out));
+            .show(ui, |ui| modal_fields::metadata_fields(state, f, ui, out));
         return;
     }
     if f.kind != NewKind::Stack {
-        modal_fields::metadata_fields(f, ui, out);
+        modal_fields::metadata_fields(state, f, ui, out);
     }
     if f.kind == NewKind::Stack {
+        ui.horizontal_wrapped(|ui| {
+            modal_fields::priority_choice(f, ui, out);
+            let mut is_stack = f.is_stack;
+            if ui.checkbox(&mut is_stack, "Mark as stack folder").changed() {
+                send(out, ModalMsg::SetIsStack(is_stack));
+            }
+        });
         if let Some(t) = text_field(ui, "Tags", &f.tags, "comma separated", 1) {
             send(out, ModalMsg::Edit(Field::Tags, t));
-        }
-        let mut is_stack = f.is_stack;
-        if ui.checkbox(&mut is_stack, "Mark as stack folder").changed() {
-            send(out, ModalMsg::SetIsStack(is_stack));
         }
         if f.is_stack {
             modal_fields::due_fields(state, f, ui, out);
@@ -146,7 +151,7 @@ fn fields(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
 fn footer(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.separator();
     ui.horizontal(|ui| {
-        super::modal_size::grip(ui);
+        super::modal_size::grip(f.kind, ui);
         ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
             let label = if f.busy { "Creating…" } else { "Create" };
             if ui
@@ -192,7 +197,7 @@ pub fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Ms
         discard_question(ui, out);
     }
     ui.add_space(6.0);
-    let room = (ui.ctx().content_rect().height() - 200.0).max(240.0);
+    let room = (ui.ctx().content_rect().height() - 140.0).max(240.0);
     ui.style_mut().animation_time = 0.0;
     egui::ScrollArea::vertical()
         .max_height(room)

@@ -143,15 +143,24 @@ fn choice<T: Copy + PartialEq>(
     picked
 }
 
-pub(super) fn metadata_fields(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    use studyfrog_core::event::difficulty_name;
+pub(super) fn priority_choice(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     use studyfrog_core::priority::{PRIORITIES, Priority, priority_name};
+    let priorities: Vec<(Priority, &str)> =
+        PRIORITIES.iter().map(|p| (*p, priority_name(*p))).collect();
+    if let Some(p) = choice(ui, "Priority", (f.priority, &priorities)) {
+        send(out, ModalMsg::SetPriority(p));
+    }
+}
+
+pub(super) fn metadata_fields(
+    state: &State,
+    f: &CreateForm,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+) {
+    use studyfrog_core::event::difficulty_name;
     ui.horizontal_wrapped(|ui| {
-        let priorities: Vec<(Priority, &str)> =
-            PRIORITIES.iter().map(|p| (*p, priority_name(*p))).collect();
-        if let Some(p) = choice(ui, "Priority", (f.priority, &priorities)) {
-            send(out, ModalMsg::SetPriority(p));
-        }
+        priority_choice(f, ui, out);
         let levels: Vec<(_, &str)> = DIFFICULTIES
             .iter()
             .map(|d| (*d, difficulty_name(*d)))
@@ -163,4 +172,5 @@ pub(super) fn metadata_fields(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<M
     if let Some(t) = crate::view::widgets::text_field(ui, "Tags", &f.tags, "comma separated", 1) {
         send(out, ModalMsg::Edit(Field::Tags, t));
     }
+    due_fields(state, f, ui, out);
 }

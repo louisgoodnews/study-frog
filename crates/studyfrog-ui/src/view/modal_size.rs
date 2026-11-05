@@ -7,28 +7,46 @@ use crate::modal::{CreateForm, ModalMsg};
 use crate::msg::Msg;
 use crate::view::icons::{Glyph, icon_button};
 
-pub(super) const NORMAL: f32 = 620.0;
-pub(super) const WIDE: f32 = 1000.0;
+/// Standard width of the create dialog.
+pub const NORMAL: f32 = 620.0;
 const MIN_WIDTH: f32 = 480.0;
 
-fn width_id() -> Id {
-    Id::unique("create-dialog-width")
+fn width_id(kind: NewKind) -> Id {
+    Id::unique("create-dialog-width").with(if kind == NewKind::Note {
+        "note"
+    } else {
+        "normal"
+    })
 }
 
-fn widest(ctx: &Context) -> f32 {
+/// The widest the dialog can be inside the window.
+pub fn widest(ctx: &Context) -> f32 {
     (ctx.content_rect().width() - 40.0).max(MIN_WIDTH)
+}
+
+/// Reset dialog size state when closing or switching kinds in the create modal.
+pub fn reset(ctx: &Context) {
+    ctx.data_mut(|d| {
+        d.remove_temp::<f32>(width_id(NewKind::Note));
+        d.remove_temp::<f32>(width_id(NewKind::Card));
+    });
 }
 
 /// The width of the dialog: what the user dragged it to, else a normal one (wide for a note).
 pub fn width(ctx: &Context, kind: NewKind) -> f32 {
-    let own = ctx.data(|d| d.get_temp::<f32>(width_id()));
-    own.unwrap_or(if kind == NewKind::Note { WIDE } else { NORMAL })
-        .clamp(MIN_WIDTH, widest(ctx))
+    let own = ctx.data(|d| d.get_temp::<f32>(width_id(kind)));
+    own.unwrap_or(if kind == NewKind::Note {
+        widest(ctx)
+    } else {
+        NORMAL
+    })
+    .clamp(MIN_WIDTH, widest(ctx))
 }
 
-fn set_width(ctx: &Context, w: f32) {
+/// Set the temporary width of the create dialog.
+pub fn set_width(ctx: &Context, kind: NewKind, w: f32) {
     let w = w.clamp(MIN_WIDTH, widest(ctx));
-    ctx.data_mut(|d| d.insert_temp(width_id(), w));
+    ctx.data_mut(|d| d.insert_temp(width_id(kind), w));
 }
 
 pub(super) fn window_buttons(ctx: &Context, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
@@ -36,14 +54,14 @@ pub(super) fn window_buttons(ctx: &Context, f: &CreateForm, ui: &mut egui::Ui, o
         if icon_button(ui, Glyph::Close, "Close", false).clicked() {
             out.push(Msg::Modal(ModalMsg::Close));
         }
-        let wide = width(ctx, f.kind) > (NORMAL + WIDE) / 2.0;
+        let wide = width(ctx, f.kind) > NORMAL + 50.0;
         let name = if wide {
             "Shrink the dialog"
         } else {
             "Enlarge the dialog"
         };
         if ui.button(name).clicked() {
-            set_width(ctx, if wide { NORMAL } else { WIDE });
+            set_width(ctx, f.kind, if wide { NORMAL } else { widest(ctx) });
         }
         ui.menu_button("More", |ui| {
             if ui.button("Import or export…").clicked() {
@@ -66,7 +84,7 @@ pub(super) fn window_buttons(ctx: &Context, f: &CreateForm, ui: &mut egui::Ui, o
 }
 
 /// A grip at the lower left that widens the dialog when dragged, or with the arrow keys when focused.
-pub(super) fn grip(ui: &mut egui::Ui) {
+pub(super) fn grip(kind: NewKind, ui: &mut egui::Ui) {
     let (rect, r) = ui.allocate_exact_size(vec2(20.0, 20.0), Sense::click_and_drag());
     ui.painter().text(
         rect.center(),
@@ -90,10 +108,7 @@ pub(super) fn grip(ui: &mut egui::Ui) {
         0.0
     };
     if step != 0.0 || drag != 0.0 {
-        let now = ui
-            .ctx()
-            .data(|d| d.get_temp::<f32>(width_id()))
-            .unwrap_or(ui.available_width());
-        set_width(ui.ctx(), now + step + drag);
+        let now = width(ui.ctx(), kind);
+        set_width(ui.ctx(), kind, now + step + drag);
     }
 }

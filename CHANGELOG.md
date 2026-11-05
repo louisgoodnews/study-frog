@@ -7,6 +7,17 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-11-05
+
+### Fixed
+- The card file importer automatically detects and parses both CSV (comma-separated, RFC 4180 quoted values, and multi-column AI prompt headers `stack,kind,title,front,back,tags`) and TSV (tab-separated) formats without requiring manual conversion (BUG-0011).
+
+### Changed
+- The item page details column is restructured into a four-tab notebook layout (`Properties`, `Schedule`, `Relations`, `Learning`) with inline mutable fields and direct stack due date editing (STORY-0093).
+- The Create dialog exposes priority for stacks and due date / reminder selection across all creatable item types, syncing deadlines directly to the vault calendar (STORY-0094).
+- Selecting Note in the Create dialog automatically expands the modal to fill the window and defaults the Markdown editor to Write mode while retaining drag-resize, shrink toggle, and item kind switching (STORY-0095).
+- The top-bar Vaults switcher popup displays clean folder basenames in borderless selectable rows with automatic ancestor disambiguation for duplicate folder names and full paths on hover (STORY-0099).
+
 ## [0.4.0] - 2026-11-04
 
 ### Fixed

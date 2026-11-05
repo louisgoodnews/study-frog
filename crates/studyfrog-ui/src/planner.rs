@@ -207,6 +207,11 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
             },
         ),
         PlanMsg::StackDeadline(stack) => crate::deadline_ui::open(state, stack),
+        PlanMsg::SetStackDueDate {
+            stack,
+            date,
+            reminders,
+        } => crate::deadline_ui::set_due_date(state, stack, date, reminders),
         PlanMsg::Edit(id) => {
             let form = p.sessions.iter().find(|s| s.id == id).map(form_from);
             with(state, Planner { form, ..p })

@@ -56,10 +56,19 @@
     - Interactive parameter controls in the Assistant Prompts UI
     - Search and workflow filtering
     - TASK-0233 Move prompt library to standalone left sidebar navigation
-  - **BUG-0011** Importer only accepts TSV format and fails on CSV prompt outputs
-    - Auto-detect CSV vs TSV delimiters
-    - Seamlessly import multi-column prompt outputs (stack,kind,title,front,back,tags)
-    - Handle quoted strings, linebreaks, and semicolon-delimited tags cleanly
+- **EPIC-032** Item keys, colorization, and reporting export
+  - **STORY-0096** Item keys for querying
+    - Sequential human-readable item keys (STACK_1, FLASHCARD_500, NOTE_12, QUESTION_3)
+    - Query engine and search bar filtering and direct jump by key
+    - Display key badges across details notebook tabs, editor header, and browser
+  - **STORY-0097** Item colorization with color picker and viewer background styling
+    - Item frontmatter color field supporting hex codes and curated pastel palette tokens
+    - Color picker widget in the editor and details notebook tabs
+    - Accessible tinted background rendering in the rehearsal card viewer and browser
+  - **STORY-0098** Reporting export as CSV
+    - Prominent Export as CSV action button in the Reports screen
+    - Structured CSV tables covering review volume, retention rates, mastery, and run logs
+    - Native file save dialog and vault exports location support
 
 ## Priority order
 
@@ -69,6 +78,7 @@
 4. **Extensibility & modding:** EPIC-028 Python API, subprocess JSON-RPC bridge, cron scheduler, event triggers, and built-in interactive console.
 5. **Achievements expansion:** EPIC-029 (STORY-0086, STORY-0087) tiered achievement catalog, per-stack progression milestones, and achievements UI filtering.
 6. **Prompt expansion:** EPIC-030 (STORY-0088 to STORY-0092) multi-level explanation, oral exams, Socratic dialogue, concept mapping, and categorized prompt UI.
+7. **Vault organization & insights:** EPIC-032 (STORY-0096 to STORY-0098) item keys for querying, item colorization, and reporting CSV export.
 
 **Exit criteria:**
 - External model API integration for Google Gemini and Deepseek functioning in the Assistant and Rehearsal Exam screens
@@ -76,3 +86,4 @@
 - Python API exposed for StudyFrog, enabling modding plugins and automation via cron triggers, event listeners, or in-app console
 - Tiered default achievements and per-stack filtering functioning in the achievements screen and stack browser
 - Expanded prompt library with categorized navigation, parameterized controls, multi-level explanations, interactive exams, Socratic dialogues, and concept mapping templates functional in the Assistant
+- Item keys functional in query search, color picker and background tinting working across editor and rehearsal, and reporting metrics exportable as CSV

@@ -155,9 +155,12 @@ fn the_toolbar_formats_the_text_and_the_side_column_shows_the_details() {
         .clone();
     assert!(body.ends_with("**bold**"), "{body:?}");
     assert!(h.state().0.state.editor.as_ref().is_some());
-    for text in ["Details", "Kind", "note", "Links to"] {
+    for text in ["Details", "Kind", "note"] {
         assert!(h.query_all_by_label(text).count() >= 1, "missing {text}");
     }
+    h.get_by_label("Relations").click();
+    h.run_steps(2);
+    assert!(h.query_all_by_label("Links to").count() >= 1);
     h.get_by_label("Body: preview").click();
     h.run_steps(2);
     assert!(
@@ -184,6 +187,8 @@ fn the_side_column_lists_the_items_that_link_here() {
     };
     apply(&mut m, Msg::BacklinksLoaded(Uid(0xA), Ok(vec![row])));
     let mut h = harness(m);
+    h.run_steps(2);
+    h.get_by_label("Relations").click();
     h.run_steps(2);
     assert!(h.query_by_label("Linked from").is_some());
     let node = h.get_by_label("Flashcard about Alpha");

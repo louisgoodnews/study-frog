@@ -37,6 +37,15 @@ pub enum PlanMsg {
     Rehearse(Uid),
     /// Set or change the due date of a stack.
     StackDeadline(Uid),
+    /// Set or clear the due date of a stack directly.
+    SetStackDueDate {
+        /// The stack to set or clear the deadline for.
+        stack: Uid,
+        /// The new date, or `None` to clear.
+        date: Option<Date>,
+        /// Reminders in minutes before the due date.
+        reminders: Vec<u32>,
+    },
     /// The reviews the schedule planned.
     Reviews(crate::planner_reviews::ReviewMsg),
 }

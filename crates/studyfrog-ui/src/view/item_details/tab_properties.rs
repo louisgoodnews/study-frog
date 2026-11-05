@@ -1,10 +1,9 @@
-//! The side column of the item page: kind, stack, subjects, priority, difficulty, tags, dates and the
-//! links to and from the item.
+//! The Properties tab of the item details notebook: kind, tags, subjects, priority, difficulty,
+//! status, PDF source link, and metadata timestamps.
 
 use eframe::egui::{self, RichText, Role, WidgetInfo};
 use studyfrog_core::event::{Difficulty, difficulty_name};
 use studyfrog_core::priority::{PRIORITIES, priority_name};
-use studyfrog_md::blocks::{Block, Link, Span};
 use studyfrog_md::doc::Doc;
 
 use crate::editor::Editor;
@@ -24,8 +23,8 @@ fn kind_word(doc: &Doc) -> &'static str {
     }
 }
 
-pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    kit::section(ui, "Details");
+/// The Properties tab content.
+pub fn draw(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     kit::card(ui, |ui| {
         ui.set_width(ui.available_width());
         let p = palette_of(ui);
@@ -38,7 +37,9 @@ pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         }
         subject_rows(state, e, ui, out);
         priority_row(e, ui, out);
-        difficulty_row(e, ui, out);
+        if !matches!(e.doc, Doc::Stack(_)) {
+            difficulty_row(e, ui, out);
+        }
         status_row(state, e, ui, out);
         source_link(e, ui, out);
         let meta = studyfrog_md::doc::doc_meta(&e.doc);
@@ -48,12 +49,6 @@ pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>)
             }
         }
     });
-    ui.add_space(10.0);
-    crate::view::item_stacks::card(state, e, ui, out);
-    crate::view::item_fam::card(e, ui);
-    links(e, ui, out);
-    ui.add_space(10.0);
-    linked_from(e, ui, out);
 }
 
 /// A stack picks its subjects; an item shows the ones it takes from its stack, with their teachers.
@@ -114,7 +109,7 @@ fn priority_row(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 }
 
-/// The status menu; an item with no stored status shows what its history makes of it, when the list is loaded.
+/// The status menu; an item with no stored status shows what its history makes of it.
 fn status_row(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.label("Status");
     let derived = state
@@ -141,68 +136,6 @@ fn difficulty_row(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 ("Difficulty", difficulty_name(d)),
             ) {
                 out.push(Msg::Edit(EditAction::Difficulty(Some(d))));
-            }
-        }
-    });
-}
-
-fn wiki_targets(blocks: &[Block], into: &mut Vec<String>) {
-    let spans = |spans: &[Span], into: &mut Vec<String>| {
-        for s in spans {
-            match &s.link {
-                Some(Link::Wiki(t)) if !into.contains(t) => into.push(t.clone()),
-                _ => {}
-            }
-        }
-    };
-    for b in blocks {
-        match b {
-            Block::Heading { spans: s, .. } | Block::Paragraph(s) => spans(s, into),
-            Block::Quote(inner) => wiki_targets(inner, into),
-            Block::List { items, .. } => items.iter().for_each(|i| wiki_targets(&i.blocks, into)),
-            Block::Table { header, rows, .. } => {
-                for cell in header.iter().chain(rows.iter().flatten()) {
-                    spans(cell, into);
-                }
-            }
-            Block::Code { .. } | Block::Rule | Block::Toc => {}
-        }
-    }
-}
-
-fn linked_from(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    kit::section(ui, "Linked from");
-    kit::card(ui, |ui| {
-        ui.set_width(ui.available_width());
-        if e.backlinks.is_empty() {
-            ui.weak("Nothing links here yet.");
-        }
-        let weak = palette_of(ui).text_weak;
-        for item in &e.backlinks {
-            ui.horizontal(|ui| {
-                kit::pill(ui, studyfrog_core::plan::item_kind_name(item.kind), weak);
-                if ui.link(&item.title).clicked() {
-                    out.push(Msg::OpenItem(item.uid));
-                }
-            });
-        }
-    });
-}
-
-fn links(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let mut targets = Vec::new();
-    for f in &e.form.fields {
-        wiki_targets(&studyfrog_md::blocks::parse_blocks(&f.text), &mut targets);
-    }
-    kit::section(ui, "Links to");
-    kit::card(ui, |ui| {
-        ui.set_width(ui.available_width());
-        if targets.is_empty() {
-            ui.weak("No links yet. Write [[Title]] to link a note.");
-        }
-        for t in targets {
-            if ui.link(&t).clicked() {
-                out.push(Msg::OpenLink(t));
             }
         }
     });

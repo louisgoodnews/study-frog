@@ -40,6 +40,8 @@ fn the_item_page_shows_the_value_its_drivers_and_the_curve() {
     assert_eq!(curve.points.len(), 4, "three ratings and now");
     let mut h = harness(model);
     h.run_steps(4);
+    h.get_by_label("Learning").click();
+    h.run_steps(2);
     assert!(h.query_by_label_contains("Familiarity ").is_some());
     assert!(h.query_by_label_contains("3 rating(s)").is_some());
     assert!(h.query_by_label_contains("Over time:").is_some());
@@ -49,6 +51,8 @@ fn the_item_page_shows_the_value_its_drivers_and_the_curve() {
     send(&mut m2, &mut w2, Msg::OpenItem(Uid(11)));
     let mut h = harness(m2);
     h.run_steps(4);
+    h.get_by_label("Learning").click();
+    h.run_steps(2);
     assert!(
         h.query_by_label("Over time:").is_none()
             && h.query_by_label_contains("Over time").is_none()
