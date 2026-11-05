@@ -1,6 +1,6 @@
 # Roadmap
 
-Phases M0 to M11. Each phase has entry criteria, an epic breakdown (every epic has at least one story, every story at least one task) and **exit criteria**: what must be demonstrably working. Issue files for a phase are created when it becomes next (M0 seeded now); until then the tree below is the plan of record.
+Phases M0 to M12. Each phase has entry criteria, an epic breakdown (every epic has at least one story, every story at least one task) and **exit criteria**: what must be demonstrably working. Issue files for a phase are created when it becomes next (M0 seeded now); until then the tree below is the plan of record.
 
 | Phase | Name | Epics | Detail |
 |---|---|---|---|
@@ -17,6 +17,7 @@ Phases M0 to M11. Each phase has entry criteria, an epic breakdown (every epic h
 | M10 | Usability and insight (0.3.0, released 2026-11-03) | EPIC-023 | [M10-usability-and-insight](M10-usability-and-insight.md) (priority order inside) |
 | M10 | 0.3.1 fixes | EPIC-025 | [M10](M10-usability-and-insight.md), last paragraph |
 | M11 | Diary, a calmer UI, writing, prompts and appearance (0.4.0) | EPIC-024, EPIC-026, EPIC-027 | [M11-diary](M11-diary.md) |
+| M12 | External models, PDF viewer fixes and optimization, Python modding API, and expanded achievements (0.5.0) | EPIC-028, EPIC-029 | [M12-models-and-extensibility](M12-models-and-extensibility.md) |
 
 ## M0 Bootstrap
 
@@ -290,3 +291,27 @@ The diary (STORY-0068, TASK-0170 to TASK-0174) moved to M11 on 2026-11-03.
 
 ## M11 Diary, a calmer UI, writing and prompts (0.4.0)
 See [M11-diary](M11-diary.md): EPIC-024 (STORY-0068, STORY-0073) and EPIC-026 (STORY-0074 to STORY-0079, BUG-0007, BUG-0008, TASK-0197 to TASK-0220) and EPIC-027 (STORY-0080, STORY-0081, TASK-0221 to TASK-0227). STORY-0082 (PDF export, TASK-0228 to TASK-0232) was added to EPIC-026 on 2026-11-04.
+
+## M12 External models, PDF viewer fixes and optimization, and Python modding API (0.5.0)
+
+External model integrations, high-performance legible PDF reading, and application modding via Python scripting.
+
+See [M12-models-and-extensibility](M12-models-and-extensibility.md).
+
+**Entry:** M11 exit met (0.4.0 released).
+
+**Exit criteria:**
+- External model API integration for Google Gemini and Deepseek functioning in the Assistant and Rehearsal Exam screens
+- PDF viewer pages remain crisp and legible across all zoom settings and fit modes; rendering performance meets 60 fps target
+- Python API exposed for StudyFrog, enabling modding plugins and automation via cron triggers, event listeners, or in-app console
+
+**Work breakdown:**
+- **EPIC-028** Extensibility, plugin modding, and Python API
+  - **STORY-0083** Google Gemini in models for StudyFrog
+  - **STORY-0084** Deepseek in models for StudyFrog
+  - **STORY-0085** Performance optimization in StudyFrog pdf-viewer
+  - **BUG-0010** PDF pages are illegible depending on zoom or page fit mode
+- **EPIC-029** Expanded achievements and per-stack progression
+  - **STORY-0086** Expanded achievement catalog and milestone tiers
+  - **STORY-0087** Per-stack achievement UI and filtering
+

@@ -4,9 +4,9 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (237) |
+| Backlog (1) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (237) |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
 |  |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 |  |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
@@ -329,6 +329,11 @@
 | [STORY-0080](docs/issues/stories/STORY-0080-dark-light-and-system-theme.md) Dark, light and system theme (8) | done | 3/3 |
 | [STORY-0081](docs/issues/stories/STORY-0081-display-and-window-settings.md) Display and window settings (8) | done | 4/4 |
 | [STORY-0082](docs/issues/stories/STORY-0082-export-notes-to-pdf.md) Export notes to PDF (8) | done | 5/5 |
+| [STORY-0083](docs/issues/stories/STORY-0083-google-gemini-in-models-for-studyfrog.md) Google Gemini in models for StudyFrog (5) | backlog | 0/0 |
+| [STORY-0084](docs/issues/stories/STORY-0084-deepseek-in-models-for-studyfrog.md) Deepseek in models for StudyFrog (5) | backlog | 0/0 |
+| [STORY-0085](docs/issues/stories/STORY-0085-performance-optimization-in-studyfrog-pdf-viewer.md) Performance optimization in StudyFrog pdf-viewer (5) | backlog | 0/0 |
+| [STORY-0086](docs/issues/stories/STORY-0086-expanded-achievement-catalog-and-milestone-tiers.md) Expanded achievement catalog and milestone tiers (3) | backlog | 0/0 |
+| [STORY-0087](docs/issues/stories/STORY-0087-per-stack-achievement-ui-and-filtering.md) Per-stack achievement UI and filtering (3) | backlog | 0/0 |
 
 ## Epics
 
@@ -361,3 +366,5 @@
 | [EPIC-025](docs/issues/epics/EPIC-025-feedback-fixes-for-0-3-1.md) Feedback fixes for 0.3.1 | done | 1/1 |
 | [EPIC-026](docs/issues/epics/EPIC-026-writing-saving-organizing-and-prompts-for-0-4-0.md) Writing, saving, organizing and prompts for 0.4.0 | done | 7/7 |
 | [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | done | 2/2 |
+| [EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md) Extensibility, plugin modding, and Python API | backlog | 0/3 |
+| [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md) Expanded achievements and per-stack progression | backlog | 0/2 |
