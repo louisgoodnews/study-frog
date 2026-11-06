@@ -143,6 +143,10 @@ fn cross_format_delimiter_auto_detection() {
     let tsv = "front\tback\ttags\nWhat is 3+3?\t6\tmath\n";
     let cards = import_csv(tsv).unwrap();
     assert_eq!(cards[0].front, "What is 3+3?");
+
+    let escaped = "stack,kind,title,front,back,tags\nd,card,,Q?,1. Eins\\n2. Zwei,t\n";
+    let c = import_csv(escaped).unwrap();
+    assert_eq!(c[0].back, "1. Eins\n2. Zwei");
 }
 
 #[test]

@@ -152,3 +152,29 @@ fn fresh_ids_are_random_and_valid() {
     let (a, b) = (fresh_id_source(1).unwrap(), fresh_id_source(1).unwrap());
     assert_ne!(a.random, b.random);
 }
+
+#[test]
+fn bug_0015_long_card_titles_and_escaped_newlines_are_preserved_and_repaired() {
+    let q = "Was sind die vier Hauptziele einer akkuraten psychologischen Diagnostik?";
+    assert_eq!(default_card_title(q), q);
+    let d = empty_vault("bug0015");
+    fs::create_dir_all(d.0.join("diag")).unwrap();
+    fs::write(
+        d.0.join("diag/_stack.md"),
+        "---\nid: 01000000000000000000000001\nkind: stack\ntitle: Diag\n---\n",
+    )
+    .unwrap();
+    let truncated: String = q.chars().take(60).collect();
+    fs::write(
+        d.0.join("diag/card.md"),
+        format!(
+            "---\nid: 01000000000000000000000002\nkind: card\ntitle: {truncated}\n---\n{q}\n???\n1. Eins\\n2. Zwei\n"
+        ),
+    )
+    .unwrap();
+    let (s, _) = open_vault(d.0.to_str().unwrap()).unwrap();
+    let uid = studyfrog_md::ulid::parse_ulid("01000000000000000000000002").unwrap();
+    let content = studyfrog_service::content::load_item_content(&s, uid).unwrap();
+    assert_eq!(content.title, q);
+    assert_eq!(content.answer, "1. Eins\n2. Zwei");
+}

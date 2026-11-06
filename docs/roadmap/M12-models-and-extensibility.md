@@ -69,6 +69,40 @@
     - Prominent Export as CSV action button in the Reports screen
     - Structured CSV tables covering review volume, retention rates, mastery, and run logs
     - Native file save dialog and vault exports location support
+  - **STORY-0123** Colorization field for items influencing details and rehearsal view background
+    - Colorization field in item front-matter and Details Properties tab
+    - Theme-aware background tinting in the Item Details view, Editor, and Rehearsal card surface
+- **EPIC-033** Exam run mode with mandatory text entry, semantic comparison, and percentage grading
+  - Strict one-way exam progression (no skipping, no moving back, mandatory written submission)
+  - Automatic semantic comparison scoring for flashcards and questions
+  - Percentage grading (`60%` pass threshold `D`/`4.0` and `5%` intervals up to `95%–100%` `A+`/`1+`)
+- **EPIC-034** Behavioral learning analytics, FSRS optimizer, and workload forecasting
+  - **STORY-0102** Chronobiological hour-of-day and day-of-week performance telemetry
+  - **STORY-0103** Within-session cognitive fatigue and pacing decay analysis
+  - **STORY-0104** Leech diagnostics, interference detection, and confusion clusters
+  - **STORY-0105** FSRS state-simulation forecasting, study-minute projection, and exam deadline pacer
+  - **STORY-0106** Workload-versus-retention simulator and minimum recommended retention (CMRR)
+  - **STORY-0107** Empirical forgetting curves, true retention, and stability-tier survival analysis
+- **EPIC-035** Rich active-recall formats, inline note extraction, and focus workflows
+  - **STORY-0108** Inline cloze deletions in flashcards and notes
+  - **STORY-0109** Image occlusion cards for diagrams, slides, and PDF figures
+  - **STORY-0110** Inline flashcard and question extraction from Markdown notes
+  - **STORY-0111** Contrastive side-by-side drill for confused and interfering items
+  - **STORY-0112** Pomodoro focus timer with automatic learning diary and session logging
+- **EPIC-036** Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement
+  - **STORY-0113** Perceptual OKLCH color palette calibration and WCAG 3 APCA contrast verification
+  - **STORY-0114** Psychophysical typographic measure, modular hierarchy, and tabular numerals
+  - **STORY-0115** Low-entropy surface elevation, border de-cluttering, and Gestalt proximity spacing
+  - **STORY-0116** Distraction-free Zen focus mode and zero-layout-shift interaction polish
+- **EPIC-037** State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry
+  - **STORY-0117** Pure JSON-RPC 2.0 MCP protocol engine and extensible plain-data capability registry
+  - **STORY-0118** StudyFrog MCP server resources and read-only search, analytics, and forecast tools
+  - **STORY-0119** Annotated MCP authoring tools, human-in-the-loop staging, and parameterized MCP prompts
+  - **STORY-0120** CLI stdio MCP server mode and localhost Streamable HTTP transport
+  - **STORY-0121** Built-in Assistant MCP client host for external academic tool servers
+- **EPIC-038** CLI control protocol for interactive AI agent application operation
+  - **STORY-0122** StudyFrog application files in `~/.local/` with logs and configurations
+  - **STORY-0124** Interactive CLI control protocol and console log streaming for AI agents
 
 ## Priority order
 

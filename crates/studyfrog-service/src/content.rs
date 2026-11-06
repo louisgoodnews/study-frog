@@ -28,7 +28,7 @@ pub struct ItemContent {
 
 fn content_of(doc: &Doc) -> ItemContent {
     let title = doc_meta(doc).title.clone();
-    let shown = |text: &str| text.trim_end().to_owned();
+    let shown = |text: &str| unescape_newlines(text.trim_end());
     match doc {
         Doc::Card(c) => ItemContent {
             title,
@@ -89,4 +89,71 @@ pub fn load_item_content(session: &VaultSession, uid: Uid) -> Result<ItemContent
         source: studyfrog_md::extra::extra_value(&doc, "source"),
         ..content_of(&doc)
     })
+}
+
+/// Convert literal `\r\n` and `\n` sequences outside `$...$` math spans into newline characters.
+pub fn unescape_newlines(text: &str) -> String {
+    if !text.contains("\\n") && !text.contains("\\r\\n") {
+        return text.to_owned();
+    }
+    let mut out = String::with_capacity(text.len());
+    let mut chars = text.chars().peekable();
+    let mut in_math = false;
+    while let Some(c) = chars.next() {
+        if c == '$' {
+            in_math = !in_math;
+            out.push(c);
+        } else if !in_math && c == '\\' {
+            if chars.next_if_eq(&'n').is_some() {
+                out.push('\n');
+            } else if chars.next_if_eq(&'r').is_some() {
+                if chars.next_if_eq(&'\\').is_some() && chars.next_if_eq(&'n').is_some() {
+                    out.push('\n');
+                } else {
+                    out.push_str("\\r");
+                }
+            } else {
+                out.push('\\');
+                if let Some(next) = chars.next() {
+                    out.push(next);
+                }
+            }
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
+
+/// Repair existing card files in `root` that have literal `\n` sequences or 60-char truncated titles.
+pub fn repair_imported_cards(conn: &rusqlite::Connection, root: &std::path::Path) {
+    let Ok(files) = studyfrog_store::vault::list_markdown(root) else {
+        return;
+    };
+    for f in files {
+        let Ok(raw) = fs::read_to_string(&f.abs) else {
+            continue;
+        };
+        let Ok(Doc::Card(mut c)) = parse_doc(&raw) else {
+            continue;
+        };
+        let (front, back) = (unescape_newlines(&c.front), unescape_newlines(&c.back));
+        let full_title = crate::create::default_card_title(&front);
+        let truncated = c.meta.title.chars().count() == 60
+            && full_title.chars().count() > 60
+            && full_title.starts_with(&c.meta.title)
+            && crate::create::check_title(&full_title).is_ok();
+        if front != c.front || back != c.back || truncated {
+            c.front = front;
+            c.back = back;
+            if truncated {
+                c.meta.title = full_title;
+            }
+            if let Ok(rendered) = studyfrog_md::render::render_doc(&Doc::Card(c))
+                && crate::create::write_new(&f.abs, &rendered).is_ok()
+            {
+                let _ = conn.execute("UPDATE file SET size = -1 WHERE path = ?1", [&f.rel]);
+            }
+        }
+    }
 }

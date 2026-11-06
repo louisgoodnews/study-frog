@@ -116,6 +116,7 @@ pub fn open_vault(path: &str) -> Result<(VaultSession, VaultInfo), ServiceError>
         .map_err(|e| ServiceError::Io(format!("cannot create {}: {e}", dir.display())))?;
     let mut conn = open_db(&dir.join(INDEX_FILE)).map_err(store)?;
     migrate(&mut conn, MIGRATIONS).map_err(store)?;
+    crate::content::repair_imported_cards(&conn, &root);
     // Fingerprint first: a file that changes while indexing still shows up at the next poll.
     let poll = prime(&root).map_err(store)?;
     reindex(&mut conn, &root).map_err(store)?;

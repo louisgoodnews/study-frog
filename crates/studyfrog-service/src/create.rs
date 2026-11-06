@@ -163,14 +163,15 @@ pub fn create_stack(
     refresh(session)
 }
 
-/// The title of a card made without one: its first non-empty line, shortened.
+/// The title of a card made without one: its first non-empty line.
 pub fn default_card_title(front: &str) -> String {
-    let line = front
+    let clean = crate::content::unescape_newlines(front);
+    clean
         .lines()
         .map(str::trim)
         .find(|l| !l.is_empty())
-        .unwrap_or("Card");
-    line.chars().take(60).collect()
+        .unwrap_or("Card")
+        .to_owned()
 }
 
 /// What a new card holds.
@@ -207,11 +208,13 @@ pub fn write_card(
         return Err(invalid("that folder is not a stack"));
     }
     let name = unique_name(&slug(&title), ".md", |n| dir.join(n).exists());
+    let front = crate::content::unescape_newlines(card.front.trim_end());
+    let back = crate::content::unescape_newlines(card.back.trim_end());
     let doc = with_new_defaults(Doc::Card(CardDoc {
         meta: meta(&title, card.tags, ids),
         reversible: false,
-        front: card.front.trim_end().to_owned(),
-        back: card.back.trim_end().to_owned(),
+        front,
+        back,
         extra: Vec::new(),
     }));
     let text = render_doc(&doc).map_err(render_error)?;

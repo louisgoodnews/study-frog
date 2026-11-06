@@ -1,45 +1,88 @@
 # StudyFrog
 
-A Linux-native desktop learning app. Your notes, flashcards and questions are plain Markdown files in a folder (the
-*vault*); StudyFrog adds the learning system on top: spaced-repetition scheduling, timed rehearsal, a planning
-calendar, reports, and an optional AI assistant. Everything works offline and your files stay readable without it.
+A Linux-native desktop learning app. Your notes, flashcards, questions, and learning diary entries are plain Markdown
+files in a folder (the *vault*); StudyFrog adds the learning system on top: spaced-repetition scheduling, timed
+rehearsal, a planning calendar, Kanban boards, a learning diary, PDF reading and export, reports, and an optional AI
+assistant with a parameterized prompt library. Everything works offline and your files stay readable without it.
 
 Written in Rust as a functional, data-oriented Cargo workspace (no OOP idioms).
 
+For a complete guide to everything StudyFrog offers today, see **[FEATURES.md](FEATURES.md)**. For upcoming roadmap epics and stories, see **[PLANNED_FEATURES.md](PLANNED_FEATURES.md)**.
+
 ## What it does
-- **Vault of Markdown** with links between notes (`[[wikilinks]]`), a link graph, cards, questions, stacks and
-  sub-stacks, tags, priorities, difficulties and statuses.
-- **Library** as a sortable table of every item with a search bar (standard fields or a SQL-like query language), saved
-  filters and bulk changes with undo. A stack opens as a page with tabs: Summary, List, Backlog, Roadmap, Board,
-  Calendar, Reports, Sub-stacks and Goals.
-- **Rehearsal** in any order, with a free run, a countdown or a count-up; FSRS-6 or SM-2 scheduling per stack; typed
-  answers compared offline (a small language model if installed, else word matching); a review after each run.
-- **Familiarity** (0.0 to 1.0 per item) that shows what needs attention, steers the queue and tempers the schedule.
-- **Calendar** with planned sessions, exams and the reviews the schedule plans, which can be dragged to another day.
-- **Board**, **achievements**, and **reports** on retention, answer times, forecast, familiarity and runs.
-- **PDFs** you can read, search, highlight, rearrange, and turn into notes and cards.
-- **Import and export** as JSON, CSV or Markdown; import from Anki packages and Obsidian vaults, with suggestions from
-  what it finds on your computer.
-- **Appearance settings**: dark, light or follow the system, interface and text size, density, accent colours, high contrast, reduced motion, the start screen and the remembered window, all applied at once.
-- **Help inside the app** (`F1`): how-to pages, FAQ, your own pages in the vault, and a first-steps tutorial.
-- **Assistant** (optional): proposes notes, cards and edits that change nothing until you apply them; sends text only
-  after you press Send.
+- **Vault of Markdown** with links between notes (`[[wikilinks]]`), a link graph, cards, questions, notes, diary
+  entries, standalone and nested stacks (`Move stack…` between parent and top-level), cross-stack references
+  (`referenced_by`), tags, priorities, difficulties, statuses, and a compact Jira-inspired Vaults switcher.
+- **Folders & Items views**: an Obsidian-style folder tree (create, inline `F2` rename with link rewriting, drag &
+  drop, convert folder to/from stack) alongside a sortable library table with standard search, a SQL-like query
+  language, saved filters, and bulk edits with undo. Each stack opens a nine-tab workspace: Summary, List, Backlog,
+  Roadmap, Board, Calendar, Reports, Sub-stacks, and Goals.
+- **Rich Editor & Details Notebook**: distraction-free Write, Preview, and Split Markdown editing (tables, syntax-highlighted
+  code, underline, palette colors, `[TOC]`, smart lists, text macros, conflict-safe auto-save, and item deletion with
+  undo) paired with a four-tab Details notebook (`Properties`, `Schedule`, `Relations`, `Learning`).
+- **Rehearsal** in any order, with a free run, a countdown or a count-up; independent FSRS-6 or SM-2 scheduling per
+  stack; typed answers compared offline (a small language model if installed, else word matching); a scrollable
+  post-run review with suggested ratings and an inline diary prompt.
+- **Familiarity** (`0.0` to `1.0` per item and stack) that shows what needs attention, steers the queue, and tempers
+  the schedule.
+- **Learning Diary & Calibration** with 13 standard 1–5 self-assessment scales, custom scales, list and calendar views,
+  and calibration reports comparing subjective ratings against measured retention.
+- **Calendar**, **Board**, **Achievements**, and **Reports** on retention, answer times, forecast, familiarity,
+  self-assessment calibration, and runs.
+- **PDFs** you can read, search, highlight, rearrange, and turn into notes and cards—plus native **Markdown-to-PDF
+  export** for single items, selections, and full stacks with live preview.
+- **Import and export** as Markdown, CSV, TSV, JSON, TOML, or RON (with smart recovery for unquoted commas, multiline
+  fields, and escaped newlines in AI-generated CSVs); import from Anki packages (`.apkg`) and Obsidian vaults.
+- **Prompt Library & Assistant**: ready-made AI prompts (Flashcards, Questions, Whole Stack, Notes, Summary, Critique)
+  with one-click copy, Markdown export, or optional assistant execution where all proposed changes require explicit
+  approval.
+- **Appearance & Help**: dark, light or system theme, UI/text scaling, density, accent colours, high contrast, reduced
+  motion, and built-in Help (`F1`) with how-to guides, FAQ, and an interactive tutorial.
 
 ## Status
-- **Released: 0.3.1** (2026-11-03): fixes and a calmer UI after the first use of 0.3.0: StudyFrog's own title bar, a
-  roomier layout with reading columns and aligned rows (library, stack page, Home, rehearsal setup, settings, help),
-  a progress bar in the rehearsal, a discard question in the Create dialog and import suggestions. Notes:
-  [docs/RELEASE_NOTES_0.3.1.md](docs/RELEASE_NOTES_0.3.1.md). Earlier: [0.3.0](docs/RELEASE_NOTES_0.3.0.md)
-  (usability and insight), [0.2.0](docs/RELEASE_NOTES_0.2.0.md) (PDF support) and
-  [0.1.0](docs/RELEASE_NOTES_0.1.0.md).
-- **Planned: 0.4.0**, a diary of self-reported progress next to the measured results, and the calmer look for the
-  screens not yet done (Calendar, Board, Reports, Achievements, Assistant, Graph, the Create dialog).
-- **Not verified by hand:** much of the UI was tested headless only; real-window behaviour is checked as it comes up.
-  OCR for scanned PDFs, cloud sync and other platforms are not planned for now. The release notes list what each
-  version was and was not checked with.
+- **Released: 0.4.3** (2026-11-06): resilient CSV/TSV import for unquoted commas, multiline fields, and escaped
+  newlines; moving stacks between parent stacks and standalone top-level (`STORY-0100`); deleting items directly from
+  the item editor with undo (`STORY-0101`); rehearsal card wrapping and scrollable result review (`BUG-0012`,
+  `BUG-0013`); simplified Vaults switcher (`STORY-0099`); four-tab Details notebook (`STORY-0093`); and expanded Create
+  modal with deadlines and full-window Note writing (`STORY-0094`, `STORY-0095`). Notes:
+  [docs/RELEASE_NOTES_0.4.3.md](docs/RELEASE_NOTES_0.4.3.md). Earlier releases:
+  [0.4.2](docs/RELEASE_NOTES_0.4.2.md), [0.4.1](docs/RELEASE_NOTES_0.4.1.md), [0.4.0](docs/RELEASE_NOTES_0.4.0.md),
+  [0.3.1](docs/RELEASE_NOTES_0.3.1.md), [0.3.0](docs/RELEASE_NOTES_0.3.0.md), [0.2.0](docs/RELEASE_NOTES_0.2.0.md),
+  and [0.1.0](docs/RELEASE_NOTES_0.1.0.md).
+- **Planned: 0.5.0 (Phase M12)** — see **[PLANNED_FEATURES.md](PLANNED_FEATURES.md)**:
+  - **Exam run mode (`EPIC-033`)**: strict one-way progression, mandatory written answers, semantic comparison, and
+    percentage grading (`60%` pass threshold `D`/`4.0`, `5%` bands up to `95%–100%` `A+`/`1+`).
+  - **Item keys, colorization & CSV reporting (`EPIC-032`)**: sequential keys (`STACK_1`, `FLASHCARD_500`), item color
+    picker with viewer background tinting, and CSV export from Reports.
+  - **Prompt expansion & standalone Prompts view (`EPIC-030`)**: multi-level explanation, interactive oral/written exam,
+    Socratic dialogue, and concept-mapping prompts, plus categorized/parameterized UI and left-sidebar navigation.
+  - **Expanded achievements & per-stack progression (`EPIC-029`)**: tiered streak, run, rating, and mastery milestones
+    with per-stack filtering and stack overview badges.
+  - **Extensibility, Python API, Gemini/DeepSeek & PDF optimization (`EPIC-028`)**: out-of-process JSON-RPC Python
+    scripting, Google Gemini and DeepSeek providers, and 60 fps LRU-cached PDF rendering.
+  - **Behavioral learning analytics, FSRS optimizer & workload forecasting (`EPIC-034`)**: chronobiological hour-of-day
+    & weekday telemetry, within-session cognitive fatigue detection, multi-signal leech & interference pair diagnostics,
+    FSRS state-simulation forecasting in study minutes with an Exam Deadline Pacer, Workload-vs-Retention (CMRR)
+    simulation, and stability-tier empirical forgetting curves with True Retention.
+  - **Rich active-recall formats, inline note extraction & focus workflows (`EPIC-035`)**: inline Cloze deletions
+    (`{{c1::answer::hint}}`), Image Occlusion cards for diagrams/PDF figures, one-click card extraction from Markdown
+    notes (`Concept :: Definition` / `Q: / A:`), contrastive side-by-side drills for confused items, and a top-bar
+    Pomodoro focus timer integrated with the Learning Diary.
+  - **Evidence-based UI aesthetics, perceptual color science & UX refinement (`EPIC-036`)**: OKLCH iso-luminant palette
+    calibration, WCAG 3 APCA perceptual contrast verification, 60–75 cpl typographic reading measure, low-entropy
+    surface elevation over nested borders, and a distraction-free Zen focus mode.
+  - **State-of-the-art Model Context Protocol (MCP) server, client host & registry (`EPIC-037`)**: pure JSON-RPC 2.0 MCP
+    engine with a plain-data function-pointer registry (`McpRegistry`), `studyfrog-app --mcp` (`stdio` & localhost
+    Streamable HTTP) exposing `studyfrog://` resources, annotated search/analytics/staged-authoring tools, and native
+    MCP prompts, plus an MCP Client Host in the built-in Assistant.
+  - **CLI control protocol for AI agents & `~/.local/` application files (`EPIC-038`)**: interactive CLI control
+    protocol (`studyfrog-app ctl` / `--control-stdio`) giving AI agents full operational access to all screens,
+    rehearsal/exam runs, state snapshots, and real-time console logs stored under `~/.local/share/studyfrog/`.
+- **Verification:** all 10 automated repository gates in `scripts/check.sh` (formatting, `repo-lint`, `clippy`, unit/integration/UI tests, doc-tests, 250-line file limit, crate layering, zero inherent `impl` blocks, issue lint, and `BOARD.md` sync) pass. OCR for scanned PDFs, cloud sync, and non-Linux platforms are not planned for now.
 
-Live work: [BOARD.md](BOARD.md) and [priority-list.md](priority-list.md). Where the project stands:
-[STATUS.md](STATUS.md). History: [CHANGELOG.md](CHANGELOG.md). Docs: [docs/README.md](docs/README.md).
+Live work: [BOARD.md](BOARD.md) and [priority-list.md](priority-list.md). Feature reference:
+[FEATURES.md](FEATURES.md) and [PLANNED_FEATURES.md](PLANNED_FEATURES.md). Where the project stands: [STATUS.md](STATUS.md). History:
+[CHANGELOG.md](CHANGELOG.md). Docs: [docs/README.md](docs/README.md).
 
 ## Install
 Linux on x86_64 with OpenGL and X11 or Wayland. Download from the
@@ -47,12 +90,12 @@ Linux on x86_64 with OpenGL and X11 or Wayland. Download from the
 
 ```sh
 # AppImage: one file
-sha256sum -c StudyFrog-0.3.1-x86_64.AppImage.sha256
-chmod +x StudyFrog-0.3.1-x86_64.AppImage && ./StudyFrog-0.3.1-x86_64.AppImage
+sha256sum -c StudyFrog-0.4.3-x86_64.AppImage.sha256
+chmod +x StudyFrog-0.4.3-x86_64.AppImage && ./StudyFrog-0.4.3-x86_64.AppImage
 
 # or the tarball
-sha256sum -c StudyFrog-0.3.1-x86_64.tar.gz.sha256
-tar -xzf StudyFrog-0.3.1-x86_64.tar.gz && ./StudyFrog-0.3.1/bin/studyfrog
+sha256sum -c StudyFrog-0.4.3-x86_64.tar.gz.sha256
+tar -xzf StudyFrog-0.4.3-x86_64.tar.gz && ./StudyFrog-0.4.3/bin/studyfrog
 ```
 The release notes have the full steps (menu entry, per-user install, removing it). To build from source:
 ```sh

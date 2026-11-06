@@ -5,8 +5,7 @@ The order in which Claude works on the planned items of phase M10 (0.3.0), kept 
 [docs/roadmap/M10-usability-and-insight.md](docs/roadmap/M10-usability-and-insight.md). Tick an item when it is done and
 verified (`scripts/check.sh` passes), and report it to the owner. The owner may reorder the list at any time.
 
-Last updated: 2026-11-03 (0.3.1 released). Phase M10 was released as 0.3.0 on 2026-11-03; the diary (item 20) moved to phase M11 (0.4.0) at the
-owner's request and is listed under Next.
+Last updated: 2026-11-06 (0.4.3 released). Phases M10 (0.3.0 / 0.3.1) and M11 (0.4.0 – 0.4.3) are complete; active planning for Phase M12 (0.5.0) is listed under **Next: phase M12 (0.5.0)** below.
 
 ## Wave 1: start now
 - [x] 1. [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Names with commas cannot be used
@@ -71,3 +70,39 @@ Proposed by Claude on 2026-11-03 after the owner's test of 0.3.1; the owner may 
 - [x] TASK-0190 Own title bar (the owner tried it on 2026-11-03)
 - [x] TASK-0192 Calmer UI, first part: library, stack page, Home, rehearsal setup, settings and help (`docs/specs/ui-calm.md`); accepted by the owner, the rest is TASK-0195
 - [x] TASK-0193 Space between content and scroll bars, TASK-0194 Rehearsal progress bar against the open items
+
+## Shipped in 0.4.1 – 0.4.3 (EPIC-031 & follow-ups)
+- [x] [STORY-0093](docs/issues/stories/STORY-0093-details-view-notebook-overhaul.md) Details view notebook overhaul with tabs and stack due date editing
+- [x] [STORY-0094](docs/issues/stories/STORY-0094-create-menu-due-date-and-priority.md) Create menu due date and priority assignment for stacks and other creatable items
+- [x] [STORY-0095](docs/issues/stories/STORY-0095-note-creation-modal-expansion-and-write-view.md) Note creation modal full-window expansion and default write view
+- [x] [STORY-0099](docs/issues/stories/STORY-0099-simplify-vault-switcher-menu.md) Simplify vault switcher menu
+- [x] [STORY-0100](docs/issues/stories/STORY-0100-move-stack-between-parent-and-standalone.md) Move stack between parent stack and standalone after creation
+- [x] [STORY-0101](docs/issues/stories/STORY-0101-delete-item-from-viewer-and-details.md) Delete item from item viewer and editor
+- [x] [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer auto-detects CSV/TSV format
+- [x] [BUG-0012](docs/issues/bugs/BUG-0012-rehearsal-card-text-wrapping-and-unquoted-csv-comma-truncation.md) Rehearsal card text wrapping and unquoted CSV comma recovery
+- [x] [BUG-0013](docs/issues/bugs/BUG-0013-rehearsal-result-view-scrollability-review-stretch-and-suggested-rating.md) Rehearsal result view scrollability, stretched review area, and suggested rating visibility
+- [x] [BUG-0014](docs/issues/bugs/BUG-0014-csv-import-fails-on-unquoted-multiline-fields.md) CSV importer recovery on unquoted multiline fields
+- [x] [BUG-0015](docs/issues/bugs/BUG-0015-csv-escaped-newlines-and-card-title-truncation.md) Escaped newline sequences in imported cards and 60-character card title truncation
+
+## Next: phase M12 (0.5.0)
+Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-models-and-extensibility.md) and [PLANNED_FEATURES.md](PLANNED_FEATURES.md).
+
+**Wave 1: PDF legibility & performance, application files (`~/.local/`), and CLI control protocol**
+- [ ] 1. [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode, and [STORY-0085](docs/issues/stories/STORY-0085-performance-optimization-in-studyfrog-pdf-viewer.md) PDF viewer 60 fps performance optimization
+- [ ] 2. [STORY-0122](docs/issues/stories/STORY-0122-studyfrog-application-files-in-local-with-logs-and-configurations.md) StudyFrog application files in `~/.local/` with rotating logs and configurations
+- [ ] 3. [EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md) / [STORY-0124](docs/issues/stories/STORY-0124-interactive-cli-control-protocol-and-console-log-streaming-for-ai-agents.md) Interactive CLI control protocol and console log streaming for AI agents
+
+**Wave 2: Item keys, colorization, Exam run mode, and UI psychophysics**
+- [ ] 4. [EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md): [STORY-0096](docs/issues/stories/STORY-0096-item-keys-for-querying.md) Item keys (`STACK_1`, `FLASHCARD_500`), [STORY-0097](docs/issues/stories/STORY-0097-item-colorization-with-color-picker-and-viewer-background-styling.md) & [STORY-0123](docs/issues/stories/STORY-0123-colorization-field-for-items-influencing-details-and-rehearsal-background.md) Item colorization field influencing Details and Rehearsal view backgrounds, and [STORY-0098](docs/issues/stories/STORY-0098-reporting-export-as-csv.md) Reporting export as CSV
+- [ ] 5. [EPIC-033](docs/issues/epics/EPIC-033-exam-run-mode-with-semantic-comparison-and-grading.md) Exam run mode with mandatory text entry, semantic comparison, and percentage grading (`60%` pass threshold `D`/`4.0`, `5%` bands up to `95%–100%` `A+`/`1+`)
+- [ ] 6. [EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md): [STORY-0113](docs/issues/stories/STORY-0113-perceptual-oklch-color-palette-calibration-and-apca-contrast-verification.md) OKLCH/APCA color calibration, [STORY-0114](docs/issues/stories/STORY-0114-psychophysical-typographic-measure-modular-hierarchy-and-tabular-numerals.md) 60–75 cpl typographic measure & tabular numerals, [STORY-0115](docs/issues/stories/STORY-0115-low-entropy-surface-elevation-border-decluttering-and-gestalt-spacing.md) border de-cluttering & Gestalt spacing, and [STORY-0116](docs/issues/stories/STORY-0116-distraction-free-zen-focus-mode-and-zero-layout-shift-interaction-polish.md) Zen focus mode
+
+**Wave 3: Behavioral learning analytics, FSRS workload forecasting, and active-recall formats**
+- [ ] 7. [EPIC-034](docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md): [STORY-0102](docs/issues/stories/STORY-0102-chronobiological-hour-of-day-and-day-of-week-performance-telemetry.md) Chronobiological 24h/7d telemetry, [STORY-0103](docs/issues/stories/STORY-0103-within-session-cognitive-fatigue-and-pacing-decay-analysis.md) Within-session fatigue decay, [STORY-0104](docs/issues/stories/STORY-0104-leech-diagnostics-interference-detection-and-confusion-clusters.md) Leech & interference diagnostics, [STORY-0105](docs/issues/stories/STORY-0105-fsrs-state-simulation-forecasting-study-minute-projection-and-exam-pacer.md) FSRS state-simulation forecast & Exam Deadline Pacer, [STORY-0106](docs/issues/stories/STORY-0106-workload-versus-retention-simulator-and-minimum-recommended-retention.md) CMRR Workload vs. Retention simulator, and [STORY-0107](docs/issues/stories/STORY-0107-empirical-forgetting-curves-true-retention-and-stability-tier-survival-analysis.md) True Retention & stability-tier forgetting curves
+- [ ] 8. [EPIC-035](docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md): [STORY-0108](docs/issues/stories/STORY-0108-inline-cloze-deletions-in-flashcards-and-notes.md) Inline Cloze deletions, [STORY-0109](docs/issues/stories/STORY-0109-image-occlusion-cards-for-diagrams-slides-and-pdf-figures.md) Image Occlusion cards, [STORY-0110](docs/issues/stories/STORY-0110-inline-flashcard-and-question-extraction-from-markdown-notes.md) Inline Note-to-Card extraction, [STORY-0111](docs/issues/stories/STORY-0111-contrastive-side-by-side-drill-for-confused-and-interfering-items.md) Contrastive side-by-side drill, and [STORY-0112](docs/issues/stories/STORY-0112-pomodoro-focus-timer-with-automatic-learning-diary-and-session-logging.md) Pomodoro focus timer
+
+**Wave 4: MCP server/client, external AI providers, prompt expansion, Python API, and achievements**
+- [ ] 9. [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md): [STORY-0117](docs/issues/stories/STORY-0117-pure-json-rpc-2-0-mcp-protocol-engine-and-plain-data-registry.md) to [STORY-0121](docs/issues/stories/STORY-0121-built-in-assistant-mcp-client-host-for-external-academic-tool-servers.md) State-of-the-art MCP Server (`studyfrog-app --mcp`), plain-data `McpRegistry`, and Assistant MCP Client Host
+- [ ] 10. [EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md): [STORY-0083](docs/issues/stories/STORY-0083-google-gemini-in-models-for-studyfrog.md) Google Gemini, [STORY-0084](docs/issues/stories/STORY-0084-deepseek-in-models-for-studyfrog.md) DeepSeek, and Python modding API
+- [ ] 11. [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md): [STORY-0088](docs/issues/stories/STORY-0088-multi-level-file-explanation-prompt.md) to [STORY-0092](docs/issues/stories/STORY-0092-prompt-library-categorization-and-parameterized-execution-ui.md) and [TASK-0233](docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Prompt library expansion and standalone sidebar navigation
+- [ ] 12. [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md): [STORY-0086](docs/issues/stories/STORY-0086-expanded-achievement-catalog-and-milestone-tiers.md) and [STORY-0087](docs/issues/stories/STORY-0087-per-stack-achievement-ui-and-filtering.md) Expanded achievements and per-stack progression

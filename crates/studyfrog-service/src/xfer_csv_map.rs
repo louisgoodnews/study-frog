@@ -92,6 +92,14 @@ fn cell(row: &[String], at: Option<usize>) -> &str {
     at.and_then(|i| row.get(i)).map_or("", |s| s.trim())
 }
 
+fn clean_cell(row: &[String], at: Option<usize>) -> String {
+    let mut s = crate::content::unescape_newlines(cell(row, at));
+    for br in ["<br>", "<br/>", "<br />", "<BR>", "<BR/>", "<BR />"] {
+        s = s.replace(br, "\n");
+    }
+    s.trim().to_owned()
+}
+
 fn name_of(names: &[String], at: usize) -> String {
     names
         .get(at)
@@ -124,7 +132,10 @@ fn row_item(
         want(m.kind.unwrap_or(0), "card, question or note", kind_text);
     }
     let kind = kind.unwrap_or(ItemKind::Card);
-    let (front, back) = (cell(row, Some(m.front)), cell(row, Some(m.back)));
+    let (front, back) = (
+        clean_cell(row, Some(m.front)),
+        clean_cell(row, Some(m.back)),
+    );
     if front.is_empty() {
         want(m.front, "the text of the front", "");
     }
@@ -134,7 +145,7 @@ fn row_item(
     if !bad.is_empty() {
         return Err(bad);
     }
-    let mut it = item(kind, cell(row, m.stack), front, back);
+    let mut it = item(kind, cell(row, m.stack), &front, &back);
     it.title = cell(row, m.title).to_owned();
     it.tags = cell(row, m.tags)
         .split(';')

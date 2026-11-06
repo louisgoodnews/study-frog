@@ -19,7 +19,7 @@ fn send(out: &mut Vec<Msg>, m: LibraryMsg) {
 
 fn width(c: Column) -> f32 {
     match c {
-        Column::Title => 300.0,
+        Column::Title => 460.0,
         Column::Path | Column::Stack | Column::AlsoIn | Column::Subjects | Column::Tags => 180.0,
         Column::Type | Column::Reviews => 80.0,
         _ => 110.0,

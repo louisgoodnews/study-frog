@@ -47,7 +47,7 @@ fn sniff_delimiter(text: &str, preferred: Option<char>) -> char {
 }
 
 fn clean(field: &str) -> String {
-    let mut s = field.trim().to_owned();
+    let mut s = field.trim().replace("\\r\\n", "\n").replace("\\n", "\n");
     for br in ["<br>", "<br/>", "<br />", "<BR>", "<BR/>", "<BR />"] {
         s = s.replace(br, "\n");
     }
