@@ -35,6 +35,7 @@ pub fn draw(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if let Some(t) = text_field(ui, "Tags (comma separated)", &e.form.tags, "", 1) {
             out.push(Msg::Edit(EditAction::Tags(t)));
         }
+        parent_stack_row(state, e, ui, out);
         subject_rows(state, e, ui, out);
         priority_row(e, ui, out);
         if !matches!(e.doc, Doc::Stack(_)) {
@@ -160,4 +161,49 @@ fn source_link(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             page.unwrap_or(0),
         )));
     }
+}
+
+fn parent_stack_row(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if !matches!(e.doc, Doc::Stack(_)) {
+        return;
+    }
+    let Some(vault) = &state.vault else { return };
+    let folder = e.path.rsplit_once('/').map_or("", |(f, _)| f);
+    let Some(stack) = vault.overview.stacks.iter().find(|s| s.folder == folder) else {
+        return;
+    };
+    let current = stack
+        .parent
+        .as_deref()
+        .and_then(|p| vault.overview.stacks.iter().find(|s| s.folder == p))
+        .map_or_else(|| "None (standalone)".to_owned(), |s| s.title.clone());
+    ui.label("Parent stack");
+    let r = ui.menu_button(&current, |ui| {
+        if stack.parent.is_some() && ui.button("None (standalone)").clicked() {
+            out.push(Msg::Library(crate::library_ui::LibraryMsg::Stack(
+                crate::stack_view_ui::StackViewMsg::MoveStack(stack.folder.clone(), String::new()),
+            )));
+            ui.close();
+        }
+        for s in &vault.overview.stacks {
+            if s.folder == stack.folder
+                || studyfrog_service::folder_ops::is_subpath_or_equal(&stack.folder, &s.folder)
+                || Some(s.folder.as_str()) == stack.parent.as_deref()
+            {
+                continue;
+            }
+            if ui.button(&s.title).clicked() {
+                out.push(Msg::Library(crate::library_ui::LibraryMsg::Stack(
+                    crate::stack_view_ui::StackViewMsg::MoveStack(
+                        stack.folder.clone(),
+                        s.folder.clone(),
+                    ),
+                )));
+                ui.close();
+            }
+        }
+    });
+    r.response.widget_info(|| {
+        WidgetInfo::labeled(Role::Button, true, format!("Parent stack: {current}"))
+    });
 }

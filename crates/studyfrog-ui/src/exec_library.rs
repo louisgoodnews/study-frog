@@ -58,6 +58,12 @@ pub fn run(w: &mut Worker, effect: LibraryEffect, now_ns: i64) -> Msg {
                 .map_err(|e| e.to_string());
             Msg::Library(LibraryMsg::Stack(StackViewMsg::StatusSet(done)))
         }
+        LibraryEffect::MoveStack(src, dst_folder) => {
+            let done = studyfrog_service::folder_ops::move_path(s, &src, &dst_folder)
+                .map(|(info, _, plan)| Box::new((info, plan.src, plan.dst)))
+                .map_err(|e| e.to_string());
+            Msg::Library(LibraryMsg::Stack(StackViewMsg::Moved(done)))
+        }
         LibraryEffect::Undo(snapshot) => msg(BulkMsg::Undone(
             bulk_undo(s, &snapshot)
                 .map(Box::new)

@@ -17,6 +17,9 @@ const SIDE_WIDTH: f32 = 300.0;
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(e) = &state.editor else { return };
     toolbar(e, ui, out);
+    if e.confirm_delete {
+        confirm_delete_bar(ui, out);
+    }
     ui.add_space(6.0);
     let total = ui.available_width();
     let side = SIDE_WIDTH.min(total * 0.4);
@@ -66,6 +69,12 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     )));
                     ui.close();
                 }
+                if !matches!(e.doc, studyfrog_md::doc::Doc::Stack(_))
+                    && ui.button("Delete item…").clicked()
+                {
+                    out.push(Msg::Edit(EditAction::AskDelete(true)));
+                    ui.close();
+                }
             });
             if e.conflict && ui.button("Keep mine").clicked() {
                 out.push(Msg::KeepMineClicked);
@@ -103,4 +112,17 @@ fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         ui.add_space(10.0);
     }
+}
+
+fn confirm_delete_bar(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.add_space(4.0);
+    ui.horizontal(|ui| {
+        ui.label("Delete this item?");
+        if ui.button("Yes, delete").clicked() {
+            out.push(Msg::Edit(EditAction::ConfirmDelete));
+        }
+        if ui.button("Cancel").clicked() {
+            out.push(Msg::Edit(EditAction::AskDelete(false)));
+        }
+    });
 }

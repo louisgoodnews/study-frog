@@ -94,6 +94,42 @@ fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Ve
             out.push(Msg::Modal(ModalMsg::AskUnmark(stack.folder.clone())));
             ui.close();
         }
+        move_stack_menu(state, stack, ui, out);
+    });
+}
+
+fn move_stack_menu(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let Some(vault) = &state.vault else { return };
+    let targets: Vec<_> = vault
+        .overview
+        .stacks
+        .iter()
+        .filter(|s| {
+            s.folder != stack.folder
+                && !studyfrog_service::folder_ops::is_subpath_or_equal(&stack.folder, &s.folder)
+                && Some(s.folder.as_str()) != stack.parent.as_deref()
+        })
+        .collect();
+    if stack.parent.is_none() && targets.is_empty() {
+        return;
+    }
+    ui.menu_button("Move stack…", |ui| {
+        if stack.parent.is_some() && ui.button("Make standalone (top-level)").clicked() {
+            send(
+                out,
+                StackViewMsg::MoveStack(stack.folder.clone(), String::new()),
+            );
+            ui.close();
+        }
+        for s in targets {
+            if ui.button(format!("Move under {}", s.title)).clicked() {
+                send(
+                    out,
+                    StackViewMsg::MoveStack(stack.folder.clone(), s.folder.clone()),
+                );
+                ui.close();
+            }
+        }
     });
 }
 

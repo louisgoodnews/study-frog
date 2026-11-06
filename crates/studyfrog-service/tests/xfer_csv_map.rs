@@ -122,4 +122,20 @@ fn unquoted_commas_in_llm_csv_rows_are_reconstructed() {
         r.bundle.items[0].tags,
         ["Multiple_Regression", "Zweifache_Regression"]
     );
+
+    let multiline = "stack,kind,title,front,back,tags\n\
+        psychologische-diagnostik,card,,What are the four main reasons why we need accurate psychological diagnostics?,1. Accurate description of human experience and behavior\n\
+2. Testing psychological theories explaining human experience and behavior\n\
+3. Psychologically grounded prediction and decision making\n\
+4. Evaluation of predictions and psychological measures,objectives\n";
+    let r2 = read(multiline, &CsvOptions::default());
+    assert_eq!(r2.bundle.items.len(), 1);
+    assert_eq!(
+        r2.bundle.items[0].answer,
+        "1. Accurate description of human experience and behavior\n\
+2. Testing psychological theories explaining human experience and behavior\n\
+3. Psychologically grounded prediction and decision making\n\
+4. Evaluation of predictions and psychological measures"
+    );
+    assert_eq!(r2.bundle.items[0].tags, ["objectives"]);
 }

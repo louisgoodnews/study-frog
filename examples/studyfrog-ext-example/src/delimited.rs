@@ -8,20 +8,19 @@ struct RawRow {
 }
 
 fn sniff_delimiter(text: &str, preferred: Option<char>) -> char {
+    const SEPS: [(&str, char); 6] = [
+        ("separator:tab", '\t'),
+        ("separator:\\t", '\t'),
+        ("separator:comma", ','),
+        ("separator:,", ','),
+        ("separator:semicolon", ';'),
+        ("separator:;", ';'),
+    ];
     for line in text.lines().map(str::trim).filter(|l| !l.is_empty()) {
         if let Some(c) = line.strip_prefix('#') {
             let l = c.to_ascii_lowercase();
-            for (pat, ch) in [
-                ("separator:tab", '\t'),
-                ("separator:\\t", '\t'),
-                ("separator:comma", ','),
-                ("separator:,", ','),
-                ("separator:semicolon", ';'),
-                ("separator:;", ';'),
-            ] {
-                if l.contains(pat) {
-                    return ch;
-                }
+            if let Some((_, ch)) = SEPS.iter().find(|(p, _)| l.contains(p)) {
+                return *ch;
             }
             continue;
         }
@@ -35,10 +34,12 @@ fn sniff_delimiter(text: &str, preferred: Option<char>) -> char {
                 }
             }
         }
-        for (count, ch) in counts.into_iter().zip(['\t', ',', ';']) {
-            if count > 0 {
-                return ch;
-            }
+        if let Some((_, ch)) = counts
+            .into_iter()
+            .zip(['\t', ',', ';'])
+            .find(|(n, _)| *n > 0)
+        {
+            return ch;
         }
         break;
     }
@@ -170,12 +171,36 @@ fn normalize_row(fields: &[String], m: &Mapping, cols: usize, delim: char) -> Ve
     let mid = &fields[m.front..fields.len() - trail];
     let split = mid[..mid.len() - 1]
         .iter()
-        .position(|s| s.trim_end().ends_with('?'))
+        .position(|s| !s.contains('\n') && s.trim_end().ends_with('?'))
         .unwrap_or(0);
     let mut out = fields[..m.front].to_vec();
     out.push(mid[..=split].join(","));
     out.push(mid[split + 1..].join(","));
     out.extend_from_slice(&fields[fields.len() - trail..]);
+    out
+}
+
+fn merge_rows(rows: &[RawRow], m: &Mapping, cols: usize, delim: char) -> Vec<RawRow> {
+    let mut out: Vec<RawRow> = Vec::with_capacity(rows.len());
+    for r in rows {
+        if delim == ','
+            && cols >= 3
+            && let Some(prev) = out.last_mut()
+            && (prev.fields.len() < cols || (m.front > 0 && r.fields.len() <= m.front))
+            && let Some(first) = r.fields.first()
+        {
+            if let Some(last) = prev.fields.last_mut() {
+                last.push('\n');
+                last.push_str(first);
+            }
+            prev.fields.extend_from_slice(&r.fields[1..]);
+        } else {
+            out.push(RawRow {
+                line: r.line,
+                fields: r.fields.clone(),
+            });
+        }
+    }
     out
 }
 
@@ -187,18 +212,14 @@ pub fn parse_delimited(text: &str, preferred: Option<char>) -> Result<Vec<Import
         return Ok(Vec::new());
     };
     let head = detect_header(&first.fields).map_err(|e| format!("line {}: {e}", first.line))?;
-    let (start_idx, cols) = if head.is_some() {
-        (1, first.fields.len())
-    } else {
-        (0, 0)
-    };
+    let (start_idx, cols) = head.as_ref().map_or((0, 0), |_| (1, first.fields.len()));
     let m = head.unwrap_or(Mapping {
         front: 0,
         back: 1,
         title: None,
         tags: Some(2),
     });
-    rows[start_idx..]
+    merge_rows(&rows[start_idx..], &m, cols, delim)
         .iter()
         .map(|r| {
             let f = normalize_row(&r.fields, &m, cols, delim);
@@ -217,19 +238,12 @@ pub fn parse_delimited(text: &str, preferred: Option<char>) -> Result<Vec<Import
                     ));
                 }
             }
-            let title = m
-                .title
-                .and_then(|i| f.get(i))
-                .map_or_else(String::new, |t| clean(t));
-            let tags = m
-                .tags
-                .and_then(|i| f.get(i))
-                .map_or_else(Vec::new, |t| parse_tags(t));
+            let get = |idx: Option<usize>| idx.and_then(|i| f.get(i)).map(String::as_str);
             Ok(ImportedCard {
                 front,
                 back,
-                title,
-                tags,
+                title: get(m.title).map_or_else(String::new, clean),
+                tags: get(m.tags).map_or_else(Vec::new, parse_tags),
             })
         })
         .collect()

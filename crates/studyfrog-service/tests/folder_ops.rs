@@ -136,13 +136,10 @@ fn test_move_cross_stack_and_references() {
 
     let moved_text = fs::read_to_string(d.0.join("stack_b/card.md")).unwrap();
     assert!(!moved_text.contains(stack_b));
-
     let doc_text = fs::read_to_string(d.0.join("doc.md")).unwrap();
     assert!(doc_text.contains("[card](stack_b/card.md)"));
-
     let dropped = load_mem_state_in(&s.conn, (card_uid, stack_a_uid)).unwrap();
     assert!(dropped.is_none());
-
     undo_folder_op(&mut s, &snap).unwrap();
     assert!(d.0.join("stack_a/card.md").is_file());
     let restored_mem = load_mem_state_in(&s.conn, (card_uid, stack_a_uid)).unwrap();
@@ -154,10 +151,8 @@ fn test_rollback_on_simulated_failure() {
     let (d, mut s) = vault("rollback");
     write(&d.0, "src_dir/note.md", "some text");
     let plan = plan_move(&s, "src_dir/note.md", "").unwrap();
-
     let err = execute_move_with_fault(&mut s, &plan, Some(1)).unwrap_err();
     assert!(format!("{err}").contains("simulated fault"));
-
     assert!(d.0.join("src_dir/note.md").is_file());
     assert!(!d.0.join("note.md").exists());
 }
@@ -165,13 +160,9 @@ fn test_rollback_on_simulated_failure() {
 #[test]
 fn test_rejection_of_traversal_and_root() {
     let (_, mut s) = vault("hostile_traversal");
-    assert!(create_folder(&mut s, "").is_err());
-    assert!(create_folder(&mut s, "..").is_err());
-    assert!(create_folder(&mut s, "../escape").is_err());
-    assert!(create_folder(&mut s, "/absolute").is_err());
-    assert!(create_folder(&mut s, "C:/windows").is_err());
-    assert!(create_folder(&mut s, ".studyfrog").is_err());
-    assert!(create_folder(&mut s, ".studyfrog/evil").is_err());
+    for bad in ",..,../escape,/absolute,C:/windows,.studyfrog,.studyfrog/evil".split(',') {
+        assert!(create_folder(&mut s, bad).is_err());
+    }
     assert!(delete_path(&mut s, "").is_err());
     assert!(delete_path(&mut s, ".studyfrog").is_err());
 }
@@ -179,11 +170,74 @@ fn test_rejection_of_traversal_and_root() {
 #[test]
 fn test_rejection_of_device_and_special_chars() {
     let (_, mut s) = vault("hostile_chars");
-    assert!(create_folder(&mut s, "bad/con/dir").is_err());
-    assert!(create_folder(&mut s, "bad/aux.txt").is_err());
-    assert!(create_folder(&mut s, "bad/nul").is_err());
-    assert!(create_folder(&mut s, "bad/com1").is_err());
-    assert!(create_folder(&mut s, "bad/foo:bar").is_err());
-    assert!(create_folder(&mut s, "bad/foo*bar").is_err());
-    assert!(create_folder(&mut s, "bad/foo?bar").is_err());
+    for bad in
+        "bad/con/dir,bad/aux.txt,bad/nul,bad/com1,bad/foo:bar,bad/foo*bar,bad/foo?bar".split(',')
+    {
+        assert!(create_folder(&mut s, bad).is_err());
+    }
+}
+
+#[test]
+fn test_move_stack_between_parent_and_standalone_preserves_schedules() {
+    let (d, mut s) = vault("move_stack");
+    let (pid, cid) = ("01000000000000000000000010", "01000000000000000000000020");
+    write(
+        &d.0,
+        "parent/_stack.md",
+        &format!("---\nid: {pid}\nkind: stack\ntitle: Parent\n---\n"),
+    );
+    write(
+        &d.0,
+        "child/_stack.md",
+        &format!("---\nid: {cid}\nkind: stack\ntitle: Child\n---\n"),
+    );
+    write(
+        &d.0,
+        "child/card.md",
+        "---\nid: 00000000000000000000000030\nkind: card\ntitle: C\n---\nQ\n???\nA\n",
+    );
+    studyfrog_store::reindex::reindex(&mut s.conn, &s.root).unwrap();
+    let state = MemState {
+        stability: 3.0,
+        difficulty: 5.0,
+    };
+    let mem = StoredMem {
+        state,
+        due: UnixMs(2_000_000_000_000),
+        last_review: UnixMs(1_900_000_000_000),
+    };
+    let child_uid = studyfrog_md::ulid::parse_ulid(cid).unwrap();
+    let card_uid = studyfrog_md::ulid::parse_ulid("00000000000000000000000030").unwrap();
+    save_mem_state_in(&s.conn, (card_uid, child_uid), &mem).unwrap();
+
+    let (info, _, plan) = move_path(&mut s, "child", "parent").unwrap();
+    assert_eq!(plan.dst, "parent/child");
+    assert_eq!(plan.schedules_dropped, 0);
+    let r1 = info
+        .overview
+        .stacks
+        .iter()
+        .find(|st| st.uid == child_uid)
+        .unwrap();
+    assert_eq!(r1.parent.as_deref(), Some("parent"));
+    assert!(
+        load_mem_state_in(&s.conn, (card_uid, child_uid))
+            .unwrap()
+            .is_some()
+    );
+
+    let (info2, _, plan2) = move_path(&mut s, "parent/child", "").unwrap();
+    assert_eq!(plan2.dst, "child");
+    let r2 = info2
+        .overview
+        .stacks
+        .iter()
+        .find(|st| st.uid == child_uid)
+        .unwrap();
+    assert_eq!(r2.parent, None);
+    assert!(
+        load_mem_state_in(&s.conn, (card_uid, child_uid))
+            .unwrap()
+            .is_some()
+    );
 }

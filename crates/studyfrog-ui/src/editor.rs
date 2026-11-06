@@ -50,6 +50,8 @@ pub struct Editor {
     pub backlinks: Vec<studyfrog_store::overview::ItemRow>,
     /// The familiarity over time, once read.
     pub curve: Option<Box<studyfrog_service::fam_curve::ItemCurve>>,
+    /// Whether the inline delete confirmation bar is shown.
+    pub confirm_delete: bool,
 }
 
 /// True when the form differs from what is on disk.
@@ -98,6 +100,7 @@ fn editor_new(loaded: LoadedDoc, uid: Uid) -> Editor {
         keep_mine: false,
         backlinks: Vec::new(),
         curve: None,
+        confirm_delete: false,
     }
 }
 

@@ -159,12 +159,33 @@ fn normalize_row(row: &[String], m: &Mapping, cols: usize, delim: char) -> Vec<S
     let mid = &row[m.front..row.len() - trail];
     let split = mid[..mid.len() - 1]
         .iter()
-        .position(|s| s.trim_end().ends_with('?'))
+        .position(|s| !s.contains('\n') && s.trim_end().ends_with('?'))
         .unwrap_or(0);
     let mut out = row[..m.front].to_vec();
     out.push(mid[..=split].join(","));
     out.push(mid[split + 1..].join(","));
     out.extend_from_slice(&row[row.len() - trail..]);
+    out
+}
+
+fn merge_rows(rows: &[Vec<String>], m: &Mapping, cols: usize, delim: char) -> Vec<Vec<String>> {
+    let mut out: Vec<Vec<String>> = Vec::with_capacity(rows.len());
+    for r in rows {
+        if delim == ','
+            && cols >= 3
+            && let Some(prev) = out.last_mut()
+            && (prev.len() < cols || (m.front > 0 && r.len() <= m.front))
+            && let Some(first) = r.first()
+        {
+            if let Some(last) = prev.last_mut() {
+                last.push('\n');
+                last.push_str(first);
+            }
+            prev.extend_from_slice(&r[1..]);
+        } else {
+            out.push(r.clone());
+        }
+    }
     out
 }
 
@@ -187,7 +208,7 @@ pub fn read_csv(bytes: &[u8], o: &CsvOptions) -> Result<CsvRead, String> {
         "it needs at least two columns: the front and the back of each card".to_owned()
     })?;
     let cols = if header { names.len() } else { 0 };
-    let body: Vec<Vec<String>> = table[usize::from(header)..]
+    let body: Vec<Vec<String>> = merge_rows(&table[usize::from(header)..], &map, cols, delimiter)
         .iter()
         .map(|r| normalize_row(r, &map, cols, delimiter))
         .collect();

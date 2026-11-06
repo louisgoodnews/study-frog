@@ -77,6 +77,39 @@ fn bug_0011_benchmark_csv_and_prompt_header() {
 }
 
 #[test]
+fn bug_0014_unquoted_multiline_and_comma_csv_import() {
+    let csv = "stack,kind,title,front,back,tags\n\
+        psychologische-diagnostik,card,,Who is the lecturer for the module 'Psychologische Diagnostik und Evaluation'?,Prof. Dr. Christian Kandler,organisation\n\
+        psychologische-diagnostik,card,,What is the office address of Prof. Dr. Christian Kandler?,An der Morgenbreede 39, 33615 Bielefeld, Raum H1-115a,organisation\n\
+        psychologische-diagnostik,card,,What are the four main reasons why we need accurate psychological diagnostics?,1. Accurate description of human experience and behavior\n\
+2. Testing psychological theories explaining human experience and behavior\n\
+3. Psychologically grounded prediction and decision making\n\
+4. Evaluation of predictions and psychological measures,objectives\n\
+        psychologische-diagnostik,card,,What are the three main perspectives of psychological diagnostics mentioned in the slides?,Idiographic, Nomothetic, and Differential,perspectives\n";
+    let cards = import_tsv(csv).unwrap();
+    assert_eq!(cards.len(), 4);
+    assert_eq!(
+        cards[1].back,
+        "An der Morgenbreede 39, 33615 Bielefeld, Raum H1-115a"
+    );
+    assert_eq!(cards[1].tags, ["organisation"]);
+    assert_eq!(
+        cards[2].front,
+        "What are the four main reasons why we need accurate psychological diagnostics?"
+    );
+    assert_eq!(
+        cards[2].back,
+        "1. Accurate description of human experience and behavior\n\
+2. Testing psychological theories explaining human experience and behavior\n\
+3. Psychologically grounded prediction and decision making\n\
+4. Evaluation of predictions and psychological measures"
+    );
+    assert_eq!(cards[2].tags, ["objectives"]);
+    assert_eq!(cards[3].back, "Idiographic, Nomothetic, and Differential");
+    assert_eq!(cards[3].tags, ["perspectives"]);
+}
+
+#[test]
 fn csv_with_quotes_and_commas_in_content() {
     let csv = "stack,kind,title,front,back,tags\nfrench,card,,\"Quelle est la règle, en général?\",\"C'est la règle \"\"standard\"\".\",grammaire;base\n";
     let cards = import_csv(csv).unwrap();

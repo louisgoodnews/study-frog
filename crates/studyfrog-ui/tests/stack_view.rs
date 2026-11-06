@@ -194,18 +194,29 @@ fn through_the_worker_the_summary_arrives_and_the_status_chip_writes_the_stack_f
             .unwrap()
             .contains("status: paused")
     );
-    let row = model
-        .state
-        .vault
-        .as_ref()
-        .unwrap()
-        .overview
-        .stacks
-        .iter()
-        .find(|s| s.folder == "french")
-        .unwrap()
-        .status;
+    let row = model.state.vault.as_ref().unwrap().overview.stacks[0].status;
     assert_eq!(row, Some(Status::Paused));
+    std::fs::create_dir_all(vault.path.join("verbs")).unwrap();
+    std::fs::write(
+        vault.path.join("verbs/_stack.md"),
+        "---\nid: 00000000000000000000000002\nkind: stack\ntitle: Verbs\n---\n",
+    )
+    .unwrap();
+    send(
+        &mut model,
+        &mut worker,
+        stack(StackViewMsg::MoveStack("verbs".into(), "french".into())),
+    );
+    assert!(vault.path.join("french/verbs/_stack.md").is_file());
+    send(
+        &mut model,
+        &mut worker,
+        stack(StackViewMsg::MoveStack(
+            "french/verbs".into(),
+            String::new(),
+        )),
+    );
+    assert!(vault.path.join("verbs/_stack.md").is_file());
 }
 
 #[test]
@@ -226,17 +237,6 @@ fn the_priority_bars_line_up_in_one_column_and_have_one_length() {
     assert!(bars.len() >= 5, "five priority bars, found {}", bars.len());
     let first = bars[0];
     for b in &bars[..5] {
-        assert!(
-            (b.x0 - first.x0).abs() < 0.5,
-            "starts differ: {} vs {}",
-            b.x0,
-            first.x0
-        );
-        assert!(
-            (b.x1 - first.x1).abs() < 0.5,
-            "lengths differ: {} vs {}",
-            b.x1,
-            first.x1
-        );
+        assert!((b.x0 - first.x0).abs() < 0.5 && (b.x1 - first.x1).abs() < 0.5);
     }
 }

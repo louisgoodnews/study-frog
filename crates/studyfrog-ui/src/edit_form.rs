@@ -64,6 +64,10 @@ pub enum EditAction {
     AddReference(String),
     /// Remove a reference to this stack (by stack UID string).
     RemoveReference(String),
+    /// Show or hide the confirmation prompt before deleting the open item.
+    AskDelete(bool),
+    /// Confirm deleting the open item.
+    ConfirmDelete,
 }
 
 fn field(label: &'static str, text: &str, rows: usize) -> EditField {

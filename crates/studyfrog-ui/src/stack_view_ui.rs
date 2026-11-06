@@ -50,6 +50,10 @@ pub enum StackViewMsg {
     SetStatus(Uid, Option<Status>),
     /// The status was written.
     StatusSet(Result<Box<VaultInfo>, String>),
+    /// Move a stack (`src`) into `dst_folder` (`""` for standalone top-level).
+    MoveStack(String, String),
+    /// The stack was moved (`(info, old_folder, new_folder)`).
+    Moved(Result<Box<(VaultInfo, String, String)>, String>),
 }
 
 pub(crate) fn open_folder(state: &State) -> Option<&str> {
@@ -137,8 +141,50 @@ pub fn update(state: State, msg: StackViewMsg) -> (State, Vec<Effect>) {
             NoticeKind::Error,
             format!("Could not set the status: {e}"),
         ),
+        StackViewMsg::MoveStack(src, dst) => {
+            return (
+                state,
+                vec![Effect::Library(LibraryEffect::MoveStack(src, dst))],
+            );
+        }
+        StackViewMsg::Moved(result) => return stack_moved(state, result),
     }
     (state, Vec::new())
+}
+
+fn stack_moved(
+    mut state: State,
+    result: Result<Box<(VaultInfo, String, String)>, String>,
+) -> (State, Vec<Effect>) {
+    match result {
+        Ok(boxed) => {
+            let (info, src, dst) = *boxed;
+            state.vault = Some(info);
+            state.library.stale = true;
+            if let Selection::Stack(f) = &mut state.browser.selection {
+                if *f == src {
+                    *f = dst.clone();
+                } else if let Some(rest) = f.strip_prefix(&format!("{src}/")) {
+                    *f = format!("{dst}/{rest}");
+                }
+            }
+            if let Some(e) = &mut state.editor
+                && let Some(rest) = e.path.strip_prefix(&format!("{src}/"))
+            {
+                e.path = format!("{dst}/{rest}");
+            }
+            let reload = crate::browse::reload(&state.browser.selection);
+            (state, reload)
+        }
+        Err(e) => {
+            notice(
+                &mut state,
+                NoticeKind::Error,
+                format!("Could not move the stack: {e}"),
+            );
+            (state, Vec::new())
+        }
+    }
 }
 
 /// Read the summary when the Summary tab of a stack is on screen and what is held is for another stack or an older list.

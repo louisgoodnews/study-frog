@@ -72,6 +72,20 @@ pub(crate) fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
             EditAction::RemoveReference(id) => {
                 e.form.referenced_by.retain(|x| x != &id);
             }
+            EditAction::AskDelete(on) => {
+                e.confirm_delete = on;
+                return (state, Vec::new());
+            }
+            EditAction::ConfirmDelete => {
+                let uid = e.uid;
+                state.editor = None;
+                state.screen = crate::state::Screen::Library;
+                let effect = Effect::Library(crate::library_bulk::LibraryEffect::Bulk(
+                    vec![uid],
+                    studyfrog_service::bulk::BulkEdit::Delete,
+                ));
+                return (state, vec![effect]);
+            }
             EditAction::Field(i, text) => {
                 if let Some(f) = e.form.fields.get_mut(i) {
                     finished = token_done(&f.text, &text);

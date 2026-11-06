@@ -7,6 +7,15 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-11-06
+
+### Fixed
+- Both CSV importers (`studyfrog-ext-example` and `studyfrog-service::xfer_csv_map`) now merge unquoted multiline continuation rows in headed CSV files before splitting columns, fixing import failures such as `line 5: a card needs at least a front and a back` when AI-generated CSV exports contain unquoted newline breaks or numbered lists inside `front` or `back` fields (BUG-0014).
+
+### Added
+- Stacks can now be moved between a parent stack and standalone (top-level) after creation via `"Move stack…"` in the stack page's `"More actions"` menu and the `"Parent stack"` selector in the stack's `Properties` tab, while preserving all items' primary stack associations and SRS schedules (STORY-0100).
+- Items (notes, cards, and questions) can now be deleted directly from the item editor toolbar (`"More actions"` -> `"Delete item…"`) with an inline confirmation prompt and full `"Undo last change"` support in the library bar (STORY-0101).
+
 ## [0.4.2] - 2026-11-05
 
 ### Fixed

@@ -31,6 +31,8 @@ pub enum LibraryEffect {
     SaveGoals(Uid, String),
     /// Give a stack or item a status.
     SetStatus(Uid, Option<studyfrog_core::status::Status>),
+    /// Move a stack to a parent stack folder (or `""` for standalone top-level).
+    MoveStack(String, String),
 }
 
 /// What happened to the selection, the bulk bar or the saved filters.

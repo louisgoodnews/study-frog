@@ -147,8 +147,9 @@ pub fn plan_move(
         .stacks;
     let src_stack = find_enclosing_stack(&stacks, &clean_src);
     let dst_stack = find_enclosing_stack(&stacks, &dst);
-    let is_cross_stack =
-        src_stack.as_ref().map(|s| &s.folder) != dst_stack.as_ref().map(|s| &s.folder);
+    let src_is_stack = stacks.iter().any(|s| s.folder == clean_src);
+    let is_cross_stack = !src_is_stack
+        && src_stack.as_ref().map(|s| &s.folder) != dst_stack.as_ref().map(|s| &s.folder);
     let (mut items_count, mut sched_dropped) = (0, 0);
     let mut dropped_mem = Vec::new();
     let mut doc_updates = Vec::new();
