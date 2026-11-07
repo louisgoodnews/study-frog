@@ -7,6 +7,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Fixed
+- PDF page, sidebar thumbnail and arrange-grid textures are keyed by their pixel size instead of the requested scale, so a low-resolution thumbnail shown while the sharp render is in flight no longer takes over the sharp texture and leaves the page blurred at some zoom levels or fit modes (BUG-0010).
+
 ## [0.4.3] - 2026-11-06
 
 ### Fixed

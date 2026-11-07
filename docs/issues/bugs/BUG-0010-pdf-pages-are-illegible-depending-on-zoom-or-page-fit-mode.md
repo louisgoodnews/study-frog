@@ -2,7 +2,7 @@
 id: BUG-0010
 type: bug
 title: PDF pages are illegible depending on zoom or page fit mode
-status: backlog
+status: review
 epic: EPIC-028
 parents: []
 estimate: 3
