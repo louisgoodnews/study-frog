@@ -23,6 +23,7 @@ pub mod exam_card;
 pub mod exam_result;
 mod explorer;
 mod explorer_charts;
+pub mod extract_panel;
 pub mod folders;
 mod graph;
 mod help;

@@ -50,6 +50,8 @@ pub mod help_user;
 pub mod home;
 pub mod images;
 pub mod import;
+pub mod inline_sync;
+mod inline_sync_apply;
 pub mod item_keys;
 pub mod item_schedule;
 pub mod kanban;

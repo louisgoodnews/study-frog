@@ -219,4 +219,6 @@ pub struct State {
     pub pdf: Option<crate::pdf_types::PdfView>,
     /// The diary screen and configuration.
     pub diary: crate::diary_types::DiaryState,
+    /// The active-recall workflows (EPIC-035).
+    pub recall: Box<crate::recall_types::RecallState>,
 }

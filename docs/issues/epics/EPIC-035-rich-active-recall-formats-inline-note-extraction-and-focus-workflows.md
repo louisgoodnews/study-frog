@@ -2,7 +2,7 @@
 id: EPIC-035
 type: epic
 title: Rich active-recall formats, inline note extraction, and focus workflows
-status: backlog
+status: in_progress
 parents: []
 labels: [m12, core, md, rehearsal, service, ui]
 acceptance_criteria:

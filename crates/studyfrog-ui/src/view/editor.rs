@@ -20,6 +20,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if e.confirm_delete {
         confirm_delete_bar(ui, out);
     }
+    crate::view::extract_panel::panel(state, e, ui, out);
     ui.add_space(6.0);
     let p = palette_of(ui);
     let fill = crate::item_look::page_fill(&p, ui.visuals().dark_mode, e.form.color.as_deref());
@@ -86,6 +87,7 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         key_badge(e, ui);
         ui.label(RichText::new(&e.path).color(palette_of(ui).text_weak));
         status(e, dirty, ui);
+        crate::view::extract_panel::button(e, ui, out);
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
             ui.menu_button("More actions", |ui| {
                 if ui.button("Export to PDF…").clicked() {

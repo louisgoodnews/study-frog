@@ -21,6 +21,7 @@ pub fn run(w: &mut Worker, effect: LibraryEffect, now_ns: i64) -> Msg {
         return msg(BulkMsg::FiltersLoaded(Err("no vault is open".to_owned())));
     };
     match effect {
+        LibraryEffect::Recall(e) => crate::exec_recall::run(s, e, now_ns),
         LibraryEffect::Drill(items) => crate::exec_run::drill(s, &items, now_ns),
         LibraryEffect::ApplyRetention(folder, permille) => {
             let r = f32::from(permille) / 1000.0;

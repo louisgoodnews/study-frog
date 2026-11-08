@@ -124,6 +124,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Activity => crate::view_time::activity(state),
         Msg::Library(m) => crate::library_ui::update(state, m),
         Msg::Folders(m) => crate::folders_ui::update(state, m),
+        Msg::Recall(m) => crate::recall_ui::update(state, m),
         Msg::Help(m) => crate::help_ui::update(state, m),
         Msg::Exam(m) => crate::exam_ui::update(state, m),
         Msg::Appearance(m) => crate::appearance_ui::update(state, m),

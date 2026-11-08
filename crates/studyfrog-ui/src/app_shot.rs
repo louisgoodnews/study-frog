@@ -24,7 +24,7 @@ pub struct Shot {
     /// The screen: `home`, `library`, `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or
     /// `run` (opens Rehearse and starts a run of everything), `exam-setup`, `exam` (an exam with a draft answer),
     /// `exam-result` (an exam answered to the end), `reports:<tab>` (a tab of the reports: `performance`, `memory`,
-    /// `familiarity`, `calibration`, `runs`, `habits`, `leeches`, `workload`), `stack:<folder>` or `item:<ULID>` (the item page);
+    /// `familiarity`, `calibration`, `runs`, `habits`, `leeches`, `workload`), `stack:<folder>` or `item:<ULID>` (the item page), `extract:<ULID>` (a note's sync preview);
     /// `None` keeps the first screen.
     pub screen: Option<String>,
     /// Frames drawn so far.
@@ -59,6 +59,9 @@ fn screen_named(name: &str) -> Option<Screen> {
 }
 
 fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
+    if let Some(fx) = crate::app_shot_recall::setup(model, name) {
+        return fx;
+    }
     if let Some(folder) = name.strip_prefix("stack:") {
         let mut fx = apply(model, Msg::Navigate(Screen::Library));
         fx.extend(apply(
@@ -116,6 +119,9 @@ pub fn step(shot: &mut Shot, model: &mut Model, ui: &egui::Ui) -> Vec<crate::eff
     let name = shot.screen.as_deref().unwrap_or("");
     if shot.frames == SETTLE + START && matches!(name, "run" | "exam" | "exam-result") {
         effects = apply(model, Msg::StartRunClicked);
+    }
+    if shot.frames == SETTLE + START {
+        effects.extend(crate::app_shot_recall::later(model, name));
     }
     if shot.frames > SETTLE + START && shot.frames < SETTLE + DRAW - 8 {
         effects.extend(crate::app_shot_exam::play(model, name));

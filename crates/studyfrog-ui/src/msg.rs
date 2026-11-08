@@ -224,6 +224,8 @@ pub enum Msg {
     SettingsTab(crate::app_settings_ui::SettingsTabMsg),
     /// File explorer folders screen.
     Folders(crate::folders_types::FoldersMsg),
+    /// The active-recall workflows (EPIC-035).
+    Recall(crate::recall_types::RecallMsg),
 }
 
 pub use crate::edit_form::EditAction;

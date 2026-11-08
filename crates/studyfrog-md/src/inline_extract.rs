@@ -98,3 +98,30 @@ pub fn extract_inline(body: &str) -> Vec<InlineBlock> {
     }
     out
 }
+
+/// The wikilink target of a block's place in its note: `Title#Heading`, or the title alone.
+pub fn source_target(note_title: &str, heading: Option<&str>) -> String {
+    match heading {
+        Some(h) => format!("{note_title}#{h}"),
+        None => note_title.to_owned(),
+    }
+}
+
+/// A stable key of a block (its kind and its front with case and spacing evened out), so a later
+/// sync finds the item it made: 16 hex digits of FNV-1a. Changing the definition keeps the key.
+pub fn extract_key(block: &InlineBlock) -> String {
+    let kind = match block.kind {
+        InlineKind::Card => "card",
+        InlineKind::Question => "question",
+    };
+    let front: Vec<String> = block
+        .front
+        .split_whitespace()
+        .map(str::to_lowercase)
+        .collect();
+    let text = format!("{kind}\u{1f}{}", front.join(" "));
+    let hash = text.bytes().fold(0xcbf2_9ce4_8422_2325_u64, |h, b| {
+        (h ^ u64::from(b)).wrapping_mul(0x0100_0000_01b3)
+    });
+    format!("{hash:016x}")
+}

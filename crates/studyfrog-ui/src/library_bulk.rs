@@ -1,12 +1,11 @@
 //! Selecting rows of the library, changing them together, undoing that, and the saved filters. Pure.
 
-use studyfrog_config::filters::SavedFilter;
-use studyfrog_core::uid::Uid;
-use studyfrog_service::bulk::{BulkDone, BulkEdit, Snapshot};
-
 use crate::effect::Effect;
 use crate::library_search::SearchMode;
 use crate::state::{Notice, NoticeKind, State, VaultInfo};
+use studyfrog_config::filters::SavedFilter;
+use studyfrog_core::uid::Uid;
+use studyfrog_service::bulk::{BulkDone, BulkEdit, Snapshot};
 
 /// What the library asks the worker to do besides reading the rows.
 #[derive(Debug, Clone, PartialEq)]
@@ -39,6 +38,8 @@ pub enum LibraryEffect {
     Drill(Vec<Uid>),
     /// Set the desired retention (thousandths) of the stack at this folder, or of the vault.
     ApplyRetention(Option<String>, u16),
+    /// An active-recall workflow (EPIC-035).
+    Recall(crate::recall_types::RecallEffect),
 }
 
 /// What happened to the selection, the bulk bar or the saved filters.
