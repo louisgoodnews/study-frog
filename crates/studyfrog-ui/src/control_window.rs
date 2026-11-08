@@ -148,7 +148,11 @@ pub fn pump(
 /// Serve `run/control.sock` for this window; `None` (with the reason on standard error) when there
 /// is no application home or another instance serves it.
 #[cfg(unix)]
-pub fn window_control_new(ctx: &egui::Context, policy: ControlPolicy) -> Option<WindowControl> {
+pub fn window_control_new(
+    ctx: &egui::Context,
+    policy: ControlPolicy,
+    events: crate::control_events::EventBus,
+) -> Option<WindowControl> {
     use crate::control_conn::ConnCtx;
     use crate::control_socket::{bind, publish, serve};
     let p = crate::runtime::paths()?;
@@ -174,6 +178,7 @@ pub fn window_control_new(ctx: &egui::Context, policy: ControlPolicy) -> Option<
             wake,
             logs: logs.clone(),
             wait: crate::cli::pause,
+            events: Some(events),
         },
     );
     Some(WindowControl {
@@ -187,6 +192,10 @@ pub fn window_control_new(ctx: &egui::Context, policy: ControlPolicy) -> Option<
 
 /// No socket on this system.
 #[cfg(not(unix))]
-pub fn window_control_new(_: &egui::Context, _: ControlPolicy) -> Option<WindowControl> {
+pub fn window_control_new(
+    _: &egui::Context,
+    _: ControlPolicy,
+    _: crate::control_events::EventBus,
+) -> Option<WindowControl> {
     None
 }

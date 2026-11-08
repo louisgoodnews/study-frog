@@ -37,6 +37,8 @@ pub struct ConnCtx {
     pub logs: Option<PathBuf>,
     /// The pause between looks at a followed log.
     pub wait: fn(),
+    /// The instance's lifecycle events, for `subscribe`.
+    pub events: Option<crate::control_events::EventBus>,
 }
 
 fn logs(
@@ -88,6 +90,10 @@ pub fn answer(ctx: &ConnCtx, line: &str, out: &SharedOut, alive: &Arc<AtomicBool
             id,
             cmd: Command::Logs(q),
         }) => logs(ctx, &id, &q, out, alive),
+        Ok(Request {
+            id,
+            cmd: Command::Subscribe(kinds),
+        }) => crate::control_events::serve_subscribe(ctx.events.as_ref(), &id, &kinds, out, alive),
         Ok(req) => ask(ctx, req),
     }
 }

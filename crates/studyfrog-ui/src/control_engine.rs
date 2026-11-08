@@ -5,13 +5,15 @@
 use std::path::PathBuf;
 
 use crate::control_cmd::{Command, ControlPolicy, Request, allowed};
+use crate::control_events::publish;
 use crate::control_plan::plan_for;
 use crate::control_reply::{err_line, ok_line, result_for};
 use crate::effect::Effect;
 use crate::exec::{Worker, execute};
-use crate::model::{Model, apply};
+use crate::model::Model;
 use crate::msg::Msg;
 use crate::notify::log_new;
+use crate::script_events::apply_observed;
 
 /// Rounds of effects executed for one phase before giving up waiting (a safety net; work normally
 /// settles in a few rounds).
@@ -32,6 +34,8 @@ pub struct Engine {
     pub logs: Option<PathBuf>,
     /// The time, read before each phase.
     pub clock: Clock,
+    /// Where lifecycle events are published (`subscribe`, scripts).
+    pub events: Option<crate::control_events::EventBus>,
 }
 
 fn set_time(e: &mut Engine) {
@@ -40,11 +44,15 @@ fn set_time(e: &mut Engine) {
     e.model.state.wall_ms = wall;
 }
 
-/// Apply `msg` and note a notice it raised for the log.
-fn apply_logged(model: &mut Model, msg: Msg) -> Vec<Effect> {
-    let before = model.state.notice.clone();
-    let mut effects = apply(model, msg);
-    effects.extend(log_new(&before, &model.state));
+/// Apply `msg`, note a notice it raised for the log and publish the events it caused.
+fn apply_logged(e: &mut Engine, msg: Msg) -> Vec<Effect> {
+    let before = e.model.state.notice.clone();
+    let mut events = Vec::new();
+    let mut effects = apply_observed(&mut e.model, msg, &mut events);
+    effects.extend(log_new(&before, &e.model.state));
+    if let Some(bus) = &e.events {
+        publish(bus, &events, e.model.state.wall_ms);
+    }
     effects
 }
 
@@ -59,20 +67,14 @@ pub fn settle(e: &mut Engine, mut effects: Vec<Effect>) {
             .drain(..)
             .flat_map(|fx| execute(&mut e.worker, fx, now_ns))
             .collect();
-        effects = msgs
-            .into_iter()
-            .flat_map(|m| apply_logged(&mut e.model, m))
-            .collect();
+        effects = msgs.into_iter().flat_map(|m| apply_logged(e, m)).collect();
     }
 }
 
 /// Apply one phase of messages and wait for its work.
 pub fn run_phase(e: &mut Engine, msgs: Vec<Msg>) {
     set_time(e);
-    let effects: Vec<Effect> = msgs
-        .into_iter()
-        .flat_map(|m| apply_logged(&mut e.model, m))
-        .collect();
+    let effects: Vec<Effect> = msgs.into_iter().flat_map(|m| apply_logged(e, m)).collect();
     settle(e, effects);
 }
 

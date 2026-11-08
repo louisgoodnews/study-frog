@@ -58,6 +58,8 @@ pub enum Command {
     Screenshot(PathBuf),
     /// Read (and maybe follow) the console log.
     Logs(LogsQuery),
+    /// Stream lifecycle events of these kinds (all when empty) until the connection closes.
+    Subscribe(Vec<String>),
     /// The recent notifications.
     Notices,
     /// Dismiss the status-bar notice.

@@ -68,6 +68,7 @@ pub fn engine_new(
     policy: ControlPolicy,
     clock: Clock,
     vault: Option<String>,
+    events: Option<crate::control_events::EventBus>,
 ) -> Engine {
     let p = paths();
     let host = Host {
@@ -90,6 +91,7 @@ pub fn engine_new(
         policy,
         logs,
         clock,
+        events,
     };
     settle(&mut e, vec![Effect::LoadAppSettings]);
     e.model.state.app.tutorial_offered = true;
@@ -131,7 +133,9 @@ pub fn run(args: &[String], host: Host) -> u8 {
             return 2;
         }
     };
-    let mut engine = engine_new(host, a.policy, system_clock(), a.vault.clone());
+    let bus = crate::control_events::bus_new();
+    let clock = system_clock();
+    let mut engine = engine_new(host, a.policy, clock, a.vault.clone(), Some(bus.clone()));
     if let Some(n) = engine.model.state.notice.as_ref() {
         eprintln!("studyfrog --control-stdio: {}", n.text);
     }
@@ -141,6 +145,7 @@ pub fn run(args: &[String], host: Host) -> u8 {
         wake: Arc::new(|| {}),
         logs: engine.logs.clone(),
         wait: crate::cli::pause,
+        events: Some(bus),
     };
     let vault = engine.model.state.vault.as_ref().map(|v| v.root.clone());
     let _guard = if a.no_socket {

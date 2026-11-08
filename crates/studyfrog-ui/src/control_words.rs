@@ -161,6 +161,7 @@ fn two_words(words: &[String]) -> Result<Command, String> {
         "rehearse" => Command::Rehearse(rehearse(rest)?),
         "screenshot" => Command::Screenshot(arg(0, "PNG path")?.into()),
         "logs" => Command::Logs(logs_query(rest)?),
+        "subscribe" | "events" => Command::Subscribe(rest.to_vec()),
         "export" => {
             let (flags, pos) = split_flags(rest, &["scheduling"])?;
             Command::Export(ExportArgs {

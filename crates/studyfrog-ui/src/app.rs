@@ -20,6 +20,8 @@ pub struct StudyFrogApp {
     pub shot: Option<crate::app_shot::Shot>,
     /// The control protocol over `run/control.sock`, when it is served.
     pub control: Option<crate::control_window::WindowControl>,
+    /// Lifecycle events, published for `subscribe` and the scripts.
+    pub events: crate::control_events::EventBus,
 }
 
 /// How the window is opened.
@@ -56,9 +58,10 @@ pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> Stud
     let mut model = Model::default();
     model.state.app.appearance = saved;
     model.state.extensions = extensions_of(&host.registry);
+    let events = crate::control_events::bus_new();
     let control = options
         .control
-        .and_then(|policy| crate::control_window::window_control_new(&ctx, policy));
+        .and_then(|policy| crate::control_window::window_control_new(&ctx, policy, events.clone()));
     let runtime = spawn(ctx, host);
     send_effect(&runtime, Effect::LoadAppSettings);
     StudyFrogApp {
@@ -67,6 +70,7 @@ pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> Stud
         smoke_frames: options.smoke_frames,
         shot: options.shot,
         control,
+        events,
     }
 }
 
@@ -78,8 +82,11 @@ pub fn app_ui(app: &mut StudyFrogApp, ui: &mut egui::Ui) {
         .pending
         .load(std::sync::atomic::Ordering::SeqCst)
         == 0;
+    let probe = crate::script_events::probe(&app.model.state);
+    let mut events = Vec::new();
     while let Ok(msg) = app.runtime.msgs.try_recv() {
         idle = false;
+        events.extend(crate::script_events::from_msg(&msg, &app.model.state));
         let before = app.model.state.notice.clone();
         effects.extend(apply(&mut app.model, msg));
         effects.extend(log_new(&before, &app.model.state));
@@ -100,6 +107,8 @@ pub fn app_ui(app: &mut StudyFrogApp, ui: &mut egui::Ui) {
         ));
         effects.extend(log_new(&before, &app.model.state));
     }
+    events.extend(crate::script_events::from_change(&probe, &app.model.state));
+    crate::control_events::publish(&app.events, &events, app.model.state.wall_ms);
     for effect in effects {
         send_effect(&app.runtime, effect);
     }

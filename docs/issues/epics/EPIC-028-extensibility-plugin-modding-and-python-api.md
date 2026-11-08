@@ -2,7 +2,7 @@
 id: EPIC-028
 type: epic
 title: Extensibility, plugin modding, and Python API
-status: backlog
+status: in_progress
 parents: []
 labels: [m12, ext, slm]
 acceptance_criteria:

@@ -56,6 +56,7 @@ pub fn engine(vault: &Path, logs: &Path, policy: ControlPolicy) -> Engine {
         policy,
         logs: Some(logs.to_path_buf()),
         clock: ticking(),
+        events: None,
     };
     run_phase(&mut e, vec![Msg::OpenRecent(vault.display().to_string())]);
     assert!(e.model.state.vault.is_some());
@@ -69,6 +70,7 @@ pub fn conn_ctx(inbox: Inbox, logs: &Path, wait: fn()) -> ConnCtx {
         wake: Arc::new(|| {}),
         logs: Some(logs.to_path_buf()),
         wait,
+        events: None,
     }
 }
 

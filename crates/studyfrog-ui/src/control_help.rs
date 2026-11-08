@@ -145,6 +145,11 @@ pub const COMMANDS: &[Row] = &[
         "the console.jsonl entries; --follow streams new ones as {\"event\":\"log\"} lines",
         "read",
     ),
+    (
+        "subscribe [vault_opened|vault_closed|item_created|item_saved|rehearsal_finished|script_finished]...",
+        "streams lifecycle events (all kinds when none named) as {\"event\":\"lifecycle\"} lines",
+        "read",
+    ),
     ("notices", "the recent notifications", "read"),
     (
         "dismiss | close",
