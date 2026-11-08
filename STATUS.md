@@ -14,6 +14,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
 ## Latest
+- **EPIC-037 (MCP) partly built:** STORY-0117 (the protocol engine, done), STORY-0118 (read-only resources and search; reports, diary and several tools missing) and STORY-0120 (stdio server and config snippet; the HTTP transport is missing) are in; STORY-0119 (authoring tools) and STORY-0121 (client host) are not started. Run as the real binary over pipes; not tried with a real AI client.
 - **STORY-0098 (reports as CSV) in review:** "Export as CSV" on the Reports screen writes `exports/studyfrog-report-<vault>-<date>.csv`; no per-stack statistics or learned and mastered totals yet; no save dialog; tested headless.
 - **EPIC-029 (achievements) built:** 32 built-in tiers (STORY-0086, done) and the filter, grouping and per-stack summary (STORY-0087, in review, tested headless only).
 - **STORY-0083 (Google Gemini) and STORY-0084 (DeepSeek) in review:** two more providers of the assistant with their wire formats, default addresses and suggested models; tested against fixed requests and answers only, never against the real endpoints; no explicit "test connection" button yet.

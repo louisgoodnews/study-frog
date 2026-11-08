@@ -98,6 +98,7 @@ fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
         ui.add_space(8.0);
     }
+    crate::view::agent_mcp::snippet(state, ui);
     new_connection(state, ui, out);
 }
 

@@ -70,3 +70,16 @@ fn the_form_offers_the_suggested_models_of_the_protocol_as_buttons() {
     assert_eq!(h.state().0.state.agent.form.model, "gemini-1.5-pro");
     assert_all_named(&h, "assistant connections form");
 }
+
+#[test]
+fn the_connections_tab_offers_the_mcp_config_only_with_a_vault() {
+    let mut h = harness(model());
+    h.run_steps(4);
+    assert!(h.query_by_label("Copy MCP server config").is_some());
+    assert_all_named(&h, "connections with mcp");
+    let mut none = Model::default();
+    none.state.screen = Screen::Agent;
+    let mut h = harness(none);
+    h.run_steps(4);
+    assert!(h.query_by_label("Copy MCP server config").is_none());
+}

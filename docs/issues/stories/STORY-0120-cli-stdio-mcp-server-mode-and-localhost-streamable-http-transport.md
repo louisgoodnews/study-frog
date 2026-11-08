@@ -2,7 +2,7 @@
 id: STORY-0120
 type: story
 title: CLI stdio MCP server mode and localhost Streamable HTTP transport
-status: backlog
+status: review
 epic: EPIC-037
 parents: [EPIC-037]
 estimate: 5
@@ -40,14 +40,19 @@ Implement the `stdio` and localhost Streamable HTTP MCP transports and UI config
      ```
 
 ## Acceptance Criteria
-- [ ] Running studyfrog-app --mcp [--vault <path>] [--mcp-allow-write] starts a headless JSON-RPC 2.0 MCP server over stdin/stdout with all diagnostic output routed strictly to stderr
+- [x] Running studyfrog-app --mcp [--vault <path>] [--mcp-allow-write] starts a headless JSON-RPC 2.0 MCP server over stdin/stdout with all diagnostic output routed strictly to stderr
 - [ ] An optional localhost-only Streamable HTTP transport (--mcp-http 127.0.0.1:<port>) enforces bearer-token authentication and Origin header validation to prevent DNS-rebinding or cross-origin requests
-- [ ] The Settings / Assistant screen displays a ready-to-copy MCP configuration snippet (claude_desktop_config.json / Cursor / Zed) for the active vault
+- [x] The Settings / Assistant screen displays a ready-to-copy MCP configuration snippet (claude_desktop_config.json / Cursor / Zed) for the active vault
 
 ## Design Notes
 - Touchpoints:
   - `crates/studyfrog-app/src/mcp_stdio.rs`, `crates/studyfrog-net/src/`, `crates/studyfrog-ui/src/view/agent.rs`.
 - Comply with P1 (zero inherent `impl` blocks), P2 (≤ 250 lines per file), and P3 (`check-deps.sh`).
+
+## Progress (2026-11-08)
+Built and tried: `studyfrog --mcp [--vault PATH] [--mcp-allow-write] [--mcp-allow-destructive]` serves the vault over standard input and output (newline-delimited JSON-RPC, one flushed line per answer, nothing but protocol on standard output, problems on standard error with exit code 1); the vault defaults to the one opened last. It was run as the real binary over pipes. The Assistant's connections tab has "Copy MCP server config" with the block for the open vault. The binary is called `studyfrog`, not `studyfrog-app` as the story says.
+
+Open: the localhost Streamable HTTP transport with its token and origin checks (criterion 2) is not built.
 
 ## Dependencies
 EPIC-037, STORY-0117, STORY-0118, STORY-0119.

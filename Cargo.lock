@@ -5391,6 +5391,7 @@ dependencies = [
  "egui_kittest",
  "image",
  "lopdf",
+ "serde_json",
  "studyfrog-achieve",
  "studyfrog-agent",
  "studyfrog-board",

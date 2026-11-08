@@ -74,6 +74,8 @@ pub mod library_columns;
 pub mod library_search;
 pub mod library_sort;
 pub mod library_ui;
+pub mod mcp_stdio;
+pub mod mcp_vault;
 pub mod md_edit;
 pub mod md_edit_table;
 pub mod md_lists;

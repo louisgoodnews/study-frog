@@ -4,7 +4,9 @@
 //! `studyfrog --screenshot FILE [--screen NAME] [--size WxH] [--theme dark|light|system]` saves a PNG of a screen and exits (`home`, `library`,
 //! `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `run`, or `stack:<folder>`).
 //! `studyfrog --print-paths` lists where the application keeps its files, and
-//! `studyfrog logs [--tail N] [--follow] [--json]` shows its log.
+//! `studyfrog logs [--tail N] [--follow] [--json]` shows its log, and
+//! `studyfrog --mcp [--vault PATH] [--mcp-allow-write] [--mcp-allow-destructive]` serves the vault to AI
+//! clients over the Model Context Protocol on standard input and output.
 
 use std::process::ExitCode;
 

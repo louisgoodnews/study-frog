@@ -368,10 +368,10 @@
 | [STORY-0114](docs/issues/stories/STORY-0114-psychophysical-typographic-measure-modular-hierarchy-and-tabular-numerals.md) Psychophysical typographic measure, modular hierarchy, and tabular numerals (3) | backlog | 0/0 |
 | [STORY-0115](docs/issues/stories/STORY-0115-low-entropy-surface-elevation-border-decluttering-and-gestalt-spacing.md) Low-entropy surface elevation, border de-cluttering, and Gestalt proximity spacing (5) | backlog | 0/0 |
 | [STORY-0116](docs/issues/stories/STORY-0116-distraction-free-zen-focus-mode-and-zero-layout-shift-interaction-polish.md) Distraction-free Zen focus mode and zero-layout-shift interaction polish (3) | backlog | 0/0 |
-| [STORY-0117](docs/issues/stories/STORY-0117-pure-json-rpc-2-0-mcp-protocol-engine-and-plain-data-registry.md) Pure JSON-RPC 2.0 MCP protocol engine and extensible plain-data capability registry (5) | backlog | 0/0 |
-| [STORY-0118](docs/issues/stories/STORY-0118-studyfrog-mcp-server-resources-and-read-only-search-and-analytics-tools.md) StudyFrog MCP server resources and read-only search, analytics, and forecast tools (5) | backlog | 0/0 |
+| [STORY-0117](docs/issues/stories/STORY-0117-pure-json-rpc-2-0-mcp-protocol-engine-and-plain-data-registry.md) Pure JSON-RPC 2.0 MCP protocol engine and extensible plain-data capability registry (5) | done | 0/0 |
+| [STORY-0118](docs/issues/stories/STORY-0118-studyfrog-mcp-server-resources-and-read-only-search-and-analytics-tools.md) StudyFrog MCP server resources and read-only search, analytics, and forecast tools (5) | review | 0/0 |
 | [STORY-0119](docs/issues/stories/STORY-0119-annotated-mcp-authoring-tools-human-in-the-loop-staging-and-prompts.md) Annotated MCP authoring tools, human-in-the-loop staging, and parameterized MCP prompts (5) | backlog | 0/0 |
-| [STORY-0120](docs/issues/stories/STORY-0120-cli-stdio-mcp-server-mode-and-localhost-streamable-http-transport.md) CLI stdio MCP server mode and localhost Streamable HTTP transport (5) | backlog | 0/0 |
+| [STORY-0120](docs/issues/stories/STORY-0120-cli-stdio-mcp-server-mode-and-localhost-streamable-http-transport.md) CLI stdio MCP server mode and localhost Streamable HTTP transport (5) | review | 0/0 |
 | [STORY-0121](docs/issues/stories/STORY-0121-built-in-assistant-mcp-client-host-for-external-academic-tool-servers.md) Built-in Assistant MCP client host for external academic tool servers (8) | backlog | 0/0 |
 | [STORY-0122](docs/issues/stories/STORY-0122-studyfrog-application-files-in-local-with-logs-and-configurations.md) StudyFrog application files in ~/.local/ with logs and configurations (5) | review | 0/0 |
 | [STORY-0123](docs/issues/stories/STORY-0123-colorization-field-for-items-influencing-details-and-rehearsal-background.md) Colorization field for items influencing details and rehearsal view background (3) | backlog | 0/0 |
@@ -417,5 +417,5 @@
 | [EPIC-034](docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md) Behavioral learning analytics, FSRS optimizer, and workload forecasting | backlog | 0/6 |
 | [EPIC-035](docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md) Rich active-recall formats, inline note extraction, and focus workflows | backlog | 0/5 |
 | [EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md) Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement | backlog | 0/4 |
-| [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md) State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry | backlog | 0/5 |
+| [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md) State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry | backlog | 1/5 |
 | [EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md) CLI control protocol for interactive AI agent application operation | backlog | 0/2 |

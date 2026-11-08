@@ -4,6 +4,9 @@
 //! supplies, so this crate does no I/O and links no network library.
 
 pub mod exam;
+pub mod mcp_route;
+pub mod mcp_types;
+pub mod mcp_uri;
 pub mod provider;
 pub mod settings;
 pub mod wiki;

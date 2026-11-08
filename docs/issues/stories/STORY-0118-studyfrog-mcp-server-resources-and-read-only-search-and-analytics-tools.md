@@ -2,7 +2,7 @@
 id: STORY-0118
 type: story
 title: StudyFrog MCP server resources and read-only search, analytics, and forecast tools
-status: backlog
+status: review
 epic: EPIC-037
 parents: [EPIC-037]
 estimate: 5
@@ -34,12 +34,17 @@ Register StudyFrog's canonical read-only MCP Resources and Tier-1 Read-Only Tool
 ## Acceptance Criteria
 - [ ] The MCP server exposes canonical studyfrog:// resources for vault summary, stacks, items (Markdown + SRS state), reports, and learning diary entries
 - [ ] Read-only MCP tools (readOnlyHint: true, idempotentHint: true) allow external AI clients to search items via the StudyFrog query language, fetch due queues, read PDF pages, and query retention/forecast/leech reports
-- [ ] All read-only resources and tools operate with zero side effects on vault files or SQLite schedules
+- [x] All read-only resources and tools operate with zero side effects on vault files or SQLite schedules
 
 ## Design Notes
 - Touchpoints:
   - `crates/studyfrog-service/src/mcp_resources.rs` and `mcp_tools_read.rs`.
 - Adhere to P1 (no inherent `impl` blocks) and P2 (≤ 250 lines per file).
+
+## Progress (2026-11-08)
+Built and tested on a sample vault (`crates/studyfrog-ui/tests/mcp_vault.rs`): the resources `studyfrog://vault/summary`, `studyfrog://stacks/{stack}` and `studyfrog://items/{id}` (Markdown), and the read-only tool `vault_search_items`, which takes the real query language (`type = card AND tag = exam`) and falls back to a text search for plain words. A session leaves every Markdown file of the vault as it was, also when writing is allowed.
+
+Open: the resources for reports and the diary; the tools for the due queue, analytics, the workload forecast and PDF pages; the schedule state of an item in its resource; stacks are addressed by id, not by folder. Criteria 1 and 2 are therefore only partly met.
 
 ## Dependencies
 EPIC-037, STORY-0117.

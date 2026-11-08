@@ -2,7 +2,7 @@
 id: STORY-0117
 type: story
 title: Pure JSON-RPC 2.0 MCP protocol engine and extensible plain-data capability registry
-status: backlog
+status: done
 epic: EPIC-037
 parents: [EPIC-037]
 estimate: 5
@@ -32,9 +32,9 @@ Build the pure MCP protocol engine and extensible `McpRegistry`:
    - Support an `McpPolicy { allow_write: bool, allow_destructive: bool }` that automatically filters or gates `tools/call` based on each tool's `McpToolAnnotations`.
 
 ## Acceptance Criteria
-- [ ] StudyFrog implements a pure, I/O-free JSON-RPC 2.0 MCP router supporting initialize, notifications/initialized, ping, tools/list, tools/call, resources/list, resources/templates/list, resources/read, prompts/list, and prompts/get
-- [ ] McpRegistry stores McpTool, McpResourceTemplate, and McpPrompt definitions as plain data structs with function pointers and MCP ToolAnnotations (readOnlyHint, destructiveHint, idempotentHint, openWorldHint)
-- [ ] Adding a new MCP tool, resource, or prompt requires only registering a plain data struct entry without modifying the protocol router or using OOP trait objects
+- [x] StudyFrog implements a pure, I/O-free JSON-RPC 2.0 MCP router supporting initialize, notifications/initialized, ping, tools/list, tools/call, resources/list, resources/templates/list, resources/read, prompts/list, and prompts/get
+- [x] McpRegistry stores McpTool, McpResourceTemplate, and McpPrompt definitions as plain data structs with function pointers and MCP ToolAnnotations (readOnlyHint, destructiveHint, idempotentHint, openWorldHint)
+- [x] Adding a new MCP tool, resource, or prompt requires only registering a plain data struct entry without modifying the protocol router or using OOP trait objects
 
 ## Design Notes
 - Zero I/O in the protocol router: `handle_mcp_message(registry: &McpRegistry, policy: McpPolicy, session: &mut VaultSession, raw_json: &str) -> Option<String>`.

@@ -11,6 +11,7 @@ authors.workspace = true
 workspace = true
 
 [dependencies]
+serde_json.workspace = true
 studyfrog-core.workspace = true
 studyfrog-md.workspace = true
 studyfrog-config.workspace = true

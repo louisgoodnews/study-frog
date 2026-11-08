@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- A Model Context Protocol server for AI clients: a pure JSON-RPC 2.0 router with plain-data tools, resources and prompts and a policy for writes (STORY-0117), the read-only vault summary, stack and item resources and a search tool using the query language (STORY-0118), and `studyfrog --mcp [--vault PATH]` over standard input and output with "Copy MCP server config" in the Assistant's connections (STORY-0120).
 - The Reports screen has "Export as CSV": one RFC 4180 table with the review total, retention, answer times, the review forecast, the familiarity distribution and the run log, written to `exports/` in the vault (STORY-0098).
 - Many more built-in achievement tiers: streaks of 3, 14, 60, 100 and 365 days, runs up to 100, ratings up to 5,000, mastery up to 500, and four tiers of learned and mastered items for every stack; the ids of the first set are unchanged, so earlier unlocks stay (STORY-0086).
 - The achievements screen has a filter (all, global, one stack), groups its entries by category and stack, and a stack's page shows how many of its achievements are unlocked (STORY-0087).

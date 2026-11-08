@@ -145,6 +145,9 @@ fn print_paths() -> u8 {
 /// Run the command in `args` (the program name first) if it is one of ours; `None` means open the
 /// window as usual.
 pub fn run(args: &[String]) -> Option<u8> {
+    if args.iter().skip(1).any(|a| a == "--mcp") {
+        return Some(crate::mcp_stdio::run(args));
+    }
     match args.get(1).map(String::as_str) {
         Some("--print-paths") => Some(print_paths()),
         Some("logs") => Some(logs(&args[2..])),

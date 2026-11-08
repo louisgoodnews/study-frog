@@ -62,3 +62,12 @@ removes the PDF again.
 ## Related pages
 
 [[privacy]], [[settings]], [[faq]].
+
+## Letting other AI tools read your vault
+
+Other AI tools (Claude Desktop, Cursor, Zed and others) can read your vault through the **Model Context Protocol**.
+In **Connections**, press **Copy MCP server config** and paste the block into the tool's settings. The tool then
+starts `studyfrog --mcp --vault <your vault>` by itself. The server is read-only: it offers the vault summary, each
+stack, each item as Markdown, and a search that understands the [[query-language]]. Nothing in your vault changes.
+Run `studyfrog --mcp` yourself only if you want to talk to it by hand: it reads one JSON message per line from
+standard input and answers on standard output.
