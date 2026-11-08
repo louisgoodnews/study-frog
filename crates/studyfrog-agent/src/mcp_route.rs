@@ -5,7 +5,7 @@ use serde_json::{Map, Value, json};
 
 use crate::mcp_types::{
     INTERNAL_ERROR, INVALID_PARAMS, INVALID_REQUEST, METHOD_NOT_FOUND, McpContent, McpError,
-    McpPolicy, McpRegistry, PARSE_ERROR, PROTOCOL_VERSION, mcp_error, tool_allowed,
+    McpPolicy, McpRegistry, PARSE_ERROR, PROTOCOL_VERSION, mcp_error, tool_permitted,
 };
 use crate::mcp_uri::{is_fixed, match_template};
 
@@ -94,7 +94,7 @@ fn tools_list<C>(reg: &McpRegistry<C>, policy: &McpPolicy) -> Value {
     let tools: Vec<Value> = reg
         .tools
         .iter()
-        .filter(|t| tool_allowed(policy, &t.annotations))
+        .filter(|t| tool_permitted(policy, t))
         .map(|t| {
             let schema = serde_json::from_str(t.input_schema).unwrap_or(json!({"type": "object"}));
             json!({
@@ -140,7 +140,7 @@ fn tools_call<C>(
         .iter()
         .find(|t| t.name == name)
         .ok_or_else(|| mcp_error(INVALID_PARAMS, format!("no tool {name}")))?;
-    if !tool_allowed(policy, &tool.annotations) {
+    if !tool_permitted(policy, tool) {
         return Ok(text_error(format!(
             "{name} is not allowed: the server was started without permission to change the vault"
         )));
@@ -191,7 +191,11 @@ fn resources_read<C>(reg: &McpRegistry<C>, ctx: &mut C, params: &Value) -> Resul
         ));
     };
     let c = (resource.read)(ctx, uri, &parts)?;
-    Ok(json!({"contents": [{"uri": c.uri, "mimeType": c.mime_type, "text": c.text}]}))
+    let contents: Vec<Value> = std::iter::once(&c)
+        .chain(&c.more)
+        .map(|c| json!({"uri": c.uri, "mimeType": c.mime_type, "text": c.text}))
+        .collect();
+    Ok(json!({"contents": contents}))
 }
 
 fn prompts_list<C>(reg: &McpRegistry<C>) -> Value {

@@ -73,6 +73,8 @@ pub struct McpTool<C> {
     pub input_schema: &'static str,
     /// What it says about itself.
     pub annotations: McpToolAnnotations,
+    /// Without permission to write, the tool still runs but only stages its change for the user.
+    pub staged: bool,
     /// Run it with the arguments.
     pub call: McpToolFn<C>,
 }
@@ -86,6 +88,8 @@ pub struct McpResourceContent {
     pub mime_type: &'static str,
     /// The text.
     pub text: String,
+    /// Further parts of the same resource (the schedule as JSON next to the Markdown, say).
+    pub more: Vec<McpResourceContent>,
 }
 
 /// Something the model can read, at an address with `{name}` parts such as `studyfrog://items/{id}`;
@@ -200,6 +204,12 @@ pub fn register_prompt<C>(mut reg: McpRegistry<C>, prompt: McpPrompt<C>) -> McpR
 /// Whether the policy lets a tool with these annotations be listed and called.
 pub fn tool_allowed(policy: &McpPolicy, a: &McpToolAnnotations) -> bool {
     a.read_only_hint || (policy.allow_write && (!a.destructive_hint || policy.allow_destructive))
+}
+
+/// Whether the policy lets this tool be listed and called: a staging tool always may, since it
+/// changes nothing until the user applies what it staged.
+pub fn tool_permitted<C>(policy: &McpPolicy, tool: &McpTool<C>) -> bool {
+    tool.staged || tool_allowed(policy, &tool.annotations)
 }
 
 /// An error with a code and a sentence.

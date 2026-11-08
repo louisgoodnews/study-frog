@@ -35,3 +35,4 @@ eframe.workspace = true
 [dev-dependencies]
 egui_kittest.workspace = true
 lopdf.workspace = true
+rusqlite.workspace = true

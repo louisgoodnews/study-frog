@@ -69,6 +69,7 @@ pub fn tool(
         description: "a test tool",
         input_schema: r#"{"type":"object","properties":{"text":{"type":"string"}}}"#,
         annotations: a,
+        staged: false,
         call,
     }
 }
@@ -83,6 +84,7 @@ pub fn read_item(
         uri: uri.to_owned(),
         mime_type: "text/markdown",
         text: format!("item {id}"),
+        more: Vec::new(),
     })
 }
 

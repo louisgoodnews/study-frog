@@ -95,7 +95,15 @@ pub fn prepare(args: &[String]) -> Result<(McpArgs, VaultCtx), String> {
     let a = parse_mcp_args(args.get(1..).unwrap_or_default())?;
     let path = vault_path(&a)?;
     let (session, _) = open_vault(&path).map_err(|e| format!("{path}: {e}"))?;
-    Ok((a, VaultCtx { session, now_ms }))
+    let policy = a.policy;
+    Ok((
+        a,
+        VaultCtx {
+            session,
+            now_ms,
+            policy,
+        },
+    ))
 }
 
 /// Run the server on standard input and output until the input ends; the exit code.

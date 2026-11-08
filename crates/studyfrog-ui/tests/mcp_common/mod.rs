@@ -13,6 +13,15 @@ pub use studyfrog_service::session::open_vault;
 pub use studyfrog_ui::mcp_stdio::{McpArgs, mcp_config_snippet, parse_mcp_args, serve_lines};
 pub use studyfrog_ui::mcp_vault::{VaultCtx, vault_registry};
 
+/// The read-only tools, in the order they are listed.
+pub const READ_ONLY_TOOLS: [&str; 5] = [
+    "vault_search_items",
+    "vault_get_due_queue",
+    "analytics_get_report",
+    "forecast_simulate_workload",
+    "pdf_read_pages",
+];
+
 pub fn now() -> i64 {
     1_800_000_000_000
 }
@@ -22,11 +31,13 @@ pub fn ctx(path: &Path) -> VaultCtx {
     VaultCtx {
         session,
         now_ms: now,
+        policy: McpPolicy::default(),
     }
 }
 
 /// Send these messages (one per line) and return the answers.
 pub fn session(ctx: &mut VaultCtx, policy: McpPolicy, messages: &[Value]) -> Vec<Value> {
+    ctx.policy = policy;
     let input: String = messages.iter().map(|m| format!("{m}\n")).collect();
     let mut out = Vec::new();
     serve_lines(
@@ -89,4 +100,56 @@ pub fn markdown_files(root: &Path) -> BTreeMap<String, Vec<u8>> {
         }
     }
     files
+}
+
+/// Call a tool; the answer's text parsed as JSON (or as a JSON string when it is not JSON).
+pub fn call(ctx: &mut VaultCtx, policy: McpPolicy, name: &str, args: Value) -> Value {
+    let message = request(1, "tools/call", &json!({"name": name, "arguments": args}));
+    let answer = session(ctx, policy, &[message]).remove(0);
+    let text = answer["result"]["content"][0]["text"]
+        .as_str()
+        .unwrap_or_else(|| panic!("no text in {answer}"))
+        .to_owned();
+    serde_json::from_str(&text).unwrap_or(Value::String(text))
+}
+
+/// Read a resource; the whole answer.
+pub fn read(ctx: &mut VaultCtx, uri: &str) -> Value {
+    let message = request(1, "resources/read", &json!({"uri": uri}));
+    session(ctx, McpPolicy::default(), &[message]).remove(0)
+}
+
+/// The JSON text of the `n`-th content of a read.
+pub fn content(answer: &Value, n: usize) -> Value {
+    serde_json::from_str(answer["result"]["contents"][n]["text"].as_str().unwrap()).unwrap()
+}
+
+/// Every row of every table of the index, as text: a change anywhere shows.
+pub fn index_rows(ctx: &VaultCtx) -> Vec<String> {
+    let conn = &ctx.session.conn;
+    let mut stmt = conn
+        .prepare("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name")
+        .unwrap();
+    let tables: Vec<String> = stmt
+        .query_map([], |r| r.get(0))
+        .unwrap()
+        .map(Result::unwrap)
+        .collect();
+    let mut out = Vec::new();
+    for t in tables {
+        let mut rows = conn.prepare(&format!("SELECT * FROM \"{t}\"")).unwrap();
+        let n = rows.column_count();
+        let all: Vec<String> = rows
+            .query_map([], |r| {
+                let cells: Vec<String> = (0..n)
+                    .map(|i| format!("{:?}", r.get::<_, rusqlite::types::Value>(i).unwrap()))
+                    .collect();
+                Ok(cells.join("|"))
+            })
+            .unwrap()
+            .map(Result::unwrap)
+            .collect();
+        out.extend(all.into_iter().map(|row| format!("{t}: {row}")));
+    }
+    out
 }

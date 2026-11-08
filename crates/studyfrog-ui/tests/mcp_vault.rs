@@ -28,10 +28,13 @@ fn a_whole_session_initializes_lists_searches_and_reads() {
         json!({"name": "studyfrog", "version": "9.9.9"})
     );
     let tools = answers[1]["result"]["tools"].as_array().unwrap();
-    assert_eq!(tools.len(), 1);
-    assert_eq!(tools[0]["name"], "vault_search_items");
-    assert_eq!(tools[0]["annotations"]["readOnlyHint"], true);
-    assert_eq!(tools[0]["annotations"]["destructiveHint"], false);
+    let names: Vec<&str> = tools.iter().map(|t| t["name"].as_str().unwrap()).collect();
+    assert_eq!(names, READ_ONLY_TOOLS);
+    for t in tools {
+        assert_eq!(t["annotations"]["readOnlyHint"], true);
+        assert_eq!(t["annotations"]["idempotentHint"], true);
+        assert_eq!(t["annotations"]["destructiveHint"], false);
+    }
     let summary: Value = serde_json::from_str(
         answers[2]["result"]["contents"][0]["text"]
             .as_str()
@@ -140,6 +143,11 @@ fn items_and_stacks_are_read_by_id_and_bad_ids_are_refused() {
     );
     assert_eq!(
         read(&mut c, "studyfrog://items/not-an-id")["error"]["code"],
+        -32002,
+        "not an id, and no item has it as its key"
+    );
+    assert_eq!(
+        read(&mut c, "studyfrog://diary/not-a-date")["error"]["code"],
         -32602
     );
     assert_eq!(

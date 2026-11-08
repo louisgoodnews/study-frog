@@ -43,6 +43,7 @@ pub mod home;
 pub mod images;
 pub mod import;
 pub mod item_keys;
+pub mod item_schedule;
 pub mod kanban;
 pub mod library_rows;
 pub mod logging;
