@@ -33,6 +33,8 @@ pub enum LibraryEffect {
     SetStatus(Uid, Option<studyfrog_core::status::Status>),
     /// Move a stack to a parent stack folder (or `""` for standalone top-level).
     MoveStack(String, String),
+    /// Give every stack and item without a key its key.
+    AssignKeys,
 }
 
 /// What happened to the selection, the bulk bar or the saved filters.
@@ -50,6 +52,10 @@ pub enum BulkMsg {
     MoveOne(Uid, BulkEdit),
     /// The worker changed the items.
     Done(Result<Box<BulkDone>, String>),
+    /// Show or hide the question before assigning keys; `AssignKeys` answers it.
+    AskAssignKeys(bool),
+    /// Assign keys to every stack and item without one.
+    AssignKeys,
     /// Take the last bulk edit back.
     Undo,
     /// The files were put back.
@@ -84,7 +90,7 @@ fn plural(n: usize) -> String {
 
 fn done(mut state: State, result: Result<Box<BulkDone>, String>) -> (State, Vec<Effect>) {
     let lib = &mut state.library;
-    lib.confirm_delete = false;
+    (lib.confirm_delete, lib.confirm_keys) = (false, false);
     lib.stale = true;
     match result {
         Ok(d) => {
@@ -174,6 +180,11 @@ pub fn update(state: State, msg: BulkMsg) -> (State, Vec<Effect>) {
         }
         BulkMsg::Apply(_) => {}
         BulkMsg::AskDelete(on) => state.library.confirm_delete = on,
+        BulkMsg::AskAssignKeys(on) => state.library.confirm_keys = on,
+        BulkMsg::AssignKeys => {
+            state.library.confirm_keys = false;
+            return (state, vec![Effect::Library(LibraryEffect::AssignKeys)]);
+        }
         BulkMsg::MoveOne(uid, edit) => {
             return (
                 state,

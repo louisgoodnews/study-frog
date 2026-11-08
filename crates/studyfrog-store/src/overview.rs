@@ -35,6 +35,8 @@ pub struct StackRow {
     pub daily_review_limit: Option<u32>,
     /// The status the stack states itself; `None` leaves it to its items.
     pub status: Option<studyfrog_core::status::Status>,
+    /// The stack's key (`STACK_3`), if it has one.
+    pub key: Option<String>,
 }
 
 /// A file or settings problem worth showing.
@@ -62,7 +64,7 @@ SELECT s.uid, i.title, s.folder, s.scheduler, s.daily_new_limit, s.daily_review_
        (SELECT COUNT(*) FROM item x WHERE x.stack_path = s.folder AND x.kind = 'note'),
        (SELECT COUNT(*) FROM item x WHERE x.stack_path = s.folder AND x.kind = 'card'),
        (SELECT COUNT(*) FROM item x WHERE x.stack_path = s.folder AND x.kind = 'question'),
-       i.subjects, i.status
+       i.subjects, i.status, i.key
 FROM stack_setting s JOIN item i ON i.uid = s.uid
 ORDER BY s.folder";
 
@@ -85,6 +87,7 @@ fn stack_row(r: &rusqlite::Row) -> rusqlite::Result<(String, StackRow)> {
             .get::<_, Option<String>>(10)?
             .as_deref()
             .and_then(studyfrog_core::status::status_from_name),
+        key: r.get(11)?,
     };
     Ok((r.get(0)?, row))
 }

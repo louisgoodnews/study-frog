@@ -117,6 +117,7 @@ pub(crate) fn ensure_stacks(
             body: String::new(),
             extra: Vec::new(),
         });
+        let doc = crate::item_keys::with_new_key(&session.conn, doc)?;
         write_new(&file, &render_doc(&doc).map_err(render_error)?)?;
     }
     Ok(())
@@ -192,7 +193,11 @@ pub fn apply_import(
             (Verdict::Create, _) => (item.id.unwrap_or_else(|| fresh_uid(ids, n)), None),
         };
         ensure_stacks(session, &line.folder, b, ids, &mut stacks)?;
-        let text = render_doc(&doc_of(item, uid, nth(ids, n), &mut notes)).map_err(render_error)?;
+        let doc = crate::item_keys::with_new_key(
+            &session.conn,
+            doc_of(item, uid, nth(ids, n), &mut notes),
+        )?;
+        let text = render_doc(&doc).map_err(render_error)?;
         let file = match &path {
             Some(p) => p.clone(),
             None => {

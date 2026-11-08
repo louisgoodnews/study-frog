@@ -122,6 +122,9 @@ fn the_item_list_says_when_each_item_is_next_due() {
     let mut m = stack_open();
     m.state.library.items[0].row.due_day = Some(1_800_000_000_000 / 86_400_000); // 2027-01-15 UTC
     m.state.library.rows[0].due_day = Some(1_800_000_000_000 / 86_400_000);
+    for (n, item) in m.state.library.items.iter_mut().enumerate() {
+        item.row.key = Some(format!("FLASHCARD_{}", n + 1)); // no empty Key cell to miscount
+    }
     let mut h = harness(m);
     h.run_steps(2);
     assert!(

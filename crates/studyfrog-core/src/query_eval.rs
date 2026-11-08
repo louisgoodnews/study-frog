@@ -47,6 +47,8 @@ pub struct Row {
     pub created_day: Option<i64>,
     /// The day it was last updated.
     pub updated_day: Option<i64>,
+    /// The item's key (`FLASHCARD_500`), if it has one.
+    pub key: Option<String>,
 }
 
 fn day_of(d: DateVal, today: i64) -> i64 {
@@ -124,6 +126,7 @@ fn cmp(row: &Row, today: i64, (field, op, val): (Field, Op, &Val)) -> bool {
         (Field::Text, Val::Text(w)) => text_compare(op, &format!("{} {}", row.title, row.body), w),
         (Field::Title, Val::Text(w)) => text_compare(op, &row.title, w),
         (Field::Path, Val::Text(w)) => text_compare(op, &row.path, w),
+        (Field::Key, Val::Text(w)) => crate::item_key::key_matches(op, row.key.as_deref(), w),
         (Field::Type, Val::Kind(k)) => compare(op, row.kind == *k, true),
         (Field::Status, Val::Status(s)) => compare(op, row.status == *s, true),
         (Field::Stack, Val::Text(w)) => list_compare(op, &row.stacks, w),
@@ -155,6 +158,7 @@ fn is_empty(row: &Row, field: Field) -> bool {
         Field::Due => row.due_day.is_none(),
         Field::Created => row.created_day.is_none(),
         Field::Updated => row.updated_day.is_none(),
+        Field::Key => row.key.is_none(),
         _ => false,
     }
 }
@@ -212,6 +216,7 @@ fn by_field(a: &Row, b: &Row, o: Order) -> Ordering {
         Field::Reviews => missing_last(Some(a.reviews), Some(b.reviews), d),
         Field::Created => missing_last(a.created_day, b.created_day, d),
         Field::Updated => missing_last(a.updated_day, b.updated_day, d),
+        Field::Key => crate::item_key::key_order(a.key.as_deref(), b.key.as_deref(), d),
         Field::Text | Field::Subject | Field::Teacher | Field::Tag => Ordering::Equal,
     }
 }

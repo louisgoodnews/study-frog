@@ -32,6 +32,8 @@ pub struct LibraryItem {
     pub row: Row,
     /// What each stack that holds it makes of it; the row's familiarity is their average.
     pub references: Vec<RefView>,
+    /// Its colour (a palette word or `#RRGGBB`), if it has one.
+    pub color: Option<String>,
 }
 
 /// A stack's folder and title and those of every stack above it, for `stack = ...`.
@@ -149,6 +151,7 @@ fn row_of((item, meta): (&IndexedItem, &ItemMeta), shared: &Shared, refs: &[RefV
         reviews: meta.reviews,
         created_day: day_of(meta.created_ms),
         updated_day: day_of(meta.updated_ms),
+        key: meta.key.clone(),
     }
 }
 
@@ -184,6 +187,7 @@ fn rows_of(session: &VaultSession, now: UnixMs) -> Result<Vec<LibraryItem>, Stor
                     uid: item.uid,
                     row: row_of((item, m), &shared, &references),
                     references,
+                    color: m.color.clone(),
                 }
             })
         })

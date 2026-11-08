@@ -47,6 +47,7 @@ fn running(p: Pacing) -> Model {
             answer: answer.into(),
             previous: None,
             source: None,
+            color: None,
         };
         apply(&mut m, Msg::ItemLoaded(Uid(uid), Ok(content)));
     }

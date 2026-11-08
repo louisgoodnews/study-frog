@@ -7,6 +7,8 @@ pub mod civil;
 pub mod diary;
 pub mod event;
 pub mod idx;
+pub mod item_color;
+pub mod item_key;
 pub mod items;
 pub mod library;
 pub mod memory;

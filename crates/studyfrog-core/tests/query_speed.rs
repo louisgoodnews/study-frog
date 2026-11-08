@@ -39,6 +39,7 @@ fn rows(n: usize) -> Vec<Row> {
             reviews: (i % 30) as u32,
             created_day: Some(19_000),
             updated_day: Some(19_900),
+            key: None,
         })
         .collect()
 }

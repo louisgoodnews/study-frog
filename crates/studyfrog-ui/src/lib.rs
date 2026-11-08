@@ -67,6 +67,7 @@ pub mod host;
 pub mod image_ui;
 pub mod images;
 pub mod import_ui;
+pub mod item_look;
 pub mod kanban;
 pub mod kanban_msg;
 pub mod library_bulk;

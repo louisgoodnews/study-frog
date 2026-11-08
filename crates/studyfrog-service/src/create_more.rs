@@ -184,6 +184,7 @@ pub fn create_item(
     } else {
         doc
     };
+    let doc = crate::item_keys::with_new_key(&session.conn, doc)?;
     let uid = studyfrog_md::doc::doc_meta(&doc).uid;
     let text = render_doc(&doc).map_err(render_error)?;
     let rel_of = |name: &str| match item.parent {

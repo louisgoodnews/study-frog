@@ -51,12 +51,28 @@ fn status(e: &Editor, dirty: bool, ui: &mut egui::Ui) {
     }
 }
 
+/// The item's key as a badge with a button that copies it, so it can be pasted into notes and links.
+pub(crate) fn key_badge(e: &Editor, ui: &mut egui::Ui) {
+    let field = studyfrog_core::item_key::KEY_FIELD;
+    let Some(key) = studyfrog_md::extra::extra_value(&e.doc, field) else {
+        return;
+    };
+    crate::view::kit::pill(ui, &key, palette_of(ui).accent);
+    let copy = ui
+        .small_button("Copy key")
+        .on_hover_text(format!("Copy {key}"));
+    if copy.clicked() {
+        ui.ctx().copy_text(key);
+    }
+}
+
 fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let dirty = is_dirty(e);
     ui.horizontal(|ui| {
         if ui.button("Back").clicked() {
             out.push(Msg::CloseEditor);
         }
+        key_badge(e, ui);
         ui.label(RichText::new(&e.path).color(palette_of(ui).text_weak));
         status(e, dirty, ui);
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {

@@ -6,7 +6,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 /// Files that may name colours, and why.
-const ALLOWED: [(&str, &str); 7] = [
+const ALLOWED: [(&str, &str); 8] = [
     ("theme.rs", "the palettes themselves"),
     ("theme_hue.rs", "the six text colours of a note"),
     ("view/navbar.rs", "the frog logo has its own green"),
@@ -20,6 +20,10 @@ const ALLOWED: [(&str, &str); 7] = [
         "the colours of the user's highlights are data",
     ),
     ("view/pdf_paint.rs", "the highlight overlay"),
+    (
+        "item_look.rs",
+        "an item's colour is data, mixed into a theme surface",
+    ),
 ];
 
 const PATTERNS: [&str; 12] = [

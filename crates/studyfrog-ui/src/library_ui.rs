@@ -53,6 +53,8 @@ pub struct LibraryState {
     pub undo: Option<studyfrog_service::bulk::Snapshot>,
     /// The question before deleting is shown.
     pub confirm_delete: bool,
+    /// Whether the question before assigning keys to the items without one is shown.
+    pub confirm_keys: bool,
     /// The tag typed in the bulk bar.
     pub tag_input: String,
     /// The page of the open stack.
@@ -80,6 +82,7 @@ impl Default for LibraryState {
             filter_name: String::new(),
             undo: None,
             confirm_delete: false,
+            confirm_keys: false,
             tag_input: String::new(),
             stack_view: Default::default(),
         }

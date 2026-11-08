@@ -138,8 +138,9 @@ fn search_cluster(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f
         chrome(out, ChromeMsg::SearchClear);
     }
     let enter = field.lost_focus() && ui.input(|i| i.key_pressed(Key::Enter));
-    if let (true, Some(first)) = (enter, state.chrome.results.first()) {
-        out.push(Msg::OpenItem(first.uid));
+    let stack = crate::item_look::stack_by_key(state, &state.chrome.search).map(|s| s.uid);
+    if let (true, Some(uid)) = (enter, stack.or(state.chrome.results.first().map(|r| r.uid))) {
+        out.push(Msg::OpenItem(uid));
         chrome(out, ChromeMsg::SearchClear);
     }
     menus::search_results(state, ui, field.rect, out);

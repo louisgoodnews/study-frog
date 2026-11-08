@@ -122,5 +122,6 @@ fn blank(path: &str) -> Row {
         reviews: 0,
         created_day: None,
         updated_day: None,
+        key: None,
     }
 }

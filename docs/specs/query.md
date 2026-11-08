@@ -53,6 +53,7 @@ value      = word | string | number | percent | date | relative
 | `reviews` | whole number | the number operators | how many reviews the item has |
 | `created`, `updated` | date | the date operators | from the front-matter |
 | `path` | text | `=` `~` | the file's path in the vault |
+| `key` | text | `=` `!=` `~` `!~` `IN` `IS EMPTY` | the item's key (`FLASHCARD_12`), case-insensitive, `NOTE_012` is `NOTE_12`; sorts by kind, then number. In the Standard search a word that is a key finds that item |
 
 `!~` and `NOT` negate; `field != value` is the same as `NOT field = value`. A comparison with `IS EMPTY` on a field that is never empty is an error that
 says so.

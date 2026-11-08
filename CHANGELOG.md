@@ -7,6 +7,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Added
+- Item keys: every new stack, card, note and question gets a short key such as `STACK_1`, `FLASHCARD_12`, `NOTE_3` or `QUESTION_7` in its front matter; "Assign keys…" in the Library gives older items theirs after a confirmation (undoable); the query language has `key`, an exact key typed into the top-bar or Library search finds its item, and keys show in a Library column, the item page's toolbar (with "Copy key") and the Details tab (STORY-0096).
+- Store migration 24: `item.key`, `item.color` and a `key_counter` table, so a deleted item's key is not handed out again (STORY-0096).
+
 ## [0.5.0] - 2026-11-08
 
 ### Added

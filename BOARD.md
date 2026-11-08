@@ -347,7 +347,7 @@
 | [STORY-0093](docs/issues/stories/STORY-0093-details-view-notebook-overhaul.md) Details view notebook overhaul with tabs and stack due date editing (5) | done | 0/0 |
 | [STORY-0094](docs/issues/stories/STORY-0094-create-menu-due-date-and-priority.md) Create menu due date and priority assignment for stacks and other creatable items (3) | done | 0/0 |
 | [STORY-0095](docs/issues/stories/STORY-0095-note-creation-modal-expansion-and-write-view.md) Note creation modal full-window expansion and default write view (3) | done | 0/0 |
-| [STORY-0096](docs/issues/stories/STORY-0096-item-keys-for-querying.md) Item keys for querying (5) | backlog | 0/0 |
+| [STORY-0096](docs/issues/stories/STORY-0096-item-keys-for-querying.md) Item keys for querying (5) | done | 0/0 |
 | [STORY-0097](docs/issues/stories/STORY-0097-item-colorization-with-color-picker-and-viewer-background-styling.md) Item colorization with color picker and viewer background styling (3) | backlog | 0/0 |
 | [STORY-0098](docs/issues/stories/STORY-0098-reporting-export-as-csv.md) Reporting export as CSV (3) | review | 0/0 |
 | [STORY-0099](docs/issues/stories/STORY-0099-simplify-vault-switcher-menu.md) Simplify vault switcher menu (3) | done | 0/0 |
@@ -412,7 +412,7 @@
 | [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md) Expanded achievements and per-stack progression | backlog | 1/2 |
 | [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md) Prompt expansion | backlog | 4/5 |
 | [EPIC-031](docs/issues/epics/EPIC-031-details-tabs-create-workflow-csv-import.md) Details tabs, create workflow, and CSV import for 0.4.1 | done | 6/6 |
-| [EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md) Item keys, colorization, and reporting export | backlog | 0/4 |
+| [EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md) Item keys, colorization, and reporting export | backlog | 1/4 |
 | [EPIC-033](docs/issues/epics/EPIC-033-exam-run-mode-with-semantic-comparison-and-grading.md) Exam run mode with mandatory text entry, semantic comparison, and percentage grading | backlog | 0/0 |
 | [EPIC-034](docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md) Behavioral learning analytics, FSRS optimizer, and workload forecasting | backlog | 0/6 |
 | [EPIC-035](docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md) Rich active-recall formats, inline note extraction, and focus workflows | backlog | 0/5 |

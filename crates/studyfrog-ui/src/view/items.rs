@@ -39,7 +39,9 @@ pub(super) fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if can_import(state) && ui.button("Import…").clicked() {
             out.push(Msg::Modal(crate::modal::ModalMsg::OpenImport));
         }
+        crate::view::library_keys::button(state, ui, out);
     });
+    crate::view::library_keys::confirm_bar(state, ui, out);
     crate::view::library_bulk::bar(state, ui, out);
     ui.allocate_ui(
         egui::vec2(

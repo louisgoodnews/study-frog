@@ -158,6 +158,7 @@ pub fn create_stack(
         body: String::new(),
         extra: Vec::new(),
     });
+    let doc = crate::item_keys::with_new_key(&session.conn, doc)?;
     let text = render_doc(&doc).map_err(render_error)?;
     write_new(&session.root.join(&folder).join(STACK_FILE), &text)?;
     refresh(session)
@@ -217,6 +218,7 @@ pub fn write_card(
         back,
         extra: Vec::new(),
     }));
+    let doc = crate::item_keys::with_new_key(&session.conn, doc)?;
     let text = render_doc(&doc).map_err(render_error)?;
     write_new(&dir.join(name), &text)
 }

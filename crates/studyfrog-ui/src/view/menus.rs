@@ -157,7 +157,15 @@ pub fn search_results(state: &State, ui: &mut egui::Ui, field: Rect, out: &mut V
         field.left_bottom() + egui::vec2(0.0, 4.0),
         field.width(),
         |ui| {
-            if state.chrome.results.is_empty() && state.chrome.pdf_results.is_empty() {
+            let stack = crate::item_look::stack_by_key(state, query);
+            if let Some(s) = stack
+                && ui.button(format!("stack · {}", s.title)).clicked()
+            {
+                out.push(Msg::OpenItem(s.uid));
+                out.push(Msg::Chrome(ChromeMsg::SearchClear));
+            }
+            let none = state.chrome.results.is_empty() && state.chrome.pdf_results.is_empty();
+            if none && stack.is_none() {
                 ui.weak(format!("No items match \"{query}\"."));
             }
             for item in &state.chrome.results {

@@ -186,6 +186,7 @@ fn item_loaded(
                 answer: String::new(),
                 previous: None,
                 source: None,
+                color: None,
             }
         }
     };

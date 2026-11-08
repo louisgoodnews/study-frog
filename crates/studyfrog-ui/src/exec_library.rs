@@ -64,6 +64,11 @@ pub fn run(w: &mut Worker, effect: LibraryEffect, now_ns: i64) -> Msg {
                 .map_err(|e| e.to_string());
             Msg::Library(LibraryMsg::Stack(StackViewMsg::Moved(done)))
         }
+        LibraryEffect::AssignKeys => msg(BulkMsg::Done(
+            studyfrog_service::item_keys::assign_missing_keys(s, now)
+                .map(Box::new)
+                .map_err(|e| e.to_string()),
+        )),
         LibraryEffect::Undo(snapshot) => msg(BulkMsg::Undone(
             bulk_undo(s, &snapshot)
                 .map(Box::new)

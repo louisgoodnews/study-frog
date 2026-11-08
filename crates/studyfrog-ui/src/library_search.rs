@@ -1,5 +1,6 @@
 //! The search bar of the library: filter fields (Standard) or a query (Query), and the way between them. Pure.
 
+use studyfrog_core::item_key::is_key;
 use studyfrog_core::plan::ItemKind;
 use studyfrog_core::priority::Priority;
 use studyfrog_core::query::{Cond, Field, Op, Order, Query, QueryError, Val};
@@ -56,12 +57,14 @@ pub enum SearchMsg {
 pub fn standard_query(word: &str, s: &SearchState, sort: &[Order]) -> Query {
     let word = word.trim();
     let mut conds = Vec::new();
+    // A word that is a key (`FLASHCARD_12`) finds the item with that key.
+    let field = if is_key(word) {
+        (Field::Key, Op::Eq)
+    } else {
+        (Field::Title, Op::Contains)
+    };
     if !word.is_empty() {
-        conds.push(Cond::Cmp(
-            Field::Title,
-            Op::Contains,
-            Val::Text(word.to_owned()),
-        ));
+        conds.push(Cond::Cmp(field.0, field.1, Val::Text(word.to_owned())));
     }
     let picks = [
         s.kind.map(|k| (Field::Type, Val::Kind(k))),
@@ -94,6 +97,9 @@ fn fields_of(q: &Query) -> Option<(String, SearchState)> {
     for c in list {
         match c {
             Cond::Cmp(Field::Title, Op::Contains, Val::Text(t)) if word.is_empty() => word = t,
+            Cond::Cmp(Field::Key, Op::Eq, Val::Text(t)) if word.is_empty() && is_key(&t) => {
+                word = t
+            }
             Cond::Cmp(Field::Type, Op::Eq, Val::Kind(k)) if s.kind.is_none() => s.kind = Some(k),
             Cond::Cmp(Field::Status, Op::Eq, Val::Status(v)) if s.status.is_none() => {
                 s.status = Some(v);

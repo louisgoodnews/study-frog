@@ -24,6 +24,8 @@ pub struct ItemContent {
     pub previous: Option<Rating>,
     /// Where the item was made from (such as `bio/cells.pdf#page=3`), if it says.
     pub source: Option<String>,
+    /// The item's colour (a palette word or `#RRGGBB`), if it has one.
+    pub color: Option<String>,
 }
 
 fn content_of(doc: &Doc) -> ItemContent {
@@ -36,6 +38,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             answer: shown(&c.back),
             previous: None,
             source: None,
+            color: None,
         },
         Doc::Question(q) => ItemContent {
             title,
@@ -43,6 +46,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             answer: shown(&q.reference),
             previous: None,
             source: None,
+            color: None,
         },
         Doc::Note(n) => ItemContent {
             prompt: title.clone(),
@@ -50,6 +54,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             answer: shown(&n.body),
             previous: None,
             source: None,
+            color: None,
         },
         Doc::Stack(s) => ItemContent {
             prompt: title.clone(),
@@ -57,6 +62,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             answer: shown(&s.description),
             previous: None,
             source: None,
+            color: None,
         },
         Doc::Diary(d) => ItemContent {
             prompt: title.clone(),
@@ -64,6 +70,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             answer: shown(&d.body),
             previous: None,
             source: None,
+            color: None,
         },
     }
 }
@@ -87,6 +94,8 @@ pub fn load_item_content(session: &VaultSession, uid: Uid) -> Result<ItemContent
     load_doc(session, uid).map(|doc| ItemContent {
         previous,
         source: studyfrog_md::extra::extra_value(&doc, "source"),
+        color: studyfrog_md::extra::extra_value(&doc, studyfrog_core::item_color::COLOR_FIELD)
+            .and_then(|c| studyfrog_core::item_color::normalize_color(&c)),
         ..content_of(&doc)
     })
 }

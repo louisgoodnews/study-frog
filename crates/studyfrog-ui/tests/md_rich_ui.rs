@@ -59,6 +59,7 @@ fn card(prompt: &str, answer: &str) -> egui_kittest::Harness<'static, common::vi
         answer: answer.into(),
         previous: None,
         source: None,
+        color: None,
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     let mut h = harness(m);

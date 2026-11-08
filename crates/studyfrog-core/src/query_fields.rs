@@ -3,7 +3,7 @@
 use crate::query::{Field, Op};
 
 /// Every field and the word that names it.
-pub const FIELDS: [(Field, &str); 16] = [
+pub const FIELDS: [(Field, &str); 17] = [
     (Field::Text, "text"),
     (Field::Title, "title"),
     (Field::Type, "type"),
@@ -20,6 +20,7 @@ pub const FIELDS: [(Field, &str); 16] = [
     (Field::Created, "created"),
     (Field::Updated, "updated"),
     (Field::Path, "path"),
+    (Field::Key, "key"),
 ];
 
 /// The field a word names (without regard to case).
@@ -81,7 +82,7 @@ const ORDERED: [Op; 6] = [Op::Eq, Op::Ne, Op::Lt, Op::Le, Op::Gt, Op::Ge];
 pub fn ops_allowed(f: Field) -> &'static [Op] {
     match f {
         Field::Text => &[Op::Contains, Op::NotContains],
-        Field::Title | Field::Path => &TEXTUAL,
+        Field::Title | Field::Path | Field::Key => &TEXTUAL,
         Field::Type
         | Field::Status
         | Field::Stack
@@ -104,6 +105,7 @@ pub fn takes_in(f: Field) -> bool {
             | Field::Tag
             | Field::Priority
             | Field::Difficulty
+            | Field::Key
     )
 }
 
@@ -119,6 +121,7 @@ pub fn can_be_empty(f: Field) -> bool {
             | Field::Due
             | Field::Created
             | Field::Updated
+            | Field::Key
     )
 }
 

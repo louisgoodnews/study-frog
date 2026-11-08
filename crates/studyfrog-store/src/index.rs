@@ -3,18 +3,12 @@
 use std::collections::HashMap;
 
 use rusqlite::{Connection, Transaction, params};
-use studyfrog_core::event::difficulty_from_name;
-use studyfrog_core::priority::priority_from_name;
-use studyfrog_core::status::status_from_name;
-use studyfrog_md::doc::{Doc, doc_kind, doc_meta, doc_texts, kind_name};
+use studyfrog_md::doc::{Doc, doc_meta};
 use studyfrog_md::error::describe_parse_error;
-use studyfrog_md::extra::{extra_raw, extra_value};
-use studyfrog_md::links::extract_wikilinks;
 use studyfrog_md::ulid::format_ulid;
 
 use crate::error::{StoreError, sql_err};
 use crate::scan::ScannedFile;
-use crate::stackmap::parent_folder;
 
 /// What the index remembers about a file.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -58,7 +52,11 @@ pub fn load_rows(conn: &Connection) -> Result<HashMap<String, FileRow>, StoreErr
 }
 
 /// Run a statement through the connection's prepared-statement cache.
-fn run(tx: &Transaction, sql: &str, args: impl rusqlite::Params) -> Result<(), StoreError> {
+pub(crate) fn run(
+    tx: &Transaction,
+    sql: &str,
+    args: impl rusqlite::Params,
+) -> Result<(), StoreError> {
     tx.prepare_cached(sql)
         .and_then(|mut s| s.execute(args))
         .map(drop)
@@ -146,85 +144,9 @@ pub fn write_scanned(tx: &Transaction, f: &ScannedFile) -> Result<(), StoreError
             crate::diary::write_diary_entry(tx, &file.rel, file.mtime_ns, diary)
         }
         Ok(Doc::Diary(_)) => Ok(()),
-        Ok(doc) => write_item(tx, &file.rel, f.stack.as_deref(), doc),
+        Ok(doc) => crate::index_item::write_item(tx, &file.rel, f.stack.as_deref(), doc),
         Err(_) => Ok(()),
     }
-}
-
-/// The value of a front-matter word key when it is one of the known words, else `NULL`.
-fn word_of(doc: &Doc, key: &str, known: fn(&str) -> bool) -> Option<String> {
-    extra_value(doc, key).filter(|w| known(w))
-}
-
-fn write_item(
-    tx: &Transaction,
-    rel: &str,
-    stack: Option<&str>,
-    doc: &Doc,
-) -> Result<(), StoreError> {
-    let meta = doc_meta(doc);
-    let uid = format_ulid(meta.uid);
-    run(tx, "DELETE FROM item WHERE uid = ?1", [&uid])?;
-    run(
-        tx,
-        "INSERT INTO item (uid, path, kind, title, stack_path, created_ms, updated_ms, priority, difficulty, subjects, source, status, body)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
-        params![
-            uid,
-            rel,
-            kind_name(doc_kind(doc)),
-            meta.title,
-            stack,
-            meta.created.map(|t| t.0),
-            meta.updated.map(|t| t.0),
-            word_of(doc, "priority", |w| priority_from_name(w).is_some()),
-            word_of(doc, "difficulty", |w| difficulty_from_name(w).is_some()),
-            extra_raw(doc, "subjects"),
-            extra_value(doc, "source"),
-            word_of(doc, "status", |w| status_from_name(w).is_some()),
-            doc_texts(doc).join("\n").trim().to_owned()
-        ],
-    )?;
-    write_tags(tx, &uid, &meta.tags)?;
-    crate::refs_index::write_refs(tx, &uid, doc)?;
-    if matches!(doc, Doc::Stack(_)) {
-        run(
-            tx,
-            "INSERT INTO stack_identity (path, uid, folder) VALUES (?1, ?2, ?3)",
-            params![rel, uid, parent_folder(rel)],
-        )?;
-    }
-    write_links(tx, &uid, doc)
-}
-
-fn write_tags(tx: &Transaction, uid: &str, tags: &[String]) -> Result<(), StoreError> {
-    let mut stmt = tx
-        .prepare_cached("INSERT OR IGNORE INTO tag (uid, tag) VALUES (?1, ?2)")
-        .map_err(sql_err)?;
-    tags.iter()
-        .try_for_each(|t| stmt.execute(params![uid, t]).map(drop))
-        .map_err(sql_err)
-}
-
-fn write_links(tx: &Transaction, uid: &str, doc: &Doc) -> Result<(), StoreError> {
-    let mut stmt = tx
-        .prepare_cached(
-            "INSERT INTO link (src_uid, seq, target, heading, label, line) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-        )
-        .map_err(sql_err)?;
-    let links = doc_texts(doc).into_iter().flat_map(extract_wikilinks);
-    for (seq, l) in links.enumerate() {
-        stmt.execute(params![
-            uid,
-            seq as i64,
-            l.target,
-            l.heading,
-            l.label,
-            l.line as i64
-        ])
-        .map_err(sql_err)?;
-    }
-    Ok(())
 }
 
 /// Position of every indexed item in path order (the library order used by sequential runs).

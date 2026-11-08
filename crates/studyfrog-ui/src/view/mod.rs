@@ -33,6 +33,7 @@ mod items;
 pub(crate) mod kit;
 mod library;
 pub mod library_bulk;
+pub mod library_keys;
 mod library_pdfs;
 pub mod library_search;
 pub mod library_table;

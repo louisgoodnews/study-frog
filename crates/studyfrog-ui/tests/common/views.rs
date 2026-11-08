@@ -36,6 +36,7 @@ pub fn stack(title: &str, folder: &str, notes: usize, cards: usize) -> StackRow 
         daily_new_limit: Some(20),
         daily_review_limit: None,
         status: None,
+        key: None,
     }
 }
 
@@ -94,6 +95,7 @@ pub fn running_model(mode: studyfrog_core::run::RunMode) -> Model {
             answer: answer.into(),
             previous: None,
             source: None,
+            color: None,
         };
         apply(&mut m, Msg::ItemLoaded(Uid(uid), Ok(content)));
     }
@@ -129,6 +131,7 @@ pub fn lib_item(n: u128, title: &str) -> studyfrog_service::library_rows::Librar
     use studyfrog_core::status::Status;
     studyfrog_service::library_rows::LibraryItem {
         references: Vec::new(),
+        color: None,
         uid: Uid(n),
         row: Row {
             path: format!("french/{n}.md"),
@@ -148,6 +151,7 @@ pub fn lib_item(n: u128, title: &str) -> studyfrog_service::library_rows::Librar
             reviews: 0,
             created_day: None,
             updated_day: None,
+            key: None,
         },
     }
 }

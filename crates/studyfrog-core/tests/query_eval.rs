@@ -34,6 +34,7 @@ fn row(path: &str, title: &str) -> Row {
         reviews: 0,
         created_day: Some(day("2026-01-01")),
         updated_day: Some(day("2026-11-01")),
+        key: None,
     }
 }
 

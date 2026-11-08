@@ -167,7 +167,7 @@ fn columns_are_shown_or_hidden_in_a_fixed_order_the_title_stays_and_the_choice_i
     };
     assert_eq!(
         app.library_columns.as_deref(),
-        Some("title,type,status,priority,familiarity,due")
+        Some("title,key,type,status,priority,familiarity,due")
     );
     apply(
         &mut m,

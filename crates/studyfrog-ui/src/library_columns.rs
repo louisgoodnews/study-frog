@@ -40,11 +40,14 @@ pub enum Column {
     Updated,
     /// The file's path.
     Path,
+    /// The item's key (`FLASHCARD_12`).
+    Key,
 }
 
 /// Every column, with its stored word and its heading.
-pub const COLUMNS: [(Column, &str, &str); 15] = [
+pub const COLUMNS: [(Column, &str, &str); 16] = [
     (Column::Title, "title", "Title"),
+    (Column::Key, "key", "Key"),
     (Column::Type, "type", "Type"),
     (Column::Status, "status", "Status"),
     (Column::Priority, "priority", "Priority"),
@@ -62,8 +65,9 @@ pub const COLUMNS: [(Column, &str, &str); 15] = [
 ];
 
 /// The columns shown until the user chooses others.
-pub const DEFAULT_COLUMNS: [Column; 5] = [
+pub const DEFAULT_COLUMNS: [Column; 6] = [
     Column::Title,
+    Column::Key,
     Column::Type,
     Column::Status,
     Column::Priority,
@@ -118,6 +122,7 @@ pub fn column_field(c: Column) -> Option<Field> {
         Column::Created => Field::Created,
         Column::Updated => Field::Updated,
         Column::Path => Field::Path,
+        Column::Key => Field::Key,
         Column::AlsoIn | Column::Subjects | Column::Tags => return None,
     })
 }
@@ -156,5 +161,6 @@ pub fn cell(row: &Row, c: Column) -> String {
         Column::Created => date_text(row.created_day),
         Column::Updated => date_text(row.updated_day),
         Column::Path => row.path.clone(),
+        Column::Key => row.key.clone().unwrap_or_else(|| "–".to_owned()),
     }
 }

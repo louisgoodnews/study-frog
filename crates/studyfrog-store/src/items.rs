@@ -39,8 +39,8 @@ pub fn list_items(conn: &Connection, folder: Option<&str>) -> Result<Vec<ItemRow
     rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
 }
 
-/// Items anywhere in the vault whose title contains `query` (case-insensitive; `%` and `_` are taken
-/// literally), titles that start with it first, at most `limit`. An empty query finds nothing.
+/// Items whose title contains `query` (case-insensitive; `%` and `_` taken literally) or whose key it is
+/// (`flashcard_7`); that item first, then titles starting with it; at most `limit`, none for an empty query.
 pub fn search_items(
     conn: &Connection,
     query: &str,
@@ -57,11 +57,13 @@ pub fn search_items(
     let sql = format!(
         "SELECT {ITEM_COLS}
                FROM item i LEFT JOIN mem_primary m ON m.item_uid = i.uid LEFT JOIN sm2_primary s ON s.item_uid = i.uid
-               WHERE i.kind != 'stack' AND i.title LIKE ?1 ESCAPE '\\'
-               ORDER BY (i.title LIKE ?2 ESCAPE '\\') DESC, i.title COLLATE NOCASE, i.path LIMIT ?3"
+               WHERE i.kind != 'stack' AND (i.title LIKE ?1 ESCAPE '\\' OR i.key = ?4)
+               ORDER BY (i.key IS ?4) DESC, (i.title LIKE ?2 ESCAPE '\\') DESC, i.title COLLATE NOCASE, i.path LIMIT ?3"
     );
     let mut stmt = conn.prepare(&sql).map_err(sql_err)?;
-    let params = (format!("%{escaped}%"), format!("{escaped}%"), limit as i64);
+    let key = studyfrog_core::item_key::normalize_key(needle);
+    let (contains, starts) = (format!("%{escaped}%"), format!("{escaped}%"));
+    let params = (contains, starts, limit as i64, key);
     let rows = stmt.query_map(params, raw_item).map_err(sql_err)?;
     rows.map(|r| item_row(r.map_err(sql_err)?)).collect()
 }

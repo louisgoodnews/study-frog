@@ -41,6 +41,8 @@ pub enum Field {
     Updated,
     /// The file's path in the vault.
     Path,
+    /// The item's key (`FLASHCARD_500`).
+    Key,
 }
 
 /// How a comparison compares.

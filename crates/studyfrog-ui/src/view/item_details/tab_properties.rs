@@ -32,6 +32,13 @@ pub fn draw(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.label("Kind");
             kit::pill(ui, kind_word(&e.doc), p.accent);
         });
+        ui.horizontal(|ui| {
+            ui.label("Key");
+            if studyfrog_md::extra::extra_value(&e.doc, "key").is_none() {
+                ui.weak("none yet (Library: Assign keys)");
+            }
+            crate::view::editor::key_badge(e, ui);
+        });
         if let Some(t) = text_field(ui, "Tags (comma separated)", &e.form.tags, "", 1) {
             out.push(Msg::Edit(EditAction::Tags(t)));
         }
