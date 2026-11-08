@@ -162,6 +162,9 @@ fn save_example(folder: &str, file: &str, text: &str) -> Result<String, String> 
 /// Perform one job and report.
 pub fn run(w: &mut Worker, job: TransferJob, now_ns: i64) -> Msg {
     match job {
+        TransferJob::ReportCsv => msg(TransferMsg::Exported(crate::exec_run::report_csv_file(
+            w, now_ns,
+        ))),
         TransferJob::Discover => crate::transfer_found::look(),
         TransferJob::Browse(folder) => {
             let picked = if folder {

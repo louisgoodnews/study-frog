@@ -4,6 +4,10 @@ Reports show how your learning is going: what you remember, how fast you answer,
 items, and what is coming up. Open **Reports** in the sidebar. The reports need a few reviews first; until then
 the screen says "There are no reviews yet."
 
+**Export as CSV** (top of the screen) writes the numbers of the reports into one CSV table in the `exports` folder of
+your vault, as `studyfrog-report-<vault>-<date>.csv`, and tells you where. Each row has a section (summary, retention,
+latency, forecast, familiarity or runs), a subject, a metric and a value, so a spreadsheet can pivot it.
+
 The screen has four tabs: **Performance**, **Memory and forecast**, **Familiarity** and **Runs**.
 
 ## Performance

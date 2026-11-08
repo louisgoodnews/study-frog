@@ -36,6 +36,8 @@ pub enum TransferMsg {
     Browse(bool, bool),
     /// The dialog for browsing answered.
     Browsed(bool, Option<String>),
+    /// Write the reports as a CSV file into the vault's `exports` folder.
+    ExportReport,
     /// Write the export.
     Export,
     /// The export finished: the path written, or why not.
@@ -125,6 +127,7 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
                 }),
             );
         }
+        TransferMsg::ExportReport => return (state, job(TransferJob::ReportCsv)),
         TransferMsg::Exported(result) => {
             t.busy = false;
             match result {

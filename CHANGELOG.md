@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- The Reports screen has "Export as CSV": one RFC 4180 table with the review total, retention, answer times, the review forecast, the familiarity distribution and the run log, written to `exports/` in the vault (STORY-0098).
 - Many more built-in achievement tiers: streaks of 3, 14, 60, 100 and 365 days, runs up to 100, ratings up to 5,000, mastery up to 500, and four tiers of learned and mastered items for every stack; the ids of the first set are unchanged, so earlier unlocks stay (STORY-0086).
 - The achievements screen has a filter (all, global, one stack), groups its entries by category and stack, and a stack's page shows how many of its achievements are unlocked (STORY-0087).
 - Google Gemini (`generateContent`, key in the `x-goog-api-key` header only, safety stops reported with their reason) and DeepSeek (`/chat/completions`, default address and models) as providers of the assistant; choosing a protocol fills in its first suggested model (STORY-0083, STORY-0084).

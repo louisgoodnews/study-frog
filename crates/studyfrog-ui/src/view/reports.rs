@@ -8,8 +8,10 @@ use studyfrog_report::retention::{RetentionBucket, retention_rate};
 use studyfrog_service::reports::{BacktestReport, ReportBundle};
 
 use crate::explorer_ui::{ExplorerMsg, ReportTab};
+use crate::library_ui::LibraryMsg;
 use crate::msg::Msg;
 use crate::state::State;
+use crate::transfer_ui::TransferMsg;
 use crate::view::kit::{self, BarRow, READING_WIDTH};
 
 fn seconds(ms: u32) -> String {
@@ -43,7 +45,20 @@ fn day_label(i: usize) -> String {
 
 /// The tabs, then either the performance explorer or the three memory reports.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.label(RichText::new("Reports").size(17.0).strong());
+    ui.horizontal(|ui| {
+        ui.label(RichText::new("Reports").size(17.0).strong());
+        let button = egui::Button::new("Export as CSV");
+        let tip = "Write the reports as a CSV file into the exports folder of the vault.";
+        if ui
+            .add_enabled(state.vault.is_some(), button)
+            .on_hover_text(tip)
+            .clicked()
+        {
+            out.push(Msg::Library(LibraryMsg::Transfer(
+                TransferMsg::ExportReport,
+            )));
+        }
+    });
     ui.add_space(4.0);
     ui.horizontal(|ui| {
         for (tab, label) in [

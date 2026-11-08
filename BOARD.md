@@ -349,7 +349,7 @@
 | [STORY-0095](docs/issues/stories/STORY-0095-note-creation-modal-expansion-and-write-view.md) Note creation modal full-window expansion and default write view (3) | done | 0/0 |
 | [STORY-0096](docs/issues/stories/STORY-0096-item-keys-for-querying.md) Item keys for querying (5) | backlog | 0/0 |
 | [STORY-0097](docs/issues/stories/STORY-0097-item-colorization-with-color-picker-and-viewer-background-styling.md) Item colorization with color picker and viewer background styling (3) | backlog | 0/0 |
-| [STORY-0098](docs/issues/stories/STORY-0098-reporting-export-as-csv.md) Reporting export as CSV (3) | backlog | 0/0 |
+| [STORY-0098](docs/issues/stories/STORY-0098-reporting-export-as-csv.md) Reporting export as CSV (3) | review | 0/0 |
 | [STORY-0099](docs/issues/stories/STORY-0099-simplify-vault-switcher-menu.md) Simplify vault switcher menu (3) | done | 0/0 |
 | [STORY-0100](docs/issues/stories/STORY-0100-move-stack-between-parent-and-standalone.md) Move stack between parent stack and standalone after creation (3) | done | 0/0 |
 | [STORY-0101](docs/issues/stories/STORY-0101-delete-item-from-viewer-and-details.md) Delete item from item viewer and editor (3) | done | 0/0 |
