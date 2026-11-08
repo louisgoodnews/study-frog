@@ -9,13 +9,19 @@ pub enum Protocol {
     OpenAiCompatible,
     /// Anthropic's `/v1/messages`.
     Anthropic,
+    /// Google's `generateContent` of the Generative Language API.
+    Gemini,
+    /// DeepSeek's `/chat/completions`.
+    DeepSeek,
 }
 
 /// Every protocol, in the order the form offers them.
-pub const PROTOCOLS: [Protocol; 3] = [
+pub const PROTOCOLS: [Protocol; 5] = [
     Protocol::Ollama,
     Protocol::OpenAiCompatible,
     Protocol::Anthropic,
+    Protocol::Gemini,
+    Protocol::DeepSeek,
 ];
 
 /// The word stored and shown for a protocol.
@@ -24,6 +30,8 @@ pub fn protocol_name(p: Protocol) -> &'static str {
         Protocol::Ollama => "ollama",
         Protocol::OpenAiCompatible => "openai",
         Protocol::Anthropic => "anthropic",
+        Protocol::Gemini => "gemini",
+        Protocol::DeepSeek => "deepseek",
     }
 }
 
@@ -40,6 +48,18 @@ pub fn default_base_url(p: Protocol) -> &'static str {
         Protocol::Ollama => "http://localhost:11434",
         Protocol::OpenAiCompatible => "https://api.openai.com",
         Protocol::Anthropic => "https://api.anthropic.com",
+        Protocol::Gemini => "https://generativelanguage.googleapis.com",
+        Protocol::DeepSeek => "https://api.deepseek.com",
+    }
+}
+
+/// The models a protocol suggests when a connection is added; the first is filled in. Empty when
+/// the model is the user's own choice.
+pub fn default_models(p: Protocol) -> &'static [&'static str] {
+    match p {
+        Protocol::Gemini => &["gemini-1.5-flash", "gemini-1.5-pro"],
+        Protocol::DeepSeek => &["deepseek-chat", "deepseek-reasoner"],
+        _ => &[],
     }
 }
 

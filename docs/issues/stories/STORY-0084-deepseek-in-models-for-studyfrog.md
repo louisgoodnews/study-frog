@@ -2,7 +2,7 @@
 id: STORY-0084
 type: story
 title: Deepseek in models for StudyFrog
-status: backlog
+status: review
 epic: EPIC-028
 parents: [EPIC-028]
 estimate: 5
@@ -26,10 +26,10 @@ Integrate Deepseek as a first-class model provider:
 - Handle API key storage in `secrets.toml` with strict `0600` permissions via `studyfrog-service::agent`.
 
 ## Acceptance Criteria
-- [ ] The Assistant Settings screen offers Deepseek as a distinct selectable model provider
-- [ ] Users can configure their Deepseek API key, base URL (defaulting to https://api.deepseek.com), and model selection (deepseek-chat, deepseek-reasoner)
+- [x] The Assistant Settings screen offers Deepseek as a distinct selectable model provider
+- [x] Users can configure their Deepseek API key, base URL (defaulting to https://api.deepseek.com), and model selection (deepseek-chat, deepseek-reasoner)
 - [ ] Interactive exams and prompt actions communicate reliably with Deepseek endpoints and handle rate limits or error responses gracefully
-- [ ] API keys are stored securely in secrets.toml with 0600 permissions and never logged
+- [x] API keys are stored securely in secrets.toml with 0600 permissions and never logged
 
 ## Design Notes
 Crate touchpoints:
@@ -37,6 +37,11 @@ Crate touchpoints:
 - `crates/studyfrog-agent/src/wire.rs`: build request using Deepseek URL and authentication header; parse chat reply.
 - `crates/studyfrog-ui/src/view/agent.rs`: connection selection button and model presets.
 - Release target: version 0.5.0 (Phase M12).
+
+## Progress (2026-11-08)
+Built and tested against fixed requests and answers (`crates/studyfrog-agent/tests/wire.rs`): `Protocol::DeepSeek` with the default address `https://api.deepseek.com`, `POST /chat/completions` with a Bearer key (required), the reasoning text of `deepseek-reasoner` ignored, and the suggested models `deepseek-chat` and `deepseek-reasoner` as buttons in the connection form. Errors and rate limits (429) use the shared handling, which never echoes the key.
+
+Open: criterion 3 (exams and prompt actions "reliably" against DeepSeek) is not checked; nothing was run against the real DeepSeek endpoint.
 
 ## Dependencies
 EPIC-028.

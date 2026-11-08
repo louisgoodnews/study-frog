@@ -2,7 +2,7 @@
 id: STORY-0083
 type: story
 title: Google Gemini in models for StudyFrog
-status: backlog
+status: review
 epic: EPIC-028
 parents: [EPIC-028]
 estimate: 5
@@ -27,10 +27,10 @@ Implement Google Gemini API support within `studyfrog-agent` and `studyfrog-net`
 - Store keys securely in `secrets.toml` with `0600` permissions via `studyfrog-service::agent`.
 
 ## Acceptance Criteria
-- [ ] The Assistant Settings screen offers Google Gemini as an API provider option alongside Ollama, OpenAI, and Anthropic
+- [x] The Assistant Settings screen offers Google Gemini as an API provider option alongside Ollama, OpenAI, and Anthropic
 - [ ] Users can input a Google Gemini API key, select standard Gemini models (such as gemini-1.5-flash and gemini-1.5-pro), and test connectivity
-- [ ] Requests are transmitted to the Google Generative Language API endpoint (v1beta/models/{model}:generateContent) with x-goog-api-key authentication and correct wire schemas
-- [ ] Responses and error reasons (including safety finishReason codes) are parsed without data leaks, with API keys preserved in secrets.toml
+- [x] Requests are transmitted to the Google Generative Language API endpoint (v1beta/models/{model}:generateContent) with x-goog-api-key authentication and correct wire schemas
+- [x] Responses and error reasons (including safety finishReason codes) are parsed without data leaks, with API keys preserved in secrets.toml
 
 ## Design Notes
 Crate touchpoints:
@@ -38,6 +38,11 @@ Crate touchpoints:
 - `crates/studyfrog-agent/src/wire.rs`: add `format_gemini_request` and `parse_gemini_response`. The model parameter is embedded in the endpoint path (`/v1beta/models/{model}:generateContent`). Roles map `Role::User => "user"` and `Role::Assistant => "model"`.
 - `crates/studyfrog-ui/src/view/agent.rs` and `crates/studyfrog-service/src/agent.rs`: UI connection form updates and secret handling.
 - Release target: version 0.5.0 (Phase M12).
+
+## Progress (2026-11-08)
+Built and tested against fixed requests and answers (`crates/studyfrog-agent/tests/wire.rs`): `Protocol::Gemini`, the `generateContent` request with the key in `x-goog-api-key` only, `system_instruction` and `contents` with the `model` role, answers joined from all text parts, safety and block reasons reported without the text, and suggested models as buttons in the connection form.
+
+Open: criterion 2 is half met (key and models yes, but there is no explicit "test connectivity" button; a connection is first tried when it is used); never run against the real Google endpoint (the wire follows the provider's documentation, as for the other providers).
 
 ## Dependencies
 EPIC-028.

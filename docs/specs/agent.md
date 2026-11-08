@@ -12,7 +12,9 @@ Calls are logged in `logs/agent.log` of the application home: time, connection, 
 
 ## Wire
 Ollama `POST /api/chat`, OpenAI-compatible `POST /v1/chat/completions` (Bearer key), Anthropic `POST /v1/messages`
-(`x-api-key`, `anthropic-version`). One non-streaming request per turn, 180 s timeout. Errors say what happened
+(`x-api-key`, `anthropic-version`), Google Gemini `POST /v1beta/models/{model}:generateContent` (`x-goog-api-key`; the key
+is never in the address; a safety stop is reported with its `finishReason`) and DeepSeek `POST /chat/completions`
+(Bearer key; reasoning text is not shown). One non-streaming request per turn, 180 s timeout. Errors say what happened
 (refused key, wrong model name, unreachable server) and never echo a key.
 
 ## Working the vault

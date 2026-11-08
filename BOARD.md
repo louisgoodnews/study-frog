@@ -334,8 +334,8 @@
 | [STORY-0080](docs/issues/stories/STORY-0080-dark-light-and-system-theme.md) Dark, light and system theme (8) | done | 3/3 |
 | [STORY-0081](docs/issues/stories/STORY-0081-display-and-window-settings.md) Display and window settings (8) | done | 4/4 |
 | [STORY-0082](docs/issues/stories/STORY-0082-export-notes-to-pdf.md) Export notes to PDF (8) | done | 5/5 |
-| [STORY-0083](docs/issues/stories/STORY-0083-google-gemini-in-models-for-studyfrog.md) Google Gemini in models for StudyFrog (5) | backlog | 0/0 |
-| [STORY-0084](docs/issues/stories/STORY-0084-deepseek-in-models-for-studyfrog.md) Deepseek in models for StudyFrog (5) | backlog | 0/0 |
+| [STORY-0083](docs/issues/stories/STORY-0083-google-gemini-in-models-for-studyfrog.md) Google Gemini in models for StudyFrog (5) | review | 0/0 |
+| [STORY-0084](docs/issues/stories/STORY-0084-deepseek-in-models-for-studyfrog.md) Deepseek in models for StudyFrog (5) | review | 0/0 |
 | [STORY-0085](docs/issues/stories/STORY-0085-performance-optimization-in-studyfrog-pdf-viewer.md) Performance optimization in StudyFrog pdf-viewer (5) | in_progress | 0/0 |
 | [STORY-0086](docs/issues/stories/STORY-0086-expanded-achievement-catalog-and-milestone-tiers.md) Expanded achievement catalog and milestone tiers (3) | backlog | 0/0 |
 | [STORY-0087](docs/issues/stories/STORY-0087-per-stack-achievement-ui-and-filtering.md) Per-stack achievement UI and filtering (3) | backlog | 0/0 |

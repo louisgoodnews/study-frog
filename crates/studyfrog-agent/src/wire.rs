@@ -1,4 +1,4 @@
-//! The requests and answers of the three protocols.
+//! The requests and answers of the protocols.
 
 use serde_json::{Value, json};
 
@@ -13,6 +13,13 @@ fn role_word(r: Role) -> &'static str {
     match r {
         Role::User => "user",
         Role::Assistant => "assistant",
+    }
+}
+
+fn gemini_role(r: Role) -> &'static str {
+    match r {
+        Role::User => "user",
+        Role::Assistant => "model",
     }
 }
 
@@ -69,6 +76,42 @@ pub fn build_request(
                 vec![json_header, auth],
                 json!({"model": p.model, "messages": all}),
             )
+        }
+        Protocol::DeepSeek => {
+            let mut all = vec![json!({"role": "system", "content": system})];
+            all.extend(turns(messages));
+            let auth = (
+                "Authorization".to_owned(),
+                format!("Bearer {}", need_key()?),
+            );
+            (
+                "/chat/completions",
+                vec![json_header, auth],
+                json!({"model": p.model, "messages": all}),
+            )
+        }
+        Protocol::Gemini => {
+            // The key goes in a header, never in the address, so it cannot end up in a URL log.
+            let headers = vec![
+                json_header,
+                ("x-goog-api-key".to_owned(), need_key()?.to_owned()),
+            ];
+            let contents: Vec<Value> = messages
+                .iter()
+                .map(|m| json!({"role": gemini_role(m.role), "parts": [{"text": m.content}]}))
+                .collect();
+            let path = format!("/v1beta/models/{}:generateContent", p.model);
+            return Ok(HttpRequest {
+                url: url(p, &path),
+                headers,
+                body: json!({
+                    "system_instruction": {"parts": [{"text": system}]},
+                    "contents": contents,
+                    "generationConfig": {"maxOutputTokens": MAX_TOKENS},
+                })
+                .to_string(),
+                timeout_secs: TIMEOUT_SECS,
+            });
         }
         Protocol::Anthropic => {
             let headers = vec![
@@ -129,7 +172,8 @@ pub fn parse_reply(p: &Provider, r: &HttpResponse) -> Result<String, String> {
             .pointer("/message/content")
             .and_then(Value::as_str)
             .map(str::to_owned),
-        Protocol::OpenAiCompatible => v
+        Protocol::Gemini => return gemini_text(p, &v),
+        Protocol::OpenAiCompatible | Protocol::DeepSeek => v
             .pointer("/choices/0/message/content")
             .and_then(Value::as_str)
             .map(str::to_owned),
@@ -143,4 +187,32 @@ pub fn parse_reply(p: &Provider, r: &HttpResponse) -> Result<String, String> {
     };
     text.filter(|t| !t.trim().is_empty())
         .ok_or_else(|| format!("{} answered without any text", p.name))
+}
+
+/// The text of a Gemini answer. Without text it says why: a safety filter or another stop reason
+/// (never the content of the request).
+fn gemini_text(p: &Provider, v: &Value) -> Result<String, String> {
+    let parts = v
+        .pointer("/candidates/0/content/parts")
+        .and_then(Value::as_array);
+    let text: String = parts
+        .map(|parts| {
+            parts
+                .iter()
+                .filter_map(|part| part.get("text").and_then(Value::as_str))
+                .collect()
+        })
+        .unwrap_or_default();
+    if !text.trim().is_empty() {
+        return Ok(text);
+    }
+    let stop = v
+        .pointer("/candidates/0/finishReason")
+        .or_else(|| v.pointer("/promptFeedback/blockReason"))
+        .and_then(Value::as_str)
+        .filter(|reason| *reason != "STOP");
+    Err(match stop {
+        Some(reason) => format!("{} gave no answer: it stopped with {reason}", p.name),
+        None => format!("{} answered without any text", p.name),
+    })
 }

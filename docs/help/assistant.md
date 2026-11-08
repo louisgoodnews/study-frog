@@ -12,7 +12,7 @@ ready-made prompts for any AI chat, to copy or save: see [[prompts]].
 A connection is a model the assistant talks to.
 
 - **A model on this computer**, such as Ollama and similar tools. Nothing leaves your computer.
-- **A model at a provider**: OpenAI-compatible services or Anthropic.
+- **A model at a provider**: OpenAI-compatible services, Anthropic, Google Gemini or DeepSeek.
 
 To add one, fill in **Connection name**, the kind of service, the **Address**, the **Model** name and, for a
 provider, the **API key** (not needed for a local model), then press **Add connection**. **Use** chooses the

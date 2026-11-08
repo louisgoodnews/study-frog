@@ -1,9 +1,9 @@
 //! The assistant screen: tabs, the stacks it may read, and the connections.
 
 use eframe::egui::{self, RichText};
-use studyfrog_agent::provider::{PROTOCOLS, host_of, is_local, protocol_name};
+use studyfrog_agent::provider::{PROTOCOLS, default_models, host_of, is_local, protocol_name};
 
-use crate::agent_types::{AgentMsg, AgentTab, FormEdit};
+use crate::agent_types::{AgentMsg, AgentTab, ConnForm, FormEdit};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
@@ -101,6 +101,22 @@ fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     new_connection(state, ui, out);
 }
 
+/// One button per model the chosen protocol suggests; a click fills in the Model field.
+fn suggested_models(f: &ConnForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let models = default_models(f.protocol);
+    if models.is_empty() {
+        return;
+    }
+    ui.horizontal_wrapped(|ui| {
+        ui.label("Suggested models:");
+        for model in models {
+            if ui.selectable_label(f.model == *model, *model).clicked() {
+                send(out, AgentMsg::Form(FormEdit::Model((*model).to_owned())));
+            }
+        }
+    });
+}
+
 fn new_connection(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let f = &state.agent.form;
     ui.add_space(8.0);
@@ -134,6 +150,7 @@ fn new_connection(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 send(out, AgentMsg::Form(make(t)));
             }
         }
+        suggested_models(f, ui, out);
         let name = ui.label("API key (not needed for a local model)");
         let mut key = f.key.clone();
         let edit = egui::TextEdit::singleline(&mut key)

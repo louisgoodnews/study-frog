@@ -1,6 +1,6 @@
 //! The connections part of the assistant screen: reading, the form and adding one. Pure.
 
-use studyfrog_agent::provider::{Provider, default_base_url, is_local};
+use studyfrog_agent::provider::{Provider, default_base_url, default_models, is_local};
 use studyfrog_agent::settings::provider_problem;
 use studyfrog_service::agent::Connections;
 
@@ -24,6 +24,17 @@ pub(crate) fn loaded(state: State, c: Connections) -> (State, Vec<Effect>) {
     })
 }
 
+/// The model for the form after the protocol changed: the new protocol's first suggestion when the
+/// model is empty or was only the old protocol's suggestion, else what the user typed.
+fn suggested_model(f: &ConnForm, protocol: studyfrog_agent::provider::Protocol) -> String {
+    let untouched = f.model.is_empty() || default_models(f.protocol).contains(&f.model.as_str());
+    match default_models(protocol).first() {
+        Some(first) if untouched => (*first).to_owned(),
+        None if untouched => String::new(),
+        _ => f.model.clone(),
+    }
+}
+
 pub(crate) fn form_edit(a: AgentState, e: FormEdit) -> AgentState {
     let f = a.form.clone();
     let form = match e {
@@ -31,6 +42,7 @@ pub(crate) fn form_edit(a: AgentState, e: FormEdit) -> AgentState {
         FormEdit::Protocol(protocol) => ConnForm {
             protocol,
             base_url: default_base_url(protocol).to_owned(),
+            model: suggested_model(&f, protocol),
             ..f
         },
         FormEdit::BaseUrl(base_url) => ConnForm { base_url, ..f },
