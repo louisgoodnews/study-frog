@@ -74,5 +74,13 @@ calendar sessions: these wait under **Work the vault > Proposals from AI tools**
 them like the assistant's own proposals. Nothing is written before you apply it, unless you start the server with
 `--mcp-allow-write`. Moving a stack or deleting an item needs `--mcp-allow-write --mcp-allow-destructive` as well,
 and every such change can be taken back under **Changes by AI tools**.
+The assistant can also use tools of other MCP servers (a literature search, a citation manager, a local
+computation server). In **Connections > Tool servers (MCP)**, give a name and either the program to start (such as
+`npx -y some-mcp-server`) or an `http://` or `https://` address, then press **Discover** to see its tools, resources
+and prompts. The list is kept in `mcp_servers.toml` in your config folder. A remote address gets nothing until you
+tick **Allow sending text to** it. While working the vault or examining you, the assistant may ask for a tool; a tool
+that says it only reads runs at once if you ticked **Run read-only tools without asking**, every other call shows
+**Allow Assistant to run tool … on server …?** with its arguments, and nothing runs until you press **Allow this call**.
+
 Run `studyfrog --mcp` yourself only if you want to talk to it by hand: it reads one JSON message per line from
 standard input and answers on standard output.

@@ -48,6 +48,8 @@ pub mod item_schedule;
 pub mod kanban;
 pub mod library_rows;
 pub mod logging;
+pub mod mcp_client_io;
+pub mod mcp_servers;
 pub mod mcp_staging;
 pub mod mcp_undo;
 pub mod pdf_export;

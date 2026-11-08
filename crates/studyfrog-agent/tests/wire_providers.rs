@@ -34,6 +34,7 @@ fn body(text: &str) -> Value {
 
 fn ok(text: &str) -> HttpResponse {
     HttpResponse {
+        headers: Vec::new(),
         status: 200,
         body: text.into(),
     }
@@ -105,6 +106,7 @@ fn gemini_errors_show_the_providers_message_and_hint_at_rate_limits() {
         "https://generativelanguage.googleapis.com",
     );
     let limited = HttpResponse {
+        headers: Vec::new(),
         status: 429,
         body: r#"{"error":{"message":"Quota exceeded"}}"#.into(),
     };

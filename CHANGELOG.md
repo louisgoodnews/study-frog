@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- The assistant can use tools of external MCP servers (STORY-0121): register a program or an `http(s)://` address under Connections > Tool servers (MCP) (kept in `mcp_servers.toml` in the config folder), discover its tools, resources and prompts, and let the assistant call them while working the vault or examining you; only trusted read-only tools run without asking, every other call waits for "Allow this call", and a remote server gets nothing until you allow it.
 - MCP authoring with the user in the loop (STORY-0119): the standard prompts are MCP prompts (`file_path`, `target_stack`, `depth`, `count`); `vault_propose_items`, `note_extract_inline_cards`, `diary_log_entry` and `calendar_plan_session` stage their changes in `.studyfrog/staged/` unless the server runs with `--mcp-allow-write`, and the Assistant's "Work the vault" tab lists them to review, apply or discard; `vault_move_stack` and `vault_delete_item` need `--mcp-allow-write --mcp-allow-destructive` and keep undo entries the user takes back under "Changes by AI tools".
 - More of the MCP server (STORY-0118): resources `studyfrog://reports/{kind}` (retention, forecast, familiarity, calibration, runs, latency) and `studyfrog://diary/{date}`; an item's resource also carries its FSRS or SM-2 schedule in every stack and finds items by key; stacks by folder or title; the summary has due and new counts, items by kind and the streak; read-only tools `vault_get_due_queue`, `analytics_get_report`, `forecast_simulate_workload` and `pdf_read_pages`. Leech diagnostics and a study-minute forecast are not built yet.
 - The MCP server can also listen on local HTTP: `studyfrog --mcp --mcp-http 127.0.0.1:<port>` serves `POST /mcp` (Streamable HTTP, JSON answers) on 127.0.0.1 only, wants a bearer token (`mcp_http` under `[keys]` in `secrets.toml`, else a fresh one printed to standard error) and refuses foreign `Host` and browser `Origin` headers against DNS rebinding (STORY-0120).
@@ -16,6 +17,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - Item colours: a `color` in front matter (palette word or `"#RRGGBB"`), chosen in the item page's Details > Properties (swatches, None, picker, code); it tints the item page, its Details cards, the rehearsal card and the item's Library row (with a dot), keeping text at a 4.5:1 contrast in both themes (STORY-0097, STORY-0123).
 - `studyfrog --screenshot FILE --screen item:<ULID>` pictures an item's page (STORY-0123).
 - Store migration 24: `item.key`, `item.color` and a `key_counter` table, so a deleted item's key is not handed out again (STORY-0096).
+
+### Changed
+- `studyfrog-net` returns the answer's headers with every response, so an MCP client can keep a server's session (STORY-0121).
 
 ## [0.5.0] - 2026-11-08
 

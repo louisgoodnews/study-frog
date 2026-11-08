@@ -36,6 +36,7 @@ fn body(text: &str) -> Value {
 
 fn ok(text: &str) -> HttpResponse {
     HttpResponse {
+        headers: Vec::new(),
         status: 200,
         body: text.into(),
     }
@@ -122,6 +123,7 @@ fn failures_are_sentences_that_never_contain_the_key() {
     let e = parse_reply(
         &p,
         &HttpResponse {
+            headers: Vec::new(),
             status: 401,
             body: r#"{"error":{"message":"invalid x-api-key"}}"#.into(),
         },
@@ -135,6 +137,7 @@ fn failures_are_sentences_that_never_contain_the_key() {
         parse_reply(
             &p,
             &HttpResponse {
+                headers: Vec::new(),
                 status: 404,
                 body: "no".into()
             }
@@ -155,6 +158,7 @@ fn failures_are_sentences_that_never_contain_the_key() {
     let long = parse_reply(
         &p,
         &HttpResponse {
+            headers: Vec::new(),
             status: 500,
             body: "x".repeat(5000),
         },

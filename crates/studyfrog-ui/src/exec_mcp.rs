@@ -1,6 +1,8 @@
 //! Performing the assistant's other effects: connections, and what AI clients staged or changed over
-//! MCP (STORY-0119).
+//! MCP (STORY-0119), and the external tool servers the assistant uses (STORY-0121).
 
+use studyfrog_service::mcp_client_io::{call_server_tool, discover_server};
+use studyfrog_service::mcp_servers::{load_servers, save_servers};
 use studyfrog_service::mcp_staging::{list_staged, remove_staged};
 use studyfrog_service::mcp_undo::{list_undo, undo_recorded};
 
@@ -26,6 +28,16 @@ fn load(w: &Worker) -> Msg {
     mcp(McpMsg::Loaded(staged.map(|st| (st, undo))))
 }
 
+fn servers(w: &Worker, save: Option<&[studyfrog_agent::mcp_client::McpServer]>) -> Msg {
+    let Some(dir) = w.config_dir.clone() else {
+        return mcp(McpMsg::Servers(Err("there is no config folder".to_owned())));
+    };
+    let saved = save.map_or(Ok(()), |list| {
+        save_servers(&dir, list).map_err(|e| e.to_string())
+    });
+    mcp(McpMsg::Servers(saved.and_then(|()| load_servers(&dir))))
+}
+
 /// Perform one of these effects.
 pub fn run(w: &mut Worker, effect: AgentEffect, _now_ns: i64) -> Msg {
     match effect {
@@ -39,6 +51,13 @@ pub fn run(w: &mut Worker, effect: AgentEffect, _now_ns: i64) -> Msg {
             },
             None => load(w),
         },
+        AgentEffect::LoadServers => servers(w, None),
+        AgentEffect::SaveServers(list) => servers(w, Some(&list)),
+        AgentEffect::Discover(s) => mcp(McpMsg::Discovered(discover_server(&s, w.transport))),
+        AgentEffect::CallTool(s, p) => {
+            let outcome = call_server_tool(&s, w.transport, &p.call.tool, &p.call.arguments);
+            mcp(McpMsg::ToolDone(p, outcome))
+        }
         AgentEffect::Undo(id) => mcp(McpMsg::Undone(match &mut w.session {
             Some(s) => undo_recorded(s, &id)
                 .map(Box::new)

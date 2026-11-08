@@ -27,7 +27,11 @@ fn fake_model(req: &HttpRequest) -> Result<HttpResponse, String> {
     let reply = r#"{"summary":"Made an index","changes":[{"action":"create_note","stack":"deck","title":"Index","body":"- [[C1]]"}]}"#;
     let escaped = reply.replace('\\', "\\\\").replace('"', "\\\"");
     let body = format!("{{\"message\":{{\"role\":\"assistant\",\"content\":\"{escaped}\"}}}}");
-    Ok(HttpResponse { status: 200, body })
+    Ok(HttpResponse {
+        headers: Vec::new(),
+        status: 200,
+        body,
+    })
 }
 
 #[test]

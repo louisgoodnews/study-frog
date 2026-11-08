@@ -7,6 +7,7 @@ mod agent_exam;
 mod agent_mcp;
 mod agent_prompt_run;
 mod agent_prompts;
+mod agent_servers;
 mod agent_staged;
 mod agent_wiki;
 mod backup;

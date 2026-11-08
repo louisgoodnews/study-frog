@@ -47,7 +47,7 @@ pub(crate) fn send_wiki(state: State) -> (State, Vec<Effect>) {
     else {
         return (state, Vec::new());
     };
-    let system = wiki_system();
+    let (state, system) = crate::mcp_tool_calls::with_tools(state, wiki_system());
     let user = wiki_user(&state.agent.instruction, &pending.stacks, &pending.items);
     let messages = vec![Message {
         role: Role::User,
@@ -128,6 +128,7 @@ pub(crate) fn chat(state: State, messages: Vec<Message>) -> (State, Vec<Effect>)
         return (state, Vec::new());
     };
     let system = exam_system(&state.agent.exam.items);
+    let (state, system) = crate::mcp_tool_calls::with_tools(state, system);
     let (state, _) = with(state, |a| AgentState {
         busy: true,
         exam: ExamState {

@@ -43,9 +43,18 @@ pub fn send(request: &HttpRequest) -> Result<HttpResponse, String> {
         .send(request.body.as_str())
         .map_err(|e| describe(&e, &request.url))?;
     let status = response.status().as_u16();
+    let headers: Vec<(String, String)> = response
+        .headers()
+        .iter()
+        .filter_map(|(k, v)| Some((k.as_str().to_lowercase(), v.to_str().ok()?.to_owned())))
+        .collect();
     let body = response
         .body_mut()
         .read_to_string()
         .map_err(|e| describe(&e, &request.url))?;
-    Ok(HttpResponse { status, body })
+    Ok(HttpResponse {
+        status,
+        body,
+        headers,
+    })
 }

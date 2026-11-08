@@ -4,6 +4,9 @@
 //! supplies, so this crate does no I/O and links no network library.
 
 pub mod exam;
+pub mod mcp_client;
+pub mod mcp_client_cfg;
+pub mod mcp_client_chat;
 pub mod mcp_route;
 pub mod mcp_stage;
 pub mod mcp_types;

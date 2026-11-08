@@ -110,6 +110,9 @@ pub fn chat(
         (None, _) => Err("This build cannot reach the network.".to_owned()),
         (_, None) => Err("there is no config folder".to_owned()),
     };
+    if let Some(asked) = tool_request(&reply, (&provider, &system, &messages), &purpose) {
+        return asked;
+    }
     match purpose {
         ChatPurpose::Exam => agent(AgentMsg::ExamReplied(reply)),
         ChatPurpose::Prompt => Msg::Prompts(crate::prompts_ui::PromptsMsg::Run(
@@ -121,6 +124,34 @@ pub fn chat(
             })))
         }
     }
+}
+
+/// When tools were offered and the reply asks for one: the request, with the conversation to go on.
+fn tool_request(
+    reply: &Result<String, String>,
+    (provider, system, messages): (&Provider, &str, &[Message]),
+    purpose: &ChatPurpose,
+) -> Option<Msg> {
+    let text = reply
+        .as_ref()
+        .ok()
+        .filter(|_| system.contains("\"tool_call\""))?;
+    let call = studyfrog_agent::mcp_client_chat::parse_tool_call(text)?;
+    let mut messages = messages.to_vec();
+    messages.push(Message {
+        role: studyfrog_agent::provider::Role::Assistant,
+        content: text.clone(),
+    });
+    let cont = crate::agent_mcp_types::ChatCont {
+        provider: provider.clone(),
+        system: system.to_owned(),
+        messages,
+        purpose: purpose.clone(),
+    };
+    let pending = crate::agent_mcp_types::PendingCall { call, cont };
+    Some(agent(AgentMsg::Mcp(
+        crate::agent_mcp_types::McpMsg::ToolRequested(Box::new(pending)),
+    )))
 }
 
 /// Apply the accepted changes and report the refreshed vault.

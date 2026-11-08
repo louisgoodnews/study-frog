@@ -30,9 +30,10 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
         Screen::Agent => {
             let pages = Effect::Help(crate::help_types::HelpEffect::Load);
             let mcp = Effect::Agent(crate::agent_mcp_types::AgentEffect::LoadMcp);
+            let tools = Effect::Agent(crate::agent_mcp_types::AgentEffect::LoadServers);
             (
                 State { screen, ..state },
-                vec![Effect::LoadAgent, mcp, pages],
+                vec![Effect::LoadAgent, mcp, tools, pages],
             )
         }
         Screen::Reports => {

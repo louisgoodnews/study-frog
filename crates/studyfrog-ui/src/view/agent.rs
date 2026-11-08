@@ -38,6 +38,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 ui.colored_label(ui.visuals().error_fg_color, e);
             }
             ui.add_space(8.0);
+            kit::column(ui, 860.0, |ui| {
+                crate::view::agent_servers::approval(state, ui, out)
+            });
             kit::column(ui, 860.0, |ui| match a.tab {
                 AgentTab::Connections => connections(state, ui, out),
                 AgentTab::Wiki => agent_wiki::wiki(state, ui, out),
@@ -100,6 +103,7 @@ fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     crate::view::agent_mcp::snippet(state, ui);
     new_connection(state, ui, out);
+    crate::view::agent_servers::servers(state, ui, out);
 }
 
 /// One button per model the chosen protocol suggests; a click fills in the Model field.

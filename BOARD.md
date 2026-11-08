@@ -372,7 +372,7 @@
 | [STORY-0118](docs/issues/stories/STORY-0118-studyfrog-mcp-server-resources-and-read-only-search-and-analytics-tools.md) StudyFrog MCP server resources and read-only search, analytics, and forecast tools (5) | review | 0/0 |
 | [STORY-0119](docs/issues/stories/STORY-0119-annotated-mcp-authoring-tools-human-in-the-loop-staging-and-prompts.md) Annotated MCP authoring tools, human-in-the-loop staging, and parameterized MCP prompts (5) | done | 0/0 |
 | [STORY-0120](docs/issues/stories/STORY-0120-cli-stdio-mcp-server-mode-and-localhost-streamable-http-transport.md) CLI stdio MCP server mode and localhost Streamable HTTP transport (5) | done | 0/0 |
-| [STORY-0121](docs/issues/stories/STORY-0121-built-in-assistant-mcp-client-host-for-external-academic-tool-servers.md) Built-in Assistant MCP client host for external academic tool servers (8) | backlog | 0/0 |
+| [STORY-0121](docs/issues/stories/STORY-0121-built-in-assistant-mcp-client-host-for-external-academic-tool-servers.md) Built-in Assistant MCP client host for external academic tool servers (8) | done | 0/0 |
 | [STORY-0122](docs/issues/stories/STORY-0122-studyfrog-application-files-in-local-with-logs-and-configurations.md) StudyFrog application files in ~/.local/ with logs and configurations (5) | review | 0/0 |
 | [STORY-0123](docs/issues/stories/STORY-0123-colorization-field-for-items-influencing-details-and-rehearsal-background.md) Colorization field for items influencing details and rehearsal view background (3) | done | 0/0 |
 | [STORY-0124](docs/issues/stories/STORY-0124-interactive-cli-control-protocol-and-console-log-streaming-for-ai-agents.md) Interactive CLI control protocol and console log streaming for AI agents (8) | review | 0/0 |
@@ -417,5 +417,5 @@
 | [EPIC-034](docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md) Behavioral learning analytics, FSRS optimizer, and workload forecasting | backlog | 0/6 |
 | [EPIC-035](docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md) Rich active-recall formats, inline note extraction, and focus workflows | backlog | 0/5 |
 | [EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md) Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement | backlog | 0/4 |
-| [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md) State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry | backlog | 3/5 |
+| [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md) State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry | review | 4/5 |
 | [EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md) CLI control protocol for interactive AI agent application operation | review | 0/2 |

@@ -2,7 +2,7 @@
 id: EPIC-037
 type: epic
 title: State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry
-status: backlog
+status: review
 parents: []
 labels: [m12, agent, ext, service, ui, app]
 acceptance_criteria:
@@ -33,9 +33,9 @@ Implement a complete, extensible Model Context Protocol (MCP) stack across Study
    - Allow users to configure external MCP servers (`stdio` subprocess or HTTP URL) in the Assistant Connections tab, discover their tools/resources, and invoke them during Assistant tasks with explicit per-tool approval.
 
 ## Acceptance Criteria
-- [ ] StudyFrog includes a pure, transport-agnostic JSON-RPC 2.0 MCP engine and a plain-data registry (McpRegistry) for registering Tools (with safety annotations), Resource templates, and Prompts without OOP traits
-- [ ] Running studyfrog-app --mcp exposes the vault over stdio or localhost Streamable HTTP with canonical studyfrog:// resources, read-only search/analytics/forecast tools, staged authoring tools, and parameterized prompts
-- [ ] The built-in Assistant can act as an MCP Host/Client connecting to external MCP servers (such as literature search, citation managers, or local domain tools) with explicit user permission gates
+- [x] StudyFrog includes a pure, transport-agnostic JSON-RPC 2.0 MCP engine and a plain-data registry (McpRegistry) for registering Tools (with safety annotations), Resource templates, and Prompts without OOP traits
+- [x] Running studyfrog-app --mcp exposes the vault over stdio or localhost Streamable HTTP with canonical studyfrog:// resources, read-only search/analytics/forecast tools, staged authoring tools, and parameterized prompts
+- [x] The built-in Assistant can act as an MCP Host/Client connecting to external MCP servers (such as literature search, citation managers, or local domain tools) with explicit user permission gates
 
 ## Design Notes
 Child stories:
@@ -46,6 +46,9 @@ Child stories:
 - STORY-0121: Built-in Assistant MCP client host for external academic tool servers (estimate: 8)
 
 Reference architecture: `docs/research/mcp-architecture.md`.
+
+## Progress (2026-11-08)
+STORY-0117, STORY-0119, STORY-0120 and STORY-0121 are done; STORY-0118 is in review because leech diagnostics, the study-minute forecast and true retention curves wait for EPIC-034. The epic stays in review until STORY-0118 is done. Nothing was tried with a real AI client or a real external MCP server.
 
 ## Dependencies
 EPIC-016 (Plugin Boundaries), EPIC-021 (Knowledge Workspace), and EPIC-028 (Extensibility).

@@ -12,37 +12,38 @@ use crate::agent_ui::{fail, notice, with};
 use crate::effect::Effect;
 use crate::state::State;
 
-fn with_mcp(state: State, f: impl FnOnce(McpUi) -> McpUi) -> (State, Vec<Effect>) {
-    with(state, |a| AgentState {
-        mcp: f(a.mcp.clone()),
-        ..a
-    })
+fn undone(state: State, info: VaultInfo) -> (State, Vec<Effect>) {
+    let state = State {
+        vault: Some(info),
+        ..state
+    };
+    let (state, _) = notice(state, "The change was undone.".to_owned());
+    (state, vec![Effect::Agent(AgentEffect::LoadMcp)])
 }
 
-/// Handle the MCP messages of the assistant.
-pub fn update(state: State, msg: McpMsg) -> (State, Vec<Effect>) {
-    match msg {
-        McpMsg::Loaded(Err(e)) => fail(state, e),
-        McpMsg::Loaded(Ok((staged, undo))) => with_mcp(state, |m| McpUi { staged, undo, ..m }),
-        McpMsg::Review(id) => review(state, &id),
-        McpMsg::Discard(id) => {
-            let (state, _) = with_mcp(state, |m| McpUi {
-                reviewing: m.reviewing.filter(|r| *r != id),
-                ..m
-            });
-            (state, vec![Effect::Agent(AgentEffect::RemoveStaged(id))])
-        }
-        McpMsg::Undo(id) => (state, vec![Effect::Agent(AgentEffect::Undo(id))]),
-        McpMsg::Undone(Err(e)) => fail(state, e),
-        McpMsg::Undone(Ok(info)) => {
-            let state = State {
-                vault: Some(*info),
-                ..state
-            };
-            let (state, _) = notice(state, "The change was undone.".to_owned());
-            (state, vec![Effect::Agent(AgentEffect::LoadMcp)])
-        }
+/// Handle the MCP messages of the assistant. The state is edited in place: it is large, and copies
+/// of it fill the stack.
+pub fn update(mut state: State, msg: McpMsg) -> (State, Vec<Effect>) {
+    if crate::mcp_client_ui::handles(&msg) {
+        return crate::mcp_client_ui::update(state, msg);
     }
+    let m = &mut state.agent.mcp;
+    let effect = match msg {
+        McpMsg::Loaded(Err(e)) | McpMsg::Undone(Err(e)) => return fail(state, e),
+        McpMsg::Loaded(Ok((staged, undo))) => {
+            (m.staged, m.undo) = (staged, undo);
+            None
+        }
+        McpMsg::Review(id) => return review(state, &id),
+        McpMsg::Discard(id) => {
+            m.reviewing = m.reviewing.take().filter(|r| *r != id);
+            Some(AgentEffect::RemoveStaged(id))
+        }
+        McpMsg::Undo(id) => Some(AgentEffect::Undo(id)),
+        McpMsg::Undone(Ok(info)) => return undone(state, *info),
+        _ => None,
+    };
+    (state, effect.map(Effect::Agent).into_iter().collect())
 }
 
 /// Show a staged proposal in the review card, every change accepted.

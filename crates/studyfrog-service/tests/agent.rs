@@ -21,6 +21,7 @@ static SEEN: Mutex<Vec<HttpRequest>> = Mutex::new(Vec::new());
 fn fake(req: &HttpRequest) -> Result<HttpResponse, String> {
     SEEN.lock().unwrap().push(req.clone());
     Ok(HttpResponse {
+        headers: Vec::new(),
         status: 200,
         body: r#"{"choices":[{"message":{"content":"pong"}}]}"#.into(),
     })

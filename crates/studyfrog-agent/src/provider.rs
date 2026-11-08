@@ -137,6 +137,8 @@ pub struct HttpResponse {
     pub status: u16,
     /// The body as text.
     pub body: String,
+    /// Header names (lower case) and values the answer came with.
+    pub headers: Vec<(String, String)>,
 }
 
 /// Sends a request; the application binary supplies it (an error is a sentence for the user).
