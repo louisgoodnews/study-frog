@@ -7,6 +7,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-09
+
 ### Added
 - Reports as CSV (STORY-0098): the totals of learned and mastered items and the active streak, and per stack its items, due, learned, mastered, reviews, average interval and retention; "Save CSV to..." next to "Export as CSV" writes into a folder chosen in the folder dialog.
 - Settings > Data > **Open logs folder** shows the logs in the system's file manager (STORY-0122); the application log now also records failed background work, import and export outcomes with their warnings and skipped rows, and work that took two seconds or more (source `worker`), from the window and from headless instances.

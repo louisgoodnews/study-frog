@@ -40,43 +40,16 @@ For a complete guide to everything StudyFrog offers today, see **[FEATURES.md](F
   motion, and built-in Help (`F1`) with how-to guides, FAQ, and an interactive tutorial.
 
 ## Status
-- **Released: 0.5.0** (2026-11-08), part of the planned phase M12: an application home with rotating logs
-  (`~/.local/share/studyfrog`, `studyfrog --print-paths`, `studyfrog logs`; `STORY-0122`); a Model Context Protocol
-  server for AI tools (`studyfrog --mcp`, read-only; `STORY-0117`, `STORY-0118`, `STORY-0120`); Google Gemini and
-  DeepSeek as assistant providers (`STORY-0083`, `STORY-0084`); four more prompts, categories, options and a Prompts
-  screen (`STORY-0088` to `STORY-0092`, `TASK-0233`); 32 achievement tiers with a per-stack view (`STORY-0086`,
-  `STORY-0087`); the reports as CSV (`STORY-0098`); and a fix for blurred PDF pages (`BUG-0010`, `STORY-0085`). Notes:
-  [docs/RELEASE_NOTES_0.5.0.md](docs/RELEASE_NOTES_0.5.0.md). Earlier releases:
-  [0.4.3](docs/RELEASE_NOTES_0.4.3.md), [0.4.2](docs/RELEASE_NOTES_0.4.2.md), [0.4.1](docs/RELEASE_NOTES_0.4.1.md),
-  [0.4.0](docs/RELEASE_NOTES_0.4.0.md), [0.3.1](docs/RELEASE_NOTES_0.3.1.md), [0.3.0](docs/RELEASE_NOTES_0.3.0.md),
-  [0.2.0](docs/RELEASE_NOTES_0.2.0.md), and [0.1.0](docs/RELEASE_NOTES_0.1.0.md).
-- **Planned next (rest of phase M12)** — see **[PLANNED_FEATURES.md](PLANNED_FEATURES.md)**:
-  - **Exam run mode (`EPIC-033`)**: strict one-way progression, mandatory written answers, semantic comparison, and
-    percentage grading (`60%` pass threshold `D`/`4.0`, `5%` bands up to `95%–100%` `A+`/`1+`).
-  - **Item keys & colorization (`EPIC-032`)**: sequential keys (`STACK_1`, `FLASHCARD_500`) and an item color picker
-    with viewer background tinting (the CSV export of the reports is in 0.5.0).
-  - **Extensibility, Python API, Gemini/DeepSeek & PDF optimization (`EPIC-028`)**: out-of-process Python scripting
-    over the control protocol (built on `feature/complete-m12`: the `python/studyfrog` client, lifecycle events,
-    scheduled and event-bound jobs in `scripts/scripts.toml`, `studyfrog script run`, the Console screen; ADR 0013),
-    and the rest of the PDF viewer performance work (a real-window 60 fps check, eviction by use).
-  - **Behavioral learning analytics, FSRS optimizer & workload forecasting (`EPIC-034`)**: chronobiological hour-of-day
-    & weekday telemetry, within-session cognitive fatigue detection, multi-signal leech & interference pair diagnostics,
-    FSRS state-simulation forecasting in study minutes with an Exam Deadline Pacer, Workload-vs-Retention (CMRR)
-    simulation, and stability-tier empirical forgetting curves with True Retention.
-  - **Rich active-recall formats, inline note extraction & focus workflows (`EPIC-035`)**: inline Cloze deletions
-    (`{{c1::answer::hint}}`), Image Occlusion cards for diagrams/PDF figures, one-click card extraction from Markdown
-    notes (`Concept :: Definition` / `Q: / A:`), contrastive side-by-side drills for confused items, and a top-bar
-    Pomodoro focus timer integrated with the Learning Diary.
-  - **Evidence-based UI aesthetics, perceptual color science & UX refinement (`EPIC-036`)**: OKLCH iso-luminant palette
-    calibration, WCAG 3 APCA perceptual contrast verification, 60–75 cpl typographic reading measure, low-entropy
-    surface elevation over nested borders, and a distraction-free Zen focus mode.
-  - **State-of-the-art Model Context Protocol (MCP) server, client host & registry (`EPIC-037`)**: pure JSON-RPC 2.0 MCP
-    engine with a plain-data function-pointer registry (`McpRegistry`), `studyfrog-app --mcp` (`stdio` & localhost
-    Streamable HTTP) exposing `studyfrog://` resources, annotated search/analytics/staged-authoring tools, and native
-    MCP prompts, plus an MCP Client Host in the built-in Assistant (0.5.0 has the engine, read-only resources and search, and the stdio server).
-  - **CLI control protocol for AI agents & `~/.local/` application files (`EPIC-038`)**: interactive CLI control
-    protocol (`studyfrog-app ctl` / `--control-stdio`) giving AI agents full operational access to all screens,
-    rehearsal/exam runs, state snapshots, and real-time console logs (the logs and paths are in 0.5.0).
+- **Released: 0.6.0** (2026-11-09): Exam mode with grading, item keys and colours, learning analytics (habits, leeches,
+  workload forecast, true retention), cloze deletions, image occlusion, cards from notes, a contrastive drill and a focus
+  timer, a control protocol with a Python client, scripts and a Console, the rest of the Model Context Protocol work (reports,
+  authoring with staging, an HTTP transport and a client for external tool servers), OKLCH/APCA palettes, a type scale and
+  Zen mode, and a sharper PDF viewer. Notes: [docs/RELEASE_NOTES_0.6.0.md](docs/RELEASE_NOTES_0.6.0.md). Earlier releases:
+  [0.5.0](docs/RELEASE_NOTES_0.5.0.md), [0.4.3](docs/RELEASE_NOTES_0.4.3.md), [0.4.2](docs/RELEASE_NOTES_0.4.2.md),
+  [0.4.1](docs/RELEASE_NOTES_0.4.1.md), [0.4.0](docs/RELEASE_NOTES_0.4.0.md), [0.3.1](docs/RELEASE_NOTES_0.3.1.md),
+  [0.3.0](docs/RELEASE_NOTES_0.3.0.md), [0.2.0](docs/RELEASE_NOTES_0.2.0.md), and [0.1.0](docs/RELEASE_NOTES_0.1.0.md).
+- **Open points** — see **[PLANNED_FEATURES.md](PLANNED_FEATURES.md)**: STORY-0114 (a reading measure in pixels or in
+  characters) and STORY-0124 (control protocol commands for every screen) are in review.
 - **Verification:** all 10 automated repository gates in `scripts/check.sh` (formatting, `repo-lint`, `clippy`, unit/integration/UI tests, doc-tests, 250-line file limit, crate layering, zero inherent `impl` blocks, issue lint, and `BOARD.md` sync) pass. OCR for scanned PDFs, cloud sync, and non-Linux platforms are not planned for now.
 
 Live work: [BOARD.md](BOARD.md) and [priority-list.md](priority-list.md). Feature reference:
@@ -89,12 +62,12 @@ Linux on x86_64 with OpenGL and X11 or Wayland. Download from the
 
 ```sh
 # AppImage: one file
-sha256sum -c StudyFrog-0.5.0-x86_64.AppImage.sha256
-chmod +x StudyFrog-0.5.0-x86_64.AppImage && ./StudyFrog-0.5.0-x86_64.AppImage
+sha256sum -c StudyFrog-0.6.0-x86_64.AppImage.sha256
+chmod +x StudyFrog-0.6.0-x86_64.AppImage && ./StudyFrog-0.6.0-x86_64.AppImage
 
 # or the tarball
-sha256sum -c StudyFrog-0.5.0-x86_64.tar.gz.sha256
-tar -xzf StudyFrog-0.5.0-x86_64.tar.gz && ./StudyFrog-0.5.0/bin/studyfrog
+sha256sum -c StudyFrog-0.6.0-x86_64.tar.gz.sha256
+tar -xzf StudyFrog-0.6.0-x86_64.tar.gz && ./StudyFrog-0.6.0/bin/studyfrog
 ```
 The release notes have the full steps (menu entry, per-user install, removing it). To build from source:
 ```sh

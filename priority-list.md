@@ -5,7 +5,7 @@ The order in which Claude works on the planned items of phase M10 (0.3.0), kept 
 [docs/roadmap/M10-usability-and-insight.md](docs/roadmap/M10-usability-and-insight.md). Tick an item when it is done and
 verified (`scripts/check.sh` passes), and report it to the owner. The owner may reorder the list at any time.
 
-Last updated: 2026-11-08 (0.5.0 released with part of the planned scope; see **Phase M12 (0.5.0)** below for what shipped and what moves on).
+Last updated: 2026-11-09 (0.6.0 released; everything of phase M12 is built; STORY-0114 and STORY-0124 are in review, see below).
 
 ## Wave 1: start now
 - [x] 1. [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Names with commas cannot be used
@@ -84,7 +84,7 @@ Proposed by Claude on 2026-11-03 after the owner's test of 0.3.1; the owner may 
 - [x] [BUG-0014](docs/issues/bugs/BUG-0014-csv-import-fails-on-unquoted-multiline-fields.md) CSV importer recovery on unquoted multiline fields
 - [x] [BUG-0015](docs/issues/bugs/BUG-0015-csv-escaped-newlines-and-card-title-truncation.md) Escaped newline sequences in imported cards and 60-character card title truncation
 
-## Phase M12 (0.5.0)
+## Phase M12 (released in 0.5.0 and 0.6.0)
 Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-models-and-extensibility.md) and [PLANNED_FEATURES.md](PLANNED_FEATURES.md).
 
 **Wave 1: PDF legibility & performance, application files (`~/.local/`), and CLI control protocol**

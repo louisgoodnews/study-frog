@@ -150,3 +150,17 @@ The right-hand column of the item editor organizes metadata into a four-tab note
 - **Reports as CSV:** **Export as CSV** on the Reports screen writes one table to `exports/` in the vault.
 - **PDF viewer:** pages stay sharp after the thumbnails were drawn, and full-size pages and thumbnails are cached apart.
 
+---
+
+## 11. Added in 0.6.0
+
+- **Exam mode:** every card and question once, answered in writing, no skipping or going back, scored by the semantic comparison, graded on a combined `A+ / 1+` to `F / 5.0` scale with a pass at 60 %; results in Reports > Runs.
+- **Item keys and colours:** `STACK_1`, `FLASHCARD_12` and so on, searchable and copyable; a colour per item that tints the item page, Details, the rehearsal card and the Library row.
+- **Learning analytics:** Habits (hour and weekday, fatigue within a run), Leeches and look-alike pairs with a drill, Workload (simulated reviews and study minutes, exam pacer, workload against desired retention), true retention and forgetting curves.
+- **Active-recall formats:** cloze deletions, image occlusion, cards extracted from notes, a contrastive side-by-side drill, and a focus timer that logs blocks and offers a diary entry.
+- **Control protocol and scripting:** `studyfrog --control-stdio`, `run/control.sock` and `studyfrog ctl`; a standard-library Python client in `python/studyfrog/`; scripts run on a cron schedule or on lifecycle events with their own access level; a Console screen.
+- **More MCP:** reports, diary, schedules, the due queue, analytics and PDF pages; staged authoring tools and prompts; undoable structural tools; a localhost HTTP transport with a token; and a client so the Assistant can use external tool servers with your approval.
+- **Appearance:** OKLCH palettes with an APCA contrast test, a four-size type scale, tonal surfaces and one primary button per view, and Zen mode (Ctrl+Shift+F, F11).
+- **PDF viewer:** sharp at every zoom (including 400 % on a high-density display), caches dropped by last use, measured frame times.
+- **Other:** "Test connection" for each provider, per-stack numbers in the CSV export, "Open logs folder", worker events in the log.
+

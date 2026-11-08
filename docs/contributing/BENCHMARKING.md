@@ -168,3 +168,28 @@ seed 1; release profile, this machine, criterion with 3 s measurement):
 | 2026-11-08 | forecast of 5,000 cards, 90 days, 16 futures | 7.9 ms | < 50 ms |
 | 2026-11-08 | forecast of 5,000 cards, 365 days, 16 futures | 21.0 ms | < 50 ms |
 | 2026-11-08 | cmrr of 5,000 cards, 12 targets, 180 days, 4 futures | 45.4 ms | < 50 ms |
+
+## Release 0.6.0 check (2026-11-09)
+Each crate's benchmark on its own at low priority, release profile, on the development machine. The first pass ran while
+the machine was busy (load average about 9, another project compiling); the one number that missed its budget there was run
+again alone (see below). Every hot path is within its budget:
+
+| Bench | Result | Budget |
+|---|---|---|
+| `fsrs_schedule_100k` | 2.71 ms | < 10 ms |
+| `sm2_schedule_100k` | 0.70 ms | n/a |
+| `vault_10k` scan + parse / cold reindex / warm reindex | 118 ms / 384 ms / 35 ms | cold < 3 s |
+| `graph_5k` layout step / projection | 3.63 ms / 1.6 us | < 8 ms |
+| rehearsal queues of 10k items | 0.06 to 0.56 ms | n/a |
+| PDF, 500 pages: structure / all text / one page's words / draw one page | 5.9 ms / 300 ms / 45 ms / 8.1 ms | < 50 ms / < 2 s / < 100 ms / < 50 ms |
+| PDF: draw at 2x / one thumbnail / parse the document only | 9.5 ms / 7.8 ms / 0.52 ms | n/a |
+| survival report (true retention, tier curves, fit) | 6.7 ms | see the analytics budgets above |
+| chronotype / fatigue report | 3.3 ms / 2.7 ms | see the analytics budgets above |
+| leeches of every item / confusion pairs of 400 lapsing items | 0.69 ms / 3.0 ms | see the analytics budgets above |
+| forecast of 5,000 cards: 90 days / 365 days, 16 futures | 8.0 ms / 21.0 ms | see the analytics budgets above |
+| workload against retention (CMRR), 5,000 cards, 12 targets, 180 days | 45.2 to 45.5 ms alone (57.7 ms in the busy first pass) | < 50 ms |
+| comparison latency (language model, release test) | p50 24.4 ms, p95 24.7 ms | p95 < 150 ms |
+
+The CMRR simulation is the closest to its budget (about 10 % under it on a quiet machine, over it on a loaded one); it
+runs once when the Reports screen is built, so a loaded machine makes the report slower to appear, not the app slower.
+
