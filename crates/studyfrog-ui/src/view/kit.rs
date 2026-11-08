@@ -1,58 +1,11 @@
 //! The few building blocks every screen is made of: cards, pills, a primary button, stat tiles,
 //! section headings and a progress bar. They take their colours from the theme.
 
-use eframe::egui::{self, Button, Color32, CornerRadius, Frame, Margin, RichText, Stroke, vec2};
+use eframe::egui::{self, Button, Color32, CornerRadius, Frame, Margin, RichText, vec2};
 
 use crate::theme::{palette_of, tint};
 
-/// A surface with a border and rounded corners that holds a group of content.
-pub fn card<R>(ui: &mut egui::Ui, add: impl FnOnce(&mut egui::Ui) -> R) -> R {
-    let p = palette_of(ui);
-    card_with(ui, (p.surface, p.border), add)
-}
-
-/// A card with its own fill and border colour (an item's tint, see `item_look`).
-pub fn card_with<R>(
-    ui: &mut egui::Ui,
-    (fill, border): (Color32, Color32),
-    add: impl FnOnce(&mut egui::Ui) -> R,
-) -> R {
-    Frame::new()
-        .fill(fill)
-        .stroke(Stroke::new(1.0, border))
-        .corner_radius(CornerRadius::same(12))
-        .inner_margin(Margin::same(16))
-        .show(ui, |ui| {
-            ui.with_layout(egui::Layout::top_down(egui::Align::Min), add)
-                .inner
-        })
-        .inner
-}
-
-/// A card that can be clicked as a whole; returns whether it was.
-pub fn card_button(ui: &mut egui::Ui, id: &str, add: impl FnOnce(&mut egui::Ui)) -> bool {
-    let p = palette_of(ui);
-    let outer = ui.make_persistent_id(id);
-    let frame = Frame::new()
-        .fill(p.surface)
-        .stroke(Stroke::new(1.0, p.border))
-        .corner_radius(CornerRadius::same(12))
-        .inner_margin(Margin::same(16));
-    let mut prepared = frame.begin(ui);
-    let width = prepared.content_ui.available_width();
-    prepared.content_ui.set_width(width);
-    prepared
-        .content_ui
-        .with_layout(egui::Layout::top_down(egui::Align::Min), add);
-    let response = prepared.allocate_space(ui);
-    let response = ui.interact(response.rect, outer, egui::Sense::click());
-    if response.hovered() {
-        prepared.frame.fill = p.surface_hover;
-        prepared.frame.stroke = Stroke::new(1.0, p.accent);
-    }
-    prepared.paint(ui);
-    response.clicked()
-}
+pub use super::kit_card::{caption, card, card_button, card_with, group, section};
 
 /// A small rounded label with a tinted background.
 pub fn pill(ui: &mut egui::Ui, text: &str, color: Color32) {
@@ -77,11 +30,22 @@ pub fn figure_pill(ui: &mut egui::Ui, text: &str, color: Color32, widest: &str) 
 /// The main action of a screen: an accent-coloured button.
 pub fn primary_button(ui: &mut egui::Ui, text: &str) -> egui::Response {
     let p = palette_of(ui);
+    crate::theme_space::note_primary(ui.ctx());
     ui.add(
         Button::new(RichText::new(text).color(p.on_accent).strong())
             .fill(p.accent)
-            .min_size(vec2(0.0, 34.0)),
+            .min_size(vec2(
+                0.0,
+                crate::theme::MIN_TARGET.max(ui.spacing().interact_size.y),
+            )),
     )
+}
+
+/// A secondary action that should still be found quickly: the quiet fill of other buttons, the label in the
+/// accent. It does not count as the view's one accent-filled primary action.
+pub fn quiet_button(ui: &mut egui::Ui, text: &str) -> egui::Response {
+    let p = palette_of(ui);
+    ui.add(Button::new(RichText::new(text).color(p.accent).strong()))
 }
 
 /// A big number with a caption under it.
@@ -94,17 +58,6 @@ pub fn stat(ui: &mut egui::Ui, value: &str, caption: &str) {
         );
         ui.label(RichText::new(caption).color(palette_of(ui).text_weak));
     });
-}
-
-/// A heading for a block of a screen.
-pub fn section(ui: &mut egui::Ui, title: &str) {
-    ui.add_space(12.0);
-    ui.label(
-        RichText::new(title)
-            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-            .strong(),
-    );
-    ui.add_space(2.0);
 }
 
 /// A full-width bar with `text` centred on it; screen readers hear `name` and the text. The filled part is the
@@ -156,27 +109,6 @@ pub fn column<R>(ui: &mut egui::Ui, max: f32, add: impl FnOnce(&mut egui::Ui) ->
 pub fn reading<R>(ui: &mut egui::Ui, add: impl FnOnce(&mut egui::Ui) -> R) -> R {
     let width = crate::typo::measure(ui);
     column(ui, width, add)
-}
-
-/// A small grey caption above a group of controls.
-pub fn caption(ui: &mut egui::Ui, text: &str) {
-    ui.add_space(10.0);
-    ui.label(
-        RichText::new(text)
-            .size(crate::typo::size(ui, crate::typo::Tier::Label))
-            .strong()
-            .color(palette_of(ui).text_weak),
-    );
-    ui.add_space(2.0);
-}
-
-/// A caption and, under it, a card that holds the group.
-pub fn group<R>(ui: &mut egui::Ui, title: &str, add: impl FnOnce(&mut egui::Ui) -> R) -> R {
-    caption(ui, title);
-    card(ui, |ui| {
-        ui.set_width(ui.available_width());
-        add(ui)
-    })
 }
 
 /// One row of [`bar_rows`].

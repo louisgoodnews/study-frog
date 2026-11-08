@@ -2,7 +2,7 @@
 id: STORY-0116
 type: story
 title: Distraction-free Zen focus mode and zero-layout-shift interaction polish
-status: backlog
+status: done
 epic: EPIC-036
 parents: [EPIC-036]
 estimate: 3
@@ -26,9 +26,9 @@ Implement Zen Focus Mode and interaction stability polish in `studyfrog-ui`:
    - Anchor the rehearsal card top edge at a fixed vertical offset so revealing the answer expands downward without jumping the question prompt upward.
 
 ## Acceptance Criteria
-- [ ] Users can toggle a Zen Focus Mode (via keyboard shortcut or top-bar icon, and optionally auto-enabled during Rehearsal/Exam runs) that hides the left sidebar and status bar chrome
-- [ ] Primary rehearsal rating buttons (Again, Hard, Good, Easy) and Flip/Submit controls meet Fitts's Law ergonomic target heights (>= 36 px) with clear keyboard badge hints
-- [ ] Transitioning between prompt and answer states in Rehearsal or opening inline confirmations produces zero vertical layout shift of the primary card header
+- [x] Users can toggle a Zen Focus Mode (via keyboard shortcut or top-bar icon, and optionally auto-enabled during Rehearsal/Exam runs) that hides the left sidebar and status bar chrome
+- [x] Primary rehearsal rating buttons (Again, Hard, Good, Easy) and Flip/Submit controls meet Fitts's Law ergonomic target heights (>= 36 px) with clear keyboard badge hints
+- [x] Transitioning between prompt and answer states in Rehearsal or opening inline confirmations produces zero vertical layout shift of the primary card header
 
 ## Design Notes
 - Touchpoints:
@@ -40,3 +40,12 @@ EPIC-036.
 
 ## Open Questions
 None.
+
+## Progress (2026-11-08)
+Done. Zen mode (`zen.rs`, `view/zen.rs`): Ctrl+Shift+F, F11 and a top-bar button hide the sidebar and the status bar;
+the `zen_in_runs` appearance setting (core, `app.toml`, Settings > Appearance) turns it on during rehearsal and exam
+runs. Primary buttons (Show answer, Submit) are at least 36 pt, ratings 46 pt, labels carry their keys. Verified by
+`tests/zen_mode.rs` (toggle by both shortcuts and the button, sidebar and status bar gone and back, automatic mode and
+leaving it, button heights, prompt and header positions unchanged by Show answer), the config round-trip test, and
+screenshots of a run in Zen mode (dark, light). Esc is not used to leave Zen mode because it stops a run; the top bar
+stays because it is the window's title bar. Inline confirmations other than the run's answer were not measured.

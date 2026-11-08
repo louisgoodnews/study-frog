@@ -128,7 +128,7 @@ pub fn servers(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if let Some(t) = text_field(ui, "Program or address", &m.form.line, hint, 1) {
             send(out, McpMsg::FormLine(t));
         }
-        if kit::primary_button(ui, "Add tool server").clicked() {
+        if kit::quiet_button(ui, "Add tool server").clicked() {
             send(out, McpMsg::AddServer);
         }
     });

@@ -7,7 +7,7 @@ Written 2026-11-08 while building EPIC-036 (STORY-0113 to STORY-0116). The resea
 
 ### Perceptual colour maths, in-house
 `crates/studyfrog-ui/src/color_science.rs` holds pure functions: sRGB to linear light and back, Oklab and OKLCH
-(Ottosson 2020, the standard matrices), the largest chroma sRGB can show at a lightness and hue (bisection), OKLCH to
+(Ottosson 2020, the standard matrices), the largest chroma sRGB can show at a lightness and hue (it steps down, then bisects: the gamut's slice is not convex near its corners, which a plain bisection got wrong for a pure blue), OKLCH to
 sRGB with gamut mapping (chroma is lowered until the colour fits; lightness and hue stay), mixing two colours in Oklab,
 and the APCA lightness contrast `apca_lc(text, background)` (APCA-W3 0.0.98G-4g constants: 2.4 power, 0.56/0.57 and
 0.65/0.62 exponents, black soft clamp at 0.022, scale 1.14, offset 0.027, clip below 0.1).
@@ -101,3 +101,56 @@ only when it gains a character. The ticking places therefore reserve the width o
 the current item ("000.0 s"), the run's position ("10 / 10" for a run of ten), the run clock, and the focus timer in
 the top bar (`kit::figure_pill`, `typo::figure_template`). Numeric columns of the Library table (reviews,
 familiarity) are right-aligned so their digits line up.
+
+## Surfaces and spacing (STORY-0115)
+
+### Depth by tone, not outlines
+A card (`kit::card`, `kit::group`, `kit::card_button`, in `view/kit_card.rs`) is the `surface` step on the `panel`
+page and has **no border**; a card inside a card is an inset of the `panel` step, also without a border. Buttons,
+combo boxes and selectable labels are drawn by their quiet `surface_hover` fill alone (their outline is the fill colour,
+so a text field keeps a faint ring around its darker well); hover draws an accent outline and focus the selection
+outline, neither of which changes a control's size. Separators keep the `border` hairline. **High contrast** brings
+every outline back in the strong border colour. A card tinted by an item's colour keeps its colour border, because the
+colour means something. `tests/visual_rhythm.rs` checks the outlines of both themes with and without high contrast.
+
+### Rhythm
+Four tokens (`theme.rs`, scaled by density in `theme_space.rs`: compact 0.75, comfortable 1, spacious 1.25):
+
+| Token | Comfortable | Between |
+|---|---|---|
+| `GAP_TIGHT` | 4 | a caption and its card, a label and its value |
+| `GAP_ITEM` | 8 | sibling controls (egui's item spacing is set to it) |
+| `PAD_CARD` | 16 | a card's edge and its content |
+| `GAP_SECTION` | 24 | one group and the next (`kit::caption` and `kit::section` bring it) |
+
+Each is twice the one before, so the rule of halves (siblings closer than a card's padding, padding closer than the
+next group) holds at every density. Tested on the tokens, on egui's installed spacing, and measured on the drawn
+Appearance settings page (sibling gap 8, card padding 16, group gap 24).
+
+### One primary action
+Only `kit::primary_button` fills a button with the accent, and it counts itself each frame (`theme_space::note_primary`).
+`tests/visual_rhythm.rs` draws Home, Folders, Library, Rehearse, Settings, Help, Calendar, Board, Reports, Diary,
+Assistant, Prompts, Achievements, Graph, a stack page, a flip run and a typed run, and fails if any shows more than one.
+Secondary actions that should still be found (the top bar's **+ Create**, Home's diary **Write entry**, **Add tool
+server**) are `kit::quiet_button`: the quiet fill with an accent label. Dialogs and popups have their own primary.
+
+## Zen mode and steady targets (STORY-0116)
+
+- **Zen mode** (`zen.rs`, `view/zen.rs`) leaves out the sidebar and the status bar; the page takes their room and the
+  run card stays centred. It is toggled by **Ctrl+Shift+F** or **F11** on any screen (also while a text field has the
+  keyboard) and by the four-corners button in the top bar, which is highlighted while it is on and is the visible way
+  out. The top bar stays: it is StudyFrog's own title bar with the window buttons. The setting `zen_in_runs`
+  (Settings > Appearance, "Zen mode during rehearsal and exam runs", `app.toml` `[appearance] zen_in_runs = true`)
+  turns it on by itself while a run is on screen; a choice made with the shortcut or button wins until the next run
+  starts. Esc keeps its meaning in runs (stop), so it does not leave Zen mode.
+- **Targets:** `kit::primary_button` (Show answer, Submit, Resume and every other primary action) is at least
+  `MIN_TARGET` = 36 pt tall (or the density's control height if larger); the rating buttons are 46 pt. Their labels
+  carry their keys: "Again (1)" to "Easy (4)", "Show answer (Space)".
+- **No layout shift:** the run card is anchored at the top and the answer grows below the rule, so the prompt and
+  the header ("1 / 10", mode, timer) keep their places when the answer shows (tested to the point). Outlines on hover
+  and focus are drawn without changing a control's size (egui keeps the stroke inside the margin), and the timers
+  reserve their widest width (STORY-0114).
+
+Tested in `tests/zen_mode.rs` (shortcuts, button, automatic mode, the sidebar and status bar gone and back, target
+heights, header and prompt positions before and after Show answer). Screenshots: a run with `zen_in_runs` on, dark and
+light, showed no sidebar and no status bar, the card centred in the full width, and the Zen button highlighted.

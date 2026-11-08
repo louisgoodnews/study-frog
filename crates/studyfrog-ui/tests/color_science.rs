@@ -86,6 +86,23 @@ fn mixing_in_oklab_ends_at_both_colours() {
     assert_eq!(mix_oklab(a, b, 1.0), b);
 }
 
+/// A grid of colours, the gamut's corners and edges among them (a blue on the r = g = 0 edge once failed: the gamut's
+/// slice is not convex there).
+#[test]
+fn a_grid_of_colours_with_the_corners_round_trips() {
+    let mut n = 0;
+    for r in (0..=255u16).step_by(15) {
+        for g in (0..=255u16).step_by(15) {
+            for b in (0..=255u16).step_by(15).chain([123]) {
+                let c = Color32::from_rgb(r as u8, g as u8, b as u8);
+                assert_eq!(oklch_to_rgb(rgb_to_oklch(c)), c);
+                n += 1;
+            }
+        }
+    }
+    assert!(n > 5000);
+}
+
 proptest! {
     /// sRGB to OKLCH and back gives the same 8-bit colour.
     #[test]

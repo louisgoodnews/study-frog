@@ -26,6 +26,8 @@ it (see [[exam-mode]]).
 - **Tab**: move between controls. **Shift+Tab** moves back.
 - **Space** or **Enter** on a focused button: press it.
 - **F1**: open help for this screen. See [[help|Using help]].
+- **Ctrl+Shift+F** or **F11**: Zen mode on or off. It hides the sidebar and the status bar so a run or a note has the
+  window to itself; the four-corners button in the top bar (highlighted while it is on) does the same.
 
 ## On some screens
 

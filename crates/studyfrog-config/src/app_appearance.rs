@@ -25,6 +25,7 @@ pub(crate) struct RawAppearance {
     start_screen: Option<String>,
     last_screen: Option<String>,
     sidebar_folded: Option<bool>,
+    zen_in_runs: Option<bool>,
     remember_window: Option<bool>,
     window_width: Option<u32>,
     window_height: Option<u32>,
@@ -124,6 +125,7 @@ pub(crate) fn parse(text: &str, raw: Option<RawAppearance>) -> Result<Appearance
         .unwrap_or(d.start),
         last_screen: raw.last_screen.clone(),
         sidebar_folded: raw.sidebar_folded.unwrap_or(d.sidebar_folded),
+        zen_in_runs: raw.zen_in_runs.unwrap_or(d.zen_in_runs),
         remember_window: raw.remember_window.unwrap_or(d.remember_window),
         window: window_of(&raw),
     })
@@ -162,6 +164,7 @@ pub(crate) fn render(a: &Appearance) -> String {
         add(true, format!("last_screen = {}", toml_string(s)));
     }
     add(a.sidebar_folded, "sidebar_folded = true".to_owned());
+    add(a.zen_in_runs, "zen_in_runs = true".to_owned());
     add(!a.remember_window, "remember_window = false".to_owned());
     if let Some(w) = a.window {
         add(true, format!("window_width = {}", w.width));

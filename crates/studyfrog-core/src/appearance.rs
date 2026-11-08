@@ -93,6 +93,8 @@ pub struct Appearance {
     pub last_screen: Option<String>,
     /// The sidebar starts folded away.
     pub sidebar_folded: bool,
+    /// Zen mode (no sidebar, no status bar) comes on by itself during a rehearsal or exam run.
+    pub zen_in_runs: bool,
     /// Remember the window's size and place.
     pub remember_window: bool,
     /// The remembered window.
@@ -121,6 +123,7 @@ pub fn appearance_default() -> Appearance {
         start: StartScreen::default(),
         last_screen: None,
         sidebar_folded: false,
+        zen_in_runs: false,
         remember_window: true,
         window: None,
     }

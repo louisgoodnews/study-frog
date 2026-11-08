@@ -105,9 +105,12 @@ restart.
   and 0** do the same from any screen. **Text size** changes only the text. Longer
   text (notes, help pages, answers) is kept to about 70 characters a line, however wide the window, so it is easy to
   read; the column grows with the text size.
-- **Density**: Compact, Comfortable or Spacious.
+- **Density**: Compact, Comfortable or Spacious: the room between controls, inside cards and between groups.
+  Cards are set off by a lighter (or, in the light theme, whiter) tone rather than outlines; **High contrast** draws
+  outlines around controls and cards again.
 - **Accent colour**, **High contrast** and **Reduce motion**. All six accents look equally bright, and every text
   colour is checked for contrast in both themes, with and without high contrast.
 - **Open this screen first**: Home, Library or the screen you used last. **Start with the sidebar folded away.**
-  **Remember the window's size and place.** Some desktops do not tell the place of a window; then only its size is kept.
+  **Zen mode during rehearsal and exam runs** hides the sidebar and the status bar while a run is on screen
+  (Ctrl+Shift+F or F11 leaves it, and it comes back with the next run). **Remember the window's size and place.** Some desktops do not tell the place of a window; then only its size is kept.
 - **Restore the default appearance** puts every choice back.

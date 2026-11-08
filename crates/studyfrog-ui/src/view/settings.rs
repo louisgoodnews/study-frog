@@ -49,8 +49,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .show(ui, |ui| {
             kit::column(ui, 860.0, |ui| {
                 for section in sections_of(tab) {
+                    // Each group's caption brings the gap between groups (`kit::caption`).
                     section(state, ui, out);
-                    ui.add_space(12.0);
                 }
             });
         });

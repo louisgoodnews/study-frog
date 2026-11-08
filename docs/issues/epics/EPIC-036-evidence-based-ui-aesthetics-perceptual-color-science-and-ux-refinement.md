@@ -2,7 +2,7 @@
 id: EPIC-036
 type: epic
 title: Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement
-status: in_progress
+status: review
 parents: []
 labels: [m12, core, ui, docs]
 acceptance_criteria:
@@ -29,9 +29,9 @@ Elevate StudyFrog's user interface (`crates/studyfrog-ui`) using empirical psych
    - Add a toggleable/automatic **Zen Focus Mode** (`F11` or `Ctrl+Shift+F`) that collapses the left sidebar and secondary chrome during active Rehearsal/Exam runs and full-window Note writing, while guaranteeing Fitts's Law target sizing ($\ge 36\text{ px}$ height for rehearsal rating buttons) and zero layout shift on state transitions.
 
 ## Acceptance Criteria
-- [ ] All theme palettes, accents, semantic badges, and item tints are calibrated in OKLCH perceptual color space and verified against WCAG 3 APCA perceptual contrast (Lc) thresholds in automated tests
+- [x] All theme palettes, accents, semantic badges, and item tints are calibrated in OKLCH perceptual color space and verified against WCAG 3 APCA perceptual contrast (Lc) thresholds in automated tests
 - [ ] Long-form reading, note editing, and rehearsal views enforce psychophysical typographic line-length bounds (55-75 cpl), a 4-tier modular scale, and tabular numerals for timers and metrics
-- [ ] Screen layouts minimize extraneous cognitive load and visual edge entropy by replacing nested box borders with tonal surface elevation, Gestalt proximity spacing, and a Zen focus mode
+- [x] Screen layouts minimize extraneous cognitive load and visual edge entropy by replacing nested box borders with tonal surface elevation, Gestalt proximity spacing, and a Zen focus mode
 
 ## Design Notes
 Child stories:
@@ -47,3 +47,9 @@ EPIC-020 (UI Rework) and EPIC-027 (Appearance and UI Settings).
 
 ## Open Questions
 None.
+
+## Progress (2026-11-08)
+In **review** because STORY-0114 is in review (its reading measure is kept at 60 to 75 characters, about 450 pt in
+StudyFrog's font, not the 620 to 680 px it names; the owner should accept or ask for the pixel width). STORY-0113,
+STORY-0115 and STORY-0116 are done. Criterion 2 is not ticked for the same reason; criteria 1 and 3 are met (see the
+stories). Spec `docs/specs/ui-colour-and-type.md`.

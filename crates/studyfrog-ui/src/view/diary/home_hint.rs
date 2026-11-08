@@ -33,7 +33,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     out.push(Msg::Diary(DiaryMsg::DismissHomeHint));
                 }
 
-                let write_btn = crate::view::kit::primary_button(ui, "Write entry");
+                let write_btn = crate::view::kit::quiet_button(ui, "Write entry");
                 write_btn.widget_info(|| {
                     WidgetInfo::labeled(Role::Button, true, "Write diary entry for today")
                 });

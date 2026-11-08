@@ -145,7 +145,8 @@ fn search_cluster(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f
         chrome(out, ChromeMsg::SearchClear);
     }
     menus::search_results(state, ui, field.rect, out);
-    let create = kit::primary_button(ui, "+ Create");
+    // The view below owns the one accent-filled action; Create stays findable by its accent label.
+    let create = kit::quiet_button(ui, "+ Create");
     if create.clicked() {
         out.push(Msg::Modal(ModalMsg::OpenCreate));
     }
@@ -191,6 +192,7 @@ fn right_cluster(
         out.push(Msg::Navigate(Screen::Settings));
     }
     help_button(state, ui, out);
+    super::zen::button(state, ui, out);
     let bell = icon_button(
         ui,
         Glyph::Bell,

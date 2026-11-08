@@ -196,6 +196,7 @@ pub mod summary;
 pub mod theme;
 pub mod theme_apply;
 pub mod theme_hue;
+pub mod theme_space;
 pub mod theme_tokens;
 pub mod transfer_csv;
 pub mod transfer_found;
@@ -208,5 +209,6 @@ pub mod vault_ui;
 pub mod view;
 pub mod view_time;
 pub mod window_watch;
+pub mod zen;
 
 pub use app::{RunOptions, run, run_with};

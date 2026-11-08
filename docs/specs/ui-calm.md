@@ -33,8 +33,8 @@ reference.
 | Type | One size for labels and values, weak captions in grey | A scale (13 / 15 / 18 / 26), captions at 13 and a stronger contrast for weak text |
 
 ## Rules for new screens
-1. At most one primary button per area.
-2. Group related controls; separate groups with 16 px, items inside a group with 8 px.
+1. At most one accent-filled primary button per view (`kit::primary_button`, tested); others are plain or `kit::quiet_button`.
+2. Group related controls with `kit::group`; the rhythm is 4 / 8 / 16 / 24 (see `ui-colour-and-type.md`); no outlines around cards.
 3. Hide what is rarely used behind a menu; do not remove it.
 4. Empty states are one sentence and one action.
 

@@ -113,6 +113,10 @@ pub const PAD_CARD: f32 = 16.0;
 /// Between distinct groups.
 pub const GAP_SECTION: f32 = 24.0;
 
+/// The least height of a primary action, Show answer, Submit and the rating buttons (Fitts's law; points, so the
+/// interface size scales it).
+pub const MIN_TARGET: f32 = 36.0;
+
 const RADIUS: u8 = 8;
 
 fn widget(fill: Color32, edge: Color32, text: Color32) -> WidgetVisuals {
@@ -148,10 +152,17 @@ pub(crate) fn visuals(dark: bool, look: Look) -> Visuals {
     v.selection.bg_fill = tint(p.accent, 90);
     v.selection.stroke = Stroke::new(1.0, p.accent);
     let w = &mut v.widgets;
+    // Standard contrast draws controls by fill alone (their edge is the fill colour, so text fields keep a quiet
+    // ring); high contrast keeps strong outlines. Hover and focus outlines never change a control's size.
+    let edge = if look.high_contrast {
+        p.border
+    } else {
+        p.surface_hover
+    };
     w.noninteractive = widget(p.panel, p.border, p.text);
-    w.inactive = widget(p.surface_hover, p.border, p.text);
+    w.inactive = widget(p.surface_hover, edge, p.text);
     w.hovered = widget(p.surface_hover, p.accent, p.text);
     w.active = widget(tint(p.accent, 70), p.accent, p.text);
-    w.open = widget(p.surface_hover, p.border, p.text);
+    w.open = widget(p.surface_hover, edge, p.text);
     v
 }

@@ -17,18 +17,21 @@ fn key_of(a: &Appearance) -> LookKey {
         start: Default::default(),
         last_screen: None,
         sidebar_folded: false,
+        zen_in_runs: false,
         remember_window: false,
         window: None,
         ..a.clone()
     })
 }
 
-/// Spacing for a density: item spacing, button padding and the height of a control.
+/// Spacing for a density: item spacing (the rhythm's sibling gap, `theme_space`), button padding and the height of
+/// a control.
 fn spacing_of(d: Density) -> (egui::Vec2, egui::Vec2, f32) {
+    let item = crate::theme_space::rhythm(d).item;
     match d {
-        Density::Compact => (egui::vec2(6.0, 4.0), egui::vec2(10.0, 4.0), 26.0),
-        Density::Comfortable => (egui::vec2(8.0, 7.0), egui::vec2(12.0, 6.0), 30.0),
-        Density::Spacious => (egui::vec2(10.0, 10.0), egui::vec2(14.0, 8.0), 34.0),
+        Density::Compact => (egui::vec2(item, item), egui::vec2(10.0, 4.0), 26.0),
+        Density::Comfortable => (egui::vec2(item, item), egui::vec2(12.0, 6.0), 30.0),
+        Density::Spacious => (egui::vec2(item, item), egui::vec2(14.0, 8.0), 34.0),
     }
 }
 
@@ -52,6 +55,7 @@ fn apply_with(ctx: &egui::Context, a: &Appearance, motion_back: bool) {
         high_contrast: a.high_contrast,
     };
     set_look(ctx, look);
+    crate::theme_space::set_density(ctx, a.density);
     let (item, button, height) = spacing_of(a.density);
     let scale = f32::from(a.text) / 100.0;
     for (theme, dark) in [(Theme::Dark, true), (Theme::Light, false)] {

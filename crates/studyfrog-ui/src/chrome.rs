@@ -45,6 +45,8 @@ pub enum Menu {
 pub struct Chrome {
     /// The sidebar is folded away.
     pub sidebar_hidden: bool,
+    /// Zen mode chosen by the user (`None`: follow the automatic choice, see `zen::active`).
+    pub zen: Option<bool>,
     /// The open menu.
     pub menu: Option<Menu>,
     /// The global search text.
@@ -72,6 +74,8 @@ pub struct Chrome {
 pub enum ChromeMsg {
     /// Show or fold the sidebar.
     ToggleSidebar,
+    /// Zen mode on or off (Ctrl+Shift+F, F11, or the top bar's button).
+    ToggleZen,
     /// Open the menu, or close it when it is the one open.
     ToggleMenu(Menu),
     /// Close any menu.
@@ -191,6 +195,11 @@ pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
                 ..state.chrome.clone()
             };
             with(state, c)
+        }
+        ChromeMsg::ToggleZen => {
+            let mut state = state;
+            state.chrome.zen = Some(!crate::zen::active(&state));
+            (state, Vec::new())
         }
         ChromeMsg::ToggleMenu(menu) => toggle_menu(state, menu),
         ChromeMsg::CloseMenu => {

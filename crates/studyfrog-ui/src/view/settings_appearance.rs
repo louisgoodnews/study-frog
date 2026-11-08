@@ -183,6 +183,13 @@ pub(super) fn startup_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Ms
         {
             send(out, AppearanceMsg::SidebarFolded(folded));
         }
+        let mut zen = a.zen_in_runs;
+        if ui
+            .checkbox(&mut zen, "Zen mode during rehearsal and exam runs")
+            .changed()
+        {
+            send(out, AppearanceMsg::ZenInRuns(zen));
+        }
         let mut remember = a.remember_window;
         if ui
             .checkbox(&mut remember, "Remember the window's size and place")

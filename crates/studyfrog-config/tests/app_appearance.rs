@@ -19,6 +19,7 @@ fn custom() -> Appearance {
         start: StartScreen::Last,
         last_screen: Some("calendar".into()),
         sidebar_folded: true,
+        zen_in_runs: true,
         remember_window: false,
         window: Some(WindowState {
             width: 1280,

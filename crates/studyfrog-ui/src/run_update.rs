@@ -88,6 +88,7 @@ fn run_ready(state: State, result: Result<Run, String>) -> (State, Vec<Effect>) 
                 &state.app.reading,
             );
             state.rehearse.run = Some(view);
+            state.chrome.zen = None; // a new run follows the Zen setting again
             act(state, Action::Start)
         }
         Err(e) => error(state, format!("Could not start the run: {e}")),

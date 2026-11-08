@@ -29,6 +29,8 @@ pub enum Glyph {
     History,
     /// A stopwatch.
     Timer,
+    /// Four corners around an empty middle: Zen mode.
+    Focus,
 }
 
 const SIZE: f32 = 32.0;
@@ -55,6 +57,7 @@ fn paint(ui: &egui::Ui, rect: Rect, glyph: Glyph, color: Color32) {
                 p.rect_stroke(cell, 1.5, stroke, egui::StrokeKind::Inside);
             }
         }
+        Glyph::Focus => corners(p, c, stroke),
         Glyph::Bell => bell(p, c, stroke),
         Glyph::Gear => gear(p, c, stroke),
         Glyph::Person => {
@@ -117,6 +120,15 @@ fn arc(center: Pos2, rx: f32, ry: f32, from: f32, to: f32) -> Vec<Pos2> {
             Pos2::new(center.x + rx * a.cos(), center.y + ry * a.sin())
         })
         .collect()
+}
+
+fn corners(p: &egui::Painter, c: Pos2, stroke: Stroke) {
+    for (sx, sy) in [(-1.0, -1.0), (1.0, -1.0), (-1.0, 1.0), (1.0, 1.0)] {
+        let corner = Pos2::new(c.x + 7.0 * sx, c.y + 6.0 * sy);
+        let along = Pos2::new(corner.x - 4.0 * sx, corner.y);
+        let down = Pos2::new(corner.x, corner.y - 4.0 * sy);
+        p.add(egui::Shape::line(vec![along, corner, down], stroke));
+    }
 }
 
 fn bell(p: &egui::Painter, c: Pos2, stroke: Stroke) {

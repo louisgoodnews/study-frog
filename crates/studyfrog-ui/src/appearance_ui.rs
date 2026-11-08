@@ -34,6 +34,8 @@ pub enum AppearanceMsg {
     Start(StartScreen),
     /// The sidebar starts folded or shown.
     SidebarFolded(bool),
+    /// Zen mode by itself during runs, or not.
+    ZenInRuns(bool),
     /// Remember the window's size and place, or not.
     RememberWindow(bool),
     /// The window is now like this (from the shell, once it has stayed so for a moment).
@@ -136,6 +138,7 @@ fn changed(a: &mut Appearance, msg: AppearanceMsg) {
         AppearanceMsg::ReducedMotion(on) => a.reduced_motion = on,
         AppearanceMsg::Start(s) => a.start = s,
         AppearanceMsg::SidebarFolded(on) => a.sidebar_folded = on,
+        AppearanceMsg::ZenInRuns(on) => a.zen_in_runs = on,
         AppearanceMsg::RememberWindow(on) => a.remember_window = on,
         AppearanceMsg::Window(w) => {
             if a.remember_window {

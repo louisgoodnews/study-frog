@@ -39,6 +39,7 @@ mod item_fam;
 pub mod item_stacks;
 mod items;
 pub(crate) mod kit;
+mod kit_card;
 mod library;
 pub mod library_bulk;
 pub mod library_keys;
@@ -122,6 +123,7 @@ mod tutorial;
 mod welcome;
 pub(crate) mod widgets;
 pub(crate) mod window_frame;
+mod zen;
 
 use eframe::egui;
 
@@ -135,8 +137,12 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     image::set_vault_root(ui.ctx(), state.vault.as_ref().map(|v| v.root.as_str()));
     window_frame::frame(ui);
     navbar::draw(state, ui, &mut out);
-    sidebar::draw(state, ui, &mut out);
-    bars::status(state, ui, &mut out);
+    zen::keys(ui, &mut out);
+    // Zen mode leaves out the sidebar and the status bar; the page takes their room.
+    if !crate::zen::active(state) {
+        sidebar::draw(state, ui, &mut out);
+        bars::status(state, ui, &mut out);
+    }
     let page = egui::Frame::central_panel(ui.style()).inner_margin(egui::Margin::symmetric(20, 14));
     egui::CentralPanel::default()
         .frame(page)

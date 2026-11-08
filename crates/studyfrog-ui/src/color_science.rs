@@ -98,24 +98,40 @@ pub fn in_gamut(o: Oklch) -> bool {
     fits(oklab_to_linear(lab_of(o, f64::from(o.c))))
 }
 
-/// The largest chroma sRGB can show at this lightness and hue (bisection to 1e-5).
-pub fn max_chroma(l: f32, h: f32) -> f32 {
-    let (mut lo, mut hi) = (0.0_f64, 0.4_f64);
+/// The largest chroma up to `limit` that sRGB can show at this lightness and hue. The gamut's slice is not convex
+/// near its corners, so it steps down from `limit` until the colour fits, then bisects the last step (to 1e-5).
+pub fn fit_chroma(l: f32, h: f32, limit: f32) -> f32 {
+    const STEP: f32 = 0.005;
+    let fits = |c: f32| in_gamut(lch(l, c, h));
+    let mut hi = limit.max(0.0);
+    if fits(hi) {
+        return hi;
+    }
+    let mut lo = (hi - STEP).max(0.0);
+    while lo > 0.0 && !fits(lo) {
+        hi = lo;
+        lo = (lo - STEP).max(0.0);
+    }
     while hi - lo > 1e-5 {
         let mid = (lo + hi) / 2.0;
-        if in_gamut(lch(l, mid as f32, h)) {
+        if fits(mid) {
             lo = mid;
         } else {
             hi = mid;
         }
     }
-    lo as f32
+    lo
+}
+
+/// The largest chroma sRGB can show at this lightness and hue.
+pub fn max_chroma(l: f32, h: f32) -> f32 {
+    fit_chroma(l, h, 0.4)
 }
 
 /// An OKLCH colour in sRGB. A colour outside sRGB keeps its lightness and hue and loses chroma until it fits
 /// (the gamut mapping CSS Color 4 describes, without its just-noticeable-difference shortcut).
 pub fn oklch_to_rgb(o: Oklch) -> Color32 {
-    let c = f64::from(o.c.min(max_chroma(o.l, o.h)).max(0.0));
+    let c = f64::from(fit_chroma(o.l, o.h, o.c));
     let [r, g, b] = oklab_to_linear(lab_of(o, c));
     Color32::from_rgb(from_linear(r), from_linear(g), from_linear(b))
 }

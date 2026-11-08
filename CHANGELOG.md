@@ -8,6 +8,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Zen mode (STORY-0116): Ctrl+Shift+F, F11 or the four-corners button in the top bar hides the sidebar and the status bar; Settings > Appearance > "Zen mode during rehearsal and exam runs" (`zen_in_runs`) turns it on by itself during runs. Primary buttons such as Show answer and Submit are at least 36 pt tall, and showing the answer never moves the prompt or the run's header.
+- Calmer surfaces (STORY-0115): cards are set off by tone instead of 1 px outlines (a card in a card is an inset), buttons and fields are drawn by their fill (outlines on hover and focus, and all outlines back with high contrast), spacing follows 4 / 8 / 16 / 24 tokens that scale with density, and each view has one accent-filled primary action (the top bar's + Create and Home's diary Write entry are now quiet buttons with an accent label). Spec `docs/specs/ui-colour-and-type.md`.
 - Typography (STORY-0114): a four-tier type scale (heading 1.40, body 1.00, label 0.92, caption 0.80 of the body size) used by every view and following the text size; prose has a 1.5 line height with an even first line and keeps to a reading measure of about 70 characters (help pages, item and note previews, rehearsal cards); timers and counters reserve their widest width so ticking digits never move their neighbours; Library's numeric columns are right-aligned. The rehearsal card is narrower and its answer is body text in the text colour. Spec `docs/specs/ui-colour-and-type.md`.
 - Perceptual colour (STORY-0113): the palettes are OKLCH tokens (`theme_tokens.rs`) computed by in-house Oklab/OKLCH and APCA maths (`color_science.rs`); the six accents and the status colours of a theme share one perceptual lightness and chroma, surfaces climb in equal lightness steps, note text colours and item tints are chosen in OKLCH/Oklab, and a test checks the APCA contrast of every text/background pair in all 24 palettes (body text |Lc| >= 75, secondary >= 58, dividers 15 to 28; targets in `docs/specs/ui-colour-and-type.md`). The light theme's page is now a light grey with white cards; secondary text and borders in the dark theme are a little stronger.
 - Image occlusion cards (STORY-0109): masks over a picture kept as an `occlusion` front-matter block (normalized `x y w h label`, `hide_all` or `hide_one`; the picture is never changed). "Make this an image occlusion card" on a card that shows a picture, or "Occlusion card from <picture>" for a picture or snapshot saved in the PDF viewer; draw, move, resize, label and delete masks on the card's page. A run asks one mask at a time (they take turns with the card's reviews), hidden and marked before the answer and uncovered after it; typed answers are compared with the mask's label. Spec `docs/specs/image-occlusion.md`.
@@ -39,6 +41,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ### Changed
 - On a narrow window the vault name in the top bar is cut short instead of being drawn under the search field, and the search field may shrink further, to make room for the focus timer (STORY-0112).
 - `studyfrog-net` returns the answer's headers with every response, so an MCP client can keep a server's session (STORY-0121).
+
+### Fixed
+- OKLCH gamut mapping stepped down before bisecting, since the gamut's slice is not convex near its corners (a pure blue did not round-trip) (STORY-0113).
 
 ## [0.5.0] - 2026-11-08
 
