@@ -133,6 +133,7 @@ pub mod msg;
 pub mod nav;
 pub mod notify;
 pub mod notify_types;
+pub mod occlusion_ui;
 pub mod pdf_arrange_plan;
 pub mod pdf_arrange_types;
 pub mod pdf_arrange_ui;

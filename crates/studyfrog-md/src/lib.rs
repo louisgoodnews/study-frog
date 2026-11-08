@@ -21,6 +21,7 @@ pub mod hue;
 pub mod inline_extract;
 pub mod links;
 pub mod names;
+pub mod occlusion;
 pub mod parse;
 pub mod raw;
 pub mod refs;

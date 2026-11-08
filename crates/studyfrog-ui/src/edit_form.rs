@@ -44,6 +44,8 @@ pub struct EditForm {
     pub referenced_by: Vec<String>,
     /// The item's colour (a palette word or `#RRGGBB`); `None`: no colour.
     pub color: Option<String>,
+    /// The image occlusion masks of a card (STORY-0109); `None`: not an occlusion card.
+    pub occlusion: Option<studyfrog_md::occlusion::Occlusion>,
 }
 
 /// A change in the editor.
@@ -73,6 +75,8 @@ pub enum EditAction {
     AskDelete(bool),
     /// Confirm deleting the open item.
     ConfirmDelete,
+    /// The card's image occlusion masks; `None` makes it an ordinary card again.
+    Occlusion(Option<studyfrog_md::occlusion::Occlusion>),
 }
 
 fn field(label: &'static str, text: &str, rows: usize) -> EditField {
@@ -117,6 +121,7 @@ pub fn form_from_doc(doc: &Doc) -> EditForm {
         subjects: extra_names(doc, "subjects"),
         referenced_by: references_of(doc),
         color: color_of(doc),
+        occlusion: studyfrog_md::occlusion::occlusion_of(doc),
     }
 }
 
@@ -192,6 +197,11 @@ pub fn apply_form(doc: &Doc, form: &EditForm) -> Result<Doc, String> {
         out // a hand-written `green` stays as it is
     } else {
         with_extra(&out, COLOR_FIELD, color.as_deref())
+    };
+    let out = if form.occlusion == studyfrog_md::occlusion::occlusion_of(doc) {
+        out
+    } else {
+        studyfrog_md::occlusion::with_occlusion(&out, form.occlusion.as_ref())
     };
     let out = if form.status == status_of(doc) {
         out

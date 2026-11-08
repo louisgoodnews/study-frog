@@ -62,6 +62,8 @@ mod modal_unmark;
 mod navbar;
 mod navbar_history;
 pub mod notifications;
+pub mod occlusion_edit;
+pub mod occlusion_paint;
 mod pdf;
 mod pdf_arrange;
 mod pdf_extract;

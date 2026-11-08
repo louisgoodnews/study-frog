@@ -28,6 +28,8 @@ pub struct ItemContent {
     pub color: Option<String>,
     /// What a typed answer is compared with when it is not the whole answer (a cloze gap's words).
     pub expected: Option<String>,
+    /// The picture and masks of an image occlusion card.
+    pub occlusion: Option<Box<crate::content_occlusion::OcclusionView>>,
 }
 
 fn content_of(doc: &Doc) -> ItemContent {
@@ -42,6 +44,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             source: None,
             color: None,
             expected: None,
+            occlusion: None,
         },
         Doc::Question(q) => ItemContent {
             title,
@@ -51,6 +54,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             source: None,
             color: None,
             expected: None,
+            occlusion: None,
         },
         Doc::Note(n) => ItemContent {
             prompt: title.clone(),
@@ -60,6 +64,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             source: None,
             color: None,
             expected: None,
+            occlusion: None,
         },
         Doc::Stack(s) => ItemContent {
             prompt: title.clone(),
@@ -69,6 +74,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             source: None,
             color: None,
             expected: None,
+            occlusion: None,
         },
         Doc::Diary(d) => ItemContent {
             prompt: title.clone(),
@@ -78,6 +84,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             source: None,
             color: None,
             expected: None,
+            occlusion: None,
         },
     }
 }
@@ -104,7 +111,8 @@ pub fn load_item_content(session: &VaultSession, uid: Uid) -> Result<ItemContent
                 .and_then(|c| studyfrog_core::item_color::normalize_color(&c)),
             ..content_of(&doc)
         };
-        crate::content_cloze::with_cloze(&doc, content, reviews.len())
+        let content = crate::content_cloze::with_cloze(&doc, content, reviews.len());
+        crate::content_occlusion::with_occlusion_view(&doc, content, reviews.len())
     })
 }
 

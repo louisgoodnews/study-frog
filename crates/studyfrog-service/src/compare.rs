@@ -70,8 +70,12 @@ pub fn score_item_answer_with<R: SlmRuntime + ?Sized>(
     let reviews = || studyfrog_store::schedule::load_reviews(&session.conn, uid).map(|r| r.len());
     let gap = match reference {
         Some(r) => Some(r.to_owned()),
-        None => crate::content_cloze::asked_group(&doc, reviews().map_err(ServiceError::Store)?)
-            .and_then(|g| crate::content_cloze::expected_words(&doc, g)),
+        None => {
+            let n = reviews().map_err(ServiceError::Store)?;
+            crate::content_cloze::asked_group(&doc, n)
+                .and_then(|g| crate::content_cloze::expected_words(&doc, g))
+                .or_else(|| crate::content_occlusion::asked_label(&doc, n))
+        }
     };
     let mut comparison = comparison_of(&doc, answer)?;
     if let Some(gap) = &gap {

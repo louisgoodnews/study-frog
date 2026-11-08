@@ -60,6 +60,7 @@ pub(crate) fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
             EditAction::Difficulty(d) => e.form.difficulty = d,
             EditAction::Status(s) => e.form.status = s,
             EditAction::Color(c) => e.form.color = c.and_then(|c| normalize_color(&c)),
+            EditAction::Occlusion(o) => e.form.occlusion = o,
             EditAction::Subject(name, on) => {
                 e.form.subjects.retain(|s| *s != name);
                 if on {

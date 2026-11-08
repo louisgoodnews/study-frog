@@ -2,6 +2,7 @@
 //! cards, the contrastive drill, the focus timer and the occlusion editor. Plain data.
 
 use studyfrog_core::uid::Uid;
+use studyfrog_service::create_more::Created;
 use studyfrog_service::inline_sync::{SyncOutcome, SyncPlan};
 
 /// The "Extract / Sync cards" panel of a note's page.
@@ -47,6 +48,10 @@ pub enum RecallMsg {
     Focus(crate::focus_ui::FocusMsg),
     /// The contrastive drill.
     Contrast(crate::contrast::ContrastMsg),
+    /// Make an image occlusion card in the stack `0` from the vault picture `1`.
+    OcclusionCard(String, String),
+    /// The occlusion card was made (or not).
+    OcclusionMade(Result<Box<(studyfrog_service::session::VaultInfo, Created)>, String>),
 }
 
 /// Work for the worker.
@@ -62,4 +67,6 @@ pub enum RecallEffect {
     LoadContrast(Vec<Uid>),
     /// Keep the distinction of a contrastive drill.
     SaveContrast(Box<crate::contrast::ContrastSave>),
+    /// Make an image occlusion card in a stack from a vault picture.
+    CreateOcclusion(String, String),
 }

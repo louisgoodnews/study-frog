@@ -77,6 +77,10 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .cloned()
         .unwrap_or_else(|| blocks_of(content));
     markdown(ui, &prompt, 24.0, None, out);
+    if let Some(v) = &content.occlusion {
+        let shown = awaiting_rating(run) && !crate::exam_ui::is_exam(run);
+        crate::view::occlusion_paint::run_picture(ui, v, shown);
+    }
     source_link(content, ui, out);
     ui.add_space(8.0);
     if crate::exam_ui::is_exam(run) {

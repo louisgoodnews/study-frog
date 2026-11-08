@@ -2,7 +2,7 @@
 id: EPIC-035
 type: epic
 title: Rich active-recall formats, inline note extraction, and focus workflows
-status: in_progress
+status: done
 parents: []
 labels: [m12, core, md, rehearsal, service, ui]
 acceptance_criteria:
@@ -31,9 +31,9 @@ Deliver five high-value learning and study workflow features across StudyFrog:
    - Add a non-intrusive top-bar Focus / Pomodoro timer (`25/5`, `50/10`, or custom work/break intervals) that tracks focused study time across reading, writing, and rehearsal, and offers a one-click Learning Diary reflection when a focus block finishes.
 
 ## Acceptance Criteria
-- [ ] Learners can author and rehearse inline Cloze deletion cards ({{c1::answer::hint}}) and visual Image Occlusion cards for diagrams and PDF figures
-- [ ] Markdown notes support inline flashcard and question extraction (such as Q:/A: or concept::definition blocks) that syncs linked study items without duplicating source context
-- [ ] Rehearsal and study workflows include a contrastive side-by-side drill for confused items and a built-in Pomodoro focus timer integrated with the Learning Diary
+- [x] Learners can author and rehearse inline Cloze deletion cards ({{c1::answer::hint}}) and visual Image Occlusion cards for diagrams and PDF figures
+- [x] Markdown notes support inline flashcard and question extraction (such as Q:/A: or concept::definition blocks) that syncs linked study items without duplicating source context
+- [x] Rehearsal and study workflows include a contrastive side-by-side drill for confused items and a built-in Pomodoro focus timer integrated with the Learning Diary
 
 ## Design Notes
 Child stories:
@@ -46,6 +46,13 @@ Child stories:
 Architecture guardrails:
 - All vault files remain human-readable plain-text Markdown (`.md`); image occlusion masks are stored as normalized coordinates (`x, y, w, h` in `[0.0, 1.0]`) in item front-matter or a clean Markdown table block so the underlying image file is never mutated.
 - Strictly adhere to P1 (no inherent `impl` blocks) and P2 (≤ 250 lines per `.rs` file).
+
+## Progress (2026-11-08)
+All five stories done: STORY-0110 (inline extraction and sync), STORY-0108 (cloze), STORY-0112 (focus timer),
+STORY-0111 (contrastive drill), STORY-0109 (image occlusion). Specs: `docs/specs/inline-extraction.md`,
+`cloze.md`, `focus-timer.md`, `contrastive-drill.md`, `image-occlusion.md`. Each was checked by unit, property,
+fixture-vault and egui harness tests and by screenshots of the real binary; none was used by a person in an
+interactive window yet.
 
 ## Dependencies
 EPIC-005 (Markdown and Front-Matter), EPIC-007 (Rehearsal Engine), EPIC-022 (PDF Documents), and EPIC-024 (Diary).

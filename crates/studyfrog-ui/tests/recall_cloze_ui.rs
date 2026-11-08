@@ -26,6 +26,7 @@ fn with_gap(mode: RunMode) -> Model {
         source: None,
         color: None,
         expected: Some("sun".into()),
+        occlusion: None,
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     m

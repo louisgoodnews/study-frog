@@ -24,6 +24,8 @@ pub fn update(mut state: State, msg: RecallMsg) -> (State, Vec<Effect>) {
         RecallMsg::ExtractSynced(r) => synced(&mut state, r),
         RecallMsg::Focus(m) => crate::focus_ui::update(&mut state, m),
         RecallMsg::Contrast(m) => crate::contrast::update(&mut state, m),
+        RecallMsg::OcclusionCard(folder, image) => occlusion_card(&mut state, folder, image),
+        RecallMsg::OcclusionMade(r) => occlusion_made(&mut state, r),
         RecallMsg::ExtractClose => {
             state.recall.extract = Default::default();
             Vec::new()
@@ -91,4 +93,41 @@ fn synced(
             Vec::new()
         }
     }
+}
+
+fn occlusion_card(state: &mut State, folder: String, image: String) -> Vec<Effect> {
+    if folder.is_empty() {
+        let text = "Choose the stack for it first (Stack, above).".to_owned();
+        notice(state, NoticeKind::Error, text);
+        return Vec::new();
+    }
+    vec![effect(RecallEffect::CreateOcclusion(folder, image))]
+}
+
+type Made = Result<
+    Box<(
+        crate::state::VaultInfo,
+        studyfrog_service::create_more::Created,
+    )>,
+    String,
+>;
+
+fn occlusion_made(state: &mut State, r: Made) -> Vec<Effect> {
+    match r {
+        Ok(made) => {
+            let (info, created) = *made;
+            state.vault = Some(info);
+            let text = format!("Made {}: draw its masks on the picture.", created.title);
+            notice(state, NoticeKind::Info, text);
+            if let Some(uid) = created.uid {
+                state.replay = Some(Box::new(crate::msg::Msg::OpenItem(uid)));
+            }
+        }
+        Err(e) => notice(
+            state,
+            NoticeKind::Error,
+            format!("Could not make the card: {e}"),
+        ),
+    }
+    Vec::new()
 }

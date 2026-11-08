@@ -48,3 +48,27 @@ pub fn draw_image(ui: &mut egui::Ui, alt: &str, path: &str) {
         }
     }
 }
+
+/// The texture of the vault picture at `path`: `Ok(None)` while it loads, `Err` with what to say when it
+/// cannot be shown.
+pub fn vault_texture(
+    ui: &egui::Ui,
+    path: &str,
+) -> Result<Option<egui::load::SizedTexture>, String> {
+    let root = ui.ctx().data(|d| d.get_temp::<String>(root_key()));
+    let uri = root
+        .as_deref()
+        .and_then(|r| image_uri(r, path))
+        .ok_or_else(|| format!("[picture: {path}] Only pictures inside the vault are shown."))?;
+    match ui
+        .ctx()
+        .try_load_texture(&uri, TextureOptions::default(), SizeHint::default())
+    {
+        Ok(TexturePoll::Ready { texture }) => Ok(Some(texture)),
+        Ok(TexturePoll::Pending { .. }) => {
+            ui.ctx().request_repaint();
+            Ok(None)
+        }
+        Err(_) => Err(format!("[picture: {path} could not be shown]")),
+    }
+}

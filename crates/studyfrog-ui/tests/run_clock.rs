@@ -49,6 +49,7 @@ fn running(p: Pacing) -> Model {
             source: None,
             color: None,
             expected: None,
+            occlusion: None,
         };
         apply(&mut m, Msg::ItemLoaded(Uid(uid), Ok(content)));
     }

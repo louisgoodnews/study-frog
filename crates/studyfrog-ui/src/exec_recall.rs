@@ -44,6 +44,16 @@ pub fn run(s: &mut VaultSession, effect: RecallEffect, now_ns: i64) -> Msg {
                 .map(Box::new)
                 .map_err(|e| text(&e)),
         )),
+        RecallEffect::CreateOcclusion(folder, image) => RecallMsg::OcclusionMade(
+            fresh_id_source(now_ms)
+                .and_then(|ids| {
+                    studyfrog_service::content_occlusion::create_occlusion_card(
+                        s, &folder, &image, ids,
+                    )
+                })
+                .map(Box::new)
+                .map_err(|e| text(&e)),
+        ),
     };
     Msg::Recall(m)
 }

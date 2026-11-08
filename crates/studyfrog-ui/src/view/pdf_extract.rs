@@ -104,6 +104,16 @@ fn pictures(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     for p in &view.extract.pictures {
         ui.horizontal(|ui| {
             ui.label(p);
+            let make = crate::recall_types::RecallMsg::OcclusionCard(
+                view.extract.folder.clone(),
+                p.clone(),
+            );
+            if ui
+                .small_button(format!("Occlusion card from {p}"))
+                .clicked()
+            {
+                out.push(Msg::Recall(make));
+            }
             if ui.small_button("Copy Markdown").clicked() {
                 let name = p.rsplit('/').next().unwrap_or(p);
                 ui.ctx().copy_text(format!(
