@@ -13,3 +13,6 @@ workspace = true
 [dependencies]
 studyfrog-agent.workspace = true
 ureq.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true

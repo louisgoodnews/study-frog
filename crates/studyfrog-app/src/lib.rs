@@ -1,6 +1,7 @@
 //! The application binary's own pieces: the native dialogs and the choice of extensions. Depends on
 //! studyfrog-ui and the optional heavy runtimes; nothing else depends on this crate.
 
+pub mod mcp_http;
 pub mod picker;
 
 use studyfrog_ext::registry::registry_new;

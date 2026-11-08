@@ -6,7 +6,8 @@
 //! `studyfrog --print-paths` lists where the application keeps its files, and
 //! `studyfrog logs [--tail N] [--follow] [--json]` shows its log, and
 //! `studyfrog --mcp [--vault PATH] [--mcp-allow-write] [--mcp-allow-destructive]` serves the vault to AI
-//! clients over the Model Context Protocol on standard input and output.
+//! clients over the Model Context Protocol on standard input and output, or with `--mcp-http 127.0.0.1:PORT` on
+//! a local HTTP listener that wants a bearer token.
 //! `studyfrog --control-stdio [--vault PATH]` runs headless, driven by control requests on standard input, and
 //! `studyfrog ctl <command>` sends one to a running instance (`studyfrog ctl help` lists them). The window serves
 //! `run/control.sock` unless `--no-control` is given; `--control-read-only` and `--control-allow-destructive`
@@ -57,6 +58,9 @@ fn control_policy(args: &[String]) -> Option<studyfrog_ui::control_cmd::ControlP
 
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().collect();
+    if args.iter().skip(1).any(|a| a == "--mcp-http") {
+        return ExitCode::from(studyfrog_app::mcp_http::run(&args));
+    }
     if args.iter().skip(1).any(|a| a == "--control-stdio") {
         return ExitCode::from(studyfrog_ui::control_stdio::run(
             &args,

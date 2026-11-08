@@ -1,6 +1,9 @@
 //! Sends the agent's requests over HTTP(S). The only crate that links a network library; the
 //! application hands [`send`] to the UI as its transport.
 
+pub mod http_req;
+pub mod mcp_http;
+
 use std::io::ErrorKind;
 use std::time::Duration;
 

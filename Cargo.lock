@@ -5283,6 +5283,7 @@ dependencies = [
 name = "studyfrog-net"
 version = "0.5.0"
 dependencies = [
+ "serde_json",
  "studyfrog-agent",
  "ureq",
 ]

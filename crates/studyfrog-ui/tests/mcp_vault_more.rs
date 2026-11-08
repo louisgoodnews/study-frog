@@ -110,6 +110,9 @@ fn the_flags_choose_the_vault_and_the_policy() {
             .unwrap_err()
             .contains("--loud")
     );
+    let http = parse_mcp_args(&args(&["--mcp", "--mcp-http", "127.0.0.1:9"])).unwrap();
+    assert_eq!(http.http.as_deref(), Some("127.0.0.1:9"));
+    assert!(parse_mcp_args(&args(&["--mcp", "--mcp-http"])).is_err());
 }
 
 #[test]

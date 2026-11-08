@@ -2,7 +2,7 @@
 id: STORY-0120
 type: story
 title: CLI stdio MCP server mode and localhost Streamable HTTP transport
-status: review
+status: done
 epic: EPIC-037
 parents: [EPIC-037]
 estimate: 5
@@ -41,7 +41,7 @@ Implement the `stdio` and localhost Streamable HTTP MCP transports and UI config
 
 ## Acceptance Criteria
 - [x] Running studyfrog-app --mcp [--vault <path>] [--mcp-allow-write] starts a headless JSON-RPC 2.0 MCP server over stdin/stdout with all diagnostic output routed strictly to stderr
-- [ ] An optional localhost-only Streamable HTTP transport (--mcp-http 127.0.0.1:<port>) enforces bearer-token authentication and Origin header validation to prevent DNS-rebinding or cross-origin requests
+- [x] An optional localhost-only Streamable HTTP transport (--mcp-http 127.0.0.1:<port>) enforces bearer-token authentication and Origin header validation to prevent DNS-rebinding or cross-origin requests
 - [x] The Settings / Assistant screen displays a ready-to-copy MCP configuration snippet (claude_desktop_config.json / Cursor / Zed) for the active vault
 
 ## Design Notes
@@ -52,7 +52,7 @@ Implement the `stdio` and localhost Streamable HTTP MCP transports and UI config
 ## Progress (2026-11-08)
 Built and tried: `studyfrog --mcp [--vault PATH] [--mcp-allow-write] [--mcp-allow-destructive]` serves the vault over standard input and output (newline-delimited JSON-RPC, one flushed line per answer, nothing but protocol on standard output, problems on standard error with exit code 1); the vault defaults to the one opened last. It was run as the real binary over pipes. The Assistant's connections tab has "Copy MCP server config" with the block for the open vault. The binary is called `studyfrog`, not `studyfrog-app` as the story says.
 
-Open: the localhost Streamable HTTP transport with its token and origin checks (criterion 2) is not built.
+Criterion 2 built and verified later the same day: `studyfrog --mcp --mcp-http 127.0.0.1:<port> [--vault PATH] [--mcp-allow-write]` serves `POST /mcp` (one JSON-RPC message in, one JSON answer out, `202 Accepted` for a notification; `GET` answers `405` since no server-sent event stream is offered, which the Streamable HTTP transport allows). It binds 127.0.0.1 only (any other address, `0.0.0.0` included, is refused before binding), wants `Authorization: Bearer <token>` (compared in constant time; the token is `mcp_http` under `[keys]` in `secrets.toml`, else 32 random bytes from the system printed to standard error for this run), refuses a `Host` that is not 127.0.0.1/localhost with this port (DNS rebinding) and a browser `Origin` that is not localhost, 127.0.0.1 or [::1], and limits header lines, headers and bodies. The HTTP reader and writer are about 150 lines of the standard library in `studyfrog-net` (`http_req.rs`, `mcp_http.rs`): a server crate (tiny_http, hyper) would add a dependency tree for one endpoint, one request per connection and a `Content-Length` body (P10). Verified by `crates/studyfrog-net/tests/mcp_http.rs` (address, host, origin and token checks, the reader's limits, nine exchanges over a real socket on 127.0.0.1) and `crates/studyfrog-app/tests/mcp_http_binary.rs` (the real binary: the printed token reads the vault summary, a wrong token gets 401, nothing on standard output, the `secrets.toml` token is used and not printed, `0.0.0.0` is refused). Not done: `Mcp-Session-Id` sessions and server-sent events (optional in the transport); not tried with a real AI client over HTTP.
 
 ## Dependencies
 EPIC-037, STORY-0117, STORY-0118, STORY-0119.

@@ -21,6 +21,8 @@ pub struct McpArgs {
     pub vault: Option<String>,
     /// What the server lets through.
     pub policy: McpPolicy,
+    /// `--mcp-http 127.0.0.1:<port>`: serve over local HTTP instead of standard input and output.
+    pub http: Option<String>,
 }
 
 /// Read the flags (the arguments after the program name); `--mcp` itself is skipped, anything unknown
@@ -33,6 +35,10 @@ pub fn parse_mcp_args(args: &[String]) -> Result<McpArgs, String> {
             "--vault" => {
                 let path = rest.next().ok_or("--vault needs a folder")?;
                 out.vault = Some(path.clone());
+            }
+            "--mcp-http" => {
+                let addr = rest.next().ok_or("--mcp-http needs 127.0.0.1:<port>")?;
+                out.http = Some(addr.clone());
             }
             "--mcp-allow-write" => out.policy.allow_write = true,
             "--mcp-allow-destructive" => out.policy.allow_destructive = true,
@@ -84,12 +90,19 @@ fn vault_path(args: &McpArgs) -> Result<String, String> {
         .ok_or_else(|| "no vault: give --vault PATH or open one in the app first".to_owned())
 }
 
+/// Read the flags (the program name first) and open the vault they name.
+pub fn prepare(args: &[String]) -> Result<(McpArgs, VaultCtx), String> {
+    let a = parse_mcp_args(args.get(1..).unwrap_or_default())?;
+    let path = vault_path(&a)?;
+    let (session, _) = open_vault(&path).map_err(|e| format!("{path}: {e}"))?;
+    Ok((a, VaultCtx { session, now_ms }))
+}
+
 /// Run the server on standard input and output until the input ends; the exit code.
 pub fn run(args: &[String]) -> u8 {
-    let result = parse_mcp_args(args.get(1..).unwrap_or_default()).and_then(|a| {
-        let path = vault_path(&a)?;
-        let (session, _) = open_vault(&path).map_err(|e| format!("{path}: {e}"))?;
-        Ok((a.policy, VaultCtx { session, now_ms }))
+    let result = prepare(args).and_then(|(a, ctx)| match a.http {
+        Some(_) => Err("--mcp-http is served by the studyfrog binary".to_owned()),
+        None => Ok((a.policy, ctx)),
     });
     let (policy, mut ctx) = match result {
         Ok(ready) => ready,
