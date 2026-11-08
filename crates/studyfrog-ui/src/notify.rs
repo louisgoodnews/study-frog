@@ -101,6 +101,20 @@ pub fn push(
     (state, effects)
 }
 
+/// The effect that writes a notice raised since `before` to the application log, if there is one.
+/// The window calls it around each step, so that the update itself stays free of it.
+pub fn log_new(before: &Option<Notice>, state: &State) -> Option<Effect> {
+    let n = state
+        .notice
+        .as_ref()
+        .filter(|n| Some(*n) != before.as_ref())?;
+    Some(Effect::Notifications(NotifyEffect::Log(
+        n.kind,
+        n.text.clone(),
+        state.wall_ms,
+    )))
+}
+
 /// Keep every new notice in the list, and read the vault's stored list when a vault has just opened. Call after
 /// each update with the notice from before it.
 pub fn track(before: &Option<Notice>, state: State) -> (State, Vec<Effect>) {

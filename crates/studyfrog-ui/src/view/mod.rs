@@ -75,6 +75,7 @@ mod run_timer;
 mod session_form;
 mod settings;
 mod settings_appearance;
+mod settings_files;
 mod settings_replay;
 mod setup;
 mod setup_how;

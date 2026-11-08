@@ -3,6 +3,7 @@
 pub mod achievements;
 pub mod answer_scores;
 pub mod app_config;
+pub mod app_migrate;
 pub mod board_store;
 pub mod db;
 pub mod diary;

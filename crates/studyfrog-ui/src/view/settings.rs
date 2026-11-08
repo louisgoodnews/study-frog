@@ -19,7 +19,11 @@ pub fn sections_of(tab: SettingsTab) -> &'static [Section] {
         SettingsTab::Study => &[scheduling, view_tracking, replay],
         SettingsTab::Rehearsal => &[reading_speed],
         SettingsTab::Answers => &[answer_comparison],
-        SettingsTab::Data => &[crate::view::backup::draw, transfer],
+        SettingsTab::Data => &[
+            crate::view::backup::draw,
+            transfer,
+            super::settings_files::draw,
+        ],
         SettingsTab::Subjects => &[crate::view::subjects::draw],
         SettingsTab::Diary => &[crate::view::diary::settings::draw],
         SettingsTab::Appearance => &[

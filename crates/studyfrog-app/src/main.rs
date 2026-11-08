@@ -3,6 +3,8 @@
 //! `studyfrog --smoke-frames N` draws N frames and exits (for CI under a virtual display).
 //! `studyfrog --screenshot FILE [--screen NAME] [--size WxH] [--theme dark|light|system]` saves a PNG of a screen and exits (`home`, `library`,
 //! `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `run`, or `stack:<folder>`).
+//! `studyfrog --print-paths` lists where the application keeps its files, and
+//! `studyfrog logs [--tail N] [--follow] [--json]` shows its log.
 
 use std::process::ExitCode;
 
@@ -35,6 +37,9 @@ fn options(args: &[String]) -> RunOptions {
 
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().collect();
+    if let Some(code) = studyfrog_ui::cli::run(&args) {
+        return ExitCode::from(code);
+    }
     match studyfrog_ui::run_with(options(&args), studyfrog_app::host()) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {

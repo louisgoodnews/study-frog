@@ -43,7 +43,10 @@ When the file exists it **replaces** the built-in set (an empty file means no ac
 is reported and the built-in set is used. Mastered means scheduled 21 days or more ahead. Only runs that
 update the schedule write reviews, so practice runs do not count towards review-based metrics.
 
-## `app.toml` (`$XDG_CONFIG_HOME/studyfrog/`, written by the app)
+## `app.toml` (`config/` in the application home, written by the app)
+The application home is `$STUDYFROG_HOME`, else `$XDG_DATA_HOME/studyfrog`, else `~/.local/share/studyfrog` (also holding `secrets.toml`,
+`providers.toml`, `profiles.toml`, `models/`, `logs/` and `run/`; `studyfrog --print-paths` lists them). Files of the old
+`$XDG_CONFIG_HOME/studyfrog/` are copied in on first start when missing and left where they are; with `STUDYFROG_HOME` set nothing is copied.
 ```toml
 vault = "/home/me/notes"       # the vault opened last
 recent = ["/home/me/notes"]    # recently opened vaults, newest first

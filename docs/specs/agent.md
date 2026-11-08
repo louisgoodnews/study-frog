@@ -8,7 +8,7 @@ until the user applies a proposal.
 `anthropic`), `base_url`, `model`, `allowed`. API keys are in `secrets.toml` (`[keys]`, mode 0600), never in the
 vault or in `providers.toml`. A connection whose host is `localhost`, `127.0.0.1` or `::1` is local and needs no
 permission; a remote one is refused until the user ticks "Allow sending text from my vault".
-Calls are logged in `$XDG_STATE_HOME/studyfrog/agent.log`: time, connection, host, status. Never text or keys.
+Calls are logged in `logs/agent.log` of the application home: time, connection, host, status. Never text or keys.
 
 ## Wire
 Ollama `POST /api/chat`, OpenAI-compatible `POST /v1/chat/completions` (Bearer key), Anthropic `POST /v1/messages`

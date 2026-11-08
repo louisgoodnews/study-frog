@@ -5,6 +5,7 @@ use eframe::egui;
 use crate::effect::Effect;
 use crate::host::{Host, extensions_of};
 use crate::model::{Model, apply, frame};
+use crate::notify::log_new;
 use crate::runtime::{Runtime, spawn};
 
 /// The window's state.
@@ -65,9 +66,13 @@ pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> Stud
 pub fn app_ui(app: &mut StudyFrogApp, ui: &mut egui::Ui) {
     let mut effects: Vec<Effect> = Vec::new();
     while let Ok(msg) = app.runtime.msgs.try_recv() {
+        let before = app.model.state.notice.clone();
         effects.extend(apply(&mut app.model, msg));
+        effects.extend(log_new(&before, &app.model.state));
     }
+    let before = app.model.state.notice.clone();
     effects.extend(frame(&mut app.model, ui));
+    effects.extend(log_new(&before, &app.model.state));
     if let Some(shot) = app.shot.as_mut() {
         effects.extend(crate::app_shot::step(shot, &mut app.model, ui));
     }

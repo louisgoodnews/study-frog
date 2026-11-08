@@ -2,7 +2,7 @@
 id: STORY-0122
 type: story
 title: StudyFrog application files in ~/.local/ with logs and configurations
-status: backlog
+status: review
 epic: EPIC-038
 parents: [EPIC-038]
 estimate: 5
@@ -45,6 +45,11 @@ Standardize StudyFrog's application directory layout in `~/.local/` and implemen
   - `crates/studyfrog-service/src/logging.rs`: structured JSONL and text log writer with rotation.
   - `crates/studyfrog-app/src/`: wire startup/runtime logging and `--print-paths` / `logs` CLI subcommands.
 - Strictly enforce P1 (zero inherent `impl` blocks) and P2 (≤ 250 lines per file).
+
+## Progress (2026-11-08)
+Built and tested: `studyfrog-config::paths` (home from `STUDYFROG_HOME`, `XDG_DATA_HOME` or `~/.local/share/studyfrog`), `studyfrog-store::app_migrate` (the old config directory is copied in, never moved or deleted, an existing file is never overwritten, `secrets.toml` ends up `0600`), `studyfrog-service::logging` (text and JSON Lines, 5 MB x 3 files), every notice written to both logs through `NotifyEffect::Log`, config, models and logs read from the new home, `studyfrog --print-paths`, `studyfrog logs [--tail N] [--follow] [--json]` (tried against a real binary), and an "Application files" section in Settings > Data with copy buttons.
+
+Open: only notices are logged, not other worker events, import/export diagnostics or control-protocol events (the protocol is STORY-0124); `profiles/` and `run/` are named but nothing writes to them yet (no socket exists); no "Open logs folder" button (it needs an effect that starts the file manager); `profiles.toml` stays in `config/`; the Settings section was not looked at in a real window; the migration ran in tests only, not against a real `~/.config/studyfrog`.
 
 ## Dependencies
 EPIC-038.

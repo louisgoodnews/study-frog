@@ -83,6 +83,9 @@ pub enum NotifyEffect {
     Clear,
     /// Drop the oldest beyond the caps.
     Prune,
+    /// Write a notice to the application log: its severity, its text and when it was raised (Unix
+    /// milliseconds). Works without a vault.
+    Log(crate::state::NoticeKind, String, i64),
 }
 
 const SCREENS: [(Screen, &str); 7] = [

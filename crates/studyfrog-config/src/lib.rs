@@ -6,6 +6,7 @@ mod app_appearance;
 pub mod backup;
 pub mod error;
 pub mod filters;
+pub mod paths;
 pub mod pdf_marks;
 pub mod profiles;
 pub mod stack;

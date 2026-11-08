@@ -54,6 +54,10 @@ pub fn record_view(w: &Worker, v: crate::view_time::ViewRecord, now_ns: i64) -> 
 pub fn notifications(w: &Worker, op: crate::notify::NotifyEffect, now_ns: i64) -> Vec<Msg> {
     use crate::notify::{MAX_AGE_MS, MAX_NOTIFICATIONS, NotifyEffect, from_stored, to_stored};
     use studyfrog_store::notifications as db;
+    if let NotifyEffect::Log(kind, text, at_ms) = op {
+        crate::exec_log::log_notice(w, kind, text, at_ms);
+        return Vec::new();
+    }
     let Some(s) = &w.session else {
         return Vec::new();
     };
@@ -72,6 +76,7 @@ pub fn notifications(w: &Worker, op: crate::notify::NotifyEffect, now_ns: i64) -
         NotifyEffect::Delete(id) => db::delete_notification(c, id as i64),
         NotifyEffect::Clear => db::clear_notifications(c),
         NotifyEffect::Prune => db::prune_notifications(c, MAX_NOTIFICATIONS, now_ms - MAX_AGE_MS),
+        NotifyEffect::Log(..) => return Vec::new(),
     };
     Vec::new()
 }

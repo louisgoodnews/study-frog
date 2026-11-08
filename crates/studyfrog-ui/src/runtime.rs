@@ -1,12 +1,15 @@
 //! The worker thread: runs effects off the UI thread and sends the results back as messages.
 
+use std::path::PathBuf;
+use std::sync::OnceLock;
 use std::sync::mpsc::{Receiver, Sender, channel};
 use std::thread;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use eframe::egui;
-use studyfrog_slm::models::models_dir;
+use studyfrog_config::paths::{AppPaths, HOME_ENV, app_home, app_paths};
 use studyfrog_store::app_config::app_config_dir;
+use studyfrog_store::app_migrate::{migrate_legacy_config, secure_secrets};
 
 use crate::effect::Effect;
 use crate::exec::{execute, worker_with_host};
@@ -27,19 +30,31 @@ fn now_ns() -> i64 {
         .map_or(0, |d| i64::try_from(d.as_nanos()).unwrap_or(i64::MAX))
 }
 
-pub(crate) fn config_dir() -> Option<std::path::PathBuf> {
-    let xdg = std::env::var("XDG_CONFIG_HOME").ok();
-    let home = std::env::var("HOME").ok();
-    app_config_dir(xdg.as_deref(), home.as_deref())
+fn env(name: &str) -> Option<String> {
+    std::env::var(name).ok()
 }
 
-/// `$XDG_STATE_HOME/studyfrog`, else `$HOME/.local/state/studyfrog`: where the agent logs its calls.
-fn state_dir() -> Option<std::path::PathBuf> {
-    let non_empty = |v: Option<String>| v.filter(|s| !s.is_empty()).map(std::path::PathBuf::from);
-    let base = non_empty(std::env::var("XDG_STATE_HOME").ok()).or_else(|| {
-        non_empty(std::env::var("HOME").ok()).map(|h| h.join(".local").join("state"))
-    })?;
-    Some(base.join("studyfrog"))
+/// Where the application keeps its files, with the old config directory copied in on first use.
+/// An explicit `STUDYFROG_HOME` is an isolated home, so nothing is copied into it.
+fn resolve_paths() -> Option<AppPaths> {
+    let (own, data, home) = (env(HOME_ENV), env("XDG_DATA_HOME"), env("HOME"));
+    let paths = app_paths(&app_home(own.as_deref(), data.as_deref(), home.as_deref())?);
+    let legacy = app_config_dir(env("XDG_CONFIG_HOME").as_deref(), home.as_deref());
+    if let Some(legacy) = legacy.filter(|l| own.is_none() && *l != paths.config) {
+        let _ = migrate_legacy_config(&legacy, &paths.config);
+    }
+    let _ = secure_secrets(&paths.config);
+    Some(paths)
+}
+
+/// The application's directories, found and migrated once per run.
+pub fn paths() -> Option<AppPaths> {
+    static PATHS: OnceLock<Option<AppPaths>> = OnceLock::new();
+    PATHS.get_or_init(resolve_paths).clone()
+}
+
+pub(crate) fn config_dir() -> Option<PathBuf> {
+    paths().map(|p| p.config)
 }
 
 /// Start the worker. It repaints the window whenever it has produced messages.
@@ -47,13 +62,10 @@ pub fn spawn(ctx: egui::Context, host: Host) -> Runtime {
     let (effects, effect_rx) = channel::<Effect>();
     let (msg_tx, msgs) = channel::<Msg>();
     thread::spawn(move || {
-        let models = {
-            let xdg = std::env::var("XDG_DATA_HOME").ok();
-            let home = std::env::var("HOME").ok();
-            models_dir(xdg.as_deref(), home.as_deref())
-        };
+        let paths = paths();
+        let models = paths.as_ref().map(|p| p.models.clone());
         let mut worker = worker_with_host(config_dir(), models, host);
-        worker.state_dir = state_dir();
+        worker.state_dir = paths.map(|p| p.logs);
         while let Ok(effect) = effect_rx.recv() {
             for msg in execute(&mut worker, effect, now_ns()) {
                 if msg_tx.send(msg).is_err() {

@@ -7,11 +7,16 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
-### Changed
-- The PDF viewer trims full-size page pictures (6) and thumbnails (60) apart, so scrolling the sidebar thumbnails no longer pushes out the page being read and far fewer large page textures are kept in memory; the sidebar and the arrange grid share one thumbnail scale (STORY-0085).
-
 ### Added
+- StudyFrog keeps its own files in one application home (`$STUDYFROG_HOME`, else `$XDG_DATA_HOME/studyfrog`, else `~/.local/share/studyfrog`): `config/`, `models/`, `logs/`. Files of the old `~/.config/studyfrog` are copied in on first start and left in place; API keys end up readable by the owner only (STORY-0122).
+- Every notice is written to a rotating text log (`logs/studyfrog.log`) and a JSON Lines log (`logs/console.jsonl`), 5 MB x 3 files each (STORY-0122).
+- `studyfrog --print-paths` lists the application's directories, and `studyfrog logs [--tail N] [--follow] [--json]` shows its log (STORY-0122).
+- Settings > Data lists the application files with a Copy button for each path (STORY-0122).
 - Benchmarks for parsing a document and for drawing a thumbnail and a page at 2x, next to the existing page benchmark (STORY-0085).
+
+### Changed
+- The assistant's call log moved from `~/.local/state/studyfrog/agent.log` to `logs/agent.log` in the application home (STORY-0122).
+- The PDF viewer trims full-size page pictures (6) and thumbnails (60) apart, so scrolling the sidebar thumbnails no longer pushes out the page being read and far fewer large page textures are kept in memory; the sidebar and the arrange grid share one thumbnail scale (STORY-0085).
 
 ### Fixed
 - PDF page, sidebar thumbnail and arrange-grid textures are keyed by their pixel size instead of the requested scale, so a low-resolution thumbnail shown while the sharp render is in flight no longer takes over the sharp texture and leaves the page blurred at some zoom levels or fit modes (BUG-0010).

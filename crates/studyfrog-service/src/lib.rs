@@ -44,6 +44,7 @@ pub mod images;
 pub mod import;
 pub mod kanban;
 pub mod library_rows;
+pub mod logging;
 pub mod pdf_export;
 mod pdf_export_doc;
 mod pdf_export_exec;
