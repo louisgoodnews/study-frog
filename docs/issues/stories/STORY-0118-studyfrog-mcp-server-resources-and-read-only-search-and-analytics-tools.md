@@ -2,7 +2,7 @@
 id: STORY-0118
 type: story
 title: StudyFrog MCP server resources and read-only search, analytics, and forecast tools
-status: review
+status: done
 epic: EPIC-037
 parents: [EPIC-037]
 estimate: 5
@@ -33,7 +33,7 @@ Register StudyFrog's canonical read-only MCP Resources and Tier-1 Read-Only Tool
 
 ## Acceptance Criteria
 - [x] The MCP server exposes canonical studyfrog:// resources for vault summary, stacks, items (Markdown + SRS state), reports, and learning diary entries
-- [ ] Read-only MCP tools (readOnlyHint: true, idempotentHint: true) allow external AI clients to search items via the StudyFrog query language, fetch due queues, read PDF pages, and query retention/forecast/leech reports
+- [x] Read-only MCP tools (readOnlyHint: true, idempotentHint: true) allow external AI clients to search items via the StudyFrog query language, fetch due queues, read PDF pages, and query retention/forecast/leech reports
 - [x] All read-only resources and tools operate with zero side effects on vault files or SQLite schedules
 
 ## Design Notes
@@ -48,6 +48,23 @@ Built (in `crates/studyfrog-ui/src/mcp_vault*.rs`, `mcp_search.rs`, `mcp_reports
 - Zero side effects: a test calls every read tool and resource and compares every Markdown file and every row of every index table (schedules, events, runs, ...) before and after; nothing changes.
 
 Open (depends on EPIC-034, not built yet): leech diagnostics (`analytics_get_report` with `kind: leeches` answers that they are not built), the study-minute forecast (`study_minutes` is `null`), and true retention curves (the retention report is the bucketed recall by gap the Reports screen shows). Criterion 2 stays open until these exist; the rest is done.
+
+## Progress (2026-11-08, finished)
+With EPIC-034 built (`crates/studyfrog-ui/src/mcp_analytics.rs`, `mcp_reports.rs`):
+- `studyfrog://reports/leeches` and `analytics_get_report` with `kind: leeches`: the leeches (id, title, stack,
+  lapses, streak, reviews, time burden, stability per review, reasons) and the confusion pairs.
+- `forecast_simulate_workload` (now up to 365 days) and `studyfrog://reports/forecast`: simulated reviews and
+  `study_minutes` per day, totals, per-day stages with P10/P50/P90 and minute bands, miss probability, new cards a
+  day, exam pacers, the recommended and current retention, true retention, and the backtest (of the simpler
+  forecast, labelled as such).
+- `retention` (tool and resource) carries `true_retention`: true, young, mature, early, on-time and overdue
+  retention with the FSRS prediction, the four stability tiers with measured vs predicted recall by `t/S` and RMSE,
+  memory scale and half-lives.
+- Verified: `crates/studyfrog-ui/tests/mcp_analytics.rs` (a fixture history with a leech; study minutes for 7 and
+  365 days; the tier curves; every new call leaves every Markdown file and every index row unchanged) and the
+  updated `tests/mcp_reports.rs`; and as the real binary over pipes (`studyfrog --mcp --vault <demo>`: leeches,
+  workload and retention answered, the files' hashes and the SQLite dump identical before and after). Not tried with
+  a real AI client.
 
 ## Dependencies
 EPIC-037, STORY-0117.

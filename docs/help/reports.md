@@ -8,7 +8,8 @@ the screen says "There are no reviews yet."
 your vault, as `studyfrog-report-<vault>-<date>.csv`, and tells you where. Each row has a section (summary, retention,
 latency, forecast, familiarity or runs), a subject, a metric and a value, so a spreadsheet can pivot it.
 
-The screen has four tabs: **Performance**, **Memory and forecast**, **Familiarity** and **Runs**.
+The screen has these tabs: **Performance**, **Memory and forecast**, **Familiarity**, **Self-assessment**, **Runs**,
+**Habits**, **Leeches** and **Workload**.
 
 ## Performance
 
@@ -30,6 +31,10 @@ Good, Easy), a chart of the **Last 30 days**, and the **Last review**.
   same split by the mark you gave the item (easy, medium, difficult, not marked). Paused time is left out.
 - **Reviews ahead**: how many reviews to expect on each of the next 30 days, and per week. Overdue items count
   today. It is an expectation from your history, not a promise.
+- **True retention**: recall of mature items (stability of 21 days or more) reviewed within 20 % of their interval,
+  next to young, mature, early, on-time and overdue reviews, each with what FSRS expected; your memory half-life for
+  a typical item; and **Forgetting curves by stability**: for items under 7, 7-30, 30-90 and 90+ days of stability,
+  measured recall against the FSRS prediction by the time since the review relative to the stability (t/S).
 - **Checked on**: how well the forecast did when tested on the past. With at least 56 days of your own history it is
   checked on yours; otherwise on a simulated learner, and the screen says so. On simulated histories the weekly
   totals were off by about 10 %.
@@ -46,16 +51,47 @@ Every rehearsal run with its date, mode (Flip cards or Type answers), how many i
 it finished or was stopped early, its pacing (no clock, countdown or count up), the planned time of a countdown, the
 time used and the answers per minute. **Show** filters the list: **All runs**, **Flip cards** or **Type answers**.
 
+## Habits
+
+- **When you remember best**: recall and time to answer by the local hour of the review, the two hours where your
+  recall is highest for its time (and the lowest), and by weekday. **Reviews an hour needs** (5, 10, 20, 50) sets how
+  many reviews an hour must have before it is recommended.
+- **Within a run**: recall and time to reveal by minutes into a run (pauses left out) and by the item's place in it,
+  and where accuracy starts to fall or answers slow down: a suggested run length. During a run a quiet line says when
+  an answer took far longer than the run's usual; switch it off with **Don't show this** or in Settings > Rehearsal.
+
+## Leeches
+
+Items that keep failing (4 lapses or more, 3 hard or forgotten in a row, 3 times the stack's usual time, or many
+reviews and still a short memory), with the reasons, and **Items that get confused**: pairs forgotten close together
+that share words, a tag or a link. **Edit or split** opens the item, **Pause** takes it out of the schedule, **Drill**
+starts a practice run of exactly those items (a pair side by side) that does not change the schedule.
+
+## Workload
+
+- **Workload ahead**: reviews or **Study minutes** for **30**, **90** or **365 days**, from 16 simulated futures of
+  every card's FSRS or SM-2 state with your ratings, missed days, new cards a day and the time reviews take in each
+  stack; by stage (new, learning, young, mature) with a typical value and a low-to-busy range.
+- **Exam pacer**: for each stack with an exam or due date ahead, the new cards a day to start, the reviews and
+  minutes a day, and the share of cards that would be at 90 % recall on the day; the last three days are kept for
+  consolidation.
+- **Workload against desired retention**: each target from 0.75 to 0.97 simulated for 180 days: minutes a day, cards
+  remembered and cards per minute; the least-work target and the recommended one. **Apply recommended retention**
+  writes it into `studyfrog.toml`.
+
 ## A stack's reports
 
-The **Reports** tab of a [[stack-page|stack page]] shows the stack's familiarity and the items it knows least, with
-**Open all reports** to come here.
+The **Reports** tab of a [[stack-page|stack page]] shows the stack's familiarity and the items it knows least, its
+exam pacer, its leeches and confused pairs, and its own workload-against-retention curve, whose **Apply** button writes
+the stack's `_stack.toml`; **Open all reports** comes here. The stack's **Summary** also shows its exam pacer.
 
 ## Good to know
 
 - Practice-only runs do not write reviews, so they do not count in Performance, Retention or the forecast. Their
   answer times do count in Time to answer.
-- Reports are computed when you open the screen. They take a few milliseconds even with 100 000 reviews.
+- Reports are computed when you open the screen. They take a few milliseconds even with 100 000 reviews; the
+  simulations take up to about 50 ms each for 5 000 cards. Every simulation uses fixed seeds, so the same history
+  gives the same numbers.
 
 ## Related pages
 

@@ -100,6 +100,7 @@ pub mod library_columns;
 pub mod library_search;
 pub mod library_sort;
 pub mod library_ui;
+pub mod mcp_analytics;
 pub mod mcp_client_ui;
 pub mod mcp_diary_pdf;
 pub mod mcp_extract;

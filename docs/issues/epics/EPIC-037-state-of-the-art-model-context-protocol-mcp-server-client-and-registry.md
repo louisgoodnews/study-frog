@@ -2,7 +2,7 @@
 id: EPIC-037
 type: epic
 title: State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry
-status: review
+status: done
 parents: []
 labels: [m12, agent, ext, service, ui, app]
 acceptance_criteria:

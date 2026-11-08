@@ -36,6 +36,14 @@ Measured on simulated histories (3 seeds, 150 days, cut at day 119): weekly tota
 Each report computes in under 50 ms on 100,000 reviews; measured 0.4 to 6.6 ms
 ([BENCHMARKING](../contributing/BENCHMARKING.md)).
 
+## Behavioural analytics (EPIC-034)
+`ReportBundle.analytics` (`studyfrog-service/src/analytics*.rs`) adds: true retention and forgetting curves by stability
+tier (`report::retention_survival`), the hour/weekday profile (`report::chronotype`), fatigue within runs
+(`report::session_log`, `report::fatigue`), leeches and confusion pairs (`report::leech`, `report::confusion`), the
+simulated forecast with study minutes and the exam pacer (`report::sim_engine`, `forecast_sim`, `exam_pacer`) and
+workload against desired retention (`report::cmrr`). Every simulation is seeded (SplitMix64, `simulate::next_random`).
+Budgets and measurements: [BENCHMARKING](../contributing/BENCHMARKING.md). The stories hold the definitions.
+
 ## Familiarity
 `studyfrog_report::familiarity` values an item from its history ([familiarity](familiarity.md)). Checked on the simulated learner
 of the forecast (`tests/familiarity_validation.rs`; 3 seeds, 200 days, 20 new items a day, about 49 000 reviews and 12 000 items; the

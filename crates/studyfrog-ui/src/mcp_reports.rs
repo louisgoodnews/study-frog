@@ -17,14 +17,18 @@ use crate::mcp_vault::{
 };
 
 /// The reports a client can ask for.
-pub const REPORT_KINDS: [&str; 6] = [
+pub const REPORT_KINDS: [&str; 7] = [
     "retention",
     "forecast",
     "familiarity",
     "calibration",
     "runs",
     "latency",
+    "leeches",
 ];
+
+/// Days `forecast_simulate_workload` can cover.
+pub const MAX_WORKLOAD_DAYS: usize = 365;
 
 fn bundle(ctx: &VaultCtx) -> Result<ReportBundle, McpError> {
     let now = now_of(ctx);
@@ -37,22 +41,25 @@ fn retention(b: &ReportBundle) -> Value {
         "retention": (r.reviews > 0).then(|| f64::from(r.recalled) / f64::from(r.reviews)),
     })).collect();
     json!({"reviews": b.reviews, "buckets": buckets,
-        "note": "Recall by the gap since the previous review, measured on the review history."})
+        "true_retention": crate::mcp_analytics::survival(&b.analytics.survival),
+        "note": "Buckets: recall by the gap since the previous review, measured on the review history."})
 }
 
 fn forecast(b: &ReportBundle, days: usize) -> Value {
     let e = b.backtest.error;
-    json!({
-        "days": days, "reviews_per_day": b.forecast.iter().take(days).collect::<Vec<_>>(),
-        "total_reviews": b.forecast.iter().take(days).sum::<f32>(),
-        "study_minutes": Value::Null,
-        "backtest": {
-            "simulated_history": b.backtest.simulated, "days": e.map(|e| e.days),
-            "mae_per_day": e.map(|e| e.mae_per_day), "weekly_error": e.map(|e| e.weekly_error),
-            "bias": e.map(|e| e.bias),
-        },
-        "note": "Expected reviews from today on; a study-minute forecast is not built yet.",
-    })
+    let mut v = crate::mcp_analytics::workload(&b.analytics, days);
+    v["true_retention"] =
+        crate::mcp_analytics::survival(&b.analytics.survival)["true_retention"].clone();
+    v["backtest"] = json!({
+        "of": "the simpler interval-growth forecast of the Reports screen, checked against the history",
+        "simulated_history": b.backtest.simulated, "days": e.map(|e| e.days),
+        "mae_per_day": e.map(|e| e.mae_per_day), "weekly_error": e.map(|e| e.weekly_error),
+        "bias": e.map(|e| e.bias),
+    });
+    v["note"] = json!(
+        "Each card's FSRS or SM-2 state carried forward in 16 seeded futures with the learner's ratings, missed days, new cards a day and per-stack pace; reviews and study minutes per day from today on, with stages and a P10-P90 band."
+    );
+    v
 }
 
 fn familiarity(b: &ReportBundle) -> Value {
@@ -117,6 +124,7 @@ fn report_json(b: &ReportBundle, kind: &str) -> Option<Value> {
         "calibration" => calibration(b),
         "runs" => runs(b),
         "latency" => latency(b),
+        "leeches" => crate::mcp_analytics::leeches(&b.analytics),
         _ => return None,
     })
 }
@@ -143,11 +151,6 @@ fn read_report(
 
 fn analytics(ctx: &mut VaultCtx, args: &Value) -> Result<McpContent, McpError> {
     let kind = arg_str(args, "kind").unwrap_or("retention");
-    if kind == "leeches" {
-        return Ok(tool_error(
-            "Leech diagnostics are not built yet; ask for retention, latency, calibration, familiarity, runs or forecast.",
-        ));
-    }
     let b = bundle(ctx)?;
     match report_json(&b, kind) {
         Some(v) => Ok(json_result(&json!({"kind": kind, "report": v}))),
@@ -159,7 +162,7 @@ fn analytics(ctx: &mut VaultCtx, args: &Value) -> Result<McpContent, McpError> {
 }
 
 fn workload(ctx: &mut VaultCtx, args: &Value) -> Result<McpContent, McpError> {
-    let days = arg_count(args, "days", 30, (1, 30));
+    let days = arg_count(args, "days", 30, (1, MAX_WORKLOAD_DAYS));
     let b = bundle(ctx)?;
     Ok(json_result(&forecast(&b, days)))
 }
@@ -171,7 +174,7 @@ pub fn register(reg: McpRegistry<VaultCtx>) -> McpRegistry<VaultCtx> {
         McpResourceTemplate {
             uri_template: "studyfrog://reports/{kind}",
             name: "Report",
-            description: "A report as JSON: retention, forecast, familiarity, calibration, runs or latency.",
+            description: "A report as JSON: retention (with true retention and the forgetting curves by stability), forecast (simulated reviews and study minutes), familiarity, calibration, runs, latency or leeches (with confusion pairs).",
             mime_type: "application/json",
             read: read_report,
         },
@@ -180,7 +183,7 @@ pub fn register(reg: McpRegistry<VaultCtx>) -> McpRegistry<VaultCtx> {
         reg,
         McpTool {
             name: "analytics_get_report",
-            description: "Learning telemetry as JSON: retention by gap, answer latency, self-assessment calibration, familiarity, recent runs or the forecast.",
+            description: "Learning telemetry as JSON: retention by gap with true retention and forgetting curves by stability tier, answer latency, self-assessment calibration, familiarity, recent runs, the forecast, or leeches and confusion pairs.",
             input_schema: r#"{"type":"object","properties":{"kind":{"type":"string","enum":["retention","latency","calibration","familiarity","runs","forecast","leeches"],"default":"retention"}}}"#,
             annotations: read_only("Learning report"),
             staged: false,
@@ -191,8 +194,8 @@ pub fn register(reg: McpRegistry<VaultCtx>) -> McpRegistry<VaultCtx> {
         reg,
         McpTool {
             name: "forecast_simulate_workload",
-            description: "Expected reviews per day for the next days (at most 30) and how far such a forecast was off in a backtest.",
-            input_schema: r#"{"type":"object","properties":{"days":{"type":"integer","minimum":1,"maximum":30,"default":30}}}"#,
+            description: "Simulated reviews and study minutes per day for the next days (at most 365) by stage with a P10-P90 band, the exam pacers, true retention and the backtest of the simpler forecast.",
+            input_schema: r#"{"type":"object","properties":{"days":{"type":"integer","minimum":1,"maximum":365,"default":30}}}"#,
             annotations: read_only("Workload forecast"),
             staged: false,
             call: workload,

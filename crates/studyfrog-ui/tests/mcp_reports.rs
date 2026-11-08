@@ -30,6 +30,7 @@ fn every_report_kind_is_a_resource_and_unknown_kinds_are_refused() {
         "calibration",
         "runs",
         "latency",
+        "leeches",
     ] {
         let answer = read(&mut c, &format!("studyfrog://reports/{kind}"));
         assert_eq!(
@@ -41,12 +42,12 @@ fn every_report_kind_is_a_resource_and_unknown_kinds_are_refused() {
     let forecast = content(&read(&mut c, "studyfrog://reports/forecast"), 0);
     assert_eq!(forecast["reviews_per_day"].as_array().unwrap().len(), 30);
     assert!(forecast["backtest"]["simulated_history"].as_bool().unwrap());
-    let unknown = read(&mut c, "studyfrog://reports/leeches");
+    let unknown = read(&mut c, "studyfrog://reports/nonsense");
     assert_eq!(unknown["error"]["code"], -32002);
 }
 
 #[test]
-fn the_analytics_and_forecast_tools_answer_and_say_what_is_not_built() {
+fn the_analytics_and_forecast_tools_answer() {
     let vault = sample_vault("mcp-analytics");
     let mut c = ctx(&vault.path);
     let p = McpPolicy::default();
@@ -64,11 +65,14 @@ fn the_analytics_and_forecast_tools_answer_and_say_what_is_not_built() {
         "analytics_get_report",
         json!({"kind": "leeches"}),
     );
-    assert!(leeches.as_str().unwrap().contains("not built yet"));
+    assert!(
+        leeches["report"]["leeches"].as_array().unwrap().is_empty(),
+        "no history, no leeches"
+    );
     let week = call(&mut c, p, "forecast_simulate_workload", json!({"days": 7}));
     assert_eq!(week["days"], 7);
     assert_eq!(week["reviews_per_day"].as_array().unwrap().len(), 7);
-    assert!(week["study_minutes"].is_null());
+    assert_eq!(week["study_minutes"].as_array().unwrap().len(), 7);
 }
 
 #[test]
