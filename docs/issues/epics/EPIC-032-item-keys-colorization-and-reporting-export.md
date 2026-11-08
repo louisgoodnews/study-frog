@@ -2,7 +2,7 @@
 id: EPIC-032
 type: epic
 title: Item keys, colorization, and reporting export
-status: backlog
+status: review
 parents: []
 labels: [m12, core, ui, report]
 acceptance_criteria:
@@ -32,8 +32,8 @@ Deliver three key vault organization, visual, and reporting enhancements planned
    - Export structured tables including retention rates, mastery distributions, stack review volumes, and time-series rehearsal run history.
 
 ## Acceptance Criteria
-- [ ] Items and stacks support human-readable sequential keys (e.g. STACK_1, FLASHCARD_500) for query filtering, direct navigation, and cross-linking
-- [ ] Items support an optional color attribute configured via a color picker in the editor and rendered as a tinted background accent in the viewer
+- [x] Items and stacks support human-readable sequential keys (e.g. STACK_1, FLASHCARD_500) for query filtering, direct navigation, and cross-linking
+- [x] Items support an optional color attribute configured via a color picker in the editor and rendered as a tinted background accent in the viewer
 - [ ] Learning metrics, retention statistics, and rehearsal history from the Reports screen can be exported directly as a CSV file
 
 ## Design Notes
@@ -49,6 +49,9 @@ Touchpoints across crates:
 - `crates/studyfrog-service`: `report.rs` (CSV serializer for metrics), `item.rs` (key resolution and color updates).
 - `crates/studyfrog-ui`: `view/reports.rs` (export button), `view/editor.rs` (color picker), `view/rehearse/` (background tinting), `view/browser.rs` (key column and search).
 - Release target: version 0.5.0 (Phase M12).
+
+## Progress (2026-11-08)
+STORY-0096, STORY-0097 and STORY-0123 are done (see each story). STORY-0098 (CSV export) stays in review, so the epic is in review; its third criterion is not ticked here. STORY-0099 (vault switcher) is listed under Design Notes but belongs to another package.
 
 ## Dependencies
 EPIC-015 (Reporting) and EPIC-023 (Usability).

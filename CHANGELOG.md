@@ -9,6 +9,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ### Added
 - Item keys: every new stack, card, note and question gets a short key such as `STACK_1`, `FLASHCARD_12`, `NOTE_3` or `QUESTION_7` in its front matter; "Assign keys…" in the Library gives older items theirs after a confirmation (undoable); the query language has `key`, an exact key typed into the top-bar or Library search finds its item, and keys show in a Library column, the item page's toolbar (with "Copy key") and the Details tab (STORY-0096).
+- Item colours: a `color` in front matter (palette word or `"#RRGGBB"`), chosen in the item page's Details > Properties (swatches, None, picker, code); it tints the item page, its Details cards, the rehearsal card and the item's Library row (with a dot), keeping text at a 4.5:1 contrast in both themes (STORY-0097, STORY-0123).
+- `studyfrog --screenshot FILE --screen item:<ULID>` pictures an item's page (STORY-0123).
 - Store migration 24: `item.key`, `item.color` and a `key_counter` table, so a deleted item's key is not handed out again (STORY-0096).
 
 ## [0.5.0] - 2026-11-08

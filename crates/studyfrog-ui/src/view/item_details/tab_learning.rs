@@ -13,7 +13,7 @@ pub fn draw(e: &Editor, ui: &mut egui::Ui) {
         crate::view::item_fam::card(e, ui);
     } else {
         kit::section(ui, "Familiarity");
-        kit::card(ui, |ui| {
+        super::item_card(e, ui, |ui| {
             ui.set_width(ui.available_width());
             ui.weak("No review history yet. Study this item to build a familiarity curve.");
         });

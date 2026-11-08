@@ -22,7 +22,8 @@ pub struct Shot {
     /// Where to write the PNG.
     pub path: PathBuf,
     /// The screen: `home`, `library`, `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or
-    /// `run` (opens Rehearse and starts a run of everything), or `stack:<folder>`; `None` keeps the first screen.
+    /// `run` (opens Rehearse and starts a run of everything), `stack:<folder>` or `item:<ULID>` (the item page);
+    /// `None` keeps the first screen.
     pub screen: Option<String>,
     /// Frames drawn so far.
     pub frames: u32,
@@ -63,6 +64,12 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
             Msg::Select(Selection::Stack(folder.to_owned())),
         ));
         return fx;
+    }
+    if let Some(uid) = name
+        .strip_prefix("item:")
+        .and_then(studyfrog_md::ulid::parse_ulid)
+    {
+        return apply(model, Msg::OpenItem(uid));
     }
     if name == "create" {
         return apply(model, Msg::Modal(crate::modal_types::ModalMsg::OpenCreate));

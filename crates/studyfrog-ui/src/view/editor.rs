@@ -21,6 +21,17 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         confirm_delete_bar(ui, out);
     }
     ui.add_space(6.0);
+    let p = palette_of(ui);
+    let fill = crate::item_look::page_fill(&p, ui.visuals().dark_mode, e.form.color.as_deref());
+    egui::Frame::new()
+        .fill(fill.unwrap_or(egui::Color32::TRANSPARENT))
+        .corner_radius(10)
+        .inner_margin(if fill.is_some() { 10 } else { 0 })
+        .show(ui, |ui| page(state, e, ui, out));
+}
+
+/// The two columns of the page.
+fn page(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let total = ui.available_width();
     let side = SIDE_WIDTH.min(total * 0.4);
     let height = ui.available_height();

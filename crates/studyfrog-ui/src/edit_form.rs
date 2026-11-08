@@ -3,6 +3,7 @@
 //! cloning the original document, so editing can never drop it. Pure.
 
 use studyfrog_core::event::{Difficulty, difficulty_from_name, difficulty_name};
+use studyfrog_core::item_color::{COLOR_FIELD, color_front_matter, normalize_color};
 use studyfrog_core::priority::{Priority, priority_from_name, priority_name};
 use studyfrog_core::status::Status;
 use studyfrog_md::doc::Doc;
@@ -41,6 +42,8 @@ pub struct EditForm {
     pub subjects: Vec<String>,
     /// The other stacks that reference this item (by stack UID string).
     pub referenced_by: Vec<String>,
+    /// The item's colour (a palette word or `#RRGGBB`); `None`: no colour.
+    pub color: Option<String>,
 }
 
 /// A change in the editor.
@@ -58,6 +61,8 @@ pub enum EditAction {
     Difficulty(Option<Difficulty>),
     /// The item's own status; `None` leaves it to the history.
     Status(Option<Status>),
+    /// The item's colour (a palette word or `#RRGGBB`); `None` removes it.
+    Color(Option<String>),
     /// A subject of a stack on or off.
     Subject(String, bool),
     /// Add a reference to this stack (by stack UID string).
@@ -111,7 +116,13 @@ pub fn form_from_doc(doc: &Doc) -> EditForm {
         status: status_of(doc),
         subjects: extra_names(doc, "subjects"),
         referenced_by: references_of(doc),
+        color: color_of(doc),
     }
+}
+
+/// The colour a document states, in its stored form.
+fn color_of(doc: &Doc) -> Option<String> {
+    extra_value(doc, COLOR_FIELD).and_then(|c| normalize_color(&c))
 }
 
 fn single_line(what: &str, text: &str) -> Result<(), String> {
@@ -176,6 +187,12 @@ pub fn apply_form(doc: &Doc, form: &EditForm) -> Result<Doc, String> {
     let out = with_extra(&out, "priority", form.priority.map(priority_name));
     let out = with_extra(&out, "difficulty", form.difficulty.map(difficulty_name));
     let out = with_references(&out, &form.referenced_by);
+    let color = form.color.as_deref().and_then(color_front_matter);
+    let out = if form.color == color_of(doc) {
+        out // a hand-written `green` stays as it is
+    } else {
+        with_extra(&out, COLOR_FIELD, color.as_deref())
+    };
     let out = if form.status == status_of(doc) {
         out
     } else {

@@ -36,7 +36,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .show(ui, |ui| {
             ui.vertical_centered(|ui| {
                 ui.set_max_width(CARD_WIDTH);
-                kit::card(ui, |ui| {
+                let p = palette_of(ui);
+                let color = crate::item_look::run_color(run);
+                let colors = crate::item_look::card_colors(&p, ui.visuals().dark_mode, color);
+                kit::card_with(ui, colors, |ui| {
                     ui.set_width(ui.available_width());
                     if run.session.run.state == RunState::Paused {
                         paused(ui, out);

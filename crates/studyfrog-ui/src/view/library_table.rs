@@ -95,6 +95,37 @@ fn row_box(state: &State, item: &LibraryItem, ui: &mut egui::Ui, out: &mut Vec<M
     }
 }
 
+/// The row's tint from the item's colour (STORY-0097), readable with the list's text.
+fn row_fill(item: &LibraryItem, p: &crate::theme::Palette, dark: bool) -> Option<egui::Color32> {
+    crate::item_look::item_surface(
+        p.surface,
+        &[p.text, p.text_weak, p.accent],
+        item.color.as_deref(),
+        dark,
+    )
+}
+
+fn paint_fill(ui: &egui::Ui, fill: Option<egui::Color32>) {
+    if let Some(f) = fill {
+        ui.painter()
+            .rect_filled(ui.max_rect().expand2(egui::vec2(4.0, 1.0)), 0.0, f);
+    }
+}
+
+/// A dot in the item's colour before its title, named for screen readers.
+fn color_dot(ui: &mut egui::Ui, item: &LibraryItem) {
+    let Some((value, dot)) = item
+        .color
+        .as_deref()
+        .and_then(|c| crate::item_look::swatch(c).map(|d| (c, d)))
+    else {
+        return;
+    };
+    let (rect, r) = ui.allocate_exact_size(egui::vec2(10.0, 10.0), egui::Sense::hover());
+    ui.painter().circle_filled(rect.center(), 5.0, dot);
+    r.widget_info(|| WidgetInfo::labeled(Role::Image, true, format!("Color {value}")));
+}
+
 /// The table.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let lib = &state.library;
@@ -108,6 +139,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     let weak = palette_of(ui).text_weak;
+    let (ui_palette, dark) = (palette_of(ui), ui.visuals().dark_mode);
     let mut table = TableBuilder::new(ui)
         .striped(true)
         .resizable(true)
@@ -127,11 +159,17 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .body(|body| {
             body.rows(ROW_HEIGHT, lib.shown.len(), |mut row| {
                 let item = &lib.items[lib.shown[row.index()]];
-                row.col(|ui| row_box(state, item, ui, out));
+                let fill = row_fill(item, &ui_palette, dark);
+                row.col(|ui| {
+                    paint_fill(ui, fill);
+                    row_box(state, item, ui, out);
+                });
                 for c in &lib.columns {
                     row.col(|ui| {
+                        paint_fill(ui, fill);
                         let text = cell(&item.row, *c);
                         if *c == Column::Title {
+                            color_dot(ui, item);
                             ui.dnd_drag_source(
                                 Id::unique(("library-item", item.uid)),
                                 item.uid,

@@ -48,7 +48,7 @@ fn wiki_targets(blocks: &[Block], into: &mut Vec<String>) {
 
 fn linked_from(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     kit::section(ui, "Linked from");
-    kit::card(ui, |ui| {
+    super::item_card(e, ui, |ui| {
         ui.set_width(ui.available_width());
         if e.backlinks.is_empty() {
             ui.weak("Nothing links here yet.");
@@ -71,7 +71,7 @@ fn links(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         wiki_targets(&studyfrog_md::blocks::parse_blocks(&f.text), &mut targets);
     }
     kit::section(ui, "Links to");
-    kit::card(ui, |ui| {
+    super::item_card(e, ui, |ui| {
         ui.set_width(ui.available_width());
         if targets.is_empty() {
             ui.weak("No links yet. Write [[Title]] to link a note.");

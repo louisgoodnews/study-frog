@@ -1,5 +1,6 @@
 //! Edits to the open document and the lookup of what links to it. Pure.
 
+use studyfrog_core::item_color::normalize_color;
 use studyfrog_core::uid::Uid;
 use studyfrog_md::blocks::parse_blocks;
 
@@ -58,6 +59,7 @@ pub(crate) fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
             EditAction::Priority(p) => e.form.priority = p,
             EditAction::Difficulty(d) => e.form.difficulty = d,
             EditAction::Status(s) => e.form.status = s,
+            EditAction::Color(c) => e.form.color = c.and_then(|c| normalize_color(&c)),
             EditAction::Subject(name, on) => {
                 e.form.subjects.retain(|s| *s != name);
                 if on {

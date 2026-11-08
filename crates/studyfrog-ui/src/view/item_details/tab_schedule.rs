@@ -16,7 +16,7 @@ use crate::view::kit;
 
 /// Draw the Schedule tab for a stack.
 pub fn draw(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    kit::card(ui, |ui| {
+    super::item_card(e, ui, |ui| {
         ui.set_width(ui.available_width());
         let dl = deadline_of(&state.planner.sessions, e.uid);
         let today = today_of(state);

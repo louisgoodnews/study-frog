@@ -25,7 +25,7 @@ fn kind_word(doc: &Doc) -> &'static str {
 
 /// The Properties tab content.
 pub fn draw(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    kit::card(ui, |ui| {
+    super::item_card(e, ui, |ui| {
         ui.set_width(ui.available_width());
         let p = palette_of(ui);
         ui.horizontal(|ui| {
@@ -49,6 +49,9 @@ pub fn draw(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             difficulty_row(e, ui, out);
         }
         status_row(state, e, ui, out);
+        if !matches!(e.doc, Doc::Diary(_)) {
+            super::color_row::draw(e, ui, out);
+        }
         source_link(e, ui, out);
         let meta = studyfrog_md::doc::doc_meta(&e.doc);
         for (word, at) in [("Created", meta.created), ("Updated", meta.updated)] {

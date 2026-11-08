@@ -8,9 +8,18 @@ use crate::theme::{palette_of, tint};
 /// A surface with a border and rounded corners that holds a group of content.
 pub fn card<R>(ui: &mut egui::Ui, add: impl FnOnce(&mut egui::Ui) -> R) -> R {
     let p = palette_of(ui);
+    card_with(ui, (p.surface, p.border), add)
+}
+
+/// A card with its own fill and border colour (an item's tint, see `item_look`).
+pub fn card_with<R>(
+    ui: &mut egui::Ui,
+    (fill, border): (Color32, Color32),
+    add: impl FnOnce(&mut egui::Ui) -> R,
+) -> R {
     Frame::new()
-        .fill(p.surface)
-        .stroke(Stroke::new(1.0, p.border))
+        .fill(fill)
+        .stroke(Stroke::new(1.0, border))
         .corner_radius(CornerRadius::same(12))
         .inner_margin(Margin::same(16))
         .show(ui, |ui| {

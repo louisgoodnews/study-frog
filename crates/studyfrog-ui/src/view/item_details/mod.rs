@@ -1,6 +1,7 @@
 //! The side column of the item page: a tabbed notebook view organizing item details
 //! into Properties, Schedule, Relations, and Learning tabs.
 
+mod color_row;
 mod tab_learning;
 mod tab_properties;
 mod tab_relations;
@@ -78,6 +79,18 @@ fn tab_bar(e: &Editor, ui: &mut egui::Ui) -> DetailsTab {
         }
     });
     chosen
+}
+
+/// A card of the notebook, tinted by the item's colour (STORY-0123).
+pub(super) fn item_card<R>(
+    e: &Editor,
+    ui: &mut egui::Ui,
+    add: impl FnOnce(&mut egui::Ui) -> R,
+) -> R {
+    let p = crate::theme::palette_of(ui);
+    let dark = ui.visuals().dark_mode;
+    let colors = crate::item_look::card_colors(&p, dark, e.form.color.as_deref());
+    kit::card_with(ui, colors, add)
 }
 
 /// The details view entry point for the item editor side column.
