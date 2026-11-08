@@ -20,7 +20,11 @@ fn send(out: &mut Vec<Msg>, m: BoardMsg) {
 
 /// Heading, controls, the columns, and the card editor when a card is open.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.label(RichText::new("Board").size(17.0).strong());
+    ui.label(
+        RichText::new("Board")
+            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+            .strong(),
+    );
     ui.add_space(4.0);
     let k = &state.kanban;
     let Some(board) = &k.board else {

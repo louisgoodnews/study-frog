@@ -76,7 +76,8 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .get(&uid)
         .cloned()
         .unwrap_or_else(|| blocks_of(content));
-    markdown(ui, &prompt, 24.0, None, out);
+    let heading = crate::typo::size(ui, crate::typo::Tier::Heading);
+    markdown(ui, &prompt, heading, None, out);
     if let Some(v) = &content.occlusion {
         let shown = awaiting_rating(run) && !crate::exam_ui::is_exam(run);
         crate::view::occlusion_paint::run_picture(ui, v, shown);
@@ -94,7 +95,9 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     } else if awaiting_rating(run) {
         ui.separator();
         ui.add_space(6.0);
-        markdown(ui, &answer, 21.0, Some(palette_of(ui).accent), out);
+        // The answer is body text in the text colour (APCA body target), set apart by the rule above it.
+        let body = crate::typo::body_size(ui);
+        markdown(ui, &answer, body, None, out);
         if let Some(scored) = &run.scored {
             ui.add_space(8.0);
             score_line(scored, ui);

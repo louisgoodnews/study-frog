@@ -82,8 +82,12 @@ fn review(
                 .show(ui, |ui| {
                     for m in messages {
                         ui.add(
-                            egui::Label::new(RichText::new(&m.content).monospace().size(12.0))
-                                .wrap(),
+                            egui::Label::new(
+                                RichText::new(&m.content)
+                                    .monospace()
+                                    .size(crate::typo::size(ui, crate::typo::Tier::Caption)),
+                            )
+                            .wrap(),
                         );
                     }
                 });
@@ -104,7 +108,14 @@ fn answer(text: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .id_salt("prompt-answer")
         .max_height(260.0)
         .show(ui, |ui| {
-            ui.add(egui::Label::new(RichText::new(text).monospace().size(12.0)).wrap());
+            ui.add(
+                egui::Label::new(
+                    RichText::new(text)
+                        .monospace()
+                        .size(crate::typo::size(ui, crate::typo::Tier::Caption)),
+                )
+                .wrap(),
+            );
         });
     ui.horizontal(|ui| {
         if ui.button("Copy the answer").clicked() {
@@ -126,7 +137,7 @@ pub fn run(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.separator();
     ui.label(
         RichText::new("Run a prompt with the assistant")
-            .size(18.0)
+            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
             .strong(),
     );
     ui.label(RichText::new("Uses the connection chosen on the Connections tab. The file is read here; you see exactly what would be sent and nothing is sent until you press Send.").color(palette_of(ui).text_weak));

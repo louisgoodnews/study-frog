@@ -65,7 +65,7 @@ fn ring(s: &StackSummary, ui: &mut egui::Ui) {
             center,
             egui::Align2::CENTER_CENTER,
             total.to_string(),
-            egui::FontId::proportional(22.0),
+            crate::typo::font(ui, crate::typo::Tier::Heading),
             pal.text,
         );
         ui.vertical(|ui| {

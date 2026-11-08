@@ -102,7 +102,7 @@ pub fn caption(ui: &egui::Ui, frame: Rect, m: &Mask, n: usize) {
         r.left_top() + vec2(4.0, 2.0),
         egui::Align2::LEFT_TOP,
         text,
-        egui::FontId::proportional(13.0),
+        crate::typo::font(ui, crate::typo::Tier::Label),
         color,
     );
 }

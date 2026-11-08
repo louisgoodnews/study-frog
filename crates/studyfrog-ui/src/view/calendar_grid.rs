@@ -1,8 +1,6 @@
 //! The month grid of the calendar: a header, six weeks of day cells with the entries as coloured chips.
 
-use eframe::egui::{
-    self, Align2, Color32, FontId, Rect, RichText, Role, Sense, Stroke, WidgetInfo, vec2,
-};
+use eframe::egui::{self, Align2, Color32, Rect, RichText, Role, Sense, Stroke, WidgetInfo, vec2};
 use studyfrog_calendar::session::{EventKind, Occurrence, Session};
 use studyfrog_core::civil::{Date, format_date};
 use studyfrog_core::uid::Uid;
@@ -48,7 +46,11 @@ pub fn kind_color(p: &Palette, kind: EventKind) -> Color32 {
 pub fn month(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = &state.planner;
     ui.horizontal_wrapped(|ui| {
-        ui.label(RichText::new("Calendar").size(17.0).strong());
+        ui.label(
+            RichText::new("Calendar")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong(),
+        );
         ui.add_space(12.0);
         if ui.button("Previous month").clicked() {
             plan(out, PlanMsg::Month(-1));
@@ -144,7 +146,7 @@ fn day_cell(
         rect.left_top() + vec2(6.0, 4.0),
         Align2::LEFT_TOP,
         day.day.to_string(),
-        FontId::proportional(14.0),
+        crate::typo::font(ui, crate::typo::Tier::Label),
         ink,
     );
     let used = chips(&painter, rect, &entries, &pal);
@@ -178,7 +180,7 @@ fn chips(
             chip.left_center() + vec2(4.0, 0.0),
             Align2::LEFT_CENTER,
             &s.title,
-            FontId::proportional(11.5),
+            crate::typo::painter_font(painter, crate::typo::Tier::Caption),
             pal.text,
         );
     }
@@ -188,7 +190,7 @@ fn chips(
             rect.right_bottom() - vec2(6.0, 3.0),
             Align2::RIGHT_BOTTOM,
             more,
-            FontId::proportional(11.0),
+            crate::typo::painter_font(painter, crate::typo::Tier::Caption),
             pal.text_weak,
         );
     }

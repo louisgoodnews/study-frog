@@ -21,7 +21,7 @@ pub fn draw(plan: &UnmarkPlan, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.horizontal(|ui| {
             ui.label(
                 RichText::new(format!("Make \"{}\" a normal folder?", plan.title))
-                    .size(18.0)
+                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
                     .strong(),
             );
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {

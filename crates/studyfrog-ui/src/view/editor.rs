@@ -122,7 +122,7 @@ fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let title = ui.label(RichText::new("Title").color(palette_of(ui).text_weak));
     let mut text = e.form.title.clone();
     let edit = TextEdit::singleline(&mut text)
-        .font(egui::FontId::proportional(24.0))
+        .font(crate::typo::font(ui, crate::typo::Tier::Heading))
         .desired_width(f32::INFINITY);
     if ui.add(edit).labelled_by(title.id).changed() {
         out.push(Msg::Edit(EditAction::Title(text)));

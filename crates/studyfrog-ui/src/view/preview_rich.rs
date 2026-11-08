@@ -49,6 +49,10 @@ pub fn heading(ui: &mut egui::Ui, (level, spans): (u8, &[Span]), out: &mut Vec<M
     let r = ui
         .scope(|ui| spans_line(ui, spans, Some(level), out))
         .response;
+    if level == 1 {
+        // Levels 1 and 2 share the heading size; a hairline under the title tells them apart.
+        ui.separator();
+    }
     let wanted = ui.data(|d| d.get_temp::<ScrollTo>(Id::NULL));
     if wanted.is_some_and(|w| w.0 == text) {
         r.scroll_to_me(Some(Align::TOP));
@@ -116,7 +120,7 @@ fn aligned_cell(ui: &mut egui::Ui, spans: &[Span], align: Align) {
 fn cell(ui: &mut egui::Ui, spans: &[Span], (column, header): (Column, bool), out: &mut Vec<Msg>) {
     let align = alignment(column);
     if align == Align::Min && !header {
-        spans_line(ui, spans, None, out);
+        ui.scope(|ui| spans_line(ui, spans, None, out));
     } else if align == Align::Min {
         ui.label(RichText::new(plain_text(spans)).strong());
     } else {

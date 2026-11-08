@@ -38,7 +38,7 @@ pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         ui.horizontal_wrapped(|ui| {
             ui.label(
                 RichText::new("Log your session in the diary?")
-                    .size(15.0)
+                    .size(crate::typo::size(ui, crate::typo::Tier::Body))
                     .strong(),
             );
             let mut parts = vec![

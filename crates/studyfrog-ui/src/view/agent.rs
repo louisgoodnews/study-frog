@@ -20,7 +20,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     egui::ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
-            ui.label(RichText::new("Assistant").size(17.0).strong());
+            ui.label(
+                RichText::new("Assistant")
+                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                    .strong(),
+            );
             ui.add_space(4.0);
             ui.horizontal(|ui| {
                 for (tab, label) in [

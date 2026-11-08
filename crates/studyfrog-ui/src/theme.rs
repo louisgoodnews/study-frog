@@ -104,6 +104,15 @@ pub fn tint(c: Color32, alpha: u8) -> Color32 {
     Color32::from_rgba_unmultiplied(c.r(), c.g(), c.b(), alpha)
 }
 
+/// Spacing tokens at the Comfortable density (STORY-0115): label to value, icon to text.
+pub const GAP_TIGHT: f32 = 4.0;
+/// Between sibling controls in a group.
+pub const GAP_ITEM: f32 = 8.0;
+/// Inside a card.
+pub const PAD_CARD: f32 = 16.0;
+/// Between distinct groups.
+pub const GAP_SECTION: f32 = 24.0;
+
 const RADIUS: u8 = 8;
 
 fn widget(fill: Color32, edge: Color32, text: Color32) -> WidgetVisuals {

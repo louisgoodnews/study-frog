@@ -202,6 +202,7 @@ pub mod transfer_found;
 pub mod transfer_types;
 pub mod transfer_ui;
 pub mod tutorial;
+pub mod typo;
 pub mod update;
 pub mod vault_ui;
 pub mod view;

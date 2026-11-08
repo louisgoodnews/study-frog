@@ -1,7 +1,7 @@
 //! The reviews the schedule planned, on the calendar: chips in the day cells that can be dragged to another day,
 //! and the list under the chosen day with a date field, for those who do not drag.
 
-use eframe::egui::{self, Align2, FontId, Pos2, Rect, Role, Sense, Stroke, WidgetInfo, vec2};
+use eframe::egui::{self, Align2, Pos2, Rect, Role, Sense, Stroke, WidgetInfo, vec2};
 use studyfrog_calendar::review_plan::PlanEntry;
 use studyfrog_core::civil::{Date, date_to_days};
 use studyfrog_core::uid::Uid;
@@ -72,7 +72,7 @@ fn chip(state: &State, e: &PlanEntry, rect: Rect, ui: &mut egui::Ui) -> egui::Re
         rect.left_center() + vec2(4.0, 0.0),
         Align2::LEFT_CENTER,
         line(state, e),
-        FontId::proportional(11.5),
+        crate::typo::font(ui, crate::typo::Tier::Caption),
         pal.text,
     );
     let name = format!("Planned reviews, {}", line(state, e));

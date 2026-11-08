@@ -199,7 +199,11 @@ pub(super) fn startup_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Ms
 pub(super) fn sample_section(_: &State, ui: &mut egui::Ui, _: &mut Vec<Msg>) {
     kit::group(ui, "Sample", |ui| {
         let p = palette_of(ui);
-        ui.label(RichText::new("A heading").size(18.0).strong());
+        ui.label(
+            RichText::new("A heading")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong(),
+        );
         ui.label("Body text with a link:");
         ui.hyperlink_to("a link", "https://example.org");
         ui.horizontal(|ui| {

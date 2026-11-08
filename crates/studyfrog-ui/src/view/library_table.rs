@@ -197,7 +197,16 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                                 },
                             );
                         } else {
-                            let label = ui.label(RichText::new(text).color(weak));
+                            // Numbers sit at the right edge, so their (tabular) digits line up.
+                            let numeric = matches!(c, Column::Reviews | Column::Familiarity);
+                            let layout = if numeric {
+                                egui::Layout::right_to_left(egui::Align::Center)
+                            } else {
+                                egui::Layout::left_to_right(egui::Align::Center)
+                            };
+                            let label = ui
+                                .with_layout(layout, |ui| ui.label(RichText::new(text).color(weak)))
+                                .inner;
                             if *c == Column::Familiarity && item.references.len() > 1 {
                                 label.on_hover_text(studyfrog_service::fam_refs::per_stack(
                                     &item.references,

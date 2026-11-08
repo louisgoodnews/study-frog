@@ -173,7 +173,11 @@ fn bottom_actions(form: &PdfExportState, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
 pub fn draw(state: &State, form: &PdfExportState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = palette_of(ui);
     ui.horizontal(|ui| {
-        ui.label(RichText::new("Export to PDF").strong().size(18.0));
+        ui.label(
+            RichText::new("Export to PDF")
+                .strong()
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading)),
+        );
         ui.label(
             RichText::new(format!("({})", target_label(state, &form.target))).color(p.text_weak),
         );

@@ -374,7 +374,7 @@
 | [STORY-0111](docs/issues/stories/STORY-0111-contrastive-side-by-side-drill-for-confused-and-interfering-items.md) Contrastive side-by-side drill for confused and interfering items (3) | done | 0/0 |
 | [STORY-0112](docs/issues/stories/STORY-0112-pomodoro-focus-timer-with-automatic-learning-diary-and-session-logging.md) Pomodoro focus timer with automatic learning diary and session logging (3) | done | 0/0 |
 | [STORY-0113](docs/issues/stories/STORY-0113-perceptual-oklch-color-palette-calibration-and-apca-contrast-verification.md) Perceptual OKLCH color palette calibration and WCAG 3 APCA contrast verification (5) | done | 0/0 |
-| [STORY-0114](docs/issues/stories/STORY-0114-psychophysical-typographic-measure-modular-hierarchy-and-tabular-numerals.md) Psychophysical typographic measure, modular hierarchy, and tabular numerals (3) | backlog | 0/0 |
+| [STORY-0114](docs/issues/stories/STORY-0114-psychophysical-typographic-measure-modular-hierarchy-and-tabular-numerals.md) Psychophysical typographic measure, modular hierarchy, and tabular numerals (3) | review | 0/0 |
 | [STORY-0115](docs/issues/stories/STORY-0115-low-entropy-surface-elevation-border-decluttering-and-gestalt-spacing.md) Low-entropy surface elevation, border de-cluttering, and Gestalt proximity spacing (5) | backlog | 0/0 |
 | [STORY-0116](docs/issues/stories/STORY-0116-distraction-free-zen-focus-mode-and-zero-layout-shift-interaction-polish.md) Distraction-free Zen focus mode and zero-layout-shift interaction polish (3) | backlog | 0/0 |
 | [STORY-0117](docs/issues/stories/STORY-0117-pure-json-rpc-2-0-mcp-protocol-engine-and-plain-data-registry.md) Pure JSON-RPC 2.0 MCP protocol engine and extensible plain-data capability registry (5) | done | 0/0 |

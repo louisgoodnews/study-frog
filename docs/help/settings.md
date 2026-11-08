@@ -102,7 +102,9 @@ restart.
 
 - **Theme**: Dark, Light, or Follow system (it changes with your desktop). The profile menu has the same choice.
 - **Interface size** makes everything larger or smaller (70 to 200 %); **Ctrl and plus**, **Ctrl and minus** and **Ctrl
-  and 0** do the same from any screen. **Text size** changes only the text.
+  and 0** do the same from any screen. **Text size** changes only the text. Longer
+  text (notes, help pages, answers) is kept to about 70 characters a line, however wide the window, so it is easy to
+  read; the column grows with the text size.
 - **Density**: Compact, Comfortable or Spacious.
 - **Accent colour**, **High contrast** and **Reduce motion**. All six accents look equally bright, and every text
   colour is checked for contrast in both themes, with and without high contrast.

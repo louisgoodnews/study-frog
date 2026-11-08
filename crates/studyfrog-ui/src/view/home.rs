@@ -52,7 +52,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .show(ui, |ui| {
             let top = ui.cursor().top();
             ui.add_space(4.0);
-            ui.label(RichText::new(greeting(h.hour)).size(30.0).strong());
+            ui.label(
+                RichText::new(greeting(h.hour))
+                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                    .strong(),
+            );
             let stacks = vault.overview.stacks.len();
             ui.label(RichText::new(format!("{stacks} stacks")).color(palette_of(ui).text_weak));
             ui.add_space(8.0);

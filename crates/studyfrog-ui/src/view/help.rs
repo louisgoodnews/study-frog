@@ -42,7 +42,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .id_salt("help-page")
             .auto_shrink([false, false])
             .show(ui, |ui| {
-                kit::column(ui, kit::READING_WIDTH, |ui| page(state, help, ui, out));
+                kit::reading(ui, |ui| page(state, help, ui, out));
             });
     });
 }

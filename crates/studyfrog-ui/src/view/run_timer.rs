@@ -18,7 +18,8 @@ fn announce(ui: &mut egui::Ui, w: Warning) {
 /// The clock and, near the end of a countdown, its warning.
 pub fn draw(clock: &Clock, ui: &mut egui::Ui) {
     let weak = palette_of(ui).text_weak;
-    kit::pill(ui, &clock.text, weak);
+    let widest = crate::typo::figure_template(&clock.text);
+    kit::figure_pill(ui, &clock.text, weak, &widest);
     if let Some(w) = clock.warning {
         announce(ui, w);
     }

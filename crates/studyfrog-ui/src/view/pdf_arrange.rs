@@ -107,7 +107,7 @@ fn cell(view: &PdfView, a: &Arrange, at: usize, ui: &mut egui::Ui, out: &mut Vec
         rect.left_bottom() + Vec2::new(4.0, -2.0),
         egui::Align2::LEFT_BOTTOM,
         &text,
-        egui::FontId::proportional(11.0),
+        crate::typo::font(ui, crate::typo::Tier::Caption),
         ui.visuals().text_color(),
     );
     response.widget_info(|| {

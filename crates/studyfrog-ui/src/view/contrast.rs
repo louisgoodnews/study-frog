@@ -14,7 +14,11 @@ const LETTERS: [&str; 4] = ["A", "B", "C", "D"];
 
 fn match_column(c: &Contrast, i: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let item = &c.items[i];
-    ui.label(RichText::new(&item.prompt).strong().size(17.0));
+    ui.label(
+        RichText::new(&item.prompt)
+            .strong()
+            .size(crate::typo::size(ui, crate::typo::Tier::Heading)),
+    );
     ui.horizontal_wrapped(|ui| {
         ui.weak("Its answer:");
         for (k, letter) in LETTERS.iter().enumerate().take(c.order.len()) {

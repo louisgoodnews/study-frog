@@ -46,7 +46,11 @@ fn day_label(i: usize) -> String {
 /// The tabs, then either the performance explorer or the three memory reports.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
-        ui.label(RichText::new("Reports").size(17.0).strong());
+        ui.label(
+            RichText::new("Reports")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong(),
+        );
         let button = egui::Button::new("Export as CSV");
         let tip = "Write the reports as a CSV file into the exports folder of the vault.";
         if ui

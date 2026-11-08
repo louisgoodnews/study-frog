@@ -77,7 +77,11 @@ fn group_card(label: &str, list: &[&Entry], ui: &mut egui::Ui) {
 
 /// The screen.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.label(RichText::new("Achievements").size(17.0).strong());
+    ui.label(
+        RichText::new("Achievements")
+            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+            .strong(),
+    );
     ui.add_space(4.0);
     let Some(report) = &state.achievements else {
         ui.label("Checking achievements…");

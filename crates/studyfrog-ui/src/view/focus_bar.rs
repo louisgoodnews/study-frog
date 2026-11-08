@@ -52,8 +52,13 @@ pub fn pill(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let r = if ft::is_idle(f) {
         crate::view::icons::icon_button(ui, crate::view::icons::Glyph::Timer, "Focus timer", false)
     } else {
-        let text = RichText::new(label(state)).color(palette_of(ui).accent);
-        ui.button(text)
+        let label = label(state);
+        let font = crate::typo::font(ui, crate::typo::Tier::Label);
+        let widest =
+            crate::typo::text_width(ui.ctx(), &crate::typo::figure_template(&label), &font);
+        let pad = 2.0 * ui.spacing().button_padding.x;
+        let text = RichText::new(label).color(palette_of(ui).accent);
+        ui.add(egui::Button::new(text).min_size(egui::vec2(widest + pad, 0.0)))
     };
     egui::Popup::menu(&r)
         .close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside)

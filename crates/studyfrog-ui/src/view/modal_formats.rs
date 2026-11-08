@@ -20,7 +20,14 @@ fn format_entry(ui: &mut egui::Ui, i: usize, out: &mut Vec<Msg>) {
     );
     ui.label(a.layout);
     if let Some(ex) = a.example {
-        ui.add(egui::Label::new(RichText::new(ex.text.trim_end()).monospace().size(12.0)).wrap());
+        ui.add(
+            egui::Label::new(
+                RichText::new(ex.text.trim_end())
+                    .monospace()
+                    .size(crate::typo::size(ui, crate::typo::Tier::Caption)),
+            )
+            .wrap(),
+        );
         if ui.button(format!("Save example ({})", ex.file)).clicked() {
             out.push(Msg::Library(LibraryMsg::Transfer(
                 TransferMsg::SaveExample(i),

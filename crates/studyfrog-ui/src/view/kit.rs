@@ -56,12 +56,21 @@ pub fn card_button(ui: &mut egui::Ui, id: &str, add: impl FnOnce(&mut egui::Ui))
 
 /// A small rounded label with a tinted background.
 pub fn pill(ui: &mut egui::Ui, text: &str, color: Color32) {
+    figure_pill(ui, text, color, "");
+}
+
+/// A pill for a number that changes (a timer, a count): never narrower than `widest`, so the controls beside it
+/// stay where they are while the digits tick (the fonts' digits are tabular, `tests/typography.rs`).
+pub fn figure_pill(ui: &mut egui::Ui, text: &str, color: Color32, widest: &str) {
+    let font = crate::typo::font(ui, crate::typo::Tier::Caption);
+    let min = crate::typo::text_width(ui.ctx(), widest, &font);
     Frame::new()
         .fill(tint(color, 40))
         .corner_radius(CornerRadius::same(10))
         .inner_margin(Margin::symmetric(8, 2))
         .show(ui, |ui| {
-            ui.label(RichText::new(text).color(color).size(12.5));
+            ui.set_min_width(min);
+            ui.label(RichText::new(text).color(color).font(font));
         });
 }
 
@@ -78,7 +87,11 @@ pub fn primary_button(ui: &mut egui::Ui, text: &str) -> egui::Response {
 /// A big number with a caption under it.
 pub fn stat(ui: &mut egui::Ui, value: &str, caption: &str) {
     ui.vertical(|ui| {
-        ui.label(RichText::new(value).size(28.0).strong());
+        ui.label(
+            RichText::new(value)
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong(),
+        );
         ui.label(RichText::new(caption).color(palette_of(ui).text_weak));
     });
 }
@@ -86,7 +99,11 @@ pub fn stat(ui: &mut egui::Ui, value: &str, caption: &str) {
 /// A heading for a block of a screen.
 pub fn section(ui: &mut egui::Ui, title: &str) {
     ui.add_space(12.0);
-    ui.label(RichText::new(title).size(17.0).strong());
+    ui.label(
+        RichText::new(title)
+            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+            .strong(),
+    );
     ui.add_space(2.0);
 }
 
@@ -109,7 +126,7 @@ pub fn progress_with_text(ui: &mut egui::Ui, fraction: f32, text: &str, name: &s
         rect.center(),
         egui::Align2::CENTER_CENTER,
         text,
-        egui::FontId::proportional(14.0),
+        crate::typo::font(ui, crate::typo::Tier::Label),
         p.text,
     );
     let label = format!("{name}: {text}");
@@ -134,12 +151,19 @@ pub fn column<R>(ui: &mut egui::Ui, max: f32, add: impl FnOnce(&mut egui::Ui) ->
     .inner
 }
 
+/// A centred column as wide as the reading measure (`typo::measure`, about 70 characters of body text), for pages
+/// that are mostly prose.
+pub fn reading<R>(ui: &mut egui::Ui, add: impl FnOnce(&mut egui::Ui) -> R) -> R {
+    let width = crate::typo::measure(ui);
+    column(ui, width, add)
+}
+
 /// A small grey caption above a group of controls.
 pub fn caption(ui: &mut egui::Ui, text: &str) {
     ui.add_space(10.0);
     ui.label(
         RichText::new(text)
-            .size(13.0)
+            .size(crate::typo::size(ui, crate::typo::Tier::Label))
             .strong()
             .color(palette_of(ui).text_weak),
     );

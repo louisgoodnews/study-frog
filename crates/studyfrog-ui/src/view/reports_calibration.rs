@@ -86,7 +86,11 @@ fn metric_card(ui: &mut egui::Ui, title: &str, value: String) {
     crate::view::kit::card(ui, |ui| {
         ui.vertical(|ui| {
             ui.weak(title);
-            ui.label(egui::RichText::new(value).size(18.0).strong());
+            ui.label(
+                egui::RichText::new(value)
+                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                    .strong(),
+            );
         });
     });
 }

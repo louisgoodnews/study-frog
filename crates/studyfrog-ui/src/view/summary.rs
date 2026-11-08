@@ -85,7 +85,11 @@ pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>)
                 } else {
                     "Run finished"
                 };
-                ui.label(RichText::new(title).size(26.0).strong());
+                ui.label(
+                    RichText::new(title)
+                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                        .strong(),
+                );
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     if kit::primary_button(ui, "Back to setup").clicked() {
                         out.push(Msg::LeaveRun);

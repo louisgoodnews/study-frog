@@ -26,7 +26,11 @@ fn kind_color(p: &crate::theme::Palette, kind: ItemKind) -> Color32 {
 
 /// Header, canvas and the accessible item list.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.label(egui::RichText::new("Link graph").size(17.0).strong());
+    ui.label(
+        egui::RichText::new("Link graph")
+            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+            .strong(),
+    );
     ui.add_space(4.0);
     let Some(g) = &state.graph else {
         ui.label("Loading the graph…");
@@ -132,7 +136,7 @@ fn paint(g: &GraphState, ui: &egui::Ui, rect: egui::Rect) {
                 p + egui::vec2(6.0, -6.0),
                 egui::Align2::LEFT_BOTTOM,
                 &node.title,
-                egui::FontId::proportional(12.0),
+                crate::typo::font(ui, crate::typo::Tier::Caption),
                 ui.visuals().text_color(),
             );
         }

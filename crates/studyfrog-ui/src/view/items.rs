@@ -63,7 +63,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     egui::ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
-            ui.label(RichText::new(heading(state)).size(26.0).strong());
+            ui.label(
+                RichText::new(heading(state))
+                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                    .strong(),
+            );
             let stack = matches!(state.browser.selection, Selection::Stack(_));
             if stack {
                 due_row(state, ui, out);

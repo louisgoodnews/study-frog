@@ -52,7 +52,11 @@ fn type_combo(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 fn header(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     // The window controls have a row of their own, so the pickers below can never push them out.
     ui.horizontal(|ui| {
-        ui.label(RichText::new("Create an item").size(16.0).strong());
+        ui.label(
+            RichText::new("Create an item")
+                .size(crate::typo::size(ui, crate::typo::Tier::Body))
+                .strong(),
+        );
         let ctx = ui.ctx().clone();
         super::modal_size::window_buttons(&ctx, f, ui, out);
     });
@@ -79,7 +83,11 @@ fn labels(kind: NewKind) -> ((&'static str, &'static str), Option<&'static str>)
 }
 
 fn title_field(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let label = ui.label(RichText::new("Title").size(13.0).weak());
+    let label = ui.label(
+        RichText::new("Title")
+            .size(crate::typo::size(ui, crate::typo::Tier::Label))
+            .weak(),
+    );
     let mut text = f.title.clone();
     let hint = match f.kind {
         NewKind::Card | NewKind::Question => "Title (optional: taken from the text)",

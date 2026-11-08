@@ -6,6 +6,7 @@ use eframe::egui::{self, FontId, TextStyle, Theme, ThemePreference};
 use studyfrog_core::appearance::{Appearance, Density, ThemeChoice};
 
 use crate::theme::{Look, set_look, visuals};
+use crate::typo::{self, Tier};
 
 /// The settings that change how things look (the others, such as the start screen, change nothing on screen).
 #[derive(Debug, Clone, PartialEq)]
@@ -70,20 +71,30 @@ fn apply_with(ctx: &egui::Context, a: &Appearance, motion_back: bool) {
             } else if motion_back {
                 s.animation_time = 1.0 / 12.0;
             }
-            s.text_styles = [
-                (TextStyle::Heading, FontId::proportional(22.0 * scale)),
-                (TextStyle::Body, FontId::proportional(15.0 * scale)),
-                (TextStyle::Button, FontId::proportional(15.0 * scale)),
-                (TextStyle::Small, FontId::proportional(12.5 * scale)),
-                (TextStyle::Monospace, FontId::monospace(14.0 * scale)),
-            ]
-            .into();
+            s.text_styles = text_styles(scale);
         });
     }
     ctx.set_theme(preference(a.theme));
     ctx.set_zoom_factor(f32::from(a.zoom) / 100.0);
     // Zoom is a setting of ours (saved, with its own keys), not egui's own.
     ctx.options_mut(|o| o.zoom_with_keyboard = false);
+}
+
+/// The four tiers of `typo` as egui's text styles; code is set at the label size.
+fn text_styles(scale: f32) -> std::collections::BTreeMap<TextStyle, FontId> {
+    let body = typo::size_for(typo::BASE * scale, Tier::Body);
+    let at = |t| FontId::proportional(typo::size_for(body, t));
+    [
+        (TextStyle::Heading, at(Tier::Heading)),
+        (TextStyle::Body, at(Tier::Body)),
+        (TextStyle::Button, at(Tier::Label)),
+        (TextStyle::Small, at(Tier::Caption)),
+        (
+            TextStyle::Monospace,
+            FontId::monospace(typo::size_for(body, Tier::Label)),
+        ),
+    ]
+    .into()
 }
 
 /// The default look, installed at start-up before the saved settings are known.

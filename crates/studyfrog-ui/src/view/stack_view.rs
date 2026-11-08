@@ -195,7 +195,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .auto_shrink([false, false])
         .show(ui, |ui| {
             breadcrumb(&vault.overview.stacks, stack, ui, out);
-            ui.label(RichText::new(&stack.title).size(26.0).strong());
+            ui.label(
+                RichText::new(&stack.title)
+                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                    .strong(),
+            );
             actions(state, stack, ui, out);
             crate::view::status_ui::summary(ui, &state.browser.status_counts);
             crate::view::stack_achievements::badge(state, stack.uid, ui, out);

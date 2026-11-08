@@ -4,6 +4,7 @@ use eframe::egui::{self, Align, Layout, RichText, vec2};
 use studyfrog_md::blocks::{Block, Link, ListItem, Span};
 
 use crate::msg::Msg;
+use crate::typo::{self, Tier};
 use crate::view::preview_rich as rich;
 
 /// Draw `blocks`; clicking a wikilink pushes [`Msg::OpenLink`].
@@ -31,7 +32,9 @@ fn draw_block(ui: &mut egui::Ui, block: &Block, out: &mut Vec<Msg>, toc: &[rich:
             rows,
         } => rich::table(ui, (aligns, header, rows), out),
         Block::Toc => rich::toc(ui, toc),
-        Block::Paragraph(spans) => spans_line(ui, spans, None, out),
+        Block::Paragraph(spans) => {
+            ui.scope(|ui| spans_line(ui, spans, None, out));
+        }
         Block::Code { text, tokens, .. } => rich::code(ui, text, tokens),
         Block::Quote(inner) => {
             ui.indent("quote", |ui| draw_all(ui, inner, out, toc));
@@ -75,7 +78,7 @@ fn list_item(
         // it; the marker gets a row of the same height so that it is level with that line.
         let row = vec2(
             ui.spacing().interact_size.x.min(28.0),
-            ui.spacing().interact_size.y,
+            typo::line_height(typo::body_size(ui)),
         );
         ui.allocate_ui_with_layout(row, Layout::left_to_right(Align::Center), |ui| {
             ui.label(mark);
@@ -84,19 +87,29 @@ fn list_item(
     });
 }
 
-fn heading_size(level: u8) -> f32 {
-    match level {
-        1 => 26.0,
-        2 => 22.0,
-        3 => 19.0,
-        _ => 16.0,
-    }
+/// Headings of levels 1 and 2 are in the heading tier, the others in the body tier (strong), so a document
+/// keeps to the four sizes of the type scale (`typo`).
+fn heading_size(ui: &egui::Ui, level: u8) -> f32 {
+    typo::size(
+        ui,
+        if level <= 2 {
+            Tier::Heading
+        } else {
+            Tier::Body
+        },
+    )
+}
+
+/// The size of a paragraph's or heading's text.
+fn text_size(ui: &egui::Ui, heading: Option<u8>) -> f32 {
+    heading.map_or_else(|| typo::body_size(ui), |l| heading_size(ui, l))
 }
 
 pub(super) fn styled(ui: &egui::Ui, span: &Span, heading: Option<u8>) -> RichText {
-    let mut text = RichText::new(&span.text);
-    if let Some(level) = heading {
-        text = text.size(heading_size(level)).strong();
+    let size = text_size(ui, heading);
+    let mut text = typo::prose(ui, &span.text, size);
+    if heading.is_some() {
+        text = text.strong();
     }
     let s = span.style;
     if s.bold {
@@ -127,8 +140,15 @@ pub(super) fn spans_line(
     heading: Option<u8>,
     out: &mut Vec<Msg>,
 ) {
+    let measure = typo::measure(ui);
+    let line = typo::line_height(text_size(ui, heading));
+    // The row height is taken when the wrapping layout starts, so it is set on a scope around it: then the first
+    // line of a paragraph is exactly as tall as the others.
+    ui.spacing_mut().interact_size.y = line;
+    ui.spacing_mut().item_spacing.y = 0.0;
     ui.horizontal_wrapped(|ui| {
-        ui.set_max_width(ui.available_width());
+        // Prose is never wider than the reading measure.
+        ui.set_max_width(ui.available_width().min(measure));
         ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
         ui.spacing_mut().item_spacing.x = 0.0;
         for span in spans {

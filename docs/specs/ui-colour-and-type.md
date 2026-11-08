@@ -63,3 +63,41 @@ or below the APCA targets for body and secondary text.
 The WCAG 2 ratios of `tests/appearance_palette.rs` (4.5:1 text, 7:1 high contrast, 3:1 accents) still hold as well.
 Measured, standard dark: text -90, weak text -60 to -62, button label on the accent 61 to 66, borders -15 to -17;
 standard light: text 98 to 103, weak text 67 to 78, labels on the accent -85 to -89, borders 20 and 25.
+
+## Type (STORY-0114)
+
+### Four sizes
+`crates/studyfrog-ui/src/typo.rs` defines the scale; egui's text styles are set from it (`theme_apply.rs`) and every
+size follows the user's text size (the body size is 15 pt at 100 %):
+
+| Tier | Share of body | At 100 % | Used for | egui style |
+|---|---|---|---|---|
+| Heading | 1.40 | 21 pt | page titles, section headings, Markdown headings of levels 1 and 2, the prompt of a run, big numbers | `Heading` |
+| Body | 1.00 | 15 pt | prose, notes, answers, labels, Markdown headings of level 3 and lower (strong) | `Body` |
+| Label | 0.92 | 13.8 pt | buttons, navigation, captions above groups, code | `Button`, `Monospace` |
+| Caption | 0.80 | 12 pt | pills and badges, keyboard hints, timestamps, calendar chips | `Small` |
+
+A level-1 Markdown heading has a hairline under it, which tells it apart from level 2 at the same size. No view writes
+a size of its own: `tests/typography.rs` scans the sources and fails on a literal size outside the scale. Four glyphs
+drawn as pictures keep theirs (the `?` icon, the two resize grips, the digit in the notification dot).
+
+### Line height and measure
+Prose (paragraphs, list items, headings, table cells of the Markdown preview, help pages, item pages, run cards) has a
+line height of 1.5 times its size, and the first line of a paragraph is exactly as tall as the others (the wrapping
+row height is set before the row starts). Prose is never wider than the **reading measure**: 70 average characters of
+body text, measured at run time on a sample of English prose in the font in use (`typo::measure`), so it follows the
+text size and any font change. With egui's built-in font at 15 pt this is about 450 pt; full lines average 60 to 75
+characters at every offered text size (tested, single lines move a few characters with word wrap). Help pages are a
+centred column of that width; a rehearsal card is that wide plus its padding; the item page's preview keeps
+paragraphs to it inside a wider pane.
+
+The research figure of 620 to 680 px assumes a wider font at about 16 px; in StudyFrog's font that width would hold
+about 100 characters, so the measure is kept in characters, not pixels.
+
+### Numbers that do not jitter
+egui cannot switch on OpenType features such as `tnum`, but both built-in fonts already have tabular digits: every
+digit has the same advance width (tested for the proportional and the monospace font). So a number changes width
+only when it gains a character. The ticking places therefore reserve the width of their widest form: the seconds on
+the current item ("000.0 s"), the run's position ("10 / 10" for a run of ten), the run clock, and the focus timer in
+the top bar (`kit::figure_pill`, `typo::figure_template`). Numeric columns of the Library table (reviews,
+familiarity) are right-aligned so their digits line up.

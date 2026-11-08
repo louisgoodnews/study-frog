@@ -39,7 +39,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .auto_shrink([false, false])
         .show(ui, |ui| {
             ui.vertical_centered(|ui| {
-                ui.set_max_width(CARD_WIDTH);
+                // The card is as wide as the reading measure, so answers keep 60 to 75 characters a line.
+                ui.set_max_width(crate::typo::measure(ui) + 2.0 * crate::theme::PAD_CARD);
                 let p = palette_of(ui);
                 let color = crate::item_look::run_color(run);
                 let colors = crate::item_look::card_colors(&p, ui.visuals().dark_mode, color);
@@ -61,13 +62,12 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                         HINTS
                     })
                     .color(palette_of(ui).text_weak)
-                    .size(12.5),
+                    .size(crate::typo::size(ui, crate::typo::Tier::Caption)),
                 );
             });
         });
 }
 
-const CARD_WIDTH: f32 = 760.0;
 const HINTS: &str =
     "Space shows the answer  ·  1 2 3 4 rate  ·  E M D mark  ·  S skip  ·  P pause  ·  Esc stop";
 
@@ -132,10 +132,14 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
     let weak = palette_of(ui).text_weak;
     let position = (s.cursor + 1).min(s.queue.len());
     ui.horizontal(|ui| {
-        ui.label(
-            RichText::new(format!("{position} / {}", s.queue.len()))
-                .size(18.0)
-                .strong(),
+        let total = s.queue.len();
+        let count = format!("{position} / {total}");
+        let widest = crate::typo::figure_template(&format!("{total} / {total}"));
+        let font = crate::typo::font(ui, crate::typo::Tier::Heading);
+        let min = crate::typo::text_width(ui.ctx(), &widest, &font);
+        ui.add_sized(
+            [min, ui.spacing().interact_size.y],
+            egui::Label::new(RichText::new(count).font(font).strong()),
         );
         let mode = match s.run.mode {
             RunMode::Answer => "Type answers",
@@ -148,7 +152,8 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
             let on_item = now
                 .saturating_sub(s.shown_at_ms)
                 .saturating_sub(s.paused_in_item_ms);
-            kit::pill(ui, &format!("{:.1} s", f64::from(on_item) / 1000.0), weak);
+            let secs = format!("{:.1} s", f64::from(on_item) / 1000.0);
+            kit::figure_pill(ui, &secs, weak, "000.0 s");
         }
         if let Some(clock) = crate::run_clock::clock_of(state, run) {
             crate::view::run_timer::draw(&clock, ui);

@@ -1,7 +1,7 @@
 //! The Roadmap tab: rows with status and bars on a time axis with a line for today, scrolling both ways. Only the rows in
 //! view are built; each bar is a button that opens its stack or item and says its dates in text.
 
-use eframe::egui::{self, Align2, FontId, Rect, Role, Sense, Stroke, WidgetInfo, pos2, vec2};
+use eframe::egui::{self, Align2, Rect, Role, Sense, Stroke, WidgetInfo, pos2, vec2};
 use studyfrog_core::civil::{date_from_days, format_date};
 use studyfrog_core::status::status_label;
 
@@ -57,7 +57,7 @@ fn axis_ticks(
                 pos2(x + 2.0, canvas.top() + 2.0),
                 Align2::LEFT_TOP,
                 text,
-                FontId::proportional(12.0),
+                crate::typo::font(ui, crate::typo::Tier::Caption),
                 pal.text_weak,
             );
             ui.painter().line_segment(
@@ -130,7 +130,7 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
                     pos2(label_x, top + 1.0),
                     Align2::LEFT_TOP,
                     text,
-                    FontId::proportional(13.0),
+                    crate::typo::font(ui, crate::typo::Tier::Label),
                     pal.text,
                 );
                 let name = describe(r);
@@ -152,7 +152,7 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
                 pos2(x + 3.0, canvas.top() + 12.0),
                 Align2::LEFT_TOP,
                 "Today",
-                FontId::proportional(12.0),
+                crate::typo::font(ui, crate::typo::Tier::Caption),
                 pal.danger,
             );
         });

@@ -74,7 +74,11 @@ fn crumbs(e: &Explorer, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let last = e.crumbs.len().saturating_sub(1);
         for (i, (label, scope)) in e.crumbs.iter().enumerate() {
             if i == last {
-                ui.label(RichText::new(label).size(22.0).strong());
+                ui.label(
+                    RichText::new(label)
+                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                        .strong(),
+                );
             } else {
                 if ui.link(label).clicked() {
                     send(out, ExplorerMsg::Open(scope.clone()));

@@ -116,7 +116,11 @@ fn overview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .sum::<usize>()
         + o.inbox_items;
     egui::ScrollArea::vertical().show(ui, |ui| {
-        ui.label(RichText::new("All stacks").size(26.0).strong());
+        ui.label(
+            RichText::new("All stacks")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong(),
+        );
         ui.label(
             RichText::new(format!("{} stacks, {items} items", o.stacks.len()))
                 .color(palette_of(ui).text_weak),
@@ -166,7 +170,11 @@ fn stack_cards(o: &VaultOverview, default: Scheduler, ui: &mut egui::Ui, out: &m
 fn stack_card(o: &VaultOverview, s: &StackRow, default: Scheduler, ui: &mut egui::Ui) {
     let p = palette_of(ui);
     ui.set_min_height(86.0);
-    ui.label(RichText::new(&s.title).strong().size(17.0));
+    ui.label(
+        RichText::new(&s.title)
+            .strong()
+            .size(crate::typo::size(ui, crate::typo::Tier::Heading)),
+    );
     let place = match &s.parent {
         Some(f) => o
             .stacks

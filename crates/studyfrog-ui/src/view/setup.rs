@@ -32,7 +32,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .auto_shrink([false, false])
         .show(ui, |ui| {
             kit::column(ui, kit::READING_WIDTH, |ui| {
-                ui.label(RichText::new("Rehearse").size(26.0).strong());
+                ui.label(
+                    RichText::new("Rehearse")
+                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                        .strong(),
+                );
                 step_bar(step, ui, out);
                 ui.add_space(12.0);
                 let (title, hint) = match step {
@@ -46,7 +50,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     ),
                     SetupStep::Review => ("Ready?", "Check your choices, then begin."),
                 };
-                ui.label(RichText::new(title).size(19.0).strong());
+                ui.label(
+                    RichText::new(title)
+                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                        .strong(),
+                );
                 ui.label(RichText::new(hint).color(palette_of(ui).text_weak));
                 match step {
                     SetupStep::What => setup_what::draw(state, ui, out),

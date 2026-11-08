@@ -75,15 +75,23 @@ fn draw_badge(row: &VisibleRow, ui: &mut egui::Ui) {
     } else {
         match &row.kind {
             EntryKind::Pdf => {
-                ui.label(RichText::new("[PDF]").size(11.0).color(palette.accent));
+                ui.label(
+                    RichText::new("[PDF]")
+                        .size(crate::typo::size(ui, crate::typo::Tier::Caption))
+                        .color(palette.accent),
+                );
             }
             EntryKind::Image => {
-                ui.label(RichText::new("[IMG]").size(11.0).color(palette.text_weak));
+                ui.label(
+                    RichText::new("[IMG]")
+                        .size(crate::typo::size(ui, crate::typo::Tier::Caption))
+                        .color(palette.text_weak),
+                );
             }
             EntryKind::Other(ext) => {
                 ui.label(
                     RichText::new(format!("[{ext}]"))
-                        .size(11.0)
+                        .size(crate::typo::size(ui, crate::typo::Tier::Caption))
                         .color(palette.text_weak),
                 );
             }

@@ -29,7 +29,11 @@ pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>)
                 } else {
                     "Exam finished"
                 };
-                ui.label(RichText::new(title).size(26.0).strong());
+                ui.label(
+                    RichText::new(title)
+                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                        .strong(),
+                );
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     if kit::primary_button(ui, "Back to setup").clicked() {
                         out.push(Msg::LeaveRun);
@@ -60,7 +64,11 @@ fn banner(run: &RunView, stopped: bool, ui: &mut egui::Ui) {
         } else {
             let given = answers(run).len();
             let scored = run.scores.len() + run.exam.unscored.len();
-            ui.label(RichText::new("Grading…").size(20.0).strong());
+            ui.label(
+                RichText::new("Grading…")
+                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                    .strong(),
+            );
             ui.weak(format!("{scored} of {given} answers compared"));
         }
     });
@@ -71,13 +79,13 @@ fn result_banner(r: &ExamResult, ui: &mut egui::Ui) {
     ui.horizontal(|ui| {
         ui.label(
             RichText::new(format!("{:.1} %", r.percent))
-                .size(40.0)
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
                 .strong(),
         );
         ui.add_space(16.0);
         ui.label(
             RichText::new(grade_badge(r.grade))
-                .size(28.0)
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
                 .strong()
                 .color(p.accent),
         );

@@ -68,7 +68,7 @@ fn side(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>
     let p = &state.planner;
     ui.label(
         RichText::new(format!("Sessions on {}", format_date(p.selected)))
-            .size(17.0)
+            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
             .strong(),
     );
     ui.add_space(4.0);

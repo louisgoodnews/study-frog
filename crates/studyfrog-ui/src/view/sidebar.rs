@@ -63,7 +63,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     }
                     ui.label(
                         RichText::new(caption)
-                            .size(11.0)
+                            .size(crate::typo::size(ui, crate::typo::Tier::Caption))
                             .strong()
                             .color(p.text_weak),
                     );

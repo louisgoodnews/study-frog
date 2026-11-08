@@ -2,7 +2,7 @@
 id: STORY-0114
 type: story
 title: Psychophysical typographic measure, modular hierarchy, and tabular numerals
-status: backlog
+status: review
 epic: EPIC-036
 parents: [EPIC-036]
 estimate: 3
@@ -32,8 +32,8 @@ Standardize typographic measure, modular scale, and numeric alignment across `st
 
 ## Acceptance Criteria
 - [ ] Long-form Markdown reading, note preview, help/wiki pages, and rehearsal cards constrain line width to an ergonomic reading measure (620-680 px scaled by text size, ~60-75 characters per line)
-- [ ] Typography across studyfrog-ui follows a strict 4-tier modular scale (Heading, Body, UI Label, Caption) with comfortable 1.45-1.55x line spacing
-- [ ] Timers, progress counters, and numeric table columns render with tabular/fixed-width digit alignment so ticking clocks and metrics never jitter horizontally
+- [x] Typography across studyfrog-ui follows a strict 4-tier modular scale (Heading, Body, UI Label, Caption) with comfortable 1.45-1.55x line spacing
+- [x] Timers, progress counters, and numeric table columns render with tabular/fixed-width digit alignment so ticking clocks and metrics never jitter horizontally
 
 ## Design Notes
 - Touchpoints:
@@ -45,3 +45,23 @@ EPIC-036.
 
 ## Open Questions
 None.
+
+## Progress (2026-11-08)
+Status **review**: everything is built and tested, but the first criterion names a pixel width that contradicts its own
+characters-per-line goal in StudyFrog's font, so the owner should decide.
+
+- **Measure (criterion 1, not ticked):** prose in the Markdown preview (item and note pages), help pages and rehearsal
+  cards is never wider than `typo::measure`: 70 average characters of body text measured at run time in the font in
+  use, so it scales with the text size. Full lines average 60 to 75 characters at every offered text size
+  (`tests/typography.rs`); help paragraphs and a long run answer on a 1600 pt window stay within it
+  (`tests/reading_measure_ui.rs`); screenshots of Help, the item page and a run in dark and light show lines of about
+  55 to 66 characters. In egui's font at 15 pt that is about 450 pt, not the 620 to 680 px the criterion names (that
+  width holds about 100 characters here). Accept the character measure, or ask for the pixel one.
+- **Scale (ticked):** four tiers (1.40 / 1.00 / 0.92 / 0.80 of the body size) installed as egui's text styles and
+  used for every text size in the views; a source scan fails on any literal size (four picture glyphs excepted); prose
+  has a line height of 1.5 with an even first line (tested on the galley; seen in screenshots, which before showed a
+  taller first line in every paragraph).
+- **Numbers (ticked):** both built-in fonts have tabular digits (tested; egui cannot turn on `tnum`, so a font
+  without them would need a monospace fallback); the item seconds, run position, run clock and focus timer reserve
+  the width of their widest form; Library's numeric columns are right-aligned.
+- Also: the run answer is body text in the text colour (APCA body target) instead of the accent at 21 pt.
