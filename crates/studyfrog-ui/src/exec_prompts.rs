@@ -3,20 +3,20 @@
 use std::fs;
 use std::path::Path;
 
-use studyfrog_service::prompts::{PROMPTS, clip, file_name, file_text, prompt_of};
+use studyfrog_service::prompts::{PROMPTS, clip, file_name, file_text, prompt_with};
 
 use crate::exec::Worker;
 use crate::msg::Msg;
 use crate::prompt_run::{Attachment, PromptRunMsg};
-use crate::prompts_ui::{PromptsEffect, PromptsMsg};
+use crate::prompts_ui::{PromptsEffect, PromptsMsg, pick_refs};
 
-fn write(w: &Worker, ids: &[&str]) -> Result<Option<String>, String> {
+fn write(w: &Worker, ids: &[&str], picks: &[(String, usize)]) -> Result<Option<String>, String> {
     let Some(folder) = w.folder_picker.and_then(|pick| pick()) else {
         return Ok(None);
     };
     let mut written = 0;
     for source in PROMPTS.iter().filter(|s| ids.contains(&s.id)) {
-        let prompt = prompt_of(source);
+        let prompt = prompt_with(source, &pick_refs(picks));
         let target = folder.join(file_name(&prompt));
         fs::write(&target, file_text(&prompt)).map_err(|e| format!("{}: {e}", target.display()))?;
         written += 1;
@@ -67,7 +67,9 @@ fn run_msg(m: PromptRunMsg) -> Msg {
 /// Perform one job and report.
 pub fn run(w: &Worker, effect: PromptsEffect) -> Msg {
     match effect {
-        PromptsEffect::Export(ids) => Msg::Prompts(PromptsMsg::Saved(write(w, &ids))),
+        PromptsEffect::Export(ids, picks) => {
+            Msg::Prompts(PromptsMsg::Saved(write(w, &ids, &picks)))
+        }
         PromptsEffect::Browse => {
             let picked = w.file_picker.and_then(|pick| pick(&EXTENSIONS));
             run_msg(PromptRunMsg::Browsed(

@@ -2,7 +2,7 @@
 id: STORY-0092
 type: story
 title: Prompt library categorization and parameterized execution UI
-status: backlog
+status: review
 epic: EPIC-030
 parents: [EPIC-030]
 estimate: 3

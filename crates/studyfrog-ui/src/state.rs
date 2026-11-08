@@ -29,6 +29,8 @@ pub enum Screen {
     Folders,
     /// The assistant: connections, wiki proposals and exams.
     Agent,
+    /// The standard prompts for an AI: copy, save or run them.
+    Prompts,
     /// Stacks and items of the open vault.
     Library,
     /// Set up and run a rehearsal.
@@ -183,6 +185,8 @@ pub struct State {
     pub replay: Option<Box<crate::msg::Msg>>,
     /// A standard prompt being run through the assistant.
     pub prompt_run: Box<crate::prompt_run::PromptRun>,
+    /// The Prompts tab: category, search and picked options.
+    pub prompts_view: crate::prompts_ui::PromptsView,
     /// Sidebar, menus, search and notifications.
     pub chrome: Chrome,
     /// The registered importers and card types.

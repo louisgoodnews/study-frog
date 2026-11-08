@@ -2,7 +2,7 @@
 id: STORY-0089
 type: story
 title: Interactive file examination and feedback prompt
-status: backlog
+status: done
 epic: EPIC-030
 parents: [EPIC-030]
 estimate: 3
@@ -32,9 +32,9 @@ Author an interactive examination prompt for StudyFrog's prompt library:
    - Functions both when copied into external chatbot sessions (ChatGPT, Claude, local LLMs) and when run within StudyFrog's connected assistant dialogue.
 
 ## Acceptance Criteria
-- [ ] A standard examination and feedback prompt exists in docs/prompts/exam.md and compiles into studyfrog-service
-- [ ] The prompt instructs the AI agent to quiz the learner on the attached file, evaluate answers against source material, and provide diagnostic feedback
-- [ ] The feedback highlights accuracy, misconceptions, and suggested follow-up flashcard or practice questions
+- [x] A standard examination and feedback prompt exists in docs/prompts/exam.md and compiles into studyfrog-service
+- [x] The prompt instructs the AI agent to quiz the learner on the attached file, evaluate answers against source material, and provide diagnostic feedback
+- [x] The feedback highlights accuracy, misconceptions, and suggested follow-up flashcard or practice questions
 
 ## Design Notes
 - Template file: `docs/prompts/exam.md`.

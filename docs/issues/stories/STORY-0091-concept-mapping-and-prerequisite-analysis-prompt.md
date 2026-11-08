@@ -2,7 +2,7 @@
 id: STORY-0091
 type: story
 title: Concept mapping and prerequisite analysis prompt
-status: backlog
+status: done
 epic: EPIC-030
 parents: [EPIC-030]
 estimate: 3
@@ -29,9 +29,9 @@ Create a concept mapping and prerequisite analysis prompt for the prompt library
    - Include a valid CSV worked example in the prompt with note records containing tables, wikilinks, and prerequisite tags.
 
 ## Acceptance Criteria
-- [ ] A standard concept mapping and prerequisite analysis prompt exists in docs/prompts/concept_map.md and compiles into studyfrog-service
-- [ ] The prompt generates prerequisite dependency lists, conceptual contrast tables, and mental model summaries from an attached file
-- [ ] The output imports as structured Markdown notes with wikilinks connecting related concepts
+- [x] A standard concept mapping and prerequisite analysis prompt exists in docs/prompts/concept_map.md and compiles into studyfrog-service
+- [x] The prompt generates prerequisite dependency lists, conceptual contrast tables, and mental model summaries from an attached file
+- [x] The output imports as structured Markdown notes with wikilinks connecting related concepts
 
 ## Design Notes
 - Template file: `docs/prompts/concept_map.md`.

@@ -2,7 +2,7 @@
 id: STORY-0088
 type: story
 title: Multi-level file explanation prompt
-status: backlog
+status: done
 epic: EPIC-030
 parents: [EPIC-030]
 estimate: 3
@@ -29,9 +29,9 @@ Create a multi-level explanation prompt template and integrate it into StudyFrog
    - Include a worked example in the prompt file that passes automated syntax validation and import testing.
 
 ## Acceptance Criteria
-- [ ] A standard explanation prompt exists in docs/prompts/explain.md and compiles into studyfrog-service
-- [ ] The prompt instructs the AI to explain an attached file at three selectable levels of abstraction: Intuitive Analogy (ELI5), Core Concepts, and Technical Deep-Dive
-- [ ] The generated explanation produces clear Markdown notes structured for StudyFrog import and immediate reading
+- [x] A standard explanation prompt exists in docs/prompts/explain.md and compiles into studyfrog-service
+- [x] The prompt instructs the AI to explain an attached file at three selectable levels of abstraction: Intuitive Analogy (ELI5), Core Concepts, and Technical Deep-Dive
+- [x] The generated explanation produces clear Markdown notes structured for StudyFrog import and immediate reading
 
 ## Design Notes
 - Template file: `docs/prompts/explain.md`.

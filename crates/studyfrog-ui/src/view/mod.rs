@@ -64,6 +64,7 @@ mod popup;
 mod preview;
 mod preview_rich;
 mod profiles;
+mod prompts_screen;
 mod reports;
 mod reports_calibration;
 mod reports_fam;
@@ -132,6 +133,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
             Screen::Board => board::draw(state, ui, &mut out),
             Screen::Achievements => achievements::draw(state, ui),
             Screen::Agent => agent::draw(state, ui, &mut out),
+            Screen::Prompts => prompts_screen::draw(state, ui, &mut out),
             Screen::Reports => reports::draw(state, ui, &mut out),
             Screen::Diary => diary::draw(state, ui, &mut out),
             Screen::Pdf => pdf::draw(state, ui, &mut out),

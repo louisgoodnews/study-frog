@@ -65,6 +65,7 @@ pub fn screen_title(screen: Screen) -> &'static str {
         Screen::Achievements => "Achievements",
         Screen::Reports => "Reports",
         Screen::Diary => "Diary",
+        Screen::Prompts => "Prompts",
         Screen::Pdf => "PDF",
         Screen::Help => "Help",
     }

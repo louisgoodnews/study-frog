@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Four more standard prompts: explain a file at three levels, be examined on a file, learn a file by Socratic dialogue, and map the concepts of a file; their worked examples are read by the importer in the tests (STORY-0088, STORY-0089, STORY-0090, STORY-0091).
+- Prompts have categories (create content, tutoring, analysis), a search, and options that are put into the text, such as the depth of an explanation or the number of exam questions; Save and the assistant run use the chosen options (STORY-0092).
+- The prompt library is a screen of its own, "Prompts" in the sidebar; the Assistant's Prompts tab links to it (TASK-0233).
 - StudyFrog keeps its own files in one application home (`$STUDYFROG_HOME`, else `$XDG_DATA_HOME/studyfrog`, else `~/.local/share/studyfrog`): `config/`, `models/`, `logs/`. Files of the old `~/.config/studyfrog` are copied in on first start and left in place; API keys end up readable by the owner only (STORY-0122).
 - Every notice is written to a rotating text log (`logs/studyfrog.log`) and a JSON Lines log (`logs/console.jsonl`), 5 MB x 3 files each (STORY-0122).
 - `studyfrog --print-paths` lists the application's directories, and `studyfrog logs [--tail N] [--follow] [--json]` shows its log (STORY-0122).

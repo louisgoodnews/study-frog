@@ -3,6 +3,8 @@
 //! where a prompt says `{{layout}}`, `{{files}}` or `{{answer}}`. Every worked example is read by the importer in
 //! the tests, so a prompt cannot drift from what the app reads.
 
+use crate::prompts_meta::fill_params;
+
 /// A prompt as the file has it.
 #[derive(Debug, Clone, Copy)]
 pub struct PromptSource {
@@ -29,6 +31,10 @@ pub const PROMPTS: &[PromptSource] = &[
     prompt!("notes"),
     prompt!("summary"),
     prompt!("critique"),
+    prompt!("explain"),
+    prompt!("exam"),
+    prompt!("socratic"),
+    prompt!("concept_map"),
 ];
 
 const LAYOUT: &str = include_str!("../../../docs/prompts/_layout.md");
@@ -73,13 +79,18 @@ fn summary_of(text: &str) -> String {
         .to_owned()
 }
 
-/// The prompt for a source.
+/// The prompt for a source, with every choice at its default.
 pub fn prompt_of(source: &PromptSource) -> Prompt {
+    prompt_with(source, &[])
+}
+
+/// The prompt for a source with the picked options (key, option index); the rest are defaults.
+pub fn prompt_with(source: &PromptSource, picks: &[(&str, usize)]) -> Prompt {
     Prompt {
         id: source.id,
         title: title_of(source.text),
         summary: summary_of(source.text),
-        text: expand(source.text),
+        text: fill_params(source.id, &expand(source.text), picks),
     }
 }
 

@@ -2,7 +2,7 @@
 id: TASK-0233
 type: task
 title: Move prompt library to standalone left sidebar navigation
-status: backlog
+status: review
 epic: EPIC-030
 parents: [STORY-0092]
 estimate: 2

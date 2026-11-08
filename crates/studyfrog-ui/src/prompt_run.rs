@@ -5,7 +5,9 @@
 //! if the preview finds problems, send the problems back the same way (shown first, sent after Send).
 
 use studyfrog_agent::provider::{Message, Role, is_local, may_send};
-use studyfrog_service::prompts::{PROMPTS, csv_of_reply, problem_of_reply, prompt_of, run_message};
+use studyfrog_service::prompts::{
+    PROMPTS, csv_of_reply, problem_of_reply, prompt_with, run_message,
+};
 use studyfrog_service::xfer_adapters::CSV_LAYOUT;
 use studyfrog_service::xfer_csv_map::ai_message;
 
@@ -85,7 +87,8 @@ fn prepared(state: State, file: Attachment) -> (State, Vec<Effect>) {
     else {
         return failed(state, "Choose a prompt first.");
     };
-    let content = run_message(&prompt_of(source), &file.0, &file.1);
+    let picks = crate::prompts_ui::pick_refs(&state.prompts_view.picks);
+    let content = run_message(&prompt_with(source, &picks), &file.0, &file.1);
     let run = &mut state.prompt_run;
     run.outgoing = Some(vec![Message {
         role: Role::User,

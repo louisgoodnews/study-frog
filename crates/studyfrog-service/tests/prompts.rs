@@ -2,12 +2,17 @@
 //! TASK-0205: every standard prompt is complete and its worked example is accepted by the importer.
 
 use studyfrog_core::plan::ItemKind;
-use studyfrog_service::prompts::{PROMPTS, example_of, file_name, file_text, prompt_of, prompts};
+use studyfrog_service::prompts::{
+    PROMPTS, example_of, file_name, file_text, prompt_of, prompt_with, prompts,
+};
+use studyfrog_service::prompts_meta::{
+    CATEGORIES, PromptCategory, category_name, category_of, params_of,
+};
 use studyfrog_service::xfer_adapters::CSV_LAYOUT;
 use studyfrog_service::xfer_csv_map::{CsvOptions, read_csv};
 
 #[test]
-fn there_are_six_prompts_with_a_title_and_a_summary() {
+fn there_are_ten_prompts_with_a_title_and_a_summary() {
     let all = prompts();
     let ids: Vec<_> = all.iter().map(|p| p.id).collect();
     assert_eq!(
@@ -18,7 +23,11 @@ fn there_are_six_prompts_with_a_title_and_a_summary() {
             "stack",
             "notes",
             "summary",
-            "critique"
+            "critique",
+            "explain",
+            "exam",
+            "socratic",
+            "concept_map"
         ]
     );
     for p in &all {
@@ -52,7 +61,7 @@ fn each_prompt_hand_holds_the_ai() {
 #[test]
 fn the_worked_example_of_every_prompt_is_read_by_the_importer_without_a_problem() {
     let kinds = |id: &str| match id {
-        "flashcards" => vec![ItemKind::Card],
+        "flashcards" | "exam" => vec![ItemKind::Card],
         "questions" => vec![ItemKind::Question],
         "stack" => vec![ItemKind::Note, ItemKind::Card, ItemKind::Question],
         _ => vec![ItemKind::Note],
@@ -119,4 +128,58 @@ fn the_csv_of_a_reply_is_found_with_or_without_chatter_and_a_problem_is_recognis
     let p = prompt_of(&PROMPTS[0]);
     let m = run_message(&p, "notes.txt", "hello");
     assert!(m.starts_with(&p.text) && m.contains("`notes.txt`") && m.trim_end().ends_with("hello"));
+}
+
+#[test]
+fn every_prompt_has_a_category_and_every_category_has_prompts() {
+    for category in CATEGORIES {
+        let ids: Vec<_> = PROMPTS
+            .iter()
+            .filter(|p| category_of(p.id) == category)
+            .map(|p| p.id)
+            .collect();
+        assert!(!ids.is_empty(), "{}", category_name(category));
+    }
+    assert_eq!(category_of("exam"), PromptCategory::InteractiveTutoring);
+    assert_eq!(category_of("socratic"), PromptCategory::InteractiveTutoring);
+    assert_eq!(category_of("flashcards"), PromptCategory::ContentGeneration);
+    assert_eq!(
+        category_of("concept_map"),
+        PromptCategory::AnalysisAndInsights
+    );
+}
+
+#[test]
+fn a_chosen_option_is_put_into_the_text_and_the_default_is_the_first() {
+    let explain = PROMPTS.iter().find(|p| p.id == "explain").unwrap();
+    assert!(prompt_of(explain).text.contains("at all three levels."));
+    let technical = prompt_with(explain, &[("depth", 3)]).text;
+    assert!(
+        technical.contains("the technical level only"),
+        "{technical}"
+    );
+    let exam = PROMPTS.iter().find(|p| p.id == "exam").unwrap();
+    assert!(prompt_of(exam).text.contains("Ask 3 challenging"));
+    assert!(
+        prompt_with(exam, &[("count", 1)])
+            .text
+            .contains("Ask 5 challenging")
+    );
+}
+
+#[test]
+fn no_choice_leaves_a_placeholder_and_a_bad_index_falls_back_to_the_default() {
+    for source in PROMPTS {
+        for param in params_of(source.id) {
+            for at in 0..=param.options.len() {
+                let text = prompt_with(source, &[(param.key, at)]).text;
+                assert!(!text.contains("{{"), "{} option {at}", source.id);
+            }
+        }
+    }
+    let explain = PROMPTS.iter().find(|p| p.id == "explain").unwrap();
+    assert_eq!(
+        prompt_with(explain, &[("depth", 99)]).text,
+        prompt_of(explain).text
+    );
 }

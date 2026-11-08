@@ -36,6 +36,7 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
             (State { screen, ..state }, vec![Effect::BuildReports, ask])
         }
         Screen::Settings => (State { screen, ..state }, vec![Effect::BuildReports]),
+        Screen::Prompts => (State { screen, ..state }, vec![Effect::LoadAgent]),
         Screen::Diary => (
             State { screen, ..state },
             vec![Effect::Diary(crate::diary_types::DiaryEffect::LoadEntries)],

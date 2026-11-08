@@ -42,7 +42,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 AgentTab::Connections => connections(state, ui, out),
                 AgentTab::Wiki => agent_wiki::wiki(state, ui, out),
                 AgentTab::Exam => crate::view::agent_exam::exam(state, ui, out),
-                AgentTab::Prompts => crate::view::agent_prompts::prompts_tab(state, ui, out),
+                AgentTab::Prompts => crate::view::agent_prompts::moved_link(ui, out),
             });
         });
 }

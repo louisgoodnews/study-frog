@@ -47,6 +47,7 @@ fn screen_named(name: &str) -> Option<Screen> {
         "reports" => Screen::Reports,
         "diary" => Screen::Diary,
         "agent" => Screen::Agent,
+        "prompts" => Screen::Prompts,
         "achievements" => Screen::Achievements,
         "graph" => Screen::Graph,
         "run" => Screen::Rehearse,

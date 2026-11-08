@@ -38,6 +38,7 @@ const GROUPS: &[Group] = &[
         caption: None,
         screens: &[
             (Screen::Agent, "Assistant"),
+            (Screen::Prompts, "Prompts"),
             (Screen::Settings, "Settings"),
             (Screen::Help, "Help"),
         ],

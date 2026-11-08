@@ -59,6 +59,7 @@ pub mod pdf_pictures;
 pub mod pdfs;
 pub mod planning;
 pub mod prompts;
+pub mod prompts_meta;
 pub mod queue;
 pub mod queue_data;
 pub mod rehearse;

@@ -2,7 +2,7 @@
 id: STORY-0090
 type: story
 title: Socratic dialogue and active inquiry prompt
-status: backlog
+status: done
 epic: EPIC-030
 parents: [EPIC-030]
 estimate: 3
@@ -30,9 +30,9 @@ Develop a Socratic tutoring prompt for the StudyFrog library:
    - At the conclusion of the dialogue, the prompt instructs the AI to summarize the student's own discovered conclusions into a concise summary note ready for the vault.
 
 ## Acceptance Criteria
-- [ ] A standard Socratic dialogue prompt exists in docs/prompts/socratic.md and compiles into studyfrog-service
-- [ ] The prompt enforces a question-driven dialogue where the AI leads the learner to discover key insights rather than lecturing
-- [ ] The AI dynamically detects misunderstandings and poses counter-examples to stimulate critical thinking
+- [x] A standard Socratic dialogue prompt exists in docs/prompts/socratic.md and compiles into studyfrog-service
+- [x] The prompt enforces a question-driven dialogue where the AI leads the learner to discover key insights rather than lecturing
+- [x] The AI dynamically detects misunderstandings and poses counter-examples to stimulate critical thinking
 
 ## Design Notes
 - Template file: `docs/prompts/socratic.md`.
