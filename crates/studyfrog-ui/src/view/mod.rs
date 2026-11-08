@@ -84,6 +84,7 @@ mod setup_pacing;
 mod setup_review;
 mod setup_what;
 mod sidebar;
+mod stack_achievements;
 mod stack_backlog_view;
 mod stack_board_view;
 mod stack_goals_view;
@@ -131,7 +132,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
             Screen::Graph => graph::draw(state, ui, &mut out),
             Screen::Calendar => calendar::draw(state, ui, &mut out),
             Screen::Board => board::draw(state, ui, &mut out),
-            Screen::Achievements => achievements::draw(state, ui),
+            Screen::Achievements => achievements::draw(state, ui, &mut out),
             Screen::Agent => agent::draw(state, ui, &mut out),
             Screen::Prompts => prompts_screen::draw(state, ui, &mut out),
             Screen::Reports => reports::draw(state, ui, &mut out),

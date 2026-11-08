@@ -207,6 +207,10 @@ pub struct State {
     pub explorer: crate::explorer_ui::ExplorerState,
     /// The latest achievement check.
     pub achievements: Option<AchievementReport>,
+    /// Which achievements the achievements screen lists.
+    pub achievements_filter: crate::achievements::Filter,
+    /// The report was asked for by a view (the stack page) and not yet delivered.
+    pub achievements_wanted: bool,
     /// The reading-speed test on the settings screen.
     pub reading_test: ReadingTest,
     /// The PDFs of the vault, for the library list.

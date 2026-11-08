@@ -5,22 +5,27 @@ Open **Achievements** in the sidebar.
 
 ## The screen
 
-- **Unlocked**: the achievements you have reached, with the day each one unlocked.
-- **In progress**: the others, each with a bar showing how far you are, for example "4 / 7".
+The achievements are grouped by what they measure (**Streaks**, **Runs**, **Ratings**, **Cards**, **Mastery**) and by
+stack. Each group shows how many of its achievements are unlocked, for example "Streaks (3 / 7 unlocked)". Inside a
+group the unlocked ones come first, with the day each one unlocked; the others show a bar with how far you are, for
+example "4 / 7".
+
+Use the buttons at the top to narrow the list: **All**, **Global** (the achievements of the whole vault), or one
+stack. The page of a stack also shows how many of its achievements are unlocked; click it to see them.
 
 When you reach one, StudyFrog announces it ("Achievement unlocked: ...") as a message and a notification. Each
 achievement unlocks once and is remembered.
 
 ## The built-in set
 
-- **First run**: finish a rehearsal run.
-- **Regular**: finish 10 rehearsal runs.
-- **A week in a row**: review something on 7 days in a row.
-- **A month in a row**: review something on 30 days in a row.
-- **Easy does it**: rate 20 items Easy.
-- **Hundred mastered**: have 100 items scheduled 21 days or more ahead.
-- **Getting started**: review 25 different items of a stack (separately for every stack).
-- **Stack master**: have 25 items of a stack scheduled 21 days or more ahead (separately for every stack).
+Each kind has several tiers:
+
+- **Streaks** (days in a row on which you review something): 3, 7, 14, 30, 60, 100 and 365 days.
+- **Runs** (finished rehearsal runs): 1, 10, 25, 50 and 100.
+- **Ratings** (items rated): 50, 250, 1,000 and 5,000; and 20 or 100 items rated Easy.
+- **Mastery** (items scheduled 21 days or more ahead): 10, 50, 100, 250 and 500.
+- **For every stack separately**: 10, 25, 50 or 100 different items reviewed; 10, 25, 50 or 100 items mastered; and 50
+  items rated.
 
 An item counts as **mastered** when its next review is 21 days or more away.
 

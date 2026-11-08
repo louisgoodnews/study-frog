@@ -2,7 +2,7 @@
 id: STORY-0086
 type: story
 title: Expanded achievement catalog and milestone tiers
-status: backlog
+status: done
 epic: EPIC-029
 parents: [EPIC-029]
 estimate: 3
@@ -57,9 +57,9 @@ Expand the built-in achievement rules in `studyfrog-achieve`:
   - `stack-rated-50`: "Deck dedication" (50 ratings in a stack)
 
 ## Acceptance Criteria
-- [ ] Default achievement rules in studyfrog-achieve include tiered milestones for streaks, runs, ratings, and mastered items
-- [ ] Per-stack default rules provide graduated goals for learned items, mastered cards, and ratings within each stack
-- [ ] Evaluator accurately tracks and unlocks new tiers from existing review history without invalidating previous unlocks
+- [x] Default achievement rules in studyfrog-achieve include tiered milestones for streaks, runs, ratings, and mastered items
+- [x] Per-stack default rules provide graduated goals for learned items, mastered cards, and ratings within each stack
+- [x] Evaluator accurately tracks and unlocks new tiers from existing review history without invalidating previous unlocks
 
 ## Design Notes
 - Files: `crates/studyfrog-achieve/src/defaults.rs`, `crates/studyfrog-achieve/tests/achieve.rs`.

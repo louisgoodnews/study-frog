@@ -337,8 +337,8 @@
 | [STORY-0083](docs/issues/stories/STORY-0083-google-gemini-in-models-for-studyfrog.md) Google Gemini in models for StudyFrog (5) | review | 0/0 |
 | [STORY-0084](docs/issues/stories/STORY-0084-deepseek-in-models-for-studyfrog.md) Deepseek in models for StudyFrog (5) | review | 0/0 |
 | [STORY-0085](docs/issues/stories/STORY-0085-performance-optimization-in-studyfrog-pdf-viewer.md) Performance optimization in StudyFrog pdf-viewer (5) | in_progress | 0/0 |
-| [STORY-0086](docs/issues/stories/STORY-0086-expanded-achievement-catalog-and-milestone-tiers.md) Expanded achievement catalog and milestone tiers (3) | backlog | 0/0 |
-| [STORY-0087](docs/issues/stories/STORY-0087-per-stack-achievement-ui-and-filtering.md) Per-stack achievement UI and filtering (3) | backlog | 0/0 |
+| [STORY-0086](docs/issues/stories/STORY-0086-expanded-achievement-catalog-and-milestone-tiers.md) Expanded achievement catalog and milestone tiers (3) | done | 0/0 |
+| [STORY-0087](docs/issues/stories/STORY-0087-per-stack-achievement-ui-and-filtering.md) Per-stack achievement UI and filtering (3) | review | 0/0 |
 | [STORY-0088](docs/issues/stories/STORY-0088-multi-level-file-explanation-prompt.md) Multi-level file explanation prompt (3) | done | 0/0 |
 | [STORY-0089](docs/issues/stories/STORY-0089-interactive-file-examination-and-feedback-prompt.md) Interactive file examination and feedback prompt (3) | done | 0/0 |
 | [STORY-0090](docs/issues/stories/STORY-0090-socratic-dialogue-and-active-inquiry-prompt.md) Socratic dialogue and active inquiry prompt (3) | done | 0/0 |
@@ -409,7 +409,7 @@
 | [EPIC-026](docs/issues/epics/EPIC-026-writing-saving-organizing-and-prompts-for-0-4-0.md) Writing, saving, organizing and prompts for 0.4.0 | done | 7/7 |
 | [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | done | 2/2 |
 | [EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md) Extensibility, plugin modding, and Python API | backlog | 0/3 |
-| [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md) Expanded achievements and per-stack progression | backlog | 0/2 |
+| [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md) Expanded achievements and per-stack progression | backlog | 1/2 |
 | [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md) Prompt expansion | backlog | 4/5 |
 | [EPIC-031](docs/issues/epics/EPIC-031-details-tabs-create-workflow-csv-import.md) Details tabs, create workflow, and CSV import for 0.4.1 | done | 6/6 |
 | [EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md) Item keys, colorization, and reporting export | backlog | 0/4 |

@@ -198,6 +198,8 @@ pub enum Msg {
     ReportsBuilt(Result<ReportBundle, String>),
     /// The achievements were measured.
     AchievementsChecked(Result<AchievementReport, String>),
+    /// Something happened on the achievements screen or its stack summary.
+    Achievements(crate::achievements::AchievementsMsg),
     /// Something happened on the calendar screen.
     Plan(PlanMsg),
     /// Something happened on the board screen.

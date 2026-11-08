@@ -6,8 +6,10 @@ mod common;
 use common::views::{assert_all_named, harness, open_model, running_model};
 use common::{NOW_NS, sample_vault};
 use egui_kittest::kittest::Queryable;
+use studyfrog_core::achievement::Metric;
 use studyfrog_core::run::RunMode;
 use studyfrog_core::time::UnixMs;
+use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::Action;
 use studyfrog_service::achievements::{AchievementReport, Entry};
 use studyfrog_ui::effect::Effect;
@@ -29,6 +31,14 @@ fn entry(
         title: title.into(),
         description: format!("Do {title}."),
         stack: stack.map(str::to_owned),
+        key: stack
+            .map(|_| studyfrog_md::ulid::format_ulid(Uid(1)))
+            .unwrap_or_default(),
+        metric: match rule {
+            "first-run" => Metric::RunsFinished,
+            "streak" => Metric::StreakDays,
+            _ => Metric::ItemsLearned,
+        },
         value,
         threshold,
         unlocked: unlocked.then_some(UnixMs(1_800_000_000_000)),
@@ -106,18 +116,19 @@ fn the_end_of_a_run_checks_achievements() {
 }
 
 #[test]
-fn the_screen_lists_unlocked_and_in_progress_achievements() {
+fn the_screen_groups_unlocked_and_in_progress_achievements() {
     let mut m = open_model();
     m.state.screen = Screen::Achievements;
     apply(&mut m, Msg::AchievementsChecked(Ok(report())));
     let mut h = harness(m);
     h.run();
     for text in [
-        "Unlocked (1)",
-        "In progress (2)",
+        "Runs (1 / 1 unlocked)",
+        "Streaks (0 / 1 unlocked)",
+        "French (0 / 1 unlocked)",
         "First run - unlocked 2027-01-15",
         "A week in a row",
-        "Getting started (French)",
+        "Getting started",
         "3 / 7",
         "10 / 25",
     ] {

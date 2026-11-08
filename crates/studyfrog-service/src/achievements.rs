@@ -6,7 +6,7 @@ use studyfrog_achieve::defaults::default_rules;
 use studyfrog_achieve::evaluate::{Progress, Unlock, new_unlocks, progress};
 use studyfrog_achieve::stats::{Fact, Mastered, compute_stats};
 use studyfrog_config::achievements::{ACHIEVEMENTS_FILE, parse_achievements};
-use studyfrog_core::achievement::Rule;
+use studyfrog_core::achievement::{Metric, Rule};
 use studyfrog_core::time::UnixMs;
 use studyfrog_md::ulid::format_ulid;
 use studyfrog_store::achievements::{
@@ -29,6 +29,10 @@ pub struct Entry {
     pub description: String,
     /// The stack's title for a stack achievement.
     pub stack: Option<String>,
+    /// The stack's key (its uid as text) for a stack achievement, else empty.
+    pub key: String,
+    /// What the rule measures.
+    pub metric: Metric,
     /// Current value of the metric.
     pub value: u32,
     /// What it takes.
@@ -82,6 +86,8 @@ fn entry(rules: &[Rule], p: &Progress, stacks: &[(String, String)]) -> Entry {
                 .find(|(k, _)| *k == p.key)
                 .map_or_else(|| p.key.clone(), |(_, t)| t.clone())
         }),
+        key: p.key.clone(),
+        metric: rule.map_or(Metric::ItemsRated, |r| r.metric),
         value: p.value,
         threshold: p.threshold,
         unlocked: p.unlocked,

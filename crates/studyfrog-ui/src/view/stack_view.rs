@@ -198,6 +198,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.label(RichText::new(&stack.title).size(26.0).strong());
             actions(state, stack, ui, out);
             crate::view::status_ui::summary(ui, &state.browser.status_counts);
+            crate::view::stack_achievements::badge(state, stack.uid, ui, out);
             ui.add_space(6.0);
             tab_bar(state, folder, ui, out);
             ui.separator();

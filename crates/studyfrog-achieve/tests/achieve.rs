@@ -181,7 +181,10 @@ fn the_built_in_achievements_are_valid_and_unique() {
 
 #[test]
 fn unusable_rules_are_explained() {
-    let base = default_rules().remove(0);
+    let base = default_rules()
+        .into_iter()
+        .find(|r| r.metric == Metric::RunsFinished)
+        .unwrap();
     let bad = |f: fn(&mut Rule)| {
         let mut r = base.clone();
         f(&mut r);
