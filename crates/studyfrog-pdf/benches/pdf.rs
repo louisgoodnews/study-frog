@@ -7,6 +7,7 @@ use std::hint::black_box;
 use std::sync::Arc;
 
 use criterion::{Criterion, criterion_group, criterion_main};
+use hayro::hayro_syntax::Pdf;
 use lopdf::{Dictionary, Document, Object, Stream, dictionary};
 use studyfrog_pdf::PdfBytes;
 use studyfrog_pdf::doc::pdf_info;
@@ -65,6 +66,17 @@ fn benches(c: &mut Criterion) {
     });
     group.bench_function("render_one_page_at_1x", |b| {
         b.iter(|| black_box(pdf_render_page(&pdf, 250, 1.0).unwrap()))
+    });
+    group.bench_function("render_one_page_at_2x", |b| {
+        b.iter(|| black_box(pdf_render_page(&pdf, 250, 2.0).unwrap()))
+    });
+    group.bench_function("render_one_thumbnail", |b| {
+        b.iter(|| black_box(pdf_render_page(&pdf, 250, 0.25).unwrap()))
+    });
+    // What every render pays before it draws: parsing the file again (the share a kept document
+    // would save).
+    group.bench_function("parse_document_only", |b| {
+        b.iter(|| black_box(Pdf::new(pdf.clone()).unwrap().pages().len()))
     });
     let plan: Vec<PageSpec> = (0..PAGES)
         .rev()

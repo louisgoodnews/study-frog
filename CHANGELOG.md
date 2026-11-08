@@ -7,6 +7,12 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Changed
+- The PDF viewer trims full-size page pictures (6) and thumbnails (60) apart, so scrolling the sidebar thumbnails no longer pushes out the page being read and far fewer large page textures are kept in memory; the sidebar and the arrange grid share one thumbnail scale (STORY-0085).
+
+### Added
+- Benchmarks for parsing a document and for drawing a thumbnail and a page at 2x, next to the existing page benchmark (STORY-0085).
+
 ### Fixed
 - PDF page, sidebar thumbnail and arrange-grid textures are keyed by their pixel size instead of the requested scale, so a low-resolution thumbnail shown while the sharp render is in flight no longer takes over the sharp texture and leaves the page blurred at some zoom levels or fit modes (BUG-0010).
 

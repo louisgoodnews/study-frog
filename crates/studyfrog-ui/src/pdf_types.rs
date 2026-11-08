@@ -8,10 +8,16 @@ use studyfrog_pdf::doc::PdfInfo;
 use studyfrog_pdf::render::Pixels;
 use studyfrog_pdf::text::PageText;
 
-/// Most page pictures kept (thumbnails included); the oldest go first.
-pub const MAX_CACHED: usize = 40;
-/// Pictures drawn at or below this scale (thousandths) are thumbnails.
-pub const THUMB_SCALE_MILLI: u32 = 300;
+/// Most full-size page pictures kept; they are megabytes each, so the oldest go early.
+pub const MAX_PAGE_PICTURES: usize = 6;
+/// Most thumbnails kept; they are small, and a long sidebar scrolls through many of them.
+pub const MAX_THUMB_PICTURES: usize = 60;
+/// Most pictures kept in all. Pages and thumbnails are trimmed apart so that scrolling the
+/// thumbnails never pushes out the page being read.
+pub const MAX_CACHED: usize = MAX_PAGE_PICTURES + MAX_THUMB_PICTURES;
+/// Pictures drawn at or below this scale (thousandths) are thumbnails; the sidebar and the
+/// arrange grid draw theirs at exactly this scale.
+pub const THUMB_SCALE_MILLI: u32 = 250;
 /// The zoom steps of the + and - buttons, in percent.
 pub const ZOOM_STEPS: [u32; 9] = [25, 50, 75, 100, 125, 150, 200, 300, 400];
 
@@ -22,6 +28,11 @@ pub struct PageKey {
     pub page: usize,
     /// Pixels per point times 1000.
     pub scale_milli: u32,
+}
+
+/// Whether `key` names a thumbnail rather than a full-size page.
+pub fn is_thumb(key: PageKey) -> bool {
+    key.scale_milli <= THUMB_SCALE_MILLI
 }
 
 /// How big the page is shown.

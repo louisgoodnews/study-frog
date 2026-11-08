@@ -4,11 +4,10 @@ use eframe::egui::{self, Rect, ScrollArea, Sense, TextEdit, Vec2};
 
 use crate::msg::Msg;
 use crate::pdf_arrange_types::{Arrange, ArrangeMsg, Prop};
-use crate::pdf_types::{PageKey, PdfMsg, PdfView};
+use crate::pdf_types::{PageKey, PdfMsg, PdfView, THUMB_SCALE_MILLI};
 use crate::view::pdf_page::{picture_for, texture};
 
 const CELL: f32 = 130.0;
-const THUMB_SCALE_MILLI: u32 = 250;
 
 fn send(out: &mut Vec<Msg>, m: ArrangeMsg) {
     out.push(Msg::Pdf(PdfMsg::Arrange(m)));

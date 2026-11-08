@@ -5,12 +5,11 @@ use eframe::egui::{self, ScrollArea, Sense, Vec2};
 use studyfrog_store::overview::StackRow;
 
 use crate::msg::Msg;
-use crate::pdf_types::{PageKey, PdfMsg, PdfView, Side};
+use crate::pdf_types::{PageKey, PdfMsg, PdfView, Side, THUMB_SCALE_MILLI};
 use crate::view::pdf_page::{picture_for, texture};
 use crate::view::{pdf_extract, pdf_notes};
 
 const THUMB_WIDTH: f32 = 120.0;
-const THUMB_SCALE_MILLI: u32 = 250;
 
 fn outline(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(info) = &view.info else { return };

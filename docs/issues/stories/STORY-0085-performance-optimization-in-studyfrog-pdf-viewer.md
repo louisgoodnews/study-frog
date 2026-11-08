@@ -2,7 +2,7 @@
 id: STORY-0085
 type: story
 title: Performance optimization in StudyFrog pdf-viewer
-status: backlog
+status: in_progress
 epic: EPIC-028
 parents: [EPIC-028]
 estimate: 5
@@ -38,6 +38,16 @@ Crate touchpoints:
 - Segregate thumbnail caching from active reading page textures to stop thrashing.
 - Add Criterion benchmarks in `crates/studyfrog-pdf/benches/` for multi-page rasterization throughput.
 - Release target: version 0.5.0 (Phase M12).
+
+## Progress (2026-11-08)
+Done and tested (unit tests in `pdf_load.rs`, benchmarks in `crates/studyfrog-pdf/benches/pdf.rs`):
+- Full-size page pictures and thumbnails are trimmed apart (6 pages, 60 thumbnails, oldest first within each kind), so scrolling the thumbnails cannot push out the page being read, and at most six multi-megabyte page textures are held instead of forty. The thumbnail scale is one constant (250) for the sidebar and the arrange grid.
+- Sidebar thumbnails are requested only for rows in view (`is_rect_visible` around the `Need`); read from the code, not covered by a test.
+- Renders already run on the worker thread, not in the frame.
+
+Measured on the generated 500-page text file (`cargo bench -p studyfrog-pdf --bench pdf`): parsing the document 0.59 ms, a thumbnail 2.8 ms, a page at 1x 5.7 ms, at 2x 10.3 ms. Parsing again on every render is about 10 % of a 1x render, so keeping a parsed document and `RenderCache` per session would save well under a millisecond and is not built. Not measured: documents with embedded fonts and images, where the share may be larger.
+
+Open: eviction is by age, not by last use (no real LRU); the 60 fps claim and smooth scrolling are not checked in a real window; `render.rs` is unchanged.
 
 ## Dependencies
 EPIC-028.
