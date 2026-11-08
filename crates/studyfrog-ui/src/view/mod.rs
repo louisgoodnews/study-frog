@@ -77,6 +77,7 @@ mod reports;
 mod reports_calibration;
 mod reports_fam;
 mod reports_habits;
+pub(crate) mod reports_leeches;
 mod reports_runs;
 mod reports_survival;
 mod run;

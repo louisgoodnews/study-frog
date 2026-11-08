@@ -32,6 +32,16 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         });
     }
     ui.add_space(8.0);
+    let a = &b.analytics;
+    let mine = |f: &str| crate::view::reports_leeches::in_stack(f, folder);
+    let leeches: Vec<_> = a.leeches.iter().filter(|r| mine(&r.folder)).collect();
+    let pairs: Vec<_> = a
+        .pairs
+        .iter()
+        .filter(|p| mine(&p.folders.0) || mine(&p.folders.1))
+        .collect();
+    crate::view::reports_leeches::lists(&leeches, &pairs, ui, out);
+    ui.add_space(8.0);
     if ui.button("Open all reports").clicked() {
         out.push(Msg::Navigate(Screen::Reports));
     }

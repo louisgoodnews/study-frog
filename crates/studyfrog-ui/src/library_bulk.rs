@@ -35,6 +35,8 @@ pub enum LibraryEffect {
     MoveStack(String, String),
     /// Give every stack and item without a key its key.
     AssignKeys,
+    /// Start a practice run of exactly these items (a contrastive drill).
+    Drill(Vec<Uid>),
 }
 
 /// What happened to the selection, the bulk bar or the saved filters.

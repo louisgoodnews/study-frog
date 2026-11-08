@@ -2,7 +2,7 @@
 id: STORY-0105
 type: story
 title: FSRS state-simulation forecasting, study-minute projection, and exam deadline pacer
-status: backlog
+status: in_progress
 epic: EPIC-034
 parents: [EPIC-034]
 estimate: 8

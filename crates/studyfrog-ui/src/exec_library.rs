@@ -21,6 +21,7 @@ pub fn run(w: &mut Worker, effect: LibraryEffect, now_ns: i64) -> Msg {
         return msg(BulkMsg::FiltersLoaded(Err("no vault is open".to_owned())));
     };
     match effect {
+        LibraryEffect::Drill(items) => crate::exec_run::drill(s, &items, now_ns),
         LibraryEffect::LoadFilters => msg(BulkMsg::FiltersLoaded(Ok(load_filters(s)))),
         LibraryEffect::SaveFilter(f) => msg(BulkMsg::FiltersSaved(
             save_filter(s, f).map_err(|e| e.to_string()),

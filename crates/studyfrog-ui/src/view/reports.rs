@@ -68,6 +68,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             (ReportTab::Calibration, "Self-assessment"),
             (ReportTab::Runs, "Runs"),
             (ReportTab::Habits, "Habits"),
+            (ReportTab::Leeches, "Leeches"),
         ] {
             if ui
                 .selectable_label(state.explorer.tab == tab, label)
@@ -84,6 +85,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ReportTab::Calibration => crate::view::reports_calibration::draw(state, ui, out),
         ReportTab::Runs => crate::view::reports_runs::draw(state, ui, out),
         ReportTab::Habits => crate::view::reports_habits::draw(state, ui, out),
+        ReportTab::Leeches => crate::view::reports_leeches::draw(state, ui, out),
     }
 }
 

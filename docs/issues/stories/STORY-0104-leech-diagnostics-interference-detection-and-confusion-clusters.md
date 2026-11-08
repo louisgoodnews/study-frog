@@ -2,7 +2,7 @@
 id: STORY-0104
 type: story
 title: Leech diagnostics, interference detection, and confusion clusters
-status: in_progress
+status: done
 epic: EPIC-034
 parents: [EPIC-034]
 estimate: 5
@@ -32,9 +32,9 @@ Build multi-signal leech diagnostics and interference cluster detection:
    - Add a **Leeches & Interference** section in Reports (and the Stack `Reports` tab) with one-click buttons to `Edit / Rewrite`, `Pause item`, or `Compare side-by-side`.
 
 ## Acceptance Criteria
-- [ ] studyfrog-report identifies leech items using multi-signal criteria (total lapses, recent lapse streak, cumulative review time share, and low stability-to-reviews ratio)
-- [ ] The analytics engine detects interfering item pairs that are frequently failed in close temporal proximity and share high lexical/semantic similarity, tags, or wikilinks
-- [ ] The Reports screen (and stack Reports tab) lists leeches and confusion pairs with direct actions to open, split/rewrite, pause, or launch a contrastive drill
+- [x] studyfrog-report identifies leech items using multi-signal criteria (total lapses, recent lapse streak, cumulative review time share, and low stability-to-reviews ratio)
+- [x] The analytics engine detects interfering item pairs that are frequently failed in close temporal proximity and share high lexical/semantic similarity, tags, or wikilinks
+- [x] The Reports screen (and stack Reports tab) lists leeches and confusion pairs with direct actions to open, split/rewrite, pause, or launch a contrastive drill
 
 ## Design Notes
 - Touchpoints:
@@ -42,6 +42,29 @@ Build multi-signal leech diagnostics and interference cluster detection:
   - `crates/studyfrog-service/src/reports.rs`: gather item states, review histories, latencies, and token similarity into the report bundle.
   - `crates/studyfrog-ui/src/view/reports.rs`: render actionable leech and interference cards.
 - Strictly follow P1 (free functions only) and P2 (≤ 250 lines per file).
+
+## Progress (2026-11-08)
+Built and verified:
+- `crates/studyfrog-report/src/leech.rs`: four signals per item (lapses after the first review >= 4, Hard/Again
+  streak at the end >= 3, time spent over the stack's median time per item >= 3, >= 6 reviews and stability under
+  7 days), every applying reason strongest first, ranked by the sum of each signal over its threshold.
+- `crates/studyfrog-report/src/confusion.rs`: for items with >= 2 lapse days, pairs whose lapses fall within a day
+  of each other at least twice (counted both ways) and that share >= 30 % of their words (hashed, Jaccard), a tag,
+  or a wikilink; ranked. Semantic (embedding) similarity is not used: the lexical overlap, tags and links meet the
+  criterion; recorded here as a choice (no model is needed and it runs in 3 ms for 400 items).
+- Tests with hand-checked fixtures and property tests: `crates/studyfrog-report/tests/leech.rs`.
+- Service `crates/studyfrog-service/src/analytics_leech.rs` (titles, stacks, tags and links from the index, words
+  from the item files, time from the run log, stability from the primary stack's state) -> `analytics.leeches` and
+  `analytics.pairs`; `crates/studyfrog-service/src/drill.rs` starts a practice run of exactly the given items (in
+  that order, a forgotten one comes back, the schedule is untouched). Tested on a fixture vault:
+  `crates/studyfrog-service/tests/analytics_leeches.rs`.
+- Reports > Leeches and the stack's Reports tab (filtered to the stack and its sub-stacks): each leech with its
+  reasons and numbers and "Edit or split" (opens the item page), "Pause" (status paused), "Drill"; each pair with
+  why, links to both items and "Drill ... together" (a contrastive drill). Harness tests
+  `crates/studyfrog-ui/tests/reports_leeches_ui.rs`; screenshot `--screen reports:leeches` on a demo vault.
+- Benchmarks: leeches of 16,000 items 0.7 ms; confusion pairs of 400 lapsing items 3.0 ms.
+
+"Split" has no automatic splitter: the button opens the item page to rewrite or split it by hand.
 
 ## Dependencies
 EPIC-034.

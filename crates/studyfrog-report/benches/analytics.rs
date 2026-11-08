@@ -89,5 +89,52 @@ fn habits(c: &mut Criterion) {
     });
 }
 
-criterion_group!(benches, survival, habits);
+fn leeches(c: &mut Criterion) {
+    use studyfrog_core::review::Rating;
+    use studyfrog_report::confusion::{PairInput, confusion_pairs, pair_rules_default, token_set};
+    use studyfrog_report::leech::{LeechInput, find_leeches, leech_rules_default};
+    let mut by: HashMap<u64, Vec<Rating>> = HashMap::new();
+    for r in history() {
+        by.entry(r.item).or_default().push(r.rating);
+    }
+    let items: Vec<LeechInput> = by
+        .into_iter()
+        .map(|(item, ratings)| LeechInput {
+            item,
+            group: (item % 50) as u32,
+            total_ms: ratings.len() as u64 * (3_000 + item % 7 * 1_000),
+            stability: Some((item % 40) as f32),
+            ratings,
+        })
+        .collect();
+    println!("{} items", items.len());
+    c.bench_function("leeches of every item", |b| {
+        b.iter(|| find_leeches(black_box(&items), &leech_rules_default()));
+    });
+    let words = [
+        "ionic bond electrons",
+        "covalent bond electrons",
+        "molar mass water",
+        "cell unit life",
+    ];
+    let pairs: Vec<PairInput> = (0..400_u64)
+        .map(|i| PairInput {
+            item: i,
+            group: (i % 10) as u32,
+            tokens: token_set(&format!("{} {i}", words[(i % 4) as usize])),
+            tags: vec![(i % 13) as u32],
+            links: vec![],
+            lapse_days: {
+                let mut d: Vec<i64> = (0..6).map(|k| (i as i64 * 7 + k * 11) % 120).collect();
+                d.sort_unstable();
+                d
+            },
+        })
+        .collect();
+    c.bench_function("confusion pairs of 400 lapsing items", |b| {
+        b.iter(|| confusion_pairs(black_box(&pairs), &pair_rules_default()));
+    });
+}
+
+criterion_group!(benches, survival, habits, leeches);
 criterion_main!(benches);

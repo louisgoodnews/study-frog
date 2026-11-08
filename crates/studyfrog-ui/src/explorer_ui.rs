@@ -21,16 +21,19 @@ pub enum ReportTab {
     Runs,
     /// Recall by hour and weekday, and fatigue within a run.
     Habits,
+    /// Items that keep failing and pairs that interfere.
+    Leeches,
 }
 
 /// The tabs by the word that names them on the command line (`--screen reports:<word>`).
-pub const TAB_WORDS: [(&str, ReportTab); 6] = [
+pub const TAB_WORDS: [(&str, ReportTab); 7] = [
     ("performance", ReportTab::Performance),
     ("memory", ReportTab::Memory),
     ("familiarity", ReportTab::Familiarity),
     ("calibration", ReportTab::Calibration),
     ("runs", ReportTab::Runs),
     ("habits", ReportTab::Habits),
+    ("leeches", ReportTab::Leeches),
 ];
 
 /// The tab a word names.
@@ -70,6 +73,10 @@ pub enum ExplorerMsg {
     Loaded(Result<Box<Explorer>, String>),
     /// Reviews an hour or weekday needs before it is recommended.
     MinBucket(u32),
+    /// Pause an item (a leech) so the schedule skips it.
+    Pause(studyfrog_core::uid::Uid),
+    /// Practise these items together, one after the other (a contrastive drill).
+    Drill(Vec<studyfrog_core::uid::Uid>),
 }
 
 fn ask(state: State, scope: Scope, period: Period) -> (State, Vec<Effect>) {
@@ -102,6 +109,12 @@ pub fn update(state: State, msg: ExplorerMsg) -> (State, Vec<Effect>) {
             };
             (State { explorer, ..state }, Vec::new())
         }
+        ExplorerMsg::Pause(uid) => {
+            let status = Some(studyfrog_core::status::Status::Paused);
+            let fx = crate::library_bulk::LibraryEffect::SetStatus(uid, status);
+            (state, vec![Effect::Library(fx)])
+        }
+        ExplorerMsg::Drill(items) => crate::reports::drill(state, items),
         ExplorerMsg::MinBucket(n) => {
             let explorer = ExplorerState {
                 min_bucket: n,

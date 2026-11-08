@@ -111,6 +111,48 @@ pub fn analytics() -> studyfrog_service::analytics::Analytics {
         survival: survival_report(&reviews, &p),
         chronotype: chronotype(),
         fatigue: studyfrog_report::fatigue::fatigue_report(&tiring()),
+        leeches: vec![leech_row()],
+        pairs: vec![pair_row()],
+    }
+}
+
+/// "Subjonctif" in French: five lapses, a streak of two, four times the usual time.
+pub fn leech_row() -> studyfrog_service::analytics_leech::LeechRow {
+    use studyfrog_report::leech::{LeechItem, LeechReason};
+    studyfrog_service::analytics_leech::LeechRow {
+        uid: Uid(7),
+        title: "Subjonctif".into(),
+        folder: "french".into(),
+        leech: LeechItem {
+            item: 0,
+            group: 0,
+            lapses: 5,
+            streak: 2,
+            reviews: 9,
+            time_burden: Some(4.0),
+            efficiency: Some(0.5),
+            reasons: vec![LeechReason::RepeatedLapses, LeechReason::HighLatencyBurden],
+            score: 2.5,
+        },
+    }
+}
+
+/// "Ionic bond" and "Covalent bond" in Chemistry.
+pub fn pair_row() -> studyfrog_service::analytics_leech::PairRow {
+    studyfrog_service::analytics_leech::PairRow {
+        a: (Uid(10), "Ionic bond".into()),
+        b: (Uid(11), "Covalent bond".into()),
+        folders: ("chemistry".into(), "chemistry".into()),
+        pair: studyfrog_report::confusion::ConfusionPair {
+            a: 0,
+            b: 1,
+            similarity: 0.4,
+            co_lapses: 3,
+            shared_tags: 1,
+            linked: false,
+            same_group: true,
+            score: 1.95,
+        },
     }
 }
 

@@ -27,6 +27,10 @@ pub struct Analytics {
     pub chronotype: ChronotypeReport,
     /// Recall and answer time by minutes into a run and position in it.
     pub fatigue: FatigueReport,
+    /// Items that keep failing or take far too long, strongest first.
+    pub leeches: Vec<crate::analytics_leech::LeechRow>,
+    /// Pairs of items that seem to interfere, strongest first.
+    pub pairs: Vec<crate::analytics_leech::PairRow>,
 }
 
 /// What the analytics are computed from.
@@ -108,9 +112,12 @@ pub fn analytics_of(
     let ids = item_numbers(h.rows);
     let samples = session_samples(h.events);
     let starts = load_run_starts(&session.conn)?;
+    let (leeches, pairs) = crate::analytics_leech::leeches_of(session, &h, &samples)?;
     Ok(Analytics {
         survival: survival_of(h.rows, &ids, p),
         chronotype: chronotype_of(&h, &samples, &starts),
         fatigue: fatigue_report(&samples),
+        leeches,
+        pairs,
     })
 }

@@ -47,6 +47,25 @@ pub fn start(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
     Msg::RunReady(result.map_err(|e| e.to_string()))
 }
 
+/// Start a practice run of exactly `items`.
+pub fn drill(
+    session: &studyfrog_service::session::VaultSession,
+    items: &[Uid],
+    now_ns: i64,
+) -> Msg {
+    let now = UnixMs(millis(now_ns));
+    let result = fresh_id_source(u64::try_from(now.0).unwrap_or(0)).and_then(|ids| {
+        studyfrog_service::drill::start_drill(
+            session,
+            items,
+            RunMode::Flip,
+            (now, local_day_window(now)),
+            ids,
+        )
+    });
+    Msg::RunReady(result.map_err(|e| e.to_string()))
+}
+
 /// Read an item's content.
 pub fn load_item(w: &Worker, uid: Uid) -> Msg {
     match &w.session {
