@@ -2,7 +2,8 @@
 //!
 //! `studyfrog --smoke-frames N` draws N frames and exits (for CI under a virtual display).
 //! `studyfrog --screenshot FILE [--screen NAME] [--size WxH] [--theme dark|light|system]` saves a PNG of a screen and exits (`home`, `library`,
-//! `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `run`, or `stack:<folder>`).
+//! `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `run`, or `stack:<folder>`, or
+//! `pdf:<path>[@<zoom>][+pages]`).
 //! `studyfrog --print-paths` lists where the application keeps its files, and
 //! `studyfrog logs [--tail N] [--follow] [--json]` shows its log, and
 //! `studyfrog --mcp [--vault PATH] [--mcp-allow-write] [--mcp-allow-destructive]` serves the vault to AI
@@ -38,6 +39,7 @@ fn options(args: &[String]) -> RunOptions {
             path: path.into(),
             screen: value(args, "--screen").map(str::to_owned),
             frames: 0,
+            waited: 0,
             theme: value(args, "--theme").and_then(studyfrog_ui::app_shot::theme_arg),
         }),
         size: size(args),

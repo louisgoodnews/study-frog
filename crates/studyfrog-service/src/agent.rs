@@ -143,3 +143,41 @@ pub fn ask(
     );
     result.map(|(_, text)| text)
 }
+
+/// Check that a connection answers: one tiny request with no vault text in it, through the same
+/// path as every question (the same consent rule for remote providers, the same log line). The
+/// answer is a sentence for the user; the API key never appears in it, even when a server echoes it.
+pub fn test_connection(
+    transport: Transport,
+    provider: &Provider,
+    ctx: Ask<'_>,
+) -> Result<String, String> {
+    let ping = [Message {
+        role: studyfrog_agent::provider::Role::User,
+        content: "Reply with the single word OK.".to_owned(),
+    }];
+    let key = keys_of(ctx.config_dir)
+        .ok()
+        .and_then(|mut k| k.remove(&provider.name))
+        .filter(|k| !k.is_empty());
+    let hide = |text: String| match &key {
+        Some(k) => text.replace(k.as_str(), "[API key]"),
+        None => text,
+    };
+    ask(
+        transport,
+        provider,
+        ctx,
+        "This is a connection test.",
+        &ping,
+    )
+    .map(|_| {
+        format!(
+            "{} answered: the connection to {} works with the model {}.",
+            provider.name,
+            host_of(&provider.base_url),
+            provider.model
+        )
+    })
+    .map_err(hide)
+}

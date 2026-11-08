@@ -109,6 +109,8 @@ pub struct AgentState {
     pub error: Option<String>,
     /// What AI clients staged or changed over MCP.
     pub mcp: crate::agent_mcp_types::McpUi,
+    /// "Test connection": running tests and their outcomes.
+    pub conn_tests: crate::agent_conn_test::ConnTests,
 }
 
 impl Default for AgentState {
@@ -136,6 +138,7 @@ impl Default for AgentState {
             busy: false,
             error: None,
             mcp: crate::agent_mcp_types::McpUi::default(),
+            conn_tests: crate::agent_conn_test::ConnTests::default(),
         }
     }
 }
@@ -170,6 +173,8 @@ pub enum AgentMsg {
     Form(FormEdit),
     /// Save the new connection.
     AddConnection,
+    /// Test a connection, or its outcome.
+    Test(crate::agent_conn_test::TestMsg),
     /// Remove a connection and its key.
     RemoveConnection(String),
     /// Allow or forbid sending vault text to a remote connection.

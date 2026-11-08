@@ -98,10 +98,12 @@ fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     };
                     ui.label(RichText::new(key).color(weak));
                 }
+                crate::view::agent_conn_test::button(a, p, ui, out);
                 if ui.small_button(format!("Remove {}", p.name)).clicked() {
                     send(out, AgentMsg::RemoveConnection(p.name.clone()));
                 }
             });
+            crate::view::agent_conn_test::outcome(a, p, ui);
         });
         ui.add_space(8.0);
     }

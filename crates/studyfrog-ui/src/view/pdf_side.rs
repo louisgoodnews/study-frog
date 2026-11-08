@@ -6,7 +6,7 @@ use studyfrog_store::overview::StackRow;
 
 use crate::msg::Msg;
 use crate::pdf_types::{PageKey, PdfMsg, PdfView, Side, THUMB_SCALE_MILLI};
-use crate::view::pdf_page::{picture_for, texture};
+use crate::view::pdf_page::{mark_used, picture_for, texture};
 use crate::view::{pdf_extract, pdf_notes};
 
 const THUMB_WIDTH: f32 = 120.0;
@@ -48,6 +48,7 @@ fn thumbnail(view: &PdfView, page: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>)
             Some(px) => {
                 let tex = texture(ui.ctx(), &view.path, key, &px);
                 egui::Image::new(&tex).paint_at(ui, rect);
+                mark_used(view, key, out);
             }
             None => {
                 ui.painter()

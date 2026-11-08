@@ -38,11 +38,30 @@ fn servers(w: &Worker, save: Option<&[studyfrog_agent::mcp_client::McpServer]>) 
     mcp(McpMsg::Servers(saved.and_then(|()| load_servers(&dir))))
 }
 
+/// "Test connection": one tiny request through the transport (STORY-0083, STORY-0084).
+fn test_connection(w: &Worker, p: &studyfrog_agent::provider::Provider, now_ns: i64) -> Msg {
+    let result = match (w.transport, w.config_dir.as_deref()) {
+        (Some(transport), Some(config_dir)) => {
+            let ctx = studyfrog_service::agent::Ask {
+                config_dir,
+                log_dir: w.state_dir.as_deref(),
+                now_ms: now_ns / 1_000_000,
+            };
+            studyfrog_service::agent::test_connection(transport, p, ctx)
+        }
+        (None, _) => Err("This build cannot reach the network.".to_owned()),
+        (_, None) => Err("there is no config folder".to_owned()),
+    };
+    let done = crate::agent_conn_test::TestMsg::Done(p.name.clone(), result);
+    Msg::Agent(AgentMsg::Test(done))
+}
+
 /// Perform one of these effects.
-pub fn run(w: &mut Worker, effect: AgentEffect, _now_ns: i64) -> Msg {
+pub fn run(w: &mut Worker, effect: AgentEffect, now_ns: i64) -> Msg {
     match effect {
         AgentEffect::RemoveConnection(name) => crate::exec_agent::remove(w, &name),
         AgentEffect::AllowConnection(name, on) => crate::exec_agent::allow(w, &name, on),
+        AgentEffect::TestConnection(p) => test_connection(w, &p, now_ns),
         AgentEffect::LoadMcp => load(w),
         AgentEffect::RemoveStaged(id) => match &w.session {
             Some(s) => match remove_staged(&s.root, &id) {

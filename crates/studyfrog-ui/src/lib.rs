@@ -5,6 +5,7 @@
 
 pub mod achievements;
 pub mod agent_conn;
+pub mod agent_conn_test;
 pub mod agent_mcp_types;
 pub mod agent_run;
 pub mod agent_types;
@@ -13,6 +14,7 @@ pub mod app;
 pub mod app_settings_ui;
 pub mod app_shot;
 pub mod app_shot_exam;
+pub mod app_shot_pdf;
 pub mod app_shot_recall;
 pub mod appearance_ui;
 pub mod backup_ui;
@@ -141,6 +143,7 @@ pub mod occlusion_ui;
 pub mod pdf_arrange_plan;
 pub mod pdf_arrange_types;
 pub mod pdf_arrange_ui;
+pub mod pdf_cache;
 pub mod pdf_draft_types;
 pub mod pdf_draft_ui;
 pub mod pdf_effect;

@@ -12,7 +12,7 @@ use crate::pdf_mark_types::MarkMsg;
 use crate::pdf_select::words_in_rect;
 use crate::pdf_types::{PageKey, PdfMsg, PdfView, Zoom};
 use crate::view::pdf_paint;
-pub use crate::view::pdf_texture::{prune, texture};
+pub use crate::view::pdf_texture::{mark_used, prune, texture};
 
 /// Logical pixels per point at 100 %.
 const POINT_PX: f32 = 96.0 / 72.0;
@@ -25,8 +25,18 @@ pub fn picture_for(view: &PdfView, key: PageKey) -> Option<Arc<Pixels>> {
     exact.or(same_page).map(|(_, px)| px.clone())
 }
 
+/// The largest scale (thousandths, a multiple of 50) at which a page of `page` points fits into a
+/// texture of `max_side` texels a side and into the renderer's pixel budget. Above it the page
+/// is drawn at this scale and stretched, rather than failing to render or to upload.
+pub fn max_milli(page: (f32, f32), max_side: usize) -> f32 {
+    let (w, h) = (page.0.max(1.0), page.1.max(1.0));
+    let by_side = (max_side.saturating_sub(1) as f32) / w.max(h);
+    let by_pixels = (studyfrog_pdf::limits::MAX_RENDER_PIXELS as f32 / (w * h)).sqrt();
+    ((by_side.min(by_pixels) * 1000.0 / 50.0).floor() * 50.0).max(50.0)
+}
+
 /// The scale (thousandths of a pixel per point) and the size on screen in logical pixels.
-fn layout(view: &PdfView, avail: Vec2, ppp: f32, page: (f32, f32)) -> (u32, f32) {
+fn layout(view: &PdfView, avail: Vec2, ppp: f32, page: (f32, f32), max_side: usize) -> (u32, f32) {
     let wide = (avail.x - MARGIN).max(100.0) / page.0.max(1.0);
     let high = (avail.y - MARGIN).max(100.0) / page.1.max(1.0);
     let logical = match view.zoom {
@@ -35,7 +45,7 @@ fn layout(view: &PdfView, avail: Vec2, ppp: f32, page: (f32, f32)) -> (u32, f32)
         Zoom::Percent(p) => p as f32 / 100.0 * POINT_PX,
     };
     let milli = ((logical * ppp * 20.0).round() * 50.0).clamp(50.0, 16000.0);
-    (milli as u32, logical)
+    (milli.min(max_milli(page, max_side)) as u32, logical)
 }
 
 fn page_rect_of(rect: Rect, a: Pos2, b: Pos2, logical: f32) -> PageRect {
@@ -130,6 +140,7 @@ pub fn draw(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.available_size(),
         ui.ctx().pixels_per_point(),
         (size.width, size.height),
+        ui.input(|i| i.max_texture_side),
     );
     let key = PageKey {
         page: view.page,
@@ -153,6 +164,7 @@ pub fn draw(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 Some(px) => {
                     let tex = texture(ui.ctx(), &view.path, key, &px);
                     egui::Image::new(&tex).paint_at(ui, rect);
+                    mark_used(view, key, out);
                 }
                 None => {
                     ui.painter().rect_filled(rect, 0.0, Color32::WHITE);

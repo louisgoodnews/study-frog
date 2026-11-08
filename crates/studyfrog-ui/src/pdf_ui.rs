@@ -169,6 +169,7 @@ pub fn update(state: State, msg: PdfMsg) -> (State, Vec<Effect>) {
             Vec::new(),
         ),
         PdfMsg::Need(key) => pdf_load::need(state, key),
+        PdfMsg::Used(keys) => crate::pdf_cache::used(state, keys),
         PdfMsg::Rendered(path, key, result) => pdf_load::rendered(state, path, key, result),
         PdfMsg::TextLoaded(path, p, result) => pdf_load::text_loaded(state, path, p, result),
         PdfMsg::Query(text) => pdf_load::query(state, text),

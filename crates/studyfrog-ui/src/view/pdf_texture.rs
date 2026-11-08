@@ -3,7 +3,8 @@
 use eframe::egui::{self, ColorImage, TextureHandle, TextureOptions};
 use studyfrog_pdf::render::Pixels;
 
-use crate::pdf_types::{PageKey, PdfView};
+use crate::msg::Msg;
+use crate::pdf_types::{PageKey, PdfMsg, PdfView};
 
 /// Keyed by the pixels, not the requested scale: a fallback picture of another size (a thumbnail
 /// shown while the sharp render is in flight) then gets its own handle and never takes over the
@@ -33,6 +34,14 @@ pub fn texture(ctx: &egui::Context, path: &str, key: PageKey, px: &Pixels) -> Te
         d.insert_temp(list_id, list);
     });
     handle
+}
+
+/// After drawing the picture of `key`: mark it as used again when it has fallen into the older
+/// half of the cache, so the least recently used pictures are the ones let go.
+pub fn mark_used(view: &PdfView, key: PageKey, out: &mut Vec<Msg>) {
+    if crate::pdf_cache::stale(view, key) {
+        out.push(Msg::Pdf(PdfMsg::Used(vec![key])));
+    }
 }
 
 /// Let go of textures whose picture the state no longer holds.

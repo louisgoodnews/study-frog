@@ -78,7 +78,7 @@ pub struct PdfView {
     pub zoom: Zoom,
     /// Words of the page shown.
     pub text: Option<Arc<PageText>>,
-    /// Page pictures, oldest first.
+    /// Page pictures, least recently used first (`pdf_cache`).
     pub pictures: Vec<(PageKey, Arc<Pixels>)>,
     /// Pictures asked for and not yet delivered.
     pub requested: Vec<PageKey>,
@@ -139,6 +139,8 @@ pub enum PdfMsg {
     SetZoom(Zoom),
     /// The view needs this picture.
     Need(PageKey),
+    /// The view drew these pictures, which had fallen into the older half of the cache.
+    Used(Vec<PageKey>),
     /// A picture was drawn, or could not be.
     Rendered(String, PageKey, Result<Arc<Pixels>, String>),
     /// The words of a page arrived.

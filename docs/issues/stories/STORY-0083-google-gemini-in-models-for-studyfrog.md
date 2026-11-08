@@ -2,7 +2,7 @@
 id: STORY-0083
 type: story
 title: Google Gemini in models for StudyFrog
-status: review
+status: done
 epic: EPIC-028
 parents: [EPIC-028]
 estimate: 5
@@ -28,7 +28,7 @@ Implement Google Gemini API support within `studyfrog-agent` and `studyfrog-net`
 
 ## Acceptance Criteria
 - [x] The Assistant Settings screen offers Google Gemini as an API provider option alongside Ollama, OpenAI, and Anthropic
-- [ ] Users can input a Google Gemini API key, select standard Gemini models (such as gemini-1.5-flash and gemini-1.5-pro), and test connectivity
+- [x] Users can input a Google Gemini API key, select standard Gemini models (such as gemini-1.5-flash and gemini-1.5-pro), and test connectivity
 - [x] Requests are transmitted to the Google Generative Language API endpoint (v1beta/models/{model}:generateContent) with x-goog-api-key authentication and correct wire schemas
 - [x] Responses and error reasons (including safety finishReason codes) are parsed without data leaks, with API keys preserved in secrets.toml
 
@@ -42,7 +42,10 @@ Crate touchpoints:
 ## Progress (2026-11-08)
 Built and tested against fixed requests and answers (`crates/studyfrog-agent/tests/wire.rs`): `Protocol::Gemini`, the `generateContent` request with the key in `x-goog-api-key` only, `system_instruction` and `contents` with the `model` role, answers joined from all text parts, safety and block reasons reported without the text, and suggested models as buttons in the connection form.
 
-Open: criterion 2 is half met (key and models yes, but there is no explicit "test connectivity" button; a connection is first tried when it is used); never run against the real Google endpoint (the wire follows the provider's documentation, as for the other providers).
+**Test connection (2026-11-08):** every connection on the Connections tab has a **Test connection to <name>** button (`agent_conn_test.rs`, `view/agent_conn_test.rs`). It sends one tiny request with no vault text through the worker's transport and the same `ask` path as every question (so a remote provider needs the user's "Allow sending" first; the button is disabled until then) and shows "Works: ..." or "Connection test failed: <sentence>" under the connection; the key is replaced by `[API key]` even if a server echoes it, and never reaches `agent.log`. Verified by `crates/studyfrog-service/tests/agent_conn_test.rs` (wire, consent, errors, log), `crates/studyfrog-ui/tests/agent_conn_test_ui.rs` (button, outcome, disabled until allowed, worker, a 429 during an exam or a prompt ends the wait with the sentence) and `crates/studyfrog-app/tests/providers_fake_server.rs`: the application's real HTTP sender (`studyfrog_net::send`) against a fake server on 127.0.0.1 that answers in the provider's documented format.
+Over the real sender: the test, an exam question and a 400 answer that echoes the key; the request goes to `POST /v1beta/models/gemini-1.5-flash:generateContent` with `x-goog-api-key` and no key in the URL.
+
+Limitation: verified offline only; nothing was sent to the real Google endpoint (no key or network access here). The wire follows Google's documentation, as for the other providers.
 
 ## Dependencies
 EPIC-028.

@@ -2,7 +2,7 @@
 id: BUG-0010
 type: bug
 title: PDF pages are illegible depending on zoom or page fit mode
-status: review
+status: done
 epic: EPIC-028
 parents: []
 estimate: 3
@@ -28,15 +28,20 @@ Steps to reproduce:
 4. Notice the displayed page content is permanently rendered from the upscaled low-resolution thumbnail, appearing severely blurred and illegible.
 
 ## Acceptance Criteria
-- [ ] PDF pages render sharp and legible text across all zoom levels and page fit modes (fit width, fit height, original size)
-- [ ] Fallback pictures for in-flight renders do not overwrite or poison the texture handle of the target high-resolution scale
-- [ ] Resizing the window or changing fit modes reliably updates textures to the correct physical pixel density
+- [x] PDF pages render sharp and legible text across all zoom levels and page fit modes (fit width, fit height, original size)
+- [x] Fallback pictures for in-flight renders do not overwrite or poison the texture handle of the target high-resolution scale
+- [x] Resizing the window or changing fit modes reliably updates textures to the correct physical pixel density
 
 ## Design Notes
 Crate touchpoints:
 - In `crates/studyfrog-ui/src/view/pdf_page.rs`: separate the requested target resolution key from the actual picture pixel dimensions. Do not register a low-resolution fallback picture under the high-resolution key's ID.
 - In `crates/studyfrog-ui/src/view/pdf_texture.rs`: key texture handles by `(path, page, px.width, px.height)` rather than requested scale, or invalidate the cache entry when higher-resolution pixels arrive.
 - Release target: version 0.5.0 (Phase M12).
+
+## Progress (2026-11-08)
+Verified:
+- Automated check on what a frame really paints (`crates/studyfrog-ui/tests/pdf_sharpness.rs`): with a 500-page file and the thumbnail list open, the page's texture has 0.97 to 1.05 texels per screen pixel at fit width, fit page, 25, 50, 100, 150, 200 and 400 % and at 1x, 1.5x and 2x display density; after resizing the window (1200x800, 800x600, 1600x1000, 1000x1400) and switching fit modes; and after going to other pages with thumbnails cached. Where a page would exceed the renderer's 36-megapixel budget (400 % on a 2x display) it is drawn at that limit (0.81 texels per pixel) instead of failing; on a card with 2048-texel textures the largest zooms are capped and never oversized.
+- Seen in the real binary: `studyfrog --screenshot F --screen "pdf:bio/small.pdf@<zoom>+pages"` (new `pdf:<path>[@zoom][+pages]` screen) with a generated 20-page PDF of 6 to 12 pt text, thumbnail list open, at fit width, fit page, 100 % and 400 % in a 1400x900 window and fit page in 900x650: text sharp at every setting, 6 pt legible at 100 % and fit width. Only a 1x display was available for the real window.
 
 ## Dependencies
 None.

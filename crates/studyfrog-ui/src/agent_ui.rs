@@ -74,6 +74,7 @@ pub fn update(state: State, msg: AgentMsg) -> (State, Vec<Effect>) {
         }),
         AgentMsg::Form(e) => with(state, |a| crate::agent_conn::form_edit(a, e)),
         AgentMsg::AddConnection => crate::agent_conn::add_connection(state),
+        AgentMsg::Test(m) => crate::agent_conn_test::update(state, m),
         AgentMsg::RemoveConnection(n) => {
             (state, vec![Effect::Agent(AgentEffect::RemoveConnection(n))])
         }

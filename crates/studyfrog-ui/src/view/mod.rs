@@ -2,6 +2,7 @@
 
 mod achievements;
 mod agent;
+mod agent_conn_test;
 mod agent_describe;
 mod agent_exam;
 mod agent_mcp;

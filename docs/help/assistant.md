@@ -20,6 +20,10 @@ connection to work with; **Remove** deletes it.
 
 A connection to a provider is refused until you tick **Allow sending text from my vault** for it.
 
+**Test connection to ...** sends one tiny request (no text from your vault) and shows under the connection whether
+the model answered, or why not: a refused key, a wrong model name, too many requests, a server that cannot be
+reached. A provider can only be tested once sending to it is allowed, because the test is a real request.
+
 API keys are kept in a private file in your config folder, never in the vault. They are not encrypted. Errors say
 what went wrong (a refused key, a wrong model name, a server that cannot be reached) and never show your key.
 

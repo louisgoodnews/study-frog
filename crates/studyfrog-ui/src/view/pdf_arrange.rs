@@ -5,7 +5,7 @@ use eframe::egui::{self, Rect, ScrollArea, Sense, TextEdit, Vec2};
 use crate::msg::Msg;
 use crate::pdf_arrange_types::{Arrange, ArrangeMsg, Prop};
 use crate::pdf_types::{PageKey, PdfMsg, PdfView, THUMB_SCALE_MILLI};
-use crate::view::pdf_page::{picture_for, texture};
+use crate::view::pdf_page::{mark_used, picture_for, texture};
 
 const CELL: f32 = 130.0;
 
@@ -71,6 +71,7 @@ fn cell(view: &PdfView, a: &Arrange, at: usize, ui: &mut egui::Ui, out: &mut Vec
                     .fit_to_exact_size(fit)
                     .rotate((step.rotate as f32).to_radians(), Vec2::splat(0.5));
                 image.paint_at(ui, Rect::from_center_size(area.center(), fit));
+                mark_used(view, key, out);
             }
             None => {
                 ui.painter().rect_filled(

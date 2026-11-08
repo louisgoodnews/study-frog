@@ -2,7 +2,7 @@
 id: EPIC-028
 type: epic
 title: Extensibility, plugin modding, and Python API
-status: in_progress
+status: done
 parents: []
 labels: [m12, ext, slm]
 acceptance_criteria:
@@ -27,7 +27,7 @@ Provide an extensibility and modding framework for StudyFrog planned for version
 ## Acceptance Criteria
 - [x] StudyFrog exposes a documented Python API allowing scripts to interact with vault items, metadata, and scheduling without compiling Rust code
 - [x] Application functionality can be extended via modding plugins or scripts executed as cron jobs, event-bound hooks, or via a built-in console
-- [ ] External AI models (Google Gemini and Deepseek) and optimized PDF viewing integrate cleanly under version 0.5.0 planning
+- [x] External AI models (Google Gemini and Deepseek) and optimized PDF viewing integrate cleanly under version 0.5.0 planning
 
 ## Design Notes
 Child issues planned for version 0.5.0:

@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- "Test connection to <name>" on the assistant's Connections tab (STORY-0083, STORY-0084): one tiny request without vault text through the usual path (a remote provider must be allowed first) and "Works: ..." or the error sentence under the connection, never with the key; tested against fake local servers in the Gemini and DeepSeek formats through the real HTTP sender.
+- PDF viewer measurements (STORY-0085, BUG-0010): `tests/pdf_frame_time.rs` drives a 500-page file frame by frame (update, layout and tessellation; median 8.3 ms in a debug build against 16.7 ms) and counts the thumbnail requests; `tests/pdf_sharpness.rs` checks the texels per screen pixel of the painted page at every zoom, fit mode, density and window size.
+- `studyfrog --screenshot ... --screen "pdf:<path>[@fit-width|fit-page|<percent>][+pages]"` opens the PDF viewer for the picture and waits for its pages to be drawn (BUG-0010).
 - Scripting documentation and examples (STORY-0134): help page "Scripts, the Python API and the Console" (`scripting`, opened by F1 on the Console) and FAQ entries; spec `docs/specs/scripting.md`; `examples/scripts/` with a daily vault health check (optionally saved as a note), a weekly export that keeps the newest N, an event-bound script that tags new items, a glossary importer and a sample `scripts.toml`, each run by `cargo test -p studyfrog-app --test script_examples`; `docs/EXTENDING.md` compares compiled-in extensions with script plugins and says what scripts cannot do.
 - Console screen (STORY-0133): **Console** in the sidebar takes control commands (`state`, `query ...`, `item create ...`, `logs`, `help`) and `script run JOB|FILE [ARGS]` / `script list`, sends them to the window's own control protocol (the one scripts use) or to its script runner, and shows each command with its answer, errors, lifecycle events and script output as they happen; Up/Down walk the history, Clear empties it. `studyfrog --screenshot ... --screen console`, `nav console`.
 - Script runner (STORY-0132): `<app home>/scripts/scripts.toml` lists jobs (`script`, `args`, a cron `schedule` such as `30 7 * * mon-fri` or `@daily`, lifecycle events in `on`, `timeout`, `access = "read"|"write"`, `allow_destructive`, `enabled`); every window and headless instance runs the scheduled and event-bound ones as child processes with a timeout, each with a control socket of its own limited to its access, and logs how each run went (source `script`, with its output). The Python client is written to `scripts/lib/` and put on `PYTHONPATH`. New commands: `studyfrog script run FILE|JOB [--access] [--timeout] [-- ARGS]` (through the running instance, or a headless one started for the run), `script list`, `script daemon [--vault]` and `script install-client [DIR]`; `--control-stdio` takes `--no-scripts` and `--daemon`; `studyfrog --print-paths` lists `scripts`. Cron parsing is in-house (`studyfrog-service/src/scripting/`).
@@ -44,11 +47,13 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - Store migration 24: `item.key`, `item.color` and a `key_counter` table, so a deleted item's key is not handed out again (STORY-0096).
 
 ### Changed
+- PDF viewer pictures are kept by last use (true LRU): a page or thumbnail drawn again moves to the newest end of its cache, so the least recently used goes first (STORY-0085).
 - The sidebar scrolls when the window is too low for all its screens (STORY-0133).
 - On a narrow window the vault name in the top bar is cut short instead of being drawn under the search field, and the search field may shrink further, to make room for the focus timer (STORY-0112).
 - `studyfrog-net` returns the answer's headers with every response, so an MCP client can keep a server's session (STORY-0121).
 
 ### Fixed
+- The PDF page is never drawn larger than the graphics card's texture side or the renderer's 36-megapixel budget; 400 % on a 2x display drew nothing ("too big") and is now drawn at that limit (BUG-0010, STORY-0085).
 - OKLCH gamut mapping stepped down before bisecting, since the gamut's slice is not convex near its corners (a pure blue did not round-trip) (STORY-0113).
 
 ## [0.5.0] - 2026-11-08

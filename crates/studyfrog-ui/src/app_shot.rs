@@ -25,11 +25,13 @@ pub struct Shot {
     /// `run` (opens Rehearse and starts a run of everything), `exam-setup`, `exam` (an exam with a draft answer),
     /// `exam-result` (an exam answered to the end), `reports:<tab>` (a tab of the reports: `performance`, `memory`,
     /// `familiarity`, `calibration`, `runs`, `habits`, `leeches`, `workload`), `stack:<folder>` or `item:<ULID>` (the item page), `extract:<ULID>` (a note's sync preview), `run-answer` (a run with the first answer shown), `focus`, `focus-done` (the focus timer), `contrast:<ULID>,<ULID>` and `compare:<ULID>,<ULID>` (a contrastive drill,
-    /// fresh or matched and checked);
+    /// fresh or matched and checked), `pdf:<path>[@<zoom>][+pages]` (the PDF viewer, `app_shot_pdf`);
     /// `None` keeps the first screen.
     pub screen: Option<String>,
     /// Frames drawn so far.
     pub frames: u32,
+    /// Frames the picture was held back for the PDF viewer's renders.
+    pub waited: u32,
     /// The theme to take the picture in, whatever the saved settings say (nothing is saved).
     pub theme: Option<studyfrog_core::appearance::ThemeChoice>,
 }
@@ -62,6 +64,9 @@ fn screen_named(name: &str) -> Option<Screen> {
 
 fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
     if let Some(fx) = crate::app_shot_recall::setup(model, name) {
+        return fx;
+    }
+    if let Some(fx) = crate::app_shot_pdf::setup(model, name) {
         return fx;
     }
     if let Some(folder) = name.strip_prefix("stack:") {
@@ -131,7 +136,10 @@ pub fn step(shot: &mut Shot, model: &mut Model, ui: &egui::Ui) -> Vec<crate::eff
         effects.extend(crate::app_shot_exam::play(model, name));
         effects.extend(crate::app_shot_recall::play(model, name));
     }
-    if shot.frames == SETTLE + DRAW {
+    if shot.frames == SETTLE + DRAW && crate::app_shot_pdf::waiting(model, shot.waited) {
+        shot.frames -= 1; // the PDF's pictures are still being drawn by the worker
+        shot.waited += 1;
+    } else if shot.frames == SETTLE + DRAW {
         let (path, done) = (shot.path.clone(), ctx.clone());
         let callback = egui::ScreenshotCallback::new(move |image| {
             match save(&path, &image) {

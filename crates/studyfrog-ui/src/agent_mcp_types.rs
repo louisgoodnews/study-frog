@@ -115,6 +115,8 @@ pub enum AgentEffect {
     RemoveConnection(String),
     /// Allow or forbid sending vault text to a connection.
     AllowConnection(String, bool),
+    /// Send a tiny request to a connection to see whether it answers.
+    TestConnection(studyfrog_agent::provider::Provider),
     /// Read the staged proposals and the undo entries of the open vault.
     LoadMcp,
     /// Remove a staged proposal (applied or discarded), then read them again.
