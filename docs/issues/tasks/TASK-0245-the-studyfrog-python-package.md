@@ -2,7 +2,7 @@
 id: TASK-0245
 type: task
 title: The studyfrog Python package
-status: backlog
+status: done
 epic: EPIC-028
 parents: [STORY-0131]
 estimate: 3
@@ -17,7 +17,7 @@ Part of STORY-0131.
 See the story and ADR 0013.
 
 ## Acceptance Criteria
-- [ ] `python/studyfrog/` connects over a socket or stdio and offers typed wrappers of the control commands and subscribe; standard library only
+- [x] `python/studyfrog/` connects over a socket or stdio and offers typed wrappers of the control commands and subscribe; standard library only
 
 ## Design Notes
 See the story.

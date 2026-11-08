@@ -10,3 +10,5 @@
 .DS_Store
 perf.data*
 flamegraph.svg
+__pycache__/
+*.pyc

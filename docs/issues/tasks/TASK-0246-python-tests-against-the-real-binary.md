@@ -2,7 +2,7 @@
 id: TASK-0246
 type: task
 title: Python tests against the real binary
-status: backlog
+status: done
 epic: EPIC-028
 parents: [STORY-0131]
 estimate: 2
@@ -17,7 +17,7 @@ Part of STORY-0131.
 See the story and ADR 0013.
 
 ## Acceptance Criteria
-- [ ] `python/tests/` unittest suite run by `crates/studyfrog-app/tests/python_client.rs` against a headless instance in a temporary home
+- [x] `python/tests/` unittest suite run by `crates/studyfrog-app/tests/python_client.rs` against a headless instance in a temporary home
 
 ## Design Notes
 See the story.
