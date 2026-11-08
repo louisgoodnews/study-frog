@@ -130,3 +130,8 @@ turns runs left idle, running or paused into `aborted` and closes their log with
 - `exam_result(run_uid, items, answered, percent, grade, passed, engine, graded_at_ms)`: one graded result per
   exam run (`percent` 0 to 100 with one decimal, `grade` the letter `A+` to `F`). History: never derived, never
   rebuilt from the vault. Answers stay in `run_event` (`answer_submitted`) and item scores in `answer_score`.
+
+## Schema v26: focus blocks (STORY-0112, [focus-timer.md](focus-timer.md))
+- `focus_block(id, started_ms, ended_ms, minutes, stack, session_uid, session_date)`: one row per finished work
+  block of the focus timer, with the calendar study session occurrence it overlapped most (or none). History:
+  never derived, never rebuilt from the vault.

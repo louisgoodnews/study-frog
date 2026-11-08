@@ -22,6 +22,7 @@ pub fn update(mut state: State, msg: RecallMsg) -> (State, Vec<Effect>) {
         RecallMsg::ExtractPlanned(r) => planned(&mut state, r),
         RecallMsg::ExtractSync => sync(&mut state),
         RecallMsg::ExtractSynced(r) => synced(&mut state, r),
+        RecallMsg::Focus(m) => crate::focus_ui::update(&mut state, m),
         RecallMsg::ExtractClose => {
             state.recall.extract = Default::default();
             Vec::new()

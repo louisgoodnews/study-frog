@@ -24,7 +24,7 @@ pub struct Shot {
     /// The screen: `home`, `library`, `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or
     /// `run` (opens Rehearse and starts a run of everything), `exam-setup`, `exam` (an exam with a draft answer),
     /// `exam-result` (an exam answered to the end), `reports:<tab>` (a tab of the reports: `performance`, `memory`,
-    /// `familiarity`, `calibration`, `runs`, `habits`, `leeches`, `workload`), `stack:<folder>` or `item:<ULID>` (the item page), `extract:<ULID>` (a note's sync preview), `run-answer` (a run with the first answer shown);
+    /// `familiarity`, `calibration`, `runs`, `habits`, `leeches`, `workload`), `stack:<folder>` or `item:<ULID>` (the item page), `extract:<ULID>` (a note's sync preview), `run-answer` (a run with the first answer shown), `focus`, `focus-done` (the focus timer);
     /// `None` keeps the first screen.
     pub screen: Option<String>,
     /// Frames drawn so far.

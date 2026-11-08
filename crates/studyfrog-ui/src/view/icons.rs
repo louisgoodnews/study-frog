@@ -27,6 +27,8 @@ pub enum Glyph {
     Forward,
     /// A clock face.
     History,
+    /// A stopwatch.
+    Timer,
 }
 
 const SIZE: f32 = 32.0;
@@ -71,6 +73,18 @@ fn paint(ui: &egui::Ui, rect: Rect, glyph: Glyph, color: Color32) {
             p.circle_stroke(c, 8.0, stroke);
             p.line_segment([c, Pos2::new(c.x, c.y - 5.0)], stroke);
             p.line_segment([c, Pos2::new(c.x + 4.0, c.y + 2.5)], stroke);
+        }
+        Glyph::Timer => {
+            let m = Pos2::new(c.x, c.y + 1.5);
+            p.circle_stroke(m, 7.0, stroke);
+            p.line_segment(
+                [
+                    Pos2::new(c.x - 2.5, c.y - 8.5),
+                    Pos2::new(c.x + 2.5, c.y - 8.5),
+                ],
+                stroke,
+            );
+            p.line_segment([m, Pos2::new(m.x + 3.0, m.y - 4.0)], stroke);
         }
         Glyph::Close => {
             let d = 5.0;

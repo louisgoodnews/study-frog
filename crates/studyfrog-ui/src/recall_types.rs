@@ -24,6 +24,8 @@ pub struct ExtractPanel {
 pub struct RecallState {
     /// The extraction panel (open when `note` is set).
     pub extract: ExtractPanel,
+    /// The focus timer.
+    pub focus: crate::focus_timer::Focus,
 }
 
 /// Something happened in an active-recall workflow.
@@ -39,6 +41,8 @@ pub enum RecallMsg {
     ExtractSynced(Result<Box<SyncOutcome>, String>),
     /// Close the panel.
     ExtractClose,
+    /// The focus timer.
+    Focus(crate::focus_ui::FocusMsg),
 }
 
 /// Work for the worker.
@@ -48,4 +52,6 @@ pub enum RecallEffect {
     PlanExtract(Uid, String),
     /// Carry out a sync.
     ApplyExtract(Box<SyncPlan>),
+    /// Record a finished focus block.
+    LogFocus(studyfrog_service::focus::FocusDone),
 }

@@ -24,6 +24,7 @@ pub mod exam_result;
 mod explorer;
 mod explorer_charts;
 pub mod extract_panel;
+pub mod focus_bar;
 pub mod folders;
 mod graph;
 mod help;
@@ -181,6 +182,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     }
     tutorial::panel(state, ui, &mut out);
     toast::draw(state, ui, &mut out);
+    focus_bar::done_card(state, ui, &mut out);
     modal::draw(state, ui, &mut out);
     out
 }

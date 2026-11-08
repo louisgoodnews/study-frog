@@ -26,6 +26,9 @@ pub fn run(s: &mut VaultSession, effect: RecallEffect, now_ns: i64) -> Msg {
                 .map(Box::new)
                 .map_err(|e| text(&e)),
         ),
+        RecallEffect::LogFocus(done) => RecallMsg::Focus(crate::focus_ui::FocusMsg::Recorded(
+            studyfrog_service::focus::record_focus(s, &done).map_err(|e| text(&e)),
+        )),
     };
     Msg::Recall(m)
 }

@@ -36,6 +36,7 @@ pub mod fam_report;
 pub mod fam_stacks;
 pub mod familiarity;
 pub mod filters;
+pub mod focus;
 pub mod folder_ops;
 mod folder_ops_exec;
 mod folder_ops_links;

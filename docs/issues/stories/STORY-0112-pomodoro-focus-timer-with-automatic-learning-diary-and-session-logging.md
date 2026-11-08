@@ -2,7 +2,7 @@
 id: STORY-0112
 type: story
 title: Pomodoro focus timer with automatic learning diary and session logging
-status: backlog
+status: done
 epic: EPIC-035
 parents: [EPIC-035]
 estimate: 3
@@ -28,15 +28,34 @@ Implement an app-wide Focus / Pomodoro Timer in StudyFrog:
    - When a `Work` block finishes, raise an in-app notification toast (`"Focus session complete (25 min)"`) with one-click buttons to `Start break (5 min)` or `Log in Diary…` (pre-filling duration and stack).
 
 ## Acceptance Criteria
-- [ ] The top bar includes a compact, toggleable Focus / Pomodoro timer supporting standard presets (25/5, 50/10) and custom work/break durations
-- [ ] The timer continues running across all screens (PDF reading, Note writing, Stack planning, and Rehearsal) with pause, resume, skip-break, and optional stack assignment
-- [ ] Completing a focus block records the focused duration against any active calendar study session and offers a one-click prompt to log a Learning Diary reflection
+- [x] The top bar includes a compact, toggleable Focus / Pomodoro timer supporting standard presets (25/5, 50/10) and custom work/break durations
+- [x] The timer continues running across all screens (PDF reading, Note writing, Stack planning, and Rehearsal) with pause, resume, skip-break, and optional stack assignment
+- [x] Completing a focus block records the focused duration against any active calendar study session and offers a one-click prompt to log a Learning Diary reflection
 
 ## Design Notes
 - Touchpoints:
   - `crates/studyfrog-ui/src/focus_timer.rs`: pure state transitions and preset definitions.
   - `crates/studyfrog-ui/src/view/topbar.rs`: compact pill and popover menu.
 - Strictly enforce P1 (zero inherent `impl` blocks) and P2 (≤ 250 lines per file).
+
+## Progress (2026-11-08)
+Built and verified:
+- Pure state machine `crates/studyfrog-ui/src/focus_timer.rs` (work, short and long break, presets 25/5, 50/10,
+  90/15, custom lengths, pause, resume, reset, skip break, tick on the injected clock); unit and property tests
+  `crates/studyfrog-ui/tests/focus_timer.rs` (a block ends on time, pauses do not count, every fourth break is long).
+- Top bar (`view/focus_bar.rs`): a stopwatch icon while idle, "Focus 24:12" / "Paused" / "Break" while active,
+  a menu with start/pause/resume, skip break, reset, presets, custom lengths and the stack; the completion card
+  with "Start break (N min)" and "Log in Diary…" (`focus_ui.rs`). Harness tests `crates/studyfrog-ui/tests/focus_ui.rs`
+  (menu clicks, the pill on the PDF, editor, calendar, rehearsal and library screens while the time keeps counting,
+  the card and the diary draft, the real worker recording the block); screenshots `--screen focus` and
+  `--screen focus-done` looked at.
+- Record: store migration 26 `focus_block`, `studyfrog_store::focus`, `studyfrog_service::focus::record_focus`
+  (the study session occurrence overlapped most, local time); fixture tests `crates/studyfrog-service/tests/focus.rs`.
+- Spec `docs/specs/focus-timer.md`; `docs/specs/storage-schema.md` v26.
+
+Notes: the calendar does not yet show the recorded minutes on a session (they are stored and announced in the
+notice). At a 900 px wide window the top bar was already crowded before this story (the Create button covered
+the bell); the vault name is now cut short instead of overlapping, the narrowest layout is not otherwise reworked.
 
 ## Dependencies
 EPIC-035.

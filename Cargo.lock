@@ -5393,6 +5393,7 @@ dependencies = [
  "egui_kittest",
  "image",
  "lopdf",
+ "proptest",
  "rusqlite",
  "serde_json",
  "studyfrog-achieve",

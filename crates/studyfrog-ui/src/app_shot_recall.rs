@@ -1,5 +1,6 @@
 //! Screens of the active-recall workflows for `--screenshot` (EPIC-035): `extract:<ULID>` (a note's page with
-//! its sync preview open).
+//! its sync preview open), `focus` (the timer running on the home screen) and `focus-done` (a finished
+//! work block with its card).
 
 use crate::effect::Effect;
 use crate::model::{Model, apply};
@@ -8,6 +9,9 @@ use crate::recall_types::RecallMsg;
 
 /// Go to the screen named `name`, if it is one of these.
 pub fn setup(model: &mut Model, name: &str) -> Option<Vec<Effect>> {
+    if name.starts_with("focus") {
+        return Some(focus(model, name == "focus-done"));
+    }
     let (kind, uid) = name.split_once(':')?;
     let uid = studyfrog_md::ulid::parse_ulid(uid)?;
     match kind {
@@ -44,4 +48,32 @@ pub fn play(model: &mut Model, name: &str) -> Vec<Effect> {
         return apply(model, Msg::RunAction(flip));
     }
     Vec::new()
+}
+
+fn focus(model: &mut Model, finished: bool) -> Vec<Effect> {
+    use crate::focus_ui::{FocusMsg, msg};
+    let first = model
+        .state
+        .vault
+        .as_ref()
+        .and_then(|v| v.overview.stacks.first());
+    let stack = first.map(|s| s.folder.clone());
+    let mut fx = apply(model, Msg::Navigate(crate::state::Screen::Home));
+    fx.extend(apply(model, msg(FocusMsg::Stack(stack.clone()))));
+    fx.extend(apply(model, msg(FocusMsg::Start)));
+    let f = &mut model.state.recall.focus;
+    f.banked = 95.0;
+    if finished {
+        crate::focus_timer::reset(f);
+        f.phase = crate::focus_timer::Phase::ShortBreak;
+        f.blocks = 1;
+        let wall = model.state.wall_ms;
+        f.done = Some(crate::focus_timer::FocusLog {
+            started_ms: wall - 1_500_000,
+            ended_ms: wall,
+            minutes: 25,
+            stack,
+        });
+    }
+    fx
 }

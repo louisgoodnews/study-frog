@@ -70,7 +70,7 @@ fn left_and_middle(
     section(ui, left_w, &mut |ui| brand_cluster(state, ui, out, anchors));
     section(ui, middle_w, &mut |ui| {
         if state.vault.is_some() {
-            let search_w = (middle_w * 0.8 - 90.0).clamp(160.0, 560.0);
+            let search_w = (middle_w * 0.8 - 90.0).clamp(110.0, 560.0);
             ui.add_space(((middle_w - search_w - 90.0) / 2.0).max(0.0));
             search_cluster(state, ui, out, search_w);
         }
@@ -118,7 +118,8 @@ fn brand_cluster(
     }
     if let Some(vault) = &state.vault {
         let name = vault_label(&vault.root);
-        ui.label(RichText::new(name).color(palette_of(ui).text_weak))
+        // On a narrow window the name is cut short rather than drawn under the search.
+        ui.add(egui::Label::new(RichText::new(name).color(palette_of(ui).text_weak)).truncate())
             .on_hover_text(format!("Open vault: {}", vault.root));
     }
 }
@@ -213,6 +214,7 @@ fn right_cluster(
         );
     }
     anchors.push((Menu::Notifications, bell.rect));
+    crate::view::focus_bar::pill(state, ui, out);
 }
 
 /// The logo: a green frog face.

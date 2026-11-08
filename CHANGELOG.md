@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Focus timer (STORY-0112): a stopwatch in the top bar starts 25/5, 50/10, 90/15 or custom work and break blocks (long break after every fourth) that keep running on every screen, with pause, resume, skip break, reset and a stack to count for; a finished block is recorded (store migration 26, `focus_block`) against the calendar study session it overlapped and a card offers "Start break" and "Log in Diary…" (a diary entry pre-filled with the minutes and stack). Spec `docs/specs/focus-timer.md`; `studyfrog --screenshot ... --screen focus|focus-done`.
 - Cloze deletions (STORY-0108): `{{c1::answer}}` and `{{c1::answer::hint}}` in a card's front or a note's body; a run hides one group at a time as `[...]` or `[hint]`, the groups take turns from review to review (`cloze_group: N` fixes one), the answer shows the words in bold green and typed answers are compared with them; the Markdown toolbar's `[...]` button and Ctrl+Shift+C (Alt: same number) make a gap; the editor's preview shows the gaps; a cloze card needs no back. Spec `docs/specs/cloze.md`; `studyfrog --screenshot ... --screen run-answer` pictures a run with its first answer shown.
 - Inline cards in notes (STORY-0110): a note's page offers "Extract / Sync N card(s)…" when its body holds `Term :: Definition` lines or `Q:`/`A:` and `??:`/`A:` pairs; the panel previews new, updated and unchanged items, "Sync cards" creates or updates cards and questions in the note's stack (each with `extracted_from`, `extract_key` and a `Source: [[Note#Heading]]` link back, schedules kept, no duplicates on a second sync), and "Undo the sync" takes it back. Spec `docs/specs/inline-extraction.md`; `studyfrog --screenshot ... --screen extract:<ULID>`.
 - MCP (STORY-0118): `studyfrog://reports/leeches` and `analytics_get_report` `kind: leeches` (leeches and confusion pairs); `forecast_simulate_workload` gives simulated reviews and `study_minutes` per day for up to 365 days with stages, bands, exam pacers and true retention; the retention report carries true retention and the forgetting curves by stability tier.
@@ -32,6 +33,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - Store migration 24: `item.key`, `item.color` and a `key_counter` table, so a deleted item's key is not handed out again (STORY-0096).
 
 ### Changed
+- On a narrow window the vault name in the top bar is cut short instead of being drawn under the search field, and the search field may shrink further, to make room for the focus timer (STORY-0112).
 - `studyfrog-net` returns the answer's headers with every response, so an MCP client can keep a server's session (STORY-0121).
 
 ## [0.5.0] - 2026-11-08

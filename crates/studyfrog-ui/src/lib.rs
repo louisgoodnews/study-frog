@@ -79,6 +79,8 @@ pub mod exec_recall;
 pub mod exec_run;
 pub mod exec_transfer;
 pub mod explorer_ui;
+pub mod focus_timer;
+pub mod focus_ui;
 pub mod folders_nav;
 pub mod folders_tree;
 pub mod folders_types;
