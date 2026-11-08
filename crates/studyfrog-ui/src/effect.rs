@@ -60,6 +60,8 @@ pub enum Effect {
         /// Presentation mode.
         mode: RunMode,
     },
+    /// Exam mode: grade a finished exam.
+    Exam(crate::exam_ui::ExamEffect),
     /// Read an item's content from its file.
     LoadItem(Uid),
     /// Save one engine step (events and, for scheduled runs, the schedule).

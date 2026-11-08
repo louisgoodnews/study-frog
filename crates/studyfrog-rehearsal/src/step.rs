@@ -4,9 +4,10 @@
 use studyfrog_core::event::{EventKind, Latency, LatencyKind, RunEvent};
 use studyfrog_core::plan::MAX_REQUEUES;
 use studyfrog_core::review::Rating;
-use studyfrog_core::run::{RunMode, RunState};
+use studyfrog_core::run::RunState;
 use studyfrog_core::uid::Uid;
 
+use crate::exam::{exam_refusal, is_exam, takes_answers};
 use crate::input::{Action, Input, StepError, StepOutput};
 use crate::pacing::remaining_ms;
 use crate::session::{ItemPhase, Session, current_item};
@@ -15,6 +16,9 @@ use crate::session::{ItemPhase, Session, current_item};
 pub fn step(session: &mut Session, input: Input) -> Result<StepOutput, StepError> {
     if input.t_ms < session.last_t_ms {
         return Err(StepError::TimeWentBackwards);
+    }
+    if let Some(refused) = exam_refusal(session, &input.action) {
+        return Err(refused);
     }
     validate(session, &input.action)?;
     session.last_t_ms = input.t_ms;
@@ -49,7 +53,7 @@ fn require_phase(s: &Session, want: ItemPhase, err: StepError) -> Result<(), Ste
 }
 
 fn require_answer_mode(s: &Session) -> Result<(), StepError> {
-    if s.run.mode != RunMode::Answer {
+    if !takes_answers(s.run.mode) {
         return Err(StepError::WrongMode);
     }
     require_phase(s, ItemPhase::Shown, StepError::NotAwaitingReveal)
@@ -87,14 +91,21 @@ fn apply(s: &mut Session, input: Input) -> StepOutput {
             EventKind::ItemFlipped,
             &mut out,
         ),
-        Action::SubmitAnswer(text) => reveal(
-            s,
-            t,
-            item,
-            LatencyKind::Answer,
-            EventKind::AnswerSubmitted(text),
-            &mut out,
-        ),
+        Action::SubmitAnswer(text) => {
+            reveal(
+                s,
+                t,
+                item,
+                LatencyKind::Answer,
+                EventKind::AnswerSubmitted(text),
+                &mut out,
+            );
+            if is_exam(s) {
+                // Locked: the exam moves on at once and the item never comes back.
+                s.cursor += 1;
+                show_next(s, t, &mut out);
+            }
+        }
         Action::Skip => skip(s, t, item, &mut out),
         Action::Rate(rating) => rate(s, t, item, rating, &mut out),
         Action::Mark(d) => out.events.push(event(s, t, item, EventKind::ItemMarked(d))),

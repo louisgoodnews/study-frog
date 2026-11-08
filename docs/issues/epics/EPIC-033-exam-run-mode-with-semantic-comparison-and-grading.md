@@ -2,7 +2,7 @@
 id: EPIC-033
 type: epic
 title: Exam run mode with mandatory text entry, semantic comparison, and percentage grading
-status: backlog
+status: done
 parents: []
 labels: [m12, core, rehearsal, slm, service, ui]
 acceptance_criteria:
@@ -39,9 +39,9 @@ Introduce an end-to-end **Exam Run Mode** across `studyfrog-core`, `studyfrog-re
    - Persist exam run results so they can be linked in the learning diary and reflected in stack familiarity metrics.
 
 ## Acceptance Criteria
-- [ ] Rehearsal setup offers an Exam run mode that enforces strict one-way progression (no skipping, no moving forward without submitting an answer, and no backward navigation)
-- [ ] Every flashcard and question in an Exam run requires the user to enter a written answer that is scored automatically against the reference answer via semantic comparison
-- [ ] Completing an Exam run computes an overall percentage score and grade with a 60% threshold (D / 4.0) to pass and 5% grade steps up to 95%-100% for A+ / 1+ (very good)
+- [x] Rehearsal setup offers an Exam run mode that enforces strict one-way progression (no skipping, no moving forward without submitting an answer, and no backward navigation)
+- [x] Every flashcard and question in an Exam run requires the user to enter a written answer that is scored automatically against the reference answer via semantic comparison
+- [x] Completing an Exam run computes an overall percentage score and grade with a 60% threshold (D / 4.0) to pass and 5% grade steps up to 95%-100% for A+ / 1+ (very good)
 
 ## Design Notes
 Touchpoints across crates:
@@ -49,6 +49,9 @@ Touchpoints across crates:
 - `crates/studyfrog-rehearsal`: enforce non-skippable, forward-only step transitions and mandatory text submission in exam mode.
 - `crates/studyfrog-slm` & `crates/studyfrog-service`: semantic comparison scoring for flashcards (`Card.back`) as well as questions (`Question.reference`), plus exam score aggregation.
 - `crates/studyfrog-ui`: exam mode option in `view/setup.rs`, locked answer input without skip/back controls in `view/rehearse.rs`, and percentage + grade (`A+/1+` to `F/5`) summary in `view/summary.rs`.
+
+## Progress (2026-11-08)
+Split into STORY-0125 (spec, `docs/specs/exam-mode.md`), STORY-0126 (data model and engine rules), STORY-0127 (scoring, grading, history), STORY-0128 (screens) and STORY-0129 (help, control protocol), all done. Exam runs never change the review schedule (decided in the spec: an exam assesses, it does not schedule), so they are not part of familiarity; their results are stored (`exam_result`), listed in Reports > Runs and offered to the diary prompt. Verified by unit, property, fixture, harness and headless control tests and by screenshots of the setup, run and result screens (`--screen exam-setup|exam|exam-result`); not yet used by a person in an interactive window.
 
 ## Dependencies
 EPIC-007 (Rehearsal Engine) and EPIC-013 (Comparison Scoring).

@@ -71,6 +71,10 @@ pub enum StepError {
     WrongMode,
     /// The timestamp is earlier than the previous input's.
     TimeWentBackwards,
+    /// An exam takes only written answers: no flip, skip, rating or mark.
+    NotInExam,
+    /// An exam answer must not be empty.
+    EmptyAnswer,
 }
 
 /// Human-readable description.
@@ -86,6 +90,8 @@ pub fn describe_step_error(e: StepError) -> &'static str {
         StepError::NoItemShown => "there is no item on screen",
         StepError::WrongMode => "free-text answers need an answer-mode run",
         StepError::TimeWentBackwards => "input time is earlier than the previous input",
+        StepError::NotInExam => "an exam takes only written answers: no flip, skip, rating or mark",
+        StepError::EmptyAnswer => "write an answer before submitting it",
     }
 }
 

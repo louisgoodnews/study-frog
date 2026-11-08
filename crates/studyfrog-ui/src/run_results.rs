@@ -29,6 +29,14 @@ pub fn answer_scored(
     uid: studyfrog_core::uid::Uid,
     result: Result<crate::run_state::Scored, String>,
 ) -> (State, Vec<Effect>) {
+    if state
+        .rehearse
+        .run
+        .as_ref()
+        .is_some_and(crate::exam_ui::is_exam)
+    {
+        return crate::exam_ui::score_arrived(state, uid, result);
+    }
     let mut state = state;
     let current = state
         .rehearse

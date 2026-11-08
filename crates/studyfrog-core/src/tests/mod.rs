@@ -3,6 +3,7 @@
 mod arena;
 mod civil;
 mod diary;
+mod exam;
 mod library;
 mod plan;
 mod review;

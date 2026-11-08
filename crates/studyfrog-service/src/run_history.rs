@@ -5,6 +5,7 @@ use studyfrog_core::run::RunMode;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::pacing::run_active_ms;
 use studyfrog_store::error::StoreError;
+use studyfrog_store::exam_results::load_exam_result;
 use studyfrog_store::home::recent_runs;
 use studyfrog_store::run_load::{load_events, load_run};
 
@@ -12,7 +13,7 @@ use studyfrog_store::run_load::{load_events, load_run};
 pub const HISTORY: usize = 100;
 
 /// One run of the history.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct RunSummary {
     /// The run.
     pub uid: Uid,
@@ -30,6 +31,8 @@ pub struct RunSummary {
     pub skipped: u32,
     /// The active time it used, in milliseconds.
     pub used_ms: u32,
+    /// For a graded exam: its result.
+    pub exam: Option<studyfrog_core::exam::ExamResult>,
 }
 
 /// Answers rated per minute of active time; `None` when no time was used.
@@ -53,6 +56,10 @@ pub fn run_history(conn: &rusqlite::Connection) -> Result<Vec<RunSummary>, Store
             rated: r.rated,
             skipped: r.skipped,
             used_ms: run_active_ms(&load_events(conn, r.uid)?),
+            exam: match run.mode {
+                RunMode::Exam => load_exam_result(conn, r.uid)?,
+                _ => None,
+            },
         });
     }
     Ok(out)

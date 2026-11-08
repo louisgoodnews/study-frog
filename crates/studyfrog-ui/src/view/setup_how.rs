@@ -36,6 +36,11 @@ const STATES: [(StateFilter, &str); 5] = [
     (StateFilter::NotDue, "Not due yet"),
 ];
 
+/// What an exam is, as the setup states it.
+pub const EXAM_RULES: &str = "Exam: every card and question once, answered in writing. You cannot skip, go \
+     back or see an answer; a submitted answer is locked. Your answers are compared with the references and \
+     graded at the end (60 % to pass, A+ / 1+ from 95 %). Notes are left out.";
+
 fn edit(out: &mut Vec<Msg>, e: SetupEdit) {
     out.push(Msg::Setup(e));
 }
@@ -58,12 +63,16 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         for (mode, label) in [
             (RunMode::Flip, "Flip cards"),
             (RunMode::Answer, "Type answers"),
+            (RunMode::Exam, "Exam"),
         ] {
             if ui.selectable_label(form.mode == mode, label).clicked() {
                 edit(out, SetupEdit::Mode(mode));
             }
         }
     });
+    if form.mode == RunMode::Exam {
+        ui.weak(EXAM_RULES);
+    }
     ui.label("Order");
     ui.horizontal_wrapped(|ui| {
         for (order, label) in ORDERS {
@@ -87,6 +96,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 fn schedule(form: &SetupForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if form.mode == RunMode::Exam {
+        ui.weak("An exam never changes your review schedule.");
+        return;
+    }
     let mut update = form.effect == ScheduleEffect::UpdateSchedule;
     if ui
         .checkbox(&mut update, "Update my review schedule with these ratings")

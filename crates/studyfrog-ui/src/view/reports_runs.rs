@@ -14,7 +14,26 @@ fn mode_text(m: RunMode) -> &'static str {
     match m {
         RunMode::Flip => "Flip cards",
         RunMode::Answer => "Type answers",
+        RunMode::Exam => "Exam",
     }
+}
+
+/// An exam's result, or why it has none.
+pub(crate) fn exam_text(r: &RunSummary) -> Option<String> {
+    if r.mode != RunMode::Exam {
+        return None;
+    }
+    Some(match &r.exam {
+        Some(e) => format!(
+            "{:.1} % ({}), {}, {} of {} answered",
+            e.percent,
+            studyfrog_core::exam::grade_badge(e.grade),
+            if e.passed { "passed" } else { "not passed" },
+            e.answered,
+            e.items
+        ),
+        None => "not graded".to_owned(),
+    })
 }
 
 fn line(r: &RunSummary) -> String {
@@ -26,11 +45,11 @@ fn line(r: &RunSummary) -> String {
     } else {
         "stopped early"
     };
+    let counts =
+        exam_text(r).unwrap_or_else(|| format!("{} rated, {} skipped", r.rated, r.skipped));
     format!(
-        "{date}: {}, {} rated, {} skipped, {how}; {}",
+        "{date}: {}, {counts}, {how}; {}",
         mode_text(r.mode),
-        r.rated,
-        r.skipped,
         run_line(r.pacing, r.used_ms, r.rated)
     )
 }
@@ -48,6 +67,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             (None, "All runs"),
             (Some(RunMode::Flip), "Flip cards"),
             (Some(RunMode::Answer), "Type answers"),
+            (Some(RunMode::Exam), "Exam"),
         ] {
             if ui.selectable_label(mode == m, label).clicked() {
                 out.push(Msg::Explorer(ExplorerMsg::Mode(m)));

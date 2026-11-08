@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (2) | Blocked (0) | Done (242) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (2) | Blocked (0) | Done (251) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  | [TASK-0233](docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Move prompt library to standalone left sidebar navigation (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -248,6 +248,15 @@
 |  |  |  |  |  | [TASK-0230](docs/issues/tasks/TASK-0230-export-use-cases-for-pdf.md) Export use cases for PDF in the service (5) |
 |  |  |  |  |  | [TASK-0231](docs/issues/tasks/TASK-0231-export-to-pdf-in-the-application.md) Export to PDF in the application (5) |
 |  |  |  |  |  | [TASK-0232](docs/issues/tasks/TASK-0232-pdf-export-documentation-tests-and-release-notes.md) Documentation, help and release notes for the PDF export (2) |
+|  |  |  |  |  | [TASK-0234](docs/issues/tasks/TASK-0234-exam-mode-grade-scale-and-result-records.md) Exam mode, grade scale and exam result records (3) |
+|  |  |  |  |  | [TASK-0235](docs/issues/tasks/TASK-0235-exam-rules-in-the-rehearsal-engine.md) Exam rules in the rehearsal engine (2) |
+|  |  |  |  |  | [TASK-0236](docs/issues/tasks/TASK-0236-score-exam-answers-against-fixtures.md) Score exam answers against fixtures (2) |
+|  |  |  |  |  | [TASK-0237](docs/issues/tasks/TASK-0237-grade-store-and-list-exam-results.md) Grade, store and list exam results (3) |
+|  |  |  |  |  | [TASK-0238](docs/issues/tasks/TASK-0238-exam-option-in-setup-and-the-locked-run-screen.md) Exam option in the setup and the locked run screen (3) |
+|  |  |  |  |  | [TASK-0239](docs/issues/tasks/TASK-0239-exam-result-screen-and-review.md) Exam result screen and review (3) |
+|  |  |  |  |  | [TASK-0240](docs/issues/tasks/TASK-0240-exam-results-in-reports-diary-and-screenshots.md) Exam results in the Runs report, the diary prompt and screenshots (2) |
+|  |  |  |  |  | [TASK-0241](docs/issues/tasks/TASK-0241-help-page-for-the-exam-mode.md) Help page for the exam mode (1) |
+|  |  |  |  |  | [TASK-0242](docs/issues/tasks/TASK-0242-exam-runs-in-the-control-protocol.md) Exam runs in the control protocol (2) |
 
 ## Stories
 
@@ -376,6 +385,11 @@
 | [STORY-0122](docs/issues/stories/STORY-0122-studyfrog-application-files-in-local-with-logs-and-configurations.md) StudyFrog application files in ~/.local/ with logs and configurations (5) | review | 0/0 |
 | [STORY-0123](docs/issues/stories/STORY-0123-colorization-field-for-items-influencing-details-and-rehearsal-background.md) Colorization field for items influencing details and rehearsal view background (3) | done | 0/0 |
 | [STORY-0124](docs/issues/stories/STORY-0124-interactive-cli-control-protocol-and-console-log-streaming-for-ai-agents.md) Interactive CLI control protocol and console log streaming for AI agents (8) | review | 0/0 |
+| [STORY-0125](docs/issues/stories/STORY-0125-specify-the-exam-run-mode-and-its-grade-scale.md) Specify the exam run mode and its grade scale (2) | done | 0/0 |
+| [STORY-0126](docs/issues/stories/STORY-0126-exam-run-data-model-and-engine-rules.md) Exam run data model and strict engine rules (5) | done | 2/2 |
+| [STORY-0127](docs/issues/stories/STORY-0127-exam-scoring-grading-and-result-history.md) Exam scoring, grading and result history (5) | done | 2/2 |
+| [STORY-0128](docs/issues/stories/STORY-0128-exam-mode-in-the-rehearsal-screens.md) Exam mode in the rehearsal screens (8) | done | 3/3 |
+| [STORY-0129](docs/issues/stories/STORY-0129-exam-mode-help-and-control-protocol.md) Exam mode help and control protocol (3) | done | 2/2 |
 
 ## Epics
 
@@ -413,7 +427,7 @@
 | [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md) Prompt expansion | backlog | 4/5 |
 | [EPIC-031](docs/issues/epics/EPIC-031-details-tabs-create-workflow-csv-import.md) Details tabs, create workflow, and CSV import for 0.4.1 | done | 6/6 |
 | [EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md) Item keys, colorization, and reporting export | review | 3/4 |
-| [EPIC-033](docs/issues/epics/EPIC-033-exam-run-mode-with-semantic-comparison-and-grading.md) Exam run mode with mandatory text entry, semantic comparison, and percentage grading | backlog | 0/0 |
+| [EPIC-033](docs/issues/epics/EPIC-033-exam-run-mode-with-semantic-comparison-and-grading.md) Exam run mode with mandatory text entry, semantic comparison, and percentage grading | done | 5/5 |
 | [EPIC-034](docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md) Behavioral learning analytics, FSRS optimizer, and workload forecasting | backlog | 0/6 |
 | [EPIC-035](docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md) Rich active-recall formats, inline note extraction, and focus workflows | backlog | 0/5 |
 | [EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md) Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement | backlog | 0/4 |

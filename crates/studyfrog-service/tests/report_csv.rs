@@ -19,6 +19,7 @@ fn run(state: &str, used_ms: u32) -> RunSummary {
         rated: 30,
         skipped: 2,
         used_ms,
+        exam: None,
     }
 }
 

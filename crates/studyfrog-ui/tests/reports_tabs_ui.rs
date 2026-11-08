@@ -25,6 +25,7 @@ fn run_row(
         rated,
         skipped: 0,
         used_ms,
+        exam: None,
     }
 }
 

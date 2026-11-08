@@ -181,6 +181,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::ResolveLink(target) => exec_doc::resolve_link_msg(w, target),
         Effect::Rerate { item, expected, to } => exec_run::rerate(w, item, expected, to),
         Effect::LoadItem(uid) => exec_run::load_item(w, uid),
+        Effect::Exam(e) => crate::exec_exam::execute(w, e, now_ns),
         Effect::ScoreAnswer {
             run,
             item,

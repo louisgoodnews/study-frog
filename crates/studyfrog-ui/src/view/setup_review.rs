@@ -55,10 +55,10 @@ fn what_line(state: &State, form: &SetupForm) -> String {
 }
 
 fn how_line(form: &SetupForm) -> String {
-    let mode = if form.mode == RunMode::Flip {
-        "flip cards"
-    } else {
-        "type answers"
+    let mode = match form.mode {
+        RunMode::Flip => "flip cards",
+        RunMode::Answer => "type answers",
+        RunMode::Exam => "exam (written answers, graded; cards and questions only)",
     };
     let shuffle = if form.shuffle { ", shuffled" } else { "" };
     let limit = if form.limit.trim().is_empty() {
@@ -70,6 +70,9 @@ fn how_line(form: &SetupForm) -> String {
 }
 
 fn effect_line(form: &SetupForm) -> &'static str {
+    if form.mode == RunMode::Exam {
+        return "An exam never changes your review schedule.";
+    }
     match form.effect {
         ScheduleEffect::UpdateSchedule => "Your ratings update the review schedule.",
         ScheduleEffect::PracticeOnly => "Practice only: the review schedule does not change.",

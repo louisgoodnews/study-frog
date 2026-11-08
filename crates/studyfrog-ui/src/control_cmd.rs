@@ -151,6 +151,12 @@ pub enum RehearseCmd {
     Stop,
     /// Leave the finished run for the setup.
     Leave,
+    /// Write the answer field without submitting it.
+    Type(String),
+    /// Submit (and in an exam lock) what the answer field holds.
+    Submit,
+    /// Leave a finished exam's result for the setup; refused while the exam is running.
+    Finish,
 }
 
 /// The setup of a run; what is not given keeps its value.

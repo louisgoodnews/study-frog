@@ -158,6 +158,7 @@ fn stack(state: &State, cmd: &StackCmd) -> Result<Plan, String> {
 }
 
 fn rehearse(state: &State, cmd: &RehearseCmd) -> Result<Plan, String> {
+    crate::control_exam::check(state, cmd)?;
     let act = |a| vec![vec![Msg::RunAction(a)]];
     Ok(match cmd {
         RehearseCmd::Setup(args) => vec![crate::control_setup::setup_msgs(state, args)?],
@@ -173,7 +174,17 @@ fn rehearse(state: &State, cmd: &RehearseCmd) -> Result<Plan, String> {
         RehearseCmd::Pause => act(Action::Pause),
         RehearseCmd::Resume => act(Action::Resume),
         RehearseCmd::Stop => act(Action::Abort),
-        RehearseCmd::Leave => vec![vec![Msg::LeaveRun]],
+        RehearseCmd::Leave | RehearseCmd::Finish => vec![vec![Msg::LeaveRun]],
+        RehearseCmd::Type(text) => vec![vec![Msg::AnswerEdited(text.clone())]],
+        RehearseCmd::Submit => {
+            let text = state
+                .rehearse
+                .run
+                .as_ref()
+                .map(|r| r.answer.clone())
+                .unwrap_or_default();
+            act(Action::SubmitAnswer(text))
+        }
     })
 }
 

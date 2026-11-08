@@ -124,3 +124,9 @@ turns runs left idle, running or paused into `aborted` and closes their log with
 - Vault problems for references are computed from `item_ref` (`refs_index::reference_problems`): a stack that does not
   exist, the item's own primary stack, a stack listed twice. They appear in the vault overview with the other problems.
 - The migration marks every file to be read again once, so the table fills on the next scan.
+
+## Schema v25: exam runs and results (EPIC-033, [exam-mode.md](exam-mode.md))
+- `run` is rebuilt with every row so `mode` may also be `exam` (a CHECK cannot change in place).
+- `exam_result(run_uid, items, answered, percent, grade, passed, engine, graded_at_ms)`: one graded result per
+  exam run (`percent` 0 to 100 with one decimal, `grade` the letter `A+` to `F`). History: never derived, never
+  rebuilt from the vault. Answers stay in `run_event` (`answer_submitted`) and item scores in `answer_score`.

@@ -6,6 +6,7 @@ pub mod arena;
 pub mod civil;
 pub mod diary;
 pub mod event;
+pub mod exam;
 pub mod idx;
 pub mod item_color;
 pub mod item_key;

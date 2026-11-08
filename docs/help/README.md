@@ -34,6 +34,7 @@ queries).
 | `item-page` | Item page and editor | all | CHANGELOG (EPIC-021, TASK-0187) |
 | `create-dialog` | Creating items | all | CHANGELOG (TASK-0185 to TASK-0187) |
 | `rehearse` | Rehearsing | all | `docs/specs/rehearsal-run.md`, `docs/specs/scoring.md` |
+| `exam-mode` | Exam mode | all | `docs/specs/exam-mode.md` |
 | `calendar` | Calendar | all | CHANGELOG (TASK-0146 to TASK-0148) |
 | `board` | Board | all | CHANGELOG |
 | `reports` | Reports | all | `docs/specs/reports.md` |

@@ -48,7 +48,9 @@ pub fn class_of(cmd: &Command) -> Class {
         }
         C::Item(_) | C::Stack(_) | C::Import { .. } | C::Export(_) => Class::Write,
         C::VaultOpen(_) | C::VaultClose | C::Screenshot(_) => Class::Write,
-        C::Rehearse(RehearseCmd::Setup(_) | RehearseCmd::Leave) => Class::Read,
+        C::Rehearse(RehearseCmd::Setup(_) | RehearseCmd::Leave | RehearseCmd::Finish) => {
+            Class::Read
+        }
         C::Rehearse(_) => Class::Write,
         _ => Class::Read,
     }

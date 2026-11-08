@@ -11,6 +11,8 @@ pub enum RunMode {
     Flip,
     /// User types an answer that is scored by the SLM.
     Answer,
+    /// A strict exam: written answers only, one way, graded at the end (`docs/specs/exam-mode.md`).
+    Exam,
 }
 
 /// Lifecycle of a run: `Idle -> Running <-> Paused -> Finished | Aborted`.
@@ -50,6 +52,7 @@ pub fn run_mode_name(mode: RunMode) -> &'static str {
     match mode {
         RunMode::Flip => "flip",
         RunMode::Answer => "answer",
+        RunMode::Exam => "exam",
     }
 }
 
@@ -58,6 +61,7 @@ pub fn run_mode_from_name(name: &str) -> Option<RunMode> {
     match name {
         "flip" => Some(RunMode::Flip),
         "answer" => Some(RunMode::Answer),
+        "exam" => Some(RunMode::Exam),
         _ => None,
     }
 }

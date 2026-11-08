@@ -125,6 +125,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Library(m) => crate::library_ui::update(state, m),
         Msg::Folders(m) => crate::folders_ui::update(state, m),
         Msg::Help(m) => crate::help_ui::update(state, m),
+        Msg::Exam(m) => crate::exam_ui::update(state, m),
         Msg::Appearance(m) => crate::appearance_ui::update(state, m),
         Msg::SetTrackViews(on) => crate::app_settings_ui::set_track_views(state, on),
         run @ (Msg::StartRunClicked

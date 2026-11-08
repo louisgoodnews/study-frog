@@ -49,7 +49,8 @@ fn setup(words: &[String]) -> Result<SetupArgs, String> {
         None => None,
         Some("flip") => Some(RunMode::Flip),
         Some("answer") => Some(RunMode::Answer),
-        Some(other) => return Err(format!("unknown mode {other} (flip, answer)")),
+        Some("exam") => Some(RunMode::Exam),
+        Some(other) => return Err(format!("unknown mode {other} (flip, answer, exam)")),
     };
     Ok(SetupArgs {
         preset: flag(&flags, "preset").map(preset_named).transpose()?,
@@ -101,6 +102,9 @@ fn rehearse(words: &[String]) -> Result<RehearseCmd, String> {
         "resume" => RehearseCmd::Resume,
         "stop" | "abort" => RehearseCmd::Stop,
         "leave" => RehearseCmd::Leave,
+        "type" => RehearseCmd::Type(words[1..].join(" ")),
+        "submit" => RehearseCmd::Submit,
+        "finish" => RehearseCmd::Finish,
         other => return Err(format!("unknown rehearse step {other:?}")),
     })
 }

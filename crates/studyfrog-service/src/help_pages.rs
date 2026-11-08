@@ -23,6 +23,7 @@ pub const PAGES: &[HelpPage] = &[
     page!("item-page", Screens),
     page!("create-dialog", Screens),
     page!("rehearse", Screens),
+    page!("exam-mode", Screens),
     page!("calendar", Screens),
     page!("board", Screens),
     page!("reports", Screens),

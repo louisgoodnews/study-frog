@@ -75,7 +75,7 @@ pub const COMMANDS: &[Row] = &[
         "write",
     ),
     (
-        "rehearse setup [--preset spaced|all|shuffled|hardest|stalest] [--mode flip|answer] [--limit N] [--stack F]...",
+        "rehearse setup [--preset spaced|all|shuffled|hardest|stalest] [--mode flip|answer|exam] [--limit N] [--stack F]...",
         "Navigate(Rehearse), Setup(Preset|Mode|Limit|Stack) -> Effect::PreviewQueue",
         "read",
     ),
@@ -105,6 +105,16 @@ pub const COMMANDS: &[Row] = &[
         "write",
     ),
     ("rehearse leave", "Msg::LeaveRun", "read"),
+    (
+        "rehearse type <text> | rehearse submit",
+        "AnswerEdited; RunAction(SubmitAnswer(field)); in an exam the answer is locked and the next item follows",
+        "write",
+    ),
+    (
+        "rehearse finish",
+        "Msg::LeaveRun once the exam is over (state: rehearse.run.exam.result)",
+        "read",
+    ),
     (
         "query <expr>",
         "Navigate(Library), Select(Nothing), Search(Mode(query), Query(expr)); answers the matching rows",

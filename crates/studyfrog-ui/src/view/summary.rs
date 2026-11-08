@@ -40,7 +40,7 @@ pub(crate) fn rating_text(r: Option<Rating>) -> &'static str {
     r.map_or("-", rating_name)
 }
 
-fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
+pub(crate) fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
     if ui.ctx().egui_wants_keyboard_input() {
         return;
     }

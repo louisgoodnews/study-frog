@@ -176,7 +176,7 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
         difficulty: crate::setup_fam::difficulty(f)?,
         familiarity_below: crate::setup_fam::familiarity_bound(f)?,
     };
-    Ok(RunPlan {
+    let plan = RunPlan {
         order: f.order,
         filter,
         effect: f.effect,
@@ -185,7 +185,11 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
         limit: limit(f)?,
         requeue_again: f.requeue_again,
         pacing: crate::setup_pacing::pacing_from(&f.pacing)?,
-    })
+    };
+    match f.mode {
+        RunMode::Exam => studyfrog_core::exam::exam_plan(plan),
+        _ => Ok(plan),
+    }
 }
 
 fn toggle<T: PartialEq>(mut list: Vec<T>, item: T, on: bool) -> Vec<T> {

@@ -22,8 +22,8 @@ The setup counts the matching items as you choose.
 - **Presets**: **Spaced repetition**, **Everything, in order**, **Everything, shuffled**, **Hardest first** and
   **Not seen for longest**. Start from one, then adjust.
 - **Time**: **No clock**, **Countdown** (5, 10, 15 or 25 minutes, or any number from 1 to 180) or **Count up**.
-- **Flip cards** (you think of the answer, then show it) or **Type answers** (you type your answer and StudyFrog
-  compares it with the reference).
+- **Flip cards** (you think of the answer, then show it), **Type answers** (you type your answer and StudyFrog
+  compares it with the reference) or **Exam** (a graded written test with strict rules, see [[exam-mode]]).
 - **Order**: Due first, In order, Hardest first, Easiest first, Not seen for longest, Most likely forgotten, or
   Least familiar first.
 - **Shuffle the order of the chosen items**: works with every order. It changes the sequence, never which items

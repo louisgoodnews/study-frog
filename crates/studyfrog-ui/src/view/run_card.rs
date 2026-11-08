@@ -79,6 +79,10 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     markdown(ui, &prompt, 24.0, None, out);
     source_link(content, ui, out);
     ui.add_space(8.0);
+    if crate::exam_ui::is_exam(run) {
+        crate::view::exam_card::controls(run, ui, out);
+        return;
+    }
     mark_row(run, ui, out);
     ui.add_space(12.0);
     if awaiting_reveal(run) {

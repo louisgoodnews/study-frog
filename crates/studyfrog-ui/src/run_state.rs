@@ -47,6 +47,8 @@ pub struct RunView {
     pub started_time: f64,
     /// The post-rehearsal diary prompt, if shown or active.
     pub diary_prompt: Option<crate::diary_prompt::RunDiaryPrompt>,
+    /// Exam mode: unscored answers, grading and the result.
+    pub exam: crate::exam_ui::ExamProgress,
 }
 
 /// A fresh view of a not-yet-started session.
@@ -65,6 +67,7 @@ pub fn run_view_new(session: Session, started_time: f64) -> RunView {
         scored: None,
         started_time,
         diary_prompt: None,
+        exam: crate::exam_ui::ExamProgress::default(),
     }
 }
 

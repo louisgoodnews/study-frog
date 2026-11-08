@@ -145,3 +145,8 @@ stack above that states one. In queue building:
   the library position. Sequential keeps the library order.
 - **Hardest and easiest first** use the owner's difficulty (2.5, 5.5, 8.5 on the 1 to 10 scale) for items that were
   never reviewed and so have no memory difficulty.
+
+## Exam mode
+`RunMode::Exam` is a strict, summative run: written answers only, no skipping, no going back, no peeking, no
+rating, answers locked on submission, and a percentage with a grade at the end. Its rules, scoring and grade
+scale are specified in [exam-mode.md](exam-mode.md).

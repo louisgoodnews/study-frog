@@ -72,6 +72,7 @@ fn run_json(r: &RunView) -> Value {
         "title": content.map(|c| c.title.clone()), "prompt": content.map(|c| c.prompt.clone()),
         "answer": content.filter(|_| revealed).map(|c| c.answer.clone()),
         "typed": r.answer, "scored": scored, "events": r.events.len(),
+        "exam": crate::control_exam::exam_json(r),
     })
 }
 

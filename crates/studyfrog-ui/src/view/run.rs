@@ -23,6 +23,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(run) = &state.rehearse.run else {
         return;
     };
+    if is_over(run) && crate::exam_ui::is_exam(run) {
+        crate::view::exam_result::draw(state, run, ui, out);
+        return;
+    }
     if is_over(run) {
         crate::view::summary::draw(state, run, ui, out);
         return;
@@ -48,10 +52,15 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     }
                 });
                 ui.add_space(10.0);
+                let exam = crate::exam_ui::is_exam(run);
                 ui.label(
-                    RichText::new(HINTS)
-                        .color(palette_of(ui).text_weak)
-                        .size(12.5),
+                    RichText::new(if exam {
+                        crate::view::exam_card::EXAM_HINTS
+                    } else {
+                        HINTS
+                    })
+                    .color(palette_of(ui).text_weak)
+                    .size(12.5),
                 );
             });
         });
@@ -66,6 +75,9 @@ fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     let pressed = |k: Key| ui.input(|i| i.key_pressed(k));
+    if crate::exam_ui::is_exam(run) {
+        return exam_shortcuts(run, &pressed, out);
+    }
     if awaiting_reveal(run) && pressed(Key::Space) {
         act(out, Action::Flip);
     }
@@ -98,6 +110,21 @@ fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
+/// An exam answers to P (pause and resume) only: no reveal, skip, marks or ratings, and Esc does not stop it.
+fn exam_shortcuts(run: &RunView, pressed: &dyn Fn(Key) -> bool, out: &mut Vec<Msg>) {
+    if pressed(Key::P) {
+        let paused = run.session.run.state == RunState::Paused;
+        act(
+            out,
+            if paused {
+                Action::Resume
+            } else {
+                Action::Pause
+            },
+        );
+    }
+}
+
 /// Position, mode, timer and the pause and stop buttons, with the progress bar under them.
 fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let s = &run.session;
@@ -109,10 +136,10 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
                 .size(18.0)
                 .strong(),
         );
-        let mode = if s.run.mode == RunMode::Answer {
-            "Type answers"
-        } else {
-            "Flip cards"
+        let mode = match s.run.mode {
+            RunMode::Answer => "Type answers",
+            RunMode::Exam => "Exam",
+            RunMode::Flip => "Flip cards",
         };
         kit::pill(ui, mode, weak);
         if s.run.state == RunState::Running && s.phase != ItemPhase::NoItem {
@@ -126,7 +153,12 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
             crate::view::run_timer::draw(&clock, ui);
         }
         ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-            if ui.button("Stop (Esc)").clicked() {
+            let stop = if s.run.mode == RunMode::Exam {
+                "Stop exam (not graded)"
+            } else {
+                "Stop (Esc)"
+            };
+            if ui.button(stop).clicked() {
                 act(out, Action::Abort);
             }
             if s.run.state == RunState::Running && ui.button("Pause (P)").clicked() {

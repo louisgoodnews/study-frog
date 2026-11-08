@@ -19,6 +19,8 @@ mod calendar_reviews;
 pub(crate) mod date_picker;
 pub mod diary;
 mod editor;
+pub mod exam_card;
+pub mod exam_result;
 mod explorer;
 mod explorer_charts;
 pub mod folders;

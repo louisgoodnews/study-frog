@@ -8,7 +8,7 @@ use crate::run::{
 
 #[test]
 fn mode_and_state_names_round_trip() {
-    for mode in [RunMode::Flip, RunMode::Answer] {
+    for mode in [RunMode::Flip, RunMode::Answer, RunMode::Exam] {
         assert_eq!(run_mode_from_name(run_mode_name(mode)), Some(mode));
     }
     for state in [

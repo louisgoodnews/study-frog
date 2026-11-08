@@ -103,7 +103,8 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
     };
     let t_ms = engine_ms(state.now, run.started_time, run.session.last_t_ms);
     let rated_item = current_item(&run.session);
-    let clears_answer = matches!(action, Action::Rate(_) | Action::Skip);
+    let clears_answer = matches!(action, Action::Rate(_) | Action::Skip)
+        || (crate::exam_ui::is_exam(&run) && matches!(action, Action::SubmitAnswer(_)));
     let mut effects = Vec::new();
     let submitted = match &action {
         Action::SubmitAnswer(text) => current_item(&run.session).map(|item| Effect::ScoreAnswer {
@@ -125,6 +126,10 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
         effects.extend(prefetch(&mut run));
         if is_over(&run) {
             effects.push(Effect::CheckAchievements);
+            if crate::exam_ui::is_exam(&run) {
+                effects.extend(crate::exam_ui::load_rest(&mut run));
+                effects.extend(crate::exam_ui::grade_when_ready(&mut run));
+            }
             if run.diary_prompt.is_none() {
                 run.diary_prompt = Some(crate::diary_prompt::prompt_new(&state, &run));
             }

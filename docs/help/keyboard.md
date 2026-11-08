@@ -15,6 +15,9 @@ run.
 The keys are off while you type an answer (in **Type answers** mode), so typing never triggers them. The keys are
 also written on the buttons, for example **Good (3)**. See [[rehearse]].
 
+In an **exam** only **P** works: there is no answer to show, nothing to rate or skip, and **Esc** does not stop
+it (see [[exam-mode]]).
+
 ## Everywhere
 
 - **Alt+Left** and **Alt+Right**: go back and forward through the places you visited. See [[getting-started|Getting started]].

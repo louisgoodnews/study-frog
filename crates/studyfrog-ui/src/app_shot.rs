@@ -22,7 +22,8 @@ pub struct Shot {
     /// Where to write the PNG.
     pub path: PathBuf,
     /// The screen: `home`, `library`, `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or
-    /// `run` (opens Rehearse and starts a run of everything), `stack:<folder>` or `item:<ULID>` (the item page);
+    /// `run` (opens Rehearse and starts a run of everything), `exam-setup`, `exam` (an exam with a draft answer),
+    /// `exam-result` (an exam answered to the end), `stack:<folder>` or `item:<ULID>` (the item page);
     /// `None` keeps the first screen.
     pub screen: Option<String>,
     /// Frames drawn so far.
@@ -71,6 +72,9 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
     {
         return apply(model, Msg::OpenItem(uid));
     }
+    if name.starts_with("exam") {
+        return crate::app_shot_exam::setup(model);
+    }
     if name == "create" {
         return apply(model, Msg::Modal(crate::modal_types::ModalMsg::OpenCreate));
     }
@@ -97,8 +101,12 @@ pub fn step(shot: &mut Shot, model: &mut Model, ui: &egui::Ui) -> Vec<crate::eff
     if let (SETTLE, Some(name)) = (shot.frames, shot.screen.clone()) {
         effects = go(model, &name);
     }
-    if shot.frames == SETTLE + START && shot.screen.as_deref() == Some("run") {
+    let name = shot.screen.as_deref().unwrap_or("");
+    if shot.frames == SETTLE + START && matches!(name, "run" | "exam" | "exam-result") {
         effects = apply(model, Msg::StartRunClicked);
+    }
+    if shot.frames > SETTLE + START && shot.frames < SETTLE + DRAW - 8 {
+        effects.extend(crate::app_shot_exam::play(model, name));
     }
     if shot.frames == SETTLE + DRAW {
         let (path, done) = (shot.path.clone(), ctx.clone());

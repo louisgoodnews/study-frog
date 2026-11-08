@@ -147,6 +147,8 @@ pub enum Msg {
     StepRecorded(Result<(), String>),
     /// "Back to setup" after a run.
     LeaveRun,
+    /// Exam mode: grading and its result.
+    Exam(crate::exam_ui::ExamMsg),
     /// An item was chosen for editing.
     OpenItem(Uid),
     /// A document was read for editing.

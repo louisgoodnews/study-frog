@@ -82,6 +82,11 @@ schedule with these ratings** in the run setup if you want them to count.
 
 Not by themselves. They feed rating suggestions, reports and [[familiarity]]. Your rating changes the schedule.
 
+### How do I simulate an exam?
+
+Choose **Exam** in step 2 of the rehearsal setup. You answer every card and question in writing, cannot skip or
+go back, and get a percentage and a grade at the end (60 % to pass). See [[exam-mode]].
+
 ### Can I change a rating after the run?
 
 Yes, in a run that updates the schedule: the review after the run may suggest a different rating, and you can apply
