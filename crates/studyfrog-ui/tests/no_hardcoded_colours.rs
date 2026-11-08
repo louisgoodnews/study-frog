@@ -8,7 +8,10 @@ use std::path::{Path, PathBuf};
 /// Files that may name colours, and why.
 const ALLOWED: [(&str, &str); 8] = [
     ("theme.rs", "the palettes themselves"),
-    ("theme_hue.rs", "the six text colours of a note"),
+    (
+        "color_science.rs",
+        "colours computed from OKLCH coordinates",
+    ),
     ("view/navbar.rs", "the frog logo has its own green"),
     (
         "view/window_frame.rs",

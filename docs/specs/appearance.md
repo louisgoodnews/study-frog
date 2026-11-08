@@ -28,7 +28,7 @@ for the other keys); unknown keys in the table are errors too.
 - **Interface size** is egui's zoom factor: everything gets larger or smaller, including the title bar. **Text size** only
   scales the text styles, on top of that. The keyboard shortcuts are ours, so the value is saved (egui's own are off).
 - **Density** is one table of spacing: item spacing, button padding and the height of a control.
-- **Accent** replaces the colour of selections, links, the main button and bars in both themes; each pair of accent and
+- **Accent** (colours chosen in OKLCH and checked with APCA, see `ui-colour-and-type.md`) replaces the colour of selections, links, the main button and bars in both themes; each pair of accent and
   text colour on it meets 4.5 to 1. **High contrast** gives each theme text at 7 to 1 and strong borders; a test checks
   the ratios of every palette (`tests/appearance.rs`).
 - **Reduced motion** sets egui's animation time to zero. Turning it off brings the default back; nothing else touches the

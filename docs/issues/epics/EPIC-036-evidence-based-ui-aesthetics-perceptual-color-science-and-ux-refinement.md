@@ -2,7 +2,7 @@
 id: EPIC-036
 type: epic
 title: Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement
-status: backlog
+status: in_progress
 parents: []
 labels: [m12, core, ui, docs]
 acceptance_criteria:

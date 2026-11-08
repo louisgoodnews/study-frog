@@ -6,6 +6,7 @@ use studyfrog_core::item_color::color_rgb;
 use studyfrog_core::item_key::normalize_key;
 use studyfrog_store::overview::StackRow;
 
+use crate::color_science::apca_abs;
 use crate::state::State;
 use crate::theme::Palette;
 
@@ -50,20 +51,26 @@ pub fn contrast(a: Color32, b: Color32) -> f32 {
 }
 
 fn mix(surface: Color32, [r, g, b]: [u8; 3], share: f32) -> Color32 {
-    let blend = |s: u8, c: u8| (f32::from(s) * (1.0 - share) + f32::from(c) * share).round() as u8;
-    Color32::from_rgb(
-        blend(surface.r(), r),
-        blend(surface.g(), g),
-        blend(surface.b(), b),
-    )
+    crate::color_science::mix_oklab(surface, Color32::from_rgb(r, g, b), share)
 }
 
-/// Whether every text colour keeps its contrast with `out`: at least [`MIN_CONTRAST`], or what it
-/// has with the plain surface if that is already less (secondary text often is).
+/// The APCA contrast (|Lc|) a tint must leave the first text colour (body text) and the others (secondary
+/// text), unless the plain surface already has less: the targets of `docs/specs/ui-colour-and-type.md`.
+pub const MIN_APCA: [f32; 2] = [75.0, 58.0];
+
+fn apca_kept(out: Color32, surface: Color32, i: usize, t: Color32) -> bool {
+    let floor = MIN_APCA[i.min(1)];
+    let (now, before) = (apca_abs(t, out), apca_abs(t, surface));
+    now >= floor.min(before)
+}
+
+/// Whether every text colour keeps its contrast with `out`: at least [`MIN_CONTRAST`] (WCAG 2) and
+/// [`MIN_APCA`] (APCA), or what it has with the plain surface if that is already less.
 fn readable(out: Color32, surface: Color32, texts: &[Color32]) -> bool {
-    texts
-        .iter()
-        .all(|t| contrast(out, *t) >= MIN_CONTRAST.min(contrast(surface, *t)) - 0.005)
+    texts.iter().enumerate().all(|(i, t)| {
+        contrast(out, *t) >= MIN_CONTRAST.min(contrast(surface, *t)) - 0.005
+            && apca_kept(out, surface, i, *t)
+    })
 }
 
 /// The surface with the colour mixed in at the theme's share, less if that would make any of the

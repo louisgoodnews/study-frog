@@ -1,9 +1,11 @@
 //! One look for the whole app: colours, spacing and type sizes, for the dark and the light theme.
-//! The palette is data; [`apply`] turns it into egui's style once at start-up, and views read the
+//! The palette is OKLCH data (`theme_tokens`); [`apply`] turns it into egui's style once at start-up, and views read the
 //! colours they need through [`palette`].
 
 use eframe::egui::{self, Color32, CornerRadius, Id, Stroke, Visuals, style::WidgetVisuals};
-use studyfrog_core::appearance::Accent;
+use std::sync::OnceLock;
+
+use studyfrog_core::appearance::{ACCENT_LIST, Accent};
 
 /// The colours of one theme.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -36,10 +38,6 @@ pub struct Palette {
     pub alt: Color32,
 }
 
-const fn rgb(r: u8, g: u8, b: u8) -> Color32 {
-    Color32::from_rgb(r, g, b)
-}
-
 /// What of the user's appearance settings the palette depends on; kept in egui's memory by [`crate::theme_apply`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Look {
@@ -49,100 +47,30 @@ pub struct Look {
     pub high_contrast: bool,
 }
 
-/// The accent colour and the text colour on it, for the dark or the light theme.
-fn accent_pair(accent: Accent, dark: bool) -> (Color32, Color32) {
-    let (d, l) = match accent {
-        Accent::Blue => (rgb(110, 160, 245), rgb(47, 111, 224)),
-        Accent::Green => (rgb(88, 196, 132), rgb(28, 128, 74)),
-        Accent::Purple => (rgb(184, 146, 247), rgb(111, 66, 193)),
-        Accent::Orange => (rgb(240, 152, 72), rgb(174, 83, 6)),
-        Accent::Pink => (rgb(241, 128, 182), rgb(186, 44, 116)),
-        Accent::Teal => (rgb(72, 192, 192), rgb(12, 118, 128)),
-    };
-    if dark {
-        (d, rgb(12, 20, 38))
-    } else {
-        (l, rgb(255, 255, 255))
-    }
-}
-
-fn base(dark: bool, high_contrast: bool) -> Palette {
-    match (dark, high_contrast) {
-        (true, false) => Palette {
-            background: rgb(23, 24, 27),
-            panel: rgb(29, 30, 34),
-            surface: rgb(37, 38, 43),
-            surface_hover: rgb(46, 48, 54),
-            border: rgb(55, 57, 65),
-            text: rgb(230, 231, 234),
-            text_weak: rgb(154, 156, 165),
-            accent: rgb(110, 160, 245),
-            on_accent: rgb(12, 20, 38),
-            success: rgb(95, 191, 122),
-            warning: rgb(224, 168, 74),
-            danger: rgb(224, 108, 108),
-            alt: rgb(184, 146, 247),
-        },
-        (true, true) => Palette {
-            background: rgb(0, 0, 0),
-            panel: rgb(10, 10, 12),
-            surface: rgb(22, 22, 26),
-            surface_hover: rgb(44, 44, 52),
-            border: rgb(160, 160, 170),
-            text: rgb(255, 255, 255),
-            text_weak: rgb(214, 214, 220),
-            accent: rgb(110, 160, 245),
-            on_accent: rgb(0, 0, 0),
-            success: rgb(120, 220, 150),
-            warning: rgb(255, 196, 90),
-            danger: rgb(255, 130, 130),
-            alt: rgb(208, 178, 255),
-        },
-        (false, false) => Palette {
-            background: rgb(244, 245, 247),
-            panel: rgb(255, 255, 255),
-            surface: rgb(255, 255, 255),
-            surface_hover: rgb(238, 240, 243),
-            border: rgb(216, 219, 225),
-            text: rgb(29, 31, 36),
-            text_weak: rgb(99, 104, 116),
-            accent: rgb(47, 111, 224),
-            on_accent: rgb(255, 255, 255),
-            success: rgb(46, 139, 87),
-            warning: rgb(183, 121, 31),
-            danger: rgb(192, 57, 43),
-            alt: rgb(111, 66, 193),
-        },
-        (false, true) => Palette {
-            background: rgb(255, 255, 255),
-            panel: rgb(255, 255, 255),
-            surface: rgb(246, 246, 248),
-            surface_hover: rgb(226, 228, 233),
-            border: rgb(70, 72, 80),
-            text: rgb(0, 0, 0),
-            text_weak: rgb(52, 54, 62),
-            accent: rgb(0, 80, 200),
-            on_accent: rgb(255, 255, 255),
-            success: rgb(10, 100, 55),
-            warning: rgb(140, 84, 0),
-            danger: rgb(160, 20, 10),
-            alt: rgb(84, 44, 168),
-        },
-    }
+/// Every palette (2 themes x 2 contrasts x 6 accents), computed once from the OKLCH tokens.
+fn palettes() -> &'static [Palette] {
+    static ALL: OnceLock<Vec<Palette>> = OnceLock::new();
+    ALL.get_or_init(|| {
+        let mut all = Vec::with_capacity(24);
+        for dark in [true, false] {
+            for high_contrast in [false, true] {
+                for accent in ACCENT_LIST {
+                    all.push(crate::theme_tokens::build(dark, high_contrast, accent));
+                }
+            }
+        }
+        all
+    })
 }
 
 /// The palette for a theme with the user's accent colour and contrast.
 pub fn palette_with(dark: bool, look: Look) -> Palette {
-    let (accent, on_accent) = accent_pair(look.accent, dark);
-    let p = base(dark, look.high_contrast);
-    if look.high_contrast && look.accent == Accent::Blue {
-        return p;
-    }
-    Palette {
-        accent,
-        on_accent,
-        ..p
-    }
+    let a = ACCENT_LIST
+        .iter()
+        .position(|x| *x == look.accent)
+        .unwrap_or(0);
+    let i = (usize::from(!dark) * 2 + usize::from(look.high_contrast)) * ACCENT_LIST.len() + a;
+    palettes()[i]
 }
 
 /// The palette for the dark or the light theme with the default accent.

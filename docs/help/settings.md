@@ -104,7 +104,8 @@ restart.
 - **Interface size** makes everything larger or smaller (70 to 200 %); **Ctrl and plus**, **Ctrl and minus** and **Ctrl
   and 0** do the same from any screen. **Text size** changes only the text.
 - **Density**: Compact, Comfortable or Spacious.
-- **Accent colour**, **High contrast** and **Reduce motion**.
+- **Accent colour**, **High contrast** and **Reduce motion**. All six accents look equally bright, and every text
+  colour is checked for contrast in both themes, with and without high contrast.
 - **Open this screen first**: Home, Library or the screen you used last. **Start with the sidebar folded away.**
   **Remember the window's size and place.** Some desktops do not tell the place of a window; then only its size is kept.
 - **Restore the default appearance** puts every choice back.
