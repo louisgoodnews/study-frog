@@ -137,3 +137,16 @@ The right-hand column of the item editor organizes metadata into a four-tab note
 - **Customizable Appearance:** Dark, Light, or System theme, UI scale, text size, layout density, accent color palette, high-contrast mode, and reduced motion, all applied live.
 - **Keyboard & Screen-Reader Accessible:** Every interactive control carries an AccessKit role and accessible name (verified in CI by headless `egui_kittest` audits), with keyboard navigation (`Alt+Left` / `Alt+Right` history, `F1` in-app Help & tutorial, keyboard rehearsal).
 - **Automated Backups & Profiles:** Create and restore timestamped `.tar.gz` vault backups and switch between user profiles.
+
+---
+
+## 10. Added in 0.5.0
+
+- **Application home & logs:** StudyFrog keeps its settings, provider keys, models and logs in `~/.local/share/studyfrog` (or `$STUDYFROG_HOME`); the old `~/.config/studyfrog` is copied in once and left in place. Every notice goes to `logs/studyfrog.log` and `logs/console.jsonl` (rotated at 5 MB). `studyfrog --print-paths` and `studyfrog logs [--tail N] [--follow] [--json]` show them; Settings > Data lists the paths.
+- **Model Context Protocol server:** `studyfrog --mcp [--vault PATH]` serves the vault to AI tools over standard input and output, read-only: a vault summary, stacks, items as Markdown, and a search that uses the query language. "Copy MCP server config" in the Assistant's connections gives the settings block for Claude Desktop, Cursor or Zed. Tools and resources are plain data entries in a registry, and a policy gates tools that write.
+- **More assistant providers:** Google Gemini and DeepSeek, with suggested models as buttons.
+- **Prompt library:** ten standard prompts (explain at three levels, oral exam, Socratic dialogue and concept map added), grouped in categories, searchable, with options such as the depth of an explanation; a **Prompts** screen in the sidebar.
+- **Achievements:** 32 built-in tiers (streaks to 365 days, runs, ratings, mastery, and four tiers per stack), a filter for all, global or one stack, groups by category and stack, and a summary on each stack's page.
+- **Reports as CSV:** **Export as CSV** on the Reports screen writes one table to `exports/` in the vault.
+- **PDF viewer:** pages stay sharp after the thumbnails were drawn, and full-size pages and thumbnails are cached apart.
+

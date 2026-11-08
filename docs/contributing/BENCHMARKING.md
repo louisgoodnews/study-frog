@@ -128,3 +128,25 @@ on very large files, keep the parsed document in the worker. Drawing was measure
 the library spike (`docs/research/pdf-library-spike.md`) on real documents.
 
 Familiarity (`cargo bench -p studyfrog-report --bench reports -- familiarity`; 10 000 items with 20 ratings and 5 views each; budget: 20 ms): 7.3 ms (2026-11-02).
+
+## Release 0.5.0 check (2026-11-08)
+Each crate's benchmark on its own at low priority, release profile, on the development machine (not otherwise idle: a
+build and the gate had just run). Every hot path is within its budget:
+
+| Bench | Result | Budget |
+|---|---|---|
+| `fsrs_schedule_100k` | 3.19 ms | < 10 ms |
+| `sm2_schedule_100k` | 0.80 ms | n/a |
+| `vault_10k` scan + parse | 181 ms | n/a |
+| `vault_10k` cold reindex | 564 ms | < 3 s |
+| `vault_10k` warm reindex | 53 ms | n/a |
+| `graph_5k` layout step | 4.13 ms | < 8 ms |
+| `graph_5k` projection | 1.8 us | n/a |
+| rehearsal queues of 10k items | 0.08 to 0.62 ms | n/a |
+| PDF, 500 pages: structure / all text / one page's words / draw one page | 1.9 ms / 360 ms / 52 ms / 5.8 ms | < 50 ms / < 2 s / < 100 ms / < 50 ms |
+| PDF: draw one page at 2x / one thumbnail / parse the document only | 8.3 ms / 3.1 ms / 0.59 ms | n/a |
+| comparison latency (language model, release test) | p50 28.9 ms, p95 31.0 ms | p95 < 150 ms |
+
+The last three PDF rows were added for STORY-0085: re-parsing the document on every render costs about a tenth of a
+render, so keeping a parsed document between renders was not built.
+

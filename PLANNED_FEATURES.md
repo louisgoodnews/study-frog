@@ -1,6 +1,8 @@
-# StudyFrog Planned Features (Roadmap — v0.5.0 / Phase M12)
+# StudyFrog Planned Features (Roadmap — Phase M12, carried past v0.5.0)
 
-This document catalogs all planned features, epics, stories, and tasks that are currently in the backlog and have not yet been implemented. For features already available in the current release (`v0.4.3`), see **[FEATURES.md](FEATURES.md)**. For live issue statuses, see **[BOARD.md](BOARD.md)**.
+**After 0.5.0:** part of this scope was released in `v0.5.0` and is described in **[FEATURES.md](FEATURES.md)** (prompts, achievements, Gemini and DeepSeek, the application home and logs, the CSV export, the MCP server in part, and the PDF fixes). Everything below that is not listed there is still planned. The table shows where each epic stands.
+
+This document catalogs all planned features, epics, stories, and tasks that are currently in the backlog and have not yet been implemented. For features already available in the current release (`v0.5.0`), see **[FEATURES.md](FEATURES.md)**. For live issue statuses, see **[BOARD.md](BOARD.md)**.
 
 ---
 
@@ -8,16 +10,16 @@ This document catalogs all planned features, epics, stories, and tasks that are 
 
 | Epic | Title | Child Stories / Tasks | Target |
 | :--- | :--- | :--- | :--- |
-| **[EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md)** | Extensibility, Plugin Modding, and Python API | `STORY-0083`, `STORY-0084`, `STORY-0085`, `BUG-0010` | `0.5.0` (Phase M12) |
-| **[EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md)** | Expanded Achievements and Per-Stack Progression | `STORY-0086`, `STORY-0087` | `0.5.0` (Phase M12) |
-| **[EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md)** | Prompt Expansion & Interactive AI Workflows | `STORY-0088`, `STORY-0089`, `STORY-0090`, `STORY-0091`, `STORY-0092`, `TASK-0233` | `0.5.0` (Phase M12) |
-| **[EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md)** | Item Keys, Colorization, and Reporting Export | `STORY-0096`, `STORY-0097`, `STORY-0098`, `STORY-0123` | `0.5.0` (Phase M12) |
-| **[EPIC-033](docs/issues/epics/EPIC-033-exam-run-mode-with-semantic-comparison-and-grading.md)** | Exam Run Mode with Semantic Comparison and Grading | *Epic-level specification* | `0.5.0` (Phase M12) |
-| **[EPIC-034](docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md)** | Behavioral Learning Analytics, FSRS Optimizer, and Workload Forecasting | `STORY-0102`, `STORY-0103`, `STORY-0104`, `STORY-0105`, `STORY-0106`, `STORY-0107` | `0.5.0` (Phase M12) |
-| **[EPIC-035](docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md)** | Rich Active-Recall Formats, Inline Note Extraction, and Focus Workflows | `STORY-0108`, `STORY-0109`, `STORY-0110`, `STORY-0111`, `STORY-0112` | `0.5.0` (Phase M12) |
-| **[EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md)** | Evidence-Based UI Aesthetics, Perceptual Color Science (OKLCH/APCA), and UX Refinement | `STORY-0113`, `STORY-0114`, `STORY-0115`, `STORY-0116` | `0.5.0` (Phase M12) |
-| **[EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md)** | State-of-the-Art Model Context Protocol (MCP) Server, Client Host, and Registry | `STORY-0117`, `STORY-0118`, `STORY-0119`, `STORY-0120`, `STORY-0121` | `0.5.0` (Phase M12) |
-| **[EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md)** | CLI Control Protocol for Interactive AI Agent Operation & `~/.local/` App Files | `STORY-0122`, `STORY-0124` | `0.5.0` (Phase M12) |
+| **[EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md)** | Extensibility, Plugin Modding, and Python API | `STORY-0083`, `STORY-0084`, `STORY-0085`, `BUG-0010` | Gemini, DeepSeek and the PDF fixes in `0.5.0`; Python API planned |
+| **[EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md)** | Expanded Achievements and Per-Stack Progression | `STORY-0086`, `STORY-0087` | **Released in `0.5.0`** |
+| **[EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md)** | Prompt Expansion & Interactive AI Workflows | `STORY-0088`, `STORY-0089`, `STORY-0090`, `STORY-0091`, `STORY-0092`, `TASK-0233` | **Released in `0.5.0`** |
+| **[EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md)** | Item Keys, Colorization, and Reporting Export | `STORY-0096`, `STORY-0097`, `STORY-0098`, `STORY-0123` | `STORY-0098` in `0.5.0`; the rest planned |
+| **[EPIC-033](docs/issues/epics/EPIC-033-exam-run-mode-with-semantic-comparison-and-grading.md)** | Exam Run Mode with Semantic Comparison and Grading | *Epic-level specification* | Planned |
+| **[EPIC-034](docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md)** | Behavioral Learning Analytics, FSRS Optimizer, and Workload Forecasting | `STORY-0102`, `STORY-0103`, `STORY-0104`, `STORY-0105`, `STORY-0106`, `STORY-0107` | Planned |
+| **[EPIC-035](docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md)** | Rich Active-Recall Formats, Inline Note Extraction, and Focus Workflows | `STORY-0108`, `STORY-0109`, `STORY-0110`, `STORY-0111`, `STORY-0112` | Planned |
+| **[EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md)** | Evidence-Based UI Aesthetics, Perceptual Color Science (OKLCH/APCA), and UX Refinement | `STORY-0113`, `STORY-0114`, `STORY-0115`, `STORY-0116` | Planned |
+| **[EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md)** | State-of-the-Art Model Context Protocol (MCP) Server, Client Host, and Registry | `STORY-0117`, `STORY-0118`, `STORY-0119`, `STORY-0120`, `STORY-0121` | Engine, read-only resources and stdio in `0.5.0`; the rest planned |
+| **[EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md)** | CLI Control Protocol for Interactive AI Agent Operation & `~/.local/` App Files | `STORY-0122`, `STORY-0124` | `STORY-0122` in `0.5.0`; `STORY-0124` planned |
 
 ---
 

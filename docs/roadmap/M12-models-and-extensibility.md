@@ -1,5 +1,11 @@
 # M12: External models, PDF viewer fixes and optimization, and Python modding API (0.5.0)
 
+> **Status after 0.5.0 (2026-11-08):** released with part of this scope. Built: STORY-0083, STORY-0084, BUG-0010,
+> STORY-0086, STORY-0087, STORY-0088 to STORY-0092, TASK-0233, STORY-0098, STORY-0117 and STORY-0122; partly built:
+> STORY-0085, STORY-0118 and STORY-0120. Not built and moved on: EPIC-033, STORY-0096, STORY-0097, STORY-0123,
+> STORY-0102 to STORY-0107, STORY-0108 to STORY-0112, STORY-0113 to STORY-0116, STORY-0119, STORY-0121, STORY-0124 and
+> the Python modding API. The details are in `priority-list.md` and `docs/RELEASE_NOTES_0.5.0.md`.
+
 **Goal:** Connect external intelligence models (Google Gemini and Deepseek) via native APIs, fix PDF illegibility defects and optimize rendering performance to 60 fps, and expose a Python modding API for plugins, cron jobs, event handlers, and an in-app console.
 
 **Entry criteria:** 0.4.0 released (M11 exit met).

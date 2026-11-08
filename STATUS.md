@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M0 to M10 complete; released 0.3.1 (fixes and a calmer UI after 0.3.0). **Date:** 2026-11-04. **Branch:** `main`.
+**Phase:** M0 to M11 complete; M12 partly built; released 0.5.0 (part of the planned scope). **Date:** 2026-11-08. **Branch:** `main`.
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
@@ -14,6 +14,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
 ## Latest
+- **0.5.0 released (2026-11-08)** with part of phase M12: the application home and logs, the MCP server (read-only), Gemini and DeepSeek, the prompt library and screen, 32 achievement tiers with a per-stack view, the reports as CSV, and the PDF fixes. About a third of the planned stories; the rest moves on (see `priority-list.md` and `docs/RELEASE_NOTES_0.5.0.md`). Everything is gate-checked; the new screens were tested headless only. **Next:** the unbuilt M12 stories in priority order (control protocol `STORY-0124`, item keys and colours, Exam mode, analytics, active-recall formats, UI refinements, Python API), and a real-window check of this release.
 - **EPIC-037 (MCP) partly built:** STORY-0117 (the protocol engine, done), STORY-0118 (read-only resources and search; reports, diary and several tools missing) and STORY-0120 (stdio server and config snippet; the HTTP transport is missing) are in; STORY-0119 (authoring tools) and STORY-0121 (client host) are not started. Run as the real binary over pipes; not tried with a real AI client.
 - **STORY-0098 (reports as CSV) in review:** "Export as CSV" on the Reports screen writes `exports/studyfrog-report-<vault>-<date>.csv`; no per-stack statistics or learned and mastered totals yet; no save dialog; tested headless.
 - **EPIC-029 (achievements) built:** 32 built-in tiers (STORY-0086, done) and the filter, grouping and per-stack summary (STORY-0087, in review, tested headless only).
