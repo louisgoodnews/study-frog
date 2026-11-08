@@ -16,6 +16,7 @@ mod board;
 pub(crate) mod calendar;
 mod calendar_grid;
 mod calendar_reviews;
+mod console;
 pub mod contrast;
 pub(crate) mod date_picker;
 pub mod diary;
@@ -165,6 +166,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
             Screen::Diary => diary::draw(state, ui, &mut out),
             Screen::Pdf => pdf::draw(state, ui, &mut out),
             Screen::Help => help::draw(state, ui, &mut out),
+            Screen::Console => console::draw(state, ui, &mut out),
         });
     if ui.input(|i| i.key_pressed(egui::Key::F1)) {
         out.push(Msg::Help(crate::help_types::HelpMsg::ForScreen));

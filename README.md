@@ -55,8 +55,10 @@ For a complete guide to everything StudyFrog offers today, see **[FEATURES.md](F
     percentage grading (`60%` pass threshold `D`/`4.0`, `5%` bands up to `95%–100%` `A+`/`1+`).
   - **Item keys & colorization (`EPIC-032`)**: sequential keys (`STACK_1`, `FLASHCARD_500`) and an item color picker
     with viewer background tinting (the CSV export of the reports is in 0.5.0).
-  - **Extensibility, Python API, Gemini/DeepSeek & PDF optimization (`EPIC-028`)**: out-of-process JSON-RPC Python
-    scripting, and the rest of the PDF viewer performance work (a real-window 60 fps check, eviction by use).
+  - **Extensibility, Python API, Gemini/DeepSeek & PDF optimization (`EPIC-028`)**: out-of-process Python scripting
+    over the control protocol (built on `feature/complete-m12`: the `python/studyfrog` client, lifecycle events,
+    scheduled and event-bound jobs in `scripts/scripts.toml`, `studyfrog script run`, the Console screen; ADR 0013),
+    and the rest of the PDF viewer performance work (a real-window 60 fps check, eviction by use).
   - **Behavioral learning analytics, FSRS optimizer & workload forecasting (`EPIC-034`)**: chronobiological hour-of-day
     & weekday telemetry, within-session cognitive fatigue detection, multi-signal leech & interference pair diagnostics,
     FSRS state-simulation forecasting in study minutes with an Exam Deadline Pacer, Workload-vs-Retention (CMRR)

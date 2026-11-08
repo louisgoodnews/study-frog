@@ -4,11 +4,11 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (3) | Ready (0) | In progress (0/3) | Review (2) | Blocked (0) | Done (258) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (2) | Blocked (0) | Done (261) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0250](docs/issues/tasks/TASK-0250-console-screen.md) Console screen (5) |  |  | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [TASK-0251](docs/issues/tasks/TASK-0251-scripting-help-page-spec-and-examples.md) Scripting help page, spec and examples (2) |  |  | [TASK-0233](docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Move prompt library to standalone left sidebar navigation (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
-| [TASK-0252](docs/issues/tasks/TASK-0252-plugin-modding-in-extending-md.md) Plugin modding in EXTENDING.md (1) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+|  |  |  | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+|  |  |  | [TASK-0233](docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Move prompt library to standalone left sidebar navigation (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+|  |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 |  |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
 |  |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
 |  |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
@@ -264,6 +264,9 @@
 |  |  |  |  |  | [TASK-0247](docs/issues/tasks/TASK-0247-scripts-toml-cron-and-trigger-matching.md) scripts.toml, cron and trigger matching (3) |
 |  |  |  |  |  | [TASK-0248](docs/issues/tasks/TASK-0248-child-processes-with-timeout-logging-and-scoped-sockets.md) Child processes with timeout, logging and scoped sockets (3) |
 |  |  |  |  |  | [TASK-0249](docs/issues/tasks/TASK-0249-the-runner-in-every-instance-and-the-script-commands.md) The runner in every instance and the script commands (5) |
+|  |  |  |  |  | [TASK-0250](docs/issues/tasks/TASK-0250-console-screen.md) Console screen (5) |
+|  |  |  |  |  | [TASK-0251](docs/issues/tasks/TASK-0251-scripting-help-page-spec-and-examples.md) Scripting help page, spec and examples (2) |
+|  |  |  |  |  | [TASK-0252](docs/issues/tasks/TASK-0252-plugin-modding-in-extending-md.md) Plugin modding in EXTENDING.md (1) |
 
 ## Stories
 
@@ -400,8 +403,8 @@
 | [STORY-0130](docs/issues/stories/STORY-0130-lifecycle-events-in-the-control-protocol.md) Lifecycle events in the control protocol (5) | done | 2/2 |
 | [STORY-0131](docs/issues/stories/STORY-0131-python-client-package-for-the-control-protocol.md) Python client package for the control protocol (5) | done | 2/2 |
 | [STORY-0132](docs/issues/stories/STORY-0132-script-runner-with-scheduled-and-event-bound-jobs.md) Script runner with scheduled and event-bound jobs (8) | done | 3/3 |
-| [STORY-0133](docs/issues/stories/STORY-0133-console-screen-in-the-application.md) Console screen in the application (5) | in_progress | 0/1 |
-| [STORY-0134](docs/issues/stories/STORY-0134-scripting-documentation-examples-and-script-plugins.md) Scripting documentation, examples and script plugins (3) | backlog | 0/2 |
+| [STORY-0133](docs/issues/stories/STORY-0133-console-screen-in-the-application.md) Console screen in the application (5) | done | 1/1 |
+| [STORY-0134](docs/issues/stories/STORY-0134-scripting-documentation-examples-and-script-plugins.md) Scripting documentation, examples and script plugins (3) | done | 2/2 |
 
 ## Epics
 
@@ -434,7 +437,7 @@
 | [EPIC-025](docs/issues/epics/EPIC-025-feedback-fixes-for-0-3-1.md) Feedback fixes for 0.3.1 | done | 1/1 |
 | [EPIC-026](docs/issues/epics/EPIC-026-writing-saving-organizing-and-prompts-for-0-4-0.md) Writing, saving, organizing and prompts for 0.4.0 | done | 7/7 |
 | [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | done | 2/2 |
-| [EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md) Extensibility, plugin modding, and Python API | in_progress | 3/8 |
+| [EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md) Extensibility, plugin modding, and Python API | in_progress | 5/8 |
 | [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md) Expanded achievements and per-stack progression | backlog | 1/2 |
 | [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md) Prompt expansion | backlog | 4/5 |
 | [EPIC-031](docs/issues/epics/EPIC-031-details-tabs-create-workflow-csv-import.md) Details tabs, create workflow, and CSV import for 0.4.1 | done | 6/6 |

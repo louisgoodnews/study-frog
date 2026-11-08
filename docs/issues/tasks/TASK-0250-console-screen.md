@@ -2,7 +2,7 @@
 id: TASK-0250
 type: task
 title: Console screen
-status: backlog
+status: done
 epic: EPIC-028
 parents: [STORY-0133]
 estimate: 5
@@ -17,7 +17,7 @@ Part of STORY-0133.
 See the story and ADR 0013.
 
 ## Acceptance Criteria
-- [ ] Console screen with input, history, answers, script output and events; egui harness test and screenshot
+- [x] Console screen with input, history, answers, script output and events; egui harness test and screenshot
 
 ## Design Notes
 See the story.

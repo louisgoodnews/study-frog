@@ -46,6 +46,7 @@ queries).
 | `settings` | Settings | all | `docs/specs/config-files.md`, CHANGELOG |
 | `import-export` | Import and export | all | `docs/specs/interchange.md` |
 | `prompts` | Prompts for an AI | all | `docs/prompts/` |
+| `scripting` | Scripts, the Python API and the Console | power | `docs/specs/scripting.md` |
 | `import-formats` | Import formats | all | the importer table in `xfer_adapters.rs` |
 | `notifications` | Notifications | all | CHANGELOG (TASK-0126, TASK-0127) |
 | `help` | Using help | all | this story: browsing, searching, own pages, tutorials |

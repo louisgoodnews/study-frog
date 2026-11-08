@@ -115,7 +115,7 @@
 1. **Defect fix first:** BUG-0010 (PDF pages illegible under zoom/page fit) to eliminate text rendering degradation for all PDF reading workflows.
 2. **PDF performance optimization:** STORY-0085 (virtualized thumbnail rendering, RenderCache reuse, and LRU texture caching) to ensure 60 fps navigation.
 3. **Model integrations:** STORY-0083 (Google Gemini) and STORY-0084 (Deepseek) expanding external model connectivity for vault assistance and exams.
-4. **Extensibility & modding:** EPIC-028 Python API, subprocess JSON-RPC bridge, cron scheduler, event triggers, and built-in interactive console.
+4. **Extensibility & modding:** EPIC-028 Python API, subprocess JSON-RPC bridge, cron scheduler, event triggers, and built-in interactive console. (Built on `feature/complete-m12` as STORY-0130 to STORY-0134: the bridge is the control protocol, ADR 0013.)
 5. **Achievements expansion:** EPIC-029 (STORY-0086, STORY-0087) tiered achievement catalog, per-stack progression milestones, and achievements UI filtering.
 6. **Prompt expansion:** EPIC-030 (STORY-0088 to STORY-0092) multi-level explanation, oral exams, Socratic dialogue, concept mapping, and categorized prompt UI.
 7. **Vault organization & insights:** EPIC-032 (STORY-0096 to STORY-0098) item keys for querying, item colorization, and reporting CSV export.

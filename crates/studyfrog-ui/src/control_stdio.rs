@@ -132,10 +132,10 @@ fn serve_socket(_: &ConnCtx, _: Option<&str>) -> Option<()> {
 
 /// Run the jobs of `scripts/scripts.toml` in this instance.
 #[cfg(unix)]
-pub fn start_scripts(ctx: &ConnCtx) {
+pub fn start_scripts(ctx: &ConnCtx) -> Option<crate::script_runner::Runner> {
     use crate::script_runner::{Runner, child_pause, start_runner};
     let (Some(paths), Some(bus)) = (paths(), ctx.events.clone()) else {
-        return;
+        return None;
     };
     let runner = Runner {
         paths,
@@ -145,6 +145,7 @@ pub fn start_scripts(ctx: &ConnCtx) {
         pause: child_pause,
     };
     start_runner(&runner, crate::cli::pause);
+    Some(runner)
 }
 
 /// Run the headless instance until standard input ends; the exit code.
@@ -179,7 +180,7 @@ pub fn run(args: &[String], host: Host) -> u8 {
     };
     #[cfg(unix)]
     if !a.no_scripts {
-        start_scripts(&ctx);
+        let _ = start_scripts(&ctx);
     }
     if a.daemon {
         eprintln!("studyfrog: serving the control socket and running scripts until ended");

@@ -22,6 +22,8 @@ pub struct StudyFrogApp {
     pub control: Option<crate::control_window::WindowControl>,
     /// Lifecycle events, published for `subscribe` and the scripts.
     pub events: crate::control_events::EventBus,
+    /// What the Console screen talks to.
+    pub console: crate::console_link::ConsoleLink,
 }
 
 /// How the window is opened.
@@ -62,10 +64,16 @@ pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> Stud
     let control = options
         .control
         .and_then(|policy| crate::control_window::window_control_new(&ctx, policy, events.clone()));
+    let window_ctx = control.as_ref().and_then(|c| c.ctx.clone());
     #[cfg(unix)]
-    if let Some(c) = control.as_ref().and_then(|c| c.ctx.as_ref()) {
-        crate::control_stdio::start_scripts(c);
-    }
+    let runner = window_ctx
+        .as_ref()
+        .and_then(crate::control_stdio::start_scripts);
+    let console = crate::console_link::link_new(
+        window_ctx,
+        #[cfg(unix)]
+        runner,
+    );
     let runtime = spawn(ctx, host);
     send_effect(&runtime, Effect::LoadAppSettings);
     StudyFrogApp {
@@ -75,6 +83,7 @@ pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> Stud
         shot: options.shot,
         control,
         events,
+        console,
     }
 }
 
@@ -94,6 +103,12 @@ pub fn app_ui(app: &mut StudyFrogApp, ui: &mut egui::Ui) {
         let before = app.model.state.notice.clone();
         effects.extend(apply(&mut app.model, msg));
         effects.extend(log_new(&before, &app.model.state));
+    }
+    for line in std::mem::take(&mut app.model.state.console.outbox) {
+        crate::console_link::submit(&app.console, &line);
+    }
+    for msg in crate::console_link::poll(&app.console) {
+        effects.extend(apply(&mut app.model, msg));
     }
     let before = app.model.state.notice.clone();
     effects.extend(frame(&mut app.model, ui));

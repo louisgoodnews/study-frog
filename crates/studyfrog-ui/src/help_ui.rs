@@ -29,6 +29,7 @@ pub fn page_for(state: &State) -> &'static str {
         Screen::Diary => "reports",
         Screen::Agent => "assistant",
         Screen::Prompts => "assistant",
+        Screen::Console => "scripting",
         Screen::Pdf => "pdf",
     }
 }

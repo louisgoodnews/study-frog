@@ -55,6 +55,8 @@ pub enum Screen {
     Pdf,
     /// The help pages.
     Help,
+    /// Control commands and scripts typed by hand.
+    Console,
 }
 
 /// Severity of a notice.
@@ -219,6 +221,8 @@ pub struct State {
     pub pdf: Option<crate::pdf_types::PdfView>,
     /// The diary screen and configuration.
     pub diary: crate::diary_types::DiaryState,
+    /// The Console screen.
+    pub console: crate::console_ui::ConsoleState,
     /// The active-recall workflows (EPIC-035).
     pub recall: Box<crate::recall_types::RecallState>,
 }

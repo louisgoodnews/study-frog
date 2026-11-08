@@ -86,6 +86,8 @@ pub enum Msg {
     ImageAdded(crate::image_ui::ImageTarget, crate::image_ui::Added),
     /// A message of the subjects section.
     Subjects(crate::subjects_ui::SubjectsMsg),
+    /// A message of the Console screen.
+    Console(crate::console_ui::ConsoleMsg),
     /// The items that link to an open item.
     BacklinksLoaded(
         studyfrog_core::uid::Uid,

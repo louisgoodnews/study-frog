@@ -125,6 +125,11 @@ Expands StudyFrog's built-in achievement catalog beyond the initial 8 rules and 
 Introduces out-of-process scripting and modding, first-class connectors for Google Gemini and DeepSeek, and high-frame-rate PDF rendering improvements.
 
 ### 5.1 Python Scripting API, Hooks, Cron & In-App Console ([EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md))
+> **Built (2026-11-08, STORY-0130 to STORY-0134, ADR 0013):** the scripts talk to StudyFrog over the existing control
+> protocol (JSON Lines over a Unix socket or `--control-stdio`), not a separate JSON-RPC bridge; the events are
+> `vault_opened`, `vault_closed`, `item_created`, `item_saved`, `rehearsal_finished` and `script_finished`. Details in
+> [docs/specs/scripting.md](docs/specs/scripting.md) and the help page "Scripts, the Python API and the Console".
+
 - **Out-of-Process JSON-RPC Python API:** Allows users to write Python scripts and plugins that query and update vault items, metadata, and schedules over `stdin`/`stdout` JSON-RPC without recompiling Rust code or violating StudyFrog's `unsafe_code = "forbid"` rule.
 - **Three Execution Modes:**
   1. **Cron Jobs:** Scheduled periodic tasks (such as automated vault health checks or scheduled exports).

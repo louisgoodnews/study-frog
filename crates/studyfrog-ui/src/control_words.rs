@@ -26,6 +26,7 @@ pub fn screen_by_name(name: &str) -> Option<Screen> {
         "graph" => Screen::Graph,
         "assistant" | "agent" => Screen::Agent,
         "prompts" => Screen::Prompts,
+        "console" => Screen::Console,
         "settings" => Screen::Settings,
         "help" => Screen::Help,
         _ => return None,

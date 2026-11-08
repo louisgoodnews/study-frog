@@ -20,6 +20,8 @@ pub mod browse;
 pub mod chrome;
 pub mod cli;
 pub mod color_science;
+pub mod console_link;
+pub mod console_ui;
 pub mod contrast;
 pub mod control_client;
 pub mod control_cmd;

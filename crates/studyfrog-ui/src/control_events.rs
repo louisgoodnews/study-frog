@@ -61,10 +61,11 @@ pub fn wanted(event: &Value, kinds: &[String]) -> bool {
 /// Write the matching events from `rx` to `out` until the connection is gone or the bus closes.
 pub fn forward(rx: &Receiver<Value>, kinds: &[String], out: &SharedOut, alive: &AtomicBool) {
     for event in rx.iter() {
-        if !alive.load(Ordering::Relaxed) {
+        // An event published while the connection was open is still written; then the loop ends.
+        if wanted(&event, kinds) && write_line(out, &event_line("lifecycle", event)).is_err() {
             return;
         }
-        if wanted(&event, kinds) && write_line(out, &event_line("lifecycle", event)).is_err() {
+        if !alive.load(Ordering::Relaxed) {
             return;
         }
     }

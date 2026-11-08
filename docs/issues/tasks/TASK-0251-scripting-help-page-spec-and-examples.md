@@ -2,7 +2,7 @@
 id: TASK-0251
 type: task
 title: Scripting help page, spec and examples
-status: backlog
+status: done
 epic: EPIC-028
 parents: [STORY-0134]
 estimate: 2
@@ -17,7 +17,7 @@ Part of STORY-0134.
 See the story and ADR 0013.
 
 ## Acceptance Criteria
-- [ ] Help topic, spec and `examples/scripts/` (health check, export, event-bound, importer), each example run by a test
+- [x] Help topic, spec and `examples/scripts/` (health check, export, event-bound, importer), each example run by a test
 
 ## Design Notes
 See the story.

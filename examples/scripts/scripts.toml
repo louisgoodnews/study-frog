@@ -1,0 +1,32 @@
+# Copy this file and the scripts you want into <app home>/scripts/ (`studyfrog --print-paths` shows where).
+# `studyfrog script list` checks it. Every running StudyFrog (window, headless, `studyfrog script daemon`)
+# runs the scheduled and event-bound jobs.
+
+python = "python3"
+
+[[job]]
+name = "health"
+script = "health_check.py"
+schedule = "30 7 * * *"        # every day at 07:30 local time
+access = "read"
+timeout = 60
+
+[[job]]
+name = "weekly-export"
+script = "export_vault.py"
+args = ["/home/me/Backups/studyfrog", "--keep", "8"]
+schedule = "0 18 * * fri"      # Fridays at 18:00
+access = "write"
+timeout = 300
+
+[[job]]
+name = "tag-new"
+script = "tag_new_cards.py"
+on = ["item_created"]
+access = "write"
+
+[[job]]
+name = "glossary"              # no schedule and no event: run by hand or from the Console
+script = "import_glossary.py"
+access = "write"
+enabled = true

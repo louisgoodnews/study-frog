@@ -1,5 +1,15 @@
 # Extending StudyFrog
 
+There are two ways to extend StudyFrog:
+
+| | Compiled-in extensions (this page, ADR 0008) | Scripts (ADR 0013, [scripting spec](specs/scripting.md)) |
+|---|---|---|
+| Written in | Rust, a crate built into the binary | any language; Python has a client (`python/studyfrog`) |
+| Installed by | rebuilding StudyFrog | dropping a file into `<app home>/scripts/` |
+| Adds | importers and card types in the window's dialogs; format adapters | importers run from the command line or the Console, scheduled jobs, event hooks, automated notes and exports |
+| Can reach | text in, cards out; no I/O | the control protocol, under the script's access (read, write, destructive) |
+| Runs | inside the application | as a child process with a timeout |
+
 An extension adds an **importer** or a **card type** without changing any core crate. Extensions are
 plain data (records of function pointers) gathered in a registry; see
 [ADR 0008](adr/0008-extensions-as-plain-data.md) for why.
@@ -103,11 +113,30 @@ Add `Adapter { name: "Pipe-separated cards", extensions: &["pipes"], read: pipes
 shows its preview and writes its cards with the user's choice for duplicates. Test it like the others in
 `crates/studyfrog-service/tests/xfer_*.rs`: a good file, and a corpus of broken ones that must give an error, not a crash.
 
+## Script plugins (out of process)
+
+What a script can extend today, with the examples in `examples/scripts/`:
+
+- **Importers** for any format: a script reads the file and creates items through the API
+  (`import_glossary.py`: `term — definition` lines become cards, already present terms are skipped). Run it with
+  `studyfrog script run import_glossary.py -- file.txt --stack french` or from the Console. A script can also convert a
+  file into StudyFrog's JSON interchange format and call `import_file`, which then goes through the usual dry run
+  and duplicate handling.
+- **Custom cards**: a script can generate cards of any shape from a source (a table, a word list, a PDF's text) and
+  create them as cards, questions or cloze notes.
+- **Automated views**: a scheduled or event-bound script that writes a note (`health_check.py --note STACK`) or an
+  export (`export_vault.py`), or tags new items (`tag_new_cards.py`).
+
+What scripts cannot do: add an entry to the window's import dialog or the new-card form, draw in the window, add a
+screen, or reach calendar, board, diary and settings actions (the control protocol does not have them yet). For those
+a compiled-in extension (below) or a new control command is needed.
+
 ## Limits
 
 - Extensions are compiled in. There is no loading of code at run time, no sandbox and no permissions: an
   extension is as trusted as the application. A dynamic plugin ABI would need `unsafe`, which this workspace
-  forbids, or a separate process; neither is built.
+  forbids; the separate-process route is the scripts above, which talk to the application but do not plug into
+  its dialogs.
 - Only importers and card types exist. Other extension points (exporters, scorers, report panels) would be
   new record types in `studyfrog-ext` following the same pattern.
 - A card type produces cards from text once, at creation time. It does not keep the source: editing one of the

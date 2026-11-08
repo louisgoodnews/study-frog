@@ -39,6 +39,7 @@ const GROUPS: &[Group] = &[
         screens: &[
             (Screen::Agent, "Assistant"),
             (Screen::Prompts, "Prompts"),
+            (Screen::Console, "Console"),
             (Screen::Settings, "Settings"),
             (Screen::Help, "Help"),
         ],
@@ -54,31 +55,38 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .resizable(false)
         .exact_size(150.0)
         .show(ui, |ui| {
-            let p = palette_of(ui);
-            ui.add_space(4.0);
-            for (i, group) in GROUPS.iter().enumerate() {
-                if let Some(caption) = group.caption {
-                    if i > 0 {
-                        ui.add_space(8.0);
-                    }
-                    ui.label(
-                        RichText::new(caption)
-                            .size(crate::typo::size(ui, crate::typo::Tier::Caption))
-                            .strong()
-                            .color(p.text_weak),
-                    );
-                    ui.add_space(2.0);
-                } else {
-                    ui.add_space(10.0);
-                }
-                for &(screen, label) in group.screens {
-                    let width = ui.available_width();
-                    let button = egui::Button::selectable(state.screen == screen, label)
-                        .min_size(egui::vec2(width, 26.0));
-                    if ui.add(button).clicked() {
-                        out.push(Msg::Navigate(screen));
-                    }
-                }
-            }
+            egui::ScrollArea::vertical()
+                .auto_shrink([false, false])
+                .show(ui, |ui| groups(state, ui, out));
         });
+}
+
+/// The groups of screens; scrolls when the window is too low for all of them.
+fn groups(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let p = palette_of(ui);
+    ui.add_space(4.0);
+    for (i, group) in GROUPS.iter().enumerate() {
+        if let Some(caption) = group.caption {
+            if i > 0 {
+                ui.add_space(8.0);
+            }
+            ui.label(
+                RichText::new(caption)
+                    .size(crate::typo::size(ui, crate::typo::Tier::Caption))
+                    .strong()
+                    .color(p.text_weak),
+            );
+            ui.add_space(2.0);
+        } else {
+            ui.add_space(10.0);
+        }
+        for &(screen, label) in group.screens {
+            let width = ui.available_width();
+            let button = egui::Button::selectable(state.screen == screen, label)
+                .min_size(egui::vec2(width, 26.0));
+            if ui.add(button).clicked() {
+                out.push(Msg::Navigate(screen));
+            }
+        }
+    }
 }

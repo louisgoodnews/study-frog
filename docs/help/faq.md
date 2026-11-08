@@ -211,8 +211,16 @@ documented formats only, not yet against the real services, so a provider may st
 
 ### Can I add my own card types or importers?
 
-Extensions are built into the program by developers; there is no plugin loading. When an extension is present, a
-stack page shows **Import…** with its importers and card types.
+Extensions for the import dialog and the new-card form are built into the program by developers; there is no
+plugin loading. When an extension is present, a stack page shows **Import…** with its importers and card types.
+Without rebuilding anything you can write a **script**: a small Python program that reads any file and creates
+cards, runs every morning, or reacts when an item is created. See [[scripting]].
+
+### Can I automate StudyFrog or use it from Python?
+
+Yes. Put a script into StudyFrog's `scripts` folder and say in `scripts.toml` when it runs (a time like every day at
+7:30, or an event like "an item was created"), or run it from the **Console** or with `studyfrog script run`. Scripts
+use the `studyfrog` Python package that StudyFrog installs for them. See [[scripting]].
 
 ### Does StudyFrog work with a screen reader?
 

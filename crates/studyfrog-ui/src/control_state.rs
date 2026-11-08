@@ -17,6 +17,7 @@ pub fn screen_name(screen: Screen) -> &'static str {
         Screen::Folders => "folders",
         Screen::Agent => "assistant",
         Screen::Prompts => "prompts",
+        Screen::Console => "console",
         Screen::Library => "library",
         Screen::Rehearse => "rehearse",
         Screen::Settings => "settings",

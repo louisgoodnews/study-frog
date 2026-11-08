@@ -72,6 +72,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Pdf(m) => crate::pdf_ui::update(state, m),
         Msg::Diary(m) => crate::diary_ui::update_diary(state, m),
         Msg::Subjects(m) => crate::subjects_ui::update(state, m),
+        Msg::Console(m) => crate::console_ui::update(state, m),
         Msg::RemindersDue(r) => crate::reminder_ui::arrived(state, r),
         Msg::VaultPolled(result) => crate::poll_ui::vault_polled(state, result),
         Msg::AppSettingsSaved(result) => crate::app_settings_ui::saved(state, result),
