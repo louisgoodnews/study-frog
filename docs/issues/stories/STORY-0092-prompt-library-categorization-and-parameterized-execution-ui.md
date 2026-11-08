@@ -2,7 +2,7 @@
 id: STORY-0092
 type: story
 title: Prompt library categorization and parameterized execution UI
-status: review
+status: done
 epic: EPIC-030
 parents: [EPIC-030]
 estimate: 3
@@ -30,15 +30,18 @@ Upgrade the Prompts tab in `studyfrog-ui` and prompt representation in `studyfro
    - Update `crates/studyfrog-ui/src/view/agent_prompts.rs` with category tab pills, search input, and responsive prompt cards with copy, save, and direct run actions.
 
 ## Acceptance Criteria
-- [ ] The Assistant Prompts tab categorizes prompts into Content Generation, Interactive Tutoring & Exam, and Analysis
-- [ ] Parameterized prompts allow users to select configuration options (such as explanation depth or exam question count) prior to copying or running
-- [ ] Users can filter and search prompts by title, category, or intended workflow
+- [x] The Assistant Prompts tab categorizes prompts into Content Generation, Interactive Tutoring & Exam, and Analysis
+- [x] Parameterized prompts allow users to select configuration options (such as explanation depth or exam question count) prior to copying or running
+- [x] Users can filter and search prompts by title, category, or intended workflow
 
 ## Design Notes
 - Child task: TASK-0233: Move prompt library to standalone left sidebar navigation.
 - Files: `crates/studyfrog-service/src/prompts.rs`, `crates/studyfrog-ui/src/view/agent_prompts.rs`, `crates/studyfrog-ui/src/prompts_ui.rs`.
 - Adhere to UI guidelines and line count limits (keep all modified `.rs` files ≤ 250 lines).
 - Release target: version 0.5.0 (Phase M12).
+
+## Progress (2026-11-08)
+Seen in the real binary (`--screen prompts`, and the new `--screen prompts:tutoring|analysis`): the category pills All, Create content, Tutoring and Analysis; the search box; "Be examined on a file" with the Questions choice (3 or 5 questions) and "Explain a file at three levels" with Depth (All three levels, Intuitive (ELI5), Core concepts, Technical), each with Copy to clipboard, Save as .md and Run with the assistant. The search now also matches the category name (it matched title and summary, the summary saying what the prompt is for); test `the_search_matches_the_category_name_too` in `tests/prompts_tab.rs`, placeholder "Search by title, category or what it is for".
 
 ## Dependencies
 EPIC-030, STORY-0088, STORY-0089.

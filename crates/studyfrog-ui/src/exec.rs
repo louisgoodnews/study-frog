@@ -14,7 +14,7 @@ use studyfrog_slm::models::Opened;
 
 use studyfrog_ext::types::Registry;
 
-use crate::host::{FilePicker, FolderPicker, Host};
+use crate::host::{FilePicker, FolderPicker};
 use studyfrog_store::app_config::write_app_settings;
 use studyfrog_store::overview::search_items;
 
@@ -51,42 +51,11 @@ pub struct Worker {
     pub state_dir: Option<PathBuf>,
     /// The PDF read last (vault-relative path and bytes), kept for the page requests that follow.
     pub pdf_bytes: Option<(String, studyfrog_pdf::PdfBytes)>,
+    /// Shows a folder in the system's file manager, if the host can.
+    pub opener: Option<crate::host::Opener>,
 }
 
-/// A worker with nothing open.
-pub fn worker_new(config_dir: Option<PathBuf>) -> Worker {
-    Worker {
-        root_config: config_dir.clone(),
-        config_dir,
-        session: None,
-        models_dir: None,
-        slm: None,
-        loader: None,
-        folder_picker: None,
-        file_picker: None,
-        registry: Registry::default(),
-        transport: None,
-        state_dir: None,
-        pdf_bytes: None,
-    }
-}
-
-/// A worker that looks for language models in `models_dir` and uses what the host provides.
-pub fn worker_with_host(
-    config_dir: Option<PathBuf>,
-    models_dir: Option<PathBuf>,
-    host: Host,
-) -> Worker {
-    Worker {
-        models_dir,
-        loader: host.model_loader,
-        folder_picker: host.folder_picker,
-        file_picker: host.file_picker,
-        registry: host.registry,
-        transport: host.transport,
-        ..worker_new(config_dir)
-    }
-}
+pub use crate::exec_worker::{worker_new, worker_with_host};
 
 /// Perform one effect and report what happened. `now_ns` is the current Unix time in nanoseconds.
 pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {

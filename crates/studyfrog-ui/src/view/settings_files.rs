@@ -24,7 +24,7 @@ fn rows(p: &AppPaths) -> [(&'static str, String); 6] {
 }
 
 /// The section.
-pub fn draw(_state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
+pub fn draw(_state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let weak = palette_of(ui).text_weak;
     kit::section(ui, "Application files");
     let Some(p) = paths() else {
@@ -36,17 +36,24 @@ pub fn draw(_state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
         .show(ui, |ui| {
             for (name, path) in rows(&p) {
                 ui.label(name);
-                ui.label(RichText::new(&path).monospace());
+                // The button comes before the path, so a long path never pushes it off the screen.
                 if ui
                     .small_button("Copy")
                     .on_hover_text("Copy the path")
                     .clicked()
                 {
-                    ui.ctx().copy_text(path);
+                    ui.ctx().copy_text(path.clone());
                 }
+                ui.label(RichText::new(&path).monospace());
                 ui.end_row();
             }
         });
+    let open = ui
+        .button("Open logs folder")
+        .on_hover_text("Show the logs folder in the file manager");
+    if open.clicked() {
+        out.push(Msg::Logs(crate::logs_ui::LogsMsg::Open));
+    }
     ui.label(
         RichText::new(
             "Read the log in a terminal with `studyfrog logs --tail 50 [--follow] [--json]`.",

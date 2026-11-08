@@ -2,7 +2,7 @@
 id: EPIC-032
 type: epic
 title: Item keys, colorization, and reporting export
-status: review
+status: done
 parents: []
 labels: [m12, core, ui, report]
 acceptance_criteria:
@@ -34,7 +34,7 @@ Deliver three key vault organization, visual, and reporting enhancements planned
 ## Acceptance Criteria
 - [x] Items and stacks support human-readable sequential keys (e.g. STACK_1, FLASHCARD_500) for query filtering, direct navigation, and cross-linking
 - [x] Items support an optional color attribute configured via a color picker in the editor and rendered as a tinted background accent in the viewer
-- [ ] Learning metrics, retention statistics, and rehearsal history from the Reports screen can be exported directly as a CSV file
+- [x] Learning metrics, retention statistics, and rehearsal history from the Reports screen can be exported directly as a CSV file
 
 ## Design Notes
 Child stories:

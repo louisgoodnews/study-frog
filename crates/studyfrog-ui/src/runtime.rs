@@ -13,7 +13,7 @@ use studyfrog_store::app_config::app_config_dir;
 use studyfrog_store::app_migrate::{migrate_legacy_config, secure_secrets};
 
 use crate::effect::Effect;
-use crate::exec::{execute, worker_with_host};
+use crate::exec::worker_with_host;
 use crate::host::Host;
 use crate::msg::Msg;
 
@@ -80,7 +80,7 @@ pub fn spawn(ctx: egui::Context, host: Host) -> Runtime {
         let mut worker = worker_with_host(config_dir(), models, host);
         worker.state_dir = paths.map(|p| p.logs);
         while let Ok(effect) = effect_rx.recv() {
-            for msg in execute(&mut worker, effect, now_ns()) {
+            for msg in crate::exec_log::execute_logged(&mut worker, effect, now_ns()) {
                 if msg_tx.send(msg).is_err() {
                     return;
                 }

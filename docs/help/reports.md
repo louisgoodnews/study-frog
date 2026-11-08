@@ -5,8 +5,12 @@ items, and what is coming up. Open **Reports** in the sidebar. The reports need 
 the screen says "There are no reviews yet."
 
 **Export as CSV** (top of the screen) writes the numbers of the reports into one CSV table in the `exports` folder of
-your vault, as `studyfrog-report-<vault>-<date>.csv`, and tells you where. Each row has a section (summary, retention,
-latency, forecast, familiarity or runs), a subject, a metric and a value, so a spreadsheet can pivot it.
+your vault, as `studyfrog-report-<vault>-<date>.csv`, and tells you where; **Save CSV to...** asks for a folder first.
+Each row has a section (summary, stack, retention, latency, forecast, familiarity or runs), a subject, a metric and a
+value, so a spreadsheet can pivot it. The summary holds the reviews, the items learned (reviewed at least once) and
+mastered (scheduled three weeks or more ahead) and your streak of days with a review; each stack has its items, the
+items due now, learned and mastered, its reviews, the average interval in days and its retention (share of reviews
+not rated Again).
 
 The screen has these tabs: **Performance**, **Memory and forecast**, **Familiarity**, **Self-assessment**, **Runs**,
 **Habits**, **Leeches** and **Workload**.

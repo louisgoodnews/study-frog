@@ -32,6 +32,7 @@ pub mod pdf_search;
 pub mod poll;
 pub mod refs_index;
 pub mod reindex;
+pub mod report_stacks;
 pub mod reports;
 pub mod reviews;
 pub mod reviews_by_stack;

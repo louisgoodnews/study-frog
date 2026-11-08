@@ -8,8 +8,17 @@ use crate::agent_types::{AgentMsg, AgentState};
 use crate::msg::Msg;
 use crate::theme::palette_of;
 
+/// The test's own line under the connection's actions: the button and the last outcome, wrapped
+/// so a long error never widens the card.
+pub fn row(a: &AgentState, p: &Provider, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.horizontal_wrapped(|ui| {
+        button(a, p, ui, out);
+        outcome(a, p, ui);
+    });
+}
+
 /// The button; a remote connection must be allowed first, as for every request.
-pub fn button(a: &AgentState, p: &Provider, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+fn button(a: &AgentState, p: &Provider, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let running = a.conn_tests.running.contains(&p.name);
     let may = is_local(p) || p.allowed;
     let label = if running {
@@ -29,7 +38,7 @@ pub fn button(a: &AgentState, p: &Provider, ui: &mut egui::Ui, out: &mut Vec<Msg
 }
 
 /// The outcome of the last test, if any.
-pub fn outcome(a: &AgentState, p: &Provider, ui: &mut egui::Ui) {
+fn outcome(a: &AgentState, p: &Provider, ui: &mut egui::Ui) {
     let pal = palette_of(ui);
     match result_of(&a.conn_tests, &p.name) {
         Some(Ok(text)) => {

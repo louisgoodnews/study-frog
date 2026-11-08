@@ -2,7 +2,7 @@
 id: EPIC-029
 type: epic
 title: Expanded achievements and per-stack progression
-status: backlog
+status: done
 parents: []
 labels: [m12, achieve, ui]
 acceptance_criteria:
@@ -30,9 +30,9 @@ Expand the achievements system in StudyFrog version 0.5.0:
    - Maintain full backwards compatibility with historical `unlocked.toml` records.
 
 ## Acceptance Criteria
-- [ ] The default achievement catalog provides tiered milestones across runs, streaks, ratings, and mastery
-- [ ] Per-stack achievements can be filtered and viewed in the achievements screen and on individual stack views
-- [ ] Vault review history correctly evaluates all new global and per-stack rules without regressing existing unlocks
+- [x] The default achievement catalog provides tiered milestones across runs, streaks, ratings, and mastery
+- [x] Per-stack achievements can be filtered and viewed in the achievements screen and on individual stack views
+- [x] Vault review history correctly evaluates all new global and per-stack rules without regressing existing unlocks
 
 ## Design Notes
 Child issues planned for version 0.5.0:

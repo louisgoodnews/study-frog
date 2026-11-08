@@ -59,6 +59,7 @@ fn the_table_has_a_header_and_one_row_per_number_for_every_section() {
         spread: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         unscored: 11,
         runs: &runs,
+        extras: None,
     });
     let rows = lines(&csv);
     assert_eq!(rows[0], "section,subject,metric,value");
@@ -101,6 +102,7 @@ fn cells_with_commas_quotes_or_line_breaks_are_quoted_and_a_run_without_time_has
         spread: [0; 10],
         unscored: 0,
         runs: &runs,
+        extras: None,
     });
     let rows = lines(&csv);
     assert!(

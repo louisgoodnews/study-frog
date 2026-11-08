@@ -31,7 +31,8 @@ pub fn visible_prompts(view: &PromptsView) -> Vec<&'static PromptSource> {
         .filter(|s| view.category.is_none_or(|c| category_of(s.id) == c))
         .filter(|s| {
             let p = prompt_of(s);
-            let hay = format!("{} {}", p.title, p.summary).to_lowercase();
+            let category = studyfrog_service::prompts_meta::category_name(category_of(s.id));
+            let hay = format!("{} {} {category}", p.title, p.summary).to_lowercase();
             query.is_empty() || hay.contains(&query)
         })
         .collect()

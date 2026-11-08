@@ -20,5 +20,6 @@ pub fn host() -> Host {
         file_picker: Some(picker::pick_file),
         registry,
         transport: Some(studyfrog_net::send),
+        opener: Some(picker::open_folder),
     }
 }

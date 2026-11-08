@@ -58,6 +58,9 @@ pub fn notifications(w: &Worker, op: crate::notify::NotifyEffect, now_ns: i64) -
         crate::exec_log::log_notice(w, kind, text, at_ms);
         return Vec::new();
     }
+    if op == NotifyEffect::OpenLogs {
+        return crate::exec_log::open_logs(w);
+    }
     let Some(s) = &w.session else {
         return Vec::new();
     };
@@ -76,7 +79,7 @@ pub fn notifications(w: &Worker, op: crate::notify::NotifyEffect, now_ns: i64) -
         NotifyEffect::Delete(id) => db::delete_notification(c, id as i64),
         NotifyEffect::Clear => db::clear_notifications(c),
         NotifyEffect::Prune => db::prune_notifications(c, MAX_NOTIFICATIONS, now_ms - MAX_AGE_MS),
-        NotifyEffect::Log(..) => return Vec::new(),
+        NotifyEffect::Log(..) | NotifyEffect::OpenLogs => return Vec::new(),
     };
     Vec::new()
 }

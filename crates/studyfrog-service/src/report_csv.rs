@@ -6,6 +6,7 @@ use studyfrog_md::rfc3339::format_rfc3339;
 use studyfrog_report::latency::LatencyStats;
 use studyfrog_report::retention::{RetentionBucket, retention_rate};
 
+use crate::report_extras::ReportExtras;
 use crate::reports::ReportBundle;
 use crate::run_history::{RunSummary, answers_per_minute};
 
@@ -26,6 +27,8 @@ pub struct ReportCsvData<'a> {
     pub unscored: usize,
     /// The latest runs.
     pub runs: &'a [RunSummary],
+    /// Every stack's numbers and the vault's totals, when they were measured.
+    pub extras: Option<&'a ReportExtras>,
 }
 
 /// The part of the reports that is exported.
@@ -38,6 +41,7 @@ pub fn data_of(b: &ReportBundle) -> ReportCsvData<'_> {
         spread: b.familiarity.spread,
         unscored: b.familiarity.unscored,
         runs: &b.runs,
+        extras: None,
     }
 }
 
@@ -117,12 +121,51 @@ fn run_rows(runs: &[RunSummary]) -> Vec<String> {
     rows
 }
 
+fn extra_rows(x: &ReportExtras) -> Vec<String> {
+    let t = &x.totals;
+    let mut rows = vec![
+        row("summary", "all", "learned", t.learned),
+        row("summary", "all", "mastered", t.mastered),
+        row("summary", "all", "streak_days", t.streak_days),
+    ];
+    for s in &x.stacks {
+        let subject = format!("{} ({})", s.title, s.folder);
+        let counts = [
+            ("items", s.items),
+            ("due", s.due),
+            ("learned", s.learned),
+            ("mastered", s.mastered),
+            ("reviews", s.reviews),
+        ];
+        rows.extend(counts.map(|(metric, v)| row("stack", &subject, metric, v)));
+        if let Some(days) = s.average_interval_days {
+            rows.push(row(
+                "stack",
+                &subject,
+                "average_interval_days",
+                format!("{days:.1}"),
+            ));
+        }
+        if s.reviews > 0 {
+            let rate = f64::from(s.recalled) / f64::from(s.reviews);
+            rows.push(row(
+                "stack",
+                &subject,
+                "retention_rate",
+                format!("{rate:.4}"),
+            ));
+        }
+    }
+    rows
+}
+
 /// The table, header first, with `\r\n` between rows as RFC 4180 asks.
 pub fn report_csv(d: &ReportCsvData<'_>) -> String {
     let mut rows = vec![
         "section,subject,metric,value".to_owned(),
         row("summary", "all", "reviews", d.reviews),
     ];
+    rows.extend(d.extras.map(extra_rows).unwrap_or_default());
     rows.extend(retention_rows(d.retention));
     rows.extend(latency_rows(d.latency));
     for (day, expected) in d.forecast.iter().enumerate() {

@@ -86,6 +86,8 @@ pub enum NotifyEffect {
     /// Write a notice to the application log: its severity, its text and when it was raised (Unix
     /// milliseconds). Works without a vault.
     Log(crate::state::NoticeKind, String, i64),
+    /// Show the application's logs folder in the system's file manager. Works without a vault.
+    OpenLogs,
 }
 
 const SCREENS: [(Screen, &str); 7] = [

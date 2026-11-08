@@ -16,6 +16,9 @@ pub type FolderPicker = fn() -> Option<PathBuf>;
 /// user cancels or no dialog is available.
 pub type FilePicker = fn(&[&str]) -> Option<PathBuf>;
 
+/// Shows a folder in the system's file manager; the error is a sentence for the user.
+pub type Opener = fn(&std::path::Path) -> Result<(), String>;
+
 /// The pieces the host provides.
 #[derive(Clone, Default)]
 pub struct Host {
@@ -29,6 +32,8 @@ pub struct Host {
     pub registry: Registry,
     /// Sends the AI agent's requests (the application links the network library).
     pub transport: Option<studyfrog_agent::provider::Transport>,
+    /// Shows a folder in the system's file manager (the logs folder from Settings > Data).
+    pub opener: Option<Opener>,
 }
 
 /// What the user can choose from the registry, as plain text for the views.

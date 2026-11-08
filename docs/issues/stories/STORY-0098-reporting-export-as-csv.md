@@ -2,7 +2,7 @@
 id: STORY-0098
 type: story
 title: Reporting export as CSV
-status: review
+status: done
 epic: EPIC-032
 parents: [EPIC-032]
 estimate: 3
@@ -33,7 +33,7 @@ Provide full reporting data export in CSV format:
 
 ## Acceptance Criteria
 - [x] The Reports screen provides an Export as CSV action button
-- [ ] Exported CSV files contain structured tables covering review volumes, retention rates, mastery distributions, and rehearsal run logs
+- [x] Exported CSV files contain structured tables covering review volumes, retention rates, mastery distributions, and rehearsal run logs
 - [x] The export file is written to user-selected locations via native file dialog or saved directly to vault exports
 
 ## Design Notes
@@ -45,9 +45,11 @@ Provide full reporting data export in CSV format:
 - Release target: version 0.5.0 (Phase M12).
 
 ## Progress (2026-11-08)
-Built and tested: `studyfrog-service::report_csv` renders one RFC 4180 table (`section,subject,metric,value`) with the review total, retention per gap bucket, answer-time percentiles, the review forecast, the familiarity distribution and the run log (state, rated, skipped, active seconds, answers per minute); the Reports screen has "Export as CSV", which writes `exports/studyfrog-report-<vault>-<date>.csv` in the vault and announces the path; a failed write is reported.
+Built and tested: `studyfrog-service::report_csv` renders one RFC 4180 table (`section,subject,metric,value`) with the review total, retention per gap bucket, answer-time percentiles, the review forecast, the familiarity distribution and the run log (state, rated, skipped, active seconds, answers per minute).
 
-Open: criterion 2 is partly met. The export has no per-stack statistics, no learned or mastered totals and no streak, because the report bundle does not carry them; "mastery distribution" is the familiarity distribution. The file goes to the vault's `exports` folder, there is no save dialog. Not looked at in a real window.
+Added on 2026-11-08: the totals of learned items (reviewed at least once), mastered items (scheduled 21 days or more ahead) and the active streak of days with a review, and per stack (`stack` section, subject `Title (folder)`): items, due now, learned, mastered, reviews, average interval in days and retention (share not rated Again). Measured by `studyfrog-store::report_stacks` and `studyfrog-service::report_extras` like the achievements measure them (items of the stack's own folder). The Reports screen has "Export as CSV" (into `exports/` of the vault) and "Save CSV to..." (the existing folder dialog; cancelling writes nothing and says so). Help page updated.
+
+Verified: `crates/studyfrog-service/tests/report_csv_stacks.rs` (a real vault with reviews recorded through the service: counts, due before and a year later, streak 3 then 0, average interval, retention, quoting of a stack title with a comma), `report_csv.rs`, `crates/studyfrog-ui/tests/report_csv_ui.rs` (both buttons, the file in `exports/` and in the chosen folder with stack and total rows, the cancelled dialog), and a screenshot of the Reports screen with both buttons in the real binary. "Mastery distribution" is the familiarity distribution plus the mastered counts.
 
 ## Dependencies
 EPIC-032.

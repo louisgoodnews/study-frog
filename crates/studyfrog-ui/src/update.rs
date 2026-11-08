@@ -112,6 +112,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::ReportsBuilt(result) => crate::reports::built(state, result),
         Msg::AchievementsChecked(result) => crate::achievements::checked(state, result),
         Msg::Achievements(m) => crate::achievements::update(state, m),
+        Msg::Logs(m) => crate::logs_ui::update(state, m),
         Msg::Plan(m) => crate::planner::update(state, m),
         Msg::Board(m) => crate::kanban::update(state, m),
         import @ (Msg::CardTypeChosen(_)

@@ -177,3 +177,10 @@ fn the_assistant_tab_points_to_the_screen_and_the_screen_is_in_the_sidebar() {
     h.run_steps(4);
     assert!(h.query_all_by_label("Prompts").count() >= 1);
 }
+
+#[test]
+fn the_search_matches_the_category_name_too() {
+    let mut m = on_the_tab();
+    apply(&mut m, Msg::Prompts(PromptsMsg::Query("tutoring".into())));
+    assert_eq!(ids(&m), ["exam", "socratic"]);
+}

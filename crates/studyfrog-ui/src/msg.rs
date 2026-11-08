@@ -202,6 +202,8 @@ pub enum Msg {
     ReportsBuilt(Result<ReportBundle, String>),
     /// The achievements were measured.
     AchievementsChecked(Result<AchievementReport, String>),
+    /// The application's logs folder: open it, or how that went (STORY-0122).
+    Logs(crate::logs_ui::LogsMsg),
     /// Something happened on the achievements screen or its stack summary.
     Achievements(crate::achievements::AchievementsMsg),
     /// Something happened on the calendar screen.

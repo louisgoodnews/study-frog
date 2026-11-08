@@ -135,8 +135,9 @@ impl Default for TransferState {
 /// What the worker is asked to do.
 #[derive(Debug, Clone, PartialEq)]
 pub enum TransferJob {
-    /// Write the reports as a CSV file into the vault's `exports` folder.
-    ReportCsv,
+    /// Write the reports as a CSV file into the vault's `exports` folder, or (true) into a folder
+    /// chosen in the folder dialog.
+    ReportCsv(bool),
     /// Ask for a file (or a folder).
     Browse(bool),
     /// Look for Obsidian vaults and Anki files to suggest.

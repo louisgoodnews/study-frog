@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Reports as CSV (STORY-0098): the totals of learned and mastered items and the active streak, and per stack its items, due, learned, mastered, reviews, average interval and retention; "Save CSV to..." next to "Export as CSV" writes into a folder chosen in the folder dialog.
+- Settings > Data > **Open logs folder** shows the logs in the system's file manager (STORY-0122); the application log now also records failed background work, import and export outcomes with their warnings and skipped rows, and work that took two seconds or more (source `worker`), from the window and from headless instances.
+- `studyfrog --screenshot ... --screen achievements:<folder>|global` and `--screen prompts:<category>` open the achievements filtered and the Prompts screen on a category (STORY-0087, STORY-0092).
 - "Test connection to <name>" on the assistant's Connections tab (STORY-0083, STORY-0084): one tiny request without vault text through the usual path (a remote provider must be allowed first) and "Works: ..." or the error sentence under the connection, never with the key; tested against fake local servers in the Gemini and DeepSeek formats through the real HTTP sender.
 - PDF viewer measurements (STORY-0085, BUG-0010): `tests/pdf_frame_time.rs` drives a 500-page file frame by frame (update, layout and tessellation; median 8.3 ms in a debug build against 16.7 ms) and counts the thumbnail requests; `tests/pdf_sharpness.rs` checks the texels per screen pixel of the painted page at every zoom, fit mode, density and window size.
 - `studyfrog --screenshot ... --screen "pdf:<path>[@fit-width|fit-page|<percent>][+pages]"` opens the PDF viewer for the picture and waits for its pages to be drawn (BUG-0010).
@@ -47,6 +50,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - Store migration 24: `item.key`, `item.color` and a `key_counter` table, so a deleted item's key is not handed out again (STORY-0096).
 
 ### Changed
+- The prompt search also matches the category name (STORY-0092); in Settings > Data the Copy buttons come before the paths (STORY-0122); "Test connection" sits on its own line under each connection (STORY-0083).
 - PDF viewer pictures are kept by last use (true LRU): a page or thumbnail drawn again moves to the newest end of its cache, so the least recently used goes first (STORY-0085).
 - The sidebar scrolls when the window is too low for all its screens (STORY-0133).
 - On a narrow window the vault name in the top bar is cut short instead of being drawn under the search field, and the search field may shrink further, to make room for the focus timer (STORY-0112).

@@ -24,7 +24,7 @@ pub struct Shot {
     /// The screen: `home`, `library`, `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or
     /// `run` (opens Rehearse and starts a run of everything), `exam-setup`, `exam` (an exam with a draft answer),
     /// `exam-result` (an exam answered to the end), `reports:<tab>` (a tab of the reports: `performance`, `memory`,
-    /// `familiarity`, `calibration`, `runs`, `habits`, `leeches`, `workload`), `stack:<folder>` or `item:<ULID>` (the item page), `extract:<ULID>` (a note's sync preview), `run-answer` (a run with the first answer shown), `focus`, `focus-done` (the focus timer), `contrast:<ULID>,<ULID>` and `compare:<ULID>,<ULID>` (a contrastive drill,
+    /// `familiarity`, `calibration`, `runs`, `habits`, `leeches`, `workload`), `stack:<folder>` or `item:<ULID>`, `achievements:<folder>|global` (filtered), `prompts:<category>` (the item page), `extract:<ULID>` (a note's sync preview), `run-answer` (a run with the first answer shown), `focus`, `focus-done` (the focus timer), `contrast:<ULID>,<ULID>` and `compare:<ULID>,<ULID>` (a contrastive drill,
     /// fresh or matched and checked), `pdf:<path>[@<zoom>][+pages]` (the PDF viewer, `app_shot_pdf`);
     /// `None` keeps the first screen.
     pub screen: Option<String>,
@@ -67,6 +67,35 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
         return fx;
     }
     if let Some(fx) = crate::app_shot_pdf::setup(model, name) {
+        return fx;
+    }
+    if let Some(word) = name.strip_prefix("prompts:") {
+        use studyfrog_service::prompts_meta::{CATEGORIES, category_name};
+        let mut fx = apply(model, Msg::Navigate(Screen::Prompts));
+        let c = CATEGORIES
+            .iter()
+            .copied()
+            .find(|c| category_name(*c).eq_ignore_ascii_case(word));
+        let m = crate::prompts_ui::PromptsMsg::Category(c);
+        fx.extend(apply(model, Msg::Prompts(m)));
+        return fx;
+    }
+    if let Some(which) = name.strip_prefix("achievements:") {
+        let mut fx = apply(model, Msg::Navigate(Screen::Achievements));
+        let stacks = model
+            .state
+            .vault
+            .as_ref()
+            .map(|v| v.overview.stacks.clone());
+        let uid = stacks
+            .unwrap_or_default()
+            .into_iter()
+            .find(|s| s.folder == which);
+        let filter = uid.map_or(crate::achievements::Filter::Global, |s| {
+            crate::achievements::Filter::Stack(studyfrog_md::ulid::format_ulid(s.uid))
+        });
+        let m = crate::achievements::AchievementsMsg::Filter(filter);
+        fx.extend(apply(model, Msg::Achievements(m)));
         return fx;
     }
     if let Some(folder) = name.strip_prefix("stack:") {

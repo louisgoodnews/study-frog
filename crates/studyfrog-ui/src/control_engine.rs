@@ -9,7 +9,7 @@ use crate::control_events::publish;
 use crate::control_plan::plan_for;
 use crate::control_reply::{err_line, ok_line, result_for};
 use crate::effect::Effect;
-use crate::exec::{Worker, execute};
+use crate::exec::Worker;
 use crate::model::Model;
 use crate::msg::Msg;
 use crate::notify::log_new;
@@ -65,7 +65,7 @@ pub fn settle(e: &mut Engine, mut effects: Vec<Effect>) {
         let now_ns = e.model.state.wall_ms.saturating_mul(1_000_000);
         let msgs: Vec<Msg> = effects
             .drain(..)
-            .flat_map(|fx| execute(&mut e.worker, fx, now_ns))
+            .flat_map(|fx| crate::exec_log::execute_logged(&mut e.worker, fx, now_ns))
             .collect();
         effects = msgs.into_iter().flat_map(|m| apply_logged(e, m)).collect();
     }

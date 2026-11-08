@@ -86,6 +86,7 @@ pub mod queue_data;
 pub mod rehearse;
 pub mod reminders;
 pub mod report_csv;
+pub mod report_extras;
 pub mod reports;
 pub mod rerate;
 pub mod restore;

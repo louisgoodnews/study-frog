@@ -2,7 +2,7 @@
 id: STORY-0087
 type: story
 title: Per-stack achievement UI and filtering
-status: review
+status: done
 epic: EPIC-029
 parents: [EPIC-029]
 estimate: 3
@@ -44,7 +44,9 @@ Enhance the achievements presentation in `studyfrog-ui` and `studyfrog-service`:
 - Release target: version 0.5.0 (Phase M12).
 
 ## Progress (2026-11-08)
-Built and tested headless: the filter (All, Global, one stack), groups by category and by stack with the unlocked ones first, `X / Y` bars, and the summary link on a stack's page (which asks for the report once if it is not loaded). Not looked at in a real window.
+Built and tested headless: the filter (All, Global, one stack), groups by category and by stack with the unlocked ones first, `X / Y` bars, and the summary link on a stack's page (which asks for the report once if it is not loaded).
+
+Seen in the real binary (scratch vault with stacks Bio and Chemistry): `--screen achievements` shows the filter pills All, Global, Bio, Chemistry and the list grouped by category ("Streaks (0 / 7 unlocked)"); `--screen achievements:bio` (new screenshot name) shows Bio selected and only its achievements under the heading "Bio (0 / 9 unlocked)"; `--screen stack:bio` shows "0 / 9 achievements unlocked" under the stack's status line. A cosmetic detail: the `0 / 10` text of a progress bar is drawn over the bar's knob.
 
 ## Dependencies
 EPIC-029, STORY-0086.

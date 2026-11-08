@@ -107,7 +107,13 @@ pub fn prompts_tab(state: &crate::state::State, ui: &mut egui::Ui, out: &mut Vec
     let (weak, view) = (palette_of(ui).text_weak, &state.prompts_view);
     ui.label(RichText::new("Prompts for any AI chat. Copy one, attach your file (notes, code, data or text from a PDF) and paste the answer into a file ending in .csv; then import it. No connection to an assistant is needed.").color(weak));
     category_pills(view, ui, out);
-    if let Some(query) = text_field(ui, "Search prompts", &view.query, "Search by title", 1) {
+    if let Some(query) = text_field(
+        ui,
+        "Search prompts",
+        &view.query,
+        "Search by title, category or what it is for",
+        1,
+    ) {
         send(out, PromptsMsg::Query(query));
     }
     if ui.button("Save all prompts to a folder…").clicked() {

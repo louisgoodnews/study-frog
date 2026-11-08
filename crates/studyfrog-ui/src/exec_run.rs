@@ -163,26 +163,6 @@ pub fn reports(w: &Worker, now_ns: i64) -> Msg {
     Msg::ReportsBuilt(result)
 }
 
-/// Write the reports as a CSV file into the vault's `exports` folder; the path, or why not.
-pub fn report_csv_file(w: &Worker, now_ns: i64) -> Result<String, String> {
-    use studyfrog_core::civil::{date_from_days, format_date};
-    use studyfrog_service::report_csv::{data_of, report_csv, report_csv_name};
-    let session = w.session.as_ref().ok_or("no vault is open")?;
-    let now = UnixMs(millis(now_ns));
-    let bundle = build_reports_local(session, now).map_err(|e| e.to_string())?;
-    let day = format_date(date_from_days(now.0.div_euclid(86_400_000)));
-    let vault = session.root.file_name().map_or_else(
-        || "vault".to_owned(),
-        |name| name.to_string_lossy().into_owned(),
-    );
-    let dir = session.root.join("exports");
-    std::fs::create_dir_all(&dir).map_err(|e| format!("{}: {e}", dir.display()))?;
-    let target = dir.join(report_csv_name(&vault, &day));
-    std::fs::write(&target, report_csv(&data_of(&bundle)))
-        .map_err(|e| format!("{}: {e}", target.display()))?;
-    Ok(target.display().to_string())
-}
-
 /// Read the home screen's numbers at the current local time.
 pub fn home(w: &Worker, now_ns: i64) -> Msg {
     let now = UnixMs(millis(now_ns));

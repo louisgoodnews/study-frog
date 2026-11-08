@@ -2,7 +2,7 @@
 id: EPIC-030
 type: epic
 title: Prompt expansion
-status: backlog
+status: done
 parents: []
 labels: [m12, agent, docs, ui]
 acceptance_criteria:
@@ -28,9 +28,9 @@ Expand StudyFrog's prompt library and interactive prompting capabilities in vers
    - Organize the prompt library into intuitive functional categories (Content Generation, Interactive Tutoring & Examination, Comprehension & Analysis) and support interactive parameter selection in the Assistant UI.
 
 ## Acceptance Criteria
-- [ ] The prompt library is expanded with comprehensive interactive and analytical prompt templates (explanation, examination, Socratic dialogue, and concept mapping)
-- [ ] Prompts support multi-level depth parameters and structured feedback cycles for user study sessions
-- [ ] The prompt library UI is categorized and supports running interactive prompts directly with connected AI assistants
+- [x] The prompt library is expanded with comprehensive interactive and analytical prompt templates (explanation, examination, Socratic dialogue, and concept mapping)
+- [x] Prompts support multi-level depth parameters and structured feedback cycles for user study sessions
+- [x] The prompt library UI is categorized and supports running interactive prompts directly with connected AI assistants
 
 ## Design Notes
 Child issues planned for version 0.5.0:

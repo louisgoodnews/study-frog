@@ -40,6 +40,12 @@ The AI assistant has its own screen: [[assistant]].
   **Also replace my settings with the ones in the backup** if you want those too; your old settings are kept next to
   them.
 - **Import and export**: **Export…** and **Import…** open the import and export dialog. See [[import-export]].
+- **Application files**: where StudyFrog keeps its own settings, keys, language models and logs (usually
+  `~/.local/share/studyfrog`), each with **Copy**. **Open logs folder** shows the logs in your file manager. The log
+  (`studyfrog.log`, and `console.jsonl` with one JSON object per line) holds every notice, failed background work
+  (a file that could not be read, a vault that could not be opened), import and export outcomes with their warnings
+  and skipped rows, and work that took longer than two seconds. In a terminal: `studyfrog logs --tail 50 [--follow]
+  [--json]` and `studyfrog --print-paths`.
 
 ## Subjects and teachers
 

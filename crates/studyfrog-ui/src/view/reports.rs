@@ -59,8 +59,18 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .clicked()
         {
             out.push(Msg::Library(LibraryMsg::Transfer(
-                TransferMsg::ExportReport,
+                TransferMsg::ExportReport(false),
             )));
+        }
+        let pick = egui::Button::new("Save CSV to...");
+        let tip = "Choose a folder and write the reports there as a CSV file.";
+        if ui
+            .add_enabled(state.vault.is_some(), pick)
+            .on_hover_text(tip)
+            .clicked()
+        {
+            let to = TransferMsg::ExportReport(true);
+            out.push(Msg::Library(LibraryMsg::Transfer(to)));
         }
     });
     ui.add_space(4.0);
