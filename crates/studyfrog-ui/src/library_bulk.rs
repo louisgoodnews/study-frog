@@ -37,6 +37,8 @@ pub enum LibraryEffect {
     AssignKeys,
     /// Start a practice run of exactly these items (a contrastive drill).
     Drill(Vec<Uid>),
+    /// Set the desired retention (thousandths) of the stack at this folder, or of the vault.
+    ApplyRetention(Option<String>, u16),
 }
 
 /// What happened to the selection, the bulk bar or the saved filters.

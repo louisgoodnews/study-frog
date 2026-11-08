@@ -156,6 +156,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             for p in &plan.pacers {
                 crate::view::report_pacer::draw(p, ui);
             }
+            kit::section(ui, "Workload against desired retention");
+            let c = &plan.cmrr;
+            crate::view::report_cmrr::draw(&c.vault, c.current, None, "the vault", ui, out);
         });
     });
 }

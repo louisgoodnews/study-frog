@@ -2,7 +2,7 @@
 id: STORY-0106
 type: story
 title: Workload-versus-retention simulator and minimum recommended retention (CMRR)
-status: in_progress
+status: done
 epic: EPIC-034
 parents: [EPIC-034]
 estimate: 5
@@ -36,9 +36,9 @@ Implement a pure Rust Workload-vs-Retention & CMRR simulator in `studyfrog-repor
    - Provide an `"Apply recommended retention"` button that updates `desired_retention` for the vault or active stack.
 
 ## Acceptance Criteria
-- [ ] studyfrog-report simulates long-term daily study workload (reviews/day and minutes/day) and total memorized items across desired retention targets from 0.75 to 0.97
-- [ ] The simulator computes the learner's Minimum Recommended Retention (CMRR) that maximizes retained knowledge per minute of study time and identifies the point where lower retention increases relearning workload
-- [ ] Users can inspect the Workload vs. Retention curve in Reports and Stack Settings and apply the recommended retention with one click
+- [x] studyfrog-report simulates long-term daily study workload (reviews/day and minutes/day) and total memorized items across desired retention targets from 0.75 to 0.97
+- [x] The simulator computes the learner's Minimum Recommended Retention (CMRR) that maximizes retained knowledge per minute of study time and identifies the point where lower retention increases relearning workload
+- [x] Users can inspect the Workload vs. Retention curve in Reports and Stack Settings and apply the recommended retention with one click
 
 ## Design Notes
 - Touchpoints:
@@ -46,6 +46,30 @@ Implement a pure Rust Workload-vs-Retention & CMRR simulator in `studyfrog-repor
   - `crates/studyfrog-service/src/reports.rs`: compute `CmrrReport` for vault and stack scopes.
   - `crates/studyfrog-ui/src/view/reports.rs` and `stack_view`: render trade-off chart and one-click apply action.
 - Adhere to P1 (no inherent `impl` blocks) and P2 (≤ 250 lines per file).
+
+## Progress (2026-11-08)
+Built and verified:
+- `crates/studyfrog-report/src/cmrr.rs`: the deck simulated (STORY-0105 engine, same random numbers at every
+  target) for 180 days at each of 0.75, 0.78, ..., 0.97 with FSRS parameters at that retention: reviews and minutes
+  a day, cards remembered at the end (sum of recall), mean recall, cards per daily minute; the least-work target
+  (below it forgetting adds more relearning than it saves) and the recommendation (most cards per minute at or above
+  the least-work target). Tests: `crates/studyfrog-report/tests/cmrr.rs` (grid, cost rises at the top, the
+  recommendation rule, a U-shaped curve when relearning is costly and intervals are capped, empty deck, seeds).
+- `crates/studyfrog-config/src/retention_edit.rs`: sets `request_retention` in `_stack.toml` (top level) or
+  `studyfrog.toml` (`[srs]`) keeping comments and other keys (tests `crates/studyfrog-config/tests/retention_edit.rs`).
+- Service `crates/studyfrog-service/src/analytics_cmrr.rs`: the vault's curve (4 futures) and each stack's own
+  cards (2 futures) in `analytics.plan.cmrr`; `apply_retention` writes the file, reindexes and returns the vault
+  (fixture-vault tests `crates/studyfrog-service/tests/analytics_cmrr.rs`).
+- UI: the curve (target with marks "recommended", "least work", "now"; minutes a day on the bar; reviews, cards
+  remembered and cards per minute as text) and "Apply recommended retention X to ..." on Reports > Workload (vault)
+  and on the stack's Reports tab (that stack's `_stack.toml`); the result refreshes the vault and rebuilds the
+  reports (`view/report_cmrr.rs`; harness and worker tests `crates/studyfrog-ui/tests/reports_cmrr_ui.rs`;
+  screenshot `--screen reports:workload`).
+- Benchmark: CMRR of 5,000 cards, 12 targets, 180 days, 4 futures: 45.4 ms (budget 50 ms); the per-stack curves
+  use 2 futures (about half of that together).
+
+Note on criterion 3: the stack page has no "Settings" tab (a stack's settings are its `_stack.toml`); the stack's
+curve and its one-click apply are on the stack's Reports tab and write that file.
 
 ## Dependencies
 EPIC-034, STORY-0105.

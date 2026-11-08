@@ -77,6 +77,7 @@ pub fn plan() -> studyfrog_service::analytics_plan::Plan {
                 on_track: true,
             },
         }],
+        cmrr: cmrr(),
     }
 }
 
@@ -182,4 +183,38 @@ pub fn tiring() -> Vec<studyfrog_report::session_log::SessionSample> {
         }
     }
     out
+}
+
+/// Three targets: 0.80 costs 6 minutes a day, 0.86 the least (5) and remembers the most per minute, 0.90 is set now.
+pub fn cmrr() -> studyfrog_service::analytics_cmrr::Cmrr {
+    use studyfrog_report::cmrr::{CmrrPoint, CmrrReport};
+    let point = |retention, daily_minutes, daily_reviews, memorized: f32| CmrrPoint {
+        retention,
+        daily_reviews,
+        daily_minutes,
+        memorized,
+        mean_retention: retention,
+        efficiency: memorized / daily_minutes,
+    };
+    let report = CmrrReport {
+        days: 180,
+        points: vec![
+            point(0.80, 6.0, 30.0, 100.0),
+            point(0.86, 5.0, 35.0, 110.0),
+            point(0.90, 5.5, 40.0, 115.0),
+        ],
+        min_workload_retention: Some(0.86),
+        recommended: Some(0.86),
+    };
+    studyfrog_service::analytics_cmrr::Cmrr {
+        current: 0.9,
+        vault: report.clone(),
+        stacks: vec![studyfrog_service::analytics_cmrr::StackCmrr {
+            uid: Uid(1),
+            folder: "french".into(),
+            title: "French".into(),
+            current: 0.9,
+            report,
+        }],
+    }
 }

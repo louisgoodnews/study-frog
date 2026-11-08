@@ -9,6 +9,7 @@ pub mod filters;
 pub mod paths;
 pub mod pdf_marks;
 pub mod profiles;
+pub mod retention_edit;
 pub mod stack;
 pub mod subjects;
 pub mod values;

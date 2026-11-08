@@ -41,3 +41,29 @@ pub fn drill(state: State, items: Vec<studyfrog_core::uid::Uid>) -> (State, Vec<
     )));
     (state, effects)
 }
+
+/// The desired retention was written: keep the refreshed vault, say so and compute the reports again.
+pub fn retention_applied(
+    state: State,
+    result: Result<Box<crate::state::VaultInfo>, String>,
+) -> (State, Vec<Effect>) {
+    let mut state = state;
+    match result {
+        Ok(info) => {
+            state.vault = Some(*info);
+            state.notice = Some(Notice {
+                kind: NoticeKind::Info,
+                text: "The desired retention was changed; the reports are computed again."
+                    .to_owned(),
+            });
+            (state, vec![Effect::BuildReports])
+        }
+        Err(e) => {
+            state.notice = Some(Notice {
+                kind: NoticeKind::Error,
+                text: format!("Could not change the desired retention: {e}"),
+            });
+            (state, Vec::new())
+        }
+    }
+}

@@ -72,6 +72,7 @@ mod preview;
 mod preview_rich;
 mod profiles;
 mod prompts_screen;
+mod report_cmrr;
 mod report_pacer;
 mod report_rows;
 mod reports;

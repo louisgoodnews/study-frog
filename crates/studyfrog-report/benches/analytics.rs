@@ -187,5 +187,24 @@ fn forecasts(c: &mut Criterion) {
     }
 }
 
-criterion_group!(benches, survival, habits, leeches, forecasts);
+fn retention_curve(c: &mut Criterion) {
+    use studyfrog_report::cmrr::cmrr;
+    let (cards, p) = (deck(5_000), params_default());
+    let s = sim_setup(180, 4);
+    c.bench_function(
+        "cmrr of 5,000 cards, 12 targets, 180 days, 4 futures",
+        |b| {
+            b.iter(|| cmrr(black_box(&cards), &s, &p));
+        },
+    );
+}
+
+criterion_group!(
+    benches,
+    survival,
+    habits,
+    leeches,
+    forecasts,
+    retention_curve
+);
 criterion_main!(benches);

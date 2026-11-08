@@ -22,6 +22,13 @@ pub fn run(w: &mut Worker, effect: LibraryEffect, now_ns: i64) -> Msg {
     };
     match effect {
         LibraryEffect::Drill(items) => crate::exec_run::drill(s, &items, now_ns),
+        LibraryEffect::ApplyRetention(folder, permille) => {
+            let r = f32::from(permille) / 1000.0;
+            let done = studyfrog_service::analytics_cmrr::apply_retention(s, folder.as_deref(), r)
+                .map(Box::new)
+                .map_err(|e| studyfrog_service::session::describe_service_error(&e));
+            Msg::Explorer(crate::explorer_ui::ExplorerMsg::RetentionApplied(done))
+        }
         LibraryEffect::LoadFilters => msg(BulkMsg::FiltersLoaded(Ok(load_filters(s)))),
         LibraryEffect::SaveFilter(f) => msg(BulkMsg::FiltersSaved(
             save_filter(s, f).map_err(|e| e.to_string()),

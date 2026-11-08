@@ -66,7 +66,7 @@ pub struct ExplorerState {
 }
 
 /// Messages of the explorer.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ExplorerMsg {
     /// The other tab.
     Tab(ReportTab),
@@ -88,6 +88,10 @@ pub enum ExplorerMsg {
     Horizon(u16),
     /// Show the workload in minutes (true) or reviews.
     Minutes(bool),
+    /// Set the desired retention (in thousandths) of the stack at this folder, or of the vault.
+    ApplyRetention(Option<String>, u16),
+    /// The settings were written: the refreshed vault, or why not.
+    RetentionApplied(Result<Box<crate::state::VaultInfo>, String>),
 }
 
 fn ask(state: State, scope: Scope, period: Period) -> (State, Vec<Effect>) {
@@ -126,6 +130,11 @@ pub fn update(state: State, msg: ExplorerMsg) -> (State, Vec<Effect>) {
             (state, vec![Effect::Library(fx)])
         }
         ExplorerMsg::Drill(items) => crate::reports::drill(state, items),
+        ExplorerMsg::ApplyRetention(folder, permille) => {
+            let fx = crate::library_bulk::LibraryEffect::ApplyRetention(folder, permille);
+            (state, vec![Effect::Library(fx)])
+        }
+        ExplorerMsg::RetentionApplied(result) => crate::reports::retention_applied(state, result),
         ExplorerMsg::Horizon(days) => {
             let mut state = state;
             state.explorer.horizon = days;

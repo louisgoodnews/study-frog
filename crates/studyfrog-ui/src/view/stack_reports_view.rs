@@ -37,6 +37,10 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         crate::view::report_pacer::draw(p, ui);
     }
     let a = &b.analytics;
+    if let Some(c) = a.plan.cmrr.stacks.iter().find(|c| c.folder == folder) {
+        crate::view::kit::section(ui, "Workload against desired retention");
+        crate::view::report_cmrr::draw(&c.report, c.current, Some(folder), &c.title, ui, out);
+    }
     let mine = |f: &str| crate::view::reports_leeches::in_stack(f, folder);
     let leeches: Vec<_> = a.leeches.iter().filter(|r| mine(&r.folder)).collect();
     let pairs: Vec<_> = a

@@ -8,6 +8,7 @@ pub mod agent_help;
 pub mod agent_pdf;
 pub mod agent_vault;
 pub mod analytics;
+pub mod analytics_cmrr;
 pub mod analytics_deck;
 pub mod analytics_leech;
 pub mod analytics_plan;

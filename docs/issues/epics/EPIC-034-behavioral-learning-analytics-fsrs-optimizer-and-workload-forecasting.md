@@ -2,7 +2,7 @@
 id: EPIC-034
 type: epic
 title: Behavioral learning analytics, FSRS optimizer, and workload forecasting
-status: in_progress
+status: done
 parents: []
 labels: [m12, report, srs, service, ui]
 acceptance_criteria:
@@ -34,9 +34,9 @@ Expand StudyFrog's statistical analysis of learning patterns/behaviors and its f
    - Plot empirical recall rates against FSRS theoretical retrievability $R(t, S)$ across stability tiers (`<7d`, `7–30d`, `30–90d`, `90d+`) and compute **True Retention** (retention on mature items reviewed on time) vs. early and overdue retention.
 
 ## Acceptance Criteria
-- [ ] StudyFrog analyzes chronobiological (hour-of-day and day-of-week) performance, within-session cognitive fatigue, empirical forgetting curves, true retention, and leech/interference clusters from existing review and event logs
-- [ ] The forecasting engine simulates per-item FSRS-6/SM-2 state transitions forward in time to project daily review counts (by learning stage), expected study minutes, confidence bands, and exam-deadline daily quotas
-- [ ] Users can run a Workload vs. Desired Retention (CMRR) simulation to find the optimal retention target that maximizes knowledge retained per minute of study time
+- [x] StudyFrog analyzes chronobiological (hour-of-day and day-of-week) performance, within-session cognitive fatigue, empirical forgetting curves, true retention, and leech/interference clusters from existing review and event logs
+- [x] The forecasting engine simulates per-item FSRS-6/SM-2 state transitions forward in time to project daily review counts (by learning stage), expected study minutes, confidence bands, and exam-deadline daily quotas
+- [x] Users can run a Workload vs. Desired Retention (CMRR) simulation to find the optimal retention target that maximizes knowledge retained per minute of study time
 
 ## Design Notes
 Child stories:
@@ -51,6 +51,17 @@ Architecture and performance guardrails:
 - All statistical and simulation functions in `crates/studyfrog-report` must remain 100% pure, deterministic (seeded RNG for Monte Carlo simulation), and free of I/O (`check-deps.sh`).
 - Keep per-report computation within the 50 ms budget on 100,000 reviews (`docs/specs/reports.md`).
 - Enforce zero inherent `impl` blocks (P1) and ≤ 250 lines per `.rs` file (P2).
+
+## Progress (2026-11-08)
+All six stories are done (each with its own Progress section): STORY-0107 true retention and forgetting curves
+(Reports > Memory), STORY-0102 hour/weekday profile and STORY-0103 fatigue (Reports > Habits, slow-answer line in
+runs), STORY-0104 leeches and confusion pairs with drills (Reports > Leeches, stack Reports tab), STORY-0105 the
+simulated forecast with study minutes and the exam pacer (Reports > Workload, stack Summary and Reports), STORY-0106
+workload against desired retention with one-click apply. Pure functions in `studyfrog-report` (seeded simulations),
+assembled in `studyfrog-service/src/analytics*.rs` into `ReportBundle.analytics`; benchmarks in
+`crates/studyfrog-report/benches/analytics.rs`, all within 50 ms (docs/contributing/BENCHMARKING.md). Checked by
+unit, property, fixture-vault and harness tests and by screenshots (`--screen reports:<tab>`); not yet used by a
+person in a real window.
 
 ## Dependencies
 EPIC-004 (SRS Scheduling), EPIC-015 (Reporting and Forecasting), EPIC-019 (Rehearsal Insights), and EPIC-024 (Diary and Calibration).

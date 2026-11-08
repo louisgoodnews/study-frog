@@ -14,6 +14,7 @@ replaced by a measured baseline when its crate gets its first benchmark (the own
 | Graph layout + projection | graph | 5k nodes, 10k edges: < 8 ms per frame, zero allocation (measured 4.0 ms, 0 allocs) | half of the 16.6 ms frame budget, leaving the rest for painting | TASK-0043 (done) |
 | Analytics (EPIC-034): survival, chronotype, fatigue, leeches | report | < 50 ms each on 100k reviews | the reports screen computes them all on open (docs/specs/reports.md) | STORY-0107, 0102-0104 |
 | Simulated forecast (EPIC-034) | report | 5,000 cards, 365 days, 16 futures < 50 ms | computed with the reports on open | STORY-0105 |
+| Workload against retention (CMRR) | report | 5,000 cards, 12 targets, 180 days < 50 ms | computed with the reports on open | STORY-0106 |
 | PDF: structure / all text / one page's words / draw one page, 500 pages | pdf | < 50 ms / < 2 s / < 100 ms / < 50 ms | opening must feel instant, a first scan of a big PDF is a background pass, turning a page and drawing it stay under a tenth of a second | TASK-0122 (done) |
 
 Rules: commit baselines with `--save-baseline`; PRs touching a hot path report the diff;
@@ -166,3 +167,4 @@ seed 1; release profile, this machine, criterion with 3 s measurement):
 | 2026-11-08 | confusion pairs of 400 lapsing items | 3.0 ms | < 50 ms |
 | 2026-11-08 | forecast of 5,000 cards, 90 days, 16 futures | 7.9 ms | < 50 ms |
 | 2026-11-08 | forecast of 5,000 cards, 365 days, 16 futures | 21.0 ms | < 50 ms |
+| 2026-11-08 | cmrr of 5,000 cards, 12 targets, 180 days, 4 futures | 45.4 ms | < 50 ms |

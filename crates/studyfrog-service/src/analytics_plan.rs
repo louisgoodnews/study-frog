@@ -55,6 +55,8 @@ pub struct Plan {
     pub mix: Option<RatingMix>,
     /// One per stack with an exam or due date ahead.
     pub pacers: Vec<StackPace>,
+    /// Workload against desired retention, for the vault and each stack.
+    pub cmrr: crate::analytics_cmrr::Cmrr,
 }
 
 /// What the deck is built from.
@@ -126,12 +128,11 @@ fn exam_days(session: &VaultSession, today: i64) -> Result<HashMap<Uid, i64>, St
 
 fn pacers(
     session: &VaultSession,
-    d: &DeckInput,
+    (d, all): (&DeckInput, &[StateRow]),
     mix: RatingMix,
     today: i64,
     p: &Params,
 ) -> Result<Vec<StackPace>, StoreError> {
-    let all = load_state_rows(&session.conn, false)?;
     let mut out = Vec::new();
     for (stack, exam_day) in exam_days(session, today)? {
         let Some(row) = d.stacks.iter().find(|s| s.uid == stack) else {
@@ -188,7 +189,11 @@ pub fn plan_of(
         scheduler: current_settings(session).scheduler,
         offset,
     };
-    let cards = deck(&d, &load_state_rows(&session.conn, true)?, |_| true);
+    let (primary, all) = (
+        load_state_rows(&session.conn, true)?,
+        load_state_rows(&session.conn, false)?,
+    );
+    let cards = deck(&d, &primary, |_| true);
     let mix = rating_mix(h.rows);
     let setup = SimSetup {
         today,
@@ -206,6 +211,7 @@ pub fn plan_of(
         miss_probability: setup.miss_probability,
         new_per_day: setup.new_per_day,
         mix: Some(mix),
-        pacers: pacers(session, &d, mix, today, p)?,
+        pacers: pacers(session, (&d, &all), mix, today, p)?,
+        cmrr: crate::analytics_cmrr::cmrr_of(session, &d, (&primary, &all), &setup, p)?,
     })
 }
