@@ -99,9 +99,11 @@ fn create(session: &mut VaultSession, change: &Change, ids: IdSource) -> Result<
             reference.as_str(),
             source.as_deref(),
         ),
-        Change::UpdateItem { .. } | Change::CreatePage { .. } | Change::UpdatePage { .. } => {
-            return Ok(());
-        }
+        Change::UpdateItem { .. }
+        | Change::CreatePage { .. }
+        | Change::UpdatePage { .. }
+        | Change::LogDiary(_)
+        | Change::PlanSession(_) => return Ok(()),
     };
     let source = from.and_then(|s| s.strip_prefix(PDF_PREFIX));
     let item = NewItem {
@@ -137,6 +139,12 @@ pub fn apply_changes(
             }
             Change::UpdatePage { .. } => {
                 crate::agent_help::apply_page(&session.root, change).map(|()| out.updated += 1)
+            }
+            Change::LogDiary(d) => crate::agent_apply_more::apply_diary(session, d, nth(ids, i))
+                .map(|()| out.created += 1),
+            Change::PlanSession(p) => {
+                crate::agent_apply_more::apply_session(session, p, nth(ids, i))
+                    .map(|()| out.created += 1)
             }
             other => create(session, other, nth(ids, i)).map(|()| out.created += 1),
         };

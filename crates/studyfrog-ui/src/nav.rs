@@ -29,7 +29,11 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
         }
         Screen::Agent => {
             let pages = Effect::Help(crate::help_types::HelpEffect::Load);
-            (State { screen, ..state }, vec![Effect::LoadAgent, pages])
+            let mcp = Effect::Agent(crate::agent_mcp_types::AgentEffect::LoadMcp);
+            (
+                State { screen, ..state },
+                vec![Effect::LoadAgent, mcp, pages],
+            )
         }
         Screen::Reports => {
             let ask = crate::explorer_ui::refresh(&state);

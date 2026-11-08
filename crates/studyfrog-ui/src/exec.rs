@@ -132,10 +132,9 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::Prompts(e) => crate::exec_prompts::run(w, e),
         Effect::Diary(e) => return crate::exec_diary::execute(w, e, now_ns),
         Effect::LoadHome => exec_run::home(w, now_ns),
+        Effect::Agent(e) => crate::exec_mcp::run(w, e, now_ns),
         e @ (Effect::LoadAgent
         | Effect::SaveConnection { .. }
-        | Effect::RemoveConnection(_)
-        | Effect::AllowConnection(..)
         | Effect::PrepareWiki { .. }
         | Effect::AgentChat { .. }
         | Effect::ApplyChanges(_)

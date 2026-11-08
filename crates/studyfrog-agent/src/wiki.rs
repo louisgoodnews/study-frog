@@ -18,62 +18,7 @@ pub struct ContextItem {
     pub text: String,
 }
 
-/// A change the model proposes.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Change {
-    /// A new note.
-    CreateNote {
-        /// The stack folder.
-        stack: String,
-        /// Title.
-        title: String,
-        /// Markdown body.
-        body: String,
-    },
-    /// A new card.
-    CreateCard {
-        /// The stack folder.
-        stack: String,
-        /// Front.
-        front: String,
-        /// Back.
-        back: String,
-        /// The id of the PDF page it comes from, when the model was given PDF pages.
-        source: Option<String>,
-    },
-    /// A new question.
-    CreateQuestion {
-        /// The stack folder.
-        stack: String,
-        /// The question.
-        prompt: String,
-        /// The reference answer.
-        reference: String,
-        /// The id of the PDF page it comes from, when the model was given PDF pages.
-        source: Option<String>,
-    },
-    /// A new help page of the user, in the vault's `wiki/` folder.
-    CreatePage {
-        /// The file name without `.md`.
-        name: String,
-        /// The Markdown.
-        text: String,
-    },
-    /// New text for one of the user's help pages (never a supplied page).
-    UpdatePage {
-        /// The file name without `.md`.
-        name: String,
-        /// The Markdown.
-        text: String,
-    },
-    /// New text for parts of an item (`body`, `front`, `back`, `prompt` or `reference`).
-    UpdateItem {
-        /// The item's id as text.
-        uid: String,
-        /// The parts and their new text.
-        fields: Vec<(String, String)>,
-    },
-}
+pub use crate::wiki_change::{Change, DiaryChange, SessionChange};
 
 /// What the model proposed, checked.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -153,7 +98,7 @@ fn source_of(v: &Value, uids: &[String]) -> Option<String> {
     text_of(v, "source").filter(|s| s.starts_with(PDF_PREFIX) && uids.contains(s))
 }
 
-fn change_of(v: &Value, uids: &[String], stacks: &[String]) -> Result<Change, String> {
+pub(crate) fn change_of(v: &Value, uids: &[String], stacks: &[String]) -> Result<Change, String> {
     let action = v.get("action").and_then(Value::as_str).unwrap_or("");
     let stack = || {
         text_of(v, "stack")

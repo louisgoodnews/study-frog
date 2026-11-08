@@ -67,7 +67,12 @@ removes the PDF again.
 
 Other AI tools (Claude Desktop, Cursor, Zed and others) can read your vault through the **Model Context Protocol**.
 In **Connections**, press **Copy MCP server config** and paste the block into the tool's settings. The tool then
-starts `studyfrog --mcp --vault <your vault>` by itself. The server is read-only: it offers the vault summary, each
-stack, each item as Markdown, and a search that understands the [[query-language]]. Nothing in your vault changes.
+starts `studyfrog --mcp --vault <your vault>` by itself. It offers the vault summary, each stack, each item as
+Markdown with its schedule, the reports, the diary of a day, the due queue, PDF pages, a search that understands the
+[[query-language]], and the standard prompts. The tool may also propose cards, questions, notes, diary entries and
+calendar sessions: these wait under **Work the vault > Proposals from AI tools**, where you review, apply or discard
+them like the assistant's own proposals. Nothing is written before you apply it, unless you start the server with
+`--mcp-allow-write`. Moving a stack or deleting an item needs `--mcp-allow-write --mcp-allow-destructive` as well,
+and every such change can be taken back under **Changes by AI tools**.
 Run `studyfrog --mcp` yourself only if you want to talk to it by hand: it reads one JSON message per line from
 standard input and answers on standard output.

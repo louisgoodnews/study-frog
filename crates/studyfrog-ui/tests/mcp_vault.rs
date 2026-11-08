@@ -29,8 +29,13 @@ fn a_whole_session_initializes_lists_searches_and_reads() {
     );
     let tools = answers[1]["result"]["tools"].as_array().unwrap();
     let names: Vec<&str> = tools.iter().map(|t| t["name"].as_str().unwrap()).collect();
-    assert_eq!(names, READ_ONLY_TOOLS);
-    for t in tools {
+    assert_eq!(
+        names[..5],
+        READ_ONLY_TOOLS,
+        "then the four staging authoring tools"
+    );
+    assert_eq!(names.len(), 9, "no structural tool without permission");
+    for t in &tools[..5] {
         assert_eq!(t["annotations"]["readOnlyHint"], true);
         assert_eq!(t["annotations"]["idempotentHint"], true);
         assert_eq!(t["annotations"]["destructiveHint"], false);

@@ -5,10 +5,12 @@
 
 pub mod exam;
 pub mod mcp_route;
+pub mod mcp_stage;
 pub mod mcp_types;
 pub mod mcp_uri;
 pub mod provider;
 pub mod settings;
 pub mod wiki;
+pub mod wiki_change;
 pub mod wiki_pages;
 pub mod wire;

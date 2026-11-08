@@ -4,6 +4,7 @@ use studyfrog_agent::exam::exam_opening;
 use studyfrog_agent::provider::{Message, Provider, Role, may_send};
 use studyfrog_agent::wiki::parse_proposal;
 
+use crate::agent_mcp_types::AgentEffect;
 pub use crate::agent_types::*;
 use crate::effect::Effect;
 use crate::state::{Notice, NoticeKind, State};
@@ -22,7 +23,7 @@ pub(crate) fn fail(state: State, why: String) -> (State, Vec<Effect>) {
     (State { agent, ..state }, Vec::new())
 }
 
-fn notice(state: State, text: String) -> (State, Vec<Effect>) {
+pub(crate) fn notice(state: State, text: String) -> (State, Vec<Effect>) {
     let notice = Some(Notice {
         kind: NoticeKind::Info,
         text,
@@ -73,8 +74,14 @@ pub fn update(state: State, msg: AgentMsg) -> (State, Vec<Effect>) {
         }),
         AgentMsg::Form(e) => with(state, |a| crate::agent_conn::form_edit(a, e)),
         AgentMsg::AddConnection => crate::agent_conn::add_connection(state),
-        AgentMsg::RemoveConnection(n) => (state, vec![Effect::RemoveConnection(n)]),
-        AgentMsg::Allow(n, on) => (state, vec![Effect::AllowConnection(n, on)]),
+        AgentMsg::RemoveConnection(n) => {
+            (state, vec![Effect::Agent(AgentEffect::RemoveConnection(n))])
+        }
+        AgentMsg::Allow(n, on) => (
+            state,
+            vec![Effect::Agent(AgentEffect::AllowConnection(n, on))],
+        ),
+        AgentMsg::Mcp(m) => crate::mcp_ui::update(state, m),
         AgentMsg::Instruction(t) => with(state, |a| AgentState {
             instruction: t,
             ..a
@@ -135,28 +142,7 @@ pub fn update(state: State, msg: AgentMsg) -> (State, Vec<Effect>) {
             None => fail(state, "Accept at least one change first.".to_owned()),
         },
         AgentMsg::ProposalApplied(Err(e)) => fail(state, e),
-        AgentMsg::ProposalApplied(Ok(done)) => {
-            let (applied, info) = *done;
-            let text = format!(
-                "Applied: {} created, {} updated, {} failed.",
-                applied.created,
-                applied.updated,
-                applied.failed.len()
-            );
-            let (state, _) = with(state, |a| AgentState {
-                busy: false,
-                applied: Some(applied),
-                reviewing: None,
-                ..a
-            });
-            let state = State {
-                vault: Some(info),
-                ..state
-            };
-            let (state, mut effects) = notice(state, text);
-            effects.push(Effect::Help(crate::help_types::HelpEffect::Load));
-            (state, effects)
-        }
+        AgentMsg::ProposalApplied(Ok(done)) => crate::mcp_ui::applied(state, *done),
         AgentMsg::Discard => with(state, |a| AgentState {
             pending: None,
             reviewing: None,

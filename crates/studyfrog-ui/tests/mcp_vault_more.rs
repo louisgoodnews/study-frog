@@ -38,8 +38,8 @@ fn a_session_changes_nothing_in_the_vault_even_when_writing_is_allowed() {
     let answers = session(&mut c, policy, &messages);
     assert_eq!(
         answers[0]["result"]["tools"].as_array().unwrap().len(),
-        READ_ONLY_TOOLS.len(),
-        "only read-only tools exist"
+        READ_ONLY_TOOLS.len() + 6,
+        "the read-only, authoring and structural tools are all listed"
     );
     assert_eq!(answers[4]["error"]["code"], -32602);
     assert_eq!(markdown_files(&vault.path), before);

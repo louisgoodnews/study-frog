@@ -2,7 +2,6 @@
 
 use eframe::egui::{self, RichText};
 use studyfrog_agent::provider::{host_of, is_local};
-use studyfrog_agent::wiki::Change;
 
 use crate::agent_types::{AgentMsg, AgentState, Pending, selected_provider};
 use crate::msg::Msg;
@@ -49,41 +48,6 @@ pub(super) fn busy(a: &AgentState, ui: &mut egui::Ui) {
     }
 }
 
-fn describe(c: &Change) -> (String, String) {
-    match c {
-        Change::CreateNote { stack, title, body } => {
-            (format!("New note \"{title}\" in {stack}"), body.clone())
-        }
-        Change::CreateCard {
-            stack, front, back, ..
-        } => (
-            format!("New card in {stack}: {front}"),
-            format!("Front: {front}\nBack: {back}"),
-        ),
-        Change::CreateQuestion {
-            stack,
-            prompt,
-            reference,
-            ..
-        } => (
-            format!("New question in {stack}: {prompt}"),
-            format!("Prompt: {prompt}\nReference answer: {reference}"),
-        ),
-        Change::CreatePage { name, text } => (format!("New help page \"{name}\""), text.clone()),
-        Change::UpdatePage { name, text } => {
-            (format!("Change your help page \"{name}\""), text.clone())
-        }
-        Change::UpdateItem { uid, fields } => (
-            format!("Change item {uid}"),
-            fields
-                .iter()
-                .map(|(k, v)| format!("{k}: {v}"))
-                .collect::<Vec<_>>()
-                .join("\n"),
-        ),
-    }
-}
-
 /// Work the vault: choose stacks, say what to do, review the proposal.
 pub fn wiki(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let a = &state.agent;
@@ -108,6 +72,7 @@ pub fn wiki(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if let Some(r) = &a.reviewing {
         review(r, ui, out);
     }
+    crate::view::agent_staged::staged(state, ui, out);
     if let Some(done) = &a.applied {
         ui.label(format!(
             "Applied: {} created, {} updated.",
@@ -168,7 +133,7 @@ fn review(r: &crate::agent_types::Reviewing, ui: &mut egui::Ui, out: &mut Vec<Ms
         ui.label(RichText::new(why).color(weak));
     }
     for (i, c) in r.proposal.changes.iter().enumerate() {
-        let (title, text) = describe(c);
+        let (title, text) = crate::view::agent_describe::describe(c);
         kit::card(ui, |ui| {
             ui.set_width(ui.available_width());
             let mut on = r.accepted.get(i).copied().unwrap_or(false);

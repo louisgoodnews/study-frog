@@ -123,10 +123,8 @@ pub enum Effect {
         /// Its API key, if it has one.
         key: Option<String>,
     },
-    /// Remove a connection and its key.
-    RemoveConnection(String),
-    /// Allow or forbid sending vault text to a connection.
-    AllowConnection(String, bool),
+    /// The assistant's connections, staged proposals and undo entries.
+    Agent(crate::agent_mcp_types::AgentEffect),
     /// Collect what a wiki request would send.
     PrepareWiki {
         /// The stacks to read.

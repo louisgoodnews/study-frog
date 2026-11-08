@@ -161,8 +161,6 @@ pub fn run(w: &mut Worker, effect: Effect, now_ns: i64) -> Msg {
     match effect {
         Effect::LoadAgent => load(w),
         Effect::SaveConnection { provider, key } => save(w, provider, key),
-        Effect::RemoveConnection(name) => remove(w, &name),
-        Effect::AllowConnection(name, on) => allow(w, &name, on),
         Effect::PrepareWiki { folders, pdf } => prepare_wiki(w, &folders, pdf.as_ref()),
         Effect::AgentChat {
             provider,

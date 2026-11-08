@@ -8,6 +8,7 @@ use common::views::{assert_all_named, harness, open_model};
 use egui_kittest::kittest::Queryable;
 use studyfrog_agent::provider::{Protocol, Provider};
 use studyfrog_service::agent::Connections;
+use studyfrog_ui::agent_mcp_types::AgentEffect;
 use studyfrog_ui::agent_types::{AgentMsg, FormEdit};
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::model::{Model, apply};
@@ -75,7 +76,10 @@ fn the_screen_lists_connections_with_consent_and_key_state() {
     assert!(
         h.state()
             .1
-            .contains(&Effect::AllowConnection("Cloud".into(), true))
+            .contains(&Effect::Agent(AgentEffect::AllowConnection(
+                "Cloud".into(),
+                true
+            )))
     );
     assert_all_named(&h, "assistant connections");
 }

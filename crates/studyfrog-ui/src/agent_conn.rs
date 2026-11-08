@@ -2,6 +2,7 @@
 
 use studyfrog_agent::provider::{Provider, default_base_url, default_models, is_local};
 use studyfrog_agent::settings::provider_problem;
+use studyfrog_agent::wiki::Change;
 use studyfrog_service::agent::Connections;
 
 use crate::agent_types::{AgentState, ConnForm, FormEdit};
@@ -73,4 +74,25 @@ pub(crate) fn add_connection(state: State) -> (State, Vec<Effect>) {
     let key = Some(f.key.trim().to_owned()).filter(|k| !k.is_empty());
     let (state, _) = with(state, |a| AgentState { error: None, ..a });
     (state, vec![Effect::SaveConnection { provider: p, key }])
+}
+
+/// The accepted changes of a proposal.
+pub fn accepted_changes(r: &crate::agent_types::Reviewing) -> Vec<Change> {
+    r.proposal
+        .changes
+        .iter()
+        .zip(&r.accepted)
+        .filter(|(_, on)| **on)
+        .map(|(c, _)| c.clone())
+        .collect()
+}
+
+/// The provider in use, if one is chosen and still exists.
+pub fn selected_provider(a: &crate::agent_types::AgentState) -> Option<Provider> {
+    let name = a.selected.as_ref()?;
+    a.connections
+        .providers
+        .iter()
+        .find(|p| &p.name == name)
+        .cloned()
 }

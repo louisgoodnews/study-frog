@@ -17,6 +17,7 @@ pub mod highlight;
 pub mod highlight_langs;
 mod highlight_words;
 pub mod hue;
+pub mod inline_extract;
 pub mod links;
 pub mod names;
 pub mod parse;

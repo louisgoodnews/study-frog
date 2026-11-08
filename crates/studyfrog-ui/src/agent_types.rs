@@ -1,8 +1,8 @@
 //! The state and messages of the assistant screen (ADR 0009).
 
 use studyfrog_agent::exam::{ExamItem, ExamResult};
-use studyfrog_agent::provider::{Message, Protocol, Provider};
-use studyfrog_agent::wiki::{Change, ContextItem, Proposal};
+use studyfrog_agent::provider::{Message, Protocol};
+use studyfrog_agent::wiki::{ContextItem, Proposal};
 use studyfrog_service::agent::Connections;
 use studyfrog_service::agent_vault::{Applied, WikiContext};
 
@@ -107,6 +107,8 @@ pub struct AgentState {
     pub busy: bool,
     /// The last thing that went wrong.
     pub error: Option<String>,
+    /// What AI clients staged or changed over MCP.
+    pub mcp: crate::agent_mcp_types::McpUi,
 }
 
 impl Default for AgentState {
@@ -133,6 +135,7 @@ impl Default for AgentState {
             exam_count: "5".to_owned(),
             busy: false,
             error: None,
+            mcp: crate::agent_mcp_types::McpUi::default(),
         }
     }
 }
@@ -213,28 +216,11 @@ pub enum AgentMsg {
     RecordExam,
     /// The verdicts were recorded.
     ExamRecorded(Result<u32, String>),
+    /// Staged proposals and undo entries of AI clients.
+    Mcp(crate::agent_mcp_types::McpMsg),
 }
 
-/// The accepted changes of a proposal.
-pub fn accepted_changes(r: &Reviewing) -> Vec<Change> {
-    r.proposal
-        .changes
-        .iter()
-        .zip(&r.accepted)
-        .filter(|(_, on)| **on)
-        .map(|(c, _)| c.clone())
-        .collect()
-}
-
-/// The provider in use, if one is chosen and still exists.
-pub fn selected_provider(a: &AgentState) -> Option<Provider> {
-    let name = a.selected.as_ref()?;
-    a.connections
-        .providers
-        .iter()
-        .find(|p| &p.name == name)
-        .cloned()
-}
+pub use crate::agent_conn::{accepted_changes, selected_provider};
 
 /// What a model answer is for, so the worker knows how to read it.
 #[derive(Debug, Clone, PartialEq, Eq)]

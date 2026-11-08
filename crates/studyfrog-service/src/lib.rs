@@ -3,6 +3,7 @@
 pub mod achievements;
 pub mod agent;
 pub mod agent_apply;
+pub mod agent_apply_more;
 pub mod agent_help;
 pub mod agent_pdf;
 pub mod agent_vault;
@@ -47,6 +48,8 @@ pub mod item_schedule;
 pub mod kanban;
 pub mod library_rows;
 pub mod logging;
+pub mod mcp_staging;
+pub mod mcp_undo;
 pub mod pdf_export;
 mod pdf_export_doc;
 mod pdf_export_exec;

@@ -2,10 +2,12 @@
 
 mod achievements;
 mod agent;
+mod agent_describe;
 mod agent_exam;
 mod agent_mcp;
 mod agent_prompt_run;
 mod agent_prompts;
+mod agent_staged;
 mod agent_wiki;
 mod backup;
 mod bars;

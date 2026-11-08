@@ -21,7 +21,7 @@ pub fn snippet(state: &State, ui: &mut egui::Ui) {
     ui.add_space(8.0);
     ui.label(
         RichText::new(
-            "Other AI tools can read this vault through the Model Context Protocol (read-only). Paste this block into their settings.",
+            "Other AI tools can read this vault through the Model Context Protocol and propose changes, which wait for you under \"Work the vault\". Paste this block into their settings.",
         )
         .color(palette_of(ui).text_weak),
     );

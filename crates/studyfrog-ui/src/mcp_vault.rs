@@ -122,5 +122,8 @@ pub fn vault_registry(version: &'static str) -> McpRegistry<VaultCtx> {
     reg = crate::mcp_vault_read::register(reg);
     reg = crate::mcp_search::register(reg);
     reg = crate::mcp_reports::register(reg);
-    crate::mcp_diary_pdf::register(reg)
+    reg = crate::mcp_diary_pdf::register(reg);
+    reg = crate::mcp_write::register(reg);
+    reg = crate::mcp_structural::register(reg);
+    crate::mcp_prompts::register(reg)
 }
