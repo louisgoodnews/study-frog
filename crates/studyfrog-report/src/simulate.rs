@@ -21,7 +21,8 @@ pub struct SimConfig {
     pub miss_percent: u32,
 }
 
-fn next_random(state: &mut u64) -> f32 {
+/// The next number in `[0, 1)` of a seeded SplitMix64 sequence (deterministic, no allocation).
+pub fn next_random(state: &mut u64) -> f32 {
     *state = state.wrapping_add(0x9E37_79B9_7F4A_7C15);
     let mut z = *state;
     z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);

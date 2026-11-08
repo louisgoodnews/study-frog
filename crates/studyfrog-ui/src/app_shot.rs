@@ -23,7 +23,8 @@ pub struct Shot {
     pub path: PathBuf,
     /// The screen: `home`, `library`, `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or
     /// `run` (opens Rehearse and starts a run of everything), `exam-setup`, `exam` (an exam with a draft answer),
-    /// `exam-result` (an exam answered to the end), `stack:<folder>` or `item:<ULID>` (the item page);
+    /// `exam-result` (an exam answered to the end), `reports:<tab>` (a tab of the reports: `performance`, `memory`,
+    /// `familiarity`, `calibration`, `runs`, `habits`, `leeches`, `workload`), `stack:<folder>` or `item:<ULID>` (the item page);
     /// `None` keeps the first screen.
     pub screen: Option<String>,
     /// Frames drawn so far.
@@ -71,6 +72,17 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
         .and_then(studyfrog_md::ulid::parse_ulid)
     {
         return apply(model, Msg::OpenItem(uid));
+    }
+    if let Some(tab) = name
+        .strip_prefix("reports:")
+        .and_then(crate::explorer_ui::tab_named)
+    {
+        let mut fx = apply(model, Msg::Navigate(Screen::Reports));
+        fx.extend(apply(
+            model,
+            Msg::Explorer(crate::explorer_ui::ExplorerMsg::Tab(tab)),
+        ));
+        return fx;
     }
     if name.starts_with("exam") {
         return crate::app_shot_exam::setup(model);

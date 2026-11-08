@@ -76,6 +76,7 @@ mod reports;
 mod reports_calibration;
 mod reports_fam;
 mod reports_runs;
+mod reports_survival;
 mod run;
 mod run_card;
 mod run_diary_prompt;

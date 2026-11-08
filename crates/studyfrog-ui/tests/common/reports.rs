@@ -79,5 +79,35 @@ pub fn bundle() -> ReportBundle {
             simulated: true,
         },
         calibration: studyfrog_report::calibration::calibration_report(&[], &[]),
+        analytics: Default::default(),
+    }
+}
+
+/// The analytics of a simulated learner (200 days, 10 new items a day, seed 5).
+pub fn analytics() -> studyfrog_service::analytics::Analytics {
+    use studyfrog_report::retention_survival::{SurvivalReview, survival_report};
+    let p = studyfrog_srs::params::params_default();
+    let history = studyfrog_report::simulate::simulate_history(
+        &studyfrog_report::simulate::SimConfig {
+            seed: 5,
+            days: 200,
+            new_per_day: 10,
+            miss_percent: 20,
+        },
+        &p,
+    );
+    let mut last = std::collections::HashMap::new();
+    let reviews: Vec<SurvivalReview> = history
+        .iter()
+        .map(|r| SurvivalReview {
+            item: r.item,
+            rating: r.rating,
+            elapsed_days: last
+                .insert(r.item, r.day)
+                .map_or(0.0, |d| (r.day - d) as f32),
+        })
+        .collect();
+    studyfrog_service::analytics::Analytics {
+        survival: survival_report(&reviews, &p),
     }
 }

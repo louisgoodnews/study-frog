@@ -21,6 +21,20 @@ pub enum ReportTab {
     Runs,
 }
 
+/// The tabs by the word that names them on the command line (`--screen reports:<word>`).
+pub const TAB_WORDS: [(&str, ReportTab); 5] = [
+    ("performance", ReportTab::Performance),
+    ("memory", ReportTab::Memory),
+    ("familiarity", ReportTab::Familiarity),
+    ("calibration", ReportTab::Calibration),
+    ("runs", ReportTab::Runs),
+];
+
+/// The tab a word names.
+pub fn tab_named(word: &str) -> Option<ReportTab> {
+    TAB_WORDS.iter().find(|(w, _)| *w == word).map(|(_, t)| *t)
+}
+
 /// What the explorer is looking at and what it found.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct ExplorerState {

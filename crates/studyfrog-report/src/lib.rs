@@ -11,4 +11,6 @@ pub mod forecast;
 pub mod latency;
 pub mod replay;
 pub mod retention;
+pub mod retention_survival;
 pub mod simulate;
+mod survival_types;

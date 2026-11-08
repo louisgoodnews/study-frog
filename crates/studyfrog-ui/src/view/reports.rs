@@ -97,6 +97,7 @@ fn memory(state: &State, ui: &mut egui::Ui) {
     egui::ScrollArea::vertical().show(ui, |ui| {
         kit::column(ui, READING_WIDTH, |ui| {
             retention(r, ui);
+            crate::view::reports_survival::draw(&r.analytics.survival, ui);
             ui.add_space(16.0);
             latency(r, ui);
             ui.add_space(16.0);

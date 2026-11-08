@@ -7,6 +7,7 @@ pub mod agent_apply_more;
 pub mod agent_help;
 pub mod agent_pdf;
 pub mod agent_vault;
+pub mod analytics;
 pub mod attention;
 pub mod backup;
 pub mod bulk;

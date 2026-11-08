@@ -12,6 +12,7 @@ replaced by a measured baseline when its crate gets its first benchmark (the own
 | Markdown parse + index | md/store | 10k notes cold index < 3 s (measured 0.57 s) | startup on a large vault stays under a few seconds | TASK-0028 (done) |
 | SLM comparison | slm | p95 < 150 ms for 30 words (CPU) | interactive feedback threshold (about 100-200 ms feels immediate to a user) | TASK-0050 |
 | Graph layout + projection | graph | 5k nodes, 10k edges: < 8 ms per frame, zero allocation (measured 4.0 ms, 0 allocs) | half of the 16.6 ms frame budget, leaving the rest for painting | TASK-0043 (done) |
+| Analytics (EPIC-034): survival, chronotype, fatigue, leeches | report | < 50 ms each on 100k reviews | the reports screen computes them all on open (docs/specs/reports.md) | STORY-0107, 0102-0104 |
 | PDF: structure / all text / one page's words / draw one page, 500 pages | pdf | < 50 ms / < 2 s / < 100 ms / < 50 ms | opening must feel instant, a first scan of a big PDF is a background pass, turning a page and drawing it stay under a tenth of a second | TASK-0122 (done) |
 
 Rules: commit baselines with `--save-baseline`; PRs touching a hot path report the diff;
@@ -150,3 +151,11 @@ build and the gate had just run). Every hot path is within its budget:
 The last three PDF rows were added for STORY-0085: re-parsing the document on every render costs about a tenth of a
 render, so keeping a parsed document between renders was not built.
 
+
+## Analytics (EPIC-034)
+`cargo bench -p studyfrog-report --bench analytics` (simulated history of 103,596 reviews: 400 days, 40 new items a day,
+seed 1; release profile, this machine, criterion with 3 s measurement):
+
+| Date | Bench | Result | Budget |
+|---|---|---|---|
+| 2026-11-08 | survival report (replay, tiers, fit) | 5.2 ms | < 50 ms |

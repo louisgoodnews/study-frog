@@ -2,7 +2,7 @@
 id: EPIC-034
 type: epic
 title: Behavioral learning analytics, FSRS optimizer, and workload forecasting
-status: backlog
+status: in_progress
 parents: []
 labels: [m12, report, srs, service, ui]
 acceptance_criteria:

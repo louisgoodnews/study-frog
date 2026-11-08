@@ -21,3 +21,7 @@ proptest.workspace = true
 [[bench]]
 name = "reports"
 harness = false
+
+[[bench]]
+name = "analytics"
+harness = false

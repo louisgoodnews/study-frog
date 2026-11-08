@@ -67,6 +67,8 @@ pub struct ReportBundle {
     pub runs: Vec<crate::run_history::RunSummary>,
     /// Metacognitive self-assessment calibration against measured performance.
     pub calibration: studyfrog_report::calibration::CalibrationReport,
+    /// The behavioural analytics (EPIC-034).
+    pub analytics: crate::analytics::Analytics,
 }
 
 fn day_of(ms: i64, offset_minutes: i32) -> i64 {
@@ -181,5 +183,6 @@ pub fn build_reports(
             offset_minutes,
         )
         .map_err(store)?,
+        analytics: crate::analytics::analytics_of(&rows, &params),
     })
 }

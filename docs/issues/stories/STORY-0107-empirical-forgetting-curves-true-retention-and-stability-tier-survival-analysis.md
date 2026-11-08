@@ -2,7 +2,7 @@
 id: STORY-0107
 type: story
 title: Empirical forgetting curves, true retention, and stability-tier survival analysis
-status: backlog
+status: done
 epic: EPIC-034
 parents: [EPIC-034]
 estimate: 3
@@ -34,9 +34,9 @@ Enhance StudyFrog's retention analytics in `studyfrog-report`, `studyfrog-servic
    - Upgrade the Retention section of the Reports screen with summary KPI pills (`True Retention`, `Young Retention`, `Mature Retention`, `Overdue Resilience`) and stability-tier forgetting curve comparisons.
 
 ## Acceptance Criteria
-- [ ] studyfrog-report computes empirical forgetting curves grouped by FSRS stability tier (<7d, 7-30d, 30-90d, 90d+) and compares them against theoretical retrievability R(t, S)
-- [ ] The analytics engine calculates True Retention (retention on mature items reviewed within ±20% of their scheduled due interval) separately from early and overdue reviews
-- [ ] The Reports Retention tab displays True Retention, Young vs. Mature retention, and empirical vs. predicted forgetting curves with estimated personal memory half-life
+- [x] studyfrog-report computes empirical forgetting curves grouped by FSRS stability tier (<7d, 7-30d, 30-90d, 90d+) and compares them against theoretical retrievability R(t, S)
+- [x] The analytics engine calculates True Retention (retention on mature items reviewed within ±20% of their scheduled due interval) separately from early and overdue reviews
+- [x] The Reports Retention tab displays True Retention, Young vs. Mature retention, and empirical vs. predicted forgetting curves with estimated personal memory half-life
 
 ## Design Notes
 - Touchpoints:
@@ -44,6 +44,26 @@ Enhance StudyFrog's retention analytics in `studyfrog-report`, `studyfrog-servic
   - `crates/studyfrog-service/src/reports.rs`: integrate `SurvivalReport` into `ReportBundle`.
   - `crates/studyfrog-ui/src/view/reports.rs`: render KPI cards and stability-tier curves.
 - Adhere to P1 (no inherent `impl` blocks) and P2 (≤ 250 lines per file).
+
+## Progress (2026-11-08)
+Built and verified:
+- `crates/studyfrog-report/src/retention_survival.rs` (+ `survival_types.rs`): replays the history through FSRS so every
+  spaced review knows `S`, `I` and `t`; counts true retention (mature `S >= 21`, `0.8 <= t/I <= 1.2`), young, mature,
+  early, on-time and overdue reviews with the mean FSRS prediction; four stability tiers with five `t/S` bins each
+  (measured vs predicted, weighted RMSE); fits a memory scale to the bins and gives the model and personal half-life
+  of a typical item (median stability now). Unit and property tests in `crates/studyfrog-report/tests/survival.rs`
+  (hand-checked fixtures: a young lapse with its exact prediction, due-day reviews of a maturing item, an overdue
+  review, the half-life formula, a simulated FSRS learner fitting a scale near 1, and that every spaced review is
+  counted once in each breakdown).
+- Service: `ReportBundle.analytics.survival` (`crates/studyfrog-service/src/analytics.rs`), tested on fixture vaults
+  (`crates/studyfrog-service/tests/analytics_survival.rs`).
+- Reports > Memory and forecast: "True retention" lines (true, young, mature, early, on time, overdue resilience, each
+  with what FSRS expected), the half-life sentence, and the forgetting curve of every tier as bars that carry their
+  numbers (`crates/studyfrog-ui/src/view/reports_survival.rs`); harness test `tests/reports_analytics_ui.rs`;
+  screenshot `--screen reports:memory` looked at.
+- Benchmark `survival report` in `crates/studyfrog-report/benches/analytics.rs`: 5.2 ms on 103,596 reviews (budget 50 ms).
+
+Notes: the history is replayed with the vault's FSRS parameters; the "early" share is the third timeliness group.
 
 ## Dependencies
 EPIC-034.
