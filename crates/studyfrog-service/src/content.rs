@@ -26,6 +26,8 @@ pub struct ItemContent {
     pub source: Option<String>,
     /// The item's colour (a palette word or `#RRGGBB`), if it has one.
     pub color: Option<String>,
+    /// What a typed answer is compared with when it is not the whole answer (a cloze gap's words).
+    pub expected: Option<String>,
 }
 
 fn content_of(doc: &Doc) -> ItemContent {
@@ -39,6 +41,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             previous: None,
             source: None,
             color: None,
+            expected: None,
         },
         Doc::Question(q) => ItemContent {
             title,
@@ -47,6 +50,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             previous: None,
             source: None,
             color: None,
+            expected: None,
         },
         Doc::Note(n) => ItemContent {
             prompt: title.clone(),
@@ -55,6 +59,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             previous: None,
             source: None,
             color: None,
+            expected: None,
         },
         Doc::Stack(s) => ItemContent {
             prompt: title.clone(),
@@ -63,6 +68,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             previous: None,
             source: None,
             color: None,
+            expected: None,
         },
         Doc::Diary(d) => ItemContent {
             prompt: title.clone(),
@@ -71,6 +77,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             previous: None,
             source: None,
             color: None,
+            expected: None,
         },
     }
 }
@@ -87,16 +94,17 @@ pub fn load_doc(session: &VaultSession, uid: Uid) -> Result<Doc, ServiceError> {
 
 /// What the rehearsal screen shows for an item.
 pub fn load_item_content(session: &VaultSession, uid: Uid) -> Result<ItemContent, ServiceError> {
-    let previous = load_reviews(&session.conn, uid)
-        .map_err(ServiceError::Store)?
-        .last()
-        .map(|r| r.rating);
-    load_doc(session, uid).map(|doc| ItemContent {
-        previous,
-        source: studyfrog_md::extra::extra_value(&doc, "source"),
-        color: studyfrog_md::extra::extra_value(&doc, studyfrog_core::item_color::COLOR_FIELD)
-            .and_then(|c| studyfrog_core::item_color::normalize_color(&c)),
-        ..content_of(&doc)
+    let reviews = load_reviews(&session.conn, uid).map_err(ServiceError::Store)?;
+    let previous = reviews.last().map(|r| r.rating);
+    load_doc(session, uid).map(|doc| {
+        let content = ItemContent {
+            previous,
+            source: studyfrog_md::extra::extra_value(&doc, "source"),
+            color: studyfrog_md::extra::extra_value(&doc, studyfrog_core::item_color::COLOR_FIELD)
+                .and_then(|c| studyfrog_core::item_color::normalize_color(&c)),
+            ..content_of(&doc)
+        };
+        crate::content_cloze::with_cloze(&doc, content, reviews.len())
     })
 }
 

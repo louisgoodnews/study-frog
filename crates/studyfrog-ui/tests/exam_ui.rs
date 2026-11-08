@@ -70,7 +70,7 @@ fn a_submitted_answer_is_locked_scored_and_the_next_item_follows() {
     let mut m = exam_model();
     let effects = submit(&mut m, "Paris");
     assert!(effects.iter().any(
-        |e| matches!(e, Effect::ScoreAnswer { item: Uid(1), answer, .. } if answer == "Paris")
+        |e| matches!(e, Effect::ScoreAnswer { item: Uid(1), answer, .. } if answer.0 == "Paris")
     ));
     let run = m.state.rehearse.run.as_ref().unwrap();
     assert_eq!(current_item(&run.session), Some(Uid(2)));

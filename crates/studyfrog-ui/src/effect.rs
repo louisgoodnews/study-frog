@@ -77,8 +77,8 @@ pub enum Effect {
         run: Uid,
         /// The item answered.
         item: Uid,
-        /// What the user typed.
-        answer: String,
+        /// What the user typed, and the words to compare it with when not the whole back (a cloze gap).
+        answer: (String, Option<String>),
         /// Compare by word matching only, whatever is installed.
         words_only: bool,
     },

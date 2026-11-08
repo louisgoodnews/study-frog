@@ -110,7 +110,10 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
         Action::SubmitAnswer(text) => current_item(&run.session).map(|item| Effect::ScoreAnswer {
             run: run.session.run.uid,
             item,
-            answer: text.clone(),
+            answer: (
+                text.clone(),
+                run.content.get(&item).and_then(|c| c.expected.clone()),
+            ),
             words_only: state.app.answer_engine == AnswerEngine::Words,
         }),
         _ => None,
@@ -192,6 +195,7 @@ fn item_loaded(
                 previous: None,
                 source: None,
                 color: None,
+                expected: None,
             }
         }
     };

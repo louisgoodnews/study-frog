@@ -166,7 +166,7 @@ pub fn create_stack(
 
 /// The title of a card made without one: its first non-empty line.
 pub fn default_card_title(front: &str) -> String {
-    let clean = crate::content::unescape_newlines(front);
+    let clean = studyfrog_md::cloze::blank_cloze(&crate::content::unescape_newlines(front));
     clean
         .lines()
         .map(str::trim)

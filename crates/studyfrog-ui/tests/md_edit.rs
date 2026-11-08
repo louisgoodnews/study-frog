@@ -115,3 +115,24 @@ fn the_table_goes_on_lines_of_its_own_with_the_first_header_cell_selected() {
         studyfrog_md::blocks::Block::Table { .. }
     ));
 }
+
+#[test]
+fn cloze_wraps_the_selection_with_the_next_or_the_same_number() {
+    assert_eq!(
+        apply_cmd("The sun", (4, 7), Cmd::Cloze(false)),
+        ("The {{c1::sun}}".to_owned(), (10, 13))
+    );
+    let two = "The {{c1::sun}} is a star";
+    assert_eq!(
+        apply_cmd(two, (21, 25), Cmd::Cloze(false)).0,
+        "The {{c1::sun}} is a {{c2::star}}"
+    );
+    assert_eq!(
+        apply_cmd(two, (21, 25), Cmd::Cloze(true)).0,
+        "The {{c1::sun}} is a {{c1::star}}"
+    );
+    assert_eq!(
+        apply_cmd("x ", (2, 2), Cmd::Cloze(false)).0,
+        "x {{c1::answer}}"
+    );
+}

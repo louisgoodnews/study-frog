@@ -15,7 +15,8 @@ pub(super) fn blocks_of(ui: &egui::Ui, id: Id, text: &str) -> Arc<(String, Vec<B
     {
         return hit;
     }
-    let fresh: Cached = Arc::new((text.to_owned(), parse_blocks(text)));
+    let shown = studyfrog_md::cloze::preview_cloze(text);
+    let fresh: Cached = Arc::new((text.to_owned(), parse_blocks(&shown)));
     ui.data_mut(|d| d.insert_temp(key, fresh.clone()));
     fresh
 }

@@ -7,7 +7,7 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::StepOutput;
 use studyfrog_service::achievements::check_achievements;
-use studyfrog_service::compare::{record_answer_score, score_item_answer};
+use studyfrog_service::compare::{record_answer_score, score_item_answer_with};
 use studyfrog_service::content::load_item_content;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::home::home_summary;
@@ -91,7 +91,7 @@ pub fn record(w: &mut Worker, ctx: &StepContext, out: &StepOutput, now_ns: i64) 
 pub fn score(
     w: &mut Worker,
     (run, uid): (Uid, Uid),
-    answer: &str,
+    (answer, reference): &(String, Option<String>),
     words_only: bool,
     now_ns: i64,
 ) -> Msg {
@@ -104,16 +104,18 @@ pub fn score(
             .get_or_insert_with(|| open_runtime(models.as_deref(), loader))
     };
     let result = match &w.session {
-        Some(session) => score_item_answer(session, runtime.as_ref(), uid, answer)
-            .map(|s| match why {
-                Some(why) => Scored {
-                    engine: format!("{} ({why})", s.engine),
-                    ..s
-                },
-                None => s,
-            })
-            .map(|s| remember(session, run, uid, s, now_ns))
-            .map_err(|e| e.to_string()),
+        Some(session) => {
+            score_item_answer_with(session, runtime.as_ref(), uid, answer, reference.as_deref())
+                .map(|s| match why {
+                    Some(why) => Scored {
+                        engine: format!("{} ({why})", s.engine),
+                        ..s
+                    },
+                    None => s,
+                })
+                .map(|s| remember(session, run, uid, s, now_ns))
+                .map_err(|e| e.to_string())
+        }
         None => Err("no vault is open".to_owned()),
     };
     Msg::AnswerScored(uid, result)

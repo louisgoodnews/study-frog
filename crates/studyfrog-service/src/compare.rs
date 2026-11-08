@@ -47,15 +47,36 @@ fn comparison_of<'a>(doc: &'a Doc, answer: &'a str) -> Result<Comparison<'a>, Se
     }
 }
 
-/// Score `answer` against the reference of item `uid`.
+/// Score `answer` against the reference of item `uid` (for a card with cloze gaps, the words of the
+/// group it asks now).
 pub fn score_item_answer<R: SlmRuntime + ?Sized>(
     session: &VaultSession,
     runtime: &R,
     uid: Uid,
     answer: &str,
 ) -> Result<Scored, ServiceError> {
+    score_item_answer_with(session, runtime, uid, answer, None)
+}
+
+/// [`score_item_answer`] against `reference` when given: the words the run showed as the gap.
+pub fn score_item_answer_with<R: SlmRuntime + ?Sized>(
+    session: &VaultSession,
+    runtime: &R,
+    uid: Uid,
+    answer: &str,
+    reference: Option<&str>,
+) -> Result<Scored, ServiceError> {
     let doc = load_doc(session, uid)?;
-    let comparison = comparison_of(&doc, answer)?;
+    let reviews = || studyfrog_store::schedule::load_reviews(&session.conn, uid).map(|r| r.len());
+    let gap = match reference {
+        Some(r) => Some(r.to_owned()),
+        None => crate::content_cloze::asked_group(&doc, reviews().map_err(ServiceError::Store)?)
+            .and_then(|g| crate::content_cloze::expected_words(&doc, g)),
+    };
+    let mut comparison = comparison_of(&doc, answer)?;
+    if let Some(gap) = &gap {
+        comparison.reference = gap;
+    }
     let score =
         score_answer(runtime, &comparison).map_err(|e| ServiceError::Invalid(e.to_string()))?;
     let rating = suggested_rating(score.verdict);

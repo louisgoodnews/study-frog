@@ -24,7 +24,7 @@ pub struct Shot {
     /// The screen: `home`, `library`, `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or
     /// `run` (opens Rehearse and starts a run of everything), `exam-setup`, `exam` (an exam with a draft answer),
     /// `exam-result` (an exam answered to the end), `reports:<tab>` (a tab of the reports: `performance`, `memory`,
-    /// `familiarity`, `calibration`, `runs`, `habits`, `leeches`, `workload`), `stack:<folder>` or `item:<ULID>` (the item page), `extract:<ULID>` (a note's sync preview);
+    /// `familiarity`, `calibration`, `runs`, `habits`, `leeches`, `workload`), `stack:<folder>` or `item:<ULID>` (the item page), `extract:<ULID>` (a note's sync preview), `run-answer` (a run with the first answer shown);
     /// `None` keeps the first screen.
     pub screen: Option<String>,
     /// Frames drawn so far.
@@ -53,7 +53,7 @@ fn screen_named(name: &str) -> Option<Screen> {
         "prompts" => Screen::Prompts,
         "achievements" => Screen::Achievements,
         "graph" => Screen::Graph,
-        "run" => Screen::Rehearse,
+        "run" | "run-answer" => Screen::Rehearse,
         _ => return None,
     })
 }
@@ -117,7 +117,9 @@ pub fn step(shot: &mut Shot, model: &mut Model, ui: &egui::Ui) -> Vec<crate::eff
         effects = go(model, &name);
     }
     let name = shot.screen.as_deref().unwrap_or("");
-    if shot.frames == SETTLE + START && matches!(name, "run" | "exam" | "exam-result") {
+    if shot.frames == SETTLE + START
+        && matches!(name, "run" | "run-answer" | "exam" | "exam-result")
+    {
         effects = apply(model, Msg::StartRunClicked);
     }
     if shot.frames == SETTLE + START {
@@ -125,6 +127,7 @@ pub fn step(shot: &mut Shot, model: &mut Model, ui: &egui::Ui) -> Vec<crate::eff
     }
     if shot.frames > SETTLE + START && shot.frames < SETTLE + DRAW - 8 {
         effects.extend(crate::app_shot_exam::play(model, name));
+        effects.extend(crate::app_shot_recall::play(model, name));
     }
     if shot.frames == SETTLE + DRAW {
         let (path, done) = (shot.path.clone(), ctx.clone());

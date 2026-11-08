@@ -68,7 +68,8 @@ pub fn md_editor(
         ui.data_mut(|d| d.insert_temp(id.with("select"), sel));
     }
     if mode != Mode::Preview
-        && let Some((new, sel)) = keys::list_key(ui, text_id, &current)
+        && let Some((new, sel)) =
+            keys::list_key(ui, text_id, &current).or_else(|| keys::cloze_key(ui, text_id, &current))
     {
         current = new;
         changed = true;

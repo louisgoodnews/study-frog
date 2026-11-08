@@ -32,3 +32,32 @@ pub(super) fn list_key(ui: &egui::Ui, text_id: Id, text: &str) -> Option<Edited>
     ui.input_mut(|i| i.consume_key(Modifiers::NONE, key));
     Some(edited)
 }
+
+/// Ctrl+Shift+C wraps the selection of the focused text area in a cloze gap with the next number,
+/// Ctrl+Shift+Alt+C with the number used last (STORY-0108).
+pub(super) fn cloze_key(ui: &egui::Ui, text_id: Id, text: &str) -> Option<Edited> {
+    if !ui.memory(|m| m.has_focus(text_id)) {
+        return None;
+    }
+    let same = Modifiers::COMMAND | Modifiers::SHIFT | Modifiers::ALT;
+    let next = Modifiers::COMMAND | Modifiers::SHIFT;
+    let pressed =
+        |m: Modifiers| ui.input(|i| i.modifiers.matches_exact(m) && i.key_pressed(Key::C));
+    let (mods, keep) = if pressed(same) {
+        (same, true)
+    } else if pressed(next) {
+        (next, false)
+    } else {
+        return None;
+    };
+    let range = TextEdit::load_state(ui.ctx(), text_id)?
+        .cursor
+        .char_range()?;
+    let sel = (range.primary.index.into(), range.secondary.index.into());
+    ui.input_mut(|i| i.consume_key(mods, Key::C));
+    Some(crate::md_edit::apply_cmd(
+        text,
+        sel,
+        crate::md_edit::Cmd::Cloze(keep),
+    ))
+}

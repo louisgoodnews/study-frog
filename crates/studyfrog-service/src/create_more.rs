@@ -110,13 +110,18 @@ fn doc_of(item: &NewItem<'_>, title: &str, ids: IdSource) -> Result<Doc, Service
     })
 }
 
+/// A card whose front has cloze gaps needs no back: the gaps are the answer.
+fn gapped(item: &NewItem<'_>) -> bool {
+    item.kind == NewKind::Card && !studyfrog_md::cloze::cloze_groups(item.text).is_empty()
+}
+
 /// The title to use, or why the input is not enough.
 fn title_of(item: &NewItem<'_>) -> Result<String, ServiceError> {
     let given = item.title.trim();
     match item.kind {
         NewKind::Stack | NewKind::Note if given.is_empty() => Err(invalid("give it a title")),
         NewKind::Card | NewKind::Question
-            if item.text.trim().is_empty() || item.answer.trim().is_empty() =>
+            if item.text.trim().is_empty() || (item.answer.trim().is_empty() && !gapped(item)) =>
         {
             let (first, second) = if item.kind == NewKind::Card {
                 ("front", "back")

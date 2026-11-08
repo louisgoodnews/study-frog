@@ -31,3 +31,17 @@ pub fn later(model: &mut Model, name: &str) -> Vec<Effect> {
     }
     Vec::new()
 }
+
+/// While the picture waits: `run-answer` shows the first item's answer.
+pub fn play(model: &mut Model, name: &str) -> Vec<Effect> {
+    let ready = model.state.rehearse.run.as_ref().is_some_and(|run| {
+        crate::run_update::awaiting_reveal(run)
+            && studyfrog_rehearsal::session::current_item(&run.session)
+                .is_some_and(|i| run.content.contains_key(&i))
+    });
+    if name == "run-answer" && ready {
+        let flip = studyfrog_rehearsal::input::Action::Flip;
+        return apply(model, Msg::RunAction(flip));
+    }
+    Vec::new()
+}

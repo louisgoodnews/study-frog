@@ -37,7 +37,7 @@ fn submitting_an_answer_asks_for_a_comparison_and_the_result_is_kept_until_ratin
         effects.contains(&Effect::ScoreAnswer {
             run: Uid(100),
             item: Uid(1),
-            answer: "Paris".into(),
+            answer: ("Paris".into(), None),
             words_only: false,
         }),
         "{effects:?}"
@@ -127,7 +127,7 @@ fn the_executor_scores_against_a_real_card_offline() {
         Effect::ScoreAnswer {
             run: Uid(500),
             item: Uid(10),
-            answer: "a".into(),
+            answer: ("a".into(), None),
             words_only: false,
         },
         NOW_NS,
@@ -144,7 +144,7 @@ fn the_executor_scores_against_a_real_card_offline() {
         Effect::ScoreAnswer {
             run: Uid(500),
             item: Uid(12),
-            answer: "a".into(),
+            answer: ("a".into(), None),
             words_only: false,
         },
         NOW_NS,
@@ -165,7 +165,7 @@ fn the_comparison_is_stored_with_its_run_and_word_matching_can_be_forced() {
     let ask = |words_only| Effect::ScoreAnswer {
         run: Uid(500),
         item: Uid(10),
-        answer: "a".into(),
+        answer: ("a".into(), None),
         words_only,
     };
     execute(&mut worker, ask(false), NOW_NS);

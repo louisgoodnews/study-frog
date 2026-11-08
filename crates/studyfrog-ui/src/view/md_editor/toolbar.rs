@@ -8,7 +8,7 @@ use crate::md_edit::{Cmd, apply_cmd};
 use crate::msg::Msg;
 use studyfrog_md::hue::{HUES, hue_name};
 
-const TOOLS: [(Cmd, &str, &str); 13] = [
+const TOOLS: [(Cmd, &str, &str); 14] = [
     (Cmd::Bold, "B", "Bold"),
     (Cmd::Italic, "I", "Italic"),
     (Cmd::Underline, "U", "Underline"),
@@ -22,6 +22,11 @@ const TOOLS: [(Cmd, &str, &str); 13] = [
     (Cmd::WikiLink, "[[ ]]", "Link to a note"),
     (Cmd::Table, "Table", "Table"),
     (Cmd::Rule, "---", "Rule"),
+    (
+        Cmd::Cloze(false),
+        "[...]",
+        "Cloze: hide the selection as a gap (Ctrl+Shift+C; with Alt the same number)",
+    ),
 ];
 
 pub(super) fn toolbar(

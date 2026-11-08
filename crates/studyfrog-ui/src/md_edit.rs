@@ -36,6 +36,8 @@ pub enum Cmd {
     Color(Hue),
     /// A small pipe table on its own lines.
     Table,
+    /// A cloze gap `{{cN::...}}`: the next number, or the last one used when `true`.
+    Cloze(bool),
 }
 
 /// The text and the selection (start, end) after a command.
@@ -150,6 +152,14 @@ pub fn apply_cmd(text: &str, sel: (usize, usize), cmd: Cmd) -> Edited {
         Cmd::Underline => wrap(&chars, sel, ("<u>", "</u>"), "underlined"),
         Cmd::Color(hue) => wrap(&chars, sel, (&span_open(hue), "</span>"), "coloured"),
         Cmd::Table => crate::md_edit_table::insert(&chars, sel),
+        Cmd::Cloze(same) => {
+            let n = if same {
+                studyfrog_md::cloze::last_cloze_index(text)
+            } else {
+                studyfrog_md::cloze::next_cloze_index(text)
+            };
+            wrap(&chars, sel, (&format!("{{{{c{n}::"), "}}"), "answer")
+        }
         Cmd::Rule => {
             let (a, b) = clamp(&chars, sel);
             let head: String = chars[..a].iter().collect();
