@@ -2,7 +2,7 @@
 id: STORY-0103
 type: story
 title: Within-session cognitive fatigue and pacing decay analysis
-status: backlog
+status: done
 epic: EPIC-034
 parents: [EPIC-034]
 estimate: 3
@@ -28,9 +28,9 @@ Implement within-session cognitive fatigue and pacing decay telemetry:
    - Optionally use the recommended cap to pre-populate countdown timer presets in Rehearsal setup.
 
 ## Acceptance Criteria
-- [ ] studyfrog-report analyzes rehearsal run event logs by elapsed session duration (5-minute buckets) and item sequence position to measure accuracy decay and response latency inflation
-- [ ] The Reports screen visualizes within-session pacing and accuracy curves and recommends an optimal rehearsal session duration before cognitive fatigue sets in
-- [ ] Active rehearsal runs optionally display a subtle non-blocking notice when real-time latency spikes significantly above the user's session baseline
+- [x] studyfrog-report analyzes rehearsal run event logs by elapsed session duration (5-minute buckets) and item sequence position to measure accuracy decay and response latency inflation
+- [x] The Reports screen visualizes within-session pacing and accuracy curves and recommends an optimal rehearsal session duration before cognitive fatigue sets in
+- [x] Active rehearsal runs optionally display a subtle non-blocking notice when real-time latency spikes significantly above the user's session baseline
 
 ## Design Notes
 - Touchpoints:
@@ -38,6 +38,27 @@ Implement within-session cognitive fatigue and pacing decay telemetry:
   - `crates/studyfrog-service/src/reports.rs`: feed `load_all_events` and review ratings into `fatigue_report`.
   - `crates/studyfrog-ui/src/view/reports.rs`: render session duration vs. accuracy/latency chart.
 - Keep all files ≤ 250 lines (P2) and free of inherent `impl` blocks (P1).
+
+## Progress (2026-11-08)
+Built and verified:
+- `crates/studyfrog-report/src/fatigue.rs`: rated items of every run by minutes into the run (0-5, 5-10, 10-15,
+  15-20, 20-30, 30+) and by position (1-10, 11-20, 21-35, 36-50, 51+) with recall, Good/Easy, median and p90 time to
+  reveal; the baseline is the first ten minutes; the fatigue point is the first bucket from 10 minutes on (with at
+  least 10 reviews) where recall drops by 8 points or the median rises by 35 %, with the typical number of items
+  before it. `latency_spike` for the live check. Tests: `crates/studyfrog-report/tests/fatigue.rs` (run log with
+  pauses, a hand-made tiring fixture whose point is minute 15 / 15 items / +67 % / -30 points, steady runs, the spike
+  rule, property test).
+- Service: `ReportBundle.analytics.fatigue` from the run event log (`tests/analytics_habits.rs`).
+- Reports > Habits > "Within a run": the recommendation ("Your accuracy holds for about 15 minutes (about 15 items);
+  ... Runs of about 15 minutes suit you."), the first ten minutes, and rows by minutes and by position (harness test).
+- During a run, a quiet line under the card when the answer just revealed took at least twice the run's median and
+  five seconds more ("That one took 4.0 times as long ..."), with "Don't show this"; Settings > Rehearsal > "Slow
+  answers" switches it (`slow_answer_notice = false` in `app.toml`). `view/run_slow.rs`, harness tests
+  `tests/run_slow_answer.rs`; not looked at in a real window.
+- Benchmark: fatigue report of 103,596 samples 2.8 ms.
+
+Not built (description, not a criterion): pre-filling the countdown presets of the rehearsal setup with the
+recommended length.
 
 ## Dependencies
 EPIC-034.

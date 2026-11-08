@@ -52,6 +52,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     }
                 });
                 ui.add_space(10.0);
+                crate::view::run_slow::notice(state, run, ui, out);
                 let exam = crate::exam_ui::is_exam(run);
                 ui.label(
                     RichText::new(if exam {

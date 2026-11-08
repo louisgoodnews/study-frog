@@ -12,7 +12,7 @@ use studyfrog_service::content::load_item_content;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::home::home_summary;
 use studyfrog_service::rehearse::{StepContext, record_step, start_run};
-use studyfrog_service::reports::build_reports;
+use studyfrog_service::reports::build_reports_local;
 use studyfrog_service::rerate::rerate_latest;
 use studyfrog_service::session::{VaultSession, current_settings};
 use studyfrog_service::timezone::{local_day_window, local_offset_minutes};
@@ -136,9 +136,7 @@ pub fn achievements(w: &mut Worker, now_ns: i64) -> Msg {
 pub fn reports(w: &Worker, now_ns: i64) -> Msg {
     let now = UnixMs(millis(now_ns));
     let result = match &w.session {
-        Some(session) => {
-            build_reports(session, now, local_offset_minutes(now)).map_err(|e| e.to_string())
-        }
+        Some(session) => build_reports_local(session, now).map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
     };
     Msg::ReportsBuilt(result)
@@ -150,8 +148,7 @@ pub fn report_csv_file(w: &Worker, now_ns: i64) -> Result<String, String> {
     use studyfrog_service::report_csv::{data_of, report_csv, report_csv_name};
     let session = w.session.as_ref().ok_or("no vault is open")?;
     let now = UnixMs(millis(now_ns));
-    let bundle =
-        build_reports(session, now, local_offset_minutes(now)).map_err(|e| e.to_string())?;
+    let bundle = build_reports_local(session, now).map_err(|e| e.to_string())?;
     let day = format_date(date_from_days(now.0.div_euclid(86_400_000)));
     let vault = session.root.file_name().map_or_else(
         || "vault".to_owned(),

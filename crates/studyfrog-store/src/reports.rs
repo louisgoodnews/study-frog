@@ -99,3 +99,21 @@ pub fn load_scheduled(conn: &Connection) -> Result<Vec<(i64, f32)>, StoreError> 
         .map_err(sql_err)?;
     rows.map(|r| r.map_err(sql_err)).collect()
 }
+
+/// When each run started, in Unix milliseconds (runs never started are left out).
+pub fn load_run_starts(
+    conn: &Connection,
+) -> Result<std::collections::HashMap<Uid, i64>, StoreError> {
+    let mut stmt = conn
+        .prepare("SELECT uid, started_at_ms FROM run WHERE started_at_ms IS NOT NULL")
+        .map_err(sql_err)?;
+    let rows = stmt
+        .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?)))
+        .map_err(sql_err)?;
+    let mut out = std::collections::HashMap::new();
+    for row in rows {
+        let (uid, at) = row.map_err(sql_err)?;
+        out.insert(uid_of(&uid)?, at);
+    }
+    Ok(out)
+}

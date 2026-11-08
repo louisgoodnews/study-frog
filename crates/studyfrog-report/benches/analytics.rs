@@ -41,5 +41,53 @@ fn survival(c: &mut Criterion) {
     });
 }
 
-criterion_group!(benches, survival);
+fn habits(c: &mut Criterion) {
+    use studyfrog_core::review::Rating;
+    use studyfrog_core::uid::Uid;
+    use studyfrog_report::chronotype::{TimedLatency, TimedReview, chronotype};
+    use studyfrog_report::fatigue::fatigue_report;
+    use studyfrog_report::session_log::SessionSample;
+    let h = history();
+    let at = |i: usize, day: i64| day * 86_400_000 + (i as i64 * 7_919) % 86_400_000;
+    let reviews: Vec<TimedReview> = h
+        .iter()
+        .enumerate()
+        .map(|(i, r)| TimedReview {
+            at_ms: at(i, r.day),
+            offset_minutes: 60,
+            rating: r.rating,
+        })
+        .collect();
+    let latencies: Vec<TimedLatency> = h
+        .iter()
+        .enumerate()
+        .map(|(i, r)| TimedLatency {
+            at_ms: at(i, r.day),
+            offset_minutes: 60,
+            ms: (i as u32 * 7_919) % 20_000,
+        })
+        .collect();
+    c.bench_function("chronotype of every review and answer time", |b| {
+        b.iter(|| chronotype(black_box(&reviews), black_box(&latencies), 20));
+    });
+    let samples: Vec<SessionSample> = h
+        .iter()
+        .enumerate()
+        .map(|(i, r)| SessionSample {
+            run: Uid(r.day as u128),
+            item: Uid(r.item as u128),
+            position: (i % 80) as u32 + 1,
+            shown_t_ms: (i % 80) as u32 * 30_000,
+            active_ms: (i % 80) as u32 * 30_000,
+            latency_ms: Some((i as u32 * 7_919) % 20_000),
+            item_ms: 5_000,
+            rating: if i % 9 == 0 { Rating::Again } else { r.rating },
+        })
+        .collect();
+    c.bench_function("fatigue report of one sample per review", |b| {
+        b.iter(|| fatigue_report(black_box(&samples)));
+    });
+}
+
+criterion_group!(benches, survival, habits);
 criterion_main!(benches);

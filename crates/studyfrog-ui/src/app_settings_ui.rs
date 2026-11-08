@@ -88,6 +88,8 @@ pub enum SettingsTabMsg {
     Select(SettingsTab),
     /// Move to the next (1) or previous (-1) tab, wrapping around.
     Step(i32),
+    /// Say during a run when an answer takes far longer than usual, or not.
+    SlowAnswerNotice(bool),
 }
 
 fn select(state: State, tab: SettingsTab) -> (State, Vec<Effect>) {
@@ -106,6 +108,14 @@ fn select(state: State, tab: SettingsTab) -> (State, Vec<Effect>) {
 pub fn update(state: State, msg: SettingsTabMsg) -> (State, Vec<Effect>) {
     match msg {
         SettingsTabMsg::Select(tab) => select(state, tab),
+        SettingsTabMsg::SlowAnswerNotice(on) => {
+            let app = AppSettings {
+                slow_answer_notice_off: !on,
+                ..state.app.clone()
+            };
+            let effects = vec![Effect::SaveAppSettings(app.clone())];
+            (State { app, ..state }, effects)
+        }
         SettingsTabMsg::Step(by) => {
             let at = SHOWN.iter().position(|t| *t == current_tab(&state.app));
             let n = SHOWN.len() as i32;

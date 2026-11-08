@@ -68,7 +68,7 @@ pub struct ReportBundle {
     /// Metacognitive self-assessment calibration against measured performance.
     pub calibration: studyfrog_report::calibration::CalibrationReport,
     /// The behavioural analytics (EPIC-034).
-    pub analytics: crate::analytics::Analytics,
+    pub analytics: Box<crate::analytics::Analytics>,
 }
 
 fn day_of(ms: i64, offset_minutes: i32) -> i64 {
@@ -134,12 +134,32 @@ fn latency_by_mark(samples: &[studyfrog_report::latency::FlipSample]) -> Vec<Mar
     .collect()
 }
 
-/// Compute all reports at `now` (`offset_minutes` is the local UTC offset).
+/// Compute all reports at `now` (`offset_minutes` is the local UTC offset, used for every instant).
 pub fn build_reports(
     session: &VaultSession,
     now: UnixMs,
     offset_minutes: i32,
 ) -> Result<ReportBundle, ServiceError> {
+    build_reports_with(session, now, &|_| offset_minutes)
+}
+
+/// Compute all reports at `now` in the system time zone, each review placed with the offset of its own instant.
+pub fn build_reports_local(
+    session: &VaultSession,
+    now: UnixMs,
+) -> Result<ReportBundle, ServiceError> {
+    build_reports_with(session, now, &|at| {
+        crate::timezone::local_offset_minutes(UnixMs(at))
+    })
+}
+
+/// Compute all reports at `now`; `offset_of` gives the local UTC offset at an instant (Unix milliseconds).
+pub fn build_reports_with(
+    session: &VaultSession,
+    now: UnixMs,
+    offset_of: &dyn Fn(i64) -> i32,
+) -> Result<ReportBundle, ServiceError> {
+    let offset_minutes = offset_of(now.0);
     let store = ServiceError::Store;
     let params = params_for(&current_settings(session), None);
     let rows = load_review_history(&session.conn).map_err(store)?;
@@ -153,7 +173,8 @@ pub fn build_reports(
     let history = dated(&rows, offset_minutes);
     let today = day_of(now.0, offset_minutes);
 
-    let samples = flip_samples(&load_all_events(&session.conn).map_err(ServiceError::Store)?);
+    let events = load_all_events(&session.conn).map_err(ServiceError::Store)?;
+    let samples = flip_samples(&events);
     let mut all: Vec<u32> = samples.iter().map(|s| s.ms).collect();
     let bins = histogram(&all);
     let items: Vec<ScheduledItem> = load_scheduled(&session.conn)
@@ -183,6 +204,17 @@ pub fn build_reports(
             offset_minutes,
         )
         .map_err(store)?,
-        analytics: crate::analytics::analytics_of(&rows, &params),
+        analytics: Box::new(
+            crate::analytics::analytics_of(
+                session,
+                crate::analytics::History {
+                    rows: &rows,
+                    events: &events,
+                    offset_of,
+                },
+                &params,
+            )
+            .map_err(store)?,
+        ),
     })
 }

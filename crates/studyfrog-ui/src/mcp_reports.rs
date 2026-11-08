@@ -9,8 +9,7 @@ use studyfrog_agent::mcp_types::{
     register_resource, register_tool,
 };
 use studyfrog_md::ulid::format_ulid;
-use studyfrog_service::reports::{ReportBundle, build_reports};
-use studyfrog_service::timezone::local_offset_minutes;
+use studyfrog_service::reports::{ReportBundle, build_reports_local};
 
 use crate::mcp_vault::{
     VaultCtx, arg_count, arg_str, internal, json_content, json_result, now_of, read_only,
@@ -29,7 +28,7 @@ pub const REPORT_KINDS: [&str; 6] = [
 
 fn bundle(ctx: &VaultCtx) -> Result<ReportBundle, McpError> {
     let now = now_of(ctx);
-    build_reports(&ctx.session, now, local_offset_minutes(now)).map_err(internal)
+    build_reports_local(&ctx.session, now).map_err(internal)
 }
 
 fn retention(b: &ReportBundle) -> Value {

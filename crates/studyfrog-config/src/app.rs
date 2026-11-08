@@ -27,6 +27,7 @@ struct RawApp {
     track_views: Option<bool>,
     library_columns: Option<String>,
     calendar_reviews: Option<bool>,
+    slow_answer_notice: Option<bool>,
     stack_tabs: Option<Vec<String>>,
     tutorial_offered: Option<bool>,
     appearance: Option<crate::app_appearance::RawAppearance>,
@@ -96,6 +97,7 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
         views_untracked: raw.track_views == Some(false),
         library_columns: raw.library_columns,
         calendar_reviews_off: raw.calendar_reviews == Some(false),
+        slow_answer_notice_off: raw.slow_answer_notice == Some(false),
         stack_tabs: raw.stack_tabs.unwrap_or_default(),
         tutorial_offered: raw.tutorial_offered == Some(true),
         appearance: crate::app_appearance::parse(text, raw.appearance)?,
@@ -142,6 +144,9 @@ pub fn render_app_settings(s: &AppSettings) -> String {
     }
     if s.calendar_reviews_off {
         out.push_str("calendar_reviews = false\n");
+    }
+    if s.slow_answer_notice_off {
+        out.push_str("slow_answer_notice = false\n");
     }
     if let Some(columns) = &s.library_columns {
         out.push_str(&format!("library_columns = {}\n", toml_string(columns)));

@@ -15,7 +15,7 @@ fn model_on(tab: ReportTab) -> studyfrog_ui::model::Model {
     m.state.screen = Screen::Reports;
     m.state.explorer.tab = tab;
     let mut b = bundle();
-    b.analytics = analytics();
+    b.analytics = Box::new(analytics());
     m.state.reports = Some(b);
     m
 }
@@ -60,4 +60,58 @@ fn every_tab_has_a_word_for_the_screenshot_option() {
     }
     assert_eq!(tab_named("memory"), Some(ReportTab::Memory));
     assert_eq!(tab_named("nothing"), None);
+}
+
+#[test]
+fn the_habits_tab_names_the_peak_the_trough_and_the_fatigue_point() {
+    let mut h = harness(model_on(ReportTab::Habits));
+    h.run_steps(4);
+    for text in [
+        "Your recall is highest between 09:00 and 11:00 (95 % of 40, median 3.0 s).",
+        "It is lowest between 20:00 and 22:00 (50 % of 40, median 6.0 s).",
+        "09:00",
+        "21:00",
+        "Best on Monday, weakest on Monday.",
+        "Your accuracy holds for about 15 minutes (about 15 items); after that the median time to answer rises 67 % and recall drops 30 points. Runs of about 15 minutes suit you.",
+        "First ten minutes: 90 % of 30, median 3.0 s",
+        "15-20 min",
+        "20-30 min",
+        "items 1-10",
+    ] {
+        assert!(h.query_by_label(text).is_some(), "missing {text}");
+    }
+    assert_eq!(
+        h.query_all_by_label("of 20, median 3.0 s, 90 % under 3.0 s")
+            .count(),
+        2,
+        "09:00 and 10:00"
+    );
+    assert_all_named(&h, "habits report");
+}
+
+#[test]
+fn a_higher_threshold_withholds_the_recommendation() {
+    let mut m = model_on(ReportTab::Habits);
+    studyfrog_ui::model::apply(
+        &mut m,
+        studyfrog_ui::msg::Msg::Explorer(studyfrog_ui::explorer_ui::ExplorerMsg::MinBucket(50)),
+    );
+    assert_eq!(m.state.explorer.min_bucket, 50);
+    let mut h = harness(m);
+    h.run_steps(4);
+    assert!(
+        h.query_by_label_contains("Your recall is highest")
+            .is_none()
+    );
+    assert!(
+        h.query_by_label_contains("two hours in a row need 50 reviews each")
+            .is_some()
+    );
+    h.get_by_label("10").click();
+    h.run_steps(2);
+    assert_eq!(h.state().0.state.explorer.min_bucket, 10);
+    assert!(
+        h.query_by_label_contains("Your recall is highest")
+            .is_some()
+    );
 }

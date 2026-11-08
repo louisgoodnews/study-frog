@@ -159,3 +159,5 @@ seed 1; release profile, this machine, criterion with 3 s measurement):
 | Date | Bench | Result | Budget |
 |---|---|---|---|
 | 2026-11-08 | survival report (replay, tiers, fit) | 5.2 ms | < 50 ms |
+| 2026-11-08 | chronotype of every review and answer time | 3.3 ms | < 50 ms |
+| 2026-11-08 | fatigue report of one sample per review | 2.8 ms | < 50 ms |

@@ -109,5 +109,71 @@ pub fn analytics() -> studyfrog_service::analytics::Analytics {
         .collect();
     studyfrog_service::analytics::Analytics {
         survival: survival_report(&reviews, &p),
+        chronotype: chronotype(),
+        fatigue: studyfrog_report::fatigue::fatigue_report(&tiring()),
     }
+}
+
+/// 20 reviews at 09:00, 10:00 (one Again each), 20:00 and 21:00 (ten Again each), Monday 2027-01-11 UTC.
+pub fn chronotype() -> studyfrog_report::chronotype::ChronotypeReport {
+    use studyfrog_report::chronotype::{TimedLatency, TimedReview};
+    const MONDAY: i64 = 1_799_625_600_000;
+    let mut reviews = Vec::new();
+    let mut latencies = Vec::new();
+    for (hour, again, ms) in [
+        (9, 1, 3_000),
+        (10, 1, 3_000),
+        (20, 10, 6_000),
+        (21, 10, 6_000),
+    ] {
+        for k in 0..20 {
+            let at_ms = MONDAY + hour * 3_600_000 + k * 60_000;
+            let rating = if k < again {
+                studyfrog_core::review::Rating::Again
+            } else {
+                studyfrog_core::review::Rating::Good
+            };
+            reviews.push(TimedReview {
+                at_ms,
+                offset_minutes: 0,
+                rating,
+            });
+            latencies.push(TimedLatency {
+                at_ms,
+                offset_minutes: 0,
+                ms,
+            });
+        }
+    }
+    studyfrog_report::chronotype::chronotype(&reviews, &latencies, 20)
+}
+
+/// Three runs of 30 minutes, one item a minute: steady for 15 minutes (one Again in ten), then slower and every
+/// other one forgotten.
+pub fn tiring() -> Vec<studyfrog_report::session_log::SessionSample> {
+    let mut out = Vec::new();
+    for run in 1..=3_u128 {
+        for minute in 0..30_u32 {
+            let (latency, again) = if minute < 15 {
+                (3_000, minute % 10 == 9)
+            } else {
+                (5_000, minute % 2 == 0)
+            };
+            out.push(studyfrog_report::session_log::SessionSample {
+                run: Uid(run),
+                item: Uid(u128::from(minute) + 1),
+                position: minute + 1,
+                shown_t_ms: minute * 60_000,
+                active_ms: minute * 60_000,
+                latency_ms: Some(latency),
+                item_ms: latency + 1_000,
+                rating: if again {
+                    studyfrog_core::review::Rating::Again
+                } else {
+                    studyfrog_core::review::Rating::Good
+                },
+            });
+        }
+    }
+    out
 }

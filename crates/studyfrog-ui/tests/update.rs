@@ -43,6 +43,7 @@ fn starting_with_a_remembered_vault_opens_it() {
         views_untracked: false,
         library_columns: None,
         calendar_reviews_off: false,
+        slow_answer_notice_off: false,
         stack_tabs: Vec::new(),
         tutorial_offered: false,
         appearance: Default::default(),

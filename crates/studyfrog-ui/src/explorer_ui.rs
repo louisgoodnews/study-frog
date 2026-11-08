@@ -19,15 +19,18 @@ pub enum ReportTab {
     Calibration,
     /// The history of runs.
     Runs,
+    /// Recall by hour and weekday, and fatigue within a run.
+    Habits,
 }
 
 /// The tabs by the word that names them on the command line (`--screen reports:<word>`).
-pub const TAB_WORDS: [(&str, ReportTab); 5] = [
+pub const TAB_WORDS: [(&str, ReportTab); 6] = [
     ("performance", ReportTab::Performance),
     ("memory", ReportTab::Memory),
     ("familiarity", ReportTab::Familiarity),
     ("calibration", ReportTab::Calibration),
     ("runs", ReportTab::Runs),
+    ("habits", ReportTab::Habits),
 ];
 
 /// The tab a word names.
@@ -48,6 +51,8 @@ pub struct ExplorerState {
     pub data: Option<Box<Explorer>>,
     /// Only runs of this mode in the history of runs.
     pub mode: Option<studyfrog_core::run::RunMode>,
+    /// Reviews an hour or weekday needs before it can be a peak or trough (0: the report's default).
+    pub min_bucket: u32,
 }
 
 /// Messages of the explorer.
@@ -63,6 +68,8 @@ pub enum ExplorerMsg {
     Period(Period),
     /// The numbers arrived.
     Loaded(Result<Box<Explorer>, String>),
+    /// Reviews an hour or weekday needs before it is recommended.
+    MinBucket(u32),
 }
 
 fn ask(state: State, scope: Scope, period: Period) -> (State, Vec<Effect>) {
@@ -91,6 +98,13 @@ pub fn update(state: State, msg: ExplorerMsg) -> (State, Vec<Effect>) {
         ExplorerMsg::Mode(mode) => {
             let explorer = ExplorerState {
                 mode,
+                ..state.explorer.clone()
+            };
+            (State { explorer, ..state }, Vec::new())
+        }
+        ExplorerMsg::MinBucket(n) => {
+            let explorer = ExplorerState {
+                min_bucket: n,
                 ..state.explorer.clone()
             };
             (State { explorer, ..state }, Vec::new())

@@ -115,6 +115,8 @@ pub struct AppSettings {
     pub library_columns: Option<String>,
     /// Do not show the reviews the schedule plans as entries of the calendar (the default is to show them).
     pub calendar_reviews_off: bool,
+    /// Do not say during a run when an answer takes far longer than usual (the default is to say it).
+    pub slow_answer_notice_off: bool,
     /// The tab each stack was last left on, as `folder:tab` (at most [`MAX_STACK_TABS`]).
     pub stack_tabs: Vec<String>,
     /// The first-run tutorial has been offered (it is offered once).

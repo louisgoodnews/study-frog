@@ -17,7 +17,7 @@ pub type Section = fn(&State, &mut egui::Ui, &mut Vec<Msg>);
 pub fn sections_of(tab: SettingsTab) -> &'static [Section] {
     match tab {
         SettingsTab::Study => &[scheduling, view_tracking, replay],
-        SettingsTab::Rehearsal => &[reading_speed],
+        SettingsTab::Rehearsal => &[reading_speed, crate::view::run_slow::setting],
         SettingsTab::Answers => &[answer_comparison],
         SettingsTab::Data => &[
             crate::view::backup::draw,

@@ -25,6 +25,7 @@ fn the_vault_dialog_opens_a_typed_path_and_the_welcome_page_lists_recent_vaults(
         views_untracked: false,
         library_columns: None,
         calendar_reviews_off: false,
+        slow_answer_notice_off: false,
         stack_tabs: Vec::new(),
         tutorial_offered: false,
         appearance: Default::default(),

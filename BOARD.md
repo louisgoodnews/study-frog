@@ -362,9 +362,9 @@
 | [STORY-0099](docs/issues/stories/STORY-0099-simplify-vault-switcher-menu.md) Simplify vault switcher menu (3) | done | 0/0 |
 | [STORY-0100](docs/issues/stories/STORY-0100-move-stack-between-parent-and-standalone.md) Move stack between parent stack and standalone after creation (3) | done | 0/0 |
 | [STORY-0101](docs/issues/stories/STORY-0101-delete-item-from-viewer-and-details.md) Delete item from item viewer and editor (3) | done | 0/0 |
-| [STORY-0102](docs/issues/stories/STORY-0102-chronobiological-hour-of-day-and-day-of-week-performance-telemetry.md) Chronobiological hour-of-day and day-of-week performance telemetry (3) | in_progress | 0/0 |
-| [STORY-0103](docs/issues/stories/STORY-0103-within-session-cognitive-fatigue-and-pacing-decay-analysis.md) Within-session cognitive fatigue and pacing decay analysis (3) | backlog | 0/0 |
-| [STORY-0104](docs/issues/stories/STORY-0104-leech-diagnostics-interference-detection-and-confusion-clusters.md) Leech diagnostics, interference detection, and confusion clusters (5) | backlog | 0/0 |
+| [STORY-0102](docs/issues/stories/STORY-0102-chronobiological-hour-of-day-and-day-of-week-performance-telemetry.md) Chronobiological hour-of-day and day-of-week performance telemetry (3) | done | 0/0 |
+| [STORY-0103](docs/issues/stories/STORY-0103-within-session-cognitive-fatigue-and-pacing-decay-analysis.md) Within-session cognitive fatigue and pacing decay analysis (3) | done | 0/0 |
+| [STORY-0104](docs/issues/stories/STORY-0104-leech-diagnostics-interference-detection-and-confusion-clusters.md) Leech diagnostics, interference detection, and confusion clusters (5) | in_progress | 0/0 |
 | [STORY-0105](docs/issues/stories/STORY-0105-fsrs-state-simulation-forecasting-study-minute-projection-and-exam-pacer.md) FSRS state-simulation forecasting, study-minute projection, and exam deadline pacer (8) | backlog | 0/0 |
 | [STORY-0106](docs/issues/stories/STORY-0106-workload-versus-retention-simulator-and-minimum-recommended-retention.md) Workload-versus-retention simulator and minimum recommended retention (CMRR) (5) | backlog | 0/0 |
 | [STORY-0107](docs/issues/stories/STORY-0107-empirical-forgetting-curves-true-retention-and-stability-tier-survival-analysis.md) Empirical forgetting curves, true retention, and stability-tier survival analysis (3) | done | 0/0 |
@@ -428,7 +428,7 @@
 | [EPIC-031](docs/issues/epics/EPIC-031-details-tabs-create-workflow-csv-import.md) Details tabs, create workflow, and CSV import for 0.4.1 | done | 6/6 |
 | [EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md) Item keys, colorization, and reporting export | review | 3/4 |
 | [EPIC-033](docs/issues/epics/EPIC-033-exam-run-mode-with-semantic-comparison-and-grading.md) Exam run mode with mandatory text entry, semantic comparison, and percentage grading | done | 5/5 |
-| [EPIC-034](docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md) Behavioral learning analytics, FSRS optimizer, and workload forecasting | in_progress | 1/6 |
+| [EPIC-034](docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md) Behavioral learning analytics, FSRS optimizer, and workload forecasting | in_progress | 3/6 |
 | [EPIC-035](docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md) Rich active-recall formats, inline note extraction, and focus workflows | backlog | 0/5 |
 | [EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md) Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement | backlog | 0/4 |
 | [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md) State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry | review | 4/5 |
