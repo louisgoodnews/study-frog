@@ -83,12 +83,21 @@ fn pair_row(p: &PairRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             why.push("linked".to_owned());
         }
         ui.weak(why.join(", "));
-        if ui
-            .button(format!("Drill {} and {} together", p.a.1, p.b.1))
-            .clicked()
-        {
-            out.push(Msg::Explorer(ExplorerMsg::Drill(vec![p.a.0, p.b.0])));
-        }
+        ui.horizontal_wrapped(|ui| {
+            if ui
+                .button(format!("Drill {} and {} together", p.a.1, p.b.1))
+                .clicked()
+            {
+                out.push(Msg::Explorer(ExplorerMsg::Drill(vec![p.a.0, p.b.0])));
+            }
+            let open = crate::contrast::ContrastMsg::Open(vec![p.a.0, p.b.0]);
+            if ui
+                .button(format!("Compare {} and {} side by side", p.a.1, p.b.1))
+                .clicked()
+            {
+                out.push(crate::contrast::msg(open));
+            }
+        });
     });
 }
 

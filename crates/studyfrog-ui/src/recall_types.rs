@@ -26,6 +26,8 @@ pub struct RecallState {
     pub extract: ExtractPanel,
     /// The focus timer.
     pub focus: crate::focus_timer::Focus,
+    /// The contrastive drill, while open.
+    pub contrast: Option<crate::contrast::Contrast>,
 }
 
 /// Something happened in an active-recall workflow.
@@ -43,6 +45,8 @@ pub enum RecallMsg {
     ExtractClose,
     /// The focus timer.
     Focus(crate::focus_ui::FocusMsg),
+    /// The contrastive drill.
+    Contrast(crate::contrast::ContrastMsg),
 }
 
 /// Work for the worker.
@@ -54,4 +58,8 @@ pub enum RecallEffect {
     ApplyExtract(Box<SyncPlan>),
     /// Record a finished focus block.
     LogFocus(studyfrog_service::focus::FocusDone),
+    /// Load the items of a contrastive drill.
+    LoadContrast(Vec<Uid>),
+    /// Keep the distinction of a contrastive drill.
+    SaveContrast(Box<crate::contrast::ContrastSave>),
 }

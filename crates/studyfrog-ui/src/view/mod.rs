@@ -16,6 +16,7 @@ mod board;
 pub(crate) mod calendar;
 mod calendar_grid;
 mod calendar_reviews;
+pub mod contrast;
 pub(crate) mod date_picker;
 pub mod diary;
 mod editor;
@@ -183,6 +184,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     tutorial::panel(state, ui, &mut out);
     toast::draw(state, ui, &mut out);
     focus_bar::done_card(state, ui, &mut out);
+    contrast::window(state, ui, &mut out);
     modal::draw(state, ui, &mut out);
     out
 }

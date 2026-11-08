@@ -28,14 +28,14 @@ pub struct Scored {
 fn comparison_of<'a>(doc: &'a Doc, answer: &'a str) -> Result<Comparison<'a>, ServiceError> {
     match doc {
         Doc::Question(q) => Ok(Comparison {
-            reference: crate::inline_sync::without_source(&q.reference),
+            reference: crate::contrast::answer_core(&q.reference),
             answer,
             accepted: &q.accepted,
             rubric: &q.rubric,
             min_score: q.min_score,
         }),
         Doc::Card(c) => Ok(Comparison {
-            reference: crate::inline_sync::without_source(&c.back),
+            reference: crate::contrast::answer_core(&c.back),
             answer,
             accepted: &[],
             rubric: &[],

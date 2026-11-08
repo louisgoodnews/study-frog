@@ -164,6 +164,12 @@ pub fn bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 ),
             )));
         }
+        if (2..=4).contains(&n) && ui.button("Contrastive drill").clicked() {
+            let picked = lib.selected.iter().copied().collect();
+            out.push(crate::contrast::msg(crate::contrast::ContrastMsg::Open(
+                picked,
+            )));
+        }
         delete(state, ui, out);
         if ui.button("Clear selection").clicked() {
             send(out, BulkMsg::SelectAll(false));

@@ -19,6 +19,7 @@ pub mod backup_ui;
 pub mod browse;
 pub mod chrome;
 pub mod cli;
+pub mod contrast;
 pub mod control_client;
 pub mod control_cmd;
 pub mod control_conn;

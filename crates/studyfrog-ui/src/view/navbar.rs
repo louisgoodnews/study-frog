@@ -56,7 +56,7 @@ fn left_and_middle(
     anchors: &mut Vec<(Menu, Rect)>,
 ) {
     let total = ui.available_width();
-    let left_w = LEFT_WIDTH.min(total * 0.4);
+    let left_w = LEFT_WIDTH.min(total * 0.45);
     let middle_w = (total - left_w - ui.spacing().item_spacing.x).max(0.0);
     let left_to_right = Layout::left_to_right(Align::Center);
     // A section keeps its full width even when its content is narrower, so the sections stay where they are.

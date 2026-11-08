@@ -19,6 +19,8 @@ pub mod calibration_report;
 pub mod compare;
 pub mod content;
 pub mod content_cloze;
+pub mod contrast;
+mod contrast_save;
 pub mod create;
 pub mod create_more;
 pub mod day;

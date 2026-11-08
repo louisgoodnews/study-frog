@@ -13,6 +13,11 @@ pub fn setup(model: &mut Model, name: &str) -> Option<Vec<Effect>> {
         return Some(focus(model, name == "focus-done"));
     }
     let (kind, uid) = name.split_once(':')?;
+    if kind == "contrast" || kind == "compare" {
+        let uids: Option<Vec<_>> = uid.split(',').map(studyfrog_md::ulid::parse_ulid).collect();
+        let open = crate::contrast::ContrastMsg::Open(uids?);
+        return Some(apply(model, crate::contrast::msg(open)));
+    }
     let uid = studyfrog_md::ulid::parse_ulid(uid)?;
     match kind {
         "extract" => Some(apply(model, Msg::OpenItem(uid))),
@@ -22,6 +27,9 @@ pub fn setup(model: &mut Model, name: &str) -> Option<Vec<Effect>> {
 
 /// Once the screen has loaded: open what the picture should show.
 pub fn later(model: &mut Model, name: &str) -> Vec<Effect> {
+    if name.starts_with("compare:") {
+        return compared(model);
+    }
     if name.starts_with("extract:")
         && let Some(e) = &model.state.editor
     {
@@ -76,4 +84,19 @@ fn focus(model: &mut Model, finished: bool) -> Vec<Effect> {
         });
     }
     fx
+}
+
+/// The drill with every prompt matched, checked, and a distinction typed.
+fn compared(model: &mut Model) -> Vec<Effect> {
+    use crate::contrast::{ContrastMsg, msg};
+    let Some(c) = &model.state.recall.contrast else {
+        return Vec::new();
+    };
+    let order = c.order.clone();
+    for (k, i) in order.iter().enumerate() {
+        apply(model, msg(ContrastMsg::Pick(*i, k)));
+    }
+    apply(model, msg(ContrastMsg::Check));
+    let text = "Ionic: electrons are given away; covalent: they are shared.".to_owned();
+    apply(model, msg(ContrastMsg::Distinction(text)))
 }
