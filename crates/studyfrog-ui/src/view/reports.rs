@@ -69,6 +69,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             (ReportTab::Runs, "Runs"),
             (ReportTab::Habits, "Habits"),
             (ReportTab::Leeches, "Leeches"),
+            (ReportTab::Workload, "Workload"),
         ] {
             if ui
                 .selectable_label(state.explorer.tab == tab, label)
@@ -86,6 +87,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ReportTab::Runs => crate::view::reports_runs::draw(state, ui, out),
         ReportTab::Habits => crate::view::reports_habits::draw(state, ui, out),
         ReportTab::Leeches => crate::view::reports_leeches::draw(state, ui, out),
+        ReportTab::Workload => crate::view::reports_workload::draw(state, ui, out),
     }
 }
 

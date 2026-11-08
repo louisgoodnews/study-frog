@@ -136,5 +136,56 @@ fn leeches(c: &mut Criterion) {
     });
 }
 
-criterion_group!(benches, survival, habits, leeches);
+fn deck(n: i64) -> Vec<studyfrog_report::sim_engine::SimCard> {
+    use studyfrog_core::memory::MemState;
+    use studyfrog_report::sim_engine::{SimCard, SimMemory};
+    (0..n)
+        .map(|i| SimCard {
+            memory: (i % 5 != 0).then_some(SimMemory::Fsrs(MemState {
+                stability: 1.0 + (i % 120) as f32,
+                difficulty: 5.0,
+            })),
+            last_day: -(i % 30),
+            due_day: i % 40,
+            relearning: false,
+            sm2: false,
+            pace: 0,
+        })
+        .collect()
+}
+
+fn sim_setup(days: usize, trajectories: u32) -> studyfrog_report::sim_engine::SimSetup {
+    use studyfrog_report::sim_engine::{RatingMix, SimSetup, pace_default};
+    SimSetup {
+        today: 0,
+        days,
+        trajectories,
+        seed: 1,
+        miss_probability: 0.1,
+        new_per_day: 10.0,
+        new_days: days,
+        mix: RatingMix {
+            first_again: 0.2,
+            hard: 0.1,
+            good: 0.8,
+        },
+        paces: vec![pace_default()],
+    }
+}
+
+fn forecasts(c: &mut Criterion) {
+    use studyfrog_report::forecast_sim::simulate_forecast;
+    let (cards, p) = (deck(5_000), params_default());
+    for (days, n) in [(90, 16), (365, 16)] {
+        let s = sim_setup(days, n);
+        c.bench_function(
+            &format!("forecast of 5,000 cards, {days} days, {n} futures"),
+            |b| {
+                b.iter(|| simulate_forecast(black_box(&cards), &s, &p));
+            },
+        );
+    }
+}
+
+criterion_group!(benches, survival, habits, leeches, forecasts);
 criterion_main!(benches);

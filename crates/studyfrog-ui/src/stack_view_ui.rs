@@ -218,7 +218,8 @@ pub fn sync(state: State) -> (State, Vec<Effect>) {
     (state, vec![effect])
 }
 
-/// Read what a tab needs that is not read anywhere else: the sessions for the Calendar, the reports for Reports.
+/// Read what a tab needs that is not read anywhere else: the sessions for the Calendar, the reports for Reports
+/// and for the exam pacer on Summary.
 pub fn sync_data(state: State) -> (State, Vec<Effect>) {
     let Some(folder) = open_folder(&state).map(str::to_owned) else {
         return (state, Vec::new());
@@ -226,7 +227,9 @@ pub fn sync_data(state: State) -> (State, Vec<Effect>) {
     let tab = tab_of(&state.app, &folder);
     let effects = match tab {
         StackTab::Calendar if !state.planner.loaded => vec![Effect::LoadSessions],
-        StackTab::Reports if state.reports.is_none() => vec![Effect::BuildReports],
+        StackTab::Reports | StackTab::Summary if state.reports.is_none() => {
+            vec![Effect::BuildReports]
+        }
         _ => Vec::new(),
     };
     let mut state = state;

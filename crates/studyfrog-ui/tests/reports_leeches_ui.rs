@@ -3,7 +3,8 @@
 
 mod common;
 
-use common::reports::{analytics, bundle};
+use common::analytics::analytics;
+use common::reports::bundle;
 use common::views::{assert_all_named, harness, open_model};
 use egui_kittest::kittest::Queryable;
 use studyfrog_core::status::Status;

@@ -23,10 +23,12 @@ pub enum ReportTab {
     Habits,
     /// Items that keep failing and pairs that interfere.
     Leeches,
+    /// The simulated workload ahead and the exam pacers.
+    Workload,
 }
 
 /// The tabs by the word that names them on the command line (`--screen reports:<word>`).
-pub const TAB_WORDS: [(&str, ReportTab); 7] = [
+pub const TAB_WORDS: [(&str, ReportTab); 8] = [
     ("performance", ReportTab::Performance),
     ("memory", ReportTab::Memory),
     ("familiarity", ReportTab::Familiarity),
@@ -34,6 +36,7 @@ pub const TAB_WORDS: [(&str, ReportTab); 7] = [
     ("runs", ReportTab::Runs),
     ("habits", ReportTab::Habits),
     ("leeches", ReportTab::Leeches),
+    ("workload", ReportTab::Workload),
 ];
 
 /// The tab a word names.
@@ -56,6 +59,10 @@ pub struct ExplorerState {
     pub mode: Option<studyfrog_core::run::RunMode>,
     /// Reviews an hour or weekday needs before it can be a peak or trough (0: the report's default).
     pub min_bucket: u32,
+    /// Days the workload shows: 30, 90 or 365 (0: 30).
+    pub horizon: u16,
+    /// Show the workload in study minutes instead of reviews.
+    pub minutes: bool,
 }
 
 /// Messages of the explorer.
@@ -77,6 +84,10 @@ pub enum ExplorerMsg {
     Pause(studyfrog_core::uid::Uid),
     /// Practise these items together, one after the other (a contrastive drill).
     Drill(Vec<studyfrog_core::uid::Uid>),
+    /// Days the workload shows.
+    Horizon(u16),
+    /// Show the workload in minutes (true) or reviews.
+    Minutes(bool),
 }
 
 fn ask(state: State, scope: Scope, period: Period) -> (State, Vec<Effect>) {
@@ -115,6 +126,16 @@ pub fn update(state: State, msg: ExplorerMsg) -> (State, Vec<Effect>) {
             (state, vec![Effect::Library(fx)])
         }
         ExplorerMsg::Drill(items) => crate::reports::drill(state, items),
+        ExplorerMsg::Horizon(days) => {
+            let mut state = state;
+            state.explorer.horizon = days;
+            (state, Vec::new())
+        }
+        ExplorerMsg::Minutes(on) => {
+            let mut state = state;
+            state.explorer.minutes = on;
+            (state, Vec::new())
+        }
         ExplorerMsg::MinBucket(n) => {
             let explorer = ExplorerState {
                 min_bucket: n,

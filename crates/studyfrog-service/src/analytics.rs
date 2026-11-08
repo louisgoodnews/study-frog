@@ -31,6 +31,8 @@ pub struct Analytics {
     pub leeches: Vec<crate::analytics_leech::LeechRow>,
     /// Pairs of items that seem to interfere, strongest first.
     pub pairs: Vec<crate::analytics_leech::PairRow>,
+    /// The simulated forecast and the exam pacers.
+    pub plan: crate::analytics_plan::Plan,
 }
 
 /// What the analytics are computed from.
@@ -42,6 +44,8 @@ pub struct History<'a> {
     pub events: &'a [RunEvent],
     /// The local UTC offset at an instant (Unix milliseconds).
     pub offset_of: &'a dyn Fn(i64) -> i32,
+    /// Now, in Unix milliseconds.
+    pub now_ms: i64,
 }
 
 /// A small number for every item, in order of first appearance.
@@ -113,11 +117,15 @@ pub fn analytics_of(
     let samples = session_samples(h.events);
     let starts = load_run_starts(&session.conn)?;
     let (leeches, pairs) = crate::analytics_leech::leeches_of(session, &h, &samples)?;
+    let offset = (h.offset_of)(h.now_ms);
+    let today = (h.now_ms + i64::from(offset) * 60_000).div_euclid(86_400_000);
+    let plan = crate::analytics_plan::plan_of(session, &h, &samples, &starts, (today, offset), p)?;
     Ok(Analytics {
         survival: survival_of(h.rows, &ids, p),
         chronotype: chronotype_of(&h, &samples, &starts),
         fatigue: fatigue_report(&samples),
         leeches,
         pairs,
+        plan,
     })
 }

@@ -214,6 +214,7 @@ fn a_new_stack_is_opened_and_a_refusal_keeps_the_form_with_its_reason() {
                 "french/verbs".into(),
                 0
             )),
+            Effect::BuildReports,
         ]
     );
 }

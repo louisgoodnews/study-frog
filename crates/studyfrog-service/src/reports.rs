@@ -211,6 +211,7 @@ pub fn build_reports_with(
                     rows: &rows,
                     events: &events,
                     offset_of,
+                    now_ms: now.0,
                 },
                 &params,
             )

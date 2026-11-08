@@ -163,6 +163,10 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     };
     let now_ms = state.wall_ms;
     cards(s, ui);
+    if let Some(p) = crate::view::report_pacer::of_stack(state, folder) {
+        kit::section(ui, "Exam pacer");
+        crate::view::report_pacer::draw(p, ui);
+    }
     ui.columns(2, |cols| {
         let (left, right) = cols.split_at_mut(1);
         let (left, right) = (&mut left[0], &mut right[0]);

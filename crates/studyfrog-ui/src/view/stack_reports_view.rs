@@ -32,6 +32,10 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         });
     }
     ui.add_space(8.0);
+    if let Some(p) = crate::view::report_pacer::of_stack(state, folder) {
+        crate::view::kit::section(ui, "Exam pacer");
+        crate::view::report_pacer::draw(p, ui);
+    }
     let a = &b.analytics;
     let mine = |f: &str| crate::view::reports_leeches::in_stack(f, folder);
     let leeches: Vec<_> = a.leeches.iter().filter(|r| mine(&r.folder)).collect();

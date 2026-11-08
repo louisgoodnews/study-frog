@@ -2,7 +2,7 @@
 id: STORY-0105
 type: story
 title: FSRS state-simulation forecasting, study-minute projection, and exam deadline pacer
-status: in_progress
+status: done
 epic: EPIC-034
 parents: [EPIC-034]
 estimate: 8
@@ -37,14 +37,40 @@ Upgrade StudyFrog's forecasting engine to a full FSRS/SM-2 state-transition simu
    - Show the **Exam Pacer** card on the Stack `Summary` and `Schedule` tabs whenever a stack has a deadline.
 
 ## Acceptance Criteria
-- [ ] The forecast engine simulates each item's actual FSRS-6/SM-2 state forward over 30, 90, or 365 days with P10/P50/P90 confidence bands and stage breakdowns (New, Learning, Young, Mature)
-- [ ] Daily review projections are converted into expected study minutes using empirical per-stack answer and reading latencies
-- [ ] Stacks with an exam or due date display an Exam Deadline Pacer calculating the exact daily new-item and review quota required to reach target readiness before the deadline
+- [x] The forecast engine simulates each item's actual FSRS-6/SM-2 state forward over 30, 90, or 365 days with P10/P50/P90 confidence bands and stage breakdowns (New, Learning, Young, Mature)
+- [x] Daily review projections are converted into expected study minutes using empirical per-stack answer and reading latencies
+- [x] Stacks with an exam or due date display an Exam Deadline Pacer calculating the exact daily new-item and review quota required to reach target readiness before the deadline
 
 ## Design Notes
 - Keep `forecast.rs` or add `forecast_sim.rs` and `exam_pacer.rs` in `crates/studyfrog-report/src/`.
 - Ensure simulation of 5,000 items over 90 days completes well under the 50 ms budget by using lightweight fixed-seed PRNG (`next_random`) and pre-binned items for long horizons.
 - Enforce P1 (no inherent `impl` blocks) and P2 (≤ 250 lines per file).
+
+## Progress (2026-11-08)
+Built and verified:
+- `crates/studyfrog-report/src/sim_engine.rs` (+ `sim_types.rs`): one seeded future of the deck: every card's FSRS
+  state (or SM-2 state, recalled with the FSRS curve of stability = interval) carried forward day by day, each
+  review recalled with the model's probability and rated with the learner's mix (first-review Again share; Hard /
+  Good / Easy among recalled), days missed with the learner's miss probability (their reviews move to the next day),
+  new cards at a fractional rate; reviews counted by stage (new, learning after a lapse, young S < 21 d, mature) with
+  seconds from per-stack paces. `forecast_sim.rs`: 16 futures, per day the expected stages, P10/P50/P90 of the
+  reviews and of the minutes. `exam_pacer.rs`: unseen and volatile cards, new cards a day over the days before a
+  3-day buffer, reviews and minutes a day, consolidation reviews, share of cards at 90 % recall on the day (on track
+  at >= 90 %). Tests with hand-checked fixtures and a property test: `crates/studyfrog-report/tests/forecast_sim.rs`.
+- Service: `analytics_deck.rs` (rating mix, miss probability over the last 60 days, new cards a day over 14 days,
+  paces per stack folder from the run log: time from showing to rating by first / after-lapse / other review,
+  falling back to the vault's and then 20/15/10 s) and `analytics_plan.rs` (the vault forecast over each item's
+  primary-stack state, 365 days; a pacer for every stack with an exam or deadline ahead over that stack's own
+  schedule rows, per ADR 0011). Fixture-vault tests: `crates/studyfrog-service/tests/analytics_plan.rs`.
+- UI: Reports > Workload with 30 / 90 / 365 days and Reviews / Study minutes, rows by day then week (or four weeks)
+  with stages, typical and low-to-busy range as text, and the exam pacer cards; the pacer on the stack's Summary and
+  Reports tabs (opening the Summary builds the reports). Harness tests `crates/studyfrog-ui/tests/reports_workload_ui.rs`;
+  screenshots `--screen reports:workload` and `--screen stack:chemistry` of a demo vault with an exam looked at.
+- Benchmarks: 5,000 cards, 90 days, 16 futures: 7.9 ms; 365 days: 21.0 ms (budget 50 ms).
+
+Not built (description, not criteria): the pacer in the Calendar; familiarity is not part of the simulated intervals
+(the forecast uses the plain FSRS/SM-2 intervals); the old geometric forecast stays on Memory and forecast with its
+backtest.
 
 ## Dependencies
 EPIC-034.
