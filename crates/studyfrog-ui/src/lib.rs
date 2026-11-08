@@ -180,7 +180,16 @@ pub mod run_state;
 pub mod run_time;
 pub mod run_update;
 pub mod runtime;
+#[cfg(unix)]
+pub mod script_cli;
+pub mod script_client;
 pub mod script_events;
+#[cfg(unix)]
+pub mod script_launch;
+#[cfg(unix)]
+pub mod script_runner;
+#[cfg(unix)]
+pub mod script_socket;
 pub mod session_form;
 pub mod setup;
 pub mod setup_fam;

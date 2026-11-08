@@ -86,7 +86,8 @@ pub fn publish(
     Ok(ControlGuard { socket, meta })
 }
 
-fn client(ctx: &ConnCtx, stream: UnixStream) {
+/// Serve one client of a socket until it goes away.
+pub fn serve_client(ctx: &ConnCtx, stream: UnixStream) {
     let Ok(reader) = stream.try_clone() else {
         return;
     };
@@ -99,7 +100,7 @@ pub fn serve(listener: UnixListener, ctx: ConnCtx) {
     std::thread::spawn(move || {
         for stream in listener.incoming().flatten() {
             let ctx = ctx.clone();
-            std::thread::spawn(move || client(&ctx, stream));
+            std::thread::spawn(move || serve_client(&ctx, stream));
         }
     });
 }

@@ -2,7 +2,7 @@
 id: STORY-0133
 type: story
 title: Console screen in the application
-status: backlog
+status: in_progress
 epic: EPIC-028
 parents: [EPIC-028]
 estimate: 5

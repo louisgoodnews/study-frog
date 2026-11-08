@@ -2,7 +2,7 @@
 id: TASK-0247
 type: task
 title: scripts.toml, cron and trigger matching
-status: backlog
+status: done
 epic: EPIC-028
 parents: [STORY-0132]
 estimate: 3
@@ -17,7 +17,7 @@ Part of STORY-0132.
 See the story and ADR 0013.
 
 ## Acceptance Criteria
-- [ ] Config parsing with per-entry errors, the cron parser and matcher, due jobs per minute and jobs per event; pure, unit tested with an injected clock
+- [x] Config parsing with per-entry errors, the cron parser and matcher, due jobs per minute and jobs per event; pure, unit tested with an injected clock
 
 ## Design Notes
 See the story.

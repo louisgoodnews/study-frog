@@ -71,6 +71,7 @@ pub fn conn_ctx(inbox: Inbox, logs: &Path, wait: fn()) -> ConnCtx {
         logs: Some(logs.to_path_buf()),
         wait,
         events: None,
+        scope: None,
     }
 }
 

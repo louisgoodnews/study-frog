@@ -56,6 +56,7 @@ pub fn paths_report(p: &AppPaths) -> String {
         ("profiles", p.profiles.clone()),
         ("models", p.models.clone()),
         ("run", p.run.clone()),
+        ("scripts", p.scripts.clone()),
         ("logs", p.logs.clone()),
         ("text log", p.logs.join(LOG_TEXT_FILE)),
         ("json log", p.logs.join(LOG_JSON_FILE)),
@@ -220,6 +221,6 @@ mod tests {
         let report = paths_report(&app_paths(Path::new("/s")));
         assert!(report.contains("config    /s/config\n"));
         assert!(report.contains("json log  /s/logs/console.jsonl\n"));
-        assert_eq!(report.lines().count(), 8);
+        assert_eq!(report.lines().count(), 9);
     }
 }

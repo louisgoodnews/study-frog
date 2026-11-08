@@ -12,6 +12,8 @@
 //! `studyfrog ctl <command>` sends one to a running instance (`studyfrog ctl help` lists them). The window serves
 //! `run/control.sock` unless `--no-control` is given; `--control-read-only` and `--control-allow-destructive`
 //! set what requests may change.
+//! `studyfrog script run FILE|JOB`, `script list`, `script daemon` and `script install-client` run user scripts
+//! (`<app home>/scripts/scripts.toml`; every window and headless instance runs its scheduled and event-bound jobs).
 
 use std::process::ExitCode;
 
@@ -65,6 +67,13 @@ fn main() -> ExitCode {
         return ExitCode::from(studyfrog_ui::control_stdio::run(
             &args,
             studyfrog_app::host(),
+        ));
+    }
+    #[cfg(unix)]
+    if args.get(1).map(String::as_str) == Some("script") {
+        return ExitCode::from(studyfrog_ui::script_cli::run_cli(
+            &args[2..],
+            studyfrog_app::host,
         ));
     }
     if let Some(code) = studyfrog_ui::cli::run(&args) {

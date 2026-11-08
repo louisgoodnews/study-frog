@@ -24,6 +24,8 @@ pub struct AppPaths {
     pub models: PathBuf,
     /// Runtime state of a running instance (sockets, locks).
     pub run: PathBuf,
+    /// User scripts, `scripts.toml` and the Python client (`lib/`).
+    pub scripts: PathBuf,
 }
 
 /// `$STUDYFROG_HOME`, else `$XDG_DATA_HOME/studyfrog`, else `$HOME/.local/share/studyfrog`. Pure:
@@ -48,6 +50,7 @@ pub fn app_paths(root: &Path) -> AppPaths {
         logs: root.join("logs"),
         models: root.join("models"),
         run: root.join("run"),
+        scripts: root.join("scripts"),
     }
 }
 

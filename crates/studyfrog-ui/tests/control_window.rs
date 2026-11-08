@@ -16,6 +16,7 @@ fn control(policy: ControlPolicy) -> (WindowControl, Inbox) {
         pending: None,
         policy,
         logs: None,
+        ctx: None,
         #[cfg(unix)]
         guard: None,
     };

@@ -45,6 +45,8 @@ pub struct WindowControl {
     pub policy: ControlPolicy,
     /// Where failures are logged.
     pub logs: Option<PathBuf>,
+    /// A connection context into this window (for the script runner and the console).
+    pub ctx: Option<crate::control_conn::ConnCtx>,
     /// Removes the socket when the window closes.
     #[cfg(unix)]
     pub guard: Option<crate::control_socket::ControlGuard>,
@@ -72,10 +74,12 @@ fn screenshot(ctx: &egui::Context, req: Request, reply: Sender<String>, path: Pa
 }
 
 fn start(c: &mut WindowControl, model: &mut Model, ctx: &egui::Context) -> Vec<Effect> {
-    let Ok(Job::Run(req, reply)) = c.jobs.try_recv() else {
-        return Vec::new();
+    let (req, reply, policy) = match c.jobs.try_recv() {
+        Ok(Job::Run(req, reply)) => (req, reply, c.policy),
+        Ok(Job::RunScoped(req, reply, policy)) => (req, reply, policy),
+        _ => return Vec::new(),
     };
-    if let Err(why) = allowed(&c.policy, &req.cmd) {
+    if let Err(why) = allowed(&policy, &req.cmd) {
         fail(c, model, &req, &reply, &why);
         return Vec::new();
     }
@@ -171,21 +175,21 @@ pub fn window_control_new(
     let repaint = ctx.clone();
     let wake: crate::control_conn::Wake = std::sync::Arc::new(move || repaint.request_repaint());
     let logs = Some(p.logs.clone());
-    serve(
-        listener,
-        ConnCtx {
-            inbox,
-            wake,
-            logs: logs.clone(),
-            wait: crate::cli::pause,
-            events: Some(events),
-        },
-    );
+    let ctx = ConnCtx {
+        inbox,
+        wake,
+        logs: logs.clone(),
+        wait: crate::cli::pause,
+        events: Some(events),
+        scope: None,
+    };
+    serve(listener, ctx.clone());
     Some(WindowControl {
         jobs,
         pending: None,
         policy,
         logs,
+        ctx: Some(ctx),
         guard: Some(guard),
     })
 }

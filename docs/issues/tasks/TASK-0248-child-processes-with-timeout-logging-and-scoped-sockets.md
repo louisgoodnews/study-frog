@@ -2,7 +2,7 @@
 id: TASK-0248
 type: task
 title: Child processes with timeout, logging and scoped sockets
-status: backlog
+status: done
 epic: EPIC-028
 parents: [STORY-0132]
 estimate: 3
@@ -17,7 +17,7 @@ Part of STORY-0132.
 See the story and ADR 0013.
 
 ## Acceptance Criteria
-- [ ] A job runs with a timeout and capped output, is logged, and talks over a socket limited to its access; tested
+- [x] A job runs with a timeout and capped output, is logged, and talks over a socket limited to its access; tested
 
 ## Design Notes
 See the story.

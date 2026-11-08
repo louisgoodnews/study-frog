@@ -29,6 +29,10 @@ pub struct ControlArgs {
     pub policy: ControlPolicy,
     /// Do not serve `run/control.sock`.
     pub no_socket: bool,
+    /// Do not run the jobs of `scripts/scripts.toml`.
+    pub no_scripts: bool,
+    /// Read no standard input: serve the socket (and run the jobs) until the process is ended.
+    pub daemon: bool,
 }
 
 /// Read the flags after the program name; `--control-stdio` itself is skipped.
@@ -44,6 +48,8 @@ pub fn parse_control_args(args: &[String]) -> Result<ControlArgs, String> {
             "--control-read-only" => out.policy.allow_write = false,
             "--control-allow-destructive" => out.policy.allow_destructive = true,
             "--no-control-socket" => out.no_socket = true,
+            "--no-scripts" => out.no_scripts = true,
+            "--daemon" => out.daemon = true,
             other => return Err(format!("unknown option {other}")),
         }
     }
@@ -124,6 +130,23 @@ fn serve_socket(_: &ConnCtx, _: Option<&str>) -> Option<()> {
     None
 }
 
+/// Run the jobs of `scripts/scripts.toml` in this instance.
+#[cfg(unix)]
+pub fn start_scripts(ctx: &ConnCtx) {
+    use crate::script_runner::{Runner, child_pause, start_runner};
+    let (Some(paths), Some(bus)) = (paths(), ctx.events.clone()) else {
+        return;
+    };
+    let runner = Runner {
+        paths,
+        ctx: ctx.clone(),
+        bus,
+        running: Arc::default(),
+        pause: child_pause,
+    };
+    start_runner(&runner, crate::cli::pause);
+}
+
 /// Run the headless instance until standard input ends; the exit code.
 pub fn run(args: &[String], host: Host) -> u8 {
     let a = match parse_control_args(args.get(1..).unwrap_or_default()) {
@@ -146,6 +169,7 @@ pub fn run(args: &[String], host: Host) -> u8 {
         logs: engine.logs.clone(),
         wait: crate::cli::pause,
         events: Some(bus),
+        scope: None,
     };
     let vault = engine.model.state.vault.as_ref().map(|v| v.root.clone());
     let _guard = if a.no_socket {
@@ -153,6 +177,15 @@ pub fn run(args: &[String], host: Host) -> u8 {
     } else {
         serve_socket(&ctx, vault.as_deref())
     };
+    #[cfg(unix)]
+    if !a.no_scripts {
+        start_scripts(&ctx);
+    }
+    if a.daemon {
+        eprintln!("studyfrog: serving the control socket and running scripts until ended");
+        engine_loop(&mut engine, &jobs);
+        return 0;
+    }
     let stdin_ctx = ctx.clone();
     std::thread::spawn(move || {
         let out: SharedOut = Arc::new(Mutex::new(Box::new(io::stdout())));

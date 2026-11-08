@@ -92,6 +92,7 @@ pub mod restore;
 pub mod review_plan;
 pub mod run_history;
 pub mod schedule;
+pub mod scripting;
 pub mod session;
 pub mod set_status;
 pub mod settings;

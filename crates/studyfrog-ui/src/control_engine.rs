@@ -99,7 +99,13 @@ fn refuse(e: &mut Engine, req: &Request, why: &str) -> String {
 
 /// Answer one request (not `logs`, which the connection serves itself).
 pub fn handle(e: &mut Engine, req: &Request) -> String {
-    if let Err(why) = allowed(&e.policy, &req.cmd) {
+    let policy = e.policy;
+    handle_with(e, req, &policy)
+}
+
+/// Answer one request under `policy`.
+pub fn handle_with(e: &mut Engine, req: &Request, policy: &ControlPolicy) -> String {
+    if let Err(why) = allowed(policy, &req.cmd) {
         return refuse(e, req, &why);
     }
     if let Command::Screenshot(_) = req.cmd {
@@ -122,7 +128,16 @@ pub fn handle(e: &mut Engine, req: &Request) -> String {
 
 /// Answer jobs until a `Quit` arrives or every sender is gone.
 pub fn engine_loop(e: &mut Engine, jobs: &std::sync::mpsc::Receiver<crate::control_conn::Job>) {
-    while let Ok(crate::control_conn::Job::Run(req, reply)) = jobs.recv() {
-        let _ = reply.send(handle(e, &req));
+    use crate::control_conn::Job;
+    while let Ok(job) = jobs.recv() {
+        match job {
+            Job::Run(req, reply) => {
+                let _ = reply.send(handle(e, &req));
+            }
+            Job::RunScoped(req, reply, p) => {
+                let _ = reply.send(handle_with(e, &req, &p));
+            }
+            Job::Quit => return,
+        }
     }
 }

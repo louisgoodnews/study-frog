@@ -62,6 +62,10 @@ pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> Stud
     let control = options
         .control
         .and_then(|policy| crate::control_window::window_control_new(&ctx, policy, events.clone()));
+    #[cfg(unix)]
+    if let Some(c) = control.as_ref().and_then(|c| c.ctx.as_ref()) {
+        crate::control_stdio::start_scripts(c);
+    }
     let runtime = spawn(ctx, host);
     send_effect(&runtime, Effect::LoadAppSettings);
     StudyFrogApp {

@@ -9,7 +9,7 @@ use std::sync::mpsc::{Sender, channel};
 
 use studyfrog_config::paths::LOG_JSON_FILE;
 
-use crate::control_cmd::{Command, LogsQuery, Request};
+use crate::control_cmd::{Command, ControlPolicy, LogsQuery, Request};
 use crate::control_logs::{SharedOut, follow, read_entries, write_line};
 use crate::control_reply::{err_line, ok_line};
 
@@ -17,6 +17,8 @@ use crate::control_reply::{err_line, ok_line};
 pub enum Job {
     /// Answer the request on this channel.
     Run(Request, Sender<String>),
+    /// Answer it under this policy instead of the instance's (a script's own socket).
+    RunScoped(Request, Sender<String>, ControlPolicy),
     /// The controlling input ended: stop (headless only; a window ignores it).
     Quit,
 }
@@ -39,6 +41,8 @@ pub struct ConnCtx {
     pub wait: fn(),
     /// The instance's lifecycle events, for `subscribe`.
     pub events: Option<crate::control_events::EventBus>,
+    /// The policy of a script's own socket, used in place of the instance's.
+    pub scope: Option<ControlPolicy>,
 }
 
 fn logs(
@@ -68,7 +72,11 @@ fn logs(
 fn ask(ctx: &ConnCtx, req: Request) -> String {
     let id = req.id.clone();
     let (tx, rx) = channel();
-    if ctx.inbox.send(Job::Run(req, tx)).is_err() {
+    let job = match ctx.scope {
+        Some(policy) => Job::RunScoped(req, tx, policy),
+        None => Job::Run(req, tx),
+    };
+    if ctx.inbox.send(job).is_err() {
         return err_line(&id, "the instance is shutting down");
     }
     (ctx.wake)();
