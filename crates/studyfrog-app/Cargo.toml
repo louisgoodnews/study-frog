@@ -20,6 +20,9 @@ studyfrog-ext.workspace = true
 studyfrog-ext-example.workspace = true
 rfd.workspace = true
 
+[dev-dependencies]
+serde_json.workspace = true
+
 [[bin]]
 name = "studyfrog"
 path = "src/main.rs"

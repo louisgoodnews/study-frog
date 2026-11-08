@@ -1,5 +1,6 @@
 //! Command-line access to the application's own files: `--print-paths` lists where they are and
-//! `logs [--tail N] [--follow] [--json]` shows the application log.
+//! `logs [--tail N] [--follow] [--json]` shows the application log, and `ctl <command>` sends a
+//! control request to a running instance.
 
 use std::fs::{self, File};
 use std::io::{self, Read, Seek, SeekFrom};
@@ -66,7 +67,7 @@ pub fn paths_report(p: &AppPaths) -> String {
 
 /// What was written to `path` after the first `seen` bytes, and the size read up to. A log that
 /// became smaller was rotated, so it is read again from its start.
-fn read_new(path: &Path, seen: u64) -> io::Result<(Vec<u8>, u64)> {
+pub(crate) fn read_new(path: &Path, seen: u64) -> io::Result<(Vec<u8>, u64)> {
     let len = fs::metadata(path).map_or(0, |m| m.len());
     let from = if len < seen { 0 } else { seen };
     if len == from {
@@ -83,7 +84,7 @@ fn read_new(path: &Path, seen: u64) -> io::Result<(Vec<u8>, u64)> {
 /// Wait before looking at the log again. The one place this command blocks: it is a command-line
 /// edge, not domain code, so it is passed to `follow` rather than called inside it.
 #[allow(clippy::disallowed_methods)]
-fn pause() {
+pub(crate) fn pause() {
     std::thread::sleep(Duration::from_millis(500));
 }
 
@@ -151,6 +152,7 @@ pub fn run(args: &[String]) -> Option<u8> {
     match args.get(1).map(String::as_str) {
         Some("--print-paths") => Some(print_paths()),
         Some("logs") => Some(logs(&args[2..])),
+        Some("ctl") => Some(crate::control_client::run(&args[2..])),
         _ => None,
     }
 }

@@ -6,7 +6,7 @@ use crate::effect::Effect;
 use crate::host::{Host, extensions_of};
 use crate::model::{Model, apply, frame};
 use crate::notify::log_new;
-use crate::runtime::{Runtime, spawn};
+use crate::runtime::{Runtime, send_effect, spawn};
 
 /// The window's state.
 pub struct StudyFrogApp {
@@ -18,6 +18,8 @@ pub struct StudyFrogApp {
     pub smoke_frames: Option<u32>,
     /// When set, take a picture of a screen and exit (`--screenshot`).
     pub shot: Option<crate::app_shot::Shot>,
+    /// The control protocol over `run/control.sock`, when it is served.
+    pub control: Option<crate::control_window::WindowControl>,
 }
 
 /// How the window is opened.
@@ -29,6 +31,8 @@ pub struct RunOptions {
     pub shot: Option<crate::app_shot::Shot>,
     /// The window's inner size in points; `None`: 960 by 640.
     pub size: Option<(f32, f32)>,
+    /// Serve the control protocol on `run/control.sock` with this policy (`None`: do not serve).
+    pub control: Option<crate::control_cmd::ControlPolicy>,
 }
 
 /// Create the app and ask the worker for the saved settings.
@@ -52,20 +56,30 @@ pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> Stud
     let mut model = Model::default();
     model.state.app.appearance = saved;
     model.state.extensions = extensions_of(&host.registry);
+    let control = options
+        .control
+        .and_then(|policy| crate::control_window::window_control_new(&ctx, policy));
     let runtime = spawn(ctx, host);
-    let _ = runtime.effects.send(Effect::LoadAppSettings);
+    send_effect(&runtime, Effect::LoadAppSettings);
     StudyFrogApp {
         model,
         runtime,
         smoke_frames: options.smoke_frames,
         shot: options.shot,
+        control,
     }
 }
 
 /// One frame: apply finished work, draw, hand new effects to the worker.
 pub fn app_ui(app: &mut StudyFrogApp, ui: &mut egui::Ui) {
     let mut effects: Vec<Effect> = Vec::new();
+    let mut idle = app
+        .runtime
+        .pending
+        .load(std::sync::atomic::Ordering::SeqCst)
+        == 0;
     while let Ok(msg) = app.runtime.msgs.try_recv() {
+        idle = false;
         let before = app.model.state.notice.clone();
         effects.extend(apply(&mut app.model, msg));
         effects.extend(log_new(&before, &app.model.state));
@@ -76,8 +90,18 @@ pub fn app_ui(app: &mut StudyFrogApp, ui: &mut egui::Ui) {
     if let Some(shot) = app.shot.as_mut() {
         effects.extend(crate::app_shot::step(shot, &mut app.model, ui));
     }
+    if let Some(control) = app.control.as_mut() {
+        let before = app.model.state.notice.clone();
+        effects.extend(crate::control_window::pump(
+            control,
+            &mut app.model,
+            ui.ctx(),
+            idle,
+        ));
+        effects.extend(log_new(&before, &app.model.state));
+    }
     for effect in effects {
-        let _ = app.runtime.effects.send(effect);
+        send_effect(&app.runtime, effect);
     }
     close_after_smoke_frames(app, ui);
     if app.model.state.chrome.quit {

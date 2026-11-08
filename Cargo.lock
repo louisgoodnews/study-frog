@@ -5189,6 +5189,7 @@ name = "studyfrog-app"
 version = "0.5.0"
 dependencies = [
  "rfd",
+ "serde_json",
  "studyfrog-agent",
  "studyfrog-candle",
  "studyfrog-ext",

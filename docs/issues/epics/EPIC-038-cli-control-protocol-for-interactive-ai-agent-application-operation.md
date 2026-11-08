@@ -2,7 +2,7 @@
 id: EPIC-038
 type: epic
 title: CLI control protocol for interactive AI agent application operation
-status: backlog
+status: review
 parents: []
 labels: [m12, core, service, ui, app]
 acceptance_criteria:
@@ -39,6 +39,9 @@ Child stories:
 Architecture guardrails:
 - Because StudyFrog's UI already follows a pure Elm architecture (`State` + `Msg` -> `(State, Vec<Effect>)` in `studyfrog-ui`), the CLI control protocol can serialize/deserialize commands directly into `Msg` or `Service` calls and serialize `State` snapshots and console ring-buffer logs back to JSON without duplicating any business logic!
 - Strictly adhere to P1 (zero inherent `impl` blocks) and P2 (≤ 250 lines per file).
+
+## Progress (2026-11-08)
+Both stories are in review: STORY-0122 (application home and logs) and STORY-0124 (the control protocol: `studyfrog --control-stdio`, `run/control.sock` served by the window and by headless instances, `studyfrog ctl`, `logs --follow`). Not yet: full coverage of every screen's actions (see STORY-0124's Progress), no AccessKit tree.
 
 ## Dependencies
 EPIC-008 (UI Shell), EPIC-028 (Extensibility), and EPIC-037 (MCP).

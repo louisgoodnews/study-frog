@@ -7,6 +7,10 @@
 //! `studyfrog logs [--tail N] [--follow] [--json]` shows its log, and
 //! `studyfrog --mcp [--vault PATH] [--mcp-allow-write] [--mcp-allow-destructive]` serves the vault to AI
 //! clients over the Model Context Protocol on standard input and output.
+//! `studyfrog --control-stdio [--vault PATH]` runs headless, driven by control requests on standard input, and
+//! `studyfrog ctl <command>` sends one to a running instance (`studyfrog ctl help` lists them). The window serves
+//! `run/control.sock` unless `--no-control` is given; `--control-read-only` and `--control-allow-destructive`
+//! set what requests may change.
 
 use std::process::ExitCode;
 
@@ -34,11 +38,31 @@ fn options(args: &[String]) -> RunOptions {
             theme: value(args, "--theme").and_then(studyfrog_ui::app_shot::theme_arg),
         }),
         size: size(args),
+        control: control_policy(args),
     }
+}
+
+/// The control protocol's policy for the window, or `None` when it is not served (also for the
+/// smoke and screenshot runs, which must not take the socket of a running instance).
+fn control_policy(args: &[String]) -> Option<studyfrog_ui::control_cmd::ControlPolicy> {
+    let has = |flag: &str| args.iter().any(|a| a == flag);
+    if has("--no-control") || has("--smoke-frames") || has("--screenshot") {
+        return None;
+    }
+    let mut policy = studyfrog_ui::control_cmd::policy_default();
+    policy.allow_write = !has("--control-read-only");
+    policy.allow_destructive = has("--control-allow-destructive");
+    Some(policy)
 }
 
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().collect();
+    if args.iter().skip(1).any(|a| a == "--control-stdio") {
+        return ExitCode::from(studyfrog_ui::control_stdio::run(
+            &args,
+            studyfrog_app::host(),
+        ));
+    }
     if let Some(code) = studyfrog_ui::cli::run(&args) {
         return ExitCode::from(code);
     }

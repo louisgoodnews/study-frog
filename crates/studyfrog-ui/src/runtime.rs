@@ -1,8 +1,9 @@
 //! The worker thread: runs effects off the UI thread and sends the results back as messages.
 
 use std::path::PathBuf;
-use std::sync::OnceLock;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::mpsc::{Receiver, Sender, channel};
+use std::sync::{Arc, OnceLock};
 use std::thread;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -22,6 +23,16 @@ pub struct Runtime {
     pub effects: Sender<Effect>,
     /// Results to apply.
     pub msgs: Receiver<Msg>,
+    /// Effects sent and not yet finished (the control protocol waits for zero).
+    pub pending: Arc<AtomicUsize>,
+}
+
+/// Hand an effect to the worker, counting it as pending until the worker is done with it.
+pub fn send_effect(rt: &Runtime, effect: Effect) {
+    rt.pending.fetch_add(1, Ordering::SeqCst);
+    if rt.effects.send(effect).is_err() {
+        rt.pending.fetch_sub(1, Ordering::SeqCst);
+    }
 }
 
 fn now_ns() -> i64 {
@@ -61,6 +72,8 @@ pub(crate) fn config_dir() -> Option<PathBuf> {
 pub fn spawn(ctx: egui::Context, host: Host) -> Runtime {
     let (effects, effect_rx) = channel::<Effect>();
     let (msg_tx, msgs) = channel::<Msg>();
+    let pending = Arc::new(AtomicUsize::new(0));
+    let counter = pending.clone();
     thread::spawn(move || {
         let paths = paths();
         let models = paths.as_ref().map(|p| p.models.clone());
@@ -72,8 +85,13 @@ pub fn spawn(ctx: egui::Context, host: Host) -> Runtime {
                     return;
                 }
             }
+            counter.fetch_sub(1, Ordering::SeqCst);
             ctx.request_repaint();
         }
     });
-    Runtime { effects, msgs }
+    Runtime {
+        effects,
+        msgs,
+        pending,
+    }
 }

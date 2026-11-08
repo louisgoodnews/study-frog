@@ -77,7 +77,7 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
     screen_named(name).map_or_else(Vec::new, |s| apply(model, Msg::Navigate(s)))
 }
 
-fn save(path: &std::path::Path, image: &egui::ColorImage) -> Result<(), String> {
+pub(crate) fn save(path: &std::path::Path, image: &egui::ColorImage) -> Result<(), String> {
     let [w, h] = image.size;
     let rgba: Vec<u8> = image.pixels.iter().flat_map(|c| c.to_array()).collect();
     let buffer = image::RgbaImage::from_raw(w as u32, h as u32, rgba)
