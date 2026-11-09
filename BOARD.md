@@ -450,3 +450,4 @@
 | [EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md) Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement | review | 3/4 |
 | [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md) State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry | done | 5/5 |
 | [EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md) CLI control protocol for interactive AI agent application operation | review | 1/2 |
+| [EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md) Universal item linking between stacks, cards, questions, answers, and notes | backlog | 0/0 |

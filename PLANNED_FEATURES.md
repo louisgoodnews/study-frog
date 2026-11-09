@@ -10,6 +10,12 @@ These points are still open:
 | [STORY-0124](docs/issues/stories/STORY-0124-interactive-cli-control-protocol-and-console-log-streaming-for-ai-agents.md) | The control protocol covers state, navigation, items, stacks, queries, rehearsal and exam runs, import and export, screenshots, logs and events. Calendar, board, diary, reports, achievements, settings, assistant, PDF and folders can only be reached with `nav`; there is no widget tree and no stack delete. |
 | EPIC-036, EPIC-038 | In review because of the two stories above. |
 
+## Upcoming features (Phase M13 / 0.7.0)
+
+| Epic | Summary |
+| :--- | :--- |
+| **[EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md)** | **Universal Item Linking:** Cross-link any items (stacks, cards, questions, answers, and notes) using keys, titles, and sub-item anchors (e.g. `#back`, `#answer`); bidirectional SQLite indexing; kind-badged link chips; hover preview popovers; `[[` editor autocomplete; and enhanced Relations notebook tab. |
+
 Smaller gaps are listed in each story's Progress section and in the release notes: image occlusion has one schedule per
 card, exams do not feed familiarity, deleting or moving an item raises no script event, scripting needs Unix, and the new
 providers, the MCP server and client were never run against real services.

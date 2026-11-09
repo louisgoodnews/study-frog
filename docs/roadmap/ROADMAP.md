@@ -18,7 +18,8 @@ Phases M0 to M12. Each phase has entry criteria, an epic breakdown (every epic h
 | M10 | 0.3.1 fixes | EPIC-025 | [M10](M10-usability-and-insight.md), last paragraph |
 | M11 | Diary, a calmer UI, writing, prompts and appearance (0.4.0) | EPIC-024, EPIC-026, EPIC-027 | [M11-diary](M11-diary.md) |
 | M11 | 0.4.1–0.4.3 Details notebook tabs, create workflow, vault switcher, stack moving, item deletion, and CSV import | EPIC-031 | [M11-diary](M11-diary.md) |
-| M12 | External models, PDF optimization, Python API, achievements, prompts, item keys & colorization, exam mode, behavioral analytics & forecasting, active-recall formats, UI psychophysics, MCP, and CLI control protocol (0.5.0) | EPIC-028, EPIC-029, EPIC-030, EPIC-032, EPIC-033, EPIC-034, EPIC-035, EPIC-036, EPIC-037, EPIC-038 | [M12-models-and-extensibility](M12-models-and-extensibility.md) |
+| M12 | External models, PDF optimization, Python API, achievements, prompts, item keys & colorization, exam mode, behavioral analytics & forecasting, active-recall formats, UI psychophysics, MCP, and CLI control protocol (0.5.0 and 0.6.0) | EPIC-028 to EPIC-030, EPIC-032 to EPIC-038 | [M12-models-and-extensibility](M12-models-and-extensibility.md) |
+| M13 | Universal item linking (stacks, cards, questions, answers, notes), graph and hover previews | EPIC-039 | [ROADMAP](ROADMAP.md) |
 
 ## M0 Bootstrap
 
@@ -362,4 +363,5 @@ See [M12-models-and-extensibility](M12-models-and-extensibility.md).
 - **EPIC-038** CLI control protocol for interactive AI agent application operation
   - **STORY-0122** StudyFrog application files in ~/.local/ with logs and configurations
   - **STORY-0124** Interactive CLI control protocol and console log streaming for AI agents
+- **EPIC-039** Universal item linking between stacks, cards, questions, answers, and notes
 
