@@ -112,3 +112,7 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
 **Wave 1: Item linking & graph visuals**
 - [ ] 1. [EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md) Universal item linking between stacks, cards, questions, answers, and notes (bidirectional indexing, kind-badged chips, hover previews, autocomplete picker, and Relations tab overhaul)
   - [ ] [STORY-0135](docs/issues/stories/STORY-0135-comments-for-items.md) Comments for items (YAML front-matter persistence, SQLite comment indexing, search queries, notebook Comments tab, and CLI/MCP controls)
+
+**Wave 2: Flexible rehearsal presentation & active recall**
+- [ ] 2. [EPIC-040](docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md) Intermittent typed active recall and flexible rehearsal presentation
+  - [ ] [STORY-0136](docs/issues/stories/STORY-0136-make-typed-answers-random-per-selection-during-rehearsal.md) Make typed answers random per selection during rehearsal (rehearsal setup sampling setting, notes excluded from typed answers, dynamic card view alternating between typed submission and flip)

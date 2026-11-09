@@ -16,6 +16,8 @@ These points are still open:
 | :--- | :--- |
 | **[EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md)** | **Universal Item Linking:** Cross-link any items (stacks, cards, questions, answers, and notes) using keys, titles, and sub-item anchors (e.g. `#back`, `#answer`); bidirectional SQLite indexing; kind-badged link chips; hover preview popovers; `[[` editor autocomplete; and enhanced Relations notebook tab. |
 | ↳ **[STORY-0135](docs/issues/stories/STORY-0135-comments-for-items.md)** | **Comments for Items:** Timestamped user and AI agent comments in YAML front-matter, SQLite indexing, search query filters (`has:comments`, `comment:<text>`), Item Details notebook Comments tab, and CLI/MCP controls. |
+| **[EPIC-040](docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md)** | **Intermittent Typed Active Recall:** Rehearsal setup sampling setting to randomly require typed written recall across study items, reducing typing fatigue while preventing familiarity illusions; notes remain readable reference cards. |
+| ↳ **[STORY-0136](docs/issues/stories/STORY-0136-make-typed-answers-random-per-selection-during-rehearsal.md)** | **Random Typed Answers per Selection:** Setup sampling ratio, deterministic queue presentation assignment, and dynamic card view switching between typed submission and flip reveal. |
 
 Smaller gaps are listed in each story's Progress section and in the release notes: image occlusion has one schedule per
 card, exams do not feed familiarity, deleting or moving an item raises no script event, scripting needs Unix, and the new
