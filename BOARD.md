@@ -407,6 +407,7 @@
 | [STORY-0132](docs/issues/stories/STORY-0132-script-runner-with-scheduled-and-event-bound-jobs.md) Script runner with scheduled and event-bound jobs (8) | done | 3/3 |
 | [STORY-0133](docs/issues/stories/STORY-0133-console-screen-in-the-application.md) Console screen in the application (5) | done | 1/1 |
 | [STORY-0134](docs/issues/stories/STORY-0134-scripting-documentation-examples-and-script-plugins.md) Scripting documentation, examples and script plugins (3) | done | 2/2 |
+| [STORY-0135](docs/issues/stories/STORY-0135-comments-for-items.md) Comments for items (5) | backlog | 0/0 |
 
 ## Epics
 
@@ -450,4 +451,4 @@
 | [EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md) Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement | review | 3/4 |
 | [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md) State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry | done | 5/5 |
 | [EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md) CLI control protocol for interactive AI agent application operation | review | 1/2 |
-| [EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md) Universal item linking between stacks, cards, questions, answers, and notes | backlog | 0/0 |
+| [EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md) Universal item linking between stacks, cards, questions, answers, and notes | backlog | 0/1 |

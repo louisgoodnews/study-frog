@@ -49,6 +49,9 @@ Deliver an end-to-end item linking framework with rich logic, indexing, and visu
 - [ ] The UI renders kind-badged link chips with target color accents, hover preview popovers, an editor [[ autocomplete picker, and an enhanced Relations notebook tab
 
 ## Design Notes
+Child stories:
+- STORY-0135: Comments for items (estimate: 5)
+
 Touchpoints across crates:
 - `crates/studyfrog-core`: item link types, anchor kinds (`Front`, `Back`, `Answer`, `Rubric`, `Section`), and relation kinds.
 - `crates/studyfrog-md`: link parser extensions for key detection and `#back` / `#answer` anchor parsing.
