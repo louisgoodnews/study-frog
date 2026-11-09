@@ -4,9 +4,9 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (263) |
+| Backlog (1) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (263) |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority (5) |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
 |  |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 |  |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
@@ -409,6 +409,7 @@
 | [STORY-0134](docs/issues/stories/STORY-0134-scripting-documentation-examples-and-script-plugins.md) Scripting documentation, examples and script plugins (3) | done | 2/2 |
 | [STORY-0135](docs/issues/stories/STORY-0135-comments-for-items.md) Comments for items (5) | backlog | 0/0 |
 | [STORY-0136](docs/issues/stories/STORY-0136-make-typed-answers-random-per-selection-during-rehearsal.md) Make typed answers random per selection during rehearsal (3) | backlog | 0/0 |
+| [STORY-0137](docs/issues/stories/STORY-0137-interactive-parameter-guided-content-generation-prompts.md) Interactive parameter-guided content generation prompts in prompt library (5) | backlog | 0/0 |
 
 ## Epics
 
@@ -454,3 +455,5 @@
 | [EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md) CLI control protocol for interactive AI agent application operation | review | 1/2 |
 | [EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md) Universal item linking between stacks, cards, questions, answers, and notes | backlog | 0/1 |
 | [EPIC-040](docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md) Intermittent typed active recall and flexible rehearsal presentation | backlog | 0/1 |
+| [EPIC-041](docs/issues/epics/EPIC-041-modularity-system-driven-architecture-and-decoupled-background-services.md) Modularity: system-driven application architecture and decoupled background services | backlog | 0/0 |
+| [EPIC-042](docs/issues/epics/EPIC-042-interactive-ai-content-generation-and-parameter-guided-prompt-workflows.md) Interactive AI content generation and parameter-guided prompt workflows | backlog | 0/1 |
