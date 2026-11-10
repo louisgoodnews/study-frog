@@ -73,6 +73,24 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if form.mode == RunMode::Exam {
         ui.weak(EXAM_RULES);
     }
+    if form.mode == RunMode::Answer {
+        ui.horizontal(|ui| {
+            ui.label("Typed sampling:");
+            for (pct, label) in [
+                (100, "All items (100%)"),
+                (75, "Random 75%"),
+                (50, "Random 50%"),
+                (25, "Random 25%"),
+            ] {
+                let chosen = form.typed_sample.unwrap_or(100) == pct;
+                if ui.selectable_label(chosen, label).clicked() {
+                    let val = if pct == 100 { None } else { Some(pct) };
+                    edit(out, SetupEdit::TypedSample(val));
+                }
+            }
+        });
+        ui.weak("Cards and questions are randomly sampled for typing; remaining items flip and notes are readable references.");
+    }
     ui.label("Order");
     ui.horizontal_wrapped(|ui| {
         for (order, label) in ORDERS {

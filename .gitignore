@@ -12,3 +12,4 @@ perf.data*
 flamegraph.svg
 __pycache__/
 *.pyc
+.venv

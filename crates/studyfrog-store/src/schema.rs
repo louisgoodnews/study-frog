@@ -144,6 +144,11 @@ pub const MIGRATIONS: &[Migration] = &[
         name: "focus blocks",
         sql: V26,
     },
+    Migration {
+        version: 27,
+        name: "random typed answer sampling per run",
+        sql: crate::schema_typed::V27,
+    },
 ];
 
 /// Derived index (rebuildable from the vault) followed by authoritative history. History tables

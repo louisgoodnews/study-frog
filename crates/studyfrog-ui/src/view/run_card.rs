@@ -147,8 +147,30 @@ fn score_line(scored: &crate::run_state::Scored, ui: &mut egui::Ui) {
     }
 }
 
+fn is_item_typed(run: &RunView) -> bool {
+    if run.session.run.mode != RunMode::Answer {
+        return false;
+    }
+    let Some((uid, content)) =
+        current_item(&run.session).and_then(|uid| run.content.get(&uid).map(|c| (uid, c)))
+    else {
+        return false;
+    };
+    if content.is_note {
+        return false;
+    }
+    match run.session.run.plan.typed_sample {
+        Some(pct) => studyfrog_rehearsal::typed_sample::is_typed_sample(
+            run.session.run.plan.seed,
+            uid,
+            pct,
+        ),
+        None => true,
+    }
+}
+
 fn reveal_controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let answering = run.session.run.mode == RunMode::Answer;
+    let answering = is_item_typed(run);
     if answering {
         if let Some(text) = text_field(ui, "Your answer", &run.answer, "type your answer", 3) {
             out.push(Msg::AnswerEdited(text));

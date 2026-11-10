@@ -31,12 +31,13 @@ struct RunRow {
     pacing: String,
     countdown: Option<u32>,
     fam_below: Option<f32>,
+    typed_sample: Option<u8>,
 }
 
 fn read_run_row(conn: &Connection, uid: Uid) -> Result<Option<RunRow>, StoreError> {
     let sql =
         "SELECT mode, state, started_at_ms, order_name, effect, seed, run_limit, requeue_again,
-                      filter_state, filter_diff_min, filter_diff_max, shuffle, pacing, countdown_secs, filter_fam_below FROM run WHERE uid = ?1";
+                      filter_state, filter_diff_min, filter_diff_max, shuffle, pacing, countdown_secs, filter_fam_below, typed_sample FROM run WHERE uid = ?1";
     let found = conn.query_row(sql, [format_ulid(uid)], |r| {
         Ok(RunRow {
             mode: r.get(0)?,
@@ -53,6 +54,7 @@ fn read_run_row(conn: &Connection, uid: Uid) -> Result<Option<RunRow>, StoreErro
             pacing: r.get(12)?,
             countdown: r.get(13)?,
             fam_below: r.get(14)?,
+            typed_sample: r.get::<_, Option<i64>>(15)?.and_then(|v| u8::try_from(v).ok()),
         })
     });
     match found {
@@ -90,6 +92,7 @@ pub fn load_run(conn: &Connection, uid: Uid) -> Result<Option<Run>, StoreError> 
         requeue_again: row.requeue,
         pacing: pacing_from_parts(&row.pacing, row.countdown)
             .ok_or_else(|| corrupt("pacing", &row.pacing))?,
+        typed_sample: row.typed_sample,
     };
     Ok(Some(Run {
         uid,

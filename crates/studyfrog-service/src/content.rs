@@ -30,6 +30,8 @@ pub struct ItemContent {
     pub expected: Option<String>,
     /// The picture and masks of an image occlusion card.
     pub occlusion: Option<Box<crate::content_occlusion::OcclusionView>>,
+    /// True when the item is a note, stack or diary entry (never forced into typed text answers).
+    pub is_note: bool,
 }
 
 fn content_of(doc: &Doc) -> ItemContent {
@@ -45,6 +47,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             color: None,
             expected: None,
             occlusion: None,
+            is_note: false,
         },
         Doc::Question(q) => ItemContent {
             title,
@@ -55,6 +58,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             color: None,
             expected: None,
             occlusion: None,
+            is_note: false,
         },
         Doc::Note(n) => ItemContent {
             prompt: title.clone(),
@@ -65,6 +69,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             color: None,
             expected: None,
             occlusion: None,
+            is_note: true,
         },
         Doc::Stack(s) => ItemContent {
             prompt: title.clone(),
@@ -75,6 +80,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             color: None,
             expected: None,
             occlusion: None,
+            is_note: true,
         },
         Doc::Diary(d) => ItemContent {
             prompt: title.clone(),
@@ -85,6 +91,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             color: None,
             expected: None,
             occlusion: None,
+            is_note: true,
         },
     }
 }

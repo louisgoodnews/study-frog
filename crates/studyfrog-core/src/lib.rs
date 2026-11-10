@@ -16,6 +16,7 @@ pub mod memory;
 pub mod meta;
 pub mod pacing;
 pub mod plan;
+pub mod plan_names;
 pub mod priority;
 pub mod query;
 pub mod query_complete;

@@ -198,6 +198,7 @@ fn item_loaded(
                 color: None,
                 expected: None,
                 occlusion: None,
+                is_note: false,
             }
         }
     };

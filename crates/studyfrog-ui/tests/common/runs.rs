@@ -46,6 +46,7 @@ pub fn finished_run_marked(
         color: None,
         expected: None,
         occlusion: None,
+        is_note: false,
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     act(&mut m, 0.5, Action::Mark(mark));

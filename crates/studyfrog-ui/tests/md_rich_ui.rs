@@ -62,6 +62,7 @@ fn card(prompt: &str, answer: &str) -> egui_kittest::Harness<'static, common::vi
         color: None,
         expected: None,
         occlusion: None,
+        is_note: false,
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     let mut h = harness(m);

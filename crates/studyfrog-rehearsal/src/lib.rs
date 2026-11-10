@@ -8,3 +8,4 @@ pub mod queue;
 pub mod reading;
 pub mod session;
 pub mod step;
+pub mod typed_sample;

@@ -98,6 +98,7 @@ pub fn running_model(mode: studyfrog_core::run::RunMode) -> Model {
             color: None,
             expected: None,
             occlusion: None,
+            is_note: false,
         };
         apply(&mut m, Msg::ItemLoaded(Uid(uid), Ok(content)));
     }

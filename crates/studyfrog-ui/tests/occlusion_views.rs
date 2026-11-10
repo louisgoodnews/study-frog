@@ -188,6 +188,7 @@ fn occluded_run(root: &str, mode: RunMode) -> Model {
             masks,
             active: 0,
         })),
+        is_note: false,
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     m

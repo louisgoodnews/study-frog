@@ -2,7 +2,7 @@
 id: STORY-0136
 type: story
 title: Make typed answers random per selection during rehearsal
-status: backlog
+status: done
 epic: EPIC-040
 parents: [EPIC-040]
 estimate: 3
@@ -37,9 +37,9 @@ Deliver randomized typed answer selection for rehearsal runs:
      - Ensure keyboard shortcuts (`Space`, `Enter`, `1`..`4`) and rating flows work seamlessly across transitions between typed and flip items.
 
 ## Acceptance Criteria
-- [ ] The Rehearsal Setup screen ('How') provides a setting to randomly sample typed answers across the chosen items instead of requiring typed input for every single item
-- [ ] Notes in the rehearsal queue are never forced into typed text comparison and are always shown as readable reference notes
-- [ ] During rehearsal, the card view dynamically alternates between typed answer submission and standard flip/reveal controls based on the randomized selection
+- [x] The Rehearsal Setup screen ('How') provides a setting to randomly sample typed answers across the chosen items instead of requiring typed input for every single item
+- [x] Notes in the rehearsal queue are never forced into typed text comparison and are always shown as readable reference notes
+- [x] During rehearsal, the card view dynamically alternates between typed answer submission and standard flip/reveal controls based on the randomized selection
 
 ## Design Notes
 - **Seeded Determinism:** Random sampling must be derived deterministically from the run's random seed (`RunPlan.seed`) to ensure consistent queue behavior across pauses, crashes, or session exports.

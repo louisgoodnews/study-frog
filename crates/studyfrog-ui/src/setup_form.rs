@@ -62,6 +62,8 @@ pub enum SetupEdit {
     FamBelow(String),
     /// Change the pacing.
     Pacing(crate::setup_pacing::PacingEdit),
+    /// Random sampling percentage for typed answers in answer mode (1..=100; None = 100%).
+    TypedSample(Option<u8>),
 }
 
 /// The fields as the user edits them (text stays text until it is validated).
@@ -99,6 +101,8 @@ pub struct SetupForm {
     pub fam_below: String,
     /// How the clock figures in the run.
     pub pacing: crate::setup_pacing::PacingForm,
+    /// Random sampling percentage for typed answers (1..=100; None = 100%).
+    pub typed_sample: Option<u8>,
 }
 
 fn plan_to_form(plan: &RunPlan, mode: RunMode) -> SetupForm {
@@ -118,10 +122,9 @@ fn plan_to_form(plan: &RunPlan, mode: RunMode) -> SetupForm {
         diff_max: "10".to_owned(),
         fam_on: plan.filter.familiarity_below.is_some(),
         pacing: crate::setup_pacing::form_of(plan.pacing),
-        fam_below: plan
-            .filter
-            .familiarity_below
+        fam_below: plan.filter.familiarity_below
             .map_or_else(|| "60".to_owned(), |f| format!("{}", (f * 100.0).round())),
+        typed_sample: plan.typed_sample,
     }
 }
 
@@ -185,6 +188,7 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
         limit: limit(f)?,
         requeue_again: f.requeue_again,
         pacing: crate::setup_pacing::pacing_from(&f.pacing)?,
+        typed_sample: (f.mode == RunMode::Answer).then_some(f.typed_sample).flatten(),
     };
     match f.mode {
         RunMode::Exam => studyfrog_core::exam::exam_plan(plan),
@@ -225,9 +229,7 @@ pub fn apply_edit(f: SetupForm, edit: SetupEdit) -> SetupForm {
             ..f
         },
         SetupEdit::Stacks(uids, on) => SetupForm {
-            stacks: uids
-                .into_iter()
-                .fold(f.stacks.clone(), |l, u| toggle(l, u, on)),
+            stacks: uids.into_iter().fold(f.stacks.clone(), |l, u| toggle(l, u, on)),
             ..f
         },
         SetupEdit::Tags(tags) => SetupForm { tags, ..f },
@@ -241,5 +243,6 @@ pub fn apply_edit(f: SetupForm, edit: SetupEdit) -> SetupForm {
             pacing: crate::setup_pacing::edited(f.pacing.clone(), e),
             ..f
         },
+        SetupEdit::TypedSample(typed_sample) => SetupForm { typed_sample, ..f },
     }
 }

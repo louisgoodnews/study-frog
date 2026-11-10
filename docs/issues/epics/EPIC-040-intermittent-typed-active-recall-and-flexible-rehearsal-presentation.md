@@ -2,7 +2,7 @@
 id: EPIC-040
 type: epic
 title: Intermittent typed active recall and flexible rehearsal presentation
-status: backlog
+status: done
 parents: []
 labels: [m12, rehearsal, core, ui]
 acceptance_criteria:
@@ -34,9 +34,9 @@ Deliver intermittent typed active recall and presentation flexibility during reh
    - Appropriately record SLM score and semantic comparison for typed items, while recording standard self-ratings for flipped items.
 
 ## Acceptance Criteria
-- [ ] The rehearsal setup screen allows learners to configure typed written recall with variable sampling frequency or randomized presentation per session
-- [ ] The rehearsal engine and session state support intermittent typed recall alongside standard flip-card reveal and reading notes in the same run
-- [ ] Scoring, latency, and pacing telemetry accurately reflect whether an item prompt was presented as typed recall or flipped card
+- [x] The rehearsal setup screen allows learners to configure typed written recall with variable sampling frequency or randomized presentation per session
+- [x] The rehearsal engine and session state support intermittent typed recall alongside standard flip-card reveal and reading notes in the same run
+- [x] Scoring, latency, and pacing telemetry accurately reflect whether an item prompt was presented as typed recall or flipped card
 
 ## Design Notes
 Child stories:

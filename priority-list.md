@@ -114,8 +114,8 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
   - [ ] [STORY-0135](docs/issues/stories/STORY-0135-comments-for-items.md) Comments for items (YAML front-matter persistence, SQLite comment indexing, search queries, notebook Comments tab, and CLI/MCP controls)
 
 **Wave 2: Flexible rehearsal presentation & active recall**
-- [ ] 2. [EPIC-040](docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md) Intermittent typed active recall and flexible rehearsal presentation
-  - [ ] [STORY-0136](docs/issues/stories/STORY-0136-make-typed-answers-random-per-selection-during-rehearsal.md) Make typed answers random per selection during rehearsal (rehearsal setup sampling setting, notes excluded from typed answers, dynamic card view alternating between typed submission and flip)
+- [x] 2. [EPIC-040](docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md) Intermittent typed active recall and flexible rehearsal presentation
+  - [x] [STORY-0136](docs/issues/stories/STORY-0136-make-typed-answers-random-per-selection-during-rehearsal.md) Make typed answers random per selection during rehearsal (rehearsal setup sampling setting, notes excluded from typed answers, dynamic card view alternating between typed submission and flip)
 
 **Wave 3: Modularity & system-driven architecture**
 - [ ] 3. [EPIC-041](docs/issues/epics/EPIC-041-modularity-system-driven-architecture-and-decoupled-background-services.md) Modularity: system-driven application architecture and decoupled background services (file surveys on vault open/switch rather than lazy view open, decoupled domain services)

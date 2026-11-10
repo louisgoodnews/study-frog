@@ -49,6 +49,7 @@ mod schema_exam;
 mod schema_focus;
 mod schema_keys;
 mod schema_later;
+mod schema_typed;
 mod schema_memory;
 mod schema_refs;
 pub mod sessions;
