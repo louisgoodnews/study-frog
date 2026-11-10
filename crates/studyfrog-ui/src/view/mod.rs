@@ -14,9 +14,13 @@ mod agent_wiki;
 mod backup;
 mod bars;
 mod board;
+mod burger_menu;
 pub(crate) mod calendar;
+mod calendar_day;
 mod calendar_grid;
 mod calendar_reviews;
+mod calendar_timetable;
+mod calendar_week;
 mod console;
 pub mod contrast;
 pub(crate) mod date_picker;
@@ -201,5 +205,6 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     focus_bar::done_card(state, ui, &mut out);
     contrast::window(state, ui, &mut out);
     modal::draw(state, ui, &mut out);
+    burger_menu::draw(state, ui, &mut out);
     out
 }

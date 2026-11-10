@@ -96,6 +96,8 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::SaveSession(s) => exec_plan::save(w, s, now_ns),
         Effect::DeleteSession(id) => exec_plan::delete(w, id),
         Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),
+        Effect::SaveTimetable(entry) => exec_plan::save_timetable(w, entry, now_ns),
+        Effect::DeleteTimetable(id) => exec_plan::delete_timetable(w, id),
         Effect::SearchItems(query) => search(w, query),
         Effect::Help(e) => crate::exec_help::run(w, e),
         Effect::Prompts(e) => crate::exec_prompts::run(w, e),

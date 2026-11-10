@@ -214,14 +214,8 @@ pub enum Effect {
     /// Read a document for editing.
     LoadDocument(Uid),
     /// Write an edited document, if the file is unchanged since `hash`.
-    SaveDocument {
-        /// Vault-relative path.
-        path: String,
-        /// The document to write.
-        doc: Doc,
-        /// Fingerprint of the file when it was loaded.
-        hash: u64,
-    },
+    #[rustfmt::skip]
+    SaveDocument { #[doc = "Vault path."] path: String, #[doc = "Doc."] doc: Doc, #[doc = "Hash."] hash: u64 },
     /// Find the item a wikilink points to.
     ResolveLink(String),
     /// Read or write the user's help pages.
@@ -236,15 +230,11 @@ pub enum Effect {
     Diary(crate::diary_types::DiaryEffect),
     /// Operations for editing items during rehearsal.
     RehearsalEdit(crate::rehearsal_edit::RehearsalEditEffect),
+    /// Save a weekly recurring timetable entry.
+    SaveTimetable(studyfrog_calendar::timetable::TimetableEntry),
+    /// Delete a timetable entry.
+    DeleteTimetable(Uid),
     /// Create a card in the stack at `folder`.
-    CreateCard {
-        /// Vault-relative stack folder.
-        folder: String,
-        /// Title (may be empty).
-        title: String,
-        /// Front text.
-        front: String,
-        /// Back text.
-        back: String,
-    },
+    #[rustfmt::skip]
+    CreateCard { #[doc = "Folder."] folder: String, #[doc = "Title."] title: String, #[doc = "Front."] front: String, #[doc = "Back."] back: String },
 }

@@ -145,8 +145,8 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
 - [x] [STORY-0146](docs/issues/stories/STORY-0146-stylized-breviceps-macrops-mascot-icon.md) Stylized Breviceps macrops brand mascot icon
 
 **Wave 7: Timetable planner, calendar daily/weekly views, floating burger navigation & scriptrunner console**
-- [ ] [EPIC-044](docs/issues/epics/EPIC-044-timetable-schedule-planner-and-daily-weekly-calendar-views.md) Timetable schedule planner & daily/weekly calendar views
-  - [ ] [STORY-0141](docs/issues/stories/STORY-0141-timetable-schedule-planner-for-lectures-and-lessons.md) Timetable schedule planner for lectures and lessons
-  - [ ] [STORY-0142](docs/issues/stories/STORY-0142-calendar-daily-and-weekly-views.md) Calendar daily and weekly views
-- [ ] [STORY-0147](docs/issues/stories/STORY-0147-research-floating-burger-navigation-menu.md) Research floating burger navigation menu
-- [ ] [EPIC-048](docs/issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md) / [STORY-0148](docs/issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) Console expansion to full scriptrunner environment with internal automation API
+- [x] [EPIC-044](docs/issues/epics/EPIC-044-timetable-schedule-planner-and-daily-weekly-calendar-views.md) Timetable schedule planner & daily/weekly calendar views
+  - [x] [STORY-0141](docs/issues/stories/STORY-0141-timetable-schedule-planner-for-lectures-and-lessons.md) Timetable schedule planner for lectures and lessons
+  - [x] [STORY-0142](docs/issues/stories/STORY-0142-calendar-daily-and-weekly-views.md) Calendar daily and weekly views
+- [x] [STORY-0147](docs/issues/stories/STORY-0147-research-floating-burger-navigation-menu.md) Research floating burger navigation menu
+- [x] [EPIC-048](docs/issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md) / [STORY-0148](docs/issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) Console expansion to full scriptrunner environment with internal automation API

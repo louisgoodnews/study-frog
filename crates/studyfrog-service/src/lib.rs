@@ -103,6 +103,7 @@ pub mod stack_summary;
 pub mod stack_tree;
 pub mod subjects;
 pub mod tar;
+pub mod timetable;
 pub mod timezone;
 pub mod track;
 pub mod xfer_adapters;

@@ -2,7 +2,7 @@
 id: EPIC-044
 type: epic
 title: Timetable schedule planner and daily/weekly calendar views
-status: backlog
+status: done
 parents: []
 labels: [m12, calendar, ui]
 acceptance_criteria:
@@ -20,9 +20,9 @@ Deliver an academic timetable and multi-scale calendar view system:
 2. **Daily and Weekly Calendar Views (`STORY-0142`):** Provide interactive Week and Day views featuring hourly time slots, event overlap handling, and unified display of lectures alongside planned SRS reviews.
 
 ## Acceptance Criteria
-- [ ] StudyFrog provides a timetable schedule planner to schedule recurring lessons, lectures, appointments, and study blocks
-- [ ] The calendar supports interactive switching between Month, Week, and Day views with hourly schedule agendas
-- [ ] Planned timetable events seamlessly integrate with review plans and rehearsal due queues
+- [x] StudyFrog provides a timetable schedule planner to schedule recurring lessons, lectures, appointments, and study blocks
+- [x] The calendar supports interactive switching between Month, Week, and Day views with hourly schedule agendas
+- [x] Planned timetable events seamlessly integrate with review plans and rehearsal due queues
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-calendar`, `crates/studyfrog-store`, `crates/studyfrog-ui/src/view/calendar.rs`, `calendar_grid.rs`.

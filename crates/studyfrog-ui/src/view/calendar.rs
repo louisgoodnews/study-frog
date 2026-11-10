@@ -35,6 +35,47 @@ pub fn draw_scoped(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &m
         ui.label("Loading sessions…");
         return;
     }
+
+    // Top view mode switcher and period navigation
+    ui.horizontal(|ui| {
+        for mode in crate::calendar_mode::CALENDAR_VIEW_MODES {
+            let active = p.view_mode == mode;
+            let name = crate::calendar_mode::calendar_view_mode_name(mode);
+            if ui.selectable_label(active, name).clicked() && !active {
+                plan(out, PlanMsg::SetViewMode(mode));
+            }
+        }
+        if p.view_mode != crate::calendar_mode::CalendarViewMode::Month {
+            ui.add_space(12.0);
+            if ui.button("<").clicked() {
+                plan(out, PlanMsg::ShiftPeriod(-1));
+            }
+            if ui.button("Today").clicked() {
+                plan(out, PlanMsg::Today);
+            }
+            if ui.button(">").clicked() {
+                plan(out, PlanMsg::ShiftPeriod(1));
+            }
+        }
+    });
+    ui.add_space(8.0);
+
+    match p.view_mode {
+        crate::calendar_mode::CalendarViewMode::Month => draw_month_layout(state, scope, ui, out),
+        crate::calendar_mode::CalendarViewMode::Week => {
+            super::calendar_week::draw(state, scope, ui, out)
+        }
+        crate::calendar_mode::CalendarViewMode::Day => {
+            super::calendar_day::draw(state, scope, ui, out)
+        }
+        crate::calendar_mode::CalendarViewMode::Timetable => {
+            super::calendar_timetable::draw(state, ui, out)
+        }
+    }
+}
+
+fn draw_month_layout(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let p = &state.planner;
     let (total, height) = (ui.available_width(), ui.available_height());
     let side_width = SIDE_WIDTH.min(total * 0.45);
     let month_width = total - side_width - ui.spacing().item_spacing.x;

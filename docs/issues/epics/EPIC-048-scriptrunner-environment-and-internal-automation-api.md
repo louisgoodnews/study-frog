@@ -2,7 +2,7 @@
 id: EPIC-048
 type: epic
 title: Scriptrunner environment and internal application automation API
-status: backlog
+status: done
 parents: []
 labels: [m12, ext, console]
 acceptance_criteria:
@@ -21,9 +21,9 @@ Expand the Console into a complete in-app ScriptRunner development environment:
 3. Support saving script snippets to `<vault>/.studyfrog/scripts/` with one-click runner buttons.
 
 ## Acceptance Criteria
-- [ ] StudyFrog provides a full scriptrunner environment with interactive Python execution and internal automation APIs
-- [ ] Learners and power users can test, automate, and extend application workflows via scripting directly within the UI
-- [ ] The scripting environment provides safe execution boundaries, output logging, and hot-reloading
+- [x] StudyFrog provides a full scriptrunner environment with interactive Python execution and internal automation APIs
+- [x] Learners and power users can test, automate, and extend application workflows via scripting directly within the UI
+- [x] The scripting environment provides safe execution boundaries, output logging, and hot-reloading
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-ui/src/view/console.rs`, `crates/studyfrog-ext/`, `docs/specs/scripting.md`.

@@ -1,5 +1,5 @@
-//! The Console screen (STORY-0133): a transcript of commands, answers, script output and lifecycle
-//! events, and an input line (Enter sends, Up/Down walk the history).
+//! The Console screen (STORY-0133, STORY-0148): interactive command REPL and
+//! in-app ScriptRunner development environment with multi-line script editor.
 
 use eframe::egui::{self, RichText, TextStyle};
 
@@ -9,7 +9,21 @@ use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::kit;
 
-const HINT: &str = "A control command (state, query type = card, item create note Title, nav reports, logs, help) or script run JOB|FILE, script list";
+const HINT: &str =
+    "Type a control command or Python script (e.g., `query type = card`, `state`, `logs`, `help`)";
+
+const SCRIPT_TEMPLATES: &[(&str, &str)] = &[
+    ("Query Due Items", "query type = card and due <= today\n"),
+    (
+        "Batch Create Cards",
+        "item create card \"Bayes Theorem\" --stack \"Math\" --text \"What is Bayes theorem?\" --answer \"P(A|B) = P(B|A)P(A) / P(B)\"\n",
+    ),
+    ("Calendar & State Check", "state\nnav calendar\n"),
+    (
+        "Macro Syntax Test",
+        "query type = note and text ~ \"{hide}\"\n",
+    ),
+];
 
 fn entry(ui: &mut egui::Ui, e: &Entry) {
     let p = palette_of(ui);
@@ -26,7 +40,7 @@ fn entry(ui: &mut egui::Ui, e: &Entry) {
     ui.add(egui::Label::new(text).wrap().selectable(true));
 }
 
-fn input(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+fn singleline_input(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let c = &state.console;
     let mut text = c.input.clone();
     let field = egui::TextEdit::singleline(&mut text)
@@ -53,8 +67,56 @@ fn input(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-/// The screen.
+#[allow(deprecated)]
+fn script_editor(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let buffer_id = egui::Id::new("scriptrunner-code-buffer");
+    let mut code = ui.data(|d| d.get_temp::<String>(buffer_id).unwrap_or_default());
+
+    ui.horizontal(|ui| {
+        ui.label(RichText::new("Script Editor:").strong());
+        egui::ComboBox::from_id_salt("script-template-picker")
+            .selected_text("Load recipe template…")
+            .show_ui(ui, |ui| {
+                for &(name, snippet) in SCRIPT_TEMPLATES {
+                    if ui.selectable_label(false, name).clicked() {
+                        code = snippet.to_owned();
+                        ui.data_mut(|d| d.insert_temp(buffer_id, code.clone()));
+                    }
+                }
+            });
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            if kit::primary_button(ui, "Run Script").clicked() {
+                for line in code.lines() {
+                    let trimmed = line.trim();
+                    if !trimmed.is_empty() && !trimmed.starts_with('#') {
+                        out.push(Msg::Console(ConsoleMsg::Edit(trimmed.to_owned())));
+                        out.push(Msg::Console(ConsoleMsg::Submit));
+                    }
+                }
+            }
+            if kit::quiet_button(ui, "Clear Code").clicked() {
+                code.clear();
+                ui.data_mut(|d| d.insert_temp(buffer_id, String::new()));
+            }
+        });
+    });
+
+    let edit = egui::TextEdit::multiline(&mut code)
+        .id_salt("scriptrunner-multiline-text")
+        .font(TextStyle::Monospace)
+        .desired_rows(5)
+        .desired_width(f32::INFINITY);
+    if ui.add(edit).changed() {
+        ui.data_mut(|d| d.insert_temp(buffer_id, code));
+    }
+}
+
+/// The Console screen.
+#[allow(deprecated)]
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let editor_open_id = egui::Id::new("scriptrunner-editor-expanded");
+    let mut editor_expanded = ui.data(|d| d.get_temp::<bool>(editor_open_id).unwrap_or(false));
+
     ui.horizontal(|ui| {
         ui.heading("Console");
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
@@ -64,28 +126,47 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             if kit::primary_button(ui, "Run").clicked() {
                 out.push(Msg::Console(ConsoleMsg::Submit));
             }
+            let label = if editor_expanded {
+                "Hide ScriptRunner"
+            } else {
+                "ScriptRunner Editor"
+            };
+            if ui.button(label).clicked() {
+                editor_expanded = !editor_expanded;
+                ui.data_mut(|d| d.insert_temp(editor_open_id, editor_expanded));
+            }
         });
     });
+
+    let pal = palette_of(ui);
     ui.label(
         RichText::new("Commands go to this window's control protocol, as scripts use it; events and script output appear as they happen.")
-            .color(palette_of(ui).text_weak),
+            .color(pal.text_weak),
     );
-    ui.add_space(8.0);
-    input(state, ui, out);
-    ui.add_space(8.0);
+    ui.add_space(6.0);
+
+    singleline_input(state, ui, out);
+    ui.add_space(6.0);
+
+    if editor_expanded {
+        script_editor(ui, out);
+        ui.add_space(6.0);
+    }
+
+    kit::section(ui, "Output Log Stream");
     egui::ScrollArea::vertical()
         .auto_shrink([false, false])
         .stick_to_bottom(true)
         .show(ui, |ui| {
             if state.console.entries.is_empty() {
                 ui.label(
-                    RichText::new("Nothing yet. Try `help` or `state`.")
-                        .color(palette_of(ui).text_weak),
+                    RichText::new("No command entries yet. Run a script above or type `help`.")
+                        .color(pal.text_weak),
                 );
             }
             for e in &state.console.entries {
                 entry(ui, e);
-                ui.add_space(4.0);
+                ui.add_space(2.0);
             }
         });
 }

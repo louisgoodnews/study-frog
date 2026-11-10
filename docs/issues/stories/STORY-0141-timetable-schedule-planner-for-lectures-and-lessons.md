@@ -2,7 +2,7 @@
 id: STORY-0141
 type: story
 title: Timetable schedule planner for lectures and lessons
-status: backlog
+status: done
 epic: EPIC-044
 parents: [EPIC-044]
 estimate: 5
@@ -23,9 +23,9 @@ Deliver the timetable schedule planner in `crates/studyfrog-calendar` and `crate
 3. Automatically generate calendar occurrences for timetable classes on the calendar and notification system.
 
 ## Acceptance Criteria
-- [ ] Learners can define recurring weekly timetable entries for courses, lectures, seminars, and lessons
-- [ ] Each timetable entry stores course title, day of week, start/end time, location/room, instructor, and optional associated stack
-- [ ] Timetable entries automatically project into calendar events and notifications across the semester term
+- [x] Learners can define recurring weekly timetable entries for courses, lectures, seminars, and lessons
+- [x] Each timetable entry stores course title, day of week, start/end time, location/room, instructor, and optional associated stack
+- [x] Timetable entries automatically project into calendar events and notifications across the semester term
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-calendar/src/session.rs`, `crates/studyfrog-store/src/schema.rs`, `crates/studyfrog-ui/src/view/calendar.rs`.

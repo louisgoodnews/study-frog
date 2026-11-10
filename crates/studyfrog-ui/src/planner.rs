@@ -1,15 +1,19 @@
-//! The calendar screen: state and update logic. Pure; recurrence comes from `studyfrog-calendar`
-//! and is expanded here when the month or the sessions change, never per frame.
+//! The calendar screen: state and update logic (STORY-0141, STORY-0142).
 
-use studyfrog_calendar::recurrence::occurrences_all;
 use studyfrog_calendar::session::{Occurrence, Session};
-use studyfrog_core::civil::{Date, Weekday, add_months, month_grid};
+use studyfrog_calendar::timetable::TimetableEntry;
+use studyfrog_core::civil::{Date, Weekday, month_grid};
 
+use crate::calendar_mode::CalendarViewMode;
 use crate::effect::Effect;
-use crate::session_form::{SessionForm, apply_form_edit, form_from, form_new, session_from_form};
-
 pub use crate::plan_msg::PlanMsg;
-use crate::state::{Notice, NoticeKind, State};
+use crate::planner_ops::{
+    changed, failed, loaded, month_of, save, save_timetable, shift_month, shift_period, with,
+    with_sessions,
+};
+use crate::session_form::{SessionForm, apply_form_edit, form_from, form_new};
+use crate::state::State;
+use crate::timetable_form::{TimetableForm, timetable_form_from, timetable_form_new};
 
 /// The week starts on Monday.
 pub const WEEK_START: Weekday = Weekday::Mon;
@@ -19,6 +23,8 @@ pub const WEEK_START: Weekday = Weekday::Mon;
 pub struct Planner {
     /// Sessions have been loaded at least once.
     pub loaded: bool,
+    /// Active view mode (Month, Week, Day, Timetable).
+    pub view_mode: CalendarViewMode,
     /// Today's local date as of the last load.
     pub today: Date,
     /// The visible month.
@@ -29,6 +35,12 @@ pub struct Planner {
     pub sessions: Vec<Session>,
     /// Occurrences inside the visible grid (six weeks).
     pub shown: Vec<Occurrence>,
+    /// Stored weekly timetable entries.
+    pub timetable: Vec<TimetableEntry>,
+    /// Form for creating or editing a timetable entry.
+    pub timetable_form: Option<TimetableForm>,
+    /// Error message for the timetable form.
+    pub timetable_error: Option<String>,
     /// The session form, when open.
     pub form: Option<SessionForm>,
     /// Why the last save was refused.
@@ -50,11 +62,15 @@ impl Default for Planner {
         };
         Planner {
             loaded: false,
+            view_mode: CalendarViewMode::Month,
             today: epoch,
             month: (1970, 1),
             selected: epoch,
             sessions: Vec::new(),
             shown: Vec::new(),
+            timetable: Vec::new(),
+            timetable_form: None,
+            timetable_error: None,
             form: None,
             form_error: None,
             reviews: Vec::new(),
@@ -69,111 +85,11 @@ pub fn grid_of(month: (i32, u8)) -> [Date; 42] {
     month_grid(month.0, month.1, WEEK_START)
 }
 
-fn failed(state: State, text: String) -> (State, Vec<Effect>) {
-    let notice = Some(Notice {
-        kind: NoticeKind::Error,
-        text,
-    });
-    (State { notice, ..state }, Vec::new())
-}
-
-fn with(state: State, p: Planner) -> (State, Vec<Effect>) {
-    (
-        State {
-            planner: p,
-            ..state
-        },
-        Vec::new(),
-    )
-}
-
-/// Replace the sessions and expand the visible grid.
-fn with_sessions(p: Planner, sessions: Vec<Session>) -> Planner {
-    let grid = grid_of(p.month);
-    let shown = occurrences_all(&sessions, grid[0], grid[41]);
-    Planner {
-        sessions,
-        shown,
-        ..p
-    }
-}
-
-fn month_of(d: Date) -> (i32, u8) {
-    (d.year, d.month)
-}
-
-fn shift_month(p: Planner, delta: i64) -> Planner {
-    let first = Date {
-        year: p.month.0,
-        month: p.month.1,
-        day: 1,
-    };
-    let month = add_months(first, delta).map_or(p.month, month_of);
-    let sessions = p.sessions.clone();
-    with_sessions(Planner { month, ..p }, sessions)
-}
-
-fn loaded(p: Planner, sessions: Vec<Session>, today: Date) -> Planner {
-    let first = !p.loaded;
-    let p = Planner {
-        loaded: true,
-        today,
-        ..p
-    };
-    let p = if first {
-        Planner {
-            month: month_of(today),
-            selected: today,
-            ..p
-        }
-    } else {
-        p
-    };
-    with_sessions(p, sessions)
-}
-
-fn save(state: State) -> (State, Vec<Effect>) {
-    let Some(form) = &state.planner.form else {
-        return (state, Vec::new());
-    };
-    match session_from_form(form) {
-        Ok(s) => (state, vec![Effect::SaveSession(s)]),
-        Err(e) => {
-            let planner = Planner {
-                form_error: Some(e),
-                ..state.planner.clone()
-            };
-            with(state, planner)
-        }
-    }
-}
-
-fn changed(state: State, result: Result<Vec<Session>, String>) -> (State, Vec<Effect>) {
-    match result {
-        Ok(sessions) => {
-            let p = Planner {
-                form: None,
-                form_error: None,
-                ..state.planner.clone()
-            };
-            with(state, with_sessions(p, sessions))
-        }
-        Err(e) if state.planner.form.is_some() => {
-            let planner = Planner {
-                form_error: Some(e),
-                ..state.planner.clone()
-            };
-            with(state, planner)
-        }
-        Err(e) => failed(state, e),
-    }
-}
-
-/// Handle the calendar messages; the planned reviews are read again whenever the grid or the sessions change.
+/// Handle the calendar messages.
 pub fn update(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
     let refresh = matches!(
         msg,
-        PlanMsg::Loaded(Ok(_)) | PlanMsg::Month(_) | PlanMsg::Today
+        PlanMsg::Loaded(Ok(_)) | PlanMsg::Month(_) | PlanMsg::ShiftPeriod(_) | PlanMsg::Today
     );
     let (state, mut effects) = update_one(state, msg);
     if refresh {
@@ -187,6 +103,44 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
     match msg {
         PlanMsg::Loaded(Ok((sessions, today))) => with(state, loaded(p, sessions, today)),
         PlanMsg::Loaded(Err(e)) => failed(state, e),
+        PlanMsg::SetViewMode(view_mode) => with(state, Planner { view_mode, ..p }),
+        PlanMsg::ShiftPeriod(delta) => with(state, shift_period(p, delta)),
+        PlanMsg::TimetableLoaded(Ok(timetable)) => with(state, Planner { timetable, ..p }),
+        PlanMsg::TimetableLoaded(Err(e)) => failed(state, e),
+        PlanMsg::OpenTimetableForm(entry) => {
+            let form = entry
+                .as_ref()
+                .map(timetable_form_from)
+                .unwrap_or_else(|| timetable_form_new(0));
+            with(
+                state,
+                Planner {
+                    timetable_form: Some(form),
+                    timetable_error: None,
+                    ..p
+                },
+            )
+        }
+        PlanMsg::CloseTimetableForm => with(
+            state,
+            Planner {
+                timetable_form: None,
+                timetable_error: None,
+                ..p
+            },
+        ),
+        PlanMsg::SaveTimetable(_) => save_timetable(state),
+        PlanMsg::DeleteTimetable(id) => (state, vec![Effect::DeleteTimetable(id)]),
+        PlanMsg::TimetableChanged(Ok(timetable)) => {
+            let planner = Planner {
+                timetable,
+                timetable_form: None,
+                timetable_error: None,
+                ..p
+            };
+            (State { planner, ..state }, vec![Effect::LoadSessions])
+        }
+        PlanMsg::TimetableChanged(Err(e)) => failed(state, e),
         PlanMsg::Month(delta) => with(state, shift_month(p, delta)),
         PlanMsg::Today => {
             let sessions = p.sessions.clone();

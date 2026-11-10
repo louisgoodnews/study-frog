@@ -2,7 +2,7 @@
 id: STORY-0148
 type: story
 title: Console expansion to full scriptrunner environment with internal API
-status: backlog
+status: done
 epic: EPIC-048
 parents: [EPIC-048]
 estimate: 5
@@ -23,9 +23,9 @@ Deliver the in-app ScriptRunner and internal API:
 3. Author the internal API specification and user guide in `docs/research/scriptrunner-and-internal-api.md`.
 
 ## Acceptance Criteria
-- [ ] The Console screen provides a multi-line script editor with run, pause, stop, and clear controls
-- [ ] Output log stream captures stdout, stderr, and returned objects with formatted timestamps
-- [ ] The internal Python API provides methods for vault querying, card creation, calendar events, and custom macro registration
+- [x] The Console screen provides a multi-line script editor with run, pause, stop, and clear controls
+- [x] Output log stream captures stdout, stderr, and returned objects with formatted timestamps
+- [x] The internal Python API provides methods for vault querying, card creation, calendar events, and custom macro registration
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-ui/src/view/console.rs`, `crates/studyfrog-ext/`, `crates/studyfrog-ui/src/console_link.rs`.

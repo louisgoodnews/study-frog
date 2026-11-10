@@ -13,141 +13,43 @@ use crate::schema_memory::{V21, V22};
 use crate::schema_refs::V20;
 
 /// All migrations, oldest first.
+#[rustfmt::skip]
 pub const MIGRATIONS: &[Migration] = &[
-    Migration {
-        version: 1,
-        name: "initial schema",
-        sql: V1,
-    },
-    Migration {
-        version: 2,
-        name: "run plan columns",
-        sql: V2,
-    },
-    Migration {
-        version: 3,
-        name: "run filter, stack identity and settings, sm2 last review",
-        sql: V3,
-    },
-    Migration {
-        version: 4,
-        name: "sessions and board",
-        sql: V4,
-    },
-    Migration {
-        version: 5,
-        name: "achievement unlocks",
-        sql: V5,
-    },
-    Migration {
-        version: 6,
-        name: "answer scores",
-        sql: V6,
-    },
-    Migration {
-        version: 7,
-        name: "run shuffle switch",
-        sql: V7,
-    },
-    Migration {
-        version: 8,
-        name: "calendar entry kinds and reminders",
-        sql: V8,
-    },
-    Migration {
-        version: 9,
-        name: "item priority and difficulty",
-        sql: V9,
-    },
-    Migration {
-        version: 10,
-        name: "stack subjects",
-        sql: V10,
-    },
-    Migration {
-        version: 11,
-        name: "pdf documents and page text",
-        sql: V11,
-    },
-    Migration {
-        version: 12,
-        name: "item status",
-        sql: V12,
-    },
-    Migration {
-        version: 13,
-        name: "item views",
-        sql: V13,
-    },
-    Migration {
-        version: 14,
-        name: "stack familiarity switch",
-        sql: V14,
-    },
-    Migration {
-        version: 15,
-        name: "notifications",
-        sql: V15,
-    },
-    Migration {
-        version: 16,
-        name: "run pacing",
-        sql: V16,
-    },
-    Migration {
-        version: 17,
-        name: "answer and view timing",
-        sql: V17,
-    },
-    Migration {
-        version: 18,
-        name: "item text",
-        sql: V18,
-    },
-    Migration {
-        version: 19,
-        name: "least familiar order",
-        sql: V19,
-    },
-    Migration {
-        version: 20,
-        name: "items referenced by several stacks",
-        sql: V20,
-    },
-    Migration {
-        version: 21,
-        name: "memory per stack",
-        sql: V21,
-    },
-    Migration {
-        version: 22,
-        name: "reviews per item",
-        sql: V22,
-    },
-    Migration {
-        version: 23,
-        name: "diary entries and links",
-        sql: V23,
-    },
-    Migration {
-        version: 24,
-        name: "item keys and colours",
-        sql: V24,
-    },
-    Migration {
-        version: 25,
-        name: "exam runs and results",
-        sql: V25,
-    },
-    Migration {
-        version: 26,
-        name: "focus blocks",
-        sql: V26,
-    },
+    Migration { version: 1, name: "initial schema", sql: V1 },
+    Migration { version: 2, name: "run plan columns", sql: V2 },
+    Migration { version: 3, name: "run filter, stack identity and settings, sm2 last review", sql: V3 },
+    Migration { version: 4, name: "sessions and board", sql: V4 },
+    Migration { version: 5, name: "achievement unlocks", sql: V5 },
+    Migration { version: 6, name: "answer scores", sql: V6 },
+    Migration { version: 7, name: "run shuffle switch", sql: V7 },
+    Migration { version: 8, name: "calendar entry kinds and reminders", sql: V8 },
+    Migration { version: 9, name: "item priority and difficulty", sql: V9 },
+    Migration { version: 10, name: "stack subjects", sql: V10 },
+    Migration { version: 11, name: "pdf documents and page text", sql: V11 },
+    Migration { version: 12, name: "item status", sql: V12 },
+    Migration { version: 13, name: "item views", sql: V13 },
+    Migration { version: 14, name: "stack familiarity switch", sql: V14 },
+    Migration { version: 15, name: "notifications", sql: V15 },
+    Migration { version: 16, name: "run pacing", sql: V16 },
+    Migration { version: 17, name: "answer and view timing", sql: V17 },
+    Migration { version: 18, name: "item text", sql: V18 },
+    Migration { version: 19, name: "least familiar order", sql: V19 },
+    Migration { version: 20, name: "items referenced by several stacks", sql: V20 },
+    Migration { version: 21, name: "memory per stack", sql: V21 },
+    Migration { version: 22, name: "reviews per item", sql: V22 },
+    Migration { version: 23, name: "diary entries and links", sql: V23 },
+    Migration { version: 24, name: "item keys and colours", sql: V24 },
+    Migration { version: 25, name: "exam runs and results", sql: V25 },
+    Migration { version: 26, name: "focus blocks", sql: V26 },
     Migration {
         version: 27,
         name: "random typed answer sampling per run",
         sql: crate::schema_typed::V27,
+    },
+    Migration {
+        version: 28,
+        name: "timetable entries for lectures and lessons",
+        sql: crate::schema_timetable::V28,
     },
 ];
 

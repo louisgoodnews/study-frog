@@ -57,9 +57,20 @@ fn run_sessions(
 /// Read the sessions and today's date.
 pub fn load_sessions(w: &mut Worker, now_ns: i64) -> Msg {
     let result = match &w.session {
-        Some(s) => list_sessions(s)
-            .map(|all| (all, today(now_ns)))
-            .map_err(|e| e.to_string()),
+        Some(s) => match list_sessions(s) {
+            Ok(mut all) => {
+                let d = today(now_ns);
+                if let Ok(tt) = studyfrog_service::timetable::list_timetable_entries(s) {
+                    for entry in &tt {
+                        all.push(studyfrog_calendar::timetable::timetable_to_session(
+                            entry, d,
+                        ));
+                    }
+                }
+                Ok((all, d))
+            }
+            Err(e) => Err(e.to_string()),
+        },
         None => Err(NO_VAULT.to_owned()),
     };
     Msg::Plan(PlanMsg::Loaded(result))
@@ -85,6 +96,43 @@ pub fn delete(w: &mut Worker, id: Uid) -> Msg {
 /// Skip one occurrence.
 pub fn skip(w: &mut Worker, id: Uid, date: Date) -> Msg {
     run_sessions(w, |session| cancel_occurrence(session, id, date))
+}
+
+/// Store a timetable entry, giving a new one an id first.
+pub fn save_timetable(
+    w: &mut Worker,
+    entry: studyfrog_calendar::timetable::TimetableEntry,
+    now_ns: i64,
+) -> Msg {
+    let result = match &mut w.session {
+        Some(s) => {
+            let id = if entry.id == Uid(0) {
+                match ids(now_ns) {
+                    Ok(source) => studyfrog_service::timetable::new_timetable_id(source),
+                    Err(e) => return Msg::Plan(PlanMsg::TimetableChanged(Err(e.to_string()))),
+                }
+            } else {
+                entry.id
+            };
+            studyfrog_service::timetable::save_timetable_entry_checked(
+                s,
+                studyfrog_calendar::timetable::TimetableEntry { id, ..entry },
+            )
+            .map_err(|e| e.to_string())
+        }
+        None => Err(NO_VAULT.to_owned()),
+    };
+    Msg::Plan(PlanMsg::TimetableChanged(result))
+}
+
+/// Delete a timetable entry.
+pub fn delete_timetable(w: &mut Worker, id: Uid) -> Msg {
+    let result = match &mut w.session {
+        Some(s) => studyfrog_service::timetable::delete_timetable_entry_checked(s, id)
+            .map_err(|e| e.to_string()),
+        None => Err(NO_VAULT.to_owned()),
+    };
+    Msg::Plan(PlanMsg::TimetableChanged(result))
 }
 
 fn board_msg(

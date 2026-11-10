@@ -2,7 +2,7 @@
 id: STORY-0142
 type: story
 title: Calendar daily and weekly schedule views
-status: backlog
+status: done
 epic: EPIC-044
 parents: [EPIC-044]
 estimate: 5
@@ -24,9 +24,9 @@ Implement Week and Day views on the calendar screen:
 4. Support drag-and-drop or click-to-schedule at specific hours.
 
 ## Acceptance Criteria
-- [ ] The calendar interface provides segmented controls to switch between Month, Week, and Day views
-- [ ] The Week view displays 7 daily columns with an hourly time grid from 06:00 to 22:00 showing appointments, lectures, tasks, and reviews
-- [ ] The Day view displays a detailed single-day agenda with time blocks, stack links, and quick event creation
+- [x] The calendar interface provides segmented controls to switch between Month, Week, and Day views
+- [x] The Week view displays 7 daily columns with an hourly time grid from 06:00 to 22:00 showing appointments, lectures, tasks, and reviews
+- [x] The Day view displays a detailed single-day agenda with time blocks, stack links, and quick event creation
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-ui/src/view/calendar.rs`, `crates/studyfrog-ui/src/view/calendar_week.rs`, `crates/studyfrog-ui/src/view/calendar_day.rs`.

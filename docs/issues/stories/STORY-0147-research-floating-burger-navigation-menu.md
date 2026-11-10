@@ -2,7 +2,7 @@
 id: STORY-0147
 type: story
 title: Research and prototype floating burger navigation menu
-status: backlog
+status: done
 epic: EPIC-047
 parents: [EPIC-047]
 estimate: 3
@@ -23,9 +23,9 @@ Conduct UX research and develop a prototype:
 3. Align with accessibility guidelines and screen reader navigation.
 
 ## Acceptance Criteria
-- [ ] UX research document evaluates ergonomic trade-offs between static top bar / sidebar navigation versus a floating corner burger menu
-- [ ] Prototype demonstrates collapsible floating navigation button providing quick access to all application screens
-- [ ] The design ensures non-interference with card content, reading measure widths, and touch/click affordances
+- [x] UX research document evaluates ergonomic trade-offs between static top bar / sidebar navigation versus a floating corner burger menu
+- [x] Prototype demonstrates collapsible floating navigation button providing quick access to all application screens
+- [x] The design ensures non-interference with card content, reading measure widths, and touch/click affordances
 
 ## Design Notes
 - Touchpoints: `docs/research/`, `crates/studyfrog-ui/src/view/`.
