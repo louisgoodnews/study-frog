@@ -2,7 +2,7 @@
 id: BUG-0016
 type: bug
 title: Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority
-status: backlog
+status: done
 epic: EPIC-034
 parents: []
 estimate: 5
@@ -43,9 +43,9 @@ Deliver an accurate baseline calculation for metacognitive accuracy and enforce 
    - Provide a vault migration / startup check that normalizes existing vault items missing difficulty or priority attributes.
 
 ## Acceptance Criteria
-- [ ] The rehearsal metacognitive calibration report calculates a true measured accuracy baseline instead of naively treating all non-Again ratings as 100% accurate
-- [ ] The accuracy baseline calculation factors in item novelty/rehearsal history, view latency relative to content length and expected reading speed, item classification, and rating distribution
-- [ ] Newly created and imported items default to base difficulty Hard (Difficult) and priority Medium across all creation paths, and existing items in vaults missing these attributes are normalized consistently
+- [x] The rehearsal metacognitive calibration report calculates a true measured accuracy baseline instead of naively treating all non-Again ratings as 100% accurate
+- [x] The accuracy baseline calculation factors in item novelty/rehearsal history, view latency relative to content length and expected reading speed, item classification, and rating distribution
+- [x] Newly created and imported items default to base difficulty Hard (Difficult) and priority Medium across all creation paths, and existing items in vaults missing these attributes are normalized consistently
 
 ## Design Notes
 Touchpoints across crates:

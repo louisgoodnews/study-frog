@@ -20,10 +20,41 @@ fn day_self_score(entries: &[&DiaryRatingPoint]) -> (Option<f32>, Vec<f32>) {
     }
 }
 
+/// Calculated recall accuracy for an individual review based on rating, item familiarity/novelty,
+/// and reading speed latency.
+pub fn review_accuracy(r: &CalibrationReview) -> f32 {
+    let rating_weight = match r.rating {
+        Rating::Again => 0.0,
+        Rating::Hard => 0.50,
+        Rating::Good => 0.85,
+        Rating::Easy => 1.00,
+    };
+    if rating_weight == 0.0 {
+        return 0.0;
+    }
+    // Items that have never been rehearsed or have low familiarity cannot represent 100% baseline accuracy.
+    // Scale baseline recall with familiarity (0.0 familiarity -> 0.35, 1.0 familiarity -> 1.00).
+    let fam = r.familiarity.unwrap_or(0.2).clamp(0.0, 1.0);
+    let fam_weight = 0.35 + 0.65 * fam;
+
+    // View latency vs expected reading speed: prolonged hesitation indicates struggling retrieval.
+    let latency_weight = match (r.answer_ms, r.expected_ms) {
+        (Some(ans), Some(exp)) if exp > 0 => {
+            let ratio = exp as f32 / ans.max(exp) as f32;
+            0.70 + 0.30 * ratio.clamp(0.0, 1.0)
+        }
+        _ => 1.0,
+    };
+
+    (rating_weight * fam_weight * latency_weight).clamp(0.0, 1.0)
+}
+
 fn day_review_metrics(reviews: &[&CalibrationReview]) -> (Option<f32>, Option<f32>, usize) {
     if reviews.is_empty() {
         return (None, None, 0);
     }
+    let total_acc: f32 = reviews.iter().map(|r| review_accuracy(r)).sum();
+    let mean_acc = total_acc / reviews.len() as f32;
     let recalled = reviews.iter().filter(|r| r.rating != Rating::Again).count();
     let fam_vals: Vec<f32> = reviews.iter().filter_map(|r| r.familiarity).collect();
     let fam = if fam_vals.is_empty() {
@@ -32,7 +63,7 @@ fn day_review_metrics(reviews: &[&CalibrationReview]) -> (Option<f32>, Option<f3
         let sum: f32 = fam_vals.iter().sum();
         Some(sum / fam_vals.len() as f32)
     };
-    (Some(recalled as f32 / reviews.len() as f32), fam, recalled)
+    (Some(mean_acc), fam, recalled)
 }
 
 fn compute_metrics(
@@ -83,7 +114,6 @@ pub fn calibration_report(
     let mut buckets = Vec::with_capacity(dates.len());
     let mut entries_used = 0_usize;
     let mut all_self_scores = Vec::new();
-    let mut total_recalled = 0_usize;
     let mut all_fams = Vec::new();
     let mut daily_gaps = Vec::new();
 
@@ -96,8 +126,7 @@ pub fn calibration_report(
 
         let day_reviews: Vec<&CalibrationReview> =
             reviews.iter().filter(|r| r.date == date).collect();
-        let (accuracy, familiarity, recalled) = day_review_metrics(&day_reviews);
-        total_recalled += recalled;
+        let (accuracy, familiarity, _recalled) = day_review_metrics(&day_reviews);
         all_fams.extend(day_reviews.iter().filter_map(|r| r.familiarity));
 
         let gap = match (self_score, accuracy) {
@@ -123,7 +152,8 @@ pub fn calibration_report(
     let mean_self_score = (!all_self_scores.is_empty())
         .then(|| all_self_scores.iter().sum::<f32>() / all_self_scores.len() as f32);
 
-    let mean_accuracy = (!reviews.is_empty()).then(|| total_recalled as f32 / reviews.len() as f32);
+    let total_accuracy: f32 = reviews.iter().map(review_accuracy).sum();
+    let mean_accuracy = (!reviews.is_empty()).then(|| total_accuracy / reviews.len() as f32);
 
     let mean_familiarity =
         (!all_fams.is_empty()).then(|| all_fams.iter().sum::<f32>() / all_fams.len() as f32);

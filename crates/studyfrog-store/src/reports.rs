@@ -19,12 +19,16 @@ pub struct HistoryRow {
     pub at_ms: i64,
     /// Days since the item's previous review (0 for its first).
     pub elapsed_days: f32,
+    /// Milliseconds the answer was on screen before rating.
+    pub answer_ms: Option<u32>,
+    /// Milliseconds the words should take to read.
+    pub expected_ms: Option<u32>,
 }
 
 /// Every review, oldest first.
 pub fn load_review_history(conn: &Connection) -> Result<Vec<HistoryRow>, StoreError> {
     let mut stmt = conn
-        .prepare("SELECT item_uid, rating, at_ms, elapsed_days FROM review_once ORDER BY at_ms, id")
+        .prepare("SELECT item_uid, rating, at_ms, elapsed_days, answer_ms, expected_ms FROM review_once ORDER BY at_ms, id")
         .map_err(sql_err)?;
     let rows = stmt
         .query_map([], |r| {
@@ -33,12 +37,14 @@ pub fn load_review_history(conn: &Connection) -> Result<Vec<HistoryRow>, StoreEr
                 r.get::<_, u8>(1)?,
                 r.get::<_, i64>(2)?,
                 r.get::<_, f32>(3)?,
+                r.get::<_, Option<u32>>(4)?,
+                r.get::<_, Option<u32>>(5)?,
             ))
         })
         .map_err(sql_err)?;
     let mut out = Vec::new();
     for row in rows {
-        let (item, rating, at_ms, elapsed_days) = row.map_err(sql_err)?;
+        let (item, rating, at_ms, elapsed_days, answer_ms, expected_ms) = row.map_err(sql_err)?;
         let rating =
             rating_from_value(rating).ok_or_else(|| corrupt("rating", &rating.to_string()))?;
         out.push(HistoryRow {
@@ -46,6 +52,8 @@ pub fn load_review_history(conn: &Connection) -> Result<Vec<HistoryRow>, StoreEr
             rating,
             at_ms,
             elapsed_days,
+            answer_ms,
+            expected_ms,
         });
     }
     Ok(out)

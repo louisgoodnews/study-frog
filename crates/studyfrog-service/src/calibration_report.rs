@@ -50,6 +50,8 @@ pub fn build_calibration_report(
             date: date_from_days(day_of(r.at_ms, offset_minutes)),
             rating: r.rating,
             familiarity: fam_map.get(&r.item).copied(),
+            answer_ms: r.answer_ms,
+            expected_ms: r.expected_ms,
         })
         .collect();
 

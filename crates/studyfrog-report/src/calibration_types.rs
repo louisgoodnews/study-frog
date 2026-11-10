@@ -36,7 +36,7 @@ pub struct DiaryRatingPoint {
     pub ratings: BTreeMap<String, RatingValue>,
 }
 
-/// A review event with its date, rating and optional item familiarity.
+/// A review event with its date, rating, optional item familiarity, and reading timing.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct CalibrationReview {
     /// Civil date of the review.
@@ -45,6 +45,10 @@ pub struct CalibrationReview {
     pub rating: Rating,
     /// Item familiarity at the time of review, if known.
     pub familiarity: Option<f32>,
+    /// Milliseconds on the answer side before rating, if recorded.
+    pub answer_ms: Option<u32>,
+    /// Expected reading time in milliseconds, if recorded.
+    pub expected_ms: Option<u32>,
 }
 
 /// A time-series bucket comparing subjective and objective metrics on a given date.
@@ -121,6 +125,8 @@ pub fn calibration_review(
         date,
         rating,
         familiarity,
+        answer_ms: None,
+        expected_ms: None,
     }
 }
 

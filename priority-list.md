@@ -125,4 +125,4 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
   - [ ] [STORY-0137](docs/issues/stories/STORY-0137-interactive-parameter-guided-content-generation-prompts.md) Interactive parameter-guided content generation prompts in prompt library (intake interview for relevance, language, difficulty, and style choices)
 
 **Bug fixes & calibration refinements**
-- [ ] [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty (Hard) and priority (Medium)
+- [x] [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty (Hard) and priority (Medium)

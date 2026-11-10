@@ -114,38 +114,32 @@ fn test_on_a_simulated_history_shows_the_calibration_measure_is_computed_correct
     assert_eq!(report.reviews_evaluated, 50);
     assert_eq!(report.buckets.len(), 5);
 
-    // Day 1: self 0.75, acc 0.80 -> gap -0.05
-    // Day 2: self 0.50, acc 0.50 -> gap 0.00
-    // Day 3: self 1.00, acc 0.90 -> gap +0.10
-    // Day 4: self 0.75, acc 0.70 -> gap +0.05
-    // Day 5: self 0.25, acc 0.30 -> gap -0.05
+    // Day 1: self 0.75, acc ~0.5032 -> gap ~0.2468
     let b1 = &report.buckets[0];
     assert_eq!(b1.entries, 1);
     assert_eq!(b1.reviews, 10);
     assert!((b1.self_score.unwrap() - 0.75).abs() < 1e-4);
-    assert!((b1.accuracy.unwrap() - 0.80).abs() < 1e-4);
+    assert!((b1.accuracy.unwrap() - 0.5032).abs() < 1e-4);
     assert!((b1.familiarity.unwrap() - 0.60).abs() < 1e-4);
-    assert!((b1.gap.unwrap() - (-0.05)).abs() < 1e-4);
+    assert!((b1.gap.unwrap() - 0.2468).abs() < 1e-4);
 
     // Overall mean self score = (0.75 + 0.50 + 1.00 + 0.75 + 0.25) / 5 = 0.65
     assert!((report.mean_self_score.unwrap() - 0.65).abs() < 1e-4);
 
-    // Overall mean accuracy = (8 + 5 + 9 + 7 + 3) / 50 = 32 / 50 = 0.64
-    assert!((report.mean_accuracy.unwrap() - 0.64).abs() < 1e-4);
+    // Overall mean accuracy = 21.205375 / 50 = 0.4241
+    assert!((report.mean_accuracy.unwrap() - 0.4241).abs() < 1e-4);
 
     // Overall mean familiarity = (10*0.60 + 10*0.55 + 10*0.85 + 10*0.70 + 10*0.35) / 50 = 0.61
     assert!((report.mean_familiarity.unwrap() - 0.61).abs() < 1e-4);
 
-    // Mean delta = (-0.05 + 0.00 + 0.10 + 0.05 - 0.05) / 5 = 0.05 / 5 = +0.01
-    assert!((report.delta.unwrap() - 0.01).abs() < 1e-4);
+    // Mean delta = 1.1294625 / 5 = 0.2259
+    assert!((report.delta.unwrap() - 0.2259).abs() < 1e-4);
 
-    // Mean absolute error = (0.05 + 0.00 + 0.10 + 0.05 + 0.05) / 5 = 0.25 / 5 = 0.05
-    // Calibration score = 1.0 - 0.05 = 0.95
-    assert!((report.score.unwrap() - 0.95).abs() < 1e-4);
+    // Calibration score = 1.0 - 0.2259 = 0.7741
+    assert!((report.score.unwrap() - 0.7741).abs() < 1e-4);
 
-    // Bias is within [-0.05, 0.05] -> WellCalibrated
-    assert_eq!(report.bias, CalibrationBias::WellCalibrated);
-    assert_eq!(bias_label(report.bias), "Accurately calibrated");
+    assert_eq!(report.bias, CalibrationBias::Overconfident);
+    assert_eq!(bias_label(report.bias), "Overconfident");
     assert!(!bias_explanation(report.bias).is_empty());
 }
 
@@ -170,8 +164,8 @@ fn simulated_overconfident_history_detects_overconfidence_bias() {
     assert_eq!(report.entries_used, 1);
     assert_eq!(report.reviews_evaluated, 10);
     assert_eq!(report.mean_self_score, Some(1.0));
-    assert_eq!(report.mean_accuracy, Some(0.2));
-    assert_eq!(report.delta, Some(0.8));
+    assert!((report.mean_accuracy.unwrap() - 0.09265).abs() < 1e-4);
+    assert!((report.delta.unwrap() - 0.90735).abs() < 1e-4);
     assert_eq!(report.bias, CalibrationBias::Overconfident);
     assert_eq!(bias_label(report.bias), "Overconfident");
 }
@@ -183,7 +177,7 @@ fn simulated_underconfident_history_detects_underconfidence_bias() {
         month: 11,
         day: 4,
     };
-    // User rates 1 (0.00), but 9 of 10 items recalled (90% accuracy).
+    // User rates 1 (0.00), but 9 of 10 items recalled (with high familiarity).
     let entries = vec![diary_point(date, &[("performance", 1)])];
     let mut reviews = Vec::new();
     for _ in 0..9 {
@@ -197,8 +191,8 @@ fn simulated_underconfident_history_detects_underconfidence_bias() {
     assert_eq!(report.entries_used, 1);
     assert_eq!(report.reviews_evaluated, 10);
     assert_eq!(report.mean_self_score, Some(0.0));
-    assert_eq!(report.mean_accuracy, Some(0.9));
-    assert!((report.delta.unwrap() - (-0.9)).abs() < 1e-4);
+    assert!((report.mean_accuracy.unwrap() - 0.6904).abs() < 1e-4);
+    assert!((report.delta.unwrap() - (-0.6904)).abs() < 1e-4);
     assert_eq!(report.bias, CalibrationBias::Underconfident);
     assert_eq!(bias_label(report.bias), "Underconfident");
 }
