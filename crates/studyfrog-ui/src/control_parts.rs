@@ -45,6 +45,9 @@ pub fn modal_json(m: &Modal) -> Value {
         Modal::Transfer => json!({"kind": "transfer"}),
         Modal::ConfirmUnmark(_) => json!({"kind": "confirm_unmark"}),
         Modal::PdfExport(_) => json!({"kind": "pdf_export"}),
+        Modal::EditItem(f) => json!({
+            "kind": "edit_item", "item_uid": ulid(f.uid), "title": f.title, "error": f.error, "busy": f.busy,
+        }),
     }
 }
 

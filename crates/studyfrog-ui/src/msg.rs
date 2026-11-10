@@ -136,11 +136,11 @@ pub enum Msg {
     AnswerScored(Uid, Result<Scored, String>),
     /// "Apply" was activated for a suggested rating.
     ApplySuggestion {
-        /// The item.
+        /// Item UID.
         item: Uid,
-        /// The rating given in the run.
+        /// Expected current rating.
         expected: Rating,
-        /// The suggested rating.
+        /// Suggested target rating.
         to: Rating,
     },
     /// A rating was replaced (or not).
@@ -149,6 +149,8 @@ pub enum Msg {
     StepRecorded(Result<(), String>),
     /// "Back to setup" after a run.
     LeaveRun,
+    /// Editing an item during rehearsal.
+    RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg),
     /// Exam mode: grading and its result.
     Exam(crate::exam_ui::ExamMsg),
     /// An item was chosen for editing.

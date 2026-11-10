@@ -211,13 +211,17 @@ fn mark_row(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         ui.weak("This item is:");
         for (difficulty, label, _) in MARKS {
-            if ui
-                .selectable_label(chosen == Some(difficulty), label)
-                .clicked()
-            {
+            if ui.selectable_label(chosen == Some(difficulty), label).clicked() {
                 act(out, Action::Mark(difficulty));
             }
         }
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            if let Some(uid) = current_item(&run.session) {
+                if ui.small_button("✏ Edit").clicked() {
+                    out.push(Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Open(uid)));
+                }
+            }
+        });
     });
 }
 

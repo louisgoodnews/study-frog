@@ -21,6 +21,8 @@ pub enum Modal {
     ConfirmUnmark(Box<studyfrog_service::stack_mark::UnmarkPlan>),
     /// Export items or stacks to PDF.
     PdfExport(Box<crate::pdf_export_types::PdfExportState>),
+    /// Edit an item during rehearsal.
+    EditItem(Box<crate::rehearsal_edit::EditCardModal>),
 }
 
 /// The priority and difficulty the user chose; `None` leaves the default.

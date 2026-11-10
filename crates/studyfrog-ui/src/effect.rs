@@ -163,10 +163,7 @@ pub enum Effect {
     /// Delete a profile and its settings and keys.
     DeleteProfile(String),
     /// Ask where to put a backup of the vault and write it.
-    Backup {
-        /// Put the API keys in it.
-        include_keys: bool,
-    },
+    Backup { #[doc = "Put the API keys in it."] include_keys: bool },
     /// Ask for a backup file and read what it holds.
     ChooseBackup,
     /// Ask for an empty folder and unpack a backup there.
@@ -236,6 +233,8 @@ pub enum Effect {
     Folders(crate::folders_types::FolderEffect),
     /// Diary operations.
     Diary(crate::diary_types::DiaryEffect),
+    /// Operations for editing items during rehearsal.
+    RehearsalEdit(crate::rehearsal_edit::RehearsalEditEffect),
     /// Create a card in the stack at `folder`.
     CreateCard {
         /// Vault-relative stack folder.

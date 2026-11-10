@@ -19,6 +19,33 @@ pub fn load_document_msg(w: &Worker, uid: Uid) -> Msg {
     }
 }
 
+/// Read a document for editing during rehearsal.
+pub fn load_rehearsal_doc_msg(w: &Worker, uid: Uid) -> Msg {
+    let res = match &w.session {
+        Some(s) => load_document(s, uid).map_err(|e| e.to_string()),
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Loaded(uid, res))
+}
+
+/// Write an edited document from rehearsal.
+pub fn save_rehearsal_doc_msg(
+    w: &mut Worker,
+    uid: Uid,
+    path: &str,
+    doc: &Doc,
+    hash: u64,
+    now_ns: i64,
+) -> Msg {
+    let res = match &mut w.session {
+        Some(s) => save_document(s, path, doc, hash, UnixMs(now_ns / 1_000_000))
+            .map(|_| uid)
+            .map_err(|e| e.to_string()),
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Saved(res))
+}
+
 /// Write an edited document if the file is unchanged since it was loaded.
 pub fn save_document_msg(w: &mut Worker, path: &str, doc: &Doc, hash: u64, now_ns: i64) -> Msg {
     let Some(s) = &mut w.session else {

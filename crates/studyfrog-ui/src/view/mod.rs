@@ -53,6 +53,7 @@ mod menus;
 mod modal;
 mod modal_create;
 mod modal_csv;
+mod modal_edit_item;
 mod modal_fields;
 mod modal_formats;
 mod modal_found;

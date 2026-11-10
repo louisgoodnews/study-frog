@@ -30,10 +30,15 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             Modal::Transfer => super::modal_transfer::transfer(state, ui, out),
             Modal::ConfirmUnmark(plan) => super::modal_unmark::draw(plan, ui, out),
             Modal::PdfExport(form) => super::modal_pdf_export::draw(state, form, ui, out),
+            Modal::EditItem(form) => super::modal_edit_item::draw(state, form, ui, out),
         }
     });
     if response.should_close() {
-        send(out, ModalMsg::Close);
+        if matches!(modal, Modal::EditItem(_)) {
+            out.push(Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Close));
+        } else {
+            send(out, ModalMsg::Close);
+        }
     }
 }
 
