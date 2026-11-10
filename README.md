@@ -40,12 +40,11 @@ For a complete guide to everything StudyFrog offers today, see **[FEATURES.md](F
   motion, and built-in Help (`F1`) with how-to guides, FAQ, and an interactive tutorial.
 
 ## Status
-- **Released: 0.6.1** (2026-11-10): In-rehearsal quick item editing via shortcut and button, intermittent typed active recall sampling, end-of-run queue positioning for cards rated Again, and realistic metacognitive calibration accuracy baselines. Notes: [docs/RELEASE_NOTES_0.6.1.md](docs/RELEASE_NOTES_0.6.1.md). Earlier releases:
-  [0.6.0](docs/RELEASE_NOTES_0.6.0.md), [0.5.0](docs/RELEASE_NOTES_0.5.0.md), [0.4.3](docs/RELEASE_NOTES_0.4.3.md),
+- **Released: 0.7.0** (2026-11-10): Timetable schedule planner, calendar daily and weekly views, markdown macro library expansion with escaping syntax, extended list markers, stylized *Breviceps macrops* mascot icon, floating burger navigation research, and scriptrunner development environment with internal Python API. Notes: [docs/RELEASE_NOTES_0.7.0.md](docs/RELEASE_NOTES_0.7.0.md). Earlier releases:
+  [0.6.1](docs/RELEASE_NOTES_0.6.1.md), [0.6.0](docs/RELEASE_NOTES_0.6.0.md), [0.5.0](docs/RELEASE_NOTES_0.5.0.md), [0.4.3](docs/RELEASE_NOTES_0.4.3.md),
   [0.4.2](docs/RELEASE_NOTES_0.4.2.md), [0.4.1](docs/RELEASE_NOTES_0.4.1.md), [0.4.0](docs/RELEASE_NOTES_0.4.0.md),
   [0.3.1](docs/RELEASE_NOTES_0.3.1.md), [0.3.0](docs/RELEASE_NOTES_0.3.0.md), [0.2.0](docs/RELEASE_NOTES_0.2.0.md), and [0.1.0](docs/RELEASE_NOTES_0.1.0.md).
-- **Open points** — see **[PLANNED_FEATURES.md](PLANNED_FEATURES.md)**: STORY-0114 (a reading measure in pixels or in
-  characters) and STORY-0124 (control protocol commands for every screen) are in review.
+- **Open points** — see **[PLANNED_FEATURES.md](PLANNED_FEATURES.md)**: All planned epics and stories through Phase M13 are built and verified.
 - **Verification:** all 10 automated repository gates in `scripts/check.sh` (formatting, `repo-lint`, `clippy`, unit/integration/UI tests, doc-tests, 250-line file limit, crate layering, zero inherent `impl` blocks, issue lint, and `BOARD.md` sync) pass. OCR for scanned PDFs, cloud sync, and non-Linux platforms are not planned for now.
 
 Live work: [BOARD.md](BOARD.md) and [priority-list.md](priority-list.md). Feature reference:
@@ -58,12 +57,12 @@ Linux on x86_64 with OpenGL and X11 or Wayland. Download from the
 
 ```sh
 # AppImage: one file
-sha256sum -c StudyFrog-0.6.1-x86_64.AppImage.sha256
-chmod +x StudyFrog-0.6.1-x86_64.AppImage && ./StudyFrog-0.6.1-x86_64.AppImage
+sha256sum -c StudyFrog-0.7.0-x86_64.AppImage.sha256
+chmod +x StudyFrog-0.7.0-x86_64.AppImage && ./StudyFrog-0.7.0-x86_64.AppImage
 
 # or the tarball
-sha256sum -c StudyFrog-0.6.1-x86_64.tar.gz.sha256
-tar -xzf StudyFrog-0.6.1-x86_64.tar.gz && ./StudyFrog-0.6.1/bin/studyfrog
+sha256sum -c StudyFrog-0.7.0-x86_64.tar.gz.sha256
+tar -xzf StudyFrog-0.7.0-x86_64.tar.gz && ./StudyFrog-0.7.0/bin/studyfrog
 ```
 The release notes have the full steps (menu entry, per-user install, removing it). To build from source:
 ```sh

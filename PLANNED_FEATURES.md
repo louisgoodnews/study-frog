@@ -10,23 +10,19 @@ These points are still open:
 | [STORY-0124](docs/issues/stories/STORY-0124-interactive-cli-control-protocol-and-console-log-streaming-for-ai-agents.md) | The control protocol covers state, navigation, items, stacks, queries, rehearsal and exam runs, import and export, screenshots, logs and events. Calendar, board, diary, reports, achievements, settings, assistant, PDF and folders can only be reached with `nav`; there is no widget tree and no stack delete. |
 | EPIC-036, EPIC-038 | In review because of the two stories above. |
 
-## Upcoming features (Phase M13 / 0.7.0)
+## Completed features in Phase M13 (0.7.0)
 
-| Epic / Story | Summary |
-| :--- | :--- |
-| **[EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md)** | **Universal Item Linking:** Cross-link any items (stacks, cards, questions, answers, and notes) using keys, titles, and sub-item anchors (e.g. `#back`, `#answer`); bidirectional SQLite indexing; kind-badged link chips; hover preview popovers; `[[` editor autocomplete; and enhanced Relations notebook tab. |
-| ↳ **[STORY-0135](docs/issues/stories/STORY-0135-comments-for-items.md)** | **Comments for Items:** Timestamped user and AI agent comments in YAML front-matter, SQLite indexing, search query filters (`has:comments`, `comment:<text>`), Item Details notebook Comments tab, and CLI/MCP controls. |
-| **[EPIC-040](docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md)** | **Intermittent Typed Active Recall:** Rehearsal setup sampling setting to randomly require typed written recall across study items, reducing typing fatigue while preventing familiarity illusions; notes remain readable reference cards. |
-| ↳ **[STORY-0136](docs/issues/stories/STORY-0136-make-typed-answers-random-per-selection-during-rehearsal.md)** | **Random Typed Answers per Selection:** Setup sampling ratio, deterministic queue presentation assignment, and dynamic card view switching between typed submission and flip reveal. |
-| **[EPIC-041](docs/issues/epics/EPIC-041-modularity-system-driven-architecture-and-decoupled-background-services.md)** | **System-Driven Architecture & Decoupled Services:** Redesign application processes so services (e.g. file surveys, index polling) are driven by vault lifecycle hooks and background routines rather than triggered lazily by UI screen mounts. |
-| **[EPIC-042](docs/issues/epics/EPIC-042-interactive-ai-content-generation-and-parameter-guided-prompt-workflows.md)** | **Interactive AI Content Generation:** Prompt library workflows where AI models conduct an interactive intake interview (relevance, language, difficulty, style) before generating study items. |
-| ↳ **[STORY-0137](docs/issues/stories/STORY-0137-interactive-parameter-guided-content-generation-prompts.md)** | **Interactive Intake Prompts:** Multi-turn file extraction prompts guiding users through content scope, difficulty, and format choices with clean CSV output. |
-| **[EPIC-043](docs/issues/epics/EPIC-043-navigation-profile-and-file-management-ux-overhaul.md)** | **Navigation, Profile & File Management UX Overhaul:** Overhaul hostile and dated UI/UX across vault switcher, profile switcher, Folders file explorer, and in-app file selection dialogues. |
-| ↳ **[STORY-0138](docs/issues/stories/STORY-0138-overhaul-profile-and-vault-switchers.md)** | **Profile & Vault Switcher Overhaul:** Thoughtful card layouts, active vault indicators, disambiguated folder paths, last-opened metadata, profile avatars, safe creation/deletion dialogs. |
-| ↳ **[STORY-0139](docs/issues/stories/STORY-0139-overhaul-file-navigator-and-dialogue.md)** | **File Navigator & Dialogue Overhaul:** Polished tree explorer with indent guidelines, file type icons, search filter, path breadcrumbs, quick bookmark shortcuts (Home, Documents, Downloads). |
-| ↳ **[STORY-0140](docs/issues/stories/STORY-0140-rehearsal-and-exam-comments-drawer.md)** | **Expandable Comments Drawer in Rehearsal & Exam:** Slide-out drawer or panel to view and append item comments during active rehearsal/exam runs without resetting run flow. |
-| **[BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md)** | **Calibration Accuracy Baseline & Default Difficulty/Priority:** Calculate a realistic accuracy baseline in metacognitive calibration factoring in repetition history, latency vs. word count, and ratings; enforce default difficulty Hard and priority Medium on all item creation paths. |
-
-Smaller gaps are listed in each story's Progress section and in the release notes: image occlusion has one schedule per
-card, exams do not feed familiarity, deleting or moving an item raises no script event, scripting needs Unix, and the new
-providers, the MCP server and client were never run against real services.
+All planned epics, stories, and bug fixes for Phase M13 are built, verified, and released in `0.7.0`:
+- **Universal Item Linking & Comments (`EPIC-039`, `STORY-0135`)**: Wikilink expansions, Comments notebook tab, search filters.
+- **Intermittent Typed Active Recall (`EPIC-040`, `STORY-0136`)**: Setup sampling ratio, dynamic card view switching.
+- **System-Driven Architecture & Decoupled Services (`EPIC-041`)**: Vault lifecycle driven surveys and scans.
+- **Interactive AI Content Generation (`EPIC-042`, `STORY-0137`)**: Interactive intake interview prompts.
+- **Navigation, Profile & File Management UX Overhaul (`EPIC-043`, `STORY-0138`, `STORY-0139`, `STORY-0140`)**: Overhauled profile/vault switchers, file navigator dialogue, in-rehearsal comments drawer.
+- **Timetable Schedule Planner (`EPIC-044`, `STORY-0141`)**: Weekly recurring lectures and lessons with calendar projection.
+- **Calendar Daily & Weekly Schedule Views (`EPIC-044`, `STORY-0142`)**: 7-day hourly grid and single-day agendas.
+- **Macro Library Expansion & Escaping (`EPIC-045`, `STORY-0143`, `STORY-0144`)**: Extended macro tokens and `{#...}` escaping.
+- **Markdown List Syntax (`EPIC-046`, `STORY-0145`)**: `-`, `*`, numbers, and `a)`, `b.`, `c.` list markers.
+- **Breviceps Macrops Mascot Icon (`EPIC-047`, `STORY-0146`)**: Stylized vector-drawn rain frog icon across themes.
+- **Floating Burger Navigation (`EPIC-047`, `STORY-0147`)**: Research report and collapsible floating navigation FAB.
+- **ScriptRunner & Internal Automation API (`EPIC-048`, `STORY-0148`)**: In-app code editor, runner, stdout/stderr, and API spec.
+- **Bug Fixes**: BUG-0016 (calibration baseline), BUG-0017 (bold text visibility), BUG-0018 (code block indentations), BUG-0019 (notes stack membership optional), and in-rehearsal item editing with Again queue repositioning.

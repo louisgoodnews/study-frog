@@ -7,6 +7,25 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-10
+
+### Added
+- Timetable schedule planner (STORY-0141, EPIC-044): weekly recurring course, lecture, seminar, and lesson scheduling with course title, day of week, start/end time, location/room, instructor, and linked stack; projects automatically into calendar events and notifications across the semester term.
+- Calendar daily and weekly views (STORY-0142, EPIC-044): segmented view mode switcher (`Month | Week | Day | Timetable`); 7-day hourly column grid (06:00 to 22:00) with event chips and day selection in Week view; single-day hourly agenda with detailed session cards and review workload banner in Day view.
+- Markdown macro library expansion & escaping syntax (STORY-0143, STORY-0144, EPIC-045): comprehensive macro expansions (`{rule}`, `{header:level}`, `{arrow_right}`, `{arrow_left}`, `{graph:...}`, `{hide}`, `{panel}`, `{link}`, `{bold:"..."}`, `{italic:"..."}`); escaping syntax `{#...}` to display macro tokens literally without expansion.
+- Markdown list syntax enhancements (STORY-0145, EPIC-046): support for dash (`-`), asterisk (`*`), decimal numbers (`1.`, `2.`), and alphabetical markers (`a)`, `b.`, `c.`) with consistent indentation and typography.
+- Stylized *Breviceps macrops* brand mascot icon (STORY-0146, EPIC-047): custom vector-drawn desert rain frog with spherical silhouette, large forward-facing eyes, and studious expression matching OKLCH palettes in both light and dark modes.
+- Floating burger navigation research and prototype (STORY-0147, EPIC-047): comprehensive UX research report (`docs/research/floating-burger-navigation.md`) and collapsible floating action button prototype for instant 1-click screen access.
+- Console expansion to ScriptRunner environment and internal Python API (STORY-0148, EPIC-048): multi-line code editor with recipe template picker, stdout/stderr execution stream, and complete internal `studyfrog` Python API architecture specification (`docs/research/scriptrunner-and-internal-api.md`).
+- Profile and vault switchers overhaul (STORY-0138, EPIC-043): elevated card layouts, active status badges, path disambiguation, profile avatars, and safe deletion workflows.
+- File navigator and in-app file dialogue overhaul (STORY-0139, EPIC-043): tree indent guides, file-type icons, inline real-time filtering, path breadcrumbs, and shortcut bookmarks.
+- Expandable comments drawer in rehearsal and exam modes (STORY-0140, EPIC-043): slide-out drawer or panel to view and append item comments during active rehearsal/exam runs.
+
+### Fixed
+- Markdown viewer bold text visibility (BUG-0017): distinct typographic contrast for bold words across dark and light palettes.
+- Code block indentation preservation (BUG-0018): whitespace and tab stops preserved faithfully within code blocks in markdown viewer.
+- Notes stack membership made optional (BUG-0019): standalone notes permitted at vault root without requiring stack assignment.
+
 ## [0.6.1] - 2026-11-10
 
 ### Added
