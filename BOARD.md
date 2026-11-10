@@ -425,6 +425,10 @@
 | [STORY-0146](docs/issues/stories/STORY-0146-stylized-breviceps-macrops-mascot-icon.md) Stylized Breviceps macrops brand mascot icon (2) | done | 0/0 |
 | [STORY-0147](docs/issues/stories/STORY-0147-research-floating-burger-navigation-menu.md) Research and prototype floating burger navigation menu (3) | done | 0/0 |
 | [STORY-0148](docs/issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) Console expansion to full scriptrunner environment with internal API (5) | done | 0/0 |
+| [STORY-0149](docs/issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md) Rename ScriptRunner across application and documentation to avoid trademark conflicts (2) | backlog | 0/0 |
+| [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and domain-specific language (DSL) research (5) | backlog | 0/0 |
+| [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers (5) | backlog | 0/0 |
+| [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging for user scripts (3) | backlog | 0/0 |
 
 ## Epics
 
@@ -478,3 +482,4 @@
 | [EPIC-046](docs/issues/epics/EPIC-046-markdown-viewer-list-syntax-enhancements.md) Markdown viewer list syntax enhancements | done | 1/1 |
 | [EPIC-047](docs/issues/epics/EPIC-047-brand-mascot-icon-and-consolidated-navigation-ux.md) Brand mascot icon and consolidated navigation UX | done | 2/2 |
 | [EPIC-048](docs/issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md) Scriptrunner environment and internal application automation API | done | 1/1 |
+| [EPIC-049](docs/issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md) Expanded scripting environment, DSL, job scheduling, and execution logging | backlog | 0/4 |

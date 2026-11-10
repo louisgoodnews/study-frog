@@ -95,3 +95,11 @@ every lifecycle event when the window starts. It needs the window's control prot
 Windows (Unix sockets, process groups); calendar, board, diary and settings actions (not in the control protocol);
 new card types or importers inside the window's dialogs (compiled-in only, ADR 0008); sandboxing a script's own file
 access; catching up jobs missed while no instance ran.
+
+## 10. Future Evolution: FrogScript Studio, DSL, and Execution Logging (EPIC-049)
+
+Planned enhancements for Phase M14 (STORY-0149 to STORY-0152):
+- **Trademark Transition (STORY-0149):** Rebrand all user-facing "ScriptRunner" terminology to "FrogScript Studio" / "FrogScript" to avoid trademark conflicts with Adaptavist.
+- **In-App Console & DSL Research (STORY-0150):** Interactive multi-line code execution in the UI with research into embedding a lightweight zero-dependency DSL (e.g. Rhai) alongside external Python IPC.
+- **Scheduled and Event-Driven Job Management (STORY-0151):** Full UI configuration for scheduled cron jobs (`scripts.toml`) and reactive lifecycle event bindings (`vault_opened`, `item_created`, `rehearsal_finished`).
+- **Dedicated stdout & stderr Logging (STORY-0152):** Independent capture ring buffers and visually differentiated presentation for standard output and error diagnostic streams.

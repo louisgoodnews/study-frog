@@ -150,3 +150,12 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
   - [x] [STORY-0142](docs/issues/stories/STORY-0142-calendar-daily-and-weekly-views.md) Calendar daily and weekly views
 - [x] [STORY-0147](docs/issues/stories/STORY-0147-research-floating-burger-navigation-menu.md) Research floating burger navigation menu
 - [x] [EPIC-048](docs/issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md) / [STORY-0148](docs/issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) Console expansion to full scriptrunner environment with internal automation API
+
+## Next: phase M14 (0.8.0)
+
+**Wave 1: Scripting studio rebranding, DSL research, job scheduling & logging**
+- [ ] [EPIC-049](docs/issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md) Expanded scripting environment, DSL, job scheduling & logging
+  - [ ] [STORY-0149](docs/issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md) Rename ScriptRunner to FrogScript Studio (avoid Adaptavist trademark)
+  - [ ] [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and DSL research
+  - [ ] [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers
+  - [ ] [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging

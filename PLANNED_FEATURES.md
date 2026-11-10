@@ -26,3 +26,13 @@ All planned epics, stories, and bug fixes for Phase M13 are built, verified, and
 - **Floating Burger Navigation (`EPIC-047`, `STORY-0147`)**: Research report and collapsible floating navigation FAB.
 - **ScriptRunner & Internal Automation API (`EPIC-048`, `STORY-0148`)**: In-app code editor, runner, stdout/stderr, and API spec.
 - **Bug Fixes**: BUG-0016 (calibration baseline), BUG-0017 (bold text visibility), BUG-0018 (code block indentations), BUG-0019 (notes stack membership optional), and in-rehearsal item editing with Again queue repositioning.
+
+## Upcoming features (Phase M14 / 0.8.0)
+
+| Epic / Story | Summary |
+| :--- | :--- |
+| **[EPIC-049](docs/issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md)** | **Expanded Scripting Environment, DSL, Job Scheduling & Logging:** Rebrand ScriptRunner to trademark-safe FrogScript Studio, evaluate lightweight DSL embedding, implement scheduled cron jobs and event-driven triggers, and provide dedicated internal stdout and stderr logging channels. |
+| ↳ **[STORY-0149](docs/issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md)** | **Rename ScriptRunner (Trademark Safety):** Rebrand ScriptRunner across UI, code identifiers, and documentation to FrogScript / FrogScript Studio to prevent conflicts with Adaptavist. |
+| ↳ **[STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md)** | **In-App Code Execution Console & DSL Research:** Interactive in-app console execution and comprehensive research evaluating zero-dependency embedded DSLs (e.g. Rhai) alongside Python IPC. |
+| ↳ **[STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md)** | **Ad-Hoc Runs, Scheduled Jobs & Event-Driven Triggers:** UI and service management for one-off ad-hoc runs, recurring cron schedules (`scripts.toml`), and reactive lifecycle hook bindings (`vault_opened`, `item_created`, `rehearsal_finished`). |
+| ↳ **[STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md)** | **Dedicated Internal stdout and stderr Logging:** Distinct ring buffers and visual presentation separating standard output from error diagnostics, with stream filtering and file export. |

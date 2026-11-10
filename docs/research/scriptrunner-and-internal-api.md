@@ -121,3 +121,60 @@ def quick_quiz(question: str, answer: str) -> str:
 1. **Local-Only Boundary:** The control socket and script execution operate strictly under user permissions with Unix domain sockets (`~/.local/share/studyfrog/run/control.sock`) and local process execution.
 2. **Deterministic Output Capture:** Scripts stream stdout and stderr line-by-line into the Console transcript with millisecond timestamps and color-coded error spans (`pal.danger`).
 3. **Execution Timeouts:** Scripts default to a 30-second execution cap to prevent runaway loops from freezing user workflows.
+
+---
+
+## 5. Rebranding to FrogScript Studio (Trademark Safety)
+
+> **Context (`STORY-0149`):** Adaptavist holds registered trademarks on "ScriptRunner" across software automation, IDE, and developer ecosystem tooling. 
+
+To eliminate trademark exposure and cultivate a distinct StudyFrog identity, the in-app scripting workbench is rebranded to **FrogScript Studio** (or **FrogScript**):
+- **User Interface:** UI headers, tabs, and action buttons transition from `"ScriptRunner Editor"` and `"Hide ScriptRunner"` to `"FrogScript Studio"`, `"Run FrogScript"`, and `"FrogScript Console"`.
+- **Identifiers & Storage:** Configuration keys and widget salt IDs transition cleanly to `frogscript-code-buffer` and `frogscript-multiline-text`.
+- **CLI & Sockets:** User-facing documentation refers to the scripting runtime as the FrogScript engine.
+
+---
+
+## 6. In-App Scripting Console & Domain-Specific Language (DSL) Research
+
+> **Context (`STORY-0150`):** Users need to run scripts directly within StudyFrog without installing an external Python interpreter or configuring environment variables.
+
+### 6.1 Architectural Trade-Off Analysis
+
+| Criteria | External Python IPC (Current) | Embedded DSL (Rhai / Custom) | Hybrid Model (Recommended) |
+|---|---|---|---|
+| **Prerequisites** | Requires Python 3 on host system (`/usr/bin/python3`) | Zero dependencies; compiled directly into Rust binary | Embedded DSL for immediate in-process automation; optional Python IPC for complex packages |
+| **Startup Latency** | ~50–120 ms (process fork & socket handshake) | < 1 ms (direct in-process evaluation) | Instant for DSL queries; asynchronous for Python tasks |
+| **Sandboxing & Safety** | Operating system process permissions | Strict AST evaluation limits; zero raw OS / filesystem access without explicit host hooks | Safe-by-default embedded scripts; explicit consent for Python access |
+| **Ecosystem & Libraries**| Vast ecosystem (NumPy, SciPy, Pandas, PyTorch) | Limited to language primitives & StudyFrog bindings | Best of both worlds: quick scripts use DSL; scientific/AI flows use Python |
+
+### 6.2 DSL Candidate Evaluation: Rhai vs. Custom Query DSL
+1. **Rhai (`rhai.rs`):** An embedded scripting language designed specifically for Rust applications with JavaScript-like syntax. Offers fine-grained control over execution steps (`max_operations`), memory limits, and seamless exposure of Rust structs without `unsafe`.
+2. **Custom StudyFrog Query/Action DSL:** An extension of StudyFrog's SQL-like query language supporting actions (e.g., `TAG "biology" WHERE due < TODAY AND difficulty = "Hard"`).
+
+---
+
+## 7. Execution Modes: Ad-Hoc Runs, Scheduled Cron Jobs, and Event-Driven Triggers
+
+> **Context (`STORY-0151`):** Automation needs flexible execution strategies beyond single manual runs.
+
+1. **Ad-Hoc Interactive Runs:** Executed directly from the FrogScript Studio editor by clicking "Run FrogScript" or pressing `Ctrl+Enter`. Output streams immediately to the execution viewer.
+2. **Scheduled Recurring Cron Jobs:** Defined in `scripts.toml` and managed via UI:
+   - Presets: `@hourly`, `@daily`, `@weekly`, or standard 5-field cron syntax (`0 7 * * mon-fri`).
+   - Use Cases: Nightly deck backups, morning study queue preparation, periodic timetable calendar synchronization.
+3. **Event-Driven Triggers:** Automated reactive scripts bound to application lifecycle hooks:
+   - `vault_opened`: Verify vault structure, initialize study tags, sync external calendars.
+   - `item_created`: Auto-enrich card front-matter, compute readability scores, link references.
+   - `rehearsal_finished`: Update diary reflections, analyze fatigue metrics, alert on leech formation.
+
+---
+
+## 8. Dedicated Internal stdout and stderr Execution Logging
+
+> **Context (`STORY-0152`):** Effective script authoring requires clean diagnostic separation between standard application output and runtime errors.
+
+1. **Stream Separation:**
+   - **`stdout` Channel:** Standard print statements, returned data representations, and query outputs formatted in standard monospace body typography.
+   - **`stderr` Channel:** Python tracebacks, compiler/evaluator warnings, and error diagnostics highlighted in alert/danger tones (`pal.danger`).
+2. **Stream Multiplexing & Metadata:** Each captured log chunk is tagged with monotonic timestamp offsets, stream origin (`stdout` / `stderr`), and job identifier.
+3. **Stream Filtering & Export:** Console UI provides toggle filters (`All`, `Output`, `Errors`), text search, and single-click export to `<vault>/logs/frogscript_runs.log`.
