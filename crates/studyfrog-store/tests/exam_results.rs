@@ -45,7 +45,7 @@ fn runs_from_before_the_upgrade_are_kept_and_exam_runs_can_be_stored() {
     let refused = insert_run(&conn, &run(2, RunMode::Exam));
     assert!(refused.is_err(), "version 24 does not know exam runs");
     migrate(&mut conn, MIGRATIONS).unwrap();
-    assert_eq!(schema_version(&conn).unwrap(), 26);
+    assert_eq!(schema_version(&conn).unwrap(), MIGRATIONS.len() as u32);
     assert_eq!(
         load_run(&conn, Uid(1)).unwrap().unwrap(),
         run(1, RunMode::Answer)

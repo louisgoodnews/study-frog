@@ -36,16 +36,16 @@ fn shown_items(s: &mut Session, ratings: &[Rating]) -> Vec<u128> {
 }
 
 #[test]
-fn again_returns_to_the_end_of_the_queue_up_to_three_times() {
+fn again_returns_to_the_end_of_the_queue() {
     let mut s = session(RunMode::Flip, plan_spaced(), &[1, 2]);
     assert_eq!(shown_items(&mut s, &[Again, Good, Good]), [1, 2, 1]);
     assert_eq!(s.run.state, RunState::Finished);
 
     let mut stubborn = session(RunMode::Flip, plan_spaced(), &[1]);
-    // Item 1 is rated Again five times; it returns only three times (four showings in total).
+    // Item 1 is rated Again five times; each time it is placed at the end until Good.
     assert_eq!(
-        shown_items(&mut stubborn, &[Again, Again, Again, Again]),
-        [1, 1, 1, 1]
+        shown_items(&mut stubborn, &[Again, Again, Again, Again, Good]),
+        [1, 1, 1, 1, 1]
     );
     assert_eq!(stubborn.run.state, RunState::Finished);
 }

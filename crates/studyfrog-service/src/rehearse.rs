@@ -18,7 +18,7 @@ use studyfrog_store::schedule::{
 };
 use studyfrog_store::stack_scope::{holders_of, rated_stacks, stack_home};
 
-use studyfrog_md::ulid::compose_ulid;
+use studyfrog_md::ulid::{compose_ulid, format_ulid};
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 
 use crate::create::IdSource;
@@ -85,9 +85,24 @@ pub fn record_step(
         .any(|e| e.kind == EventKind::RunStarted)
         .then_some(now);
     set_run_state(&tx, ctx.run, ctx.state, started)?;
-    if ctx.effect == ScheduleEffect::UpdateSchedule {
-        for e in &out.events {
-            if let (EventKind::ItemRated(rating), Some(item)) = (&e.kind, e.item) {
+    for e in &out.events {
+        if let (EventKind::ItemRated(rating), Some(item)) = (&e.kind, e.item) {
+            if *rating == Rating::Again {
+                let run_id = format_ulid(ctx.run);
+                let item_id = format_ulid(item);
+                let pos: i64 = tx
+                    .query_row(
+                        "SELECT COALESCE(MAX(pos) + 1, 0) FROM run_queue WHERE run_uid = ?1",
+                        [&run_id],
+                        |r| r.get(0),
+                    )
+                    .unwrap_or(0);
+                let _ = tx.execute(
+                    "INSERT INTO run_queue (run_uid, pos, item_uid) VALUES (?1, ?2, ?3)",
+                    rusqlite::params![run_id, pos, item_id],
+                );
+            }
+            if ctx.effect == ScheduleEffect::UpdateSchedule {
                 let stacks = rated_stacks(&tx, ctx.run, item)?;
                 rate_item_in(&tx, (item, &stacks), (*rating, ctx.timing), now, vault)?;
             }

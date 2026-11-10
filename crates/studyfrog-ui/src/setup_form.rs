@@ -122,21 +122,23 @@ fn plan_to_form(plan: &RunPlan, mode: RunMode) -> SetupForm {
         diff_max: "10".to_owned(),
         fam_on: plan.filter.familiarity_below.is_some(),
         pacing: crate::setup_pacing::form_of(plan.pacing),
-        fam_below: plan.filter.familiarity_below
-            .map_or_else(|| "60".to_owned(), |f| format!("{}", (f * 100.0).round())),
+        fam_below: plan.filter.familiarity_below.map_or_else(|| "60".to_owned(), |f| format!("{}", (f * 100.0).round())),
         typed_sample: plan.typed_sample,
     }
 }
 
 /// The form for a preset; practice presets are practice-only, as documented in the rehearsal spec.
 pub fn form_for_preset(preset: Preset, mode: RunMode) -> SetupForm {
-    let plan = match preset {
+    let mut plan = match preset {
         Preset::Spaced => plan_spaced(),
         Preset::EverythingInOrder => plan_sequential(),
         Preset::Shuffled => plan_shuffled(0),
         Preset::Hardest => plan_hardest(),
         Preset::Stalest => plan_stalest(),
     };
+    if mode != RunMode::Exam {
+        plan.requeue_again = true;
+    }
     plan_to_form(&plan, mode)
 }
 
@@ -198,9 +200,7 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
 
 fn toggle<T: PartialEq>(mut list: Vec<T>, item: T, on: bool) -> Vec<T> {
     list.retain(|x| *x != item);
-    if on {
-        list.push(item);
-    }
+    if on { list.push(item); }
     list
 }
 

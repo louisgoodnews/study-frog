@@ -2,7 +2,6 @@
 //! `step` validates first and mutates second, so a refused input leaves the session unchanged.
 
 use studyfrog_core::event::{EventKind, Latency, LatencyKind, RunEvent};
-use studyfrog_core::plan::MAX_REQUEUES;
 use studyfrog_core::review::Rating;
 use studyfrog_core::run::RunState;
 use studyfrog_core::uid::Uid;
@@ -180,13 +179,11 @@ fn rate(s: &mut Session, t: u32, item: Option<Uid>, rating: Rating, out: &mut St
     show_next(s, t, out);
 }
 
-/// Put `uid` at the end of the queue unless it already came back `MAX_REQUEUES` times.
+/// Put `uid` at the end of the queue.
 fn requeue(s: &mut Session, uid: Uid) {
     let count = s.requeues.entry(uid).or_insert(0);
-    if *count < MAX_REQUEUES {
-        *count += 1;
-        s.queue.push(uid);
-    }
+    *count = count.saturating_add(1);
+    s.queue.push(uid);
 }
 
 fn pause(s: &mut Session, t: u32, out: &mut StepOutput) {
