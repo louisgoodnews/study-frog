@@ -1,6 +1,6 @@
 //! Individual tree row rendering for Folders view.
 
-use eframe::egui::{self, Key, RichText, Role, Stroke, TextEdit, WidgetInfo};
+use eframe::egui::{self, Key, Role, Stroke, TextEdit, WidgetInfo};
 
 use crate::folders_types::{EntryKind, FoldersMsg, VisibleRow};
 use crate::msg::Msg;
@@ -68,32 +68,20 @@ fn draw_badge(row: &VisibleRow, ui: &mut egui::Ui) {
     let palette = palette_of(ui);
     if row.is_folder {
         if row.is_stack {
-            ui.label(RichText::new("[S]").color(palette.accent).strong());
+            crate::view::kit::pill(ui, "[S]", palette.accent);
         } else {
-            ui.label(RichText::new("[F]").color(palette.text_weak));
+            crate::view::kit::pill(ui, "[F]", palette.surface_hover);
         }
     } else {
         match &row.kind {
             EntryKind::Pdf => {
-                ui.label(
-                    RichText::new("[PDF]")
-                        .size(crate::typo::size(ui, crate::typo::Tier::Caption))
-                        .color(palette.accent),
-                );
+                crate::view::kit::pill(ui, "[PDF]", palette.accent);
             }
             EntryKind::Image => {
-                ui.label(
-                    RichText::new("[IMG]")
-                        .size(crate::typo::size(ui, crate::typo::Tier::Caption))
-                        .color(palette.text_weak),
-                );
+                crate::view::kit::pill(ui, "[IMG]", palette.warning);
             }
             EntryKind::Other(ext) => {
-                ui.label(
-                    RichText::new(format!("[{ext}]"))
-                        .size(crate::typo::size(ui, crate::typo::Tier::Caption))
-                        .color(palette.text_weak),
-                );
+                crate::view::kit::pill(ui, &format!("[{ext}]"), palette.text_weak);
             }
             EntryKind::Markdown | EntryKind::Folder => {}
         }

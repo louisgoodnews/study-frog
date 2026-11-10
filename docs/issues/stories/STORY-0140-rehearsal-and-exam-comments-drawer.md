@@ -2,7 +2,7 @@
 id: STORY-0140
 type: story
 title: Expandable comments drawer in rehearsal and exam modes
-status: backlog
+status: done
 epic: EPIC-043
 parents: [EPIC-043]
 estimate: 3
@@ -32,9 +32,9 @@ Deliver an in-rehearsal and in-exam expandable comments drawer in `crates/studyf
    - Opening or closing the comments drawer does not reset reading timers, alter card queue order, or trigger accidental reveal/rating actions.
 
 ## Acceptance Criteria
-- [ ] Rehearsal and exam mode views provide an optional expandable drawer or slide-out panel allowing learners to view and add comments for the current card on screen
-- [ ] The comments drawer displays chronological comments, author tags (learner/agent), timestamps, and a quick add-comment text input
-- [ ] The drawer can be toggled via an intuitive button on the rehearsal/exam interface and a keyboard shortcut (e.g. 'C'), without resetting the run clock or interrupting active recall flow
+- [x] Rehearsal and exam mode views provide an optional expandable drawer or slide-out panel allowing learners to view and add comments for the current card on screen
+- [x] The comments drawer displays chronological comments, author tags (learner/agent), timestamps, and a quick add-comment text input
+- [x] The drawer can be toggled via an intuitive button on the rehearsal/exam interface and a keyboard shortcut (e.g. 'C'), without resetting the run clock or interrupting active recall flow
 
 ## Design Notes
 Touchpoints across crates:

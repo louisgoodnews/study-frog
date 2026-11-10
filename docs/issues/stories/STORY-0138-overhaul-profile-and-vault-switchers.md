@@ -2,7 +2,7 @@
 id: STORY-0138
 type: story
 title: Overhaul of profile and vault switchers
-status: backlog
+status: done
 epic: EPIC-043
 parents: [EPIC-043]
 estimate: 5
@@ -35,9 +35,9 @@ Redesign and overhaul both the vault switcher and profile switcher menus in `cra
      - **Unified Theme Switcher:** Integrated segmented theme control (System / Dark / Light) with visual icons.
 
 ## Acceptance Criteria
-- [ ] The vault switcher popover renders an elevated, thoughtful card layout with active vault indicators, disambiguated folder paths, last-opened metadata, and prominent actions to open or create vaults
-- [ ] The profile switcher features visual profile avatars/initials, clear active profile cards, non-hostile profile creation and deletion workflows, and unified theme controls
-- [ ] All switcher interactions feature accessible keyboard navigation, responsive hover states, and compliant APCA contrast ratios
+- [x] The vault switcher popover renders an elevated, thoughtful card layout with active vault indicators, disambiguated folder paths, last-opened metadata, and prominent actions to open or create vaults
+- [x] The profile switcher features visual profile avatars/initials, clear active profile cards, non-hostile profile creation and deletion workflows, and unified theme controls
+- [x] All switcher interactions feature accessible keyboard navigation, responsive hover states, and compliant APCA contrast ratios
 
 ## Design Notes
 Touchpoints across crates:

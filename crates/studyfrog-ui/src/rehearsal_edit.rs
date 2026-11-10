@@ -59,6 +59,12 @@ pub enum RehearsalEditMsg {
     Saved(Result<Uid, String>),
     /// Close the modal without saving.
     Close,
+    /// Toggle comments drawer during rehearsal (STORY-0140).
+    ToggleComments,
+    /// Draft comment text changed.
+    DraftComment(String),
+    /// Submit comment for an item.
+    SubmitComment(Uid),
 }
 
 /// Side effects performed for in-rehearsal editing.
@@ -68,6 +74,8 @@ pub enum RehearsalEditEffect {
     Load(Uid),
     /// Save edited document: (uid, path, doc, hash).
     Save(Uid, String, Box<Doc>, u64),
+    /// Append a comment to an item on disk: (uid, comment).
+    AppendComment(Uid, studyfrog_core::comment::ItemComment),
 }
 
 pub use crate::rehearsal_edit_doc::{apply_to_doc, from_loaded};
@@ -96,7 +104,42 @@ pub fn update(state: State, msg: RehearsalEditMsg) -> (State, Vec<Effect>) {
         RehearsalEditMsg::Save => save_edit(state),
         RehearsalEditMsg::Saved(res) => edit_saved(state, res),
         RehearsalEditMsg::Close => close_edit(state),
+        RehearsalEditMsg::ToggleComments => {
+            let mut state = state;
+            if let Some(run) = &mut state.rehearse.run {
+                run.show_comments = !run.show_comments;
+            }
+            (state, Vec::new())
+        }
+        RehearsalEditMsg::DraftComment(t) => {
+            let mut state = state;
+            if let Some(run) = &mut state.rehearse.run {
+                run.comment_draft = t;
+            }
+            (state, Vec::new())
+        }
+        RehearsalEditMsg::SubmitComment(uid) => submit_comment(state, uid),
     }
+}
+
+fn submit_comment(mut state: State, uid: Uid) -> (State, Vec<Effect>) {
+    let Some(run) = &mut state.rehearse.run else {
+        return (state, Vec::new());
+    };
+    let text = run.comment_draft.trim().to_owned();
+    if text.is_empty() {
+        return (state, Vec::new());
+    }
+    run.comment_draft.clear();
+    let now = (state.now * 1000.0) as i64;
+    let cid = format!("c_{}", now);
+    let author = state.profiles.list.current.clone();
+    let comment = studyfrog_core::comment::new_comment(cid, author, now, text);
+    if let Some(c) = run.content.get_mut(&uid) {
+        c.comments.push(comment.clone());
+    }
+    let eff = Effect::RehearsalEdit(RehearsalEditEffect::AppendComment(uid, comment));
+    (state, vec![eff])
 }
 
 fn with_modal(

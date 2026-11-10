@@ -125,10 +125,10 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
   - [x] [STORY-0137](docs/issues/stories/STORY-0137-interactive-parameter-guided-content-generation-prompts.md) Interactive parameter-guided content generation prompts in prompt library (intake interview for relevance, language, difficulty, and style choices)
 
 **Wave 5: Navigation, profile & file management UX overhaul**
-- [ ] 5. [EPIC-043](docs/issues/epics/EPIC-043-navigation-profile-and-file-management-ux-overhaul.md) Navigation, profile, and file management UX overhaul
-  - [ ] [STORY-0138](docs/issues/stories/STORY-0138-overhaul-profile-and-vault-switchers.md) Overhaul of profile and vault switchers (elevated card layouts, active indicators, disambiguated paths, profile avatars, safe creation/deletion dialogs)
-  - [ ] [STORY-0139](docs/issues/stories/STORY-0139-overhaul-file-navigator-and-dialogue.md) Overhaul of file navigator and in-app file dialogue (indent guides, file type icons, inline search, path breadcrumbs, bookmark shortcuts)
-  - [ ] [STORY-0140](docs/issues/stories/STORY-0140-rehearsal-and-exam-comments-drawer.md) Expandable comments drawer in rehearsal and exam modes (slide-out drawer or panel to view and append item comments during active rehearsal/exam runs)
+- [x] 5. [EPIC-043](docs/issues/epics/EPIC-043-navigation-profile-and-file-management-ux-overhaul.md) Navigation, profile, and file management UX overhaul
+  - [x] [STORY-0138](docs/issues/stories/STORY-0138-overhaul-profile-and-vault-switchers.md) Overhaul of profile and vault switchers (elevated card layouts, active indicators, disambiguated paths, profile avatars, safe creation/deletion dialogs)
+  - [x] [STORY-0139](docs/issues/stories/STORY-0139-overhaul-file-navigator-and-dialogue.md) Overhaul of file navigator and in-app file dialogue (indent guides, file type icons, inline search, path breadcrumbs, bookmark shortcuts)
+  - [x] [STORY-0140](docs/issues/stories/STORY-0140-rehearsal-and-exam-comments-drawer.md) Expandable comments drawer in rehearsal and exam modes (slide-out drawer or panel to view and append item comments during active rehearsal/exam runs)
 
 **Bug fixes & calibration refinements**
 - [x] [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty (Hard) and priority (Medium)

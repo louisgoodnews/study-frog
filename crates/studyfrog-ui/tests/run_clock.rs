@@ -51,6 +51,7 @@ fn running(p: Pacing) -> Model {
             expected: None,
             occlusion: None,
             is_note: false,
+            comments: Vec::new(),
         };
         apply(&mut m, Msg::ItemLoaded(Uid(uid), Ok(content)));
     }

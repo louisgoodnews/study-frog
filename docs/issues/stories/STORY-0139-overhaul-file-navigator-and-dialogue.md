@@ -2,7 +2,7 @@
 id: STORY-0139
 type: story
 title: Overhaul of file navigator and in-app file dialogue
-status: backlog
+status: done
 epic: EPIC-043
 parents: [EPIC-043]
 estimate: 5
@@ -35,9 +35,9 @@ Deliver a comprehensive visual and interaction overhaul of the file navigator an
    - **Clear Affirmative Actions:** Replace ambiguous buttons with high-salience primary CTAs ("Open Vault", "Import Cards") and clear cancel buttons.
 
 ## Acceptance Criteria
-- [ ] The file navigator (Folders screen) provides a modern tree explorer with indent guidelines, file-type icons (Markdown, PDF, image, stack), search filtering, and polished hover/selection states
-- [ ] In-app file selection dialogues (open vault, import, transfer) feature path breadcrumbs, bookmark shortcuts (Home, Documents, Downloads), clean list/grid views, and clear primary CTA actions
-- [ ] File actions (new file, new folder, rename, move, delete) are accessible via contextual popovers with keyboard navigation and non-destructive confirmations
+- [x] The file navigator (Folders screen) provides a modern tree explorer with indent guidelines, file-type icons (Markdown, PDF, image, stack), search filtering, and polished hover/selection states
+- [x] In-app file selection dialogues (open vault, import, transfer) feature path breadcrumbs, bookmark shortcuts (Home, Documents, Downloads), clean list/grid views, and clear primary CTA actions
+- [x] File actions (new file, new folder, rename, move, delete) are accessible via contextual popovers with keyboard navigation and non-destructive confirmations
 
 ## Design Notes
 Touchpoints across crates:

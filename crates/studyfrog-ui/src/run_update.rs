@@ -192,13 +192,7 @@ fn item_loaded(
             ItemContent {
                 title: String::new(),
                 prompt: format!("(this item could not be loaded: {e})"),
-                answer: String::new(),
-                previous: None,
-                source: None,
-                color: None,
-                expected: None,
-                occlusion: None,
-                is_note: false,
+                ..Default::default()
             }
         }
     };

@@ -52,6 +52,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                         item(run, ui, out);
                     }
                 });
+                if run.show_comments {
+                    ui.add_space(8.0);
+                    super::run_comments::draw(state, run, ui, out);
+                }
                 ui.add_space(10.0);
                 crate::view::run_slow::notice(state, run, ui, out);
                 let exam = crate::exam_ui::is_exam(run);
@@ -68,13 +72,18 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
 }
 
-const HINTS: &str = "Space shows the answer  ·  1 2 3 4 rate  ·  E M D mark  ·  Ctrl+E edit  ·  S skip  ·  P pause  ·  Esc stop";
+const HINTS: &str = "Space shows the answer  ·  1 2 3 4 rate  ·  E M D mark  ·  C comments  ·  Ctrl+E edit  ·  S skip  ·  P pause  ·  Esc stop";
 
 fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
     if ui.ctx().egui_wants_keyboard_input() {
         return;
     }
     let pressed = |k: Key| ui.input(|i| i.key_pressed(k));
+    if pressed(Key::C) {
+        out.push(Msg::RehearsalEdit(
+            crate::rehearsal_edit::RehearsalEditMsg::ToggleComments,
+        ));
+    }
     if crate::exam_ui::is_exam(run) {
         return exam_shortcuts(run, &pressed, out);
     }
@@ -119,8 +128,13 @@ fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-/// An exam answers to P (pause and resume) only: no reveal, skip, marks or ratings, and Esc does not stop it.
+/// An exam answers to P (pause and resume) and C (comments drawer) only: no reveal, skip, marks or ratings, and Esc does not stop it.
 fn exam_shortcuts(run: &RunView, pressed: &dyn Fn(Key) -> bool, out: &mut Vec<Msg>) {
+    if pressed(Key::C) {
+        out.push(Msg::RehearsalEdit(
+            crate::rehearsal_edit::RehearsalEditMsg::ToggleComments,
+        ));
+    }
     if pressed(Key::P) {
         let paused = run.session.run.state == RunState::Paused;
         act(
@@ -184,6 +198,23 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
             {
                 out.push(Msg::RehearsalEdit(
                     crate::rehearsal_edit::RehearsalEditMsg::Open(uid),
+                ));
+            }
+            let comment_count = studyfrog_rehearsal::session::current_item(s)
+                .and_then(|uid| run.content.get(&uid))
+                .map(|c| c.comments.len())
+                .unwrap_or(0);
+            let comments_label = if comment_count > 0 {
+                format!("Comments ({comment_count})")
+            } else {
+                "Comments".to_string()
+            };
+            if ui
+                .selectable_label(run.show_comments, comments_label)
+                .clicked()
+            {
+                out.push(Msg::RehearsalEdit(
+                    crate::rehearsal_edit::RehearsalEditMsg::ToggleComments,
                 ));
             }
         });

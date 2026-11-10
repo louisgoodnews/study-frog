@@ -9,6 +9,7 @@ pub mod build;
 pub mod build_diary;
 pub mod cloze;
 pub mod codeblock;
+pub mod comments;
 pub mod doc;
 pub mod error;
 pub mod extra;

@@ -101,3 +101,18 @@ fn with_updated(doc: &Doc, now: UnixMs) -> Doc {
 pub fn resolve_link(session: &VaultSession, target: &str) -> Result<Option<Uid>, ServiceError> {
     resolve_title(&session.conn, target).map_err(ServiceError::Store)
 }
+
+/// Append a comment to an item document and save it.
+pub fn append_comment(
+    session: &mut VaultSession,
+    uid: Uid,
+    comment: studyfrog_core::comment::ItemComment,
+    now: UnixMs,
+) -> Result<(), ServiceError> {
+    let loaded = load_document(session, uid)?;
+    let mut comments = studyfrog_md::comments::comments_of(&loaded.doc);
+    comments.push(comment);
+    let updated = studyfrog_md::comments::with_comments(&loaded.doc, &comments);
+    save_document(session, &loaded.path, &updated, loaded.hash, now)?;
+    Ok(())
+}

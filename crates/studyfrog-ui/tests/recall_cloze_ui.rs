@@ -28,6 +28,7 @@ fn with_gap(mode: RunMode) -> Model {
         expected: Some("sun".into()),
         occlusion: None,
         is_note: false,
+        comments: Vec::new(),
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     m

@@ -47,6 +47,7 @@ pub fn finished_run_marked(
         expected: None,
         occlusion: None,
         is_note: false,
+        comments: Vec::new(),
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     act(&mut m, 0.5, Action::Mark(mark));

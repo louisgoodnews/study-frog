@@ -20,8 +20,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, anchors: &[(Menu, Rect)], out: &mu
     let width = match open {
         Menu::Notifications => 420.0,
         Menu::History => 340.0,
-        Menu::Vaults => 300.0,
-        _ => 260.0,
+        Menu::Vaults => 340.0,
+        Menu::Profile => 340.0,
     };
     let at = egui::pos2(
         (anchor.right() - width).max(anchor.left().min(8.0)),
@@ -33,7 +33,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, anchors: &[(Menu, Rect)], out: &mu
         at
     };
     let rect = popup(ui, "navbar-menu", at, width, |ui| match open {
-        Menu::Vaults => vaults(state, ui, out),
+        Menu::Vaults => super::vault_menu::draw(state, ui, out),
         Menu::Notifications => crate::view::notifications::draw(state, ui, out),
         Menu::Profile => profile(state, ui, out),
         Menu::History => history(state, ui, out),
@@ -62,84 +62,27 @@ fn history(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-fn segments(path: &str) -> Vec<&str> {
-    path.split(['/', '\\']).filter(|s| !s.is_empty()).collect()
-}
-
-/// Short, human-readable label for a vault path; appends a disambiguating ancestor when
-/// another recent vault has the same folder name.
-pub fn vault_label(path: &str, recent: &[String]) -> String {
-    let segs = segments(path);
-    let Some(&name) = segs.last() else {
-        return path.to_owned();
-    };
-    let clashes: Vec<Vec<&str>> = recent
-        .iter()
-        .filter(|p| p.as_str() != path)
-        .map(|p| segments(p))
-        .filter(|s| s.last() == Some(&name))
-        .collect();
-    if clashes.is_empty() {
-        return name.to_owned();
-    }
-    for &anc in segs.iter().rev().skip(1) {
-        if clashes
-            .iter()
-            .any(|c| !c.iter().rev().skip(1).any(|&x| x == anc))
-        {
-            return format!("{name} · {anc}");
-        }
-    }
-    segs.iter()
-        .rev()
-        .nth(1)
-        .map_or_else(|| name.to_owned(), |p| format!("{name} · {p}"))
-}
-
-fn vaults(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.strong("Vaults");
-    if let Some(v) = &state.vault {
-        let width = ui.available_width();
-        let active = egui::Button::selectable(true, &v.name).min_size(egui::vec2(width, 28.0));
-        ui.add(active).on_hover_text(&v.root);
-        if let Some(&parent) = segments(&v.root).iter().rev().nth(1) {
-            ui.weak(parent);
-        }
-        ui.add_space(4.0);
-    }
-    for path in state
-        .app
-        .recent
-        .iter()
-        .filter(|p| Some(p.as_str()) != state.vault.as_ref().map(|v| v.root.as_str()))
-    {
-        let label = vault_label(path, &state.app.recent);
-        let width = ui.available_width();
-        let row = egui::Button::selectable(false, label).min_size(egui::vec2(width, 28.0));
-        if ui.add(row).on_hover_text(path.as_str()).clicked() {
-            out.push(Msg::OpenRecent(path.clone()));
-            close(out);
-        }
-    }
-    ui.separator();
-    let width = ui.available_width();
-    let open_other =
-        egui::Button::selectable(false, "Open another vault…").min_size(egui::vec2(width, 28.0));
-    if ui.add(open_other).clicked() {
-        out.push(Msg::CloseVault);
-        close(out);
-    }
-}
-
 fn profile(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.strong(format!("StudyFrog {}", env!("CARGO_PKG_VERSION")));
+    let p = crate::theme::palette_of(ui);
+    ui.horizontal(|ui| {
+        ui.strong(format!("StudyFrog {}", env!("CARGO_PKG_VERSION")));
+        super::kit::pill(ui, "Workspace", p.text_weak);
+    });
+    ui.add_space(4.0);
     ui.separator();
-    ui.label("Theme");
+    ui.add_space(2.0);
+    ui.weak("Appearance");
     super::settings_appearance::theme_choice(state, ui, out);
+    ui.add_space(4.0);
     ui.separator();
+    ui.add_space(2.0);
     super::profiles::draw(state, ui, out);
+    ui.add_space(6.0);
     ui.separator();
-    if ui.button("Close vault").clicked() {
+    ui.add_space(4.0);
+    let close_btn = egui::Button::new(egui::RichText::new("Close vault").color(p.danger).strong())
+        .min_size(egui::vec2(ui.available_width(), 26.0));
+    if ui.add(close_btn).clicked() {
         out.push(Msg::CloseVault);
         close(out);
     }

@@ -411,9 +411,9 @@
 | [STORY-0135](docs/issues/stories/STORY-0135-comments-for-items.md) Comments for items (5) | done | 0/0 |
 | [STORY-0136](docs/issues/stories/STORY-0136-make-typed-answers-random-per-selection-during-rehearsal.md) Make typed answers random per selection during rehearsal (3) | done | 0/0 |
 | [STORY-0137](docs/issues/stories/STORY-0137-interactive-parameter-guided-content-generation-prompts.md) Interactive parameter-guided content generation prompts in prompt library (5) | done | 0/0 |
-| [STORY-0138](docs/issues/stories/STORY-0138-overhaul-profile-and-vault-switchers.md) Overhaul of profile and vault switchers (5) | backlog | 0/0 |
-| [STORY-0139](docs/issues/stories/STORY-0139-overhaul-file-navigator-and-dialogue.md) Overhaul of file navigator and in-app file dialogue (5) | backlog | 0/0 |
-| [STORY-0140](docs/issues/stories/STORY-0140-rehearsal-and-exam-comments-drawer.md) Expandable comments drawer in rehearsal and exam modes (3) | backlog | 0/0 |
+| [STORY-0138](docs/issues/stories/STORY-0138-overhaul-profile-and-vault-switchers.md) Overhaul of profile and vault switchers (5) | done | 0/0 |
+| [STORY-0139](docs/issues/stories/STORY-0139-overhaul-file-navigator-and-dialogue.md) Overhaul of file navigator and in-app file dialogue (5) | done | 0/0 |
+| [STORY-0140](docs/issues/stories/STORY-0140-rehearsal-and-exam-comments-drawer.md) Expandable comments drawer in rehearsal and exam modes (3) | done | 0/0 |
 
 ## Epics
 
@@ -461,4 +461,4 @@
 | [EPIC-040](docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md) Intermittent typed active recall and flexible rehearsal presentation | done | 1/1 |
 | [EPIC-041](docs/issues/epics/EPIC-041-modularity-system-driven-architecture-and-decoupled-background-services.md) Modularity: system-driven application architecture and decoupled background services | done | 0/0 |
 | [EPIC-042](docs/issues/epics/EPIC-042-interactive-ai-content-generation-and-parameter-guided-prompt-workflows.md) Interactive AI content generation and parameter-guided prompt workflows | done | 1/1 |
-| [EPIC-043](docs/issues/epics/EPIC-043-navigation-profile-and-file-management-ux-overhaul.md) Navigation, profile, and file management UX overhaul | backlog | 0/3 |
+| [EPIC-043](docs/issues/epics/EPIC-043-navigation-profile-and-file-management-ux-overhaul.md) Navigation, profile, and file management UX overhaul | done | 3/3 |

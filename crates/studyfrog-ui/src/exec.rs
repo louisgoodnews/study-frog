@@ -156,6 +156,10 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             doc,
             hash,
         )) => exec_doc::save_rehearsal_doc_msg(w, uid, &path, &doc, hash, now_ns),
+        Effect::RehearsalEdit(crate::rehearsal_edit::RehearsalEditEffect::AppendComment(
+            uid,
+            comment,
+        )) => exec_doc::append_rehearsal_comment_msg(w, uid, comment, now_ns),
         Effect::ResolveLink(target) => exec_doc::resolve_link_msg(w, target),
         Effect::Rerate { item, expected, to } => exec_run::rerate(w, item, expected, to),
         Effect::LoadItem(uid) => exec_run::load_item(w, uid),

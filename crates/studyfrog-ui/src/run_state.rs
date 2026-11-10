@@ -49,6 +49,10 @@ pub struct RunView {
     pub diary_prompt: Option<crate::diary_prompt::RunDiaryPrompt>,
     /// Exam mode: unscored answers, grading and the result.
     pub exam: crate::exam_ui::ExamProgress,
+    /// Whether the comments drawer is expanded on screen (STORY-0140).
+    pub show_comments: bool,
+    /// Draft comment input in the drawer.
+    pub comment_draft: String,
 }
 
 /// A fresh view of a not-yet-started session.
@@ -68,6 +72,8 @@ pub fn run_view_new(session: Session, started_time: f64) -> RunView {
         started_time,
         diary_prompt: None,
         exam: crate::exam_ui::ExamProgress::default(),
+        show_comments: false,
+        comment_draft: String::new(),
     }
 }
 

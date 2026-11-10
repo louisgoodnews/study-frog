@@ -128,7 +128,7 @@ pub fn form_from_doc(doc: &Doc) -> EditForm {
         referenced_by: references_of(doc),
         color: color_of(doc),
         occlusion: studyfrog_md::occlusion::occlusion_of(doc),
-        comments: Vec::new(),
+        comments: studyfrog_md::comments::comments_of(doc),
     }
 }
 
@@ -215,6 +215,7 @@ pub fn apply_form(doc: &Doc, form: &EditForm) -> Result<Doc, String> {
     } else {
         with_status(&out, form.status)
     };
+    let out = studyfrog_md::comments::with_comments(&out, &form.comments);
     if !matches!(out, Doc::Stack(_)) {
         return Ok(out);
     }

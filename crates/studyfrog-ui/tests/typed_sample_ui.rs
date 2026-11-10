@@ -79,6 +79,7 @@ fn rehearsal_excludes_notes_from_typing_and_shows_flip_controls() {
         expected: None,
         occlusion: None,
         is_note: true,
+        comments: Vec::new(),
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(note_content)));
 
@@ -116,6 +117,7 @@ fn rehearsal_card_view_shows_typed_input_when_sampled() {
         expected: None,
         occlusion: None,
         is_note: false,
+        comments: Vec::new(),
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(card_content)));
 

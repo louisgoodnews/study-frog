@@ -1,10 +1,11 @@
 //! The dialogs: create an item (see `modal_create`), import, and choose the vault.
 
-use eframe::egui::{self, Align, Layout};
+use eframe::egui::{self, Align, Layout, RichText};
 
 use crate::modal::{Modal, ModalMsg};
 use crate::msg::Msg;
 use crate::state::State;
+use crate::theme::palette_of;
 use crate::view::icons::{Glyph, icon_button};
 use crate::view::widgets::text_field;
 
@@ -56,47 +57,62 @@ fn header(ui: &mut egui::Ui, out: &mut Vec<Msg>, add: impl FnOnce(&mut egui::Ui,
 }
 
 fn vault(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let p = palette_of(ui);
     header(ui, out, |ui, _| {
         ui.strong("Open or create a vault");
     });
-    ui.add_space(6.0);
-    ui.label("A vault is a folder of Markdown files that StudyFrog reads and writes. Choose an existing folder, or an empty one to start a new vault.");
-    if let Some(t) = text_field(
-        ui,
-        "Vault folder",
-        &state.path_input,
-        "/path/to/your/vault",
-        1,
-    ) {
-        out.push(Msg::PathEdited(t));
-    }
-    ui.horizontal(|ui| {
-        if ui
-            .add_enabled(!state.opening, egui::Button::new("Choose folder…"))
-            .clicked()
-        {
-            out.push(Msg::BrowseVaultClicked);
+    ui.add_space(8.0);
+    super::kit::card(ui, |ui| {
+        ui.label(
+            "A vault is a folder of Markdown files that StudyFrog reads and writes. Choose an existing folder, or an empty one to start a new vault.",
+        );
+        ui.add_space(6.0);
+        if let Some(t) = text_field(
+            ui,
+            "Vault folder",
+            &state.path_input,
+            "/path/to/your/vault",
+            1,
+        ) {
+            out.push(Msg::PathEdited(t));
         }
-        if ui
-            .add_enabled(!state.opening, egui::Button::new("Open vault"))
-            .clicked()
-        {
-            out.push(Msg::OpenVaultClicked);
-        }
-        if state.opening {
-            ui.spinner();
-        }
-    });
-    if !state.app.recent.is_empty() {
-        ui.separator();
-        ui.strong("Recent vaults");
-        for path in &state.app.recent {
-            if ui
-                .add_enabled(!state.opening, egui::Button::new(path.as_str()))
-                .clicked()
-            {
-                out.push(Msg::OpenRecent(path.clone()));
+        ui.add_space(6.0);
+        ui.horizontal(|ui| {
+            let browse_btn = egui::Button::new("Choose folder…").min_size(egui::vec2(120.0, 28.0));
+            if ui.add_enabled(!state.opening, browse_btn).clicked() {
+                out.push(Msg::BrowseVaultClicked);
             }
-        }
+
+            let open_btn =
+                egui::Button::new(RichText::new("Open vault").color(p.on_accent).strong())
+                    .fill(p.accent)
+                    .min_size(egui::vec2(100.0, 28.0));
+            if ui.add_enabled(!state.opening, open_btn).clicked() {
+                out.push(Msg::OpenVaultClicked);
+            }
+
+            if state.opening {
+                ui.spinner();
+                ui.weak("Opening and indexing…");
+            }
+        });
+    });
+
+    if !state.app.recent.is_empty() {
+        ui.add_space(8.0);
+        super::kit::card(ui, |ui| {
+            ui.horizontal(|ui| {
+                ui.strong("Recent vaults");
+                super::kit::pill(ui, &format!("{}", state.app.recent.len()), p.text_weak);
+            });
+            ui.add_space(4.0);
+            for path in &state.app.recent {
+                let width = ui.available_width();
+                let btn = egui::Button::new(path.as_str()).min_size(egui::vec2(width, 26.0));
+                if ui.add_enabled(!state.opening, btn).clicked() {
+                    out.push(Msg::OpenRecent(path.clone()));
+                }
+            }
+        });
     }
 }

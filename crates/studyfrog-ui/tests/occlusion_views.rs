@@ -189,6 +189,7 @@ fn occluded_run(root: &str, mode: RunMode) -> Model {
             active: 0,
         })),
         is_note: false,
+        comments: Vec::new(),
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     m

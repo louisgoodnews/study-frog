@@ -63,6 +63,7 @@ fn a_long_answer_in_a_run_keeps_to_the_measure() {
         expected: None,
         occlusion: None,
         is_note: false,
+        comments: Vec::new(),
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     let mut h = harness(m);

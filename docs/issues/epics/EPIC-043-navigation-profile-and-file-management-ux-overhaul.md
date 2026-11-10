@@ -2,7 +2,7 @@
 id: EPIC-043
 type: epic
 title: Navigation, profile, and file management UX overhaul
-status: backlog
+status: done
 parents: []
 labels: [m12, ui, ux]
 acceptance_criteria:
@@ -31,10 +31,10 @@ Conduct a comprehensive user experience and visual design overhaul of StudyFrog'
    - Provide an optional expandable drawer in rehearsal and exam modes to view, search, and add timestamped comments to the active card without interrupting rehearsal flow.
 
 ## Acceptance Criteria
-- [ ] Profile and vault switchers are overhauled with modern visual hierarchy, clear active status indicators, and thoughtful interaction flows
-- [ ] The file navigator (Folders screen) and in-app file dialogues feature polished tree hierarchies, path breadcrumbs, search filtering, and contemporary aesthetics
-- [ ] Rehearsal and exam modes provide an optional expandable drawer or slide-out panel allowing learners to view and add comments for the active card
-- [ ] All revamped menus and dialogues conform to the 4-tier modular type scale, OKLCH surface elevations, and accessible contrast guidelines
+- [x] Profile and vault switchers are overhauled with modern visual hierarchy, clear active status indicators, and thoughtful interaction flows
+- [x] The file navigator (Folders screen) and in-app file dialogues feature polished tree hierarchies, path breadcrumbs, search filtering, and contemporary aesthetics
+- [x] Rehearsal and exam modes provide an optional expandable drawer or slide-out panel allowing learners to view and add comments for the active card
+- [x] All revamped menus and dialogues conform to the 4-tier modular type scale, OKLCH surface elevations, and accessible contrast guidelines
 
 ## Design Notes
 Child stories:

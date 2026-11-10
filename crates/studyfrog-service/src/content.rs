@@ -12,7 +12,7 @@ use studyfrog_store::schedule::load_reviews;
 use crate::session::{ServiceError, VaultSession};
 
 /// An item reduced to what is asked and what is answered, trimmed for display.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct ItemContent {
     /// The item's title.
     pub title: String,
@@ -32,10 +32,13 @@ pub struct ItemContent {
     pub occlusion: Option<Box<crate::content_occlusion::OcclusionView>>,
     /// True when the item is a note, stack or diary entry (never forced into typed text answers).
     pub is_note: bool,
+    /// Timestamped comments attached to the item (STORY-0135, STORY-0140).
+    pub comments: Vec<studyfrog_core::comment::ItemComment>,
 }
 
 fn content_of(doc: &Doc) -> ItemContent {
     let title = doc_meta(doc).title.clone();
+    let comments = studyfrog_md::comments::comments_of(doc);
     let shown = |text: &str| unescape_newlines(text.trim_end());
     match doc {
         Doc::Card(c) => ItemContent {
@@ -48,6 +51,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             expected: None,
             occlusion: None,
             is_note: false,
+            comments,
         },
         Doc::Question(q) => ItemContent {
             title,
@@ -59,6 +63,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             expected: None,
             occlusion: None,
             is_note: false,
+            comments,
         },
         Doc::Note(n) => ItemContent {
             prompt: title.clone(),
@@ -70,6 +75,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             expected: None,
             occlusion: None,
             is_note: true,
+            comments,
         },
         Doc::Stack(s) => ItemContent {
             prompt: title.clone(),
@@ -81,6 +87,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             expected: None,
             occlusion: None,
             is_note: true,
+            comments,
         },
         Doc::Diary(d) => ItemContent {
             prompt: title.clone(),
@@ -92,6 +99,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             expected: None,
             occlusion: None,
             is_note: true,
+            comments,
         },
     }
 }

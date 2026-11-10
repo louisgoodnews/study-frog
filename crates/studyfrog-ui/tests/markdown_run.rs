@@ -24,6 +24,7 @@ fn the_prompt_and_the_answer_are_drawn_as_markdown() {
         expected: None,
         occlusion: None,
         is_note: false,
+        comments: Vec::new(),
     };
     apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
     let mut h = harness(m);

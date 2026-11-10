@@ -49,6 +49,24 @@ pub fn save_rehearsal_doc_msg(
     Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Saved(res))
 }
 
+/// Append a comment to an item during rehearsal.
+pub fn append_rehearsal_comment_msg(
+    w: &mut Worker,
+    uid: Uid,
+    comment: studyfrog_core::comment::ItemComment,
+    now_ns: i64,
+) -> Msg {
+    let res = match &mut w.session {
+        Some(s) => {
+            studyfrog_service::document::append_comment(s, uid, comment, UnixMs(now_ns / 1_000_000))
+                .map(|_| uid)
+                .map_err(|e| e.to_string())
+        }
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Saved(res))
+}
+
 /// Write an edited document if the file is unchanged since it was loaded.
 pub fn save_document_msg(w: &mut Worker, path: &str, doc: &Doc, hash: u64, now_ns: i64) -> Msg {
     let Some(s) = &mut w.session else {
