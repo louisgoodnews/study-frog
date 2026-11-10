@@ -65,4 +65,4 @@ Deliver an end-to-end comment system for StudyFrog items:
 - EPIC-038 (CLI control protocol).
 
 ## Open Questions
-- Should comments be displayable as an optional expandable drawer during rehearsal and exam modes (e.g. "View notes & comments")? Can be evaluated in a follow-up story.
+- Should comments be displayable as an optional expandable drawer during rehearsal and exam modes (e.g. "View notes & comments")? -> Resolved: Yes. Tracked in STORY-0140 (Expandable comments drawer in rehearsal and exam modes).
