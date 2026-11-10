@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary & Problem Space
 
-As StudyFrog expands with advanced academic capabilities—including the **Timetable Schedule Planner**, **Prompt Library**, **Python Console & ScriptRunner**, **Exam Mode**, **Diary**, and **Active Recall Formats**—the application's navigation surface has grown significantly. 
+As StudyFrog expands with advanced academic capabilities—including the **Timetable Schedule Planner**, **Prompt Library**, **Python Console & ScriptStudio**, **Exam Mode**, **Diary**, and **Active Recall Formats**—the application's navigation surface has grown significantly. 
 
 Historically, StudyFrog utilized a static 2-tier navigation structure:
 1. **Top Navigation Bar:** Branding mascot (*Breviceps macrops*), breadcrumbs/vault title, profile/vault switchers, search shortcut, and window frame actions.

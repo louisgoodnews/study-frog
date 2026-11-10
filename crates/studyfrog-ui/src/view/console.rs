@@ -1,5 +1,5 @@
 //! The Console screen (STORY-0133, STORY-0148): interactive command REPL and
-//! in-app ScriptRunner development environment with multi-line script editor.
+//! in-app ScriptStudio development environment with multi-line FrogScript editor.
 
 use eframe::egui::{self, RichText, TextStyle};
 
@@ -69,11 +69,11 @@ fn singleline_input(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 #[allow(deprecated)]
 fn script_editor(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let buffer_id = egui::Id::new("scriptrunner-code-buffer");
+    let buffer_id = egui::Id::new("scriptstudio-code-buffer");
     let mut code = ui.data(|d| d.get_temp::<String>(buffer_id).unwrap_or_default());
 
     ui.horizontal(|ui| {
-        ui.label(RichText::new("Script Editor:").strong());
+        ui.label(RichText::new("FrogScript Editor:").strong());
         egui::ComboBox::from_id_salt("script-template-picker")
             .selected_text("Load recipe template…")
             .show_ui(ui, |ui| {
@@ -85,7 +85,7 @@ fn script_editor(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 }
             });
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if kit::primary_button(ui, "Run Script").clicked() {
+            if kit::primary_button(ui, "Run FrogScript").clicked() {
                 for line in code.lines() {
                     let trimmed = line.trim();
                     if !trimmed.is_empty() && !trimmed.starts_with('#') {
@@ -102,7 +102,7 @@ fn script_editor(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 
     let edit = egui::TextEdit::multiline(&mut code)
-        .id_salt("scriptrunner-multiline-text")
+        .id_salt("scriptstudio-multiline-text")
         .font(TextStyle::Monospace)
         .desired_rows(5)
         .desired_width(f32::INFINITY);
@@ -114,7 +114,7 @@ fn script_editor(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 /// The Console screen.
 #[allow(deprecated)]
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let editor_open_id = egui::Id::new("scriptrunner-editor-expanded");
+    let editor_open_id = egui::Id::new("scriptstudio-editor-expanded");
     let mut editor_expanded = ui.data(|d| d.get_temp::<bool>(editor_open_id).unwrap_or(false));
 
     ui.horizontal(|ui| {
@@ -127,9 +127,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 out.push(Msg::Console(ConsoleMsg::Submit));
             }
             let label = if editor_expanded {
-                "Hide ScriptRunner"
+                "Hide ScriptStudio"
             } else {
-                "ScriptRunner Editor"
+                "ScriptStudio Editor"
             };
             if ui.button(label).clicked() {
                 editor_expanded = !editor_expanded;

@@ -33,7 +33,7 @@ const SCREENS: &[(Screen, &str, &str)] = &[
     (
         Screen::Console,
         "Console",
-        "ScriptRunner development workbench",
+        "ScriptStudio & FrogScript workbench",
     ),
     (
         Screen::Achievements,

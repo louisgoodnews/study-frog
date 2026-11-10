@@ -1,6 +1,6 @@
-# ScriptRunner Environment & Internal Automation API Specification
+# ScriptStudio & FrogScript Internal Automation API Specification
 
-**Issue:** [STORY-0148](../issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) / [EPIC-048](../issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md)  
+**Issue:** [STORY-0148](../issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) / [STORY-0149](../issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md) / [EPIC-049](../issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md)  
 **Author:** StudyFrog Architecture & Extensibility Team  
 **Date:** 2026-11-10  
 **Status:** Completed  
@@ -9,10 +9,10 @@
 
 ## 1. Overview & Vision
 
-StudyFrog is designed as an extensible, hackable learning workbench. While previous milestones delivered CLI-based scripting (`studyfrog script run <job>`, ADR 0013) and the background control socket (`~/.local/share/studyfrog/run/control.sock`), users requested an **in-app ScriptRunner environment** with an ergonomic internal Python API.
+StudyFrog is designed as an extensible, hackable learning workbench. While previous milestones delivered CLI-based scripting (`studyfrog script run <job>`, ADR 0013) and the background control socket (`~/.local/share/studyfrog/run/control.sock`), users requested an in-app scripting workbench—now officially named **ScriptStudio** powered by **FrogScript**—with an ergonomic internal Python and DSL automation API.
 
-The ScriptRunner environment allows learners to:
-1. Write, test, and execute Python automation scripts directly within the StudyFrog GUI.
+ScriptStudio allows learners to:
+1. Write, test, and execute FrogScript and Python automation scripts directly within the StudyFrog GUI.
 2. Automate repetitive deck operations (e.g., batch generation of flashcards from lecture notes, syllabi, or CSVs).
 3. Query vault items, review schedules, and learning analytics.
 4. Programmatically schedule calendar study sessions and timetable lecture blocks.
@@ -20,9 +20,9 @@ The ScriptRunner environment allows learners to:
 
 ---
 
-## 2. In-App ScriptRunner Architecture
+## 2. In-App ScriptStudio Architecture
 
-The ScriptRunner integrates the UI Console (`crates/studyfrog-ui/src/view/console.rs`) with the underlying IPC control protocol (`studyfrog-ui::control_client`, `studyfrog-app::script_runner`):
+ScriptStudio integrates the UI Console (`crates/studyfrog-ui/src/view/console.rs`) with the underlying IPC control protocol (`studyfrog-ui::control_client`, `studyfrog-app::script_runner`):
 
 ```
 ┌────────────────────────────────────────────────────────┐

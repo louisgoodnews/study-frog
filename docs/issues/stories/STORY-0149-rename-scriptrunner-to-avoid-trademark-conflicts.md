@@ -2,7 +2,7 @@
 id: STORY-0149
 type: story
 title: Rename ScriptRunner across application and documentation to avoid trademark conflicts
-status: backlog
+status: done
 epic: EPIC-049
 parents: [EPIC-049]
 estimate: 2
@@ -24,9 +24,9 @@ Perform a complete naming migration across UI, codebase, and documentation:
 4. Update markdown documentation, release notes, research papers, and specifications.
 
 ## Acceptance Criteria
-- [ ] All occurrences of 'ScriptRunner' in UI labels, headers, buttons, and tooltips are renamed to a trademark-safe brand name
-- [ ] Documentation, research papers, specifications, and help files are updated to use the new naming convention
-- [ ] Internal identifier tokens, element IDs, and CSS/layout keys are migrated without breaking user configuration
+- [x] All occurrences of 'ScriptRunner' in UI labels, headers, buttons, and tooltips are renamed to a trademark-safe brand name
+- [x] Documentation, research papers, specifications, and help files are updated to use the new naming convention
+- [x] Internal identifier tokens, element IDs, and CSS/layout keys are migrated without breaking user configuration
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-ui/src/view/console.rs`, `crates/studyfrog-ui/src/view/burger_menu.rs`, `docs/specs/scripting.md`, `docs/research/`.
