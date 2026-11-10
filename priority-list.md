@@ -132,3 +132,21 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
 
 **Bug fixes & calibration refinements**
 - [x] [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty (Hard) and priority (Medium)
+- [x] [BUG-0017](docs/issues/bugs/BUG-0017-markdown-viewer-bold-text-visibility.md) Boldness of words in markdown viewer visible with distinct contrast
+- [x] [BUG-0018](docs/issues/bugs/BUG-0018-code-block-indentation-preservation.md) Code block indentation preservation with tab stop expansion
+- [x] [BUG-0019](docs/issues/bugs/BUG-0019-notes-stack-membership-optional.md) Notes in stacks optional (loose notes at vault root permitted)
+
+**Wave 6: Markdown viewing, macro library expansion, and brand mascot icon**
+- [x] [EPIC-045](docs/issues/epics/EPIC-045-macro-library-expansion-and-escaping-syntax.md) Macro library expansion & escaping syntax
+  - [x] [STORY-0143](docs/issues/stories/STORY-0143-comprehensive-markdown-macro-library-expansion.md) Comprehensive markdown macro library expansion
+  - [x] [STORY-0144](docs/issues/stories/STORY-0144-macro-escaping-syntax-to-disable-expansion.md) Macro escaping syntax ({#...}) to disable expansion
+- [x] [EPIC-046](docs/issues/epics/EPIC-046-markdown-viewer-list-syntax-enhancements.md) Markdown viewer list syntax enhancements
+  - [x] [STORY-0145](docs/issues/stories/STORY-0145-markdown-list-parser-support-for-dash-asterisk-numbers-and-alphabetical-markers.md) Markdown list parser support for dash, asterisk, numbers and alphabetical markers
+- [x] [STORY-0146](docs/issues/stories/STORY-0146-stylized-breviceps-macrops-mascot-icon.md) Stylized Breviceps macrops brand mascot icon
+
+**Wave 7: Timetable planner, calendar daily/weekly views, floating burger navigation & scriptrunner console**
+- [ ] [EPIC-044](docs/issues/epics/EPIC-044-timetable-schedule-planner-and-daily-weekly-calendar-views.md) Timetable schedule planner & daily/weekly calendar views
+  - [ ] [STORY-0141](docs/issues/stories/STORY-0141-timetable-schedule-planner-for-lectures-and-lessons.md) Timetable schedule planner for lectures and lessons
+  - [ ] [STORY-0142](docs/issues/stories/STORY-0142-calendar-daily-and-weekly-views.md) Calendar daily and weekly views
+- [ ] [STORY-0147](docs/issues/stories/STORY-0147-research-floating-burger-navigation-menu.md) Research floating burger navigation menu
+- [ ] [EPIC-048](docs/issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md) / [STORY-0148](docs/issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) Console expansion to full scriptrunner environment with internal automation API
