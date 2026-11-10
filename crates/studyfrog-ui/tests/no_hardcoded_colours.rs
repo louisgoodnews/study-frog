@@ -12,7 +12,7 @@ const ALLOWED: [(&str, &str); 8] = [
         "color_science.rs",
         "colours computed from OKLCH coordinates",
     ),
-    ("view/navbar.rs", "the frog logo has its own green"),
+    ("view/navbar_logo.rs", "the frog logo has its own green"),
     (
         "view/window_frame.rs",
         "the red close button looks the same in every theme",

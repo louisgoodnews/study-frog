@@ -128,3 +128,41 @@ fn a_code_block_shows_its_whole_text_with_or_without_a_known_language() {
     let none = card("```\nplain code\n```", "x");
     assert!(none.query_by_label_contains("plain code").is_some());
 }
+
+#[test]
+fn code_block_preserves_tab_and_space_indentations() {
+    let code_tab = card("```python\ndef greet():\n\treturn 'hello'\n```", "x");
+    assert!(
+        code_tab
+            .query_by_label_contains("    return 'hello'")
+            .is_some()
+    );
+
+    let code_spaces = card("```text\nline 1\n    indented line 2\n```", "x");
+    assert!(
+        code_spaces
+            .query_by_label_contains("    indented line 2")
+            .is_some()
+    );
+}
+
+#[test]
+fn alphabetical_lists_render_with_markers() {
+    let h = card("a. Option Alpha\nb. Option Beta\nc. Option Gamma", "x");
+    assert!(h.query_by_label("a.").is_some());
+    assert!(h.query_by_label("b.").is_some());
+    assert!(h.query_by_label("c.").is_some());
+    assert!(h.query_by_label("Option Alpha").is_some());
+    assert!(h.query_by_label("Option Beta").is_some());
+
+    let h_paren = card("(a) First choice\n(b) Second choice", "x");
+    assert!(h_paren.query_by_label("(a)").is_some());
+    assert!(h_paren.query_by_label("(b)").is_some());
+    assert!(h_paren.query_by_label("First choice").is_some());
+}
+
+#[test]
+fn bold_text_in_cards_renders_prominently() {
+    let h = card("This has **prominent bold** words.", "x");
+    assert!(h.query_by_label("prominent bold").is_some());
+}

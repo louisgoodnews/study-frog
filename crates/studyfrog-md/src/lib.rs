@@ -3,6 +3,7 @@
 pub mod blocks;
 mod blocks_build;
 mod blocks_heading;
+pub mod blocks_list;
 mod blocks_table;
 mod blocks_text;
 pub mod build;

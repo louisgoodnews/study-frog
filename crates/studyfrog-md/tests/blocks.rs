@@ -169,7 +169,12 @@ proptest! {
                         out.push_str(text);
                     }
                     Block::Quote(inner) => collect(inner, out),
-                    Block::List { items, .. } => items.iter().for_each(|i| collect(&i.blocks, out)),
+                    Block::List { items, .. } => items.iter().for_each(|i| {
+                        if let Some(m) = &i.marker {
+                            out.push_str(m);
+                        }
+                        collect(&i.blocks, out);
+                    }),
                     Block::Rule | Block::Toc => {}
                     Block::Table { header, rows, .. } => {
                         for cell in header.iter().chain(rows.iter().flatten()) {
@@ -219,7 +224,7 @@ fn style_default_is_plain() {
             strike: false,
             code: false,
             underline: false,
-            color: None
-        }
+            color: None,
+        },
     );
 }

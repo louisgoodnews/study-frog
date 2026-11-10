@@ -45,7 +45,7 @@ fn draw_block(ui: &mut egui::Ui, block: &Block, out: &mut Vec<Msg>, toc: &[rich:
             items,
         } => {
             for (i, item) in items.iter().enumerate() {
-                list_item(ui, item, marker(*ordered, *start, i), (out, toc));
+                list_item(ui, item, marker(item, *ordered, *start, i), (out, toc));
             }
         }
         Block::Rule => {
@@ -54,7 +54,10 @@ fn draw_block(ui: &mut egui::Ui, block: &Block, out: &mut Vec<Msg>, toc: &[rich:
     }
 }
 
-fn marker(ordered: bool, start: u64, index: usize) -> String {
+fn marker(item: &ListItem, ordered: bool, start: u64, index: usize) -> String {
+    if let Some(m) = &item.marker {
+        return m.clone();
+    }
     if ordered {
         format!("{}.", start + index as u64)
     } else {
@@ -106,7 +109,12 @@ fn text_size(ui: &egui::Ui, heading: Option<u8>) -> f32 {
 }
 
 pub(super) fn styled(ui: &egui::Ui, span: &Span, heading: Option<u8>) -> RichText {
-    let size = text_size(ui, heading);
+    let base_size = text_size(ui, heading);
+    let size = if span.style.bold && heading.is_none() {
+        base_size * 1.05
+    } else {
+        base_size
+    };
     let mut text = typo::prose(ui, &span.text, size);
     if heading.is_some() {
         text = text.strong();

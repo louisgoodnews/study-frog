@@ -41,18 +41,22 @@ pub(super) fn parent_picker(state: &State, f: &CreateForm, ui: &mut egui::Ui, ou
         .as_ref()
         .map(|v| stack_labels(&v.overview))
         .unwrap_or_default();
-    let is_stack = f.kind == NewKind::Stack;
-    if stacks.is_empty() && !is_stack {
-        ui.colored_label(crate::theme::palette_of(ui).warning, "There is no stack yet. Every card, note and question lives in a stack: create a stack first.");
+    let optional_parent = f.kind == NewKind::Stack || f.kind == NewKind::Note;
+    if stacks.is_empty() && !optional_parent {
+        ui.colored_label(crate::theme::palette_of(ui).warning, "There is no stack yet. Every card and question lives in a stack: create a stack first.");
         return;
     }
-    let none = "None (top level)";
+    let none = if f.kind == NewKind::Note {
+        "None (Vault root)"
+    } else {
+        "None (top level)"
+    };
     let current = f
         .parent
         .as_ref()
         .and_then(|p| stacks.iter().find(|(folder, _)| folder == p))
         .map_or(none.to_owned(), |(_, label)| label.clone());
-    let label = if is_stack {
+    let label = if optional_parent {
         "Inside stack (optional)"
     } else {
         "Parent stack"
@@ -61,7 +65,7 @@ pub(super) fn parent_picker(state: &State, f: &CreateForm, ui: &mut egui::Ui, ou
         .selected_text(current)
         .width(220.0)
         .show_ui(ui, |ui| {
-            if is_stack && ui.selectable_label(f.parent.is_none(), none).clicked() {
+            if optional_parent && ui.selectable_label(f.parent.is_none(), none).clicked() {
                 send(out, ModalMsg::SetParent(None));
             }
             for (folder, label) in &stacks {

@@ -93,12 +93,63 @@ fn a_block_macro_in_the_middle_of_a_line_gets_lines_of_its_own() {
 #[test]
 fn the_list_of_macros_is_data_with_a_help_text_each() {
     let names: Vec<_> = MACROS.iter().map(|m| m.name).collect();
-    assert_eq!(names, ["table", "toc", "code", "quote", "image", "color"]);
+    for required in [
+        "table",
+        "toc",
+        "code",
+        "quote",
+        "image",
+        "color",
+        "rule",
+        "header",
+        "arrow_right",
+        "arrow_left",
+        "hide",
+        "panel",
+        "link",
+        "bold",
+        "italic",
+        "graph",
+    ] {
+        assert!(names.contains(&required), "missing macro: {required}");
+    }
     assert!(
         MACROS
             .iter()
             .all(|m| m.usage.starts_with('{') && !m.help.is_empty())
     );
+}
+
+#[test]
+fn hash_prefixed_macros_are_escaped_and_not_expanded() {
+    for text in ["{#code}", "{#table}", "{#rule}", "{#toc}", "{#bold:test}"] {
+        assert!(
+            macro_before(text, text.len()).is_none(),
+            "should not expand escaped: {text}"
+        );
+    }
+}
+
+#[test]
+fn expanded_macro_library_works() {
+    let check = |input: &str, expected: &str| {
+        let (range, e) =
+            macro_before(input, input.len()).unwrap_or_else(|| panic!("failed {input}"));
+        assert_eq!(e.text, expected);
+        assert_eq!(range, (0, input.len()));
+    };
+    check("{rule}", "---");
+    check("{header:2}", "## Header");
+    check("{arrow_right}", "->");
+    check("{arrow_left}", "<-");
+    check(
+        "{hide}",
+        "<details><summary>Reveal</summary>Hidden answer</details>",
+    );
+    check("{panel}", "> [!NOTE]\n> Note content");
+    check("{link}", "[Link text](url)");
+    check("{bold:term}", "**term**");
+    check("{italic:note}", "*note*");
 }
 
 const NOTE: &str = "---\nid: 0000000000000000000000000A\nkind: note\ntitle: Alpha\n---\nstart\n";

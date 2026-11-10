@@ -156,7 +156,7 @@ fn exports_imports_and_failures_answer_with_their_outcome() {
 fn logs_are_read_by_level_and_failures_are_logged_as_control_entries() {
     let (vault, logs) = (sample_vault("ctl-logs"), temp_dir("ctl-logs-logs"));
     let mut e = engine(&vault.path, &logs.path, policy_default());
-    let input = "item create note Hello --stack french\nitem create note Bye\nclose\nnav nowhere\nlogs --tail 10\nlogs --level warn\nlogs --tail 1\n";
+    let input = "item create note Hello --stack french\nitem create card Title --text Front --answer Back\nclose\nnav nowhere\nlogs --tail 10\nlogs --level warn\nlogs --tail 1\n";
     let r = session(&mut e, &logs.path, input);
     assert!(
         r[1]["error"].as_str().unwrap().contains("Choose the stack"),

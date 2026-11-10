@@ -57,7 +57,20 @@ fn the_executor_creates_nested_stacks_and_items_and_reports_refusals() {
     assert!(
         matches!(&msgs[0], Msg::Modal(ModalMsg::Created(Ok(o))) if o.created.path == "french/verbs/je-suis.md")
     );
+    // BUG-0019: notes without parent stack succeed at vault root
     let msgs = execute(&mut w, make(NewKind::Note, "Loose", "x", "", None), NOW_NS);
+    assert!(
+        matches!(&msgs[0], Msg::Modal(ModalMsg::Created(Ok(o))) if o.created.path == "loose.md" || o.created.path.starts_with("loose")),
+        "{:?}",
+        msgs[0]
+    );
+
+    // Cards without a stack are still refused
+    let msgs = execute(
+        &mut w,
+        make(NewKind::Card, "", "Front", "Back", None),
+        NOW_NS,
+    );
     assert!(
         matches!(&msgs[0], Msg::Modal(ModalMsg::Created(Err(e))) if e.contains("choose the stack")),
         "{:?}",

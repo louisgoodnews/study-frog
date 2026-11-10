@@ -160,7 +160,7 @@ pub fn create_item(
             "the source of an item cannot contain quotes or line breaks",
         ));
     }
-    if item.kind != NewKind::Stack && item.parent.is_none() {
+    if item.kind != NewKind::Stack && item.kind != NewKind::Note && item.parent.is_none() {
         return Err(invalid("choose the stack it goes into"));
     }
     let base = match item.parent {

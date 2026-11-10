@@ -86,7 +86,7 @@ pub fn problem(f: &CreateForm) -> Option<&'static str> {
         NewKind::Question if blank(&f.text) || blank(&f.answer) => {
             Some("A question needs a prompt and a reference answer.")
         }
-        NewKind::Stack => None,
+        NewKind::Stack | NewKind::Note => None,
         _ if f.parent.is_none() => Some("Choose the stack it goes into."),
         _ => None,
     }

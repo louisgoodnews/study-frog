@@ -116,11 +116,11 @@ fn an_incomplete_form_shows_why_and_the_dialog_can_be_closed_three_ways() {
 }
 
 #[test]
-fn without_any_stack_the_dialog_explains_that_items_need_one() {
+fn without_any_stack_the_dialog_explains_that_cards_need_one() {
     let mut m = open_model();
     m.state.vault.as_mut().unwrap().overview = VaultOverview::default();
     apply(&mut m, Msg::Modal(ModalMsg::OpenCreate));
-    apply(&mut m, Msg::Modal(ModalMsg::SetKind(NewKind::Note)));
+    apply(&mut m, Msg::Modal(ModalMsg::SetKind(NewKind::Card)));
     let mut h = harness(m);
     h.run();
     assert!(h.query_by_label_contains("create a stack first").is_some());

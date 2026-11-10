@@ -109,13 +109,15 @@ fn layout_block_list(
             } => {
                 let mut num = *start;
                 for item in items {
-                    let marker = if *ordered {
-                        let m = format!("{num}.");
-                        num += 1;
-                        m
-                    } else {
-                        "•".to_string()
-                    };
+                    let marker = item.marker.clone().unwrap_or_else(|| {
+                        if *ordered {
+                            let m = format!("{num}.");
+                            num += 1;
+                            m
+                        } else {
+                            "•".to_string()
+                        }
+                    });
                     layout_list_item(
                         &marker,
                         item.checked,

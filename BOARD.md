@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (264) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (267) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -22,6 +22,9 @@
 |  |  |  |  |  | [BUG-0014](docs/issues/bugs/BUG-0014-csv-import-fails-on-unquoted-multiline-fields.md) CSV importer fails on unquoted multiline fields in AI-generated CSV files (2) |
 |  |  |  |  |  | [BUG-0015](docs/issues/bugs/BUG-0015-csv-escaped-newlines-and-card-title-truncation.md) Escaped newline sequences in imported cards and 60-character card title truncation (2) |
 |  |  |  |  |  | [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority (5) |
+|  |  |  |  |  | [BUG-0017](docs/issues/bugs/BUG-0017-markdown-viewer-bold-text-visibility.md) Boldness of words in markdown viewer not visible (2) |
+|  |  |  |  |  | [BUG-0018](docs/issues/bugs/BUG-0018-code-block-indentation-preservation.md) Code block indentations not visible in markdown viewer (2) |
+|  |  |  |  |  | [BUG-0019](docs/issues/bugs/BUG-0019-notes-stack-membership-optional.md) Notes being in stacks should be optional not required (3) |
 |  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 |  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
@@ -414,6 +417,14 @@
 | [STORY-0138](docs/issues/stories/STORY-0138-overhaul-profile-and-vault-switchers.md) Overhaul of profile and vault switchers (5) | done | 0/0 |
 | [STORY-0139](docs/issues/stories/STORY-0139-overhaul-file-navigator-and-dialogue.md) Overhaul of file navigator and in-app file dialogue (5) | done | 0/0 |
 | [STORY-0140](docs/issues/stories/STORY-0140-rehearsal-and-exam-comments-drawer.md) Expandable comments drawer in rehearsal and exam modes (3) | done | 0/0 |
+| [STORY-0141](docs/issues/stories/STORY-0141-timetable-schedule-planner-for-lectures-and-lessons.md) Timetable schedule planner for lectures and lessons (5) | backlog | 0/0 |
+| [STORY-0142](docs/issues/stories/STORY-0142-calendar-daily-and-weekly-views.md) Calendar daily and weekly schedule views (5) | backlog | 0/0 |
+| [STORY-0143](docs/issues/stories/STORY-0143-comprehensive-markdown-macro-library-expansion.md) Comprehensive markdown macro library expansion (3) | done | 0/0 |
+| [STORY-0144](docs/issues/stories/STORY-0144-macro-escaping-syntax-to-disable-expansion.md) Macro escaping syntax to disable expansion (2) | done | 0/0 |
+| [STORY-0145](docs/issues/stories/STORY-0145-markdown-list-parser-support-for-dash-asterisk-numbers-and-alphabetical-markers.md) Markdown list parser support for dash asterisk numbers and alphabetical markers (3) | done | 0/0 |
+| [STORY-0146](docs/issues/stories/STORY-0146-stylized-breviceps-macrops-mascot-icon.md) Stylized Breviceps macrops brand mascot icon (2) | done | 0/0 |
+| [STORY-0147](docs/issues/stories/STORY-0147-research-floating-burger-navigation-menu.md) Research and prototype floating burger navigation menu (3) | backlog | 0/0 |
+| [STORY-0148](docs/issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) Console expansion to full scriptrunner environment with internal API (5) | backlog | 0/0 |
 
 ## Epics
 
@@ -462,3 +473,8 @@
 | [EPIC-041](docs/issues/epics/EPIC-041-modularity-system-driven-architecture-and-decoupled-background-services.md) Modularity: system-driven application architecture and decoupled background services | done | 0/0 |
 | [EPIC-042](docs/issues/epics/EPIC-042-interactive-ai-content-generation-and-parameter-guided-prompt-workflows.md) Interactive AI content generation and parameter-guided prompt workflows | done | 1/1 |
 | [EPIC-043](docs/issues/epics/EPIC-043-navigation-profile-and-file-management-ux-overhaul.md) Navigation, profile, and file management UX overhaul | done | 3/3 |
+| [EPIC-044](docs/issues/epics/EPIC-044-timetable-schedule-planner-and-daily-weekly-calendar-views.md) Timetable schedule planner and daily/weekly calendar views | backlog | 0/2 |
+| [EPIC-045](docs/issues/epics/EPIC-045-macro-library-expansion-and-escaping-syntax.md) Macro library expansion and escaping syntax | done | 2/2 |
+| [EPIC-046](docs/issues/epics/EPIC-046-markdown-viewer-list-syntax-enhancements.md) Markdown viewer list syntax enhancements | done | 1/1 |
+| [EPIC-047](docs/issues/epics/EPIC-047-brand-mascot-icon-and-consolidated-navigation-ux.md) Brand mascot icon and consolidated navigation UX | backlog | 1/2 |
+| [EPIC-048](docs/issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md) Scriptrunner environment and internal application automation API | backlog | 0/1 |

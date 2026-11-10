@@ -109,6 +109,9 @@ fn aligned_cell(ui: &mut egui::Ui, spans: &[Span], align: Align) {
             egui::Stroke::NONE
         };
         format.italics = span.style.italic;
+        if span.style.bold {
+            format.color = palette_of(ui).text;
+        }
         if let Some(hue) = span.style.color {
             format.color = hue_color_in(ui, hue);
         }
@@ -178,7 +181,12 @@ pub fn code(ui: &mut egui::Ui, text: &str, tokens: &[Token]) {
     let text = text.trim_end();
     egui::Frame::group(ui.style()).show(ui, |ui| {
         if tokens.is_empty() {
-            ui.add(egui::Label::new(RichText::new(text).monospace()).wrap());
+            let expanded = if text.contains('\t') {
+                text.replace('\t', "    ")
+            } else {
+                text.to_owned()
+            };
+            ui.add(egui::Label::new(RichText::new(expanded).monospace()).wrap());
             return;
         }
         let mut job = LayoutJob::default();

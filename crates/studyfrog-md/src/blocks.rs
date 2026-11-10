@@ -47,6 +47,8 @@ pub struct Span {
 pub struct ListItem {
     /// `Some(done)` for task items.
     pub checked: Option<bool>,
+    /// Marker text (e.g. "a.", "(b)") when non-standard.
+    pub marker: Option<String>,
     /// The item's content.
     pub blocks: Vec<Block>,
 }

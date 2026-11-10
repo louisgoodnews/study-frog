@@ -30,6 +30,7 @@ pub(crate) struct Builder {
     pub(crate) underline: u32,
     pub(crate) colors: Vec<Hue>,
     pub(crate) link: Option<Link>,
+    pub(crate) soft_break: bool,
     code: Option<(String, String)>,
     heading: Option<u8>,
     pub(crate) table: Option<TableAcc>,
@@ -48,13 +49,23 @@ fn is_toc(spans: &[Span]) -> bool {
     matches!(spans, [s] if s.link.is_none() && s.text.trim().eq_ignore_ascii_case("[toc]"))
 }
 
+fn clear_break(b: &mut Builder) {
+    if b.soft_break {
+        b.text.push(' ');
+        b.soft_break = false;
+    }
+}
+
 /// Pending inline content that was not wrapped in a paragraph (tight list items) becomes one.
 fn flush_paragraph(b: &mut Builder) {
+    clear_break(b);
     flush_text(b);
     if !b.spans.is_empty() {
         let spans = std::mem::take(&mut b.spans);
         let block = if is_toc(&spans) {
             Block::Toc
+        } else if let Some(list) = crate::blocks_list::parse_alpha_list(&spans) {
+            list
         } else {
             Block::Paragraph(spans)
         };
@@ -142,7 +153,10 @@ fn end(b: &mut Builder, tag: TagEnd) {
             }
         }
         TagEnd::CodeBlock => {
-            if let Some((lang, text)) = b.code.take() {
+            if let Some((lang, mut text)) = b.code.take() {
+                if text.contains('\t') {
+                    text = text.replace('\t', "    ");
+                }
                 let tokens = crate::highlight::highlight(&lang, &text);
                 push_block(b, Block::Code { lang, text, tokens });
             }
@@ -161,13 +175,24 @@ fn end(b: &mut Builder, tag: TagEnd) {
 
 fn event(b: &mut Builder, ev: Event) {
     match ev {
-        Event::Start(tag) => start(b, tag),
-        Event::End(tag) => end(b, tag),
-        Event::Text(t) => match &mut b.code {
-            Some((_, code)) => code.push_str(&t),
-            None => b.text.push_str(&t),
-        },
+        Event::Start(tag) => (clear_break(b), start(b, tag)).1,
+        Event::End(tag) => (clear_break(b), end(b, tag)).1,
+        Event::Text(t) => {
+            if b.soft_break {
+                b.soft_break = false;
+                if crate::blocks_list::is_alpha_marker(&t) {
+                    b.text.push('\n');
+                } else {
+                    b.text.push(' ');
+                }
+            }
+            match &mut b.code {
+                Some((_, code)) => code.push_str(&t),
+                None => b.text.push_str(&t),
+            }
+        }
         Event::Code(c) => {
+            clear_break(b);
             flush_text(b);
             b.spans.push(Span {
                 text: c.to_string(),
@@ -178,8 +203,11 @@ fn event(b: &mut Builder, ev: Event) {
                 link: b.link.clone(),
             });
         }
-        Event::SoftBreak => b.text.push(' '),
-        Event::HardBreak => b.text.push('\n'),
+        Event::SoftBreak => b.soft_break = true,
+        Event::HardBreak => {
+            b.soft_break = false;
+            b.text.push('\n');
+        }
         Event::Html(t) | Event::InlineHtml(t) => crate::blocks_table::html(b, &t),
         Event::Rule => {
             flush_paragraph(b);

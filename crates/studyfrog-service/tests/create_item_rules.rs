@@ -67,8 +67,14 @@ fn an_item_without_a_stack_or_in_a_folder_that_is_no_stack_is_refused() {
     assert!(
         why(make(&mut s, 2, item(NewKind::Card, "", "Q?", "A", None))).contains("choose the stack")
     );
+    // BUG-0019: notes without a parent stack are permitted at the vault root
     assert!(
-        why(make(&mut s, 3, item(NewKind::Note, "N", "", "", None))).contains("choose the stack")
+        make(
+            &mut s,
+            3,
+            item(NewKind::Note, "Loose Note", "content", "", None)
+        )
+        .is_ok()
     );
     assert!(
         why(make(
@@ -126,4 +132,17 @@ fn an_item_without_a_stack_or_in_a_folder_that_is_no_stack_is_refused() {
         ))
         .contains("single line")
     );
+}
+
+#[test]
+fn loose_notes_at_vault_root_are_indexed_and_created_at_root() {
+    let (d, mut s) = vault("loose-note");
+    let (_, created) = create_item(
+        &mut s,
+        &item(NewKind::Note, "Standalone Note", "My body", "", None),
+        ids(1),
+    )
+    .unwrap();
+    assert_eq!(created.path, "standalone-note.md");
+    assert!(d.0.join("standalone-note.md").exists());
 }

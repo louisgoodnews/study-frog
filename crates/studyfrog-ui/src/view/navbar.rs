@@ -2,7 +2,7 @@
 //! notification, help, settings and profile buttons on the right. Menus open under their button.
 
 use eframe::egui::{
-    self, Align, Color32, Key, Layout, Panel, Rect, RichText, Role, TextEdit, WidgetInfo, vec2,
+    self, Align, Key, Layout, Panel, Rect, RichText, Role, TextEdit, WidgetInfo, vec2,
 };
 
 use crate::chrome::{ChromeMsg, Menu, unread, vault_label};
@@ -219,22 +219,7 @@ fn right_cluster(
     crate::view::focus_bar::pill(state, ui, out);
 }
 
-/// The logo: a green frog face.
+/// The logo: stylized Breviceps macrops brand mascot.
 fn frog(ui: &mut egui::Ui) {
-    let (rect, _) = ui.allocate_exact_size(vec2(24.0, 24.0), egui::Sense::hover());
-    let (c, green, dark) = (
-        rect.center(),
-        Color32::from_rgb(111, 207, 127),
-        Color32::from_rgb(16, 40, 26),
-    );
-    let p = ui.painter();
-    p.circle_filled(egui::pos2(c.x - 6.0, c.y - 5.0), 5.0, green);
-    p.circle_filled(egui::pos2(c.x + 6.0, c.y - 5.0), 5.0, green);
-    p.add(egui::Shape::ellipse_filled(
-        egui::pos2(c.x, c.y + 2.0),
-        vec2(11.0, 8.5),
-        green,
-    ));
-    p.circle_filled(egui::pos2(c.x - 6.0, c.y - 5.0), 2.0, dark);
-    p.circle_filled(egui::pos2(c.x + 6.0, c.y - 5.0), 2.0, dark);
+    crate::view::navbar_logo::frog(ui);
 }

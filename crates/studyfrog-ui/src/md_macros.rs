@@ -2,7 +2,7 @@
 //! the Markdown it stands for the moment the closing brace is typed, never earlier. A macro is a record in
 //! [`MACROS`] with one free function, so adding one is adding a record. Unknown names stay as typed. Pure.
 
-use studyfrog_md::hue::{hue_from_name, hue_hex};
+use crate::md_macros_more as m;
 
 /// What a macro writes in place of itself.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -30,7 +30,7 @@ pub struct Macro {
     pub expand: fn(Option<&str>) -> Option<Expansion>,
 }
 
-fn text(text: &str, select: &str, own_lines: bool) -> Option<Expansion> {
+pub(crate) fn text(text: &str, select: &str, own_lines: bool) -> Option<Expansion> {
     let start = text.find(select).map_or(0, |b| text[..b].chars().count());
     Some(Expansion {
         text: text.to_owned(),
@@ -40,101 +40,145 @@ fn text(text: &str, select: &str, own_lines: bool) -> Option<Expansion> {
     })
 }
 
-/// `CxR`: columns and body rows, each from 1 to the limit.
-fn size(arg: Option<&str>) -> Option<(usize, usize)> {
-    let Some(arg) = arg else { return Some((2, 1)) };
-    let (c, r) = arg.split_once(['x', 'X'])?;
-    let (c, r): (usize, usize) = (c.trim().parse().ok()?, r.trim().parse().ok()?);
-    ((1..=12).contains(&c) && (1..=50).contains(&r)).then_some((c, r))
-}
-
-fn table(arg: Option<&str>) -> Option<Expansion> {
-    let (c, r) = size(arg)?;
-    let head: Vec<String> = (1..=c).map(|i| format!("Column {i}")).collect();
-    let mut out = format!("| {} |\n|{}\n", head.join(" | "), "---|".repeat(c));
-    for _ in 0..r {
-        out.push_str(&format!("|{}\n", "   |".repeat(c)));
-    }
-    text(out.trim_end(), "Column 1", true)
-}
-
-fn toc(arg: Option<&str>) -> Option<Expansion> {
-    arg.is_none().then_some(())?;
-    text("[TOC]", "[TOC]", true)
-}
-
-fn code(arg: Option<&str>) -> Option<Expansion> {
-    let lang = arg.unwrap_or("").trim();
-    if !lang
-        .chars()
-        .all(|c| c.is_alphanumeric() || "+#-".contains(c))
-    {
-        return None;
-    }
-    text(&format!("```{lang}\ncode\n```"), "code", true)
-}
-
-fn quote(arg: Option<&str>) -> Option<Expansion> {
-    arg.is_none().then_some(())?;
-    text("> quote", "quote", true)
-}
-
-fn image(arg: Option<&str>) -> Option<Expansion> {
-    arg.is_none().then_some(())?;
-    Some(Expansion {
-        text: String::new(),
-        select: (0, 0),
-        own_lines: false,
-        picture: true,
-    })
-}
-
-fn colour(arg: Option<&str>) -> Option<Expansion> {
-    let hue = hue_from_name(arg?)?;
-    text(
-        &format!("<span style=\"color:{}\">coloured</span>", hue_hex(hue)),
-        "coloured",
-        false,
-    )
-}
-
 /// Every macro, in the order the hint lists them.
 pub const MACROS: &[Macro] = &[
     Macro {
         name: "table",
         usage: "{table} or {table:3x4}",
-        help: "A table: columns by body rows (2 by 1 without a size)",
-        expand: table,
+        help: "A table: columns by body rows",
+        expand: m::table,
     },
     Macro {
         name: "toc",
         usage: "{toc}",
         help: "The table of contents of the note",
-        expand: toc,
+        expand: m::toc,
     },
     Macro {
         name: "code",
         usage: "{code} or {code:python}",
-        help: "A code block, with a language for colours",
-        expand: code,
+        help: "A code block, with a language",
+        expand: m::code,
     },
     Macro {
         name: "quote",
         usage: "{quote}",
         help: "A quotation",
-        expand: quote,
+        expand: m::quote,
     },
     Macro {
         name: "image",
         usage: "{image}",
         help: "Choose a picture to add",
-        expand: image,
+        expand: m::image,
     },
     Macro {
         name: "color",
         usage: "{color:red}",
-        help: "Coloured text: red, orange, green, blue, purple or grey",
-        expand: colour,
+        help: "Coloured text",
+        expand: m::colour,
+    },
+    Macro {
+        name: "rule",
+        usage: "{rule}",
+        help: "Horizontal dividing rule (---)",
+        expand: m::rule,
+    },
+    Macro {
+        name: "header",
+        usage: "{header:2} or {h:3}",
+        help: "Section heading with level",
+        expand: m::header,
+    },
+    Macro {
+        name: "h",
+        usage: "{h:2}",
+        help: "Shorthand heading",
+        expand: m::header,
+    },
+    Macro {
+        name: "arrow_right",
+        usage: "{arrow_right} or {->}",
+        help: "Right arrow (->)",
+        expand: m::arrow_right,
+    },
+    Macro {
+        name: "->",
+        usage: "{->}",
+        help: "Right arrow shorthand",
+        expand: m::arrow_right,
+    },
+    Macro {
+        name: "arrow_left",
+        usage: "{arrow_left} or {<-}",
+        help: "Left arrow (<-)",
+        expand: m::arrow_left,
+    },
+    Macro {
+        name: "<-",
+        usage: "{<-}",
+        help: "Left arrow shorthand",
+        expand: m::arrow_left,
+    },
+    Macro {
+        name: "hide",
+        usage: "{hide} or {spoiler}",
+        help: "Hidden answer drawer",
+        expand: m::hide,
+    },
+    Macro {
+        name: "spoiler",
+        usage: "{spoiler}",
+        help: "Collapsible spoiler",
+        expand: m::hide,
+    },
+    Macro {
+        name: "panel",
+        usage: "{panel} or {panel:WARNING}",
+        help: "Callout note or warning block",
+        expand: m::panel,
+    },
+    Macro {
+        name: "callout",
+        usage: "{callout}",
+        help: "Callout block",
+        expand: m::panel,
+    },
+    Macro {
+        name: "link",
+        usage: "{link} or {link:https://...}",
+        help: "Markdown link template",
+        expand: m::link,
+    },
+    Macro {
+        name: "bold",
+        usage: "{bold:text} or {b:text}",
+        help: "Bold text (**text**)",
+        expand: m::bold,
+    },
+    Macro {
+        name: "b",
+        usage: "{b:text}",
+        help: "Bold text shorthand",
+        expand: m::bold,
+    },
+    Macro {
+        name: "italic",
+        usage: "{italic:text} or {i:text}",
+        help: "Italic text (*text*)",
+        expand: m::italic,
+    },
+    Macro {
+        name: "i",
+        usage: "{i:text}",
+        help: "Italic text shorthand",
+        expand: m::italic,
+    },
+    Macro {
+        name: "graph",
+        usage: "{graph:Topic}",
+        help: "Mermaid flowchart diagram template",
+        expand: m::graph,
     },
 ];
 
@@ -152,6 +196,10 @@ pub fn macro_before(text: &str, caret: usize) -> Option<((usize, usize), Expansi
         return None;
     }
     let inner: String = chars[open + 1..caret - 1].iter().collect();
+    // STORY-0144: '#' prefix suppresses expansion (e.g. {#code})
+    if inner.starts_with('#') {
+        return None;
+    }
     let (name, arg) = match inner.split_once(':') {
         Some((n, a)) => (n, Some(a)),
         None => (inner.as_str(), None),
