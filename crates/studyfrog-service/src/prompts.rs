@@ -26,6 +26,7 @@ macro_rules! prompt {
 /// Every standard prompt, in the order of the list.
 pub const PROMPTS: &[PromptSource] = &[
     prompt!("flashcards"),
+    prompt!("interactive_extract"),
     prompt!("questions"),
     prompt!("stack"),
     prompt!("notes"),

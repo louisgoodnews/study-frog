@@ -25,7 +25,10 @@ pub fn load_rehearsal_doc_msg(w: &Worker, uid: Uid) -> Msg {
         Some(s) => load_document(s, uid).map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
     };
-    Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Loaded(uid, res))
+    Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Loaded(
+        uid,
+        Box::new(res),
+    ))
 }
 
 /// Write an edited document from rehearsal.

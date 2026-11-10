@@ -179,6 +179,7 @@ pub mod reading_test;
 pub mod recall_types;
 pub mod recall_ui;
 pub mod rehearsal_edit;
+pub mod rehearsal_edit_doc;
 pub mod reminder_ui;
 pub mod reports;
 pub mod review;

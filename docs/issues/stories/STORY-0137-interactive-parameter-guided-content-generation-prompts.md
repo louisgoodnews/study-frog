@@ -2,7 +2,7 @@
 id: STORY-0137
 type: story
 title: Interactive parameter-guided content generation prompts in prompt library
-status: backlog
+status: done
 epic: EPIC-042
 parents: [EPIC-042]
 estimate: 5
@@ -36,9 +36,9 @@ Deliver interactive content generation prompts in StudyFrog's Prompt Library:
    - Once the user confirms their choices, the AI generates the study items strictly formatted according to StudyFrog's CSV or Markdown schema (`stack,kind,title,front,back,tags`) for instant, error-free staging and import.
 
 ## Acceptance Criteria
-- [ ] The prompt library includes interactive file-to-content prompts instructing the AI model to conduct an intake interview before generating study items
-- [ ] The interactive prompt guides the user through choices of relevant content scope, target language, difficulty tier, and card/note style
-- [ ] The prompt output produces clean, StudyFrog-compatible CSV/Markdown blocks matching the user's chosen parameters, ready for one-click staging or vault import
+- [x] The prompt library includes interactive file-to-content prompts instructing the AI model to conduct an intake interview before generating study items
+- [x] The interactive prompt guides the user through choices of relevant content scope, target language, difficulty tier, and card/note style
+- [x] The prompt output produces clean, StudyFrog-compatible CSV/Markdown blocks matching the user's chosen parameters, ready for one-click staging or vault import
 
 ## Design Notes
 - Store prompt templates as versioned Markdown files under `docs/prompts/` registered in `crates/studyfrog-service/src/prompts.rs`.

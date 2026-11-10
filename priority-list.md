@@ -110,19 +110,19 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
 ## Next: phase M13 (0.7.0)
 
 **Wave 1: Item linking & graph visuals**
-- [ ] 1. [EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md) Universal item linking between stacks, cards, questions, answers, and notes (bidirectional indexing, kind-badged chips, hover previews, autocomplete picker, and Relations tab overhaul)
-  - [ ] [STORY-0135](docs/issues/stories/STORY-0135-comments-for-items.md) Comments for items (YAML front-matter persistence, SQLite comment indexing, search queries, notebook Comments tab, and CLI/MCP controls)
+- [x] 1. [EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md) Universal item linking between stacks, cards, questions, answers, and notes (bidirectional indexing, kind-badged chips, hover previews, autocomplete picker, and Relations tab overhaul)
+  - [x] [STORY-0135](docs/issues/stories/STORY-0135-comments-for-items.md) Comments for items (YAML front-matter persistence, SQLite comment indexing, search queries, notebook Comments tab, and CLI/MCP controls)
 
 **Wave 2: Flexible rehearsal presentation & active recall**
 - [x] 2. [EPIC-040](docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md) Intermittent typed active recall and flexible rehearsal presentation
   - [x] [STORY-0136](docs/issues/stories/STORY-0136-make-typed-answers-random-per-selection-during-rehearsal.md) Make typed answers random per selection during rehearsal (rehearsal setup sampling setting, notes excluded from typed answers, dynamic card view alternating between typed submission and flip)
 
 **Wave 3: Modularity & system-driven architecture**
-- [ ] 3. [EPIC-041](docs/issues/epics/EPIC-041-modularity-system-driven-architecture-and-decoupled-background-services.md) Modularity: system-driven application architecture and decoupled background services (file surveys on vault open/switch rather than lazy view open, decoupled domain services)
+- [x] 3. [EPIC-041](docs/issues/epics/EPIC-041-modularity-system-driven-architecture-and-decoupled-background-services.md) Modularity: system-driven application architecture and decoupled background services (file surveys on vault open/switch rather than lazy view open, decoupled domain services)
 
 **Wave 4: Interactive AI content generation & prompt library**
-- [ ] 4. [EPIC-042](docs/issues/epics/EPIC-042-interactive-ai-content-generation-and-parameter-guided-prompt-workflows.md) Interactive AI content generation and parameter-guided prompt workflows
-  - [ ] [STORY-0137](docs/issues/stories/STORY-0137-interactive-parameter-guided-content-generation-prompts.md) Interactive parameter-guided content generation prompts in prompt library (intake interview for relevance, language, difficulty, and style choices)
+- [x] 4. [EPIC-042](docs/issues/epics/EPIC-042-interactive-ai-content-generation-and-parameter-guided-prompt-workflows.md) Interactive AI content generation and parameter-guided prompt workflows
+  - [x] [STORY-0137](docs/issues/stories/STORY-0137-interactive-parameter-guided-content-generation-prompts.md) Interactive parameter-guided content generation prompts in prompt library (intake interview for relevance, language, difficulty, and style choices)
 
 **Bug fixes & calibration refinements**
 - [x] [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty (Hard) and priority (Medium)

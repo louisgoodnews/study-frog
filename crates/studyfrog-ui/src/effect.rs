@@ -163,6 +163,7 @@ pub enum Effect {
     /// Delete a profile and its settings and keys.
     DeleteProfile(String),
     /// Ask where to put a backup of the vault and write it.
+    #[rustfmt::skip]
     Backup { #[doc = "Put the API keys in it."] include_keys: bool },
     /// Ask for a backup file and read what it holds.
     ChooseBackup,

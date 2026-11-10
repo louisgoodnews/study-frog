@@ -132,9 +132,10 @@ prompt_fn!(p6, 6);
 prompt_fn!(p7, 7);
 prompt_fn!(p8, 8);
 prompt_fn!(p9, 9);
+prompt_fn!(p10, 10);
 
 type PromptFn = fn(&mut VaultCtx, &Value) -> Result<Vec<McpPromptMessage>, McpError>;
-const GETS: [PromptFn; 10] = [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9];
+const GETS: [PromptFn; 11] = [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10];
 
 /// Register every standard prompt.
 pub fn register(mut reg: McpRegistry<VaultCtx>) -> McpRegistry<VaultCtx> {

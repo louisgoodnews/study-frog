@@ -35,7 +35,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
     if response.should_close() {
         if matches!(modal, Modal::EditItem(_)) {
-            out.push(Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Close));
+            out.push(Msg::RehearsalEdit(
+                crate::rehearsal_edit::RehearsalEditMsg::Close,
+            ));
         } else {
             send(out, ModalMsg::Close);
         }

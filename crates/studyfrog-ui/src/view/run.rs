@@ -68,8 +68,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
 }
 
-const HINTS: &str =
-    "Space shows the answer  ·  1 2 3 4 rate  ·  E M D mark  ·  Ctrl+E edit  ·  S skip  ·  P pause  ·  Esc stop";
+const HINTS: &str = "Space shows the answer  ·  1 2 3 4 rate  ·  E M D mark  ·  Ctrl+E edit  ·  S skip  ·  P pause  ·  Esc stop";
 
 fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
     if ui.ctx().egui_wants_keyboard_input() {
@@ -83,10 +82,10 @@ fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
         (i.key_pressed(Key::E) && (i.modifiers.command || i.modifiers.ctrl))
             || i.key_pressed(Key::F2)
     });
-    if edit_pressed {
-        if let Some(uid) = studyfrog_rehearsal::session::current_item(&run.session) {
-            out.push(Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Open(uid)));
-        }
+    if edit_pressed && let Some(uid) = studyfrog_rehearsal::session::current_item(&run.session) {
+        out.push(Msg::RehearsalEdit(
+            crate::rehearsal_edit::RehearsalEditMsg::Open(uid),
+        ));
     }
     if awaiting_reveal(run) && pressed(Key::Space) {
         act(out, Action::Flip);
@@ -179,12 +178,13 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
             if s.run.state == RunState::Running && ui.button("Pause (P)").clicked() {
                 act(out, Action::Pause);
             }
-            if s.run.mode != RunMode::Exam {
-                if let Some(uid) = studyfrog_rehearsal::session::current_item(s) {
-                    if ui.button("Edit (Ctrl+E)").clicked() {
-                        out.push(Msg::RehearsalEdit(crate::rehearsal_edit::RehearsalEditMsg::Open(uid)));
-                    }
-                }
+            if s.run.mode != RunMode::Exam
+                && let Some(uid) = studyfrog_rehearsal::session::current_item(s)
+                && ui.button("Edit (Ctrl+E)").clicked()
+            {
+                out.push(Msg::RehearsalEdit(
+                    crate::rehearsal_edit::RehearsalEditMsg::Open(uid),
+                ));
             }
         });
     });

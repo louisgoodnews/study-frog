@@ -2,6 +2,7 @@
 //! into Properties, Schedule, Relations, and Learning tabs.
 
 mod color_row;
+mod tab_comments;
 mod tab_learning;
 mod tab_properties;
 mod tab_relations;
@@ -23,18 +24,21 @@ pub enum DetailsTab {
     Schedule,
     Relations,
     Learning,
+    Comments,
 }
 
 const STACK_TABS: &[DetailsTab] = &[
     DetailsTab::Properties,
     DetailsTab::Schedule,
     DetailsTab::Relations,
+    DetailsTab::Comments,
 ];
 
 const ITEM_TABS: &[DetailsTab] = &[
     DetailsTab::Properties,
     DetailsTab::Relations,
     DetailsTab::Learning,
+    DetailsTab::Comments,
 ];
 
 fn tabs_of(doc: &Doc) -> &'static [DetailsTab] {
@@ -51,6 +55,7 @@ fn tab_label(tab: DetailsTab) -> &'static str {
         DetailsTab::Schedule => "Schedule",
         DetailsTab::Relations => "Relations",
         DetailsTab::Learning => "Learning",
+        DetailsTab::Comments => "Comments",
     }
 }
 
@@ -103,5 +108,6 @@ pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         DetailsTab::Schedule => tab_schedule::draw(state, e, ui, out),
         DetailsTab::Relations => tab_relations::draw(state, e, ui, out),
         DetailsTab::Learning => tab_learning::draw(e, ui),
+        DetailsTab::Comments => tab_comments::draw(state, e, ui, out),
     }
 }

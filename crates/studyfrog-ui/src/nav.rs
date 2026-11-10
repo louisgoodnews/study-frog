@@ -20,6 +20,7 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
             vec![
                 Effect::LoadHome,
                 Effect::LoadSessions,
+                Effect::Folders(crate::folders_types::FolderEffect::Scan),
                 crate::pdf_library_ui::load(),
             ],
         ),

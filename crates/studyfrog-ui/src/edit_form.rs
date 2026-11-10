@@ -46,6 +46,8 @@ pub struct EditForm {
     pub color: Option<String>,
     /// The image occlusion masks of a card (STORY-0109); `None`: not an occlusion card.
     pub occlusion: Option<studyfrog_md::occlusion::Occlusion>,
+    /// Timestamped comments on the item (STORY-0135).
+    pub comments: Vec<studyfrog_core::comment::ItemComment>,
 }
 
 /// A change in the editor.
@@ -77,6 +79,10 @@ pub enum EditAction {
     ConfirmDelete,
     /// The card's image occlusion masks; `None` makes it an ordinary card again.
     Occlusion(Option<studyfrog_md::occlusion::Occlusion>),
+    /// Add a comment to the item.
+    AddComment(studyfrog_core::comment::ItemComment),
+    /// Delete a comment by its id.
+    DeleteComment(String),
 }
 
 fn field(label: &'static str, text: &str, rows: usize) -> EditField {
@@ -122,6 +128,7 @@ pub fn form_from_doc(doc: &Doc) -> EditForm {
         referenced_by: references_of(doc),
         color: color_of(doc),
         occlusion: studyfrog_md::occlusion::occlusion_of(doc),
+        comments: Vec::new(),
     }
 }
 

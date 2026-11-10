@@ -101,6 +101,8 @@ pub(crate) fn vault_opened(
                 Effect::SaveAppSettings(state.app.clone()),
                 Effect::LoadHome,
                 Effect::LoadSubjects,
+                Effect::Folders(crate::folders_types::FolderEffect::Scan),
+                crate::pdf_library_ui::load(),
             ];
             effects.extend(go);
             (state, effects)

@@ -16,9 +16,11 @@ use studyfrog_ui::state::Screen;
 
 #[test]
 fn setup_form_typed_sample_validation_and_plan() {
-    let mut form = SetupForm::default();
-    form.mode = RunMode::Answer;
-    form = apply_edit(form, SetupEdit::TypedSample(Some(50)));
+    let form = SetupForm {
+        mode: RunMode::Answer,
+        ..Default::default()
+    };
+    let form = apply_edit(form, SetupEdit::TypedSample(Some(50)));
     assert_eq!(form.typed_sample, Some(50));
 
     let plan = plan_from_form(&form, 42).unwrap();

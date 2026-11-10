@@ -15,9 +15,8 @@ fn send(out: &mut Vec<Msg>, m: RehearsalEditMsg) {
 }
 
 pub fn draw(_state: &State, f: &EditCardModal, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let save_pressed = ui.input(|i| {
-        (i.modifiers.command || i.modifiers.ctrl) && i.key_pressed(egui::Key::Enter)
-    });
+    let save_pressed =
+        ui.input(|i| (i.modifiers.command || i.modifiers.ctrl) && i.key_pressed(egui::Key::Enter));
     if save_pressed && !f.busy && !f.title.trim().is_empty() {
         send(out, RehearsalEditMsg::Save);
     }

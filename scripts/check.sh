@@ -2,6 +2,7 @@
 # Full local gate: format, lints, tests, file size, layering, no-OOP scan, issues, board.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+export RUST_MIN_STACK=${RUST_MIN_STACK:-16777216}
 
 step() { printf '\n==> %s\n' "$*"; }
 

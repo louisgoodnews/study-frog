@@ -4,6 +4,7 @@ pub mod achievement;
 pub mod appearance;
 pub mod arena;
 pub mod civil;
+pub mod comment;
 pub mod diary;
 pub mod event;
 pub mod exam;

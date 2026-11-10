@@ -2,7 +2,7 @@
 id: EPIC-042
 type: epic
 title: Interactive AI content generation and parameter-guided prompt workflows
-status: backlog
+status: done
 parents: []
 labels: [m12, agent, docs, ui]
 acceptance_criteria:
@@ -33,9 +33,9 @@ Deliver interactive, parameter-guided content generation workflows in StudyFrog'
    - Highlight interactive generation prompts in the Prompt Library with dedicated badges and configuration drawers.
 
 ## Acceptance Criteria
-- [ ] The prompt library provides interactive prompts that guide AI models to consult the user for preferences before generating flashcards, questions, or notes from a source file
-- [ ] Interactive prompts guide the user through choices including relevant content scope, target language, difficulty level, and presentation style
-- [ ] The Assistant and Prompt Library UI support multi-turn interactive prompt sessions with option selection chips and staged confirmation before vault insertion
+- [x] The prompt library provides interactive prompts that guide AI models to consult the user for preferences before generating flashcards, questions, or notes from a source file
+- [x] Interactive prompts guide the user through choices including relevant content scope, target language, difficulty level, and presentation style
+- [x] The Assistant and Prompt Library UI support multi-turn interactive prompt sessions with option selection chips and staged confirmation before vault insertion
 
 ## Design Notes
 Child stories:

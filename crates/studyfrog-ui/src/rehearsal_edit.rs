@@ -44,7 +44,7 @@ pub enum RehearsalEditMsg {
     /// Request opening modal for the item.
     Open(Uid),
     /// Loaded document from disk.
-    Loaded(Uid, Result<LoadedDoc, String>),
+    Loaded(Uid, Box<Result<LoadedDoc, String>>),
     /// Title changed.
     EditTitle(String),
     /// Front/prompt body changed.
@@ -67,110 +67,42 @@ pub enum RehearsalEditEffect {
     /// Read a document for editing.
     Load(Uid),
     /// Save edited document: (uid, path, doc, hash).
-    Save(Uid, String, Doc, u64),
+    Save(Uid, String, Box<Doc>, u64),
 }
 
-/// Initialize edit modal state from a loaded document.
-pub fn from_loaded(loaded: LoadedDoc, uid: Uid) -> EditCardModal {
-    let (kind, title, text, answer, tags) = match &loaded.doc {
-        Doc::Card(c) => (
-            NewKind::Card,
-            c.meta.title.clone(),
-            c.front.clone(),
-            c.back.clone(),
-            c.meta.tags.join(", "),
-        ),
-        Doc::Question(q) => (
-            NewKind::Question,
-            q.meta.title.clone(),
-            q.prompt.clone(),
-            q.reference.clone(),
-            q.meta.tags.join(", "),
-        ),
-        Doc::Note(n) => (
-            NewKind::Note,
-            n.meta.title.clone(),
-            n.body.clone(),
-            String::new(),
-            n.meta.tags.join(", "),
-        ),
-        Doc::Stack(s) => (
-            NewKind::Stack,
-            s.meta.title.clone(),
-            s.description.clone(),
-            s.body.clone(),
-            s.meta.tags.join(", "),
-        ),
-        Doc::Diary(d) => (
-            NewKind::Note,
-            d.meta.title.clone(),
-            d.body.clone(),
-            String::new(),
-            d.meta.tags.join(", "),
-        ),
-    };
-    EditCardModal {
-        uid,
-        path: loaded.path,
-        hash: loaded.hash,
-        doc: loaded.doc,
-        kind,
-        title,
-        text,
-        answer,
-        tags,
-        busy: false,
-        error: None,
-    }
-}
-
-/// Build a modified Doc with updated fields from the edit modal.
-pub fn apply_to_doc(m: &EditCardModal) -> Doc {
-    let tags: Vec<String> = m.tags.split(',').map(str::trim).filter(|t| !t.is_empty()).map(str::to_owned).collect();
-    match &m.doc {
-        Doc::Card(c) => {
-            let mut c = c.clone();
-            c.meta.title = m.title.clone();
-            c.meta.tags = tags;
-            c.front = m.text.clone();
-            c.back = m.answer.clone();
-            Doc::Card(c)
-        }
-        Doc::Question(q) => {
-            let mut q = q.clone();
-            q.meta.title = m.title.clone();
-            q.meta.tags = tags;
-            q.prompt = m.text.clone();
-            q.reference = m.answer.clone();
-            Doc::Question(q)
-        }
-        Doc::Note(n) => {
-            let mut n = n.clone();
-            n.meta.title = m.title.clone();
-            n.meta.tags = tags;
-            n.body = m.text.clone();
-            Doc::Note(n)
-        }
-        other => other.clone(),
-    }
-}
+pub use crate::rehearsal_edit_doc::{apply_to_doc, from_loaded};
 
 /// Handle messages for in-rehearsal quick card editing.
 pub fn update(state: State, msg: RehearsalEditMsg) -> (State, Vec<Effect>) {
     match msg {
         RehearsalEditMsg::Open(uid) => open_edit(state, uid),
-        RehearsalEditMsg::Loaded(uid, res) => doc_loaded(state, uid, res),
-        RehearsalEditMsg::EditTitle(t) => with_modal(state, |mut m| { m.title = t; m }),
-        RehearsalEditMsg::EditText(t) => with_modal(state, |mut m| { m.text = t; m }),
-        RehearsalEditMsg::EditAnswer(a) => with_modal(state, |mut m| { m.answer = a; m }),
-        RehearsalEditMsg::EditTags(t) => with_modal(state, |mut m| { m.tags = t; m }),
+        RehearsalEditMsg::Loaded(uid, res) => doc_loaded(state, uid, *res),
+        RehearsalEditMsg::EditTitle(t) => with_modal(state, |mut m| {
+            m.title = t;
+            m
+        }),
+        RehearsalEditMsg::EditText(t) => with_modal(state, |mut m| {
+            m.text = t;
+            m
+        }),
+        RehearsalEditMsg::EditAnswer(a) => with_modal(state, |mut m| {
+            m.answer = a;
+            m
+        }),
+        RehearsalEditMsg::EditTags(t) => with_modal(state, |mut m| {
+            m.tags = t;
+            m
+        }),
         RehearsalEditMsg::Save => save_edit(state),
         RehearsalEditMsg::Saved(res) => edit_saved(state, res),
         RehearsalEditMsg::Close => close_edit(state),
     }
 }
 
-fn with_modal(mut state: State, f: impl FnOnce(EditCardModal) -> EditCardModal) -> (State, Vec<Effect>) {
+fn with_modal(
+    mut state: State,
+    f: impl FnOnce(EditCardModal) -> EditCardModal,
+) -> (State, Vec<Effect>) {
     if let Some(Modal::EditItem(m)) = state.modal.take() {
         state.modal = Some(Modal::EditItem(Box::new(f(*m))));
     }
@@ -178,9 +110,11 @@ fn with_modal(mut state: State, f: impl FnOnce(EditCardModal) -> EditCardModal) 
 }
 
 fn open_edit(state: State, uid: Uid) -> (State, Vec<Effect>) {
-    let running = state.rehearse.run.as_ref().is_some_and(|r| {
-        r.session.run.state == studyfrog_core::run::RunState::Running
-    });
+    let running = state
+        .rehearse
+        .run
+        .as_ref()
+        .is_some_and(|r| r.session.run.state == studyfrog_core::run::RunState::Running);
     let (state, mut effects) = if running {
         crate::run_update::act(state, Action::Pause)
     } else {
@@ -207,8 +141,12 @@ fn doc_loaded(mut state: State, uid: Uid, res: Result<LoadedDoc, String>) -> (St
 }
 
 fn save_edit(mut state: State) -> (State, Vec<Effect>) {
-    let Some(Modal::EditItem(ref mut m)) = state.modal else { return (state, Vec::new()); };
-    if m.busy { return (state, Vec::new()); }
+    let Some(Modal::EditItem(ref mut m)) = state.modal else {
+        return (state, Vec::new());
+    };
+    if m.busy {
+        return (state, Vec::new());
+    }
     if m.title.trim().is_empty() {
         m.error = Some("title cannot be empty".to_owned());
         return (state, Vec::new());
@@ -216,7 +154,12 @@ fn save_edit(mut state: State) -> (State, Vec<Effect>) {
     m.busy = true;
     m.error = None;
     let doc = apply_to_doc(m);
-    let effect = Effect::RehearsalEdit(RehearsalEditEffect::Save(m.uid, m.path.clone(), doc, m.hash));
+    let effect = Effect::RehearsalEdit(RehearsalEditEffect::Save(
+        m.uid,
+        m.path.clone(),
+        Box::new(doc),
+        m.hash,
+    ));
     (state, vec![effect])
 }
 
@@ -224,7 +167,10 @@ fn edit_saved(mut state: State, res: Result<Uid, String>) -> (State, Vec<Effect>
     match res {
         Ok(uid) => {
             state.modal = None;
-            state.notice = Some(Notice { kind: NoticeKind::Info, text: "Item updated".to_owned() });
+            state.notice = Some(Notice {
+                kind: NoticeKind::Info,
+                text: "Item updated".to_owned(),
+            });
             (state, vec![Effect::LoadItem(uid)])
         }
         Err(e) => {

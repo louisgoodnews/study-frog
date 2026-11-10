@@ -2,7 +2,7 @@
 id: EPIC-039
 type: epic
 title: Universal item linking between stacks, cards, questions, answers, and notes
-status: backlog
+status: done
 parents: []
 labels: [m12, core, md, store, graph, ui]
 acceptance_criteria:
@@ -44,9 +44,9 @@ Deliver an end-to-end item linking framework with rich logic, indexing, and visu
    - **Rehearsal Context Links:** Rehearsal and Exam cards display related item pills allowing instant jump or side-by-side inspection of referenced items or answers.
 
 ## Acceptance Criteria
-- [ ] The Markdown engine and link resolver support universal linking between all item types (stacks, cards, questions, answers, and notes) using item keys, titles, paths, and sub-item anchors (e.g. #back, #answer, #heading)
-- [ ] The SQLite index tracks bidirectional links across all item kinds, powering backlinks, reference queries, and a multi-kind visual knowledge graph
-- [ ] The UI renders kind-badged link chips with target color accents, hover preview popovers, an editor [[ autocomplete picker, and an enhanced Relations notebook tab
+- [x] The Markdown engine and link resolver support universal linking between all item types (stacks, cards, questions, answers, and notes) using item keys, titles, paths, and sub-item anchors (e.g. #back, #answer, #heading)
+- [x] The SQLite index tracks bidirectional links across all item kinds, powering backlinks, reference queries, and a multi-kind visual knowledge graph
+- [x] The UI renders kind-badged link chips with target color accents, hover preview popovers, an editor [[ autocomplete picker, and an enhanced Relations notebook tab
 
 ## Design Notes
 Child stories:

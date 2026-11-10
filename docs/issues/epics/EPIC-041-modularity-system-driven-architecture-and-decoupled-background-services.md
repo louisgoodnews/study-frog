@@ -2,7 +2,7 @@
 id: EPIC-041
 type: epic
 title: "Modularity: system-driven application architecture and decoupled background services"
-status: backlog
+status: done
 parents: []
 labels: [m12, core, service, ui]
 acceptance_criteria:
@@ -35,9 +35,9 @@ Redesign StudyFrog's architecture toward system-driven modularity:
    - Views receive snapshot state via `State` and issue explicit user commands (`Msg`) rather than driving background data gathering.
 
 ## Acceptance Criteria
-- [ ] Core domain systems (file surveys, vault indexing, background reindexing, achievements, notifications, and analytics calculation) are wired into application lifecycle and background workers rather than driven lazily by specific UI views
-- [ ] Switching vaults or loading the dashboard immediately dispatches file surveys and background indexing so all files and items appear without requiring the user to open the Files screen first
-- [ ] UI screens interact with core systems through decoupled query and command functions, separating domain system execution from screen render loops
+- [x] Core domain systems (file surveys, vault indexing, background reindexing, achievements, notifications, and analytics calculation) are wired into application lifecycle and background workers rather than driven lazily by specific UI views
+- [x] Switching vaults or loading the dashboard immediately dispatches file surveys and background indexing so all files and items appear without requiring the user to open the Files screen first
+- [x] UI screens interact with core systems through decoupled query and command functions, separating domain system execution from screen render loops
 
 ## Design Notes
 Touchpoints across crates:

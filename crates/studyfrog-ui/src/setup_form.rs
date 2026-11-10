@@ -122,7 +122,10 @@ fn plan_to_form(plan: &RunPlan, mode: RunMode) -> SetupForm {
         diff_max: "10".to_owned(),
         fam_on: plan.filter.familiarity_below.is_some(),
         pacing: crate::setup_pacing::form_of(plan.pacing),
-        fam_below: plan.filter.familiarity_below.map_or_else(|| "60".to_owned(), |f| format!("{}", (f * 100.0).round())),
+        fam_below: plan
+            .filter
+            .familiarity_below
+            .map_or_else(|| "60".to_owned(), |f| format!("{}", (f * 100.0).round())),
         typed_sample: plan.typed_sample,
     }
 }
@@ -145,22 +148,6 @@ pub fn form_for_preset(preset: Preset, mode: RunMode) -> SetupForm {
 impl Default for SetupForm {
     fn default() -> Self {
         form_for_preset(Preset::Spaced, RunMode::Flip)
-    }
-}
-
-pub(crate) fn number<T: std::str::FromStr>(text: &str, what: &str) -> Result<T, String> {
-    text.trim()
-        .parse()
-        .map_err(|_| format!("{what} must be a number"))
-}
-
-fn limit(f: &SetupForm) -> Result<Option<u32>, String> {
-    if f.limit.trim().is_empty() {
-        return Ok(None);
-    }
-    match number::<u32>(&f.limit, "the limit")? {
-        0 => Err("the limit must be at least 1".to_owned()),
-        n => Ok(Some(n)),
     }
 }
 
@@ -187,10 +174,12 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
         effect: f.effect,
         shuffle: f.shuffle,
         seed,
-        limit: limit(f)?,
+        limit: crate::setup_fam::limit(f)?,
         requeue_again: f.requeue_again,
         pacing: crate::setup_pacing::pacing_from(&f.pacing)?,
-        typed_sample: (f.mode == RunMode::Answer).then_some(f.typed_sample).flatten(),
+        typed_sample: (f.mode == RunMode::Answer)
+            .then_some(f.typed_sample)
+            .flatten(),
     };
     match f.mode {
         RunMode::Exam => studyfrog_core::exam::exam_plan(plan),
@@ -200,7 +189,9 @@ pub fn plan_from_form(f: &SetupForm, seed: u64) -> Result<RunPlan, String> {
 
 fn toggle<T: PartialEq>(mut list: Vec<T>, item: T, on: bool) -> Vec<T> {
     list.retain(|x| *x != item);
-    if on { list.push(item); }
+    if on {
+        list.push(item);
+    }
     list
 }
 
@@ -229,7 +220,9 @@ pub fn apply_edit(f: SetupForm, edit: SetupEdit) -> SetupForm {
             ..f
         },
         SetupEdit::Stacks(uids, on) => SetupForm {
-            stacks: uids.into_iter().fold(f.stacks.clone(), |l, u| toggle(l, u, on)),
+            stacks: uids
+                .into_iter()
+                .fold(f.stacks.clone(), |l, u| toggle(l, u, on)),
             ..f
         },
         SetupEdit::Tags(tags) => SetupForm { tags, ..f },

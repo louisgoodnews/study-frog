@@ -61,6 +61,8 @@ pub(crate) fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
             EditAction::Status(s) => e.form.status = s,
             EditAction::Color(c) => e.form.color = c.and_then(|c| normalize_color(&c)),
             EditAction::Occlusion(o) => e.form.occlusion = o,
+            EditAction::AddComment(c) => e.form.comments.push(c),
+            EditAction::DeleteComment(id) => e.form.comments.retain(|c| c.id != id),
             EditAction::Subject(name, on) => {
                 e.form.subjects.retain(|s| *s != name);
                 if on {

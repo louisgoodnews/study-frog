@@ -2,7 +2,23 @@
 
 use studyfrog_core::plan::DifficultyRange;
 
-use crate::setup_form::{SetupForm, number};
+use crate::setup_form::SetupForm;
+
+pub(crate) fn number<T: std::str::FromStr>(text: &str, what: &str) -> Result<T, String> {
+    text.trim()
+        .parse()
+        .map_err(|_| format!("{what} must be a number"))
+}
+
+pub(crate) fn limit(f: &SetupForm) -> Result<Option<u32>, String> {
+    if f.limit.trim().is_empty() {
+        return Ok(None);
+    }
+    match number::<u32>(&f.limit, "the limit")? {
+        0 => Err("the limit must be at least 1".to_owned()),
+        n => Ok(Some(n)),
+    }
+}
 
 /// The bound the form asks for, as a fraction; `None` when the filter is off.
 pub fn familiarity_bound(f: &SetupForm) -> Result<Option<f32>, String> {

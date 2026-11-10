@@ -7,6 +7,21 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-11-10
+
+### Added
+- In-rehearsal quick item editing: edit cards, questions, and notes without leaving or resetting the active rehearsal run; triggered via `Ctrl+E` / `Cmd+E` / `F2` shortcut or `✏ Edit` buttons on the card and top strip; automatically pauses run and timer; allows editing Title, Prompt/Front, Answer/Back, and Tags; on save, persists changes to disk, re-indexes, and hot-reloads card content in place.
+- Intermittent typed active recall sampling (STORY-0136, EPIC-040): rehearsal setup introduces a configurable `Typed answer sampling (0-100%)` setting; during rehearsal, runs dynamically alternate between typed answers and flip cards according to the sampling percentage; notes are excluded from typed answer requirements; card header displays mode indicator.
+- Item comments system (STORY-0135, EPIC-039): dedicated Comments tab in the Item Details notebook with author badges, timestamped entries, and add/delete controls; domain models in `studyfrog-core::comment`.
+- Interactive parameter-guided content generation prompt (STORY-0137, EPIC-042): new `interactive_extract` prompt in Prompt Library under Create Content, guiding AI models through an intake interview (scope outline, language, difficulty tier, format style) before generating StudyFrog-compatible CSV cards.
+
+### Changed
+- System-driven modularity and decoupled background services (EPIC-041): file surveys, folder scans, and library index updates trigger immediately upon vault open, vault switch, and dashboard/library navigation rather than lazily waiting for the Files screen to open.
+- Rehearsal lapse queue positioning: items rated `Again` during rehearsal are automatically moved to the last position of the active run queue instead of reappearing prematurely, allowing the user to complete the current cycle before re-testing lapses.
+
+### Fixed
+- Metacognitive calibration measured accuracy baseline (BUG-0016): replaced naive binary recall ratio (`recalled / total`) with a multi-factor recall accuracy baseline that weights item familiarity and novelty ($0.35 + 0.65 \times \text{familiarity}$), rating grades (`Easy` 1.0, `Good` 0.85, `Hard` 0.50, `Again` 0.0), and reading latency relative to expected reading speed; eliminates distorted 100% measured accuracy on unpracticed items.
+
 ## [0.6.0] - 2026-11-09
 
 ### Added

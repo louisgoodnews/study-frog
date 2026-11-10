@@ -19,6 +19,7 @@ fn there_are_ten_prompts_with_a_title_and_a_summary() {
         ids,
         [
             "flashcards",
+            "interactive_extract",
             "questions",
             "stack",
             "notes",
@@ -64,6 +65,7 @@ fn the_worked_example_of_every_prompt_is_read_by_the_importer_without_a_problem(
         "flashcards" | "exam" => vec![ItemKind::Card],
         "questions" => vec![ItemKind::Question],
         "stack" => vec![ItemKind::Note, ItemKind::Card, ItemKind::Question],
+        "interactive_extract" => vec![ItemKind::Card, ItemKind::Question],
         _ => vec![ItemKind::Note],
     };
     for source in PROMPTS {

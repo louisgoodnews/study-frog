@@ -54,7 +54,9 @@ fn read_run_row(conn: &Connection, uid: Uid) -> Result<Option<RunRow>, StoreErro
             pacing: r.get(12)?,
             countdown: r.get(13)?,
             fam_below: r.get(14)?,
-            typed_sample: r.get::<_, Option<i64>>(15)?.and_then(|v| u8::try_from(v).ok()),
+            typed_sample: r
+                .get::<_, Option<i64>>(15)?
+                .and_then(|v| u8::try_from(v).ok()),
         })
     });
     match found {

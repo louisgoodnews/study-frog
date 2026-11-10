@@ -47,9 +47,9 @@ fn the_screen_lists_the_ten_prompts_with_copy_save_and_run() {
     ] {
         assert!(h.query_by_label(title).is_some(), "{title}");
     }
-    assert_eq!(h.query_all_by_label("Copy to clipboard").count(), 10);
-    assert_eq!(h.query_all_by_label("Save as .md").count(), 10);
-    assert_eq!(h.query_all_by_label("Run with the assistant").count(), 10);
+    assert_eq!(h.query_all_by_label("Copy to clipboard").count(), 11);
+    assert_eq!(h.query_all_by_label("Save as .md").count(), 11);
+    assert_eq!(h.query_all_by_label("Run with the assistant").count(), 11);
     assert_all_named(&h, "prompts tab");
     h.get_all_by_label("Save as .md").next().unwrap().click();
     h.run_steps(3);
@@ -61,7 +61,7 @@ fn the_screen_lists_the_ten_prompts_with_copy_save_and_run() {
     h.run_steps(3);
     let all =
         h.state().1.iter().any(
-            |e| matches!(e, Effect::Prompts(PromptsEffect::Export(ids, _)) if ids.len() == 10),
+            |e| matches!(e, Effect::Prompts(PromptsEffect::Export(ids, _)) if ids.len() == 11),
         );
     assert!(all);
 }
@@ -87,7 +87,7 @@ fn saving_writes_one_markdown_file_per_prompt_into_the_chosen_folder_or_nothing_
         .unwrap()
         .map(|e| e.unwrap().file_name().to_string_lossy().into_owned())
         .collect();
-    assert_eq!(names.len(), 10);
+    assert_eq!(names.len(), 11);
     assert!(names.contains("studyfrog-prompt-flashcards.md"));
     let text = std::fs::read_to_string(dir.path.join("studyfrog-prompt-stack.md")).unwrap();
     assert!(
@@ -100,7 +100,7 @@ fn saving_writes_one_markdown_file_per_prompt_into_the_chosen_folder_or_nothing_
             .as_ref()
             .unwrap()
             .text
-            .starts_with("Saved 10 prompts")
+            .starts_with("Saved 11 prompts")
     );
 }
 
@@ -127,7 +127,7 @@ fn the_tab_offers_to_run_a_prompt_and_shows_what_would_be_sent_before_the_send_b
 #[test]
 fn the_category_and_the_search_narrow_the_list() {
     let mut m = open_model();
-    assert_eq!(ids(&m).len(), 10);
+    assert_eq!(ids(&m).len(), 11);
     apply(
         &mut m,
         Msg::Prompts(PromptsMsg::Category(Some(

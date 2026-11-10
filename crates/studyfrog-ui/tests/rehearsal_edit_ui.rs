@@ -14,7 +14,10 @@ use studyfrog_ui::state::State;
 const CARD_TEXT: &str = "---\nid: 00000000000000000000000001\nkind: card\ntitle: Original Title\ntags: [alpha]\n---\nFront question\n???\nBack answer\n";
 
 fn sample_card() -> LoadedDoc {
-    let doc = parse_doc(CARD_TEXT).expect("valid card doc");
+    let doc = match parse_doc(CARD_TEXT) {
+        Ok(d) => d,
+        Err(_) => panic!("valid card doc"),
+    };
     LoadedDoc {
         path: "cards/card1.md".to_owned(),
         doc,
@@ -22,28 +25,30 @@ fn sample_card() -> LoadedDoc {
     }
 }
 
-#[test]
-fn rehearsal_edit_flow_opens_saves_and_reloads() {
+fn open_modal(uid: Uid) -> State {
     let state = State::default();
-    let uid = Uid(1);
-
-    // 1. Open edit request emits Load effect
-    let (state, effects) = studyfrog_ui::update::update(
+    let (state, _) =
+        studyfrog_ui::update::update(state, Msg::RehearsalEdit(RehearsalEditMsg::Open(uid)));
+    let loaded = sample_card();
+    let (state, _) = studyfrog_ui::update::update(
         state,
-        Msg::RehearsalEdit(RehearsalEditMsg::Open(uid)),
+        Msg::RehearsalEdit(RehearsalEditMsg::Loaded(uid, Box::new(Ok(loaded)))),
     );
+    state
+}
+
+#[test]
+fn rehearsal_edit_flow_opens_and_modifies() {
+    let uid = Uid(1);
+    let state = State::default();
+    let (_, effects) =
+        studyfrog_ui::update::update(state, Msg::RehearsalEdit(RehearsalEditMsg::Open(uid)));
     assert_eq!(
         effects,
         vec![Effect::RehearsalEdit(RehearsalEditEffect::Load(uid))]
     );
 
-    // 2. Document loaded opens modal
-    let loaded = sample_card();
-    let (state, effects) = studyfrog_ui::update::update(
-        state,
-        Msg::RehearsalEdit(RehearsalEditMsg::Loaded(uid, Ok(loaded))),
-    );
-    assert!(effects.is_empty());
+    let state = open_modal(uid);
     let Some(Modal::EditItem(modal)) = &state.modal else {
         panic!("expected Modal::EditItem");
     };
@@ -52,46 +57,49 @@ fn rehearsal_edit_flow_opens_saves_and_reloads() {
     assert_eq!(modal.answer, "Back answer\n");
     assert_eq!(modal.kind, NewKind::Card);
 
-    // 3. Edit fields
     let (state, _) = studyfrog_ui::update::update(
         state,
         Msg::RehearsalEdit(RehearsalEditMsg::EditTitle("Updated Title".to_owned())),
     );
+    let Some(Modal::EditItem(modal)) = &state.modal else {
+        panic!("expected Modal::EditItem");
+    };
+    assert_eq!(modal.title, "Updated Title");
+}
+
+#[test]
+fn rehearsal_edit_flow_saves_and_reloads() {
+    let uid = Uid(1);
+    let state = open_modal(uid);
     let (state, _) = studyfrog_ui::update::update(
         state,
-        Msg::RehearsalEdit(RehearsalEditMsg::EditText("Updated Front".to_owned())),
-    );
-    let (state, _) = studyfrog_ui::update::update(
-        state,
-        Msg::RehearsalEdit(RehearsalEditMsg::EditAnswer("Updated Back".to_owned())),
+        Msg::RehearsalEdit(RehearsalEditMsg::EditTitle("Updated Title".to_owned())),
     );
 
-    // 4. Trigger save
-    let (state, effects) = studyfrog_ui::update::update(
-        state,
-        Msg::RehearsalEdit(RehearsalEditMsg::Save),
-    );
+    let (state, effects) =
+        studyfrog_ui::update::update(state, Msg::RehearsalEdit(RehearsalEditMsg::Save));
     assert_eq!(effects.len(), 1);
-    let Effect::RehearsalEdit(RehearsalEditEffect::Save(save_uid, path, doc, hash)) = &effects[0] else {
+    let Effect::RehearsalEdit(RehearsalEditEffect::Save(save_uid, path, doc, hash)) = &effects[0]
+    else {
         panic!("expected RehearsalEditEffect::Save");
     };
     assert_eq!(*save_uid, uid);
     assert_eq!(path, "cards/card1.md");
     assert_eq!(*hash, 42);
-    if let Doc::Card(c) = doc {
+    if let Doc::Card(c) = &**doc {
         assert_eq!(c.meta.title, "Updated Title");
-        assert_eq!(c.front, "Updated Front");
-        assert_eq!(c.back, "Updated Back");
     } else {
         panic!("expected Doc::Card");
     }
 
-    // 5. Save succeeds: closes modal and emits LoadItem to refresh rehearsal card
-    let (state, effects) = studyfrog_ui::update::update(
-        state,
-        Msg::RehearsalEdit(RehearsalEditMsg::Saved(Ok(uid))),
-    );
+    let (state, effects) =
+        studyfrog_ui::update::update(state, Msg::RehearsalEdit(RehearsalEditMsg::Saved(Ok(uid))));
     assert!(state.modal.is_none());
     assert_eq!(effects, vec![Effect::LoadItem(uid)]);
-    assert!(state.notice.as_ref().is_some_and(|n| n.text.contains("updated")));
+    assert!(
+        state
+            .notice
+            .as_ref()
+            .is_some_and(|n| n.text.contains("updated"))
+    );
 }

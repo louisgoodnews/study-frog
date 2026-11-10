@@ -2,7 +2,7 @@
 id: STORY-0135
 type: story
 title: Comments for items
-status: backlog
+status: done
 epic: EPIC-039
 parents: [EPIC-039]
 estimate: 5
@@ -47,9 +47,9 @@ Deliver an end-to-end comment system for StudyFrog items:
    - Expose corresponding MCP server tools: `vault_add_comment`, `vault_list_comments`.
 
 ## Acceptance Criteria
-- [ ] Vault items (stacks, cards, questions, and notes) support timestamped comments with author metadata in YAML front-matter (comments: [{ id, author, created, text }])
-- [ ] The Item Details notebook provides a dedicated Comments tab/section displaying chronological comments, author badges (learner or agent), and controls to add, edit, or delete comments
-- [ ] Comments are indexed in SQLite, searchable via query filters (e.g. has:comments, comment:<text>), and accessible through CLI control protocol and MCP tools
+- [x] Vault items (stacks, cards, questions, and notes) support timestamped comments with author metadata in YAML front-matter (comments: [{ id, author, created, text }])
+- [x] The Item Details notebook provides a dedicated Comments tab/section displaying chronological comments, author badges (learner or agent), and controls to add, edit, or delete comments
+- [x] Comments are indexed in SQLite, searchable via query filters (e.g. has:comments, comment:<text>), and accessible through CLI control protocol and MCP tools
 
 ## Design Notes
 - **Storage Strategy:** Comments live directly in the Markdown front-matter to adhere to StudyFrog's file-first philosophy; files copied to other systems or synced via Git retain all annotations without requiring a separate database dump.
