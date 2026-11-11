@@ -199,6 +199,11 @@ fn viewport_for(options: &RunOptions) -> egui::ViewportBuilder {
         .with_min_inner_size([640.0, 420.0])
         .with_decorations(false)
         .with_title("StudyFrog");
+    if let Ok(icon) =
+        eframe::icon_data::from_png_bytes(include_bytes!("../../../packaging/studyfrog.png"))
+    {
+        view = view.with_icon(icon);
+    }
     if let Some(r) = remembered {
         if let (Some(x), Some(y)) = (r.x, r.y) {
             view = view.with_position([x as f32, y as f32]);

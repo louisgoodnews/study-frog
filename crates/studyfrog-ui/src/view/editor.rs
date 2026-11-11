@@ -17,9 +17,6 @@ const SIDE_WIDTH: f32 = 300.0;
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(e) = &state.editor else { return };
     toolbar(e, ui, out);
-    if e.confirm_delete {
-        confirm_delete_bar(ui, out);
-    }
     crate::view::extract_panel::panel(state, e, ui, out);
     ui.add_space(6.0);
     let p = palette_of(ui);
@@ -144,17 +141,4 @@ fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             crate::view::occlusion_edit::section(e, ui, out);
         }
     }
-}
-
-fn confirm_delete_bar(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.add_space(4.0);
-    ui.horizontal(|ui| {
-        ui.label("Delete this item?");
-        if ui.button("Yes, delete").clicked() {
-            out.push(Msg::Edit(EditAction::ConfirmDelete));
-        }
-        if ui.button("Cancel").clicked() {
-            out.push(Msg::Edit(EditAction::AskDelete(false)));
-        }
-    });
 }

@@ -200,10 +200,7 @@ pub fn update(mut state: State, msg: FoldersMsg) -> (State, Vec<Effect>) {
         }
         FoldersMsg::Open(path) => {
             if path.ends_with(".pdf") {
-                let fx = vec![Effect::Pdf(crate::pdf_types::PdfEffect::Library(
-                    crate::pdf_library_types::LibraryJob::Load,
-                ))];
-                return (state, fx);
+                return crate::pdf_ui::open(state, path, 0);
             }
             if let Some(item) = state
                 .library

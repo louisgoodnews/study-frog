@@ -48,6 +48,9 @@ pub fn modal_json(m: &Modal) -> Value {
         Modal::EditItem(f) => json!({
             "kind": "edit_item", "item_uid": ulid(f.uid), "title": f.title, "error": f.error, "busy": f.busy,
         }),
+        Modal::DeleteItem(uid, title) => json!({
+            "kind": "delete_item", "item_uid": ulid(*uid), "title": title,
+        }),
     }
 }
 

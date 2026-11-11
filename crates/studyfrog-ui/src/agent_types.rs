@@ -1,6 +1,6 @@
 //! The state and messages of the assistant screen (ADR 0009).
 
-use studyfrog_agent::exam::{ExamItem, ExamResult};
+use studyfrog_agent::exam::ExamItem;
 use studyfrog_agent::provider::{Message, Protocol};
 use studyfrog_agent::wiki::{ContextItem, Proposal};
 use studyfrog_service::agent::Connections;
@@ -8,9 +8,11 @@ use studyfrog_service::agent_vault::{Applied, WikiContext};
 
 use crate::state::VaultInfo;
 
-/// The three parts of the screen.
+/// The parts of the screen.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum AgentTab {
+    /// Chat with the assistant.
+    Chat,
     /// The models the user connected.
     #[default]
     Connections,
@@ -22,25 +24,12 @@ pub enum AgentTab {
     Prompts,
 }
 
-/// The form for a new connection.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ConnForm {
-    /// Name.
-    pub name: String,
-    /// Protocol.
-    pub protocol: Protocol,
-    /// Address.
-    pub base_url: String,
-    /// Model.
-    pub model: String,
-    /// API key (kept only until it is saved).
-    pub key: String,
-}
+pub use crate::agent_conn_types::{ConnForm, ExamState, FormEdit};
 
 /// A request waiting for the user's go-ahead: what will be sent where.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Pending {
-    /// The stacks.
+    /// The stacks included.
     pub stacks: Vec<(String, String)>,
     /// The items that would be sent.
     pub items: Vec<ContextItem>,
@@ -57,21 +46,6 @@ pub struct Reviewing {
     pub proposal: Proposal,
     /// Whether each change is accepted.
     pub accepted: Vec<bool>,
-}
-
-/// An exam in progress or finished.
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
-pub struct ExamState {
-    /// The questions the examiner knows.
-    pub items: Vec<ExamItem>,
-    /// The conversation so far (the first turn only starts the exam).
-    pub chat: Vec<Message>,
-    /// What the student is typing.
-    pub input: String,
-    /// The verdicts, once the examiner gave them.
-    pub results: Option<Vec<ExamResult>>,
-    /// The verdicts were recorded as reviews.
-    pub recorded: Option<u32>,
 }
 
 /// Everything about the assistant screen.
@@ -111,6 +85,12 @@ pub struct AgentState {
     pub mcp: crate::agent_mcp_types::McpUi,
     /// "Test connection": running tests and their outcomes.
     pub conn_tests: crate::agent_conn_test::ConnTests,
+    /// Chat messages.
+    pub chat_messages: Vec<Message>,
+    /// Chat input text.
+    pub chat_input: String,
+    /// Chat busy waiting for response.
+    pub chat_busy: bool,
 }
 
 impl Default for AgentState {
@@ -139,23 +119,11 @@ impl Default for AgentState {
             error: None,
             mcp: crate::agent_mcp_types::McpUi::default(),
             conn_tests: crate::agent_conn_test::ConnTests::default(),
+            chat_messages: Vec::new(),
+            chat_input: String::new(),
+            chat_busy: false,
         }
     }
-}
-
-/// A field of the connection form.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum FormEdit {
-    /// The name.
-    Name(String),
-    /// The protocol (also resets the address to its usual one).
-    Protocol(Protocol),
-    /// The address.
-    BaseUrl(String),
-    /// The model.
-    Model(String),
-    /// The key.
-    Key(String),
 }
 
 /// Messages of the assistant screen.
@@ -223,6 +191,14 @@ pub enum AgentMsg {
     ExamRecorded(Result<u32, String>),
     /// Staged proposals and undo entries of AI clients.
     Mcp(crate::agent_mcp_types::McpMsg),
+    /// Chat input text changed.
+    ChatInput(String),
+    /// Send chat message.
+    ChatSend,
+    /// Chat model answered.
+    ChatReplied(Result<String, String>),
+    /// Clear chat messages.
+    ChatClear,
 }
 
 pub use crate::agent_conn::{accepted_changes, selected_provider};
@@ -230,6 +206,8 @@ pub use crate::agent_conn::{accepted_changes, selected_provider};
 /// What a model answer is for, so the worker knows how to read it.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ChatPurpose {
+    /// Interactive chat conversation.
+    Chat,
     /// A wiki proposal; carries the item ids and stack folders the model was shown.
     Wiki(Vec<String>, Vec<String>),
     /// An exam turn.

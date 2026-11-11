@@ -2,6 +2,7 @@
 
 mod achievements;
 mod agent;
+mod agent_chat;
 mod agent_conn_test;
 mod agent_describe;
 mod agent_exam;

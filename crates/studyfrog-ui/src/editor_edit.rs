@@ -78,7 +78,8 @@ pub(crate) fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
                 e.form.referenced_by.retain(|x| x != &id);
             }
             EditAction::AskDelete(on) => {
-                e.confirm_delete = on;
+                state.modal =
+                    on.then(|| crate::modal_types::Modal::DeleteItem(e.uid, e.form.title.clone()));
                 return (state, Vec::new());
             }
             EditAction::ConfirmDelete => {

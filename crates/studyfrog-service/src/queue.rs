@@ -150,10 +150,11 @@ pub fn new_run(conn: &Connection, req: NewRun, vault: &VaultSettings) -> Result<
     } else {
         HashMap::new()
     };
+    let effective_now = UnixMs(req.now.0.max(req.day.end.0.saturating_sub(1)));
     let queue = build_queue(
         &candidates(&items, (&sched, &req.plan.filter.stacks), &fams),
         &plan,
-        req.now,
+        effective_now,
         &budgets,
         &params_for(vault, None),
     );

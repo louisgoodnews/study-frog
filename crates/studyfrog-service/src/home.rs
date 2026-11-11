@@ -113,11 +113,11 @@ pub struct HomeSummary {
 /// The most overdue items, leaving out those of expired stacks.
 fn kept_due_items(
     conn: &Connection,
-    now: UnixMs,
+    cutoff: UnixMs,
     kept: &[IndexedItem],
 ) -> Result<Vec<ItemRow>, ServiceError> {
     let keep: BTreeSet<Uid> = kept.iter().map(|i| i.uid).collect();
-    let mut rows = due_items(conn, now.0, 64).map_err(ServiceError::Store)?;
+    let mut rows = due_items(conn, cutoff.0, 64).map_err(ServiceError::Store)?;
     rows.retain(|r| keep.contains(&r.uid));
     rows.truncate(8);
     Ok(rows)
@@ -157,6 +157,7 @@ pub fn home_summary(
     let expired = expired_stacks(conn, today_of(day)).map_err(store)?;
     let items = without_expired(load_indexed_items(conn).map_err(store)?, &expired);
     let overview = load_overview(conn).map_err(ServiceError::Store)?;
+    let due_cutoff = UnixMs(now.0.max(day.end.0.saturating_sub(1)));
 
     let cands = candidates(&items, (&sched, &[]), &HashMap::new());
     let mut per: HashMap<Uid, (usize, usize)> = HashMap::new();
@@ -164,7 +165,7 @@ pub fn home_summary(
         for stack in std::iter::once(it.stack).chain(it.also_in.iter().copied()) {
             let e = per.entry(stack).or_default();
             match sched.get(&(it.uid, stack)).map(|s| s.due) {
-                Some(due) if due <= now => e.0 += 1,
+                Some(due) if due <= due_cutoff => e.0 += 1,
                 None => e.1 += 1,
                 Some(_) => {}
             }
@@ -191,7 +192,7 @@ pub fn home_summary(
     let ready = build_queue(
         &cands,
         &plan_spaced(),
-        now,
+        due_cutoff,
         &budgets,
         &params_for(&vault, None),
     )
@@ -238,7 +239,7 @@ pub fn home_summary(
         recent_items: recent_items(conn, 6).map_err(ServiceError::Store)?,
         recent_runs: recent_runs(conn, 5).map_err(ServiceError::Store)?,
         sessions_today,
-        due_items: kept_due_items(conn, now, &items)?,
+        due_items: kept_due_items(conn, due_cutoff, &items)?,
         upcoming: upcoming(&sessions, local_now.date),
         attention: needs_attention(conn, &items, now).map_err(store)?,
     })

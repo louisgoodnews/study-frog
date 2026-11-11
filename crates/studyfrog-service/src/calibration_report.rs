@@ -38,9 +38,13 @@ pub fn build_calibration_report(
 
     let fam_scores = reference_scores(conn, now).unwrap_or_default();
     let mut fam_map: HashMap<Uid, f32> = HashMap::new();
+    let mut diff_map: HashMap<Uid, f32> = HashMap::new();
     for s in fam_scores {
         if let Some(fam) = s.fam {
             fam_map.entry(s.uid).or_insert(fam.value);
+        }
+        if let Some(diff) = s.difficulty {
+            diff_map.entry(s.uid).or_insert(diff);
         }
     }
 
@@ -50,6 +54,7 @@ pub fn build_calibration_report(
             date: date_from_days(day_of(r.at_ms, offset_minutes)),
             rating: r.rating,
             familiarity: fam_map.get(&r.item).copied(),
+            difficulty: diff_map.get(&r.item).copied(),
             answer_ms: r.answer_ms,
             expected_ms: r.expected_ms,
         })

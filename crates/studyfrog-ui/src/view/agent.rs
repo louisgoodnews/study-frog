@@ -28,6 +28,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.add_space(4.0);
             ui.horizontal(|ui| {
                 for (tab, label) in [
+                    (AgentTab::Chat, "Chat"),
                     (AgentTab::Connections, "Connections"),
                     (AgentTab::Wiki, "Work the vault"),
                     (AgentTab::Exam, "Exam me"),
@@ -46,6 +47,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 crate::view::agent_servers::approval(state, ui, out)
             });
             kit::column(ui, 860.0, |ui| match a.tab {
+                AgentTab::Chat => crate::view::agent_chat::draw(state, ui, out),
                 AgentTab::Connections => connections(state, ui, out),
                 AgentTab::Wiki => agent_wiki::wiki(state, ui, out),
                 AgentTab::Exam => crate::view::agent_exam::exam(state, ui, out),

@@ -209,6 +209,16 @@ pub fn update(state: State, msg: AgentMsg) -> (State, Vec<Effect>) {
             },
             ..a
         }),
+        AgentMsg::ChatInput(text) => with(state, |a| AgentState {
+            chat_input: text,
+            ..a
+        }),
+        AgentMsg::ChatSend => crate::agent_chat::send_chat_message(state),
+        AgentMsg::ChatReplied(r) => crate::agent_chat::chat_replied(state, r),
+        AgentMsg::ChatClear => with(state, |a| AgentState {
+            chat_messages: Vec::new(),
+            ..a
+        }),
     }
 }
 

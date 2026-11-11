@@ -46,7 +46,16 @@ pub fn review_accuracy(r: &CalibrationReview) -> f32 {
         _ => 1.0,
     };
 
-    (rating_weight * fam_weight * latency_weight).clamp(0.0, 1.0)
+    // When item difficulty is known, scale accuracy so mastering hard material is properly recognized:
+    let diff_weight = match r.difficulty {
+        Some(d) => {
+            let norm = (d.clamp(1.0, 10.0) - 1.0) / 9.0;
+            1.0 + 0.35 * norm
+        }
+        None => 1.0,
+    };
+
+    (rating_weight * fam_weight * latency_weight * diff_weight).clamp(0.0, 1.0)
 }
 
 fn day_review_metrics(reviews: &[&CalibrationReview]) -> (Option<f32>, Option<f32>, usize) {

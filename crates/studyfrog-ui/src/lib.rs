@@ -4,8 +4,10 @@
 //! about egui; `exec` performs effects; `view` and `model` draw; `runtime` and `app` are the glue.
 
 pub mod achievements;
+pub mod agent_chat;
 pub mod agent_conn;
 pub mod agent_conn_test;
+pub mod agent_conn_types;
 pub mod agent_mcp_types;
 pub mod agent_run;
 pub mod agent_types;

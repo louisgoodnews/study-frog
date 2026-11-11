@@ -23,6 +23,8 @@ pub enum Modal {
     PdfExport(Box<crate::pdf_export_types::PdfExportState>),
     /// Edit an item during rehearsal.
     EditItem(Box<crate::rehearsal_edit::EditCardModal>),
+    /// Confirm deleting an item from the editor.
+    DeleteItem(studyfrog_core::uid::Uid, String),
 }
 
 /// The priority and difficulty the user chose; `None` leaves the default.

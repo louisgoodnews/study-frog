@@ -116,6 +116,12 @@ pub fn day_chips(
                 .on_hover_text(format!("Drop on a day to move {}", line(state, e)));
         }
         r.context_menu(|ui| {
+            if let Some(stack_uid) = e.stack
+                && ui.button("Rehearse stack").clicked()
+            {
+                out.push(Msg::Plan(PlanMsg::Rehearse(stack_uid)));
+                ui.close();
+            }
             if ui.button("Move to another day…").clicked() {
                 out.push(Msg::Plan(PlanMsg::Select(day)));
                 send(out, ReviewMsg::OpenMove(e.stack, e.day));
@@ -149,6 +155,11 @@ fn entry_card(state: &State, e: &PlanEntry, ui: &mut egui::Ui, out: &mut Vec<Msg
         ui.set_width(ui.available_width());
         ui.label(line(state, e));
         ui.horizontal_wrapped(|ui| {
+            if let Some(stack_uid) = e.stack
+                && ui.button(format!("Rehearse {title}")).clicked()
+            {
+                out.push(Msg::Plan(PlanMsg::Rehearse(stack_uid)));
+            }
             if ui.button(format!("Open {title}")).clicked() {
                 send(out, ReviewMsg::OpenStack(e.stack));
             }

@@ -32,6 +32,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             Modal::ConfirmUnmark(plan) => super::modal_unmark::draw(plan, ui, out),
             Modal::PdfExport(form) => super::modal_pdf_export::draw(state, form, ui, out),
             Modal::EditItem(form) => super::modal_edit_item::draw(state, form, ui, out),
+            Modal::DeleteItem(_uid, title) => delete_item_dialog(title, ui, out),
         }
     });
     if response.should_close() {
@@ -115,4 +116,30 @@ fn vault(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         });
     }
+}
+
+fn delete_item_dialog(title: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.horizontal(|ui| {
+        ui.strong("Delete item");
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            if icon_button(ui, Glyph::Close, "Close", false).clicked() {
+                send(out, ModalMsg::Close);
+            }
+        });
+    });
+    ui.add_space(8.0);
+    ui.label(format!(
+        "Are you sure you want to delete \"{title}\"? This action cannot be undone."
+    ));
+    ui.add_space(12.0);
+    ui.horizontal(|ui| {
+        let del = egui::Button::new(RichText::new("Delete").color(ui.visuals().error_fg_color));
+        if ui.add(del).clicked() {
+            send(out, ModalMsg::Close);
+            out.push(Msg::Edit(crate::msg::EditAction::ConfirmDelete));
+        }
+        if ui.button("Cancel").clicked() {
+            send(out, ModalMsg::Close);
+        }
+    });
 }

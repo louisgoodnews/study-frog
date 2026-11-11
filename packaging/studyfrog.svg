@@ -1,9 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-  <rect width="256" height="256" rx="48" fill="#1f3d2b"/>
-  <circle cx="84" cy="96" r="34" fill="#6fcf7f"/>
-  <circle cx="172" cy="96" r="34" fill="#6fcf7f"/>
-  <ellipse cx="128" cy="150" rx="86" ry="64" fill="#6fcf7f"/>
-  <circle cx="84" cy="96" r="14" fill="#10281a"/>
-  <circle cx="172" cy="96" r="14" fill="#10281a"/>
-  <path d="M82 164 Q128 200 174 164" stroke="#10281a" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1f3d2b"/>
+      <stop offset="100%" stop-color="#14261b"/>
+    </linearGradient>
+    <radialGradient id="bodyGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#6fcb7f"/>
+      <stop offset="100%" stop-color="#4e995c"/>
+    </radialGradient>
+    <radialGradient id="bellyGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#a4e4b0"/>
+      <stop offset="100%" stop-color="#76c584"/>
+    </radialGradient>
+  </defs>
+  <!-- Background app tile with rounded corners -->
+  <rect width="256" height="256" rx="56" fill="url(#bg)"/>
+  
+  <!-- Stubby feet -->
+  <circle cx="56" cy="200" r="22" fill="#4e995c"/>
+  <circle cx="200" cy="200" r="22" fill="#4e995c"/>
+  
+  <!-- Stout globular body (signature Breviceps macrops silhouette) -->
+  <ellipse cx="128" cy="144" rx="100" ry="84" fill="url(#bodyGrad)"/>
+  
+  <!-- Chubby lighter underbelly -->
+  <ellipse cx="128" cy="172" rx="66" ry="44" fill="url(#bellyGrad)"/>
+  
+  <!-- Left eye: rim, pupil, catchlights -->
+  <circle cx="76" cy="94" r="42" fill="#3d824b"/>
+  <circle cx="76" cy="94" r="34" fill="#122016"/>
+  <circle cx="66" cy="82" r="12" fill="#ffffff"/>
+  <circle cx="84" cy="104" r="6" fill="#ffffff"/>
+  
+  <!-- Right eye: rim, pupil, catchlights -->
+  <circle cx="180" cy="94" r="42" fill="#3d824b"/>
+  <circle cx="180" cy="94" r="34" fill="#122016"/>
+  <circle cx="170" cy="82" r="12" fill="#ffffff"/>
+  <circle cx="188" cy="104" r="6" fill="#ffffff"/>
+  
+  <!-- Serious studious little mouth line -->
+  <path d="M 98 160 L 128 155 L 158 160" stroke="#122016" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>
