@@ -7,6 +7,21 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-11-11
+
+### Added
+- Assistant conversational chat interface: dedicated "Chat" tab on the Assistant screen with conversational message flow, auto-scrolling message bubbles, real-time message sending on Enter or Send button click, clear conversation action, and full integration with configured local and remote LLM providers.
+- Universal importer routing in items and stack views: the "Import…" button in Library items and stack views now routes directly to the universal importer, enabling import of notes, stacks, questions, flashcards, CSV/TSV spreadsheets, Obsidian vaults, and Anki packages.
+- Folders viewer document launching: double-clicking or right-clicking "Open" on PDF documents in the Folders tree navigator directly opens them in the built-in PDF viewer.
+- Dedicated item deletion modal: replaced the inline deletion confirmation bar with a centered modal popup with backdrop dimming and explicit Delete Item and Cancel buttons.
+- Item difficulty-weighted metacognitive calibration: self-assessment calibration scoring now incorporates item difficulty to prevent false overconfidence penalties on difficult materials.
+- Window icon integration: embedded stylized *Breviceps macrops* vector logo icon into application window and desktop packaging.
+- ScriptStudio & FrogScript rebranding and language specification (STORY-0149, STORY-0150, EPIC-049): rebranded ScriptRunner console to ScriptStudio to respect external trademarks, and authored the FrogScript DSL language specification (v1.0).
+
+### Fixed
+- Due items alignment: aligned day-end timestamp cutoffs so items scheduled for today are counted consistently across both the Dashboard and the Calendar.
+- Calendar rehearsal setup item count: fixed review queue admission when initiating rehearsal from calendar and timetable cards, resolving 0-item selection and adding recursive substack inclusion.
+
 ## [0.7.0] - 2026-11-10
 
 ### Added
