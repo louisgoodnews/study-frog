@@ -205,6 +205,8 @@ pub mod script_launch;
 pub mod script_runner;
 #[cfg(unix)]
 pub mod script_socket;
+pub mod script_studio;
+pub mod script_studio_exec;
 pub mod session_form;
 pub mod setup;
 pub mod setup_fam;

@@ -1,29 +1,16 @@
 //! The Console screen (STORY-0133, STORY-0148): interactive command REPL and
-//! in-app ScriptStudio development environment with multi-line FrogScript editor.
+//! in-app ScriptStudio multi-tab development environment with FrogScript execution.
 
 use eframe::egui::{self, RichText, TextStyle};
 
 use crate::console_ui::{ConsoleMsg, Entry, EntryKind};
 use crate::msg::Msg;
+use crate::script_studio::{ConsoleFilter, active_tab};
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::kit;
 
-const HINT: &str =
-    "Type a control command or Python script (e.g., `query type = card`, `state`, `logs`, `help`)";
-
-const SCRIPT_TEMPLATES: &[(&str, &str)] = &[
-    ("Query Due Items", "query type = card and due <= today\n"),
-    (
-        "Batch Create Cards",
-        "item create card \"Bayes Theorem\" --stack \"Math\" --text \"What is Bayes theorem?\" --answer \"P(A|B) = P(B|A)P(A) / P(B)\"\n",
-    ),
-    ("Calendar & State Check", "state\nnav calendar\n"),
-    (
-        "Macro Syntax Test",
-        "query type = note and text ~ \"{hide}\"\n",
-    ),
-];
+const HINT: &str = "Type a control command (e.g., `query type = card`, `state`, `logs`, `help`)";
 
 fn entry(ui: &mut egui::Ui, e: &Entry) {
     let p = palette_of(ui);
@@ -32,7 +19,9 @@ fn entry(ui: &mut egui::Ui, e: &Entry) {
         EntryKind::Answer => ("", p.text),
         EntryKind::Error => ("error: ", p.danger),
         EntryKind::Event => ("event ", p.text_weak),
-        EntryKind::Script => ("", p.success),
+        EntryKind::Script => ("✓ ", p.success),
+        EntryKind::Stdout => ("stdout: ", p.text),
+        EntryKind::Stderr => ("stderr: ", p.danger),
     };
     let text = RichText::new(format!("{prefix}{}", e.text))
         .text_style(TextStyle::Monospace)
@@ -67,80 +56,113 @@ fn singleline_input(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-#[allow(deprecated)]
-fn script_editor(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let buffer_id = egui::Id::new("scriptstudio-code-buffer");
-    let mut code = ui.data(|d| d.get_temp::<String>(buffer_id).unwrap_or_default());
-
-    ui.horizontal(|ui| {
-        ui.label(RichText::new("FrogScript Editor:").strong());
-        egui::ComboBox::from_id_salt("script-template-picker")
-            .selected_text("Load recipe template…")
-            .show_ui(ui, |ui| {
-                for &(name, snippet) in SCRIPT_TEMPLATES {
-                    if ui.selectable_label(false, name).clicked() {
-                        code = snippet.to_owned();
-                        ui.data_mut(|d| d.insert_temp(buffer_id, code.clone()));
-                    }
-                }
-            });
+fn studio_tab_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let studio = &state.console.studio;
+    ui.horizontal_wrapped(|ui| {
+        for (i, tab) in studio.tabs.iter().enumerate() {
+            let label = if tab.dirty {
+                format!("* {}", tab.name)
+            } else {
+                tab.name.clone()
+            };
+            let is_selected = i == studio.active_tab;
+            if ui.selectable_label(is_selected, label).clicked() {
+                out.push(Msg::Console(ConsoleMsg::StudioSelectTab(i)));
+            }
+            if ui.small_button("×").clicked() {
+                out.push(Msg::Console(ConsoleMsg::StudioCloseTab(i)));
+            }
+        }
+        if ui.button("+ Tab").clicked() {
+            out.push(Msg::Console(ConsoleMsg::StudioNewTab));
+        }
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
             if kit::primary_button(ui, "Run FrogScript").clicked() {
-                for line in code.lines() {
-                    let trimmed = line.trim();
-                    if !trimmed.is_empty() && !trimmed.starts_with('#') {
-                        out.push(Msg::Console(ConsoleMsg::Edit(trimmed.to_owned())));
-                        out.push(Msg::Console(ConsoleMsg::Submit));
-                    }
-                }
+                out.push(Msg::Console(ConsoleMsg::StudioRunScript));
             }
-            if kit::quiet_button(ui, "Clear Code").clicked() {
-                code.clear();
-                ui.data_mut(|d| d.insert_temp(buffer_id, String::new()));
+            if kit::quiet_button(ui, "Save").clicked() {
+                out.push(Msg::Console(ConsoleMsg::StudioSaveScript(None)));
             }
         });
     });
+}
 
+fn studio_editor(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let studio = &state.console.studio;
+    studio_tab_bar(state, ui, out);
+    ui.add_space(4.0);
+
+    let mut code = active_tab(studio).map_or("", |t| &t.content).to_string();
     let edit = egui::TextEdit::multiline(&mut code)
         .id_salt("scriptstudio-multiline-text")
         .font(TextStyle::Monospace)
-        .desired_rows(5)
+        .desired_rows(6)
         .desired_width(f32::INFINITY);
-    if ui.add(edit).changed() {
-        ui.data_mut(|d| d.insert_temp(buffer_id, code));
+    let response = ui.add(edit);
+    if response.changed() {
+        out.push(Msg::Console(ConsoleMsg::StudioEditCode(code)));
     }
 }
 
-/// The Console screen.
-#[allow(deprecated)]
+fn is_visible(e: &Entry, filter: ConsoleFilter) -> bool {
+    match filter {
+        ConsoleFilter::All => true,
+        ConsoleFilter::Stdout => matches!(
+            e.kind,
+            EntryKind::Command | EntryKind::Answer | EntryKind::Script | EntryKind::Stdout
+        ),
+        ConsoleFilter::Stderr => matches!(e.kind, EntryKind::Error | EntryKind::Stderr),
+        ConsoleFilter::Events => matches!(e.kind, EntryKind::Event),
+    }
+}
+
+fn output_filter_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let active = state.console.studio.filter;
+    ui.horizontal(|ui| {
+        ui.label(RichText::new("Streams:").strong());
+        let filters = [
+            (ConsoleFilter::All, "All"),
+            (ConsoleFilter::Stdout, "Stdout"),
+            (ConsoleFilter::Stderr, "Stderr / Errors"),
+            (ConsoleFilter::Events, "Events"),
+        ];
+        for (f, name) in filters {
+            if ui.selectable_label(active == f, name).clicked() {
+                out.push(Msg::Console(ConsoleMsg::StudioSetFilter(f)));
+            }
+        }
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            if kit::quiet_button(ui, "Clear Output").clicked() {
+                out.push(Msg::Console(ConsoleMsg::Clear));
+            }
+        });
+    });
+}
+
+/// The Console and ScriptStudio screen.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let editor_open_id = egui::Id::new("scriptstudio-editor-expanded");
-    let mut editor_expanded = ui.data(|d| d.get_temp::<bool>(editor_open_id).unwrap_or(false));
+    let expanded = state.console.studio.expanded;
 
     ui.horizontal(|ui| {
         ui.heading("Console");
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if kit::quiet_button(ui, "Clear").clicked() {
-                out.push(Msg::Console(ConsoleMsg::Clear));
-            }
-            if kit::primary_button(ui, "Run").clicked() {
+            if kit::primary_button(ui, "Run Command").clicked() {
                 out.push(Msg::Console(ConsoleMsg::Submit));
             }
-            let label = if editor_expanded {
+            let label = if expanded {
                 "Hide ScriptStudio"
             } else {
                 "ScriptStudio Editor"
             };
             if ui.button(label).clicked() {
-                editor_expanded = !editor_expanded;
-                ui.data_mut(|d| d.insert_temp(editor_open_id, editor_expanded));
+                out.push(Msg::Console(ConsoleMsg::StudioToggleExpanded));
             }
         });
     });
 
     let pal = palette_of(ui);
     ui.label(
-        RichText::new("Commands go to this window's control protocol, as scripts use it; events and script output appear as they happen.")
+        RichText::new("Execute control commands or develop automated FrogScript pipelines with reactive triggers and dedicated stdout/stderr streams.")
             .color(pal.text_weak),
     );
     ui.add_space(6.0);
@@ -148,23 +170,35 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     singleline_input(state, ui, out);
     ui.add_space(6.0);
 
-    if editor_expanded {
-        script_editor(ui, out);
+    if expanded {
+        studio_editor(state, ui, out);
         ui.add_space(6.0);
     }
 
-    kit::section(ui, "Output Log Stream");
+    output_filter_bar(state, ui, out);
+    ui.add_space(4.0);
+
+    let filter = state.console.studio.filter;
+    let visible_entries: Vec<_> = state
+        .console
+        .entries
+        .iter()
+        .filter(|e| is_visible(e, filter))
+        .collect();
+
     egui::ScrollArea::vertical()
         .auto_shrink([false, false])
         .stick_to_bottom(true)
         .show(ui, |ui| {
-            if state.console.entries.is_empty() {
+            if visible_entries.is_empty() {
                 ui.label(
-                    RichText::new("No command entries yet. Run a script above or type `help`.")
-                        .color(pal.text_weak),
+                    RichText::new(
+                        "No entries for selected filter. Type a command or run FrogScript above.",
+                    )
+                    .color(pal.text_weak),
                 );
             }
-            for e in &state.console.entries {
+            for e in visible_entries {
                 entry(ui, e);
                 ui.add_space(2.0);
             }

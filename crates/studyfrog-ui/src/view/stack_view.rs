@@ -67,12 +67,11 @@ fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Ve
             out.push(Msg::OpenItem(stack.uid));
             ui.close();
         }
-        if ui.button("Import…").clicked() {
-            let open = crate::transfer_ui::TransferMsg::Open(
-                crate::transfer_ui::Tab::Import,
-                Some(stack.folder.clone()),
-            );
-            out.push(Msg::Library(LibraryMsg::Transfer(open)));
+        let ext = &state.extensions;
+        if !(ext.card_types.is_empty() && ext.importers.is_empty())
+            && ui.button("Import…").clicked()
+        {
+            out.push(Msg::Modal(ModalMsg::OpenImport));
             ui.close();
         }
         if ui.button("Import or export…").clicked() {

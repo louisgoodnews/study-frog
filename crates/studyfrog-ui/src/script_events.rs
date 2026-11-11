@@ -7,9 +7,11 @@ use studyfrog_core::uid::Uid;
 
 use crate::control_state::ulid;
 use crate::effect::Effect;
+use crate::focus_ui::FocusMsg;
 use crate::modal::ModalMsg;
 use crate::model::{Model, apply};
-use crate::msg::Msg;
+use crate::msg::{EditAction, Msg};
+use crate::recall_types::RecallMsg;
 use crate::state::State;
 
 /// Every kind of lifecycle event, in the order the help lists them.
@@ -18,7 +20,15 @@ pub const EVENT_KINDS: &[&str] = &[
     "vault_closed",
     "item_created",
     "item_saved",
+    "item_deleted",
+    "rehearsal_started",
+    "rehearsal_stepped",
     "rehearsal_finished",
+    "exam_finished",
+    "diary_entry_saved",
+    "import_finished",
+    "backup_created",
+    "focus_block_finished",
     "script_finished",
 ];
 
@@ -69,6 +79,53 @@ pub fn from_msg(msg: &Msg, state: &State) -> Vec<Lifecycle> {
                 json!({"uid": ulid(e.uid), "title": e.form.title, "path": e.path}),
             )]
         }),
+        Msg::Edit(EditAction::ConfirmDelete) => state.editor.as_ref().map_or_else(Vec::new, |e| {
+            vec![event(
+                "item_deleted",
+                json!({"uid": ulid(e.uid), "title": e.form.title, "path": e.path}),
+            )]
+        }),
+        Msg::RunReady(Ok(run)) => vec![event(
+            "rehearsal_started",
+            json!({
+                "run": ulid(run.uid), "mode": run_mode_name(run.mode),
+                "items": run.queue.len(),
+            }),
+        )],
+        Msg::StepRecorded(Ok(())) => state.rehearse.run.as_ref().map_or_else(Vec::new, |r| {
+            vec![event(
+                "rehearsal_stepped",
+                json!({
+                    "run": ulid(r.session.run.uid), "events": r.events.len(),
+                }),
+            )]
+        }),
+        Msg::Exam(crate::exam_ui::ExamMsg::Graded(uid, Ok(res))) => vec![event(
+            "exam_finished",
+            json!({
+                "exam": ulid(*uid), "items": res.items,
+                "percent": res.percent, "passed": res.passed,
+            }),
+        )],
+        Msg::Diary(crate::diary_msg::DiaryMsg::Saved(Ok(_))) => {
+            vec![event("diary_entry_saved", json!({}))]
+        }
+        Msg::Imported(Ok(outcome)) => vec![event(
+            "import_finished",
+            json!({
+                "created": outcome.report.created,
+                "skipped": outcome.report.skipped.len(),
+            }),
+        )],
+        Msg::Backup(crate::backup_ui::BackupMsg::Done(Ok(Some(path)))) => {
+            vec![event("backup_created", json!({"path": path}))]
+        }
+        Msg::Recall(RecallMsg::Focus(FocusMsg::Recorded(Ok(r)))) => vec![event(
+            "focus_block_finished",
+            json!({
+                "minutes": r.minutes, "today": r.today,
+            }),
+        )],
         _ => Vec::new(),
     }
 }

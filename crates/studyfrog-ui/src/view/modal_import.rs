@@ -97,4 +97,16 @@ pub fn import(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.strong("From a file");
         from_file(state, ui, out);
     }
+    ui.separator();
+    ui.strong("From Obsidian, Anki or Markdown folder");
+    ui.label("Import complete hierarchies of notes, flashcards, questions and stacks.");
+    if ui.button("Import notes, stacks and questions…").clicked() {
+        let scope = match &state.browser.selection {
+            Selection::Stack(folder) => Some(folder.clone()),
+            _ => None,
+        };
+        out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(
+            crate::transfer_ui::TransferMsg::Open(crate::transfer_ui::Tab::Import, scope),
+        )));
+    }
 }

@@ -22,8 +22,9 @@ declare -A allowed=(
   [board]="core"
   [calendar]="core"
   [ext]=""
-  [service]="core md config calendar board store srs rehearsal slm achieve report ext agent pdf"
-  [ui]="core md config graph store srs rehearsal slm report achieve board calendar service ext agent pdf"
+  [script]="core"
+  [service]="core md config calendar board store srs rehearsal slm achieve report ext agent pdf script"
+  [ui]="core md config graph store srs rehearsal slm report achieve board calendar service ext agent pdf script"
   [app]="ui slm candle ext agent net"
 )
 

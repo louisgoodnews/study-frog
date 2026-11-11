@@ -25,6 +25,10 @@ pub enum EntryKind {
     Event,
     /// What a script printed, and how it ended.
     Script,
+    /// Standard output message from a script.
+    Stdout,
+    /// Diagnostic stderr or error trace from a script.
+    Stderr,
 }
 
 /// One entry of the transcript.
@@ -49,6 +53,8 @@ pub struct ConsoleState {
     pub history_at: Option<usize>,
     /// Lines to send, taken by the glue each frame.
     pub outbox: Vec<String>,
+    /// In-app script development workbench.
+    pub studio: crate::script_studio::StudioState,
 }
 
 /// What the console is told.
@@ -66,6 +72,26 @@ pub enum ConsoleMsg {
     Clear,
     /// A line came back (a JSON answer or event, or plain text).
     Line(String),
+    /// ScriptStudio: switch active tab.
+    StudioSelectTab(usize),
+    /// ScriptStudio: close tab.
+    StudioCloseTab(usize),
+    /// ScriptStudio: new draft tab.
+    StudioNewTab,
+    /// ScriptStudio: edit code in active tab.
+    StudioEditCode(String),
+    /// ScriptStudio: open a script from path.
+    StudioOpenScript(std::path::PathBuf),
+    /// ScriptStudio: save active tab.
+    StudioSaveScript(Option<String>),
+    /// ScriptStudio: execute active tab as FrogScript.
+    StudioRunScript,
+    /// ScriptStudio: set output stream filter.
+    StudioSetFilter(crate::script_studio::ConsoleFilter),
+    /// ScriptStudio: toggle editor visibility.
+    StudioToggleExpanded,
+    /// ScriptStudio: refresh script file list.
+    StudioRefreshList,
 }
 
 fn cut(text: String) -> String {
@@ -191,12 +217,27 @@ pub fn apply_console(c: &mut ConsoleState, m: ConsoleMsg) {
         ConsoleMsg::Newer => step_history(c, false),
         ConsoleMsg::Clear => c.entries.clear(),
         ConsoleMsg::Line(line) => push(c, entry_of(&line)),
+        _ => {}
     }
 }
 
 /// The console's part of `update`: the state is changed in place.
 pub fn update(state: State, m: ConsoleMsg) -> (State, Vec<Effect>) {
     let mut state = state;
-    apply_console(&mut state.console, m);
+    match m {
+        ConsoleMsg::StudioSelectTab(_)
+        | ConsoleMsg::StudioCloseTab(_)
+        | ConsoleMsg::StudioNewTab
+        | ConsoleMsg::StudioEditCode(_)
+        | ConsoleMsg::StudioOpenScript(_)
+        | ConsoleMsg::StudioSaveScript(_)
+        | ConsoleMsg::StudioRunScript
+        | ConsoleMsg::StudioSetFilter(_)
+        | ConsoleMsg::StudioToggleExpanded
+        | ConsoleMsg::StudioRefreshList => {
+            crate::script_studio_exec::apply_studio_msg(&mut state, m);
+        }
+        _ => apply_console(&mut state.console, m),
+    }
     (state, Vec::new())
 }

@@ -16,15 +16,22 @@ socket or the standard streams of `studyfrog --control-stdio`. No interpreter is
 | `vault_closed` | the open vault's folder changes away from a folder | `root` |
 | `item_created` | the create dialog's result arrives successfully | `uid`, `title`, `path` |
 | `item_saved` | an item page's save succeeds | `uid`, `title`, `path` |
+| `item_deleted` | an item deletion is confirmed | `uid`, `title`, `path` |
+| `rehearsal_started` | rehearsal queue is generated and ready to run | `run`, `mode`, `items` |
+| `rehearsal_stepped` | user rates/answers an item during rehearsal | `rating`, `elapsed_ms` |
 | `rehearsal_finished` | the run on screen reaches `finished` (not `aborted`) | `run`, `mode`, `items`, `events` |
-| `script_finished` | a run of the runner ends | `job`, `ok`, `code`, `timed_out`, `error`, `millis`, `stdout`, `stderr` (tails) |
+| `exam_finished` | mock examination is completed and graded | `uid`, `percent`, `passed` |
+| `diary_entry_saved` | a reflection or diary entry is stored | (empty) |
+| `import_finished` | flashcards or items import finishes | `imported`, `skipped` |
+| `backup_created` | archive snapshot backup is completed | `path` |
+| `focus_block_finished` | Pomodoro focus block completes and is recorded | `minutes`, `today` |
+| `script_finished` | a run of the runner or FrogScript ends | `job`, `ok`, `code`, `timed_out`, `error`, `millis`, `stdout`, `stderr` |
 
-Detection: `from_msg` reads a message before it is applied (create and save results); `from_change` compares a
+Detection: `from_msg` reads a message before it is applied; `from_change` compares a
 probe (vault folder, run id and state) before and after. The headless engine checks every applied message; the
 window checks the worker's messages and probes once per frame. Events go to an in-process bus (one channel per
 subscriber; closed ones are dropped). `subscribe [kinds...]` registers a connection; events are written as
-`{"event": "lifecycle", "data": {"kind", "at_ms", "data"}}` until it closes. Unknown kinds are an error. Not raised:
-deletions, moves, imports, exams graded.
+`{"event": "lifecycle", "data": {"kind", "at_ms", "data"}}` until it closes. Unknown kinds are an error.
 
 ## 3. Python client (`python/studyfrog/`)
 
@@ -96,10 +103,10 @@ Windows (Unix sockets, process groups); calendar, board, diary and settings acti
 new card types or importers inside the window's dialogs (compiled-in only, ADR 0008); sandboxing a script's own file
 access; catching up jobs missed while no instance ran.
 
-## 10. Future Evolution: FrogScript Studio, DSL, and Execution Logging (EPIC-049)
+## 10. FrogScript, ScriptStudio, and Execution Logging (v0.8.0, EPIC-049)
 
-Planned enhancements for Phase M14 (STORY-0149 to STORY-0152):
-- **Trademark Transition (STORY-0149):** Rebrand all user-facing "ScriptRunner" terminology to "FrogScript Studio" / "FrogScript" to avoid trademark conflicts with Adaptavist.
-- **In-App Console & DSL Research (STORY-0150):** Interactive multi-line code execution in the UI with research into embedding a lightweight zero-dependency DSL (e.g. Rhai) alongside external Python IPC.
-- **Scheduled and Event-Driven Job Management (STORY-0151):** Full UI configuration for scheduled cron jobs (`scripts.toml`) and reactive lifecycle event bindings (`vault_opened`, `item_created`, `rehearsal_finished`).
-- **Dedicated stdout & stderr Logging (STORY-0152):** Independent capture ring buffers and visually differentiated presentation for standard output and error diagnostic streams.
+Implemented in v0.8.0 (STORY-0149 to STORY-0152):
+- **FrogScript Standalone Crate (`crates/studyfrog-script`):** Zero-dependency, pure Rust domain-specific language engine featuring Python-like syntax, first-class pipelines (`|`), closures (`{ item -> ... }`), variable assignment, line chaining via semicolons (`;`), and native query verbs (`from stack "..."`, `where tag "..."`, `set priority "..."`).
+- **ScriptStudio Multi-Tab Environment (`script_studio.rs`, `view/console.rs`):** In-app IDE supporting multiple open tabs, drafts, and persistence directly into the vault (`.studyfrog/scripts/*.frog`) or application scripts folder.
+- **Split Output Streams & Filter Controls (`console_ui.rs`, `log_stream.rs`):** Independent stdout and stderr execution capture buffers with stream-level filtering (`All`, `Stdout`, `Stderr / Errors`, `Events`) in the split console log stream.
+- **Full Lifecycle Event Bus (`script_events.rs`):** 14 reactive lifecycle events covering all vault mutations, rehearsal steps, exams, focus blocks, imports, and backup runs.

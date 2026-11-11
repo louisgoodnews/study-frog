@@ -30,6 +30,7 @@ studyfrog-graph.workspace = true
 studyfrog-service.workspace = true
 studyfrog-ext.workspace = true
 studyfrog-pdf.workspace = true
+studyfrog-script.workspace = true
 eframe.workspace = true
 
 [dev-dependencies]

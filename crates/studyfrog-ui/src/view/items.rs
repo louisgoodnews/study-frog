@@ -22,6 +22,13 @@ fn heading(state: &State) -> String {
     }
 }
 
+/// Whether an extension offers a way to import, and a stack is open to import into.
+fn can_import(state: &State) -> bool {
+    let ext = &state.extensions;
+    matches!(state.browser.selection, Selection::Stack(_))
+        && !(ext.card_types.is_empty() && ext.importers.is_empty())
+}
+
 /// The search field, the count, the column menu and the table of items.
 pub(super) fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     crate::view::library_search::draw(state, ui, out);
@@ -29,7 +36,10 @@ pub(super) fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.label(crate::view::library_table::count_line(state));
         crate::view::library_table::column_menu(state, ui, out);
         crate::view::library_bulk::filters_menu(state, ui, out);
-        if ui.button("Import…").clicked() {
+        if can_import(state) && ui.button("Import…").clicked() {
+            out.push(Msg::Modal(crate::modal::ModalMsg::OpenImport));
+        }
+        if ui.button("Import or export…").clicked() {
             let scope = match &state.browser.selection {
                 Selection::Stack(folder) => Some(folder.clone()),
                 _ => None,

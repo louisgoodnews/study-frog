@@ -171,16 +171,13 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             },
             Vec::new(),
         ),
-        ModalMsg::OpenImport => {
-            let scope = match &state.browser.selection {
-                Selection::Stack(folder) => Some(folder.clone()),
-                _ => None,
-            };
-            crate::transfer_ui::update(
-                state,
-                crate::transfer_ui::TransferMsg::Open(crate::transfer_ui::Tab::Import, scope),
-            )
-        }
+        ModalMsg::OpenImport => (
+            State {
+                modal: Some(Modal::Import),
+                ..state
+            },
+            Vec::new(),
+        ),
         ModalMsg::Close => crate::modal_discard::close(state),
         ModalMsg::KeepEditing => crate::modal_discard::keep_editing(state),
         ModalMsg::Discard => crate::modal_discard::discard(state),

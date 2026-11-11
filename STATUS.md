@@ -1,19 +1,21 @@
 # Status
 
-**Phase:** M13 completed; released 0.7.1. **Date:** 2026-11-11. **Branch:** `main`.
+**Phase:** M14 completed; released 0.8.0. **Date:** 2026-11-11. **Branch:** `main`.
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
-- A Cargo workspace of 20 crates under `crates/` plus an example extension under `examples/` (layering enforced by `scripts/check-deps.sh`, ADR 0001):
+- A Cargo workspace of 21 crates under `crates/` plus an example extension under `examples/` (layering enforced by `scripts/check-deps.sh`, ADR 0001):
   `core`, `config`, `md`, `store`, `srs`, `rehearsal`, `calendar`, `board`, `graph`, `slm`, `candle`,
-  `report`, `achieve`, `ext`, `agent`, `net`, `pdf`, `service`, `ui`, `app`. No inherent `impl` blocks; files are at most 250 lines.
+  `report`, `achieve`, `ext`, `script`, `agent`, `net`, `pdf`, `service`, `ui`, `app`. No inherent `impl` blocks; files are at most 250 lines.
 - The app (`cargo run -p studyfrog-app`): vault of Markdown notes, cards and questions with links and a graph;
   FSRS-6 and SM-2 scheduling per stack; rehearsal runs in any order with latency capture, difficulty marks, a
   reading-speed baseline and a review after each run; typed answers compared offline (language model or word
-  matching); calendar and kanban board; achievements; retention, answer-time and forecast reports.
+  matching); calendar and kanban board; achievements; retention, answer-time and forecast reports; ScriptStudio
+  and FrogScript automation.
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
 ## Latest
+- **0.8.0 released (2026-11-11):** FrogScript standalone domain-specific language engine (`crates/studyfrog-script`), ScriptStudio multi-tab automation workbench with in-vault script persistence (`.studyfrog/scripts/`), dedicated stdout and stderr stream execution logging with filter controls, and full 14-event reactive application lifecycle event bus. See `docs/RELEASE_NOTES_0.8.0.md`.
 - **0.7.1 released (2026-11-11):** Assistant conversational chat interface, universal importer integration in items view, file launching in folders view, dedicated item deletion modal popup, difficulty-weighted metacognitive calibration, window icon integration, ScriptStudio & FrogScript rebranding and language specification, and critical fixes for calendar rehearsal setup and due item calculation. See `docs/RELEASE_NOTES_0.7.1.md`.
 - **0.7.0 released (2026-11-10):** Phase M13 completed: Timetable schedule planner for lessons and lectures (STORY-0141, EPIC-044), calendar daily and weekly schedule views (STORY-0142, EPIC-044), expanded markdown macro library with escaping syntax (STORY-0143, STORY-0144, EPIC-045), enhanced markdown list syntax (STORY-0145, EPIC-046), stylized *Breviceps macrops* mascot icon (STORY-0146, EPIC-047), UX research and working prototype of floating burger navigation (STORY-0147, EPIC-047), scriptrunner development environment with internal Python API (STORY-0148, EPIC-048), profile and vault switcher overhaul (STORY-0138, EPIC-043), file navigator and in-app file dialogue overhaul (STORY-0139, EPIC-043), expandable comments drawer during rehearsal and exam modes (STORY-0140, EPIC-043), high-contrast bold markdown text (BUG-0017), code block indentation preservation (BUG-0018), and optional stack membership for notes (BUG-0019). See `docs/RELEASE_NOTES_0.7.0.md`.
 - **0.6.1 released (2026-11-10):** In-rehearsal quick item editing via shortcut (`Ctrl+E`/`Cmd+E`/`F2`) and button (hot-reloads content in place without resetting run), intermittent typed active recall sampling (STORY-0136, EPIC-040), end-of-run queue positioning for cards rated Again, and realistic metacognitive calibration accuracy baselines (BUG-0016). See `docs/RELEASE_NOTES_0.6.1.md`.

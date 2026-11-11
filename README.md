@@ -40,8 +40,8 @@ For a complete guide to everything StudyFrog offers today, see **[FEATURES.md](F
   motion, and built-in Help (`F1`) with how-to guides, FAQ, and an interactive tutorial.
 
 ## Status
-- **Released: 0.7.1** (2026-11-11): Assistant conversational chat interface, universal importer integration in items view, file launching in folders view, dedicated item deletion modal popup, difficulty-weighted metacognitive calibration, window icon integration, ScriptStudio & FrogScript rebranding and language specification, and critical fixes for calendar rehearsal setup and due item calculation. Notes: [docs/RELEASE_NOTES_0.7.1.md](docs/RELEASE_NOTES_0.7.1.md). Earlier releases:
-  [0.7.0](docs/RELEASE_NOTES_0.7.0.md), [0.6.1](docs/RELEASE_NOTES_0.6.1.md), [0.6.0](docs/RELEASE_NOTES_0.6.0.md), [0.5.0](docs/RELEASE_NOTES_0.5.0.md), [0.4.3](docs/RELEASE_NOTES_0.4.3.md),
+- **Released: 0.8.0** (2026-11-11): FrogScript standalone domain-specific language engine, ScriptStudio multi-tab automation workbench with in-vault script persistence, dedicated stdout and stderr stream execution logging with filter controls, and full 14-event reactive application lifecycle event bus. Notes: [docs/RELEASE_NOTES_0.8.0.md](docs/RELEASE_NOTES_0.8.0.md). Earlier releases:
+  [0.7.1](docs/RELEASE_NOTES_0.7.1.md), [0.7.0](docs/RELEASE_NOTES_0.7.0.md), [0.6.1](docs/RELEASE_NOTES_0.6.1.md), [0.6.0](docs/RELEASE_NOTES_0.6.0.md), [0.5.0](docs/RELEASE_NOTES_0.5.0.md), [0.4.3](docs/RELEASE_NOTES_0.4.3.md),
   [0.4.2](docs/RELEASE_NOTES_0.4.2.md), [0.4.1](docs/RELEASE_NOTES_0.4.1.md), [0.4.0](docs/RELEASE_NOTES_0.4.0.md),
   [0.3.1](docs/RELEASE_NOTES_0.3.1.md), [0.3.0](docs/RELEASE_NOTES_0.3.0.md), [0.2.0](docs/RELEASE_NOTES_0.2.0.md), and [0.1.0](docs/RELEASE_NOTES_0.1.0.md).
 - **Open points** — see **[PLANNED_FEATURES.md](PLANNED_FEATURES.md)**: All planned epics and stories through Phase M13 are built and verified.
@@ -57,12 +57,12 @@ Linux on x86_64 with OpenGL and X11 or Wayland. Download from the
 
 ```sh
 # AppImage: one file
-sha256sum -c StudyFrog-0.7.1-x86_64.AppImage.sha256
-chmod +x StudyFrog-0.7.1-x86_64.AppImage && ./StudyFrog-0.7.1-x86_64.AppImage
+sha256sum -c StudyFrog-0.8.0-x86_64.AppImage.sha256
+chmod +x StudyFrog-0.8.0-x86_64.AppImage && ./StudyFrog-0.8.0-x86_64.AppImage
 
 # or the tarball
-sha256sum -c StudyFrog-0.7.1-x86_64.tar.gz.sha256
-tar -xzf StudyFrog-0.7.1-x86_64.tar.gz && ./StudyFrog-0.7.1/bin/studyfrog
+sha256sum -c StudyFrog-0.8.0-x86_64.tar.gz.sha256
+tar -xzf StudyFrog-0.8.0-x86_64.tar.gz && ./StudyFrog-0.8.0/bin/studyfrog
 ```
 The release notes have the full steps (menu entry, per-user install, removing it). To build from source:
 ```sh

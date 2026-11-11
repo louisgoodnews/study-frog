@@ -20,12 +20,13 @@ members = [
     "crates/studyfrog-service",
     "crates/studyfrog-ext",
     "examples/studyfrog-ext-example",
+    "crates/studyfrog-script",
     "crates/studyfrog-ui",
     "crates/studyfrog-app",
 ]
 
 [workspace.package]
-version = "0.7.1"
+version = "0.8.0"
 edition = "2024"
 rust-version = "1.99"
 license = "MIT OR Apache-2.0"
@@ -44,6 +45,7 @@ studyfrog-srs = { path = "crates/studyfrog-srs" }
 studyfrog-rehearsal = { path = "crates/studyfrog-rehearsal" }
 studyfrog-slm = { path = "crates/studyfrog-slm" }
 studyfrog-agent = { path = "crates/studyfrog-agent" }
+studyfrog-script = { path = "crates/studyfrog-script" }
 studyfrog-pdf = { path = "crates/studyfrog-pdf" }
 hayro = "0.8"
 pdf_oxide = { version = "0.3", default-features = false, features = ["icc"] }

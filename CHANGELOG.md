@@ -7,6 +7,25 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-11
+
+### Added
+- **FrogScript Domain-Specific Language (`crates/studyfrog-script`)**:
+  - Embedded zero-dependency, pure Rust domain-specific language engine for study automation, active-recall queue steering, deck generation, and custom queries.
+  - Python-like syntax featuring first-class pipeline operator (`|`), variable assignment, semicolon line chaining (`;`), and duration literals (`30s`, `15m`, `2h`, `7d`).
+  - Query verbs (`from stack "..."`, `where tag "..."`, `set priority "..."`) with predicate matchers (`tag`, `type`, `difficulty`, `priority`).
+  - First-class closures (`{ item -> ... }`) for inline card and item transformations.
+  - Native runtime globals and stdlib: `print`, `log_info`, `log_warn`, `log_error`, `len`, `now`, `today`, `days_ago`.
+- **ScriptStudio Multi-Tab Workbench (`crates/studyfrog-ui`)**:
+  - Multi-tab script editor supporting concurrent open tabs, draft editing, tab switching, and closing.
+  - File persistence: discover, open, edit, and save `.frog`, `.py`, and `.sh` scripts directly in `.studyfrog/scripts/` (vault level) or application scripts folder (`<app home>/scripts/`).
+  - In-app execution bridge: executes FrogScript against active vault items in memory with live stdout/stderr capture and lifecycle notifications.
+- **Split Console Output Streams & Filtering**:
+  - Independent stdout and stderr execution capture buffers.
+  - Stream-level filter controls (`All`, `Stdout`, `Stderr / Errors`, `Events`) for isolating execution output from errors or lifecycle events.
+- **Expanded Application Lifecycle Event Bus**:
+  - Expanded from 6 events to 14 reactive lifecycle events: `vault_opened`, `vault_closed`, `item_created`, `item_saved`, `item_deleted`, `rehearsal_started`, `rehearsal_stepped`, `rehearsal_finished`, `exam_finished`, `diary_entry_saved`, `import_finished`, `backup_created`, `focus_block_finished`, `script_finished`.
+
 ## [0.7.1] - 2026-11-11
 
 ### Added
