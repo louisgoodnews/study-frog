@@ -2,7 +2,7 @@
 id: TASK-0254
 type: task
 title: "Spatial quadtree indexing and viewport culling"
-status: backlog
+status: done
 epic: EPIC-050
 parents: ['STORY-0153']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0153.
 See STORY-0153 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Implement quadtree spatial index in studyfrog-graph supporting sub-millisecond bounding box intersection queries
+- [x] Implement quadtree spatial index in studyfrog-graph supporting sub-millisecond bounding box intersection queries
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

@@ -79,6 +79,7 @@ pub mod pdf_ops;
 pub mod pdf_pictures;
 pub mod pdfs;
 pub mod planning;
+pub mod priority_queue;
 pub mod prompts;
 pub mod prompts_meta;
 pub mod queue;

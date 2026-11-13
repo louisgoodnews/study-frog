@@ -2,7 +2,7 @@
 id: EPIC-052
 type: epic
 title: "Continuous Priority Queue and Anti-Paralysis Slicing"
-status: backlog
+status: done
 parents: []
 labels: [m13, srs, rehearsal]
 acceptance_criteria:
@@ -19,10 +19,10 @@ Accumulated backlogs are the primary cause of spaced repetition system abandonme
 Implement continuous priority queue slicing: combine numerical priority, memory retrievability, and familiarity into an effective priority score that bounds daily sessions to user budgets.
 
 ## Acceptance Criteria
-- [ ] Effective priority function blends user card priority, retrievability gap, and familiarity
-- [ ] Queue builder slices daily overdue queues to user-configured session budgets
-- [ ] High-priority urgent cards are guaranteed review even under heavy overdue backlogs
-- [ ] Review session summary provides cognitive burnout prevention pacing feedback
+- [x] Effective priority function blends user card priority, retrievability gap, and familiarity
+- [x] Queue builder slices daily overdue queues to user-configured session budgets
+- [x] High-priority urgent cards are guaranteed review even under heavy overdue backlogs
+- [x] Review session summary provides cognitive burnout prevention pacing feedback
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

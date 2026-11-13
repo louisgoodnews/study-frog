@@ -2,7 +2,7 @@
 id: TASK-0262
 type: task
 title: "Priority-based queue ordering and session budget slicing"
-status: backlog
+status: done
 epic: EPIC-052
 parents: ['STORY-0157']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0157.
 See STORY-0157 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Update queue builder in studyfrog-service to sort due items by effective priority and slice to session card budgets
+- [x] Update queue builder in studyfrog-service to sort due items by effective priority and slice to session card budgets
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

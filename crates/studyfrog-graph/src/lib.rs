@@ -3,4 +3,5 @@
 pub mod canvas;
 pub mod layout;
 pub mod params;
+pub mod quadtree;
 pub mod view;
