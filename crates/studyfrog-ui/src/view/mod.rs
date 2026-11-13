@@ -67,6 +67,8 @@ pub mod modal_pdf_export;
 pub mod modal_pdf_preview;
 pub mod modal_size;
 mod modal_transfer;
+mod modal_transfer_import;
+mod modal_transfer_preview;
 mod modal_unmark;
 mod navbar;
 mod navbar_history;

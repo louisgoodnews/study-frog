@@ -1,7 +1,7 @@
 //! The CSV settings under the preview: delimiter, encoding, header, what each column means, the first rows and the
 //! problems of the file, all at once.
 
-use eframe::egui::{self, ComboBox};
+use eframe::egui::{self, ComboBox, RichText};
 use studyfrog_service::xfer_adapters::CSV_LAYOUT;
 use studyfrog_service::xfer_csv_map::{ai_message, problem_text};
 
@@ -62,7 +62,10 @@ fn column_menu(info: &CsvInfo, ui: &mut egui::Ui, (role, label): (Role, &str), o
 
 /// The settings in rows that wrap, so the panel stays low and the buttons under it stay in reach.
 fn choices(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.add_space(4.0);
     ui.horizontal_wrapped(|ui| format_choices(info, ui, out));
+    ui.add_space(8.0);
+    ui.label(RichText::new("Column Mapping:").strong());
     ui.horizontal_wrapped(|ui| {
         for pair in [
             (Role::Front, "Front"),
@@ -74,8 +77,10 @@ fn choices(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             (Role::AlsoIn, "Also in"),
         ] {
             column_menu(info, ui, pair, out);
+            ui.add_space(6.0);
         }
     });
+    ui.add_space(6.0);
 }
 
 fn format_choices(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
@@ -89,6 +94,7 @@ fn format_choices(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 }
             }
         });
+    ui.add_space(8.0);
     let encoding = if s.latin1 { "Latin-1" } else { "UTF-8" };
     ComboBox::from_label("Text encoding")
         .selected_text(encoding)
@@ -99,6 +105,7 @@ fn format_choices(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 }
             }
         });
+    ui.add_space(8.0);
     let mut header = s.header;
     if ui
         .checkbox(&mut header, "The first row names the columns")
@@ -109,11 +116,15 @@ fn format_choices(info: &CsvInfo, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 fn rows(info: &CsvInfo, ui: &mut egui::Ui) {
-    egui::ScrollArea::horizontal()
+    ui.add_space(6.0);
+    ui.label(RichText::new("Sample Rows:").strong());
+    egui::ScrollArea::both()
         .id_salt("csv-rows")
+        .max_height(140.0)
         .show(ui, |ui| {
             egui::Grid::new("csv-first-rows")
                 .striped(true)
+                .spacing(eframe::egui::vec2(12.0, 6.0))
                 .show(ui, |ui| {
                     for name in &info.sheet.names {
                         ui.strong(name);

@@ -48,38 +48,82 @@ pub struct PromptParam {
     pub options: &'static [(&'static str, &'static str)],
 }
 
-const EXPLAIN: &[PromptParam] = &[PromptParam {
-    key: "depth",
-    label: "Depth",
+/// Standard language parameter available across prompts.
+pub const LANGUAGE_PARAM: PromptParam = PromptParam {
+    key: "language",
+    label: "Language",
     options: &[
-        ("All three levels", "all three levels"),
         (
-            "Intuitive (ELI5)",
-            "the intuitive level only (write only that one note)",
+            "Auto (same as doc)",
+            "Match the language of the source document or notes provided.",
         ),
         (
-            "Core concepts",
-            "the core concepts level only (write only that one note)",
+            "Ask user first",
+            "MANDATORY: Before generating cards or questions, ask the user in which language they want the output to be written, and wait for their confirmation.",
         ),
         (
-            "Technical",
-            "the technical level only (write only that one note)",
+            "German (Deutsch)",
+            "Write the entire output, questions, answers, and tags in German (Deutsch).",
+        ),
+        (
+            "English",
+            "Write the entire output, questions, answers, and tags in English.",
+        ),
+        (
+            "French (Français)",
+            "Write the entire output, questions, answers, and tags in French (Français).",
+        ),
+        (
+            "Spanish (Español)",
+            "Write the entire output, questions, answers, and tags in Spanish (Español).",
+        ),
+        (
+            "Bilingual",
+            "Provide bilingual cards: the front or key term in the original language, and the explanation or answer in both German and English.",
         ),
     ],
-}];
+};
 
-const EXAM: &[PromptParam] = &[PromptParam {
-    key: "count",
-    label: "Questions",
-    options: &[("3 questions", "3"), ("5 questions", "5")],
-}];
+const DEFAULT_PARAMS: &[PromptParam] = &[LANGUAGE_PARAM];
 
-/// The choices the prompt `id` offers; most prompts offer none.
+const EXPLAIN: &[PromptParam] = &[
+    PromptParam {
+        key: "depth",
+        label: "Depth",
+        options: &[
+            ("All three levels", "all three levels"),
+            (
+                "Intuitive (ELI5)",
+                "the intuitive level only (write only that one note)",
+            ),
+            (
+                "Core concepts",
+                "the core concepts level only (write only that one note)",
+            ),
+            (
+                "Technical",
+                "the technical level only (write only that one note)",
+            ),
+        ],
+    },
+    LANGUAGE_PARAM,
+];
+
+const EXAM: &[PromptParam] = &[
+    PromptParam {
+        key: "count",
+        label: "Questions",
+        options: &[("3 questions", "3"), ("5 questions", "5")],
+    },
+    LANGUAGE_PARAM,
+];
+
+/// The choices the prompt `id` offers.
 pub fn params_of(id: &str) -> &'static [PromptParam] {
     match id {
         "explain" => EXPLAIN,
         "exam" => EXAM,
-        _ => &[],
+        _ => DEFAULT_PARAMS,
     }
 }
 

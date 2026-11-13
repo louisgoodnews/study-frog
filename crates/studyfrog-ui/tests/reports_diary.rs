@@ -26,9 +26,9 @@ fn sample_calibration_report() -> CalibrationReport {
         day: 4,
     };
     let entries = vec![
-        diary_point(d1, &[("performance", 3), ("focus", 3)]),
-        diary_point(d1, &[("understanding", 3)]),
-        diary_point(d2, &[("performance", 3), ("confidence", 3)]),
+        diary_point(d1, &[("performance", 3), ("focus", 4)]),
+        diary_point(d1, &[("understanding", 4)]),
+        diary_point(d2, &[("performance", 3), ("confidence", 4)]),
     ];
     let reviews = vec![
         calibration_review(d1, Rating::Good, Some(0.70)),

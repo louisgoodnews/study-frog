@@ -114,29 +114,29 @@ fn test_on_a_simulated_history_shows_the_calibration_measure_is_computed_correct
     assert_eq!(report.reviews_evaluated, 50);
     assert_eq!(report.buckets.len(), 5);
 
-    // Day 1: self 0.75, acc ~0.5032 -> gap ~0.2468
+    // Day 1: self 0.75, acc ~0.6392 -> gap ~0.1108
     let b1 = &report.buckets[0];
     assert_eq!(b1.entries, 1);
     assert_eq!(b1.reviews, 10);
     assert!((b1.self_score.unwrap() - 0.75).abs() < 1e-4);
-    assert!((b1.accuracy.unwrap() - 0.5032).abs() < 1e-4);
+    assert!((b1.accuracy.unwrap() - 0.6392).abs() < 1e-4);
     assert!((b1.familiarity.unwrap() - 0.60).abs() < 1e-4);
-    assert!((b1.gap.unwrap() - 0.2468).abs() < 1e-4);
+    assert!((b1.gap.unwrap() - 0.1108).abs() < 1e-4);
 
     // Overall mean self score = (0.75 + 0.50 + 1.00 + 0.75 + 0.25) / 5 = 0.65
     assert!((report.mean_self_score.unwrap() - 0.65).abs() < 1e-4);
 
-    // Overall mean accuracy = 21.205375 / 50 = 0.4241
-    assert!((report.mean_accuracy.unwrap() - 0.4241).abs() < 1e-4);
+    // Overall mean accuracy = 25.816625 / 50 = 0.5163
+    assert!((report.mean_accuracy.unwrap() - 0.5163).abs() < 1e-4);
 
     // Overall mean familiarity = (10*0.60 + 10*0.55 + 10*0.85 + 10*0.70 + 10*0.35) / 50 = 0.61
     assert!((report.mean_familiarity.unwrap() - 0.61).abs() < 1e-4);
 
-    // Mean delta = 1.1294625 / 5 = 0.2259
-    assert!((report.delta.unwrap() - 0.2259).abs() < 1e-4);
+    // Mean delta = 0.6682725 / 5 = 0.1337
+    assert!((report.delta.unwrap() - 0.1337).abs() < 1e-4);
 
-    // Calibration score = 1.0 - 0.2259 = 0.7741
-    assert!((report.score.unwrap() - 0.7741).abs() < 1e-4);
+    // Calibration score = 1.0 - 0.1337 = 0.8663
+    assert!((report.score.unwrap() - 0.8663).abs() < 1e-4);
 
     assert_eq!(report.bias, CalibrationBias::Overconfident);
     assert_eq!(bias_label(report.bias), "Overconfident");
@@ -164,8 +164,8 @@ fn simulated_overconfident_history_detects_overconfidence_bias() {
     assert_eq!(report.entries_used, 1);
     assert_eq!(report.reviews_evaluated, 10);
     assert_eq!(report.mean_self_score, Some(1.0));
-    assert!((report.mean_accuracy.unwrap() - 0.09265).abs() < 1e-4);
-    assert!((report.delta.unwrap() - 0.90735).abs() < 1e-4);
+    assert!((report.mean_accuracy.unwrap() - 0.15215).abs() < 1e-4);
+    assert!((report.delta.unwrap() - 0.84785).abs() < 1e-4);
     assert_eq!(report.bias, CalibrationBias::Overconfident);
     assert_eq!(bias_label(report.bias), "Overconfident");
 }
@@ -191,8 +191,8 @@ fn simulated_underconfident_history_detects_underconfidence_bias() {
     assert_eq!(report.entries_used, 1);
     assert_eq!(report.reviews_evaluated, 10);
     assert_eq!(report.mean_self_score, Some(0.0));
-    assert!((report.mean_accuracy.unwrap() - 0.6904).abs() < 1e-4);
-    assert!((report.delta.unwrap() - (-0.6904)).abs() < 1e-4);
+    assert!((report.mean_accuracy.unwrap() - 0.7478).abs() < 1e-4);
+    assert!((report.delta.unwrap() - (-0.7478)).abs() < 1e-4);
     assert_eq!(report.bias, CalibrationBias::Underconfident);
     assert_eq!(bias_label(report.bias), "Underconfident");
 }

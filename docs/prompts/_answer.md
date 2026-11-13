@@ -10,4 +10,5 @@ Before you answer, check each point and fix the file if one fails:
 4. `kind` is `card`, `question` or `note` on every row, and `stack` is filled on every row.
 5. No `front` is empty, and no `back` of a card or a question is empty.
 6. Every item comes from the attached file; nothing is invented.
-7. The answer is one code block and nothing else.
+7. Language rule: {{language}}
+8. The answer is one code block and nothing else.

@@ -67,6 +67,13 @@ fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Ve
             out.push(Msg::OpenItem(stack.uid));
             ui.close();
         }
+        if ui.button("Select all items (bulk edit)").clicked() {
+            send(out, StackViewMsg::Select(StackTab::List));
+            out.push(Msg::Library(LibraryMsg::Bulk(
+                crate::library_bulk::BulkMsg::SelectAll(true),
+            )));
+            ui.close();
+        }
         let ext = &state.extensions;
         if !(ext.card_types.is_empty() && ext.importers.is_empty())
             && ui.button("Import…").clicked()

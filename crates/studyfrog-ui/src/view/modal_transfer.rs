@@ -1,7 +1,6 @@
 //! The import and export dialog: pick the format and the scope, see the preview, choose what to do with duplicates, see the result.
 
-use eframe::egui::{self, ComboBox, RichText};
-use studyfrog_service::xfer_plan::{Policy, Verdict};
+use eframe::egui::{self, ComboBox, RichText, vec2};
 
 use crate::library_ui::LibraryMsg;
 use crate::modal::ModalMsg;
@@ -9,13 +8,14 @@ use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::transfer_ui::{Format, Tab, TransferMsg};
+use crate::view::kit;
 use crate::view::widgets::text_field;
 
 fn send(out: &mut Vec<Msg>, m: TransferMsg) {
     out.push(Msg::Library(LibraryMsg::Transfer(m)));
 }
 
-fn scope_menu(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, label: &str) {
+pub(super) fn scope_menu(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, label: &str) {
     let stacks: Vec<_> = state
         .vault
         .iter()
@@ -54,26 +54,45 @@ fn scope_menu(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, label: &str)
 
 fn mode_question(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let t = &state.transfer;
-    ui.strong("Export mode");
-    if ui
-        .radio(!t.scheduling, "Default: without scheduling")
-        .clicked()
-    {
-        send(out, TransferMsg::Mode(false));
-    }
-    if ui.radio(t.scheduling, "Advanced").clicked() {
-        send(out, TransferMsg::Mode(true));
-    }
-    if t.scheduling {
-        ui.weak("Advanced includes scheduling: the review history and the schedule (JSON only).");
-    }
-    ui.horizontal(|ui| {
-        if ui.button("Export").clicked() {
-            send(out, TransferMsg::Export);
+    ui.add_space(8.0);
+    kit::card(ui, |ui| {
+        ui.label(
+            RichText::new("Export mode")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong(),
+        );
+        ui.add_space(6.0);
+        if ui
+            .radio(!t.scheduling, "Default: without scheduling")
+            .clicked()
+        {
+            send(out, TransferMsg::Mode(false));
         }
-        if ui.button("Back").clicked() {
-            send(out, TransferMsg::BackToExport);
+        if ui.radio(t.scheduling, "Advanced").clicked() {
+            send(out, TransferMsg::Mode(true));
         }
+        if t.scheduling {
+            ui.add_space(4.0);
+            ui.weak(
+                "Advanced includes scheduling: the review history and the schedule (JSON only).",
+            );
+        }
+        ui.add_space(10.0);
+        ui.horizontal(|ui| {
+            if ui
+                .add(egui::Button::new("Export").min_size(vec2(100.0, 32.0)))
+                .clicked()
+            {
+                send(out, TransferMsg::Export);
+            }
+            ui.add_space(6.0);
+            if ui
+                .add(egui::Button::new("Back").min_size(vec2(80.0, 32.0)))
+                .clicked()
+            {
+                send(out, TransferMsg::BackToExport);
+            }
+        });
     });
 }
 
@@ -83,148 +102,89 @@ fn export_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         mode_question(state, ui, out);
         return;
     }
-    scope_menu(state, ui, out, "Export");
-    ui.horizontal_wrapped(|ui| {
-        for (f, label) in [
-            (Format::Json, "JSON with pictures (zip)"),
-            (Format::Toml, "TOML"),
-            (Format::Ron, "RON"),
-            (Format::Csv, "CSV (cards and questions)"),
-            (Format::Markdown, "Markdown files (zip)"),
-        ] {
-            if ui.selectable_label(t.format == f, label).clicked() {
-                send(out, TransferMsg::Format(f));
-            }
-        }
-    });
-    let note = match t.format {
-        Format::Markdown => "Markdown files (import as an Obsidian vault or open directly).",
-        _ => "Can be imported back into StudyFrog.",
-    };
-    ui.label(RichText::new(note).small().color(palette_of(ui).text_weak));
-    if let Some(text) = text_field(
-        ui,
-        "Write to folder",
-        &t.destination,
-        "/path/to/a/folder",
-        1,
-    ) {
-        send(out, TransferMsg::Destination(text));
-    }
-    ui.horizontal(|ui| {
-        if ui.button("Choose folder…").clicked() {
-            send(out, TransferMsg::Browse(false, true));
-        }
-        if ui
-            .add_enabled(!t.busy, egui::Button::new("Export…"))
-            .clicked()
-        {
-            send(out, TransferMsg::AskMode);
-        }
-        if ui.button("Export to PDF…").clicked() {
-            let target = studyfrog_service::pdf_export::ExportTarget::Stack(
-                t.scope.clone().unwrap_or_default(),
-            );
-            out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Export(
-                crate::pdf_export_types::PdfExportMsg::Open(target),
-            )));
-        }
-    });
-}
-
-fn verdict(v: &Verdict) -> String {
-    match v {
-        Verdict::Create => "new".to_owned(),
-        Verdict::Duplicate(p) => format!("exists at {p}"),
-        Verdict::Error(e) => format!("error: {e}"),
-    }
-}
-
-fn preview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let t = &state.transfer;
-    let Some(p) = &t.preview else { return };
-    let (create, dup, err) = p.counts;
-    ui.strong(format!("{} found {} item(s)", p.adapter, p.total));
-    ui.label(format!("{create} to create, {dup} already exist, {err} with errors, {} new stack(s), {} picture or PDF file(s)", p.new_stacks, p.files));
-    for w in &p.warnings {
-        ui.weak(w);
-    }
-    egui::ScrollArea::vertical()
-        .max_height(160.0)
-        .show(ui, |ui| {
-            for l in &p.lines {
-                ui.label(format!(
-                    "{} ({}): {}",
-                    l.title,
-                    l.folder,
-                    verdict(&l.verdict)
-                ));
-            }
-        });
-    if dup > 0 {
-        ui.horizontal(|ui| {
-            ui.label("Items that exist:");
-            for (pol, label) in [
-                (Policy::Skip, "Skip"),
-                (Policy::Replace, "Replace"),
-                (Policy::KeepBoth, "Keep both"),
+    ui.add_space(6.0);
+    kit::card(ui, |ui| {
+        ui.label(
+            RichText::new("Export Library or Stack")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong(),
+        );
+        ui.add_space(8.0);
+        scope_menu(state, ui, out, "Export");
+        ui.add_space(8.0);
+        ui.label(RichText::new("Choose export format:").strong());
+        ui.horizontal_wrapped(|ui| {
+            for (f, label) in [
+                (Format::Json, "JSON with pictures (zip)"),
+                (Format::Toml, "TOML"),
+                (Format::Ron, "RON"),
+                (Format::Csv, "CSV (cards and questions)"),
+                (Format::Markdown, "Markdown files (zip)"),
             ] {
-                if ui.selectable_label(t.policy == pol, label).clicked() {
-                    send(out, TransferMsg::Policy(pol));
+                if ui.selectable_label(t.format == f, label).clicked() {
+                    send(out, TransferMsg::Format(f));
                 }
             }
         });
-    }
-    if let Some(info) = &p.csv {
-        super::modal_csv::settings(info, state.prompt_run.reply.is_some(), ui, out);
-    }
-    if p.scheduling {
-        let mut on = t.with_schedule;
-        if ui.checkbox(&mut on, "Import the review history").changed() {
-            send(out, TransferMsg::WithSchedule(on));
+        ui.add_space(4.0);
+        let note = match t.format {
+            Format::Markdown => "Markdown files (import as an Obsidian vault or open directly).",
+            _ => "Can be imported back into StudyFrog.",
+        };
+        ui.label(RichText::new(note).small().color(palette_of(ui).text_weak));
+        ui.add_space(8.0);
+        if let Some(text) = text_field(
+            ui,
+            "Write to folder",
+            &t.destination,
+            "/path/to/a/folder",
+            1,
+        ) {
+            send(out, TransferMsg::Destination(text));
         }
-    }
-    if ui
-        .add_enabled(!t.busy && create + dup > 0, egui::Button::new("Import"))
-        .clicked()
-    {
-        send(out, TransferMsg::Import);
-    }
-}
-
-fn import_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let t = &state.transfer;
-    super::modal_found::found(state, ui, out);
-    super::modal_formats::formats(ui, out);
-    if let Some(text) = text_field(ui, "File or folder to import", &t.path, "/path/to/file", 1) {
-        send(out, TransferMsg::Path(text));
-    }
-    ui.horizontal(|ui| {
-        if ui.button("Choose file…").clicked() {
-            send(out, TransferMsg::Browse(true, false));
-        }
-        if ui.button("Choose folder…").clicked() {
-            send(out, TransferMsg::Browse(true, true));
-        }
+        ui.add_space(8.0);
+        ui.horizontal(|ui| {
+            if ui
+                .add(egui::Button::new("Choose folder…").min_size(vec2(120.0, 32.0)))
+                .clicked()
+            {
+                send(out, TransferMsg::Browse(false, true));
+            }
+            ui.add_space(6.0);
+            if ui
+                .add_enabled(
+                    !t.busy,
+                    egui::Button::new("Export…").min_size(vec2(100.0, 32.0)),
+                )
+                .clicked()
+            {
+                send(out, TransferMsg::AskMode);
+            }
+            ui.add_space(6.0);
+            if ui
+                .add(egui::Button::new("Export to PDF…").min_size(vec2(120.0, 32.0)))
+                .clicked()
+            {
+                let target = studyfrog_service::pdf_export::ExportTarget::Stack(
+                    t.scope.clone().unwrap_or_default(),
+                );
+                out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Export(
+                    crate::pdf_export_types::PdfExportMsg::Open(target),
+                )));
+            }
+        });
     });
-    scope_menu(state, ui, out, "Import");
-    if ui
-        .add_enabled(
-            !t.busy && !t.path.trim().is_empty(),
-            egui::Button::new("Preview"),
-        )
-        .clicked()
-    {
-        send(out, TransferMsg::Preview);
-    }
-    preview(state, ui, out);
 }
 
 /// The dialog's content.
 pub fn transfer(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let t = &state.transfer;
+
     ui.horizontal(|ui| {
-        ui.strong("Import and export");
+        ui.strong(
+            RichText::new("Import and export")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading)),
+        );
         for (tab, label) in [(Tab::Export, "Export"), (Tab::Import, "Import")] {
             if ui.selectable_label(t.tab == tab, label).clicked() {
                 send(out, TransferMsg::Tab(tab));
@@ -236,15 +196,20 @@ pub fn transfer(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         });
     });
+
+    ui.add_space(4.0);
     ui.separator();
+
     match t.tab {
         Tab::Export => export_tab(state, ui, out),
-        Tab::Import => import_tab(state, ui, out),
+        Tab::Import => super::modal_transfer_import::import_tab(state, ui, out),
     }
     if t.busy {
+        ui.add_space(8.0);
         ui.spinner();
     }
     if let Some(s) = &t.status {
-        ui.label(s);
+        ui.add_space(8.0);
+        ui.label(RichText::new(s).color(palette_of(ui).text_weak));
     }
 }

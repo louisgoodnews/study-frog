@@ -25,23 +25,24 @@ fn day_self_score(entries: &[&DiaryRatingPoint]) -> (Option<f32>, Vec<f32>) {
 pub fn review_accuracy(r: &CalibrationReview) -> f32 {
     let rating_weight = match r.rating {
         Rating::Again => 0.0,
-        Rating::Hard => 0.50,
+        Rating::Hard => 0.60,
         Rating::Good => 0.85,
         Rating::Easy => 1.00,
     };
     if rating_weight == 0.0 {
         return 0.0;
     }
-    // Items that have never been rehearsed or have low familiarity cannot represent 100% baseline accuracy.
-    // Scale baseline recall with familiarity (0.0 familiarity -> 0.35, 1.0 familiarity -> 1.00).
+    // Items that have been viewed repeatedly and matured have proven stability.
+    // Rather than heavily penalizing new items (which crushed recall accuracy to ~20%),
+    // familiarity acts as a subtle confidence weight (0.85 for brand new, 1.00 for fully mature).
     let fam = r.familiarity.unwrap_or(0.2).clamp(0.0, 1.0);
-    let fam_weight = 0.35 + 0.65 * fam;
+    let fam_weight = 0.85 + 0.15 * fam;
 
     // View latency vs expected reading speed: prolonged hesitation indicates struggling retrieval.
     let latency_weight = match (r.answer_ms, r.expected_ms) {
         (Some(ans), Some(exp)) if exp > 0 => {
             let ratio = exp as f32 / ans.max(exp) as f32;
-            0.70 + 0.30 * ratio.clamp(0.0, 1.0)
+            0.85 + 0.15 * ratio.clamp(0.0, 1.0)
         }
         _ => 1.0,
     };
@@ -50,7 +51,7 @@ pub fn review_accuracy(r: &CalibrationReview) -> f32 {
     let diff_weight = match r.difficulty {
         Some(d) => {
             let norm = (d.clamp(1.0, 10.0) - 1.0) / 9.0;
-            1.0 + 0.35 * norm
+            1.0 + 0.15 * norm
         }
         None => 1.0,
     };

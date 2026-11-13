@@ -22,6 +22,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.set_width(match modal {
             Modal::Create(f) => super::modal_size::width(ui.ctx(), f.kind),
             Modal::PdfExport(_) => 620.0,
+            Modal::Transfer | Modal::Import => 720.0,
             _ => WIDTH,
         });
         match modal {
