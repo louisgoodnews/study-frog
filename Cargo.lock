@@ -5266,6 +5266,8 @@ dependencies = [
  "criterion",
  "dhat",
  "proptest",
+ "serde",
+ "toml",
 ]
 
 [[package]]

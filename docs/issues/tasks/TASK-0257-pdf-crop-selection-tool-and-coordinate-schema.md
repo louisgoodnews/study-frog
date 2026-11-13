@@ -2,7 +2,7 @@
 id: TASK-0257
 type: task
 title: "PDF rectangular crop selection tool and coordinate frontmatter schema"
-status: backlog
+status: done
 epic: EPIC-051
 parents: ['STORY-0155']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0155.
 See STORY-0155 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Support rectangular drag selection in studyfrog-pdf and serialize page/bbox coordinates into item frontmatter
+- [x] Support rectangular drag selection in studyfrog-pdf and serialize page/bbox coordinates into item frontmatter
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

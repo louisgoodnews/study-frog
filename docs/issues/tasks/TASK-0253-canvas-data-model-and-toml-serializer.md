@@ -2,7 +2,7 @@
 id: TASK-0253
 type: task
 title: "Canvas data model and TOML serializer in core and graph"
-status: backlog
+status: done
 epic: EPIC-050
 parents: ['STORY-0153']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0153.
 See STORY-0153 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Define CanvasNode, CanvasEdge, and CanvasDoc with serde TOML serializer in studyfrog-graph
+- [x] Define CanvasNode, CanvasEdge, and CanvasDoc with serde TOML serializer in studyfrog-graph
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

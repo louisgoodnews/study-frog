@@ -4,6 +4,7 @@
 //! cannot take the program down: a panic or a hang inside a library comes back as an error.
 
 pub mod annotate;
+pub mod crop;
 pub mod doc;
 pub mod edit;
 pub mod error;
@@ -13,6 +14,11 @@ pub mod links;
 pub mod render;
 pub mod text;
 pub mod write;
+
+pub use crop::{
+    PdfCropAnchor, compute_crop_rect, crop_rect_area, format_pdf_crop_uri, is_valid_crop_anchor,
+    is_valid_crop_rect, normalized_to_points, parse_pdf_crop_uri, points_to_normalized,
+};
 
 use std::sync::Arc;
 
