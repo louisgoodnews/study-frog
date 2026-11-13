@@ -1,7 +1,7 @@
 ---
 id: STORY-0145
 type: story
-title: Markdown list parser support for dash asterisk numbers and alphabetical markers
+title: "Markdown list parser support for dash asterisk numbers and alphabetical markers"
 status: done
 epic: EPIC-046
 parents: [EPIC-046]

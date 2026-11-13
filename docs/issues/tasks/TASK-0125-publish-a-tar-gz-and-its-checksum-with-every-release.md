@@ -1,7 +1,7 @@
 ---
 id: TASK-0125
 type: task
-title: Publish a tar.gz and its checksum with every release
+title: "Publish a tar.gz and its checksum with every release"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

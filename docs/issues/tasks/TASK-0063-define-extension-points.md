@@ -1,7 +1,7 @@
 ---
 id: TASK-0063
 type: task
-title: Define extension points
+title: "Define extension points"
 status: done
 epic: EPIC-016
 parents: [STORY-0030]

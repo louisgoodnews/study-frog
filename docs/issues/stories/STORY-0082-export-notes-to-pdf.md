@@ -1,7 +1,7 @@
 ---
 id: STORY-0082
 type: story
-title: Export notes to PDF
+title: "Export notes to PDF"
 status: done
 epic: EPIC-026
 parents: [EPIC-026]

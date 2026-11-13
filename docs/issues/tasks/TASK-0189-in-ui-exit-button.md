@@ -1,7 +1,7 @@
 ---
 id: TASK-0189
 type: task
-title: In-UI exit button
+title: "In-UI exit button"
 status: done
 epic: EPIC-025
 parents: [STORY-0072]

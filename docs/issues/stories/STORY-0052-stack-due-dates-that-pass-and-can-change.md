@@ -1,7 +1,7 @@
 ---
 id: STORY-0052
 type: story
-title: Stack due dates that pass and can change
+title: "Stack due dates that pass and can change"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

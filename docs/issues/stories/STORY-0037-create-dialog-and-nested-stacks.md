@@ -1,7 +1,7 @@
 ---
 id: STORY-0037
 type: story
-title: Create dialog, nested stacks and a gentler first launch
+title: "Create dialog, nested stacks and a gentler first launch"
 status: done
 epic: EPIC-020
 parents: [EPIC-020]

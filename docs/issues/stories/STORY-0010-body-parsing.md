@@ -1,7 +1,7 @@
 ---
 id: STORY-0010
 type: story
-title: Body parsing
+title: "Body parsing"
 status: done
 epic: EPIC-005
 parents: [EPIC-005]

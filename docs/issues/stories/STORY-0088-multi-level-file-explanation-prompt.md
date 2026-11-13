@@ -1,7 +1,7 @@
 ---
 id: STORY-0088
 type: story
-title: Multi-level file explanation prompt
+title: "Multi-level file explanation prompt"
 status: done
 epic: EPIC-030
 parents: [EPIC-030]

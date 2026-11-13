@@ -1,7 +1,7 @@
 ---
 id: TASK-0174
 type: task
-title: Self-assessment against measured results
+title: "Self-assessment against measured results"
 status: done
 epic: EPIC-024
 parents: [STORY-0068]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0103
 type: task
-title: Rehearsal card layout and progress bar
+title: "Rehearsal card layout and progress bar"
 status: done
 epic: EPIC-020
 parents: [STORY-0038]

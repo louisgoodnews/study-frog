@@ -1,7 +1,7 @@
 ---
 id: STORY-0130
 type: story
-title: Lifecycle events in the control protocol
+title: "Lifecycle events in the control protocol"
 status: done
 epic: EPIC-028
 parents: [EPIC-028]

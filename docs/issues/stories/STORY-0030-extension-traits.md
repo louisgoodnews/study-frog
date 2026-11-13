@@ -1,7 +1,7 @@
 ---
 id: STORY-0030
 type: story
-title: Extension points
+title: "Extension points"
 status: done
 epic: EPIC-016
 parents: [EPIC-016]

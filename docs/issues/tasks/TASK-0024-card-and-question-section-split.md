@@ -1,7 +1,7 @@
 ---
 id: TASK-0024
 type: task
-title: Card and question section split
+title: "Card and question section split"
 status: done
 epic: EPIC-005
 parents: [STORY-0010]

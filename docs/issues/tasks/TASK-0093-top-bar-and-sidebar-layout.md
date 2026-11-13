@@ -1,7 +1,7 @@
 ---
 id: TASK-0093
 type: task
-title: Top bar, sidebar and menus
+title: "Top bar, sidebar and menus"
 status: done
 epic: EPIC-020
 parents: [STORY-0036]

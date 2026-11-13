@@ -1,7 +1,7 @@
 ---
 id: TASK-0031
 type: task
-title: Transition functions
+title: "Transition functions"
 status: done
 epic: EPIC-007
 parents: [STORY-0013]

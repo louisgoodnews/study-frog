@@ -1,7 +1,7 @@
 ---
 id: TASK-0102
 type: task
-title: Library cards and item rows
+title: "Library cards and item rows"
 status: done
 epic: EPIC-020
 parents: [STORY-0038]

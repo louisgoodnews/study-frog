@@ -1,7 +1,7 @@
 ---
 id: TASK-0049
 type: task
-title: SlmRuntime trait
+title: "SlmRuntime trait"
 status: done
 epic: EPIC-012
 parents: [STORY-0023]

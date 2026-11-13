@@ -1,7 +1,7 @@
 ---
 id: STORY-0137
 type: story
-title: Interactive parameter-guided content generation prompts in prompt library
+title: "Interactive parameter-guided content generation prompts in prompt library"
 status: done
 epic: EPIC-042
 parents: [EPIC-042]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0064
 type: story
-title: Stack sub-views for list, backlog, roadmap, board, calendar and reports
+title: "Stack sub-views for list, backlog, roadmap, board, calendar and reports"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

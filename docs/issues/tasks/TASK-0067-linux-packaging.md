@@ -1,7 +1,7 @@
 ---
 id: TASK-0067
 type: task
-title: Linux packaging (AppImage)
+title: "Linux packaging (AppImage)"
 status: done
 epic: EPIC-017
 parents: [STORY-0032]

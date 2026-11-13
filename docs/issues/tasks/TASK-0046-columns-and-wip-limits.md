@@ -1,7 +1,7 @@
 ---
 id: TASK-0046
 type: task
-title: Columns and WIP limits
+title: "Columns and WIP limits"
 status: done
 epic: EPIC-011
 parents: [STORY-0021]

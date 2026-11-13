@@ -1,7 +1,7 @@
 ---
 id: STORY-0007
 type: story
-title: FSRS implementation
+title: "FSRS implementation"
 status: done
 epic: EPIC-004
 parents: [EPIC-004]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0044
 type: story
-title: Images in notes, cards and questions
+title: "Images in notes, cards and questions"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

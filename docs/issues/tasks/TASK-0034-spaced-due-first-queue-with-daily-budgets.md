@@ -1,7 +1,7 @@
 ---
 id: TASK-0034
 type: task
-title: Spaced (due-first) queue with daily budgets
+title: "Spaced (due-first) queue with daily budgets"
 status: done
 epic: EPIC-007
 parents: [STORY-0015]

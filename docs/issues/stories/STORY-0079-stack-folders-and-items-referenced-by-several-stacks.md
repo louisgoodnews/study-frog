@@ -1,7 +1,7 @@
 ---
 id: STORY-0079
 type: story
-title: Stack folders and items referenced by several stacks
+title: "Stack folders and items referenced by several stacks"
 status: done
 epic: EPIC-026
 parents: [EPIC-026]

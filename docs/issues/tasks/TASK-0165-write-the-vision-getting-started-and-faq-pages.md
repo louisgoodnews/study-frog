@@ -1,7 +1,7 @@
 ---
 id: TASK-0165
 type: task
-title: Write the vision, getting started and FAQ pages
+title: "Write the vision, getting started and FAQ pages"
 status: done
 epic: EPIC-023
 parents: [STORY-0066]

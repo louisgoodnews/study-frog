@@ -1,7 +1,7 @@
 ---
 id: TASK-0144
 type: task
-title: Status field in the data model and Markdown schema
+title: "Status field in the data model and Markdown schema"
 status: done
 epic: EPIC-023
 parents: [STORY-0061]

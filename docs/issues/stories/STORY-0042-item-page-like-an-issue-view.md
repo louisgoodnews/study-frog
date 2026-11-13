@@ -1,7 +1,7 @@
 ---
 id: STORY-0042
 type: story
-title: Item page like an issue view
+title: "Item page like an issue view"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

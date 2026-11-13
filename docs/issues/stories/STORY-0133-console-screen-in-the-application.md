@@ -1,7 +1,7 @@
 ---
 id: STORY-0133
 type: story
-title: Console screen in the application
+title: "Console screen in the application"
 status: done
 epic: EPIC-028
 parents: [EPIC-028]

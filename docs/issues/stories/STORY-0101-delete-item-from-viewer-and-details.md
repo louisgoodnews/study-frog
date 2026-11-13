@@ -1,7 +1,7 @@
 ---
 id: STORY-0101
 type: story
-title: Delete item from item viewer and editor
+title: "Delete item from item viewer and editor"
 status: done
 epic: EPIC-031
 parents: [EPIC-031]

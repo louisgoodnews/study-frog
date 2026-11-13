@@ -1,7 +1,7 @@
 ---
 id: TASK-0098
 type: task
-title: A clickable notification on first launch
+title: "A clickable notification on first launch"
 status: done
 epic: EPIC-020
 parents: [STORY-0037]

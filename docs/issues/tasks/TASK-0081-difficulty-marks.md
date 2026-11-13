@@ -1,7 +1,7 @@
 ---
 id: TASK-0081
 type: task
-title: Difficulty marks during a run
+title: "Difficulty marks during a run"
 status: done
 epic: EPIC-019
 parents: [STORY-0035]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0135
 type: story
-title: Comments for items
+title: "Comments for items"
 status: done
 epic: EPIC-039
 parents: [EPIC-039]

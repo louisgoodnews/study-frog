@@ -1,7 +1,7 @@
 ---
 id: STORY-0118
 type: story
-title: StudyFrog MCP server resources and read-only search, analytics, and forecast tools
+title: "StudyFrog MCP server resources and read-only search, analytics, and forecast tools"
 status: done
 epic: EPIC-037
 parents: [EPIC-037]

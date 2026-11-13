@@ -1,7 +1,7 @@
 ---
 id: TASK-0228
 type: task
-title: Specify the Markdown to PDF export and choose the writer (ADR)
+title: "Specify the Markdown to PDF export and choose the writer (ADR)"
 status: done
 epic: EPIC-026
 parents: [STORY-0082]

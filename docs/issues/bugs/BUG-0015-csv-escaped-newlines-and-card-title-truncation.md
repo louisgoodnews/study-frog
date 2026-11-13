@@ -1,7 +1,7 @@
 ---
 id: BUG-0015
 type: bug
-title: Escaped newline sequences in imported cards and 60-character card title truncation
+title: "Escaped newline sequences in imported cards and 60-character card title truncation"
 status: done
 epic: EPIC-031
 parents: []

@@ -1,7 +1,7 @@
 ---
 id: EPIC-027
 type: epic
-title: Appearance and UI settings
+title: "Appearance and UI settings"
 status: done
 parents: []
 labels: [m11, ui]

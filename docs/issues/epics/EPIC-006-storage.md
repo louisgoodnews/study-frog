@@ -1,7 +1,7 @@
 ---
 id: EPIC-006
 type: epic
-title: Storage
+title: "Storage"
 status: done
 parents: []
 labels: [m2, store]

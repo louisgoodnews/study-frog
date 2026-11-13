@@ -1,7 +1,7 @@
 ---
 id: EPIC-024
 type: epic
-title: Diary and a calmer UI for 0.4.0
+title: "Diary and a calmer UI for 0.4.0"
 status: done
 parents: []
 labels: [m11, ui]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0216
 type: task
-title: Automatic table of contents
+title: "Automatic table of contents"
 status: done
 epic: EPIC-026
 parents: [STORY-0074]

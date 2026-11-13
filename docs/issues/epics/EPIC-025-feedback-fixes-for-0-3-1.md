@@ -1,7 +1,7 @@
 ---
 id: EPIC-025
 type: epic
-title: Feedback fixes for 0.3.1
+title: "Feedback fixes for 0.3.1"
 status: done
 parents: []
 labels: [m10, ui]

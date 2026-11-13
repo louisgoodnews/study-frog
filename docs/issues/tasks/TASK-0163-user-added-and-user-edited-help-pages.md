@@ -1,7 +1,7 @@
 ---
 id: TASK-0163
 type: task
-title: User-added and user-edited help pages
+title: "User-added and user-edited help pages"
 status: done
 epic: EPIC-023
 parents: [STORY-0066]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0021
 type: task
-title: Fence splitter and serde-saphyr parsing
+title: "Fence splitter and serde-saphyr parsing"
 status: done
 epic: EPIC-005
 parents: [STORY-0009]

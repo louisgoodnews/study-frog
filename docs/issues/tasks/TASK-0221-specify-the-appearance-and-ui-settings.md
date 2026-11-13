@@ -1,7 +1,7 @@
 ---
 id: TASK-0221
 type: task
-title: Specify the appearance and UI settings
+title: "Specify the appearance and UI settings"
 status: done
 epic: EPIC-027
 parents: [STORY-0080]

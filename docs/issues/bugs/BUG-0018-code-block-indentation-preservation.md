@@ -1,7 +1,7 @@
 ---
 id: BUG-0018
 type: bug
-title: Code block indentations not visible in markdown viewer
+title: "Code block indentations not visible in markdown viewer"
 status: done
 estimate: 2
 labels: [m12, ui, markdown]

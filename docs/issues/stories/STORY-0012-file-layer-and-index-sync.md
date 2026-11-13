@@ -1,7 +1,7 @@
 ---
 id: STORY-0012
 type: story
-title: File layer and index sync
+title: "File layer and index sync"
 status: done
 epic: EPIC-006
 parents: [EPIC-006]

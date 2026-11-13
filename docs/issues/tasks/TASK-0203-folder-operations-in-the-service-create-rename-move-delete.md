@@ -1,7 +1,7 @@
 ---
 id: TASK-0203
 type: task
-title: Folder operations in the service (create, rename, move, delete)
+title: "Folder operations in the service (create, rename, move, delete)"
 status: done
 epic: EPIC-026
 parents: [STORY-0076]

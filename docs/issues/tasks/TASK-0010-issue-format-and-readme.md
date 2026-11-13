@@ -1,7 +1,7 @@
 ---
 id: TASK-0010
 type: task
-title: Issue format and README
+title: "Issue format and README"
 status: done
 epic: EPIC-002
 parents: [STORY-0004]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0080
 type: task
-title: Persist the board
+title: "Persist the board"
 status: done
 epic: EPIC-011
 parents: [STORY-0021]

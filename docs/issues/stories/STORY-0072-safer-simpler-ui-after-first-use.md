@@ -1,7 +1,7 @@
 ---
 id: STORY-0072
 type: story
-title: Safer and calmer UI after first use
+title: "Safer and calmer UI after first use"
 status: done
 epic: EPIC-025
 parents: [EPIC-025]

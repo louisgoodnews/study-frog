@@ -1,7 +1,7 @@
 ---
 id: TASK-0147
 type: task
-title: Move an entry to another day
+title: "Move an entry to another day"
 status: done
 epic: EPIC-023
 parents: [STORY-0062]

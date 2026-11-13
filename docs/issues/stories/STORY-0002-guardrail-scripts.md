@@ -1,7 +1,7 @@
 ---
 id: STORY-0002
 type: story
-title: Guardrail scripts
+title: "Guardrail scripts"
 status: done
 epic: EPIC-001
 parents: [EPIC-001]

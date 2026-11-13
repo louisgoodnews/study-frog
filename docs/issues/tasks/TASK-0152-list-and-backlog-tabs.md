@@ -1,7 +1,7 @@
 ---
 id: TASK-0152
 type: task
-title: List and Backlog tabs
+title: "List and Backlog tabs"
 status: done
 epic: EPIC-023
 parents: [STORY-0064]

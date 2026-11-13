@@ -1,7 +1,7 @@
 ---
 id: TASK-0234
 type: task
-title: Exam mode, grade scale and exam result records
+title: "Exam mode, grade scale and exam result records"
 status: done
 epic: EPIC-033
 parents: [STORY-0126]

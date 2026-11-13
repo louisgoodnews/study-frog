@@ -1,7 +1,7 @@
 ---
 id: STORY-0016
 type: story
-title: App frame
+title: "App frame"
 status: done
 epic: EPIC-008
 parents: [EPIC-008]

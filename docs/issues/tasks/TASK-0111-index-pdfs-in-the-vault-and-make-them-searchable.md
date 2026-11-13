@@ -1,7 +1,7 @@
 ---
 id: TASK-0111
 type: task
-title: Index PDFs in the vault and make them searchable
+title: "Index PDFs in the vault and make them searchable"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

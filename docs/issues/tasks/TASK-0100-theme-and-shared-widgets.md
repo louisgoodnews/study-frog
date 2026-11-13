@@ -1,7 +1,7 @@
 ---
 id: TASK-0100
 type: task
-title: Theme and shared widgets
+title: "Theme and shared widgets"
 status: done
 epic: EPIC-020
 parents: [STORY-0038]

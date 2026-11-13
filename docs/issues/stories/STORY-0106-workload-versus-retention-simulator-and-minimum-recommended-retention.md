@@ -1,7 +1,7 @@
 ---
 id: STORY-0106
 type: story
-title: Workload-versus-retention simulator and minimum recommended retention (CMRR)
+title: "Workload-versus-retention simulator and minimum recommended retention (CMRR)"
 status: done
 epic: EPIC-034
 parents: [EPIC-034]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0103
 type: story
-title: Within-session cognitive fatigue and pacing decay analysis
+title: "Within-session cognitive fatigue and pacing decay analysis"
 status: done
 epic: EPIC-034
 parents: [EPIC-034]

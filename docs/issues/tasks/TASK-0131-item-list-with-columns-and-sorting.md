@@ -1,7 +1,7 @@
 ---
 id: TASK-0131
 type: task
-title: Item list with columns and sorting
+title: "Item list with columns and sorting"
 status: done
 epic: EPIC-023
 parents: [STORY-0057]

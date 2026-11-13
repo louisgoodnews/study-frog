@@ -1,7 +1,7 @@
 ---
 id: STORY-0107
 type: story
-title: Empirical forgetting curves, true retention, and stability-tier survival analysis
+title: "Empirical forgetting curves, true retention, and stability-tier survival analysis"
 status: done
 epic: EPIC-034
 parents: [EPIC-034]

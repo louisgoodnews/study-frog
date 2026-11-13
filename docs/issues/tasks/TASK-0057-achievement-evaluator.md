@@ -1,7 +1,7 @@
 ---
 id: TASK-0057
 type: task
-title: Evaluator and unlock memory
+title: "Evaluator and unlock memory"
 status: done
 epic: EPIC-014
 parents: [STORY-0026]

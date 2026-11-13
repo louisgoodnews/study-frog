@@ -1,7 +1,7 @@
 ---
 id: BUG-0005
 type: bug
-title: The exit button is cut off at the window edge
+title: "The exit button is cut off at the window edge"
 status: done
 epic: EPIC-024
 parents: [STORY-0073]

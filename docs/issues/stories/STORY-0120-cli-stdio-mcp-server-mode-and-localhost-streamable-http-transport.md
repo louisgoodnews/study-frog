@@ -1,7 +1,7 @@
 ---
 id: STORY-0120
 type: story
-title: CLI stdio MCP server mode and localhost Streamable HTTP transport
+title: "CLI stdio MCP server mode and localhost Streamable HTTP transport"
 status: done
 epic: EPIC-037
 parents: [EPIC-037]

@@ -1,7 +1,7 @@
 ---
 id: BUG-0007
 type: bug
-title: Enter in a list does not continue the list
+title: "Enter in a list does not continue the list"
 status: done
 epic: EPIC-026
 parents: [STORY-0074]

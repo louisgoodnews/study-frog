@@ -1,7 +1,7 @@
 ---
 id: EPIC-045
 type: epic
-title: Macro library expansion and escaping syntax
+title: "Macro library expansion and escaping syntax"
 status: done
 parents: []
 labels: [m12, markdown, ui]

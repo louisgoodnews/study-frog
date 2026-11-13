@@ -1,7 +1,7 @@
 ---
 id: TASK-0065
 type: task
-title: Example card type and importer
+title: "Example card type and importer"
 status: done
 epic: EPIC-016
 parents: [STORY-0031]

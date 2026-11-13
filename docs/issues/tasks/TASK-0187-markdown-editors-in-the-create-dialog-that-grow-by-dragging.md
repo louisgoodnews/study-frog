@@ -1,7 +1,7 @@
 ---
 id: TASK-0187
 type: task
-title: Markdown editors in the create dialog that grow by dragging
+title: "Markdown editors in the create dialog that grow by dragging"
 status: done
 epic: EPIC-023
 parents: [STORY-0071]

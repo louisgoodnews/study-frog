@@ -1,7 +1,7 @@
 ---
 id: TASK-0094
 type: task
-title: Global search
+title: "Global search"
 status: done
 epic: EPIC-020
 parents: [STORY-0036]

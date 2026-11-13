@@ -1,7 +1,7 @@
 ---
 id: TASK-0211
 type: task
-title: The referenced_by field in the file format, the index and the vault checks
+title: "The referenced_by field in the file format, the index and the vault checks"
 status: done
 epic: EPIC-026
 parents: [STORY-0079]

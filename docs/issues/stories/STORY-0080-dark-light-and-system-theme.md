@@ -1,7 +1,7 @@
 ---
 id: STORY-0080
 type: story
-title: Dark, light and system theme
+title: "Dark, light and system theme"
 status: done
 epic: EPIC-027
 parents: [EPIC-027]

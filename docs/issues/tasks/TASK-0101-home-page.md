@@ -1,7 +1,7 @@
 ---
 id: TASK-0101
 type: task
-title: Home page
+title: "Home page"
 status: done
 epic: EPIC-020
 parents: [STORY-0038]

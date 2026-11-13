@@ -1,7 +1,7 @@
 ---
 id: STORY-0004
 type: story
-title: Roadmap and issue tracking
+title: "Roadmap and issue tracking"
 status: done
 epic: EPIC-002
 parents: [EPIC-002]

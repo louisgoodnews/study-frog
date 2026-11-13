@@ -1,7 +1,7 @@
 ---
 id: EPIC-033
 type: epic
-title: Exam run mode with mandatory text entry, semantic comparison, and percentage grading
+title: "Exam run mode with mandatory text entry, semantic comparison, and percentage grading"
 status: done
 parents: []
 labels: [m12, core, rehearsal, slm, service, ui]

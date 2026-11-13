@@ -1,7 +1,7 @@
 ---
 id: STORY-0073
 type: story
-title: A calmer look on every screen
+title: "A calmer look on every screen"
 status: done
 epic: EPIC-024
 parents: [EPIC-024]

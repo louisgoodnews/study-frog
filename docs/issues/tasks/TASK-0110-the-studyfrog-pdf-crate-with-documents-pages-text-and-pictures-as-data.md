@@ -1,7 +1,7 @@
 ---
 id: TASK-0110
 type: task
-title: The studyfrog-pdf crate with documents, pages, text and pictures as data
+title: "The studyfrog-pdf crate with documents, pages, text and pictures as data"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

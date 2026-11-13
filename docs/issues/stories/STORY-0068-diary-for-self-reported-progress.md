@@ -1,7 +1,7 @@
 ---
 id: STORY-0068
 type: story
-title: Diary for self-reported progress
+title: "Diary for self-reported progress"
 status: done
 epic: EPIC-024
 parents: [EPIC-024]

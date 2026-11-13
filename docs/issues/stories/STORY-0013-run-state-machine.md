@@ -1,7 +1,7 @@
 ---
 id: STORY-0013
 type: story
-title: Run state machine
+title: "Run state machine"
 status: done
 epic: EPIC-007
 parents: [EPIC-007]

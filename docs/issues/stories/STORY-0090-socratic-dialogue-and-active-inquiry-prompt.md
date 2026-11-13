@@ -1,7 +1,7 @@
 ---
 id: STORY-0090
 type: story
-title: Socratic dialogue and active inquiry prompt
+title: "Socratic dialogue and active inquiry prompt"
 status: done
 epic: EPIC-030
 parents: [EPIC-030]

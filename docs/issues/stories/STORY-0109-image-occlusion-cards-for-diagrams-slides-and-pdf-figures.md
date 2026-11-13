@@ -1,7 +1,7 @@
 ---
 id: STORY-0109
 type: story
-title: Image occlusion cards for diagrams, slides, and PDF figures
+title: "Image occlusion cards for diagrams, slides, and PDF figures"
 status: done
 epic: EPIC-035
 parents: [EPIC-035]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0060
 type: story
-title: Settings in tabs
+title: "Settings in tabs"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

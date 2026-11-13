@@ -1,7 +1,7 @@
 ---
 id: TASK-0180
 type: task
-title: Countdown and count up in the run state machine
+title: "Countdown and count up in the run state machine"
 status: done
 epic: EPIC-023
 parents: [STORY-0070]

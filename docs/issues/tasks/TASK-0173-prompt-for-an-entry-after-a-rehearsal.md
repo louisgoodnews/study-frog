@@ -1,7 +1,7 @@
 ---
 id: TASK-0173
 type: task
-title: Prompt for an entry after a rehearsal
+title: "Prompt for an entry after a rehearsal"
 status: done
 epic: EPIC-024
 parents: [STORY-0068]

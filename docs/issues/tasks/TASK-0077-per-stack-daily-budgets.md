@@ -1,7 +1,7 @@
 ---
 id: TASK-0077
 type: task
-title: Per-stack daily budgets
+title: "Per-stack daily budgets"
 status: done
 epic: EPIC-018
 parents: [STORY-0034]

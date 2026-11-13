@@ -1,7 +1,7 @@
 ---
 id: STORY-0122
 type: story
-title: StudyFrog application files in ~/.local/ with logs and configurations
+title: "StudyFrog application files in ~/.local/ with logs and configurations"
 status: done
 epic: EPIC-038
 parents: [EPIC-038]

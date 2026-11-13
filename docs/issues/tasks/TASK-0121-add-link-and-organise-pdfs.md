@@ -1,7 +1,7 @@
 ---
 id: TASK-0121
 type: task
-title: Add, link and organise PDFs
+title: "Add, link and organise PDFs"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

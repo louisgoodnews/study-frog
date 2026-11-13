@@ -1,7 +1,7 @@
 ---
 id: TASK-0252
 type: task
-title: Plugin modding in EXTENDING.md
+title: "Plugin modding in EXTENDING.md"
 status: done
 epic: EPIC-028
 parents: [STORY-0134]

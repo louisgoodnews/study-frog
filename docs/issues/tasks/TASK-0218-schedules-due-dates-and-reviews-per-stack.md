@@ -1,7 +1,7 @@
 ---
 id: TASK-0218
 type: task
-title: Schedules, due dates and reviews per stack
+title: "Schedules, due dates and reviews per stack"
 status: done
 epic: EPIC-026
 parents: [STORY-0079]

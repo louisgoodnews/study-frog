@@ -1,7 +1,7 @@
 ---
 id: STORY-0018
 type: story
-title: Markdown editor and preview
+title: "Markdown editor and preview"
 status: done
 epic: EPIC-009
 parents: [EPIC-009]

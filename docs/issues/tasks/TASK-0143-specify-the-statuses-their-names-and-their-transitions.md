@@ -1,7 +1,7 @@
 ---
 id: TASK-0143
 type: task
-title: Specify the statuses, their names and their transitions
+title: "Specify the statuses, their names and their transitions"
 status: done
 epic: EPIC-023
 parents: [STORY-0061]

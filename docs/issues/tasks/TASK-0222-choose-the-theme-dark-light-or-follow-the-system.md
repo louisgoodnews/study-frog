@@ -1,7 +1,7 @@
 ---
 id: TASK-0222
 type: task
-title: Choose the theme (dark, light or follow the system)
+title: "Choose the theme (dark, light or follow the system)"
 status: done
 epic: EPIC-027
 parents: [STORY-0080]

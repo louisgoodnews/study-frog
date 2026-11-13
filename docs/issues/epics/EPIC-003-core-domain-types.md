@@ -1,7 +1,7 @@
 ---
 id: EPIC-003
 type: epic
-title: Core domain types
+title: "Core domain types"
 status: done
 parents: []
 labels: [m1, core]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0055
 type: task
-title: SLM benchmark
+title: "SLM benchmark"
 status: done
 epic: EPIC-013
 parents: [STORY-0025]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0084
 type: story
-title: Deepseek in models for StudyFrog
+title: "Deepseek in models for StudyFrog"
 status: done
 epic: EPIC-028
 parents: [EPIC-028]

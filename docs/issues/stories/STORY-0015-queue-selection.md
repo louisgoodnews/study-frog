@@ -1,7 +1,7 @@
 ---
 id: STORY-0015
 type: story
-title: Queue selection
+title: "Queue selection"
 status: done
 epic: EPIC-007
 parents: [EPIC-007]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0053
 type: task
-title: Scoring property tests
+title: "Scoring property tests"
 status: done
 epic: EPIC-013
 parents: [STORY-0024]

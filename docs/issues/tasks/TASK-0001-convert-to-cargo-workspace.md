@@ -1,7 +1,7 @@
 ---
 id: TASK-0001
 type: task
-title: Convert to Cargo workspace
+title: "Convert to Cargo workspace"
 status: done
 epic: EPIC-001
 parents: [STORY-0001]

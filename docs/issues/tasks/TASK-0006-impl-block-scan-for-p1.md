@@ -1,7 +1,7 @@
 ---
 id: TASK-0006
 type: task
-title: impl-block scan for P1
+title: "impl-block scan for P1"
 status: done
 epic: EPIC-001
 parents: [STORY-0002]

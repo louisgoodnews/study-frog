@@ -1,7 +1,7 @@
 ---
 id: STORY-0017
 type: story
-title: Stack browser, run setup and rehearsal screen
+title: "Stack browser, run setup and rehearsal screen"
 status: done
 epic: EPIC-008
 parents: [EPIC-008]

@@ -1,7 +1,7 @@
 ---
 id: EPIC-012
 type: epic
-title: SLM runtime
+title: "SLM runtime"
 status: done
 parents: []
 labels: [m6, slm]

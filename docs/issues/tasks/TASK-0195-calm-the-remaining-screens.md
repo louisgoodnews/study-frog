@@ -1,7 +1,7 @@
 ---
 id: TASK-0195
 type: task
-title: Calm the remaining screens
+title: "Calm the remaining screens"
 status: done
 epic: EPIC-024
 parents: [STORY-0073]

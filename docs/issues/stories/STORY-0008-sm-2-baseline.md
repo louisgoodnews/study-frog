@@ -1,7 +1,7 @@
 ---
 id: STORY-0008
 type: story
-title: SM-2 baseline
+title: "SM-2 baseline"
 status: done
 epic: EPIC-004
 parents: [EPIC-004]

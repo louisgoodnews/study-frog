@@ -1,7 +1,7 @@
 ---
 id: EPIC-035
 type: epic
-title: Rich active-recall formats, inline note extraction, and focus workflows
+title: "Rich active-recall formats, inline note extraction, and focus workflows"
 status: done
 parents: []
 labels: [m12, core, md, rehearsal, service, ui]

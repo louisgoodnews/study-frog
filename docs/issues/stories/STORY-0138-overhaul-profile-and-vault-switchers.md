@@ -1,7 +1,7 @@
 ---
 id: STORY-0138
 type: story
-title: Overhaul of profile and vault switchers
+title: "Overhaul of profile and vault switchers"
 status: done
 epic: EPIC-043
 parents: [EPIC-043]

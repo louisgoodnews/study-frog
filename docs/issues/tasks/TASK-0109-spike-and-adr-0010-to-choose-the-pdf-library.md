@@ -1,7 +1,7 @@
 ---
 id: TASK-0109
 type: task
-title: Spike and ADR 0010 to choose the PDF library
+title: "Spike and ADR 0010 to choose the PDF library"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

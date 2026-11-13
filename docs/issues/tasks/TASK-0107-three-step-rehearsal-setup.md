@@ -1,7 +1,7 @@
 ---
 id: TASK-0107
 type: task
-title: Three-step rehearsal setup
+title: "Three-step rehearsal setup"
 status: done
 epic: EPIC-020
 parents: [STORY-0039]

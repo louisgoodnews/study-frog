@@ -1,7 +1,7 @@
 ---
 id: EPIC-049
 type: epic
-title: Expanded scripting environment, DSL, job scheduling, and execution logging
+title: "Expanded scripting environment, DSL, job scheduling, and execution logging"
 status: backlog
 parents: []
 labels: [m12, ext, console]

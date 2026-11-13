@@ -1,7 +1,7 @@
 ---
 id: TASK-0056
 type: task
-title: Rule data model
+title: "Rule data model"
 status: done
 epic: EPIC-014
 parents: [STORY-0026]

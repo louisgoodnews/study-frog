@@ -1,7 +1,7 @@
 ---
 id: TASK-0079
 type: task
-title: Persist sessions
+title: "Persist sessions"
 status: done
 epic: EPIC-010
 parents: [STORY-0020]

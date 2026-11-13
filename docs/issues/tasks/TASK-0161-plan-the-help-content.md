@@ -1,7 +1,7 @@
 ---
 id: TASK-0161
 type: task
-title: Plan the help content
+title: "Plan the help content"
 status: done
 epic: EPIC-023
 parents: [STORY-0066]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0066
 type: story
-title: Built-in wiki, FAQ and tutorials
+title: "Built-in wiki, FAQ and tutorials"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

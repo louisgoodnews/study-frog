@@ -1,7 +1,7 @@
 ---
 id: STORY-0039
 type: story
-title: Evidence-based UX pass, calendar entries and board tracking
+title: "Evidence-based UX pass, calendar entries and board tracking"
 status: done
 epic: EPIC-020
 parents: [EPIC-020]

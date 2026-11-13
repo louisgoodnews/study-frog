@@ -1,7 +1,7 @@
 ---
 id: STORY-0023
 type: story
-title: Runtime trait and implementation
+title: "Runtime trait and implementation"
 status: done
 epic: EPIC-012
 parents: [EPIC-012]

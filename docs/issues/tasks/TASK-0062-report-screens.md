@@ -1,7 +1,7 @@
 ---
 id: TASK-0062
 type: task
-title: Report screens and benchmark
+title: "Report screens and benchmark"
 status: done
 epic: EPIC-015
 parents: [STORY-0029]

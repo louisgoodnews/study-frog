@@ -1,7 +1,7 @@
 ---
 id: EPIC-042
 type: epic
-title: Interactive AI content generation and parameter-guided prompt workflows
+title: "Interactive AI content generation and parameter-guided prompt workflows"
 status: done
 parents: []
 labels: [m12, agent, docs, ui]

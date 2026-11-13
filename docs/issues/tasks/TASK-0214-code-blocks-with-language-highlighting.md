@@ -1,7 +1,7 @@
 ---
 id: TASK-0214
 type: task
-title: Code blocks with language highlighting
+title: "Code blocks with language highlighting"
 status: done
 epic: EPIC-026
 parents: [STORY-0074]

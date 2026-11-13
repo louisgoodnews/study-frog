@@ -1,7 +1,7 @@
 ---
 id: STORY-0125
 type: story
-title: Specify the exam run mode and its grade scale
+title: "Specify the exam run mode and its grade scale"
 status: done
 epic: EPIC-033
 parents: [EPIC-033]

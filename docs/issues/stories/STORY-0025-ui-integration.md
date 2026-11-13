@@ -1,7 +1,7 @@
 ---
 id: STORY-0025
 type: story
-title: UI integration
+title: "UI integration"
 status: done
 epic: EPIC-013
 parents: [EPIC-013]

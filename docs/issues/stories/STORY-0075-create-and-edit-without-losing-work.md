@@ -1,7 +1,7 @@
 ---
 id: STORY-0075
 type: story
-title: Create and edit without losing work
+title: "Create and edit without losing work"
 status: done
 epic: EPIC-026
 parents: [EPIC-026]

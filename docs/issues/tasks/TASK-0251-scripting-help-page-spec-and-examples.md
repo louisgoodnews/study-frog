@@ -1,7 +1,7 @@
 ---
 id: TASK-0251
 type: task
-title: Scripting help page, spec and examples
+title: "Scripting help page, spec and examples"
 status: done
 epic: EPIC-028
 parents: [STORY-0134]

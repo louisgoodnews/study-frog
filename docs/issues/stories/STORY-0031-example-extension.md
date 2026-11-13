@@ -1,7 +1,7 @@
 ---
 id: STORY-0031
 type: story
-title: Example extension
+title: "Example extension"
 status: done
 epic: EPIC-016
 parents: [EPIC-016]

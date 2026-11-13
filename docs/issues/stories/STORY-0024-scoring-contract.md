@@ -1,7 +1,7 @@
 ---
 id: STORY-0024
 type: story
-title: Scoring contract
+title: "Scoring contract"
 status: done
 epic: EPIC-013
 parents: [EPIC-013]

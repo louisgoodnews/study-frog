@@ -1,7 +1,7 @@
 ---
 id: TASK-0119
 type: task
-title: Extract pictures and page snapshots into the vault
+title: "Extract pictures and page snapshots into the vault"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

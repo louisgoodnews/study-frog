@@ -1,7 +1,7 @@
 ---
 id: STORY-0026
 type: story
-title: Rule engine
+title: "Rule engine"
 status: done
 epic: EPIC-014
 parents: [EPIC-014]

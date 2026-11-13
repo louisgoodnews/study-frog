@@ -1,7 +1,7 @@
 ---
 id: TASK-0005
 type: task
-title: scripts/linecount.sh
+title: "scripts/linecount.sh"
 status: done
 epic: EPIC-001
 parents: [STORY-0002]

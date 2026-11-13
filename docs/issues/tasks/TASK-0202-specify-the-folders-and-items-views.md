@@ -1,7 +1,7 @@
 ---
 id: TASK-0202
 type: task
-title: Specify the folders and items views
+title: "Specify the folders and items views"
 status: done
 epic: EPIC-026
 parents: [STORY-0076]

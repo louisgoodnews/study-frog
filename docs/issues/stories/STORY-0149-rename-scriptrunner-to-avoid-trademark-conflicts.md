@@ -1,7 +1,7 @@
 ---
 id: STORY-0149
 type: story
-title: Rename ScriptRunner across application and documentation to avoid trademark conflicts
+title: "Rename ScriptRunner across application and documentation to avoid trademark conflicts"
 status: done
 epic: EPIC-049
 parents: [EPIC-049]

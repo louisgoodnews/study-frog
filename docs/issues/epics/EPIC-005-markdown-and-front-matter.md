@@ -1,7 +1,7 @@
 ---
 id: EPIC-005
 type: epic
-title: Markdown and front-matter
+title: "Markdown and front-matter"
 status: done
 parents: []
 labels: [m2, md]

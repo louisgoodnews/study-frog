@@ -1,7 +1,7 @@
 ---
 id: TASK-0016
 type: task
-title: FSRS pure functions
+title: "FSRS pure functions"
 status: done
 epic: EPIC-004
 parents: [STORY-0007]

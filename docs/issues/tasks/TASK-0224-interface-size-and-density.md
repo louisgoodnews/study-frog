@@ -1,7 +1,7 @@
 ---
 id: TASK-0224
 type: task
-title: Interface size and density
+title: "Interface size and density"
 status: done
 epic: EPIC-027
 parents: [STORY-0081]

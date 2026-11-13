@@ -1,7 +1,7 @@
 ---
 id: TASK-0206
 type: task
-title: Prompts screen with copy and export
+title: "Prompts screen with copy and export"
 status: done
 epic: EPIC-026
 parents: [STORY-0077]

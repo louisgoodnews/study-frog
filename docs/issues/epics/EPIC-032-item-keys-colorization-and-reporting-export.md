@@ -1,7 +1,7 @@
 ---
 id: EPIC-032
 type: epic
-title: Item keys, colorization, and reporting export
+title: "Item keys, colorization, and reporting export"
 status: done
 parents: []
 labels: [m12, core, ui, report]

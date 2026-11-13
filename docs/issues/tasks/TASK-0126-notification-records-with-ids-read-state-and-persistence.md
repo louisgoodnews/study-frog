@@ -1,7 +1,7 @@
 ---
 id: TASK-0126
 type: task
-title: Notification records with ids, read state and persistence
+title: "Notification records with ids, read state and persistence"
 status: done
 epic: EPIC-023
 parents: [STORY-0055]

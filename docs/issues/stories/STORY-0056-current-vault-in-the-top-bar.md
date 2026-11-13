@@ -1,7 +1,7 @@
 ---
 id: STORY-0056
 type: story
-title: Current vault in the top bar
+title: "Current vault in the top bar"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

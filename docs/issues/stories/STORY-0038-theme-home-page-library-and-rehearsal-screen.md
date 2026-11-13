@@ -1,7 +1,7 @@
 ---
 id: STORY-0038
 type: story
-title: Theme, home page, library and rehearsal screen
+title: "Theme, home page, library and rehearsal screen"
 status: done
 epic: EPIC-020
 parents: [EPIC-020]

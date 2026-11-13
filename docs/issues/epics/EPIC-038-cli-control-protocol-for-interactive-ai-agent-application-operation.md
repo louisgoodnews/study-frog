@@ -1,7 +1,7 @@
 ---
 id: EPIC-038
 type: epic
-title: CLI control protocol for interactive AI agent application operation
+title: "CLI control protocol for interactive AI agent application operation"
 status: review
 parents: []
 labels: [m12, core, service, ui, app]

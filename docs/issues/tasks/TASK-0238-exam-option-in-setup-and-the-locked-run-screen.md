@@ -1,7 +1,7 @@
 ---
 id: TASK-0238
 type: task
-title: Exam option in the setup and the locked run screen
+title: "Exam option in the setup and the locked run screen"
 status: done
 epic: EPIC-033
 parents: [STORY-0128]

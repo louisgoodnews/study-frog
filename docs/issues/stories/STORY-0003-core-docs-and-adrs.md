@@ -1,7 +1,7 @@
 ---
 id: STORY-0003
 type: story
-title: Core docs and ADRs
+title: "Core docs and ADRs"
 status: done
 epic: EPIC-002
 parents: [EPIC-002]

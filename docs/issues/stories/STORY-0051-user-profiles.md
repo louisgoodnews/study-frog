@@ -1,7 +1,7 @@
 ---
 id: STORY-0051
 type: story
-title: User profiles
+title: "User profiles"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

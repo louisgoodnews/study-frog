@@ -1,7 +1,7 @@
 ---
 id: TASK-0041
 type: task
-title: Preview renderer
+title: "Preview renderer"
 status: done
 epic: EPIC-009
 parents: [STORY-0018]

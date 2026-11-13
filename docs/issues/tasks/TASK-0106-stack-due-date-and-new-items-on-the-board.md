@@ -1,7 +1,7 @@
 ---
 id: TASK-0106
 type: task
-title: Stack due date and new items on the board
+title: "Stack due date and new items on the board"
 status: done
 epic: EPIC-020
 parents: [STORY-0039]

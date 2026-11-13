@@ -1,7 +1,7 @@
 ---
 id: TASK-0226
 type: task
-title: Make every screen right in both themes
+title: "Make every screen right in both themes"
 status: done
 epic: EPIC-027
 parents: [STORY-0080]

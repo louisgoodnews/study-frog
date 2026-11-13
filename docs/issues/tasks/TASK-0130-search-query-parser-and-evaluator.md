@@ -1,7 +1,7 @@
 ---
 id: TASK-0130
 type: task
-title: Search query parser and evaluator
+title: "Search query parser and evaluator"
 status: done
 epic: EPIC-023
 parents: [STORY-0057]

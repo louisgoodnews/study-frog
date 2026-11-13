@@ -1,7 +1,7 @@
 ---
 id: STORY-0062
 type: story
-title: Calendar plans the next reviews and lets the user move them
+title: "Calendar plans the next reviews and lets the user move them"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

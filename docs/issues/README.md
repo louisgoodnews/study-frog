@@ -21,7 +21,7 @@ The file name starts with the ID followed by a kebab-case slug of the title.
 ---
 id: STORY-0042
 type: story            # epic|story|task|subtask|bug
-title: ...
+title: "..."
 status: backlog        # backlog|ready|in_progress|review|done|blocked
 epic: EPIC-003
 parents: [TASK-0017]   # direct parent ids (story->epic, task->story, subtask->task)

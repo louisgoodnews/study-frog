@@ -1,7 +1,7 @@
 ---
 id: STORY-0083
 type: story
-title: Google Gemini in models for StudyFrog
+title: "Google Gemini in models for StudyFrog"
 status: done
 epic: EPIC-028
 parents: [EPIC-028]

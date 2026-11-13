@@ -1,7 +1,7 @@
 ---
 id: STORY-0114
 type: story
-title: Psychophysical typographic measure, modular hierarchy, and tabular numerals
+title: "Psychophysical typographic measure, modular hierarchy, and tabular numerals"
 status: review
 epic: EPIC-036
 parents: [EPIC-036]

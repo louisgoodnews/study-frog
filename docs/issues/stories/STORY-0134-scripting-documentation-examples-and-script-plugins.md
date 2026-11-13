@@ -1,7 +1,7 @@
 ---
 id: STORY-0134
 type: story
-title: Scripting documentation, examples and script plugins
+title: "Scripting documentation, examples and script plugins"
 status: done
 epic: EPIC-028
 parents: [EPIC-028]

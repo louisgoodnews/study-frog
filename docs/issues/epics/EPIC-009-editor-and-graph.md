@@ -1,7 +1,7 @@
 ---
 id: EPIC-009
 type: epic
-title: Editor and graph
+title: "Editor and graph"
 status: done
 parents: []
 labels: [m4, ui]

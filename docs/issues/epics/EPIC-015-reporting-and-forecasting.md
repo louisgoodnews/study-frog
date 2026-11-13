@@ -1,7 +1,7 @@
 ---
 id: EPIC-015
 type: epic
-title: Reporting and forecasting
+title: "Reporting and forecasting"
 status: done
 parents: []
 labels: [m7, report]

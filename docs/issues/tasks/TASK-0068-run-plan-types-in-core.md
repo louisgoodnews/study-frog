@@ -1,7 +1,7 @@
 ---
 id: TASK-0068
 type: task
-title: Run plan types in core
+title: "Run plan types in core"
 status: done
 epic: EPIC-007
 parents: [STORY-0033]

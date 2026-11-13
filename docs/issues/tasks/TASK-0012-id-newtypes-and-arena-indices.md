@@ -1,7 +1,7 @@
 ---
 id: TASK-0012
 type: task
-title: Id newtypes and arena indices
+title: "Id newtypes and arena indices"
 status: done
 epic: EPIC-003
 parents: [STORY-0005]

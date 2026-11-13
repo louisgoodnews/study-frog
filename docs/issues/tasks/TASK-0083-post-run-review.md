@@ -1,7 +1,7 @@
 ---
 id: TASK-0083
 type: task
-title: Post-run review and applying a suggestion
+title: "Post-run review and applying a suggestion"
 status: done
 epic: EPIC-019
 parents: [STORY-0035]

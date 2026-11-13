@@ -1,7 +1,7 @@
 ---
 id: STORY-0121
 type: story
-title: Built-in Assistant MCP client host for external academic tool servers
+title: "Built-in Assistant MCP client host for external academic tool servers"
 status: done
 epic: EPIC-037
 parents: [EPIC-037]

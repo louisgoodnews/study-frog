@@ -1,7 +1,7 @@
 ---
 id: STORY-0104
 type: story
-title: Leech diagnostics, interference detection, and confusion clusters
+title: "Leech diagnostics, interference detection, and confusion clusters"
 status: done
 epic: EPIC-034
 parents: [EPIC-034]

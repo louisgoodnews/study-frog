@@ -1,7 +1,7 @@
 ---
 id: STORY-0143
 type: story
-title: Comprehensive markdown macro library expansion
+title: "Comprehensive markdown macro library expansion"
 status: done
 epic: EPIC-045
 parents: [EPIC-045]

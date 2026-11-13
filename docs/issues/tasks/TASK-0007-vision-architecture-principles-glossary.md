@@ -1,7 +1,7 @@
 ---
 id: TASK-0007
 type: task
-title: Vision, architecture, principles, glossary
+title: "Vision, architecture, principles, glossary"
 status: done
 epic: EPIC-002
 parents: [STORY-0003]

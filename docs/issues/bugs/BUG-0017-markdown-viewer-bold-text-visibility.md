@@ -1,7 +1,7 @@
 ---
 id: BUG-0017
 type: bug
-title: Boldness of words in markdown viewer not visible
+title: "Boldness of words in markdown viewer not visible"
 status: done
 estimate: 2
 labels: [m12, ui, markdown]

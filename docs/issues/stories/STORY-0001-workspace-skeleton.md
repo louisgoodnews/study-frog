@@ -1,7 +1,7 @@
 ---
 id: STORY-0001
 type: story
-title: Workspace skeleton
+title: "Workspace skeleton"
 status: done
 epic: EPIC-001
 parents: [EPIC-001]

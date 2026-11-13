@@ -1,7 +1,7 @@
 ---
 id: STORY-0081
 type: story
-title: Display and window settings
+title: "Display and window settings"
 status: done
 epic: EPIC-027
 parents: [EPIC-027]

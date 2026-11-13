@@ -1,7 +1,7 @@
 ---
 id: TASK-0045
 type: task
-title: Calendar view
+title: "Calendar view"
 status: done
 epic: EPIC-010
 parents: [STORY-0020]

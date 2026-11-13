@@ -1,7 +1,7 @@
 ---
 id: TASK-0029
 type: task
-title: File watcher
+title: "File watcher"
 status: done
 epic: EPIC-006
 parents: [STORY-0012]

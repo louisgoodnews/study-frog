@@ -1,7 +1,7 @@
 ---
 id: BUG-0012
 type: bug
-title: Rehearsal card text wrapping and unquoted CSV comma truncation
+title: "Rehearsal card text wrapping and unquoted CSV comma truncation"
 status: done
 epic: EPIC-031
 parents: []

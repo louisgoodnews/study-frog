@@ -1,7 +1,7 @@
 ---
 id: TASK-0047
 type: task
-title: Move and push semantics
+title: "Move and push semantics"
 status: done
 epic: EPIC-011
 parents: [STORY-0021]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0151
 type: task
-title: Summary tab
+title: "Summary tab"
 status: done
 epic: EPIC-023
 parents: [STORY-0063]

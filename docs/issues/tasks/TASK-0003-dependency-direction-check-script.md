@@ -1,7 +1,7 @@
 ---
 id: TASK-0003
 type: task
-title: Dependency-direction check script
+title: "Dependency-direction check script"
 status: done
 epic: EPIC-001
 parents: [STORY-0001]

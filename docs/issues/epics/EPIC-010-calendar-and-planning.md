@@ -1,7 +1,7 @@
 ---
 id: EPIC-010
 type: epic
-title: Calendar and planning
+title: "Calendar and planning"
 status: done
 parents: []
 labels: [m5, calendar]

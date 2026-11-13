@@ -1,7 +1,7 @@
 ---
 id: BUG-0013
 type: bug
-title: Rehearsal result view scrollability, stretched review area, and suggested rating visibility
+title: "Rehearsal result view scrollability, stretched review area, and suggested rating visibility"
 status: done
 epic: EPIC-031
 parents: []

@@ -1,7 +1,7 @@
 ---
 id: TASK-0137
 type: task
-title: Familiarity as a pure function with benchmarks
+title: "Familiarity as a pure function with benchmarks"
 status: done
 epic: EPIC-023
 parents: [STORY-0058]

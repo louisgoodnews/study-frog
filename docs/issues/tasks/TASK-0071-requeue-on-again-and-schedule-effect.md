@@ -1,7 +1,7 @@
 ---
 id: TASK-0071
 type: task
-title: Requeue on Again and schedule effect
+title: "Requeue on Again and schedule effect"
 status: done
 epic: EPIC-007
 parents: [STORY-0013]

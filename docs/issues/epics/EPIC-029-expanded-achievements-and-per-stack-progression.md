@@ -1,7 +1,7 @@
 ---
 id: EPIC-029
 type: epic
-title: Expanded achievements and per-stack progression
+title: "Expanded achievements and per-stack progression"
 status: done
 parents: []
 labels: [m12, achieve, ui]

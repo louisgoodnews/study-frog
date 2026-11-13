@@ -1,7 +1,7 @@
 ---
 id: STORY-0028
 type: story
-title: Retention and latency reports
+title: "Retention and latency reports"
 status: done
 epic: EPIC-015
 parents: [EPIC-015]

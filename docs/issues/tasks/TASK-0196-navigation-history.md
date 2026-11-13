@@ -1,7 +1,7 @@
 ---
 id: TASK-0196
 type: task
-title: Navigation history
+title: "Navigation history"
 status: done
 epic: EPIC-024
 parents: [STORY-0073]

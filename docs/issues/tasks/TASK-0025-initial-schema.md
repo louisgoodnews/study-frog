@@ -1,7 +1,7 @@
 ---
 id: TASK-0025
 type: task
-title: Initial schema
+title: "Initial schema"
 status: done
 epic: EPIC-006
 parents: [STORY-0011]

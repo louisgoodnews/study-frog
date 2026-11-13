@@ -1,7 +1,7 @@
 ---
 id: BUG-0011
 type: bug
-title: Importer only accepts TSV format and fails on CSV prompt outputs
+title: "Importer only accepts TSV format and fails on CSV prompt outputs"
 status: done
 epic: EPIC-031
 parents: []

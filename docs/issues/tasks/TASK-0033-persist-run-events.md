@@ -1,7 +1,7 @@
 ---
 id: TASK-0033
 type: task
-title: Persist run events
+title: "Persist run events"
 status: done
 epic: EPIC-007
 parents: [STORY-0014]

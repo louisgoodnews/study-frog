@@ -1,7 +1,7 @@
 ---
 id: TASK-0185
 type: task
-title: New items default to the highest difficulty and medium priority
+title: "New items default to the highest difficulty and medium priority"
 status: done
 epic: EPIC-023
 parents: [STORY-0071]

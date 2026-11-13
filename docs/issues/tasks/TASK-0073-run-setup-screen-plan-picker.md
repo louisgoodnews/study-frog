@@ -1,7 +1,7 @@
 ---
 id: TASK-0073
 type: task
-title: Run setup screen (plan picker)
+title: "Run setup screen (plan picker)"
 status: done
 epic: EPIC-008
 parents: [STORY-0017]

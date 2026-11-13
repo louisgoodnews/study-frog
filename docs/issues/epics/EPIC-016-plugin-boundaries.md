@@ -1,7 +1,7 @@
 ---
 id: EPIC-016
 type: epic
-title: Plugin boundaries
+title: "Plugin boundaries"
 status: done
 parents: []
 labels: [m8, ext]

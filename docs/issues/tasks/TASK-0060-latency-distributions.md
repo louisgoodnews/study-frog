@@ -1,7 +1,7 @@
 ---
 id: TASK-0060
 type: task
-title: Latency distributions
+title: "Latency distributions"
 status: done
 epic: EPIC-015
 parents: [STORY-0028]

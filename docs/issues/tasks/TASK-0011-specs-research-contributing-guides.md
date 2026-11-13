@@ -1,7 +1,7 @@
 ---
 id: TASK-0011
 type: task
-title: Specs, research, contributing guides
+title: "Specs, research, contributing guides"
 status: done
 epic: EPIC-002
 parents: [STORY-0004]

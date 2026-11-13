@@ -1,7 +1,7 @@
 ---
 id: STORY-0099
 type: story
-title: Simplify vault switcher menu
+title: "Simplify vault switcher menu"
 status: done
 epic: EPIC-031
 parents: [EPIC-031]

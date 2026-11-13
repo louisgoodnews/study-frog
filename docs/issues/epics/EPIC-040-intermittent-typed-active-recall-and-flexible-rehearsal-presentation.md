@@ -1,7 +1,7 @@
 ---
 id: EPIC-040
 type: epic
-title: Intermittent typed active recall and flexible rehearsal presentation
+title: "Intermittent typed active recall and flexible rehearsal presentation"
 status: done
 parents: []
 labels: [m12, rehearsal, core, ui]

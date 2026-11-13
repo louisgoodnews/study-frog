@@ -1,7 +1,7 @@
 ---
 id: STORY-0148
 type: story
-title: Console expansion to full scriptrunner environment with internal API
+title: "Console expansion to full scriptrunner environment with internal API"
 status: done
 epic: EPIC-048
 parents: [EPIC-048]

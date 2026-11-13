@@ -1,7 +1,7 @@
 ---
 id: TASK-0108
 type: task
-title: Home and calendar fill the window
+title: "Home and calendar fill the window"
 status: done
 epic: EPIC-020
 parents: [STORY-0039]

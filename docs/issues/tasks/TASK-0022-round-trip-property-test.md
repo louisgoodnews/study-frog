@@ -1,7 +1,7 @@
 ---
 id: TASK-0022
 type: task
-title: Round-trip property test
+title: "Round-trip property test"
 status: done
 epic: EPIC-005
 parents: [STORY-0009]

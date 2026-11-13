@@ -1,7 +1,7 @@
 ---
 id: TASK-0118
 type: task
-title: Detect scanned pages and say so
+title: "Detect scanned pages and say so"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

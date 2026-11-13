@@ -1,7 +1,7 @@
 ---
 id: TASK-0192
 type: task
-title: Plan to make the UI calmer
+title: "Plan to make the UI calmer"
 status: done
 epic: EPIC-025
 parents: [STORY-0072]

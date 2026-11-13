@@ -1,7 +1,7 @@
 ---
 id: EPIC-013
 type: epic
-title: Comparison scoring
+title: "Comparison scoring"
 status: done
 parents: []
 labels: [m6, slm]

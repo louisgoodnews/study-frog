@@ -1,7 +1,7 @@
 ---
 id: TASK-0232
 type: task
-title: Documentation, help and release notes for the PDF export
+title: "Documentation, help and release notes for the PDF export"
 status: done
 epic: EPIC-026
 parents: [STORY-0082]

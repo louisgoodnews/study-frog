@@ -4,32 +4,32 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (267) |
+| Backlog (24) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (267) |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-|  |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
-|  |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
-|  |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
-|  |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
-|  |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
-|  |  |  |  |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
-|  |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
-|  |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
-|  |  |  |  |  | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |
-|  |  |  |  |  | [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |
-|  |  |  |  |  | [BUG-0012](docs/issues/bugs/BUG-0012-rehearsal-card-text-wrapping-and-unquoted-csv-comma-truncation.md) Rehearsal card text wrapping and unquoted CSV comma truncation (2) |
-|  |  |  |  |  | [BUG-0013](docs/issues/bugs/BUG-0013-rehearsal-result-view-scrollability-review-stretch-and-suggested-rating.md) Rehearsal result view scrollability, stretched review area, and suggested rating visibility (2) |
-|  |  |  |  |  | [BUG-0014](docs/issues/bugs/BUG-0014-csv-import-fails-on-unquoted-multiline-fields.md) CSV importer fails on unquoted multiline fields in AI-generated CSV files (2) |
-|  |  |  |  |  | [BUG-0015](docs/issues/bugs/BUG-0015-csv-escaped-newlines-and-card-title-truncation.md) Escaped newline sequences in imported cards and 60-character card title truncation (2) |
-|  |  |  |  |  | [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority (5) |
-|  |  |  |  |  | [BUG-0017](docs/issues/bugs/BUG-0017-markdown-viewer-bold-text-visibility.md) Boldness of words in markdown viewer not visible (2) |
-|  |  |  |  |  | [BUG-0018](docs/issues/bugs/BUG-0018-code-block-indentation-preservation.md) Code block indentations not visible in markdown viewer (2) |
-|  |  |  |  |  | [BUG-0019](docs/issues/bugs/BUG-0019-notes-stack-membership-optional.md) Notes being in stacks should be optional not required (3) |
-|  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-|  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-|  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-|  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
-|  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
+| [TASK-0253](docs/issues/tasks/TASK-0253-canvas-data-model-and-toml-serializer.md) Canvas data model and TOML serializer in core and graph (3) |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0254](docs/issues/tasks/TASK-0254-spatial-quadtree-indexing-and-viewport-culling.md) Spatial quadtree indexing and viewport culling (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+| [TASK-0255](docs/issues/tasks/TASK-0255-interactive-canvas-view-pan-zoom-and-dragging.md) Interactive canvas view with pan, zoom and node dragging (5) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+| [TASK-0256](docs/issues/tasks/TASK-0256-edge-rendering-and-canvas-card-previews.md) Edge rendering, connection anchors, and card previews on canvas (3) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
+| [TASK-0257](docs/issues/tasks/TASK-0257-pdf-crop-selection-tool-and-coordinate-schema.md) PDF rectangular crop selection tool and coordinate frontmatter schema (3) |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
+| [TASK-0258](docs/issues/tasks/TASK-0258-pdf-excerpt-rasterization-caching.md) PDF excerpt caching and rasterization pipeline (3) |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
+| [TASK-0259](docs/issues/tasks/TASK-0259-split-screen-pdf-navigation-button.md) Split-screen PDF navigation button on rehearsal cards and notes (3) |  |  |  |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
+| [TASK-0260](docs/issues/tasks/TASK-0260-synchronized-pdf-page-scroll-and-highlight.md) Synchronized PDF page scrolling and coordinate highlight overlay (3) |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
+| [TASK-0261](docs/issues/tasks/TASK-0261-effective-priority-scoring-function.md) Effective priority scoring function combining priority, retention, and familiarity (2) |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
+| [TASK-0262](docs/issues/tasks/TASK-0262-priority-queue-ordering-and-budget-slicing.md) Priority-based queue ordering and session budget slicing (3) |  |  |  |  | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |
+| [TASK-0263](docs/issues/tasks/TASK-0263-match-mode-state-machine-and-mechanics.md) Match mode state machine, tile pairing mechanics, and monotonic timer (3) |  |  |  |  | [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |
+| [TASK-0264](docs/issues/tasks/TASK-0264-match-mode-grid-ui-and-animations.md) Match mode grid UI with visual selection and feedback animations (3) |  |  |  |  | [BUG-0012](docs/issues/bugs/BUG-0012-rehearsal-card-text-wrapping-and-unquoted-csv-comma-truncation.md) Rehearsal card text wrapping and unquoted CSV comma truncation (2) |
+| [TASK-0265](docs/issues/tasks/TASK-0265-semantic-distractor-extraction-via-embeddings.md) Semantic distractor extraction via MiniLM embeddings nearest neighbors (3) |  |  |  |  | [BUG-0013](docs/issues/bugs/BUG-0013-rehearsal-result-view-scrollability-review-stretch-and-suggested-rating.md) Rehearsal result view scrollability, stretched review area, and suggested rating visibility (2) |
+| [TASK-0266](docs/issues/tasks/TASK-0266-distractor-exam-view-and-automated-grading.md) Distractor exam view and automated grading (3) |  |  |  |  | [BUG-0014](docs/issues/bugs/BUG-0014-csv-import-fails-on-unquoted-multiline-fields.md) CSV importer fails on unquoted multiline fields in AI-generated CSV files (2) |
+| [TASK-0267](docs/issues/tasks/TASK-0267-adam-optimizer-for-fsrs-parameters.md) Adam gradient descent optimizer for 21 FSRS parameters on SQLite reviews (5) |  |  |  |  | [BUG-0015](docs/issues/bugs/BUG-0015-csv-escaped-newlines-and-card-title-truncation.md) Escaped newline sequences in imported cards and 60-character card title truncation (2) |
+| [TASK-0268](docs/issues/tasks/TASK-0268-fsrs-optimizer-ui-and-metrics.md) FSRS parameter evaluation metrics and settings UI integration (3) |  |  |  |  | [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority (5) |
+| [TASK-0269](docs/issues/tasks/TASK-0269-inline-delimiter-scanner-in-markdown.md) Inline delimiter scanner for Term :: Definition in markdown documents (3) |  |  |  |  | [BUG-0017](docs/issues/bugs/BUG-0017-markdown-viewer-bold-text-visibility.md) Boldness of words in markdown viewer not visible (2) |
+| [TASK-0270](docs/issues/tasks/TASK-0270-virtual-item-indexing-for-inline-cards.md) Virtual item indexing and lifecycle sync for inline cards (3) |  |  |  |  | [BUG-0018](docs/issues/bugs/BUG-0018-code-block-indentation-preservation.md) Code block indentations not visible in markdown viewer (2) |
+| [TASK-0271](docs/issues/tasks/TASK-0271-sidecar-child-process-spawning-and-watchdog.md) Sidecar child process spawning, loopback port binding, and stdin watchdog (5) |  |  |  |  | [BUG-0019](docs/issues/bugs/BUG-0019-notes-stack-membership-optional.md) Notes being in stacks should be optional not required (3) |
+| [TASK-0272](docs/issues/tasks/TASK-0272-five-minute-idle-auto-shutdown-supervisor.md) Five-minute idle auto-shutdown and memory reclamation supervisor (3) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+| [TASK-0273](docs/issues/tasks/TASK-0273-gguf-model-catalog-and-resumable-downloader.md) GGUF model catalog and range-resuming downloader (3) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+| [TASK-0274](docs/issues/tasks/TASK-0274-sse-streaming-parser-and-chat-streaming-ui.md) Server-Sent Events streaming parser and chat UI streaming renderer (3) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+| [TASK-0275](docs/issues/tasks/TASK-0275-sqlite-vault-embeddings-and-vector-search.md) SQLite vault embeddings table and vector similarity search (3) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+| [TASK-0276](docs/issues/tasks/TASK-0276-prompt-budgeting-and-vault-context-assembly.md) 1024-token prompt budgeting and vault context assembly (3) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
 |  |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
 |  |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
 |  |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
@@ -429,6 +429,18 @@
 | [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and domain-specific language (DSL) research (5) | backlog | 0/0 |
 | [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers (5) | backlog | 0/0 |
 | [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging for user scripts (3) | backlog | 0/0 |
+| [STORY-0153](docs/issues/stories/STORY-0153-frogcanvas-data-model-and-serialization.md) FrogCanvas Data Model and Spatial Serialization (5) | backlog | 0/2 |
+| [STORY-0154](docs/issues/stories/STORY-0154-frogcanvas-interactive-ui-and-rendering.md) FrogCanvas Interactive UI and Rendering (5) | backlog | 0/2 |
+| [STORY-0155](docs/issues/stories/STORY-0155-pdf-visual-bounding-box-cropping.md) PDF Visual Bounding Box Cropping (5) | backlog | 0/2 |
+| [STORY-0156](docs/issues/stories/STORY-0156-split-screen-pdf-source-navigation.md) Split-Screen PDF Source Navigation (5) | backlog | 0/2 |
+| [STORY-0157](docs/issues/stories/STORY-0157-continuous-priority-queue-and-slicing.md) Continuous Priority Queue and Anti-Paralysis Slicing (5) | backlog | 0/2 |
+| [STORY-0158](docs/issues/stories/STORY-0158-interactive-match-mode-tile-pairing.md) Interactive Match Mode Tile Pairing Drill (5) | backlog | 0/2 |
+| [STORY-0159](docs/issues/stories/STORY-0159-embedding-distractor-exam-generator.md) Embedding-Powered Distractor Generator for Multiple-Choice Exams (5) | backlog | 0/2 |
+| [STORY-0160](docs/issues/stories/STORY-0160-fsrs-parameter-optimization-engine.md) Local FSRS-6 Parameter Optimization Engine (5) | backlog | 0/2 |
+| [STORY-0161](docs/issues/stories/STORY-0161-inline-card-syntax-scanner.md) Markdown Inline Card Syntax Scanner (5) | backlog | 0/2 |
+| [STORY-0162](docs/issues/stories/STORY-0162-managed-local-sidecar-process.md) Managed Local Background Sidecar Process and Supervisor (5) | backlog | 0/2 |
+| [STORY-0163](docs/issues/stories/STORY-0163-model-catalog-and-streaming-generation.md) GGUF Model Catalog, Downloader, and Streaming Generation (5) | backlog | 0/2 |
+| [STORY-0164](docs/issues/stories/STORY-0164-on-device-rag-and-cpu-prompt-budgeting.md) On-Device Vault RAG Pipeline and CPU Prompt Budgeting (5) | backlog | 0/2 |
 
 ## Epics
 
@@ -483,3 +495,9 @@
 | [EPIC-047](docs/issues/epics/EPIC-047-brand-mascot-icon-and-consolidated-navigation-ux.md) Brand mascot icon and consolidated navigation UX | done | 2/2 |
 | [EPIC-048](docs/issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md) Scriptrunner environment and internal application automation API | done | 1/1 |
 | [EPIC-049](docs/issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md) Expanded scripting environment, DSL, job scheduling, and execution logging | backlog | 1/4 |
+| [EPIC-050](docs/issues/epics/EPIC-050-frogcanvas-2d-spatial-concept-board.md) FrogCanvas: 2D Spatial Mind-Map and Concept Board | backlog | 0/2 |
+| [EPIC-051](docs/issues/epics/EPIC-051-pdf-precision-area-cropping-and-split-navigation.md) PDF Precision Area Cropping and 1-Click Split Navigation | backlog | 0/2 |
+| [EPIC-052](docs/issues/epics/EPIC-052-continuous-priority-queue-and-anti-paralysis-slicing.md) Continuous Priority Queue and Anti-Paralysis Slicing | backlog | 0/1 |
+| [EPIC-053](docs/issues/epics/EPIC-053-gamified-multi-modal-recall-match-mode-and-distractors.md) Gamified and Multi-Modal Active Recall | backlog | 0/2 |
+| [EPIC-054](docs/issues/epics/EPIC-054-fsrs-auto-tuning-and-inline-card-capture.md) FSRS Auto-Tuning and Inline Card Capture | backlog | 0/2 |
+| [EPIC-055](docs/issues/epics/EPIC-055-offline-local-slm-internal-assistant.md) Offline Local SLM Internal Assistant | backlog | 0/3 |

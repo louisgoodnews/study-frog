@@ -1,7 +1,7 @@
 ---
 id: STORY-0067
 type: story
-title: Importers for Anki and Obsidian
+title: "Importers for Anki and Obsidian"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

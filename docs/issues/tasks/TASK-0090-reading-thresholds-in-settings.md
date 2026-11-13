@@ -1,7 +1,7 @@
 ---
 id: TASK-0090
 type: task
-title: Reading thresholds in app.toml
+title: "Reading thresholds in app.toml"
 status: done
 epic: EPIC-019
 parents: [STORY-0035]

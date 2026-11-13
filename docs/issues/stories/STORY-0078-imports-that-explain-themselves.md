@@ -1,7 +1,7 @@
 ---
 id: STORY-0078
 type: story
-title: Imports that explain themselves
+title: "Imports that explain themselves"
 status: done
 epic: EPIC-026
 parents: [EPIC-026]

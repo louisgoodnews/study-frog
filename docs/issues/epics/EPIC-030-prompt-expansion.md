@@ -1,7 +1,7 @@
 ---
 id: EPIC-030
 type: epic
-title: Prompt expansion
+title: "Prompt expansion"
 status: done
 parents: []
 labels: [m12, agent, docs, ui]

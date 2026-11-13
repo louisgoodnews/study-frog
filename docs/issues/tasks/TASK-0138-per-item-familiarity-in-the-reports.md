@@ -1,7 +1,7 @@
 ---
 id: TASK-0138
 type: task
-title: Per-item familiarity in the reports
+title: "Per-item familiarity in the reports"
 status: done
 epic: EPIC-023
 parents: [STORY-0059]

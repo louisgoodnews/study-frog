@@ -1,7 +1,7 @@
 ---
 id: TASK-0142
 type: task
-title: Settings tab bar and domain grouping
+title: "Settings tab bar and domain grouping"
 status: done
 epic: EPIC-023
 parents: [STORY-0060]

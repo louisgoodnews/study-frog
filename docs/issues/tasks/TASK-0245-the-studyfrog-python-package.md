@@ -1,7 +1,7 @@
 ---
 id: TASK-0245
 type: task
-title: The studyfrog Python package
+title: "The studyfrog Python package"
 status: done
 epic: EPIC-028
 parents: [STORY-0131]

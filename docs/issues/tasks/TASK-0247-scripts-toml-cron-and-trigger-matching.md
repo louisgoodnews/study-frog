@@ -1,7 +1,7 @@
 ---
 id: TASK-0247
 type: task
-title: scripts.toml, cron and trigger matching
+title: "scripts.toml, cron and trigger matching"
 status: done
 epic: EPIC-028
 parents: [STORY-0132]

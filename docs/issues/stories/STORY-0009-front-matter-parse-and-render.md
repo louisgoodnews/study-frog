@@ -1,7 +1,7 @@
 ---
 id: STORY-0009
 type: story
-title: Front-matter parse and render
+title: "Front-matter parse and render"
 status: done
 epic: EPIC-005
 parents: [EPIC-005]

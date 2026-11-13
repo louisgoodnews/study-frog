@@ -1,7 +1,7 @@
 ---
 id: TASK-0032
 type: task
-title: Injected monotonic clock
+title: "Injected monotonic clock"
 status: done
 epic: EPIC-007
 parents: [STORY-0014]

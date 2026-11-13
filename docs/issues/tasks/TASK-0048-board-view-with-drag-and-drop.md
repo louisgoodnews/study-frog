@@ -1,7 +1,7 @@
 ---
 id: TASK-0048
 type: task
-title: Board view with drag and drop
+title: "Board view with drag and drop"
 status: done
 epic: EPIC-011
 parents: [STORY-0022]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0158
 type: task
-title: Export a library or stack
+title: "Export a library or stack"
 status: done
 epic: EPIC-023
 parents: [STORY-0065]

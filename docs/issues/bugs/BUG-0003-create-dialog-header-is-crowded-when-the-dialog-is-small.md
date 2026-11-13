@@ -1,7 +1,7 @@
 ---
 id: BUG-0003
 type: bug
-title: Create dialog header is crowded when the dialog is small
+title: "Create dialog header is crowded when the dialog is small"
 status: done
 epic: EPIC-025
 parents: []

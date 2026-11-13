@@ -1,7 +1,7 @@
 ---
 id: EPIC-046
 type: epic
-title: Markdown viewer list syntax enhancements
+title: "Markdown viewer list syntax enhancements"
 status: done
 parents: []
 labels: [m12, markdown, core]

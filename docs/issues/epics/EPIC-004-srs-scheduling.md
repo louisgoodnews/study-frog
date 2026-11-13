@@ -1,7 +1,7 @@
 ---
 id: EPIC-004
 type: epic
-title: SRS scheduling
+title: "SRS scheduling"
 status: done
 parents: []
 labels: [m1, srs]

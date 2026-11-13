@@ -1,7 +1,7 @@
 ---
 id: BUG-0009
 type: bug
-title: PDF lists show a placeholder title instead of the file name
+title: "PDF lists show a placeholder title instead of the file name"
 status: done
 parents: []
 estimate: 2

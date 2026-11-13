@@ -1,7 +1,7 @@
 ---
 id: STORY-0139
 type: story
-title: Overhaul of file navigator and in-app file dialogue
+title: "Overhaul of file navigator and in-app file dialogue"
 status: done
 epic: EPIC-043
 parents: [EPIC-043]

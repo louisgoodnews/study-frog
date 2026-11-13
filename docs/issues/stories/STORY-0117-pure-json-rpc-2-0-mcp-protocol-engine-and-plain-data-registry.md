@@ -1,7 +1,7 @@
 ---
 id: STORY-0117
 type: story
-title: Pure JSON-RPC 2.0 MCP protocol engine and extensible plain-data capability registry
+title: "Pure JSON-RPC 2.0 MCP protocol engine and extensible plain-data capability registry"
 status: done
 epic: EPIC-037
 parents: [EPIC-037]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0179
 type: task
-title: Specify the rehearsal modes
+title: "Specify the rehearsal modes"
 status: done
 epic: EPIC-023
 parents: [STORY-0070]

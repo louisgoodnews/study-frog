@@ -1,7 +1,7 @@
 ---
 id: TASK-0217
 type: task
-title: Mark a folder as a stack or as a normal folder
+title: "Mark a folder as a stack or as a normal folder"
 status: done
 epic: EPIC-026
 parents: [STORY-0079]

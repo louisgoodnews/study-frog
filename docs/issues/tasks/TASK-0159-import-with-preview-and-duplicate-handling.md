@@ -1,7 +1,7 @@
 ---
 id: TASK-0159
 type: task
-title: Import with preview and duplicate handling
+title: "Import with preview and duplicate handling"
 status: done
 epic: EPIC-023
 parents: [STORY-0065]

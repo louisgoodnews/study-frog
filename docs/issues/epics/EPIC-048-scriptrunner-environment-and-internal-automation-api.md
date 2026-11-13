@@ -1,7 +1,7 @@
 ---
 id: EPIC-048
 type: epic
-title: Scriptrunner environment and internal application automation API
+title: "Scriptrunner environment and internal application automation API"
 status: done
 parents: []
 labels: [m12, ext, console]

@@ -1,7 +1,7 @@
 ---
 id: BUG-0001
 type: bug
-title: Teacher and subject names with a comma cannot be used
+title: "Teacher and subject names with a comma cannot be used"
 status: done
 epic: EPIC-023
 parents: []

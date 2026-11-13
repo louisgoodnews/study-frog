@@ -1,7 +1,7 @@
 ---
 id: STORY-0132
 type: story
-title: Script runner with scheduled and event-bound jobs
+title: "Script runner with scheduled and event-bound jobs"
 status: done
 epic: EPIC-028
 parents: [EPIC-028]

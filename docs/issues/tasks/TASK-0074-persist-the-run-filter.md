@@ -1,7 +1,7 @@
 ---
 id: TASK-0074
 type: task
-title: Persist the run filter
+title: "Persist the run filter"
 status: done
 epic: EPIC-018
 parents: [STORY-0034]

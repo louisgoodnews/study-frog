@@ -1,7 +1,7 @@
 ---
 id: EPIC-028
 type: epic
-title: Extensibility, plugin modding, and Python API
+title: "Extensibility, plugin modding, and Python API"
 status: done
 parents: []
 labels: [m12, ext, slm]

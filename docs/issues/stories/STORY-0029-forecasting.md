@@ -1,7 +1,7 @@
 ---
 id: STORY-0029
 type: story
-title: Forecasting
+title: "Forecasting"
 status: done
 epic: EPIC-015
 parents: [EPIC-015]

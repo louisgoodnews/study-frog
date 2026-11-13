@@ -1,7 +1,7 @@
 ---
 id: TASK-0199
 type: task
-title: Open the new item from the notification that says it was created
+title: "Open the new item from the notification that says it was created"
 status: done
 epic: EPIC-026
 parents: [STORY-0075]

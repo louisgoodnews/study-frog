@@ -1,7 +1,7 @@
 ---
 id: STORY-0059
 type: story
-title: Familiarity in reports, on Home and in scheduling
+title: "Familiarity in reports, on Home and in scheduling"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

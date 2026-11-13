@@ -1,7 +1,7 @@
 ---
 id: STORY-0074
 type: story
-title: Markdown editor, formatting, macros and lists
+title: "Markdown editor, formatting, macros and lists"
 status: done
 epic: EPIC-026
 parents: [EPIC-026]

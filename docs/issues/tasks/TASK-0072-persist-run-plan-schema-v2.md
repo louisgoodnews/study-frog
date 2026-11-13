@@ -1,7 +1,7 @@
 ---
 id: TASK-0072
 type: task
-title: Persist run plan (schema v2)
+title: "Persist run plan (schema v2)"
 status: done
 epic: EPIC-007
 parents: [STORY-0033]

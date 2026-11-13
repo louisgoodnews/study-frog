@@ -1,7 +1,7 @@
 ---
 id: TASK-0149
 type: task
-title: Specify the stack view redesign
+title: "Specify the stack view redesign"
 status: done
 epic: EPIC-023
 parents: [STORY-0063]

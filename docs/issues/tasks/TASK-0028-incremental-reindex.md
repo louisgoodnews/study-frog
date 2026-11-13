@@ -1,7 +1,7 @@
 ---
 id: TASK-0028
 type: task
-title: Incremental reindex
+title: "Incremental reindex"
 status: done
 epic: EPIC-006
 parents: [STORY-0012]

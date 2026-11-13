@@ -1,7 +1,7 @@
 ---
 id: TASK-0150
 type: task
-title: Stack page shell with header and tabs
+title: "Stack page shell with header and tabs"
 status: done
 epic: EPIC-023
 parents: [STORY-0063]

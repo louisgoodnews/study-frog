@@ -1,7 +1,7 @@
 ---
 id: TASK-0095
 type: task
-title: Notification list
+title: "Notification list"
 status: done
 epic: EPIC-020
 parents: [STORY-0036]

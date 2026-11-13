@@ -1,7 +1,7 @@
 ---
 id: TASK-0075
 type: task
-title: Stack settings in the index
+title: "Stack settings in the index"
 status: done
 epic: EPIC-018
 parents: [STORY-0034]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0131
 type: story
-title: Python client package for the control protocol
+title: "Python client package for the control protocol"
 status: done
 epic: EPIC-028
 parents: [EPIC-028]

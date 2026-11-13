@@ -1,7 +1,7 @@
 ---
 id: TASK-0132
 type: task
-title: Search bar with Standard and Query modes
+title: "Search bar with Standard and Query modes"
 status: done
 epic: EPIC-023
 parents: [STORY-0057]

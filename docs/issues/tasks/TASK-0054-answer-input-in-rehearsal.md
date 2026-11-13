@@ -1,7 +1,7 @@
 ---
 id: TASK-0054
 type: task
-title: Answer input in rehearsal
+title: "Answer input in rehearsal"
 status: done
 epic: EPIC-013
 parents: [STORY-0025]

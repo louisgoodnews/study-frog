@@ -1,7 +1,7 @@
 ---
 id: EPIC-002
 type: epic
-title: Documentation library
+title: "Documentation library"
 status: done
 parents: []
 labels: [m0, docs]

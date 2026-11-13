@@ -1,7 +1,7 @@
 ---
 id: TASK-0154
 type: task
-title: Goals tab
+title: "Goals tab"
 status: done
 epic: EPIC-023
 parents: [STORY-0064]

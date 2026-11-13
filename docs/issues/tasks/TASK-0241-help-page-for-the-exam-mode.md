@@ -1,7 +1,7 @@
 ---
 id: TASK-0241
 type: task
-title: Help page for the exam mode
+title: "Help page for the exam mode"
 status: done
 epic: EPIC-033
 parents: [STORY-0129]

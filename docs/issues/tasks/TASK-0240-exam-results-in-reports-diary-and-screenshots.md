@@ -1,7 +1,7 @@
 ---
 id: TASK-0240
 type: task
-title: Exam results in the Runs report, the diary prompt and screenshots
+title: "Exam results in the Runs report, the diary prompt and screenshots"
 status: done
 epic: EPIC-033
 parents: [STORY-0128]

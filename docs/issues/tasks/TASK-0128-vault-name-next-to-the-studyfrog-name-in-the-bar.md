@@ -1,7 +1,7 @@
 ---
 id: TASK-0128
 type: task
-title: Vault name next to the StudyFrog name in the bar
+title: "Vault name next to the StudyFrog name in the bar"
 status: done
 epic: EPIC-023
 parents: [STORY-0056]

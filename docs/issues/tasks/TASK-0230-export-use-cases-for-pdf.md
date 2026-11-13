@@ -1,7 +1,7 @@
 ---
 id: TASK-0230
 type: task
-title: Export use cases for PDF in the service
+title: "Export use cases for PDF in the service"
 status: done
 epic: EPIC-026
 parents: [STORY-0082]

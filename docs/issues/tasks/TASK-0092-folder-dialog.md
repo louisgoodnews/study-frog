@@ -1,7 +1,7 @@
 ---
 id: TASK-0092
 type: task
-title: Native folder dialog for the vault
+title: "Native folder dialog for the vault"
 status: done
 epic: EPIC-019
 parents: [STORY-0035]

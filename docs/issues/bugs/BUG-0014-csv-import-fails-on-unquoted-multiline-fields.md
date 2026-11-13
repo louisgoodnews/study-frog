@@ -1,7 +1,7 @@
 ---
 id: BUG-0014
 type: bug
-title: CSV importer fails on unquoted multiline fields in AI-generated CSV files
+title: "CSV importer fails on unquoted multiline fields in AI-generated CSV files"
 status: done
 epic: EPIC-031
 parents: []

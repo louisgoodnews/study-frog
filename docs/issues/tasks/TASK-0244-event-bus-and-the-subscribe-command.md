@@ -1,7 +1,7 @@
 ---
 id: TASK-0244
 type: task
-title: Event bus and the subscribe command
+title: "Event bus and the subscribe command"
 status: done
 epic: EPIC-028
 parents: [STORY-0130]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0142
 type: story
-title: Calendar daily and weekly schedule views
+title: "Calendar daily and weekly schedule views"
 status: done
 epic: EPIC-044
 parents: [EPIC-044]

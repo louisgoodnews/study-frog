@@ -1,7 +1,7 @@
 ---
 id: STORY-0027
 type: story
-title: Achievement UI
+title: "Achievement UI"
 status: done
 epic: EPIC-014
 parents: [EPIC-014]

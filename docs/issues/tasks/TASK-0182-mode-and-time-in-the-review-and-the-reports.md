@@ -1,7 +1,7 @@
 ---
 id: TASK-0182
 type: task
-title: Mode and time in the review and the reports
+title: "Mode and time in the review and the reports"
 status: done
 epic: EPIC-023
 parents: [STORY-0070]

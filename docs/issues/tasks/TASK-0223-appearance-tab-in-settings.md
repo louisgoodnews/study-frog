@@ -1,7 +1,7 @@
 ---
 id: TASK-0223
 type: task
-title: Appearance tab in Settings
+title: "Appearance tab in Settings"
 status: done
 epic: EPIC-027
 parents: [STORY-0081]

@@ -1,7 +1,7 @@
 ---
 id: BUG-0016
 type: bug
-title: Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority
+title: "Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority"
 status: done
 epic: EPIC-034
 parents: []

@@ -1,7 +1,7 @@
 ---
 id: STORY-0123
 type: story
-title: Colorization field for items influencing details and rehearsal view background
+title: "Colorization field for items influencing details and rehearsal view background"
 status: done
 epic: EPIC-032
 parents: [EPIC-032]

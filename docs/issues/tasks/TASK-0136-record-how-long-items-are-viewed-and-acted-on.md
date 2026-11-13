@@ -1,7 +1,7 @@
 ---
 id: TASK-0136
 type: task
-title: Record how long items are viewed and acted on
+title: "Record how long items are viewed and acted on"
 status: done
 epic: EPIC-023
 parents: [STORY-0058]

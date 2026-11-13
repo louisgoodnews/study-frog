@@ -1,7 +1,7 @@
 ---
 id: EPIC-017
 type: epic
-title: Release hardening
+title: "Release hardening"
 status: done
 parents: []
 labels: [m8, release]

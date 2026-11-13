@@ -1,7 +1,7 @@
 ---
 id: STORY-0111
 type: story
-title: Contrastive side-by-side drill for confused and interfering items
+title: "Contrastive side-by-side drill for confused and interfering items"
 status: done
 epic: EPIC-035
 parents: [EPIC-035]

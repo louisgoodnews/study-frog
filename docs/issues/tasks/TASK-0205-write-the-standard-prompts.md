@@ -1,7 +1,7 @@
 ---
 id: TASK-0205
 type: task
-title: Write the standard prompts
+title: "Write the standard prompts"
 status: done
 epic: EPIC-026
 parents: [STORY-0077]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0064
 type: task
-title: Registry as plain data
+title: "Registry as plain data"
 status: done
 epic: EPIC-016
 parents: [STORY-0030]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0200
 type: task
-title: Auto-save in the editor and no Save button
+title: "Auto-save in the editor and no Save button"
 status: done
 epic: EPIC-026
 parents: [STORY-0075]

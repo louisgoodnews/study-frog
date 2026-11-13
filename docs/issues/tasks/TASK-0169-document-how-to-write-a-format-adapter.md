@@ -1,7 +1,7 @@
 ---
 id: TASK-0169
 type: task
-title: Document how to write a format adapter
+title: "Document how to write a format adapter"
 status: done
 epic: EPIC-023
 parents: [STORY-0067]

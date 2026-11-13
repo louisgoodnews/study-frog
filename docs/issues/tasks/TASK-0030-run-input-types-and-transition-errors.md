@@ -1,7 +1,7 @@
 ---
 id: TASK-0030
 type: task
-title: Run input types and transition errors
+title: "Run input types and transition errors"
 status: done
 epic: EPIC-007
 parents: [STORY-0013]

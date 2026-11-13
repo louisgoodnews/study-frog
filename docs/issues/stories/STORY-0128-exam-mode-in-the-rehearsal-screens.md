@@ -1,7 +1,7 @@
 ---
 id: STORY-0128
 type: story
-title: Exam mode in the rehearsal screens
+title: "Exam mode in the rehearsal screens"
 status: done
 epic: EPIC-033
 parents: [EPIC-033]

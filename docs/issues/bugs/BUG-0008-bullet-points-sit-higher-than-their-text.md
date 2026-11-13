@@ -1,7 +1,7 @@
 ---
 id: BUG-0008
 type: bug
-title: Bullet points sit higher than their text
+title: "Bullet points sit higher than their text"
 status: done
 epic: EPIC-026
 parents: [STORY-0074]

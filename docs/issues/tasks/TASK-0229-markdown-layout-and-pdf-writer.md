@@ -1,7 +1,7 @@
 ---
 id: TASK-0229
 type: task
-title: Markdown layout and PDF writer
+title: "Markdown layout and PDF writer"
 status: done
 epic: EPIC-026
 parents: [STORY-0082]

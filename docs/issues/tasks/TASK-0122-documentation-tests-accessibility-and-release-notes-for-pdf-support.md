@@ -1,7 +1,7 @@
 ---
 id: TASK-0122
 type: task
-title: Documentation, tests, accessibility and release notes for PDF support
+title: "Documentation, tests, accessibility and release notes for PDF support"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

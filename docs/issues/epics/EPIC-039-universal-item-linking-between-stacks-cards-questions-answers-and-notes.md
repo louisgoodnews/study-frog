@@ -1,7 +1,7 @@
 ---
 id: EPIC-039
 type: epic
-title: Universal item linking between stacks, cards, questions, answers, and notes
+title: "Universal item linking between stacks, cards, questions, answers, and notes"
 status: done
 parents: []
 labels: [m12, core, md, store, graph, ui]

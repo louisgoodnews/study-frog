@@ -1,7 +1,7 @@
 ---
 id: TASK-0208
 type: task
-title: CSV import with column mapping
+title: "CSV import with column mapping"
 status: done
 epic: EPIC-026
 parents: [STORY-0078]

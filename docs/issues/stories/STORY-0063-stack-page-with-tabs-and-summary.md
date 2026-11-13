@@ -1,7 +1,7 @@
 ---
 id: STORY-0063
 type: story
-title: Stack page with tabs and summary
+title: "Stack page with tabs and summary"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

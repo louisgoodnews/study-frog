@@ -1,7 +1,7 @@
 ---
 id: TASK-0039
 type: task
-title: Rehearsal screen
+title: "Rehearsal screen"
 status: done
 epic: EPIC-008
 parents: [STORY-0017]

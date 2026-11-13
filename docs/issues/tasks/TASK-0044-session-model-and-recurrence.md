@@ -1,7 +1,7 @@
 ---
 id: TASK-0044
 type: task
-title: Session model and recurrence
+title: "Session model and recurrence"
 status: done
 epic: EPIC-010
 parents: [STORY-0020]

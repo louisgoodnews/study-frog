@@ -1,7 +1,7 @@
 ---
 id: TASK-0027
 type: task
-title: Vault scanner
+title: "Vault scanner"
 status: done
 epic: EPIC-006
 parents: [STORY-0012]

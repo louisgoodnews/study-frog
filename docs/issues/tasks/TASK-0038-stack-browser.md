@@ -1,7 +1,7 @@
 ---
 id: TASK-0038
 type: task
-title: Stack browser
+title: "Stack browser"
 status: done
 epic: EPIC-008
 parents: [STORY-0017]

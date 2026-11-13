@@ -1,7 +1,7 @@
 ---
 id: TASK-0190
 type: task
-title: Readable window buttons
+title: "Readable window buttons"
 status: done
 epic: EPIC-025
 parents: [STORY-0072]

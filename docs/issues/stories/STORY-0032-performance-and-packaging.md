@@ -1,7 +1,7 @@
 ---
 id: STORY-0032
 type: story
-title: Performance and packaging
+title: "Performance and packaging"
 status: done
 epic: EPIC-017
 parents: [EPIC-017]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0018
 type: task
-title: SM-2 functions
+title: "SM-2 functions"
 status: done
 epic: EPIC-004
 parents: [STORY-0008]

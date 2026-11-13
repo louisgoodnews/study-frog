@@ -1,7 +1,7 @@
 ---
 id: TASK-0004
 type: task
-title: scripts/check.sh
+title: "scripts/check.sh"
 status: done
 epic: EPIC-001
 parents: [STORY-0002]

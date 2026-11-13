@@ -1,7 +1,7 @@
 ---
 id: TASK-0076
 type: task
-title: SM-2 in the service
+title: "SM-2 in the service"
 status: done
 epic: EPIC-018
 parents: [STORY-0034]

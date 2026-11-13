@@ -1,7 +1,7 @@
 ---
 id: TASK-0105
 type: task
-title: Calendar entry kinds and reminders
+title: "Calendar entry kinds and reminders"
 status: done
 epic: EPIC-020
 parents: [STORY-0039]

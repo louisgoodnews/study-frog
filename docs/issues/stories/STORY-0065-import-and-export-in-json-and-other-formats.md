@@ -1,7 +1,7 @@
 ---
 id: STORY-0065
 type: story
-title: Import and export in JSON and other formats
+title: "Import and export in JSON and other formats"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

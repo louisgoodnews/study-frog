@@ -1,7 +1,7 @@
 ---
 id: STORY-0049
 type: story
-title: AI agent for the vault and interactive exams
+title: "AI agent for the vault and interactive exams"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

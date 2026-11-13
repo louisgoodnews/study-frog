@@ -1,7 +1,7 @@
 ---
 id: TASK-0213
 type: task
-title: References in the interface
+title: "References in the interface"
 status: done
 epic: EPIC-026
 parents: [STORY-0079]

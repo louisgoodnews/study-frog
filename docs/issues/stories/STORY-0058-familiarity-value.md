@@ -1,7 +1,7 @@
 ---
 id: STORY-0058
 type: story
-title: Familiarity value
+title: "Familiarity value"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0153
 type: task
-title: Sub-stacks tab
+title: "Sub-stacks tab"
 status: done
 epic: EPIC-023
 parents: [STORY-0064]

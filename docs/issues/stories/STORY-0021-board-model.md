@@ -1,7 +1,7 @@
 ---
 id: STORY-0021
 type: story
-title: Board model
+title: "Board model"
 status: done
 epic: EPIC-011
 parents: [EPIC-011]

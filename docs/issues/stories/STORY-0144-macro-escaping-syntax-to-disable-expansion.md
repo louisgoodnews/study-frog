@@ -1,7 +1,7 @@
 ---
 id: STORY-0144
 type: story
-title: Macro escaping syntax to disable expansion
+title: "Macro escaping syntax to disable expansion"
 status: done
 epic: EPIC-045
 parents: [EPIC-045]

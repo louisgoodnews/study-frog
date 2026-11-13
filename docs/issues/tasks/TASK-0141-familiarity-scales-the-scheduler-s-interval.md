@@ -1,7 +1,7 @@
 ---
 id: TASK-0141
 type: task
-title: Familiarity scales the scheduler's interval
+title: "Familiarity scales the scheduler's interval"
 status: done
 epic: EPIC-023
 parents: [STORY-0059]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0096
 type: story
-title: Item keys for querying
+title: "Item keys for querying"
 status: done
 epic: EPIC-032
 parents: [EPIC-032]

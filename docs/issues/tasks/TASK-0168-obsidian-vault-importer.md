@@ -1,7 +1,7 @@
 ---
 id: TASK-0168
 type: task
-title: Obsidian vault importer
+title: "Obsidian vault importer"
 status: done
 epic: EPIC-023
 parents: [STORY-0067]

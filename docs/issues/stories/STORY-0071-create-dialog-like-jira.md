@@ -1,7 +1,7 @@
 ---
 id: STORY-0071
 type: story
-title: Create dialog like Jira
+title: "Create dialog like Jira"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

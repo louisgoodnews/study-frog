@@ -1,7 +1,7 @@
 ---
 id: STORY-0057
 type: story
-title: Library redesign
+title: "Library redesign"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

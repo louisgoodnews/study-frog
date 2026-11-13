@@ -1,7 +1,7 @@
 ---
 id: EPIC-031
 type: epic
-title: Details tabs, create workflow, and CSV import for 0.4.1
+title: "Details tabs, create workflow, and CSV import for 0.4.1"
 status: done
 parents: []
 labels: [m11, ui, ext]

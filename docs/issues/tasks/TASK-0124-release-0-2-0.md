@@ -1,7 +1,7 @@
 ---
 id: TASK-0124
 type: task
-title: Release 0.2.0
+title: "Release 0.2.0"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

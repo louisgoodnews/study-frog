@@ -1,7 +1,7 @@
 ---
 id: TASK-0082
 type: task
-title: Reading-speed rating suggestion
+title: "Reading-speed rating suggestion"
 status: done
 epic: EPIC-019
 parents: [STORY-0035]

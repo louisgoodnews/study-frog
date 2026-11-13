@@ -1,7 +1,7 @@
 ---
 id: TASK-0096
 type: task
-title: Nested stacks and one creation use case
+title: "Nested stacks and one creation use case"
 status: done
 epic: EPIC-020
 parents: [STORY-0037]

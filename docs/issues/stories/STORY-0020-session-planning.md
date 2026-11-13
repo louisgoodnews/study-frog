@@ -1,7 +1,7 @@
 ---
 id: STORY-0020
 type: story
-title: Session planning
+title: "Session planning"
 status: done
 epic: EPIC-010
 parents: [EPIC-010]

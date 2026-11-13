@@ -1,7 +1,7 @@
 ---
 id: TASK-0127
 type: task
-title: Notification center panel
+title: "Notification center panel"
 status: done
 epic: EPIC-023
 parents: [STORY-0055]

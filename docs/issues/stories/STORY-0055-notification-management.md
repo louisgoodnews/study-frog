@@ -1,7 +1,7 @@
 ---
 id: STORY-0055
 type: story
-title: Notification management
+title: "Notification management"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

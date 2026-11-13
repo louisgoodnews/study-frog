@@ -1,7 +1,7 @@
 ---
 id: STORY-0097
 type: story
-title: Item colorization with color picker and viewer background styling
+title: "Item colorization with color picker and viewer background styling"
 status: done
 epic: EPIC-032
 parents: [EPIC-032]

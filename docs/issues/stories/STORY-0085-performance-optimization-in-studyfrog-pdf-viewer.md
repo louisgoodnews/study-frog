@@ -1,7 +1,7 @@
 ---
 id: STORY-0085
 type: story
-title: Performance optimization in StudyFrog pdf-viewer
+title: "Performance optimization in StudyFrog pdf-viewer"
 status: done
 epic: EPIC-028
 parents: [EPIC-028]

@@ -1,7 +1,7 @@
 ---
 id: EPIC-001
 type: epic
-title: Workspace and guardrails
+title: "Workspace and guardrails"
 status: done
 parents: []
 labels: [m0, tooling]

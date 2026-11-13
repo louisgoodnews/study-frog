@@ -1,7 +1,7 @@
 ---
 id: TASK-0201
 type: task
-title: Item saved toast when leaving the editor
+title: "Item saved toast when leaving the editor"
 status: done
 epic: EPIC-026
 parents: [STORY-0075]

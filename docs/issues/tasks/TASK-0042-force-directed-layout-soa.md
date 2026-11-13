@@ -1,7 +1,7 @@
 ---
 id: TASK-0042
 type: task
-title: Force-directed layout (SoA)
+title: "Force-directed layout (SoA)"
 status: done
 epic: EPIC-009
 parents: [STORY-0019]

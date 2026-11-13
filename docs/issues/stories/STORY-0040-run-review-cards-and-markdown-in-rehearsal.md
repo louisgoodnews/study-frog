@@ -1,7 +1,7 @@
 ---
 id: STORY-0040
 type: story
-title: Run review cards and Markdown in rehearsal
+title: "Run review cards and Markdown in rehearsal"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0147
 type: story
-title: Research and prototype floating burger navigation menu
+title: "Research and prototype floating burger navigation menu"
 status: done
 epic: EPIC-047
 parents: [EPIC-047]

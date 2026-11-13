@@ -1,7 +1,7 @@
 ---
 id: TASK-0097
 type: task
-title: Create dialog
+title: "Create dialog"
 status: done
 epic: EPIC-020
 parents: [STORY-0037]

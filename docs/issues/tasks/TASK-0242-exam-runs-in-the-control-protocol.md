@@ -1,7 +1,7 @@
 ---
 id: TASK-0242
 type: task
-title: Exam runs in the control protocol
+title: "Exam runs in the control protocol"
 status: done
 epic: EPIC-033
 parents: [STORY-0129]

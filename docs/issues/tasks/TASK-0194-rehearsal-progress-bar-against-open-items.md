@@ -1,7 +1,7 @@
 ---
 id: TASK-0194
 type: task
-title: Rehearsal progress bar against the open items
+title: "Rehearsal progress bar against the open items"
 status: done
 epic: EPIC-025
 parents: [STORY-0072]

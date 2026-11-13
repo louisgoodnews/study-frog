@@ -1,7 +1,7 @@
 ---
 id: STORY-0061
 type: story
-title: Statuses for stacks, notes, cards and questions
+title: "Statuses for stacks, notes, cards and questions"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

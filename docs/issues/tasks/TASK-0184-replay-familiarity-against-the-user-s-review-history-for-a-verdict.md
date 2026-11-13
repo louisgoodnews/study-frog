@@ -1,7 +1,7 @@
 ---
 id: TASK-0184
 type: task
-title: Replay familiarity against the user's review history for a verdict
+title: "Replay familiarity against the user's review history for a verdict"
 status: done
 epic: EPIC-023
 parents: [STORY-0059]

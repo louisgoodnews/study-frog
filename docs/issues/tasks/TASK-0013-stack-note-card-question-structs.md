@@ -1,7 +1,7 @@
 ---
 id: TASK-0013
 type: task
-title: Stack, Note, Card, Question structs
+title: "Stack, Note, Card, Question structs"
 status: done
 epic: EPIC-003
 parents: [STORY-0005]

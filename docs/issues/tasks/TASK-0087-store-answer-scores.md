@@ -1,7 +1,7 @@
 ---
 id: TASK-0087
 type: task
-title: Store answer scores with the run
+title: "Store answer scores with the run"
 status: done
 epic: EPIC-019
 parents: [STORY-0035]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0115
 type: story
-title: Low-entropy surface elevation, border de-cluttering, and Gestalt proximity spacing
+title: "Low-entropy surface elevation, border de-cluttering, and Gestalt proximity spacing"
 status: done
 epic: EPIC-036
 parents: [EPIC-036]

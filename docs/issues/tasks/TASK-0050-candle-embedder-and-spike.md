@@ -1,7 +1,7 @@
 ---
 id: TASK-0050
 type: task
-title: Candle embedder and spike
+title: "Candle embedder and spike"
 status: done
 epic: EPIC-012
 parents: [STORY-0023]

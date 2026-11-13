@@ -1,7 +1,7 @@
 ---
 id: TASK-0235
 type: task
-title: Exam rules in the rehearsal engine
+title: "Exam rules in the rehearsal engine"
 status: done
 epic: EPIC-033
 parents: [STORY-0126]

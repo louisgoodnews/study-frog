@@ -1,7 +1,7 @@
 ---
 id: TASK-0148
 type: task
-title: Calendar entries with drag and drop
+title: "Calendar entries with drag and drop"
 status: done
 epic: EPIC-023
 parents: [STORY-0062]

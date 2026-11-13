@@ -1,7 +1,7 @@
 ---
 id: TASK-0193
 type: task
-title: Space between content and scroll bars
+title: "Space between content and scroll bars"
 status: done
 epic: EPIC-025
 parents: [STORY-0072]

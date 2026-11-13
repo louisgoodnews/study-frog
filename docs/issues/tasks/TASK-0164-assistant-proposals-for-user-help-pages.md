@@ -1,7 +1,7 @@
 ---
 id: TASK-0164
 type: task
-title: Assistant proposals for user help pages
+title: "Assistant proposals for user help pages"
 status: done
 epic: EPIC-023
 parents: [STORY-0066]

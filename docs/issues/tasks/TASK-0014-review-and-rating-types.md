@@ -1,7 +1,7 @@
 ---
 id: TASK-0014
 type: task
-title: Review and Rating types
+title: "Review and Rating types"
 status: done
 epic: EPIC-003
 parents: [STORY-0006]

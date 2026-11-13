@@ -1,7 +1,7 @@
 ---
 id: TASK-0170
 type: task
-title: Specify the diary
+title: "Specify the diary"
 status: done
 epic: EPIC-024
 parents: [STORY-0068]

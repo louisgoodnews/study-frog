@@ -1,7 +1,7 @@
 ---
 id: STORY-0141
 type: story
-title: Timetable schedule planner for lectures and lessons
+title: "Timetable schedule planner for lectures and lessons"
 status: done
 epic: EPIC-044
 parents: [EPIC-044]

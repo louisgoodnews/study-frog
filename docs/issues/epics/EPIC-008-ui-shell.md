@@ -1,7 +1,7 @@
 ---
 id: EPIC-008
 type: epic
-title: UI shell
+title: "UI shell"
 status: done
 parents: []
 labels: [m4, ui]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0033
 type: story
-title: Run plans, orders and filters
+title: "Run plans, orders and filters"
 status: done
 epic: EPIC-007
 parents: [EPIC-007]

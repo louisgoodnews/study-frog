@@ -1,7 +1,7 @@
 ---
 id: TASK-0183
 type: task
-title: Research a model that combines familiarity with FSRS
+title: "Research a model that combines familiarity with FSRS"
 status: done
 epic: EPIC-023
 parents: [STORY-0059]

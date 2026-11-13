@@ -1,7 +1,7 @@
 ---
 id: TASK-0051
 type: task
-title: Model management
+title: "Model management"
 status: done
 epic: EPIC-012
 parents: [STORY-0023]

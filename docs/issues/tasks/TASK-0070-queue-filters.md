@@ -1,7 +1,7 @@
 ---
 id: TASK-0070
 type: task
-title: Queue filters
+title: "Queue filters"
 status: done
 epic: EPIC-007
 parents: [STORY-0033]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0146
 type: story
-title: Stylized Breviceps macrops brand mascot icon
+title: "Stylized Breviceps macrops brand mascot icon"
 status: done
 epic: EPIC-047
 parents: [EPIC-047]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0225
 type: task
-title: Accent colour, high contrast and reduced motion
+title: "Accent colour, high contrast and reduced motion"
 status: done
 epic: EPIC-027
 parents: [STORY-0081]

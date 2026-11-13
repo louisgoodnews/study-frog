@@ -1,7 +1,7 @@
 ---
 id: TASK-0237
 type: task
-title: Grade, store and list exam results
+title: "Grade, store and list exam results"
 status: done
 epic: EPIC-033
 parents: [STORY-0127]

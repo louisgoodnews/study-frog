@@ -1,7 +1,7 @@
 ---
 id: EPIC-023
 type: epic
-title: Usability and insight for 0.3.0
+title: "Usability and insight for 0.3.0"
 status: done
 parents: []
 labels: [m10, ui]

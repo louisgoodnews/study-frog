@@ -1,7 +1,7 @@
 ---
 id: TASK-0117
 type: task
-title: Extract text into Markdown notes with a link back to the page
+title: "Extract text into Markdown notes with a link back to the page"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

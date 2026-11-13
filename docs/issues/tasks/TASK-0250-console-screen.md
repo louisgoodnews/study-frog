@@ -1,7 +1,7 @@
 ---
 id: TASK-0250
 type: task
-title: Console screen
+title: "Console screen"
 status: done
 epic: EPIC-028
 parents: [STORY-0133]

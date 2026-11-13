@@ -1,7 +1,7 @@
 ---
 id: TASK-0019
 type: task
-title: SRS criterion benchmark
+title: "SRS criterion benchmark"
 status: done
 epic: EPIC-004
 parents: [STORY-0008]

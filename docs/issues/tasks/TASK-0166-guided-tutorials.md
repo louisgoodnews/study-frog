@@ -1,7 +1,7 @@
 ---
 id: TASK-0166
 type: task
-title: Guided tutorials
+title: "Guided tutorials"
 status: done
 epic: EPIC-023
 parents: [STORY-0066]

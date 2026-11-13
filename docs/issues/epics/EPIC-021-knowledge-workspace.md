@@ -1,7 +1,7 @@
 ---
 id: EPIC-021
 type: epic
-title: Knowledge workspace
+title: "Knowledge workspace"
 status: done
 parents: []
 labels: [m8, ui]

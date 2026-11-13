@@ -1,7 +1,7 @@
 ---
 id: TASK-0236
 type: task
-title: Score exam answers against fixtures
+title: "Score exam answers against fixtures"
 status: done
 epic: EPIC-033
 parents: [STORY-0127]

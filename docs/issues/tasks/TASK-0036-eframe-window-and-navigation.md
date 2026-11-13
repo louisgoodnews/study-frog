@@ -1,7 +1,7 @@
 ---
 id: TASK-0036
 type: task
-title: eframe window and navigation
+title: "eframe window and navigation"
 status: done
 epic: EPIC-008
 parents: [STORY-0016]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0127
 type: story
-title: Exam scoring, grading and result history
+title: "Exam scoring, grading and result history"
 status: done
 epic: EPIC-033
 parents: [EPIC-033]

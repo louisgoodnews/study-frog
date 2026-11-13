@@ -1,7 +1,7 @@
 ---
 id: EPIC-007
 type: epic
-title: Rehearsal engine
+title: "Rehearsal engine"
 status: done
 parents: []
 labels: [m3, rehearsal]

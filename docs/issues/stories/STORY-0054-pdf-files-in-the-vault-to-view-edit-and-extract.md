@@ -1,7 +1,7 @@
 ---
 id: STORY-0054
 type: story
-title: PDF files in the vault to view, edit and extract
+title: "PDF files in the vault to view, edit and extract"
 status: done
 epic: EPIC-022
 parents: [EPIC-022]

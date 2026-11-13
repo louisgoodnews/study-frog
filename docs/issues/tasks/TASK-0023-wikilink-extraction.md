@@ -1,7 +1,7 @@
 ---
 id: TASK-0023
 type: task
-title: Wikilink extraction
+title: "Wikilink extraction"
 status: done
 epic: EPIC-005
 parents: [STORY-0010]

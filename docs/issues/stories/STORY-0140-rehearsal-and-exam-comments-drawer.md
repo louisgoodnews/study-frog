@@ -1,7 +1,7 @@
 ---
 id: STORY-0140
 type: story
-title: Expandable comments drawer in rehearsal and exam modes
+title: "Expandable comments drawer in rehearsal and exam modes"
 status: done
 epic: EPIC-043
 parents: [EPIC-043]

@@ -1,7 +1,7 @@
 ---
 id: EPIC-020
 type: epic
-title: UI rework
+title: "UI rework"
 status: done
 parents: []
 labels: [m8, ui]

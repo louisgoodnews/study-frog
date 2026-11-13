@@ -1,7 +1,7 @@
 ---
 id: TASK-0231
 type: task
-title: Export to PDF in the application
+title: "Export to PDF in the application"
 status: done
 epic: EPIC-026
 parents: [STORY-0082]

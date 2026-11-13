@@ -1,7 +1,7 @@
 ---
 id: TASK-0162
 type: task
-title: Help viewer with navigation and search
+title: "Help viewer with navigation and search"
 status: done
 epic: EPIC-023
 parents: [STORY-0066]

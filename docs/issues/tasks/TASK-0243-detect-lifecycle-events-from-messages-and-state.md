@@ -1,7 +1,7 @@
 ---
 id: TASK-0243
 type: task
-title: Detect lifecycle events from messages and state
+title: "Detect lifecycle events from messages and state"
 status: done
 epic: EPIC-028
 parents: [STORY-0130]

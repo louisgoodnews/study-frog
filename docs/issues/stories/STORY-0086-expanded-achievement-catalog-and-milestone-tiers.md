@@ -1,7 +1,7 @@
 ---
 id: STORY-0086
 type: story
-title: Expanded achievement catalog and milestone tiers
+title: "Expanded achievement catalog and milestone tiers"
 status: done
 epic: EPIC-029
 parents: [EPIC-029]

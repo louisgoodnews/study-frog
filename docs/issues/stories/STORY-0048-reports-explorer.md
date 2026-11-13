@@ -1,7 +1,7 @@
 ---
 id: STORY-0048
 type: story
-title: Reports explorer
+title: "Reports explorer"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

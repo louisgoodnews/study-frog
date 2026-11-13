@@ -1,7 +1,7 @@
 ---
 id: TASK-0099
 type: task
-title: Stack tree in the library and in run setup
+title: "Stack tree in the library and in run setup"
 status: done
 epic: EPIC-020
 parents: [STORY-0037]

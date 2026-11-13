@@ -1,7 +1,7 @@
 ---
 id: BUG-0006
 type: bug
-title: The roadmap is too small
+title: "The roadmap is too small"
 status: done
 epic: EPIC-024
 parents: [STORY-0073]

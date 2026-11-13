@@ -1,7 +1,7 @@
 ---
 id: TASK-0145
 type: task
-title: Change and show statuses in the UI
+title: "Change and show statuses in the UI"
 status: done
 epic: EPIC-023
 parents: [STORY-0061]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0186
 type: task
-title: Create dialog laid out like Jira's
+title: "Create dialog laid out like Jira's"
 status: done
 epic: EPIC-023
 parents: [STORY-0071]

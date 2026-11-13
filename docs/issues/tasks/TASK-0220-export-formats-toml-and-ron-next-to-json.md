@@ -1,7 +1,7 @@
 ---
 id: TASK-0220
 type: task
-title: Export formats TOML and RON next to JSON
+title: "Export formats TOML and RON next to JSON"
 status: done
 epic: EPIC-026
 parents: [STORY-0079]

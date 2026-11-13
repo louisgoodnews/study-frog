@@ -1,7 +1,7 @@
 ---
 id: STORY-0098
 type: story
-title: Reporting export as CSV
+title: "Reporting export as CSV"
 status: done
 epic: EPIC-032
 parents: [EPIC-032]

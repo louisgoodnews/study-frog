@@ -1,7 +1,7 @@
 ---
 id: TASK-0188
 type: task
-title: Ask before discarding a filled Create dialog
+title: "Ask before discarding a filled Create dialog"
 status: done
 epic: EPIC-025
 parents: [STORY-0072]

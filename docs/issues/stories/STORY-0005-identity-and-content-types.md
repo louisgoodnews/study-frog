@@ -1,7 +1,7 @@
 ---
 id: STORY-0005
 type: story
-title: Identity and content types
+title: "Identity and content types"
 status: done
 epic: EPIC-003
 parents: [EPIC-003]

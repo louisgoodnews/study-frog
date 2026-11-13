@@ -1,7 +1,7 @@
 ---
 id: TASK-0248
 type: task
-title: Child processes with timeout, logging and scoped sockets
+title: "Child processes with timeout, logging and scoped sockets"
 status: done
 epic: EPIC-028
 parents: [STORY-0132]

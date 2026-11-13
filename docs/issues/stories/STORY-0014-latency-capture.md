@@ -1,7 +1,7 @@
 ---
 id: STORY-0014
 type: story
-title: Latency capture
+title: "Latency capture"
 status: done
 epic: EPIC-007
 parents: [EPIC-007]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0043
 type: task
-title: Graph render benchmark
+title: "Graph render benchmark"
 status: done
 epic: EPIC-009
 parents: [STORY-0019]

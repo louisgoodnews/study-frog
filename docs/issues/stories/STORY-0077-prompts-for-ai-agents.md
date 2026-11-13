@@ -1,7 +1,7 @@
 ---
 id: STORY-0077
 type: story
-title: Prompts for AI agents
+title: "Prompts for AI agents"
 status: done
 epic: EPIC-026
 parents: [EPIC-026]

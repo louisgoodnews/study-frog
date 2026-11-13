@@ -1,7 +1,7 @@
 ---
 id: TASK-0052
 type: task
-title: Score functions
+title: "Score functions"
 status: done
 epic: EPIC-013
 parents: [STORY-0024]

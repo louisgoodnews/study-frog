@@ -1,7 +1,7 @@
 ---
 id: EPIC-047
 type: epic
-title: Brand mascot icon and consolidated navigation UX
+title: "Brand mascot icon and consolidated navigation UX"
 status: done
 parents: []
 labels: [m12, ui, ux]

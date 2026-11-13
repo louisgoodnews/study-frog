@@ -1,7 +1,7 @@
 ---
 id: TASK-0171
 type: task
-title: Diary entries in the data model, Markdown and index
+title: "Diary entries in the data model, Markdown and index"
 status: done
 epic: EPIC-024
 parents: [STORY-0068]

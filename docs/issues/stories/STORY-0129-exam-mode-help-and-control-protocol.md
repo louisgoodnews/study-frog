@@ -1,7 +1,7 @@
 ---
 id: STORY-0129
 type: story
-title: Exam mode help and control protocol
+title: "Exam mode help and control protocol"
 status: done
 epic: EPIC-033
 parents: [EPIC-033]

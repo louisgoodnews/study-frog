@@ -1,7 +1,7 @@
 ---
 id: TASK-0134
 type: task
-title: Move card creation and import out of the page
+title: "Move card creation and import out of the page"
 status: done
 epic: EPIC-023
 parents: [STORY-0057]

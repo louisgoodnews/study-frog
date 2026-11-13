@@ -1,7 +1,7 @@
 ---
 id: TASK-0246
 type: task
-title: Python tests against the real binary
+title: "Python tests against the real binary"
 status: done
 epic: EPIC-028
 parents: [STORY-0131]

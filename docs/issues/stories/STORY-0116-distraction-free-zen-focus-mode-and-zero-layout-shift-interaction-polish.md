@@ -1,7 +1,7 @@
 ---
 id: STORY-0116
 type: story
-title: Distraction-free Zen focus mode and zero-layout-shift interaction polish
+title: "Distraction-free Zen focus mode and zero-layout-shift interaction polish"
 status: done
 epic: EPIC-036
 parents: [EPIC-036]

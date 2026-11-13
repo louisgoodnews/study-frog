@@ -1,7 +1,7 @@
 ---
 id: EPIC-044
 type: epic
-title: Timetable schedule planner and daily/weekly calendar views
+title: "Timetable schedule planner and daily/weekly calendar views"
 status: done
 parents: []
 labels: [m12, calendar, ui]

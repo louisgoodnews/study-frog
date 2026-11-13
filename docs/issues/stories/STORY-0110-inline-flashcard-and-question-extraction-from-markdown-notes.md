@@ -1,7 +1,7 @@
 ---
 id: STORY-0110
 type: story
-title: Inline flashcard and question extraction from Markdown notes
+title: "Inline flashcard and question extraction from Markdown notes"
 status: done
 epic: EPIC-035
 parents: [EPIC-035]

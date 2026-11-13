@@ -1,7 +1,7 @@
 ---
 id: TASK-0219
 type: task
-title: Familiarity and difficulty per stack, averaged on the item
+title: "Familiarity and difficulty per stack, averaged on the item"
 status: done
 epic: EPIC-026
 parents: [STORY-0079]

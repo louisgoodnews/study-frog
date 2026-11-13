@@ -1,7 +1,7 @@
 ---
 id: TASK-0017
 type: task
-title: FSRS property and golden tests
+title: "FSRS property and golden tests"
 status: done
 epic: EPIC-004
 parents: [STORY-0007]

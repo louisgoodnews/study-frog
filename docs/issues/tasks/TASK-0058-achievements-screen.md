@@ -1,7 +1,7 @@
 ---
 id: TASK-0058
 type: task
-title: Achievements screen and announcements
+title: "Achievements screen and announcements"
 status: done
 epic: EPIC-014
 parents: [STORY-0027]

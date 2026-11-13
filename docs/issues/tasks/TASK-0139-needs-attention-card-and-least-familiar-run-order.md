@@ -1,7 +1,7 @@
 ---
 id: TASK-0139
 type: task
-title: Needs-attention card and least-familiar run order
+title: "Needs-attention card and least-familiar run order"
 status: done
 epic: EPIC-023
 parents: [STORY-0059]

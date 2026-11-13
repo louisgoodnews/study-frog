@@ -1,7 +1,7 @@
 ---
 id: TASK-0204
 type: task
-title: Folders view and Items view in the application
+title: "Folders view and Items view in the application"
 status: done
 epic: EPIC-026
 parents: [STORY-0076]

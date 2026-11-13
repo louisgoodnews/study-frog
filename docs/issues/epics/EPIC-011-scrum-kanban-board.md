@@ -1,7 +1,7 @@
 ---
 id: EPIC-011
 type: epic
-title: Scrum/kanban board
+title: "Scrum/kanban board"
 status: done
 parents: []
 labels: [m5, board]

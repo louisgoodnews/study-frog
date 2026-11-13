@@ -1,7 +1,7 @@
 ---
 id: STORY-0022
 type: story
-title: Board UI
+title: "Board UI"
 status: done
 epic: EPIC-011
 parents: [EPIC-011]

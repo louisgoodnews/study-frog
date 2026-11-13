@@ -1,7 +1,7 @@
 ---
 id: TASK-0037
 type: task
-title: Elm-style update loop and effects
+title: "Elm-style update loop and effects"
 status: done
 epic: EPIC-008
 parents: [STORY-0016]

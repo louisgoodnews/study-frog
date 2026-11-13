@@ -1,7 +1,7 @@
 ---
 id: STORY-0094
 type: story
-title: Create menu due date and priority assignment for stacks and other creatable items
+title: "Create menu due date and priority assignment for stacks and other creatable items"
 status: done
 epic: EPIC-031
 parents: [EPIC-031]

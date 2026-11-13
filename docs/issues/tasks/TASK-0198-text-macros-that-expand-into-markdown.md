@@ -1,7 +1,7 @@
 ---
 id: TASK-0198
 type: task
-title: Text macros that expand into Markdown
+title: "Text macros that expand into Markdown"
 status: done
 epic: EPIC-026
 parents: [STORY-0074]

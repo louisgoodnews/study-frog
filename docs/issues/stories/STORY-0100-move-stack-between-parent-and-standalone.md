@@ -1,7 +1,7 @@
 ---
 id: STORY-0100
 type: story
-title: Move stack between parent stack and standalone after creation
+title: "Move stack between parent stack and standalone after creation"
 status: done
 epic: EPIC-031
 parents: [EPIC-031]

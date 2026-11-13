@@ -1,7 +1,7 @@
 ---
 id: TASK-0227
 type: task
-title: Start-up and window settings
+title: "Start-up and window settings"
 status: done
 epic: EPIC-027
 parents: [STORY-0081]

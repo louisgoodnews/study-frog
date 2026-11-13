@@ -1,7 +1,7 @@
 ---
 id: STORY-0151
 type: story
-title: Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers
+title: "Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers"
 status: backlog
 epic: EPIC-049
 parents: [EPIC-049]

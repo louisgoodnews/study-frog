@@ -1,7 +1,7 @@
 ---
 id: TASK-0015
 type: task
-title: Run and event types
+title: "Run and event types"
 status: done
 epic: EPIC-003
 parents: [STORY-0006]

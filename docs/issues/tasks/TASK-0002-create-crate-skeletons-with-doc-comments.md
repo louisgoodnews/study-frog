@@ -1,7 +1,7 @@
 ---
 id: TASK-0002
 type: task
-title: Create crate skeletons with doc comments
+title: "Create crate skeletons with doc comments"
 status: done
 epic: EPIC-001
 parents: [STORY-0001]

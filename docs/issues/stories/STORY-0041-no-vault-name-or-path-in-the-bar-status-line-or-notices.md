@@ -1,7 +1,7 @@
 ---
 id: STORY-0041
 type: story
-title: No vault name or path in the bar, status line or notices
+title: "No vault name or path in the bar, status line or notices"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

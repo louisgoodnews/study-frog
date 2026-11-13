@@ -1,7 +1,7 @@
 ---
 id: TASK-0066
 type: task
-title: Profiling pass
+title: "Profiling pass"
 status: done
 epic: EPIC-017
 parents: [STORY-0032]

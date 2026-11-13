@@ -1,7 +1,7 @@
 ---
 id: STORY-0045
 type: story
-title: Subjects and teachers
+title: "Subjects and teachers"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

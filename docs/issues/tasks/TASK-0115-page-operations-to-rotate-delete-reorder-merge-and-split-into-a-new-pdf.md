@@ -1,7 +1,7 @@
 ---
 id: TASK-0115
 type: task
-title: Page operations to rotate, delete, reorder, merge and split into a new PDF
+title: "Page operations to rotate, delete, reorder, merge and split into a new PDF"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

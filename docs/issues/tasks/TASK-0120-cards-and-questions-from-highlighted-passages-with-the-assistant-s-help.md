@@ -1,7 +1,7 @@
 ---
 id: TASK-0120
 type: task
-title: Cards and questions from highlighted passages, with the assistant's help
+title: "Cards and questions from highlighted passages, with the assistant's help"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

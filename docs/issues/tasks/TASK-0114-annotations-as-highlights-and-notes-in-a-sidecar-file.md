@@ -1,7 +1,7 @@
 ---
 id: TASK-0114
 type: task
-title: Annotations as highlights and notes in a sidecar file
+title: "Annotations as highlights and notes in a sidecar file"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

@@ -1,7 +1,7 @@
 ---
 id: EPIC-043
 type: epic
-title: Navigation, profile, and file management UX overhaul
+title: "Navigation, profile, and file management UX overhaul"
 status: done
 parents: []
 labels: [m12, ui, ux]

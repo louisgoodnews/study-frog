@@ -1,7 +1,7 @@
 ---
 id: TASK-0191
 type: task
-title: Suggest importing found Anki and Obsidian files
+title: "Suggest importing found Anki and Obsidian files"
 status: done
 epic: EPIC-025
 parents: [STORY-0072]

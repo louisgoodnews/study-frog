@@ -1,7 +1,7 @@
 ---
 id: STORY-0093
 type: story
-title: Details view notebook overhaul with tabs and stack due date editing
+title: "Details view notebook overhaul with tabs and stack due date editing"
 status: done
 epic: EPIC-031
 parents: [EPIC-031]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0210
 type: task
-title: Decide the stack folder and reference rules (ADR and spec)
+title: "Decide the stack folder and reference rules (ADR and spec)"
 status: done
 epic: EPIC-026
 parents: [STORY-0079]

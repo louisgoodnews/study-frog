@@ -1,7 +1,7 @@
 ---
 id: EPIC-026
 type: epic
-title: Writing, saving, organizing and prompts for 0.4.0
+title: "Writing, saving, organizing and prompts for 0.4.0"
 status: done
 epic: EPIC-026
 parents: []

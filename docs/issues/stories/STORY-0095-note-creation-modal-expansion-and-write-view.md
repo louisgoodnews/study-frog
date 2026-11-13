@@ -1,7 +1,7 @@
 ---
 id: STORY-0095
 type: story
-title: Note creation modal full-window expansion and default write view
+title: "Note creation modal full-window expansion and default write view"
 status: done
 epic: EPIC-031
 parents: [EPIC-031]

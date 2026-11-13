@@ -1,7 +1,7 @@
 ---
 id: TASK-0197
 type: task
-title: Tables and more Markdown in the editor and the preview
+title: "Tables and more Markdown in the editor and the preview"
 status: done
 epic: EPIC-026
 parents: [STORY-0074]

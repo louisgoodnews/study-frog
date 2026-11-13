@@ -1,7 +1,7 @@
 ---
 id: STORY-0047
 type: story
-title: Board for every item, drag and drop, export
+title: "Board for every item, drag and drop, export"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

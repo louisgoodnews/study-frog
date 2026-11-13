@@ -1,7 +1,7 @@
 ---
 id: TASK-0085
 type: task
-title: Slow reads suggest difficulty
+title: "Slow reads suggest difficulty"
 status: done
 epic: EPIC-019
 parents: [STORY-0035]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0070
 type: story
-title: Rehearsal modes for countdown and count up
+title: "Rehearsal modes for countdown and count up"
 status: done
 epic: EPIC-023
 parents: [EPIC-023]

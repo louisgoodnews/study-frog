@@ -1,7 +1,7 @@
 ---
 id: STORY-0043
 type: story
-title: Visual Markdown editor and note links
+title: "Visual Markdown editor and note links"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

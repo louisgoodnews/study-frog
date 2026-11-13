@@ -1,7 +1,7 @@
 ---
 id: TASK-0035
 type: task
-title: Rehearsal benchmark
+title: "Rehearsal benchmark"
 status: done
 epic: EPIC-007
 parents: [STORY-0015]

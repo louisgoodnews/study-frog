@@ -1,7 +1,7 @@
 ---
 id: TASK-0129
 type: task
-title: Specify the library redesign and the query syntax
+title: "Specify the library redesign and the query syntax"
 status: done
 epic: EPIC-023
 parents: [STORY-0057]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0116
 type: task
-title: Export an annotated copy and edit document properties
+title: "Export an annotated copy and edit document properties"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

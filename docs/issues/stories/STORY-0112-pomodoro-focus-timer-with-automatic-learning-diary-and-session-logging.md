@@ -1,7 +1,7 @@
 ---
 id: STORY-0112
 type: story
-title: Pomodoro focus timer with automatic learning diary and session logging
+title: "Pomodoro focus timer with automatic learning diary and session logging"
 status: done
 epic: EPIC-035
 parents: [EPIC-035]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0124
 type: story
-title: Interactive CLI control protocol and console log streaming for AI agents
+title: "Interactive CLI control protocol and console log streaming for AI agents"
 status: review
 epic: EPIC-038
 parents: [EPIC-038]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0059
 type: task
-title: Retention curves
+title: "Retention curves"
 status: done
 epic: EPIC-015
 parents: [STORY-0028]

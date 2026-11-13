@@ -1,7 +1,7 @@
 ---
 id: STORY-0019
 type: story
-title: Link graph view
+title: "Link graph view"
 status: done
 epic: EPIC-009
 parents: [EPIC-009]

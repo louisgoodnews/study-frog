@@ -1,7 +1,7 @@
 ---
 id: TASK-0020
 type: task
-title: Schema structs and validation
+title: "Schema structs and validation"
 status: done
 epic: EPIC-005
 parents: [STORY-0009]

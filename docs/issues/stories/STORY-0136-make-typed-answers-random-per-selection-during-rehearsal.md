@@ -1,7 +1,7 @@
 ---
 id: STORY-0136
 type: story
-title: Make typed answers random per selection during rehearsal
+title: "Make typed answers random per selection during rehearsal"
 status: done
 epic: EPIC-040
 parents: [EPIC-040]

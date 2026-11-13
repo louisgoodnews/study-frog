@@ -1,7 +1,7 @@
 ---
 id: STORY-0046
 type: story
-title: Date picker
+title: "Date picker"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

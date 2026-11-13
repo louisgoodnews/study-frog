@@ -1,7 +1,7 @@
 ---
 id: TASK-0207
 type: task
-title: Run a prompt with the connected assistant and an attached file
+title: "Run a prompt with the connected assistant and an attached file"
 status: done
 epic: EPIC-026
 parents: [STORY-0077]

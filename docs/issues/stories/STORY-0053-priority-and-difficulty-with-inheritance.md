@@ -1,7 +1,7 @@
 ---
 id: STORY-0053
 type: story
-title: Priority and difficulty with inheritance
+title: "Priority and difficulty with inheritance"
 status: done
 epic: EPIC-021
 parents: [EPIC-021]

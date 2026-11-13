@@ -1,7 +1,7 @@
 ---
 id: EPIC-019
 type: epic
-title: Rehearsal insights
+title: "Rehearsal insights"
 status: done
 parents: []
 labels: [m6, rehearsal]

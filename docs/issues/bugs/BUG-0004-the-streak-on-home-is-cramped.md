@@ -1,7 +1,7 @@
 ---
 id: BUG-0004
 type: bug
-title: The streak on Home is cramped
+title: "The streak on Home is cramped"
 status: done
 epic: EPIC-025
 parents: []

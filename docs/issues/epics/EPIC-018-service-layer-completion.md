@@ -1,7 +1,7 @@
 ---
 id: EPIC-018
 type: epic
-title: Service layer completion
+title: "Service layer completion"
 status: done
 parents: []
 labels: [m3, service, store]

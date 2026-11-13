@@ -1,7 +1,7 @@
 ---
 id: STORY-0076
 type: story
-title: Organize the vault as folders and files
+title: "Organize the vault as folders and files"
 status: done
 epic: EPIC-026
 parents: [EPIC-026]

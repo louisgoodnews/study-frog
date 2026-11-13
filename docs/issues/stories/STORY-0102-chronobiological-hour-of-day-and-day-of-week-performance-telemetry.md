@@ -1,7 +1,7 @@
 ---
 id: STORY-0102
 type: story
-title: Chronobiological hour-of-day and day-of-week performance telemetry
+title: "Chronobiological hour-of-day and day-of-week performance telemetry"
 status: done
 epic: EPIC-034
 parents: [EPIC-034]

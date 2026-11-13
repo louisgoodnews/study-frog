@@ -1,7 +1,7 @@
 ---
 id: STORY-0036
 type: story
-title: Top bar and sidebar
+title: "Top bar and sidebar"
 status: done
 epic: EPIC-020
 parents: [EPIC-020]

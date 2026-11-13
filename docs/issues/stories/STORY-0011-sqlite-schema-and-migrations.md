@@ -1,7 +1,7 @@
 ---
 id: STORY-0011
 type: story
-title: SQLite schema and migrations
+title: "SQLite schema and migrations"
 status: done
 epic: EPIC-006
 parents: [EPIC-006]

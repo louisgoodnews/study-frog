@@ -1,7 +1,7 @@
 ---
 id: STORY-0152
 type: story
-title: Dedicated internal stdout and stderr execution logging for user scripts
+title: "Dedicated internal stdout and stderr execution logging for user scripts"
 status: backlog
 epic: EPIC-049
 parents: [EPIC-049]

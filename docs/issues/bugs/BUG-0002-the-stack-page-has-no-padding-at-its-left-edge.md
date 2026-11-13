@@ -1,7 +1,7 @@
 ---
 id: BUG-0002
 type: bug
-title: The stack page has no padding at its left edge
+title: "The stack page has no padding at its left edge"
 status: done
 epic: EPIC-025
 parents: []

@@ -1,7 +1,7 @@
 ---
 id: TASK-0146
 type: task
-title: Plan the next reviews as calendar entries
+title: "Plan the next reviews as calendar entries"
 status: done
 epic: EPIC-023
 parents: [STORY-0062]

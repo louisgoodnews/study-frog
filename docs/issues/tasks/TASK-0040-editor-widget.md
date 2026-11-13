@@ -1,7 +1,7 @@
 ---
 id: TASK-0040
 type: task
-title: Editor widget
+title: "Editor widget"
 status: done
 epic: EPIC-009
 parents: [STORY-0018]

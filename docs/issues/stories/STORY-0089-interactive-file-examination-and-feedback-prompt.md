@@ -1,7 +1,7 @@
 ---
 id: STORY-0089
 type: story
-title: Interactive file examination and feedback prompt
+title: "Interactive file examination and feedback prompt"
 status: done
 epic: EPIC-030
 parents: [EPIC-030]

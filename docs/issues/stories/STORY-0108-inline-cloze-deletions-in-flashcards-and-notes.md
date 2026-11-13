@@ -1,7 +1,7 @@
 ---
 id: STORY-0108
 type: story
-title: Inline cloze deletions in flashcards and notes
+title: "Inline cloze deletions in flashcards and notes"
 status: done
 epic: EPIC-035
 parents: [EPIC-035]

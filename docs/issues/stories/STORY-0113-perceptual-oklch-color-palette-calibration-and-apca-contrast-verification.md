@@ -1,7 +1,7 @@
 ---
 id: STORY-0113
 type: story
-title: Perceptual OKLCH color palette calibration and WCAG 3 APCA contrast verification
+title: "Perceptual OKLCH color palette calibration and WCAG 3 APCA contrast verification"
 status: done
 epic: EPIC-036
 parents: [EPIC-036]

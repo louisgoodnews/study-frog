@@ -1,7 +1,7 @@
 ---
 id: TASK-0078
 type: task
-title: Local time zone and local-day windows
+title: "Local time zone and local-day windows"
 status: done
 epic: EPIC-010
 parents: [STORY-0020]

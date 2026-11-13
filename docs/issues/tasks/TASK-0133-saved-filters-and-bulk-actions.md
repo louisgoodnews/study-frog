@@ -1,7 +1,7 @@
 ---
 id: TASK-0133
 type: task
-title: Saved filters and bulk actions
+title: "Saved filters and bulk actions"
 status: done
 epic: EPIC-023
 parents: [STORY-0057]

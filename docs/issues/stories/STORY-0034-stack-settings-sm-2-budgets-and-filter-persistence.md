@@ -1,7 +1,7 @@
 ---
 id: STORY-0034
 type: story
-title: Stack settings, SM-2, budgets and filter persistence
+title: "Stack settings, SM-2, budgets and filter persistence"
 status: done
 epic: EPIC-018
 parents: [EPIC-018]

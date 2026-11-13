@@ -1,7 +1,7 @@
 ---
 id: TASK-0212
 type: task
-title: Services follow the membership
+title: "Services follow the membership"
 status: done
 epic: EPIC-026
 parents: [STORY-0079]

@@ -1,7 +1,7 @@
 ---
 id: STORY-0087
 type: story
-title: Per-stack achievement UI and filtering
+title: "Per-stack achievement UI and filtering"
 status: done
 epic: EPIC-029
 parents: [EPIC-029]

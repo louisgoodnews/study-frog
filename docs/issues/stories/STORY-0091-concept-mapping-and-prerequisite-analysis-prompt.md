@@ -1,7 +1,7 @@
 ---
 id: STORY-0091
 type: story
-title: Concept mapping and prerequisite analysis prompt
+title: "Concept mapping and prerequisite analysis prompt"
 status: done
 epic: EPIC-030
 parents: [EPIC-030]

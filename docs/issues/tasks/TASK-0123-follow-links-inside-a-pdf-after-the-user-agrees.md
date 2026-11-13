@@ -1,7 +1,7 @@
 ---
 id: TASK-0123
 type: task
-title: Follow links inside a PDF after the user agrees
+title: "Follow links inside a PDF after the user agrees"
 status: done
 epic: EPIC-022
 parents: [STORY-0054]

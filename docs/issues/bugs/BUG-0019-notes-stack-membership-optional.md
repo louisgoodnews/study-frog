@@ -1,7 +1,7 @@
 ---
 id: BUG-0019
 type: bug
-title: Notes being in stacks should be optional not required
+title: "Notes being in stacks should be optional not required"
 status: done
 estimate: 3
 labels: [m12, core, service, ui]

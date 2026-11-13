@@ -1,7 +1,7 @@
 ---
 id: TASK-0091
 type: task
-title: Shuffling is a switch of its own
+title: "Shuffling is a switch of its own"
 status: done
 epic: EPIC-019
 parents: [STORY-0035]

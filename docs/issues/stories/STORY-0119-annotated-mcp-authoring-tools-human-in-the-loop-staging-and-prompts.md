@@ -1,7 +1,7 @@
 ---
 id: STORY-0119
 type: story
-title: Annotated MCP authoring tools, human-in-the-loop staging, and parameterized MCP prompts
+title: "Annotated MCP authoring tools, human-in-the-loop staging, and parameterized MCP prompts"
 status: done
 epic: EPIC-037
 parents: [EPIC-037]

@@ -1,7 +1,7 @@
 ---
 id: TASK-0140
 type: task
-title: Familiarity in queue selection and the calendar planner
+title: "Familiarity in queue selection and the calendar planner"
 status: done
 epic: EPIC-023
 parents: [STORY-0059]

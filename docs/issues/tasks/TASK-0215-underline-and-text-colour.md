@@ -1,7 +1,7 @@
 ---
 id: TASK-0215
 type: task
-title: Underline and text colour
+title: "Underline and text colour"
 status: done
 epic: EPIC-026
 parents: [STORY-0074]

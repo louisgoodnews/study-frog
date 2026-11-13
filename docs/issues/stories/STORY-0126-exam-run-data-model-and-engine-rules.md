@@ -1,7 +1,7 @@
 ---
 id: STORY-0126
 type: story
-title: Exam run data model and strict engine rules
+title: "Exam run data model and strict engine rules"
 status: done
 epic: EPIC-033
 parents: [EPIC-033]
