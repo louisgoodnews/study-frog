@@ -84,6 +84,9 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         key_badge(e, ui);
         ui.label(RichText::new(&e.path).color(palette_of(ui).text_weak));
         status(e, dirty, ui);
+        if let Some(source) = studyfrog_md::extra::extra_value(&e.doc, "source") {
+            crate::view::pdf_split::jump_button(&source, ui, out);
+        }
         crate::view::extract_panel::button(e, ui, out);
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
             ui.menu_button("More actions", |ui| {

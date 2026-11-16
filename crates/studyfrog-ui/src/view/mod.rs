@@ -22,6 +22,10 @@ mod calendar_grid;
 mod calendar_reviews;
 mod calendar_timetable;
 mod calendar_week;
+pub mod canvas;
+pub mod canvas_edge;
+pub mod canvas_paint;
+pub mod canvas_preview;
 mod console;
 pub mod contrast;
 pub(crate) mod date_picker;
@@ -53,6 +57,7 @@ pub mod library_keys;
 mod library_pdfs;
 pub mod library_search;
 pub mod library_table;
+pub mod match_grid;
 mod md_editor;
 mod menus;
 mod modal;
@@ -79,10 +84,12 @@ pub mod occlusion_paint;
 mod pdf;
 mod pdf_arrange;
 mod pdf_extract;
+pub mod pdf_highlight;
 mod pdf_notes;
 mod pdf_page;
 mod pdf_paint;
 mod pdf_side;
+pub mod pdf_split;
 mod pdf_texture;
 mod popup;
 mod preview;
@@ -164,10 +171,22 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
             Screen::Home => home::draw(state, ui, &mut out),
             Screen::Folders => folders::draw(state, ui, &mut out),
             Screen::Library => library::draw(state, ui, &mut out),
-            Screen::Rehearse if state.rehearse.run.is_some() => run::draw(state, ui, &mut out),
+            Screen::Rehearse if state.rehearse.run.is_some() => {
+                if state.split_pdf.active {
+                    pdf_split::draw_split_rehearse(state, ui, &mut out);
+                } else {
+                    run::draw(state, ui, &mut out);
+                }
+            }
             Screen::Rehearse => setup::draw(state, ui, &mut out),
             Screen::Settings => settings::draw(state, ui, &mut out),
-            Screen::Editor => editor::draw(state, ui, &mut out),
+            Screen::Editor => {
+                if state.split_pdf.active {
+                    pdf_split::draw_split_editor(state, ui, &mut out);
+                } else {
+                    editor::draw(state, ui, &mut out);
+                }
+            }
             Screen::Graph => graph::draw(state, ui, &mut out),
             Screen::Calendar => calendar::draw(state, ui, &mut out),
             Screen::Board => board::draw(state, ui, &mut out),
@@ -179,6 +198,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
             Screen::Pdf => pdf::draw(state, ui, &mut out),
             Screen::Help => help::draw(state, ui, &mut out),
             Screen::Console => console::draw(state, ui, &mut out),
+            Screen::Canvas => canvas::draw(state, ui, &mut out),
+            Screen::Match => match_grid::draw(state, ui, &mut out),
         });
     if ui.input(|i| i.key_pressed(egui::Key::F1)) {
         out.push(Msg::Help(crate::help_types::HelpMsg::ForScreen));

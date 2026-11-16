@@ -69,6 +69,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 edit(out, SetupEdit::Mode(mode));
             }
         }
+        if ui.button("Match Mode Drill").clicked() {
+            out.push(Msg::Match(crate::match_ui::MatchMsg::StartFromVault));
+        }
     });
     if form.mode == RunMode::Exam {
         ui.weak(EXAM_RULES);

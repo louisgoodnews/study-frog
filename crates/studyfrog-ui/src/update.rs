@@ -133,6 +133,8 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Appearance(m) => crate::appearance_ui::update(state, m),
         Msg::SetTrackViews(on) => crate::app_settings_ui::set_track_views(state, on),
         Msg::RehearsalEdit(m) => crate::rehearsal_edit::update(state, m),
+        Msg::Canvas(m) => crate::canvas_ui::update(state, m),
+        Msg::Match(m) => crate::match_ui::update(state, m),
         run @ (Msg::StartRunClicked
         | Msg::RunReady(_)
         | Msg::RunAction(_)

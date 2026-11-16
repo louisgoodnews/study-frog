@@ -2,7 +2,7 @@
 id: TASK-0260
 type: task
 title: "Synchronized PDF page scrolling and coordinate highlight overlay"
-status: backlog
+status: done
 epic: EPIC-051
 parents: ['STORY-0156']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0156.
 See STORY-0156 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Implement split-pane PDF viewer positioning to target page and flashing rectangular highlight overlay on coordinates
+- [x] Implement split-pane PDF viewer positioning to target page and flashing rectangular highlight overlay on coordinates
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

@@ -106,3 +106,22 @@ pub fn click_link(
     }
     true
 }
+
+/// Paint a pulsing coordinate highlight overlay over a crop region.
+pub fn paint_crop_highlight(
+    ui: &egui::Ui,
+    anchor: &studyfrog_pdf::crop::PdfCropAnchor,
+    page_bounds: (f32, f32),
+    page_rect: Rect,
+    logical: f32,
+    (flash_start, now): (f64, f64),
+) {
+    super::pdf_highlight::paint_crop_highlight(
+        ui,
+        anchor,
+        page_bounds,
+        page_rect,
+        logical,
+        (flash_start, now),
+    );
+}

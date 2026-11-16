@@ -228,20 +228,9 @@ fn mark_row(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 }
 
-/// A small link to the PDF page an item was made from.
+/// A contextual PDF jump button or source link.
 fn source_link(content: &ItemContent, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let Some(source) = &content.source else {
-        return;
-    };
-    let (path, page) = studyfrog_store::pdf_notes::split_source(source);
-    if !path.to_lowercase().ends_with(".pdf") {
-        return;
-    }
-    let label = page.map_or("Source".to_owned(), |p| format!("Source, page {}", p + 1));
-    if ui.small_button(label).clicked() {
-        out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Open(
-            path.to_owned(),
-            page.unwrap_or(0),
-        )));
+    if let Some(source) = &content.source {
+        crate::view::pdf_split::source_link(source, ui, out);
     }
 }

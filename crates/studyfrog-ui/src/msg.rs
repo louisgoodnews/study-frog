@@ -1,10 +1,11 @@
 //! Everything that can happen: user input and results of effects.
 
-use studyfrog_core::settings::{AnswerEngine, AppSettings};
-
-use studyfrog_core::review::Rating;
-use studyfrog_core::run::Run;
-use studyfrog_core::uid::Uid;
+use studyfrog_core::{
+    review::Rating,
+    run::Run,
+    settings::{AnswerEngine, AppSettings},
+    uid::Uid,
+};
 use studyfrog_rehearsal::input::Action;
 use studyfrog_service::achievements::AchievementReport;
 use studyfrog_service::document::{LoadedDoc, Saved};
@@ -232,17 +233,11 @@ pub enum Msg {
     Folders(crate::folders_types::FoldersMsg),
     /// The active-recall workflows (EPIC-035).
     Recall(crate::recall_types::RecallMsg),
+    /// FrogCanvas 2D spatial board messages.
+    Canvas(crate::canvas_types::CanvasMsg),
+    /// Match Mode tile pairing recall drill (EPIC-053).
+    Match(crate::match_ui::MatchMsg),
 }
 
 pub use crate::edit_form::EditAction;
-
-/// Which field of the new-card form.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum DraftField {
-    /// The optional title.
-    Title,
-    /// The front.
-    Front,
-    /// The back.
-    Back,
-}
+pub use crate::state::DraftField;

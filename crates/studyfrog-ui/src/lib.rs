@@ -1,7 +1,5 @@
-//! GUI layer. Thin: renders state and dispatches to the domain crates; contains no business logic.
-//!
-//! Structure (ADR 0002): `state`, `msg`, `effect` and `update` are the pure core and know nothing
-//! about egui; `exec` performs effects; `view` and `model` draw; `runtime` and `app` are the glue.
+//! GUI layer. Thin: renders state and dispatches to domain crates.
+//! Pure core (`state`, `msg`, `effect`, `update`) knows nothing of egui.
 
 pub mod achievements;
 pub mod agent_chat;
@@ -22,6 +20,8 @@ pub mod appearance_ui;
 pub mod backup_ui;
 pub mod browse;
 pub mod calendar_mode;
+pub mod canvas_types;
+pub mod canvas_ui;
 pub mod chrome;
 pub mod cli;
 pub mod color_science;
@@ -117,6 +117,7 @@ pub mod library_search;
 pub mod library_sort;
 pub mod library_ui;
 pub mod logs_ui;
+pub mod match_ui;
 pub mod mcp_analytics;
 pub mod mcp_client_ui;
 pub mod mcp_diary_pdf;
@@ -168,6 +169,7 @@ pub mod pdf_mark_types;
 pub mod pdf_marks_ui;
 pub mod pdf_names;
 pub mod pdf_select;
+pub mod pdf_split_ui;
 pub mod pdf_types;
 pub mod pdf_ui;
 pub mod plan_msg;

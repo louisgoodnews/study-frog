@@ -3,6 +3,7 @@
 pub mod clock;
 pub mod exam;
 pub mod input;
+pub mod match_mode;
 pub mod pacing;
 pub mod queue;
 pub mod reading;

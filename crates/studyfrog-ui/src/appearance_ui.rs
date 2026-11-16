@@ -45,7 +45,7 @@ pub enum AppearanceMsg {
 }
 
 /// Screens that can be opened first and are remembered as the last one, with their words in `app.toml`.
-const SCREENS: [(Screen, &str); 13] = [
+const SCREENS: [(Screen, &str); 15] = [
     (Screen::Home, "home"),
     (Screen::Library, "library"),
     (Screen::Calendar, "calendar"),
@@ -59,6 +59,8 @@ const SCREENS: [(Screen, &str); 13] = [
     (Screen::Rehearse, "rehearse"),
     (Screen::Settings, "settings"),
     (Screen::Help, "help"),
+    (Screen::Canvas, "canvas"),
+    (Screen::Match, "match"),
 ];
 
 fn screen_key(s: Screen) -> Option<&'static str> {

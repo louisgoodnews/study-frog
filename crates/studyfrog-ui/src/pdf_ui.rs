@@ -194,6 +194,9 @@ pub fn update(state: State, msg: PdfMsg) -> (State, Vec<Effect>) {
         PdfMsg::Arrange(m) => crate::pdf_arrange_ui::update(state, m),
         PdfMsg::Marks(m) => crate::pdf_marks_ui::update(state, m),
         PdfMsg::Export(m) => crate::pdf_export_ui::update(state, m),
+        PdfMsg::OpenCrop(a) => crate::pdf_split_ui::open_crop(state, a),
+        PdfMsg::CloseSplit => crate::pdf_split_ui::close_split(state),
+        PdfMsg::SetSplitRatio(r) => crate::pdf_split_ui::set_split_ratio(state, r),
         PdfMsg::ShowSide(side) => (
             State {
                 pdf: state.pdf.clone().map(|v| PdfView { side, ..v }),

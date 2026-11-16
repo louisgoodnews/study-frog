@@ -59,7 +59,9 @@ pub fn new_crop_cache(capacity: usize) -> CropLruCache {
 /// Retrieves a reference to a cached raster crop, promoting it to the front of the LRU queue.
 pub fn cache_get<'a>(cache: &'a mut CropLruCache, key: &CropCacheKey) -> Option<&'a RasterCrop> {
     let pos = cache.entries.iter().position(|(k, _)| k == key)?;
-    if pos != 0 && let Some(entry) = cache.entries.remove(pos) {
+    if pos != 0
+        && let Some(entry) = cache.entries.remove(pos)
+    {
         cache.entries.push_front(entry);
     }
     cache.entries.front().map(|(_, v)| v)

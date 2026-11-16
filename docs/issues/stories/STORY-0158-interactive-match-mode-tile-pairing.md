@@ -2,7 +2,7 @@
 id: STORY-0158
 type: story
 title: "Interactive Match Mode Tile Pairing Drill"
-status: backlog
+status: done
 epic: EPIC-053
 parents: ['EPIC-053']
 estimate: 5
@@ -20,9 +20,9 @@ Fast, low-friction gamified recall drills.
 Build Match Mode: a rapid 3x4 tile matching recall activity with animated tile clearance, streak bonuses, and speed benchmarking.
 
 ## Acceptance Criteria
-- [ ] Match mode state machine presents 3x4 grid of terms and matching answers
-- [ ] Selecting matching pairs clears tiles with visual feedback and monotonic timer scoring
-- [ ] Incorrect matches flash warning red and add time penalties without breaking session flow
+- [x] Match mode state machine presents 3x4 grid of terms and matching answers
+- [x] Selecting matching pairs clears tiles with visual feedback and monotonic timer scoring
+- [x] Incorrect matches flash warning red and add time penalties without breaking session flow
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

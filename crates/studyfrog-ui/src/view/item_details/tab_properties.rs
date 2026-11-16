@@ -152,11 +152,14 @@ fn difficulty_row(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 }
 
-/// An item made from a PDF page links back to it.
+/// An item made from a PDF page links back to it or offers a 1-click jump button.
 fn source_link(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(source) = studyfrog_md::extra::extra_value(&e.doc, "source") else {
         return;
     };
+    if crate::view::pdf_split::jump_button(&source, ui, out) {
+        return;
+    }
     let (path, page) = studyfrog_store::pdf_notes::split_source(&source);
     if !path.to_lowercase().ends_with(".pdf") {
         ui.label(format!("Source: {source}"));

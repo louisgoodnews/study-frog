@@ -19,6 +19,7 @@ const GROUPS: &[Group] = &[
             (Screen::Folders, "Folders"),
             (Screen::Library, "Items"),
             (Screen::Rehearse, "Rehearse"),
+            (Screen::Match, "Match"),
         ],
     },
     Group {
@@ -32,6 +33,7 @@ const GROUPS: &[Group] = &[
             (Screen::Diary, "Diary"),
             (Screen::Achievements, "Achievements"),
             (Screen::Graph, "Graph"),
+            (Screen::Canvas, "Canvas"),
         ],
     },
     Group {

@@ -36,7 +36,13 @@ pub fn max_milli(page: (f32, f32), max_side: usize) -> f32 {
 }
 
 /// The scale (thousandths of a pixel per point) and the size on screen in logical pixels.
-fn layout(view: &PdfView, avail: Vec2, ppp: f32, page: (f32, f32), max_side: usize) -> (u32, f32) {
+pub(crate) fn layout(
+    view: &PdfView,
+    avail: Vec2,
+    ppp: f32,
+    page: (f32, f32),
+    max_side: usize,
+) -> (u32, f32) {
     let wide = (avail.x - MARGIN).max(100.0) / page.0.max(1.0);
     let high = (avail.y - MARGIN).max(100.0) / page.1.max(1.0);
     let logical = match view.zoom {

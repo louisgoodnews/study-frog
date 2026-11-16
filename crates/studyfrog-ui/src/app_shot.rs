@@ -57,6 +57,8 @@ fn screen_named(name: &str) -> Option<Screen> {
         "console" => Screen::Console,
         "achievements" => Screen::Achievements,
         "graph" => Screen::Graph,
+        "canvas" => Screen::Canvas,
+        "match" => Screen::Match,
         "run" | "run-answer" => Screen::Rehearse,
         _ => return None,
     })

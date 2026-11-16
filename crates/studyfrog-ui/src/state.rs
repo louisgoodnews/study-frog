@@ -57,6 +57,10 @@ pub enum Screen {
     Help,
     /// Control commands and scripts typed by hand.
     Console,
+    /// FrogCanvas 2D spatial concept board.
+    Canvas,
+    /// Match Mode tile pairing recall drill.
+    Match,
 }
 
 /// Severity of a notice.
@@ -98,6 +102,17 @@ pub struct CardDraft {
     pub front: String,
     /// Answer side.
     pub back: String,
+}
+
+/// Which field of the new-card form.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DraftField {
+    /// The optional title.
+    Title,
+    /// The front.
+    Front,
+    /// The back.
+    Back,
 }
 
 /// State of the stack browser.
@@ -153,8 +168,7 @@ pub struct State {
     pub browser: Browser,
     /// The rehearse screen.
     pub rehearse: Rehearse,
-    /// Seconds on the shell's monotonic clock, refreshed every frame. Time enters the pure update
-    /// only through this field.
+    /// Seconds on the shell's monotonic clock, refreshed every frame.
     pub now: f64,
     /// The wall clock in Unix milliseconds, set from the system clock at the start of each frame.
     pub wall_ms: i64,
@@ -182,8 +196,7 @@ pub struct State {
     pub modal: Option<Modal>,
     /// Clickable in-app notifications.
     pub toasts: Vec<Toast>,
-    /// A message to apply right after the one being handled (what waited for a save to finish). Applied by
-    /// `hooks::around` in a loop, so a long chain never nests `update` calls on the stack.
+    /// A message to apply right after the one being handled.
     pub replay: Option<Box<crate::msg::Msg>>,
     /// A standard prompt being run through the assistant.
     pub prompt_run: Box<crate::prompt_run::PromptRun>,
@@ -225,4 +238,10 @@ pub struct State {
     pub console: crate::console_ui::ConsoleState,
     /// The active-recall workflows (EPIC-035).
     pub recall: Box<crate::recall_types::RecallState>,
+    /// FrogCanvas 2D spatial concept board.
+    pub canvas: Option<crate::canvas_types::CanvasState>,
+    /// Split-screen PDF navigation and highlight overlay (EPIC-051).
+    pub split_pdf: crate::pdf_types::SplitPdfView,
+    /// Match Mode tile pairing recall drill (EPIC-053).
+    pub match_state: Option<crate::match_ui::MatchUiState>,
 }

@@ -29,6 +29,8 @@ pub fn screen_by_name(name: &str) -> Option<Screen> {
         "console" => Screen::Console,
         "settings" => Screen::Settings,
         "help" => Screen::Help,
+        "canvas" => Screen::Canvas,
+        "match" => Screen::Match,
         _ => return None,
     })
 }

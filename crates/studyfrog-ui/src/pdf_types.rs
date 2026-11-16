@@ -173,4 +173,39 @@ pub enum PdfMsg {
     Arrange(crate::pdf_arrange_types::ArrangeMsg),
     /// Exporting notes or stacks to PDF.
     Export(crate::pdf_export_types::PdfExportMsg),
+    /// Open a crop anchor in split-screen PDF viewer.
+    OpenCrop(studyfrog_pdf::crop::PdfCropAnchor),
+    /// Close the split-screen PDF pane.
+    CloseSplit,
+    /// Set the split pane ratio.
+    SetSplitRatio(f32),
+}
+
+/// Split-view state for side-by-side PDF navigation and coordinate highlight.
+#[derive(Debug, Clone, PartialEq)]
+pub struct SplitPdfView {
+    /// Whether the split pane is currently active.
+    pub active: bool,
+    /// The target crop anchor to highlight, if any.
+    pub anchor: Option<studyfrog_pdf::crop::PdfCropAnchor>,
+    /// Ratio of the window given to the left primary pane (0.2 to 0.8, default 0.5).
+    pub split_ratio: f32,
+    /// Seconds on monotonic clock when the jump was triggered, for pulsing highlight.
+    pub flash_start_now: f64,
+}
+
+/// Create default `SplitPdfView`.
+pub fn split_pdf_default() -> SplitPdfView {
+    SplitPdfView {
+        active: false,
+        anchor: None,
+        split_ratio: 0.5,
+        flash_start_now: 0.0,
+    }
+}
+
+impl Default for SplitPdfView {
+    fn default() -> Self {
+        split_pdf_default()
+    }
 }

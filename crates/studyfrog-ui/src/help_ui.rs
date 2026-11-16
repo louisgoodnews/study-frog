@@ -31,6 +31,8 @@ pub fn page_for(state: &State) -> &'static str {
         Screen::Prompts => "assistant",
         Screen::Console => "scripting",
         Screen::Pdf => "pdf",
+        Screen::Canvas => "graph",
+        Screen::Match => "rehearse",
     }
 }
 
