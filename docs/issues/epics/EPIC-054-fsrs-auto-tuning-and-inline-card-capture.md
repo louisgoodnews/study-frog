@@ -2,7 +2,7 @@
 id: EPIC-054
 type: epic
 title: "FSRS Auto-Tuning and Inline Card Capture"
-status: backlog
+status: done
 parents: []
 labels: [m13, srs, md]
 acceptance_criteria:
@@ -19,10 +19,10 @@ Default FSRS parameters assume average human memory. Power users benefit from pe
 Provide a local Adam optimizer for FSRS-6 parameter training on SQLite review history and an inline Term :: Definition syntax scanner in markdown notes.
 
 ## Acceptance Criteria
-- [ ] Adam gradient descent optimizer personalizes 21 FSRS-6 parameters on local review history
-- [ ] Log-loss minimization and L2 regularization prevent overfitting on small review sets
-- [ ] Inline card syntax scanner extracts Term :: Definition pairs from markdown documents
-- [ ] Virtual item indexing syncs inline cards into SQLite without creating separate files
+- [x] Adam gradient descent optimizer personalizes 21 FSRS-6 parameters on local review history
+- [x] Log-loss minimization and L2 regularization prevent overfitting on small review sets
+- [x] Inline card syntax scanner extracts Term :: Definition pairs from markdown documents
+- [x] Virtual item indexing syncs inline cards into SQLite without creating separate files
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

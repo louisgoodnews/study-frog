@@ -6,7 +6,6 @@ use studyfrog_core::settings::AnswerEngine;
 
 use crate::app_settings_ui::{SHOWN, SettingsTab, SettingsTabMsg, current_tab, tab_label};
 use crate::msg::Msg;
-use crate::reading_test::{ReadingTestMsg, TEXT, TestPhase, current_wpm};
 use crate::state::State;
 use crate::view::kit;
 
@@ -17,7 +16,11 @@ pub type Section = fn(&State, &mut egui::Ui, &mut Vec<Msg>);
 pub fn sections_of(tab: SettingsTab) -> &'static [Section] {
     match tab {
         SettingsTab::Study => &[scheduling, view_tracking, replay],
-        SettingsTab::Rehearsal => &[reading_speed, crate::view::run_slow::setting],
+        SettingsTab::Rehearsal => &[
+            super::settings_reading::reading_speed,
+            crate::view::run_slow::setting,
+            super::settings_rehearsal_fsrs::draw,
+        ],
         SettingsTab::Answers => &[answer_comparison],
         SettingsTab::Data => &[
             crate::view::backup::draw,
@@ -164,63 +167,6 @@ fn scheduling(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
         });
     ui.add_space(8.0);
     ui.weak("Edit studyfrog.toml in the vault folder, and _stack.toml next to a stack, to change these (familiarity_strength, familiarity_threshold, and familiarity = false to switch it off for one stack).");
-}
-
-fn test_msg(out: &mut Vec<Msg>, m: ReadingTestMsg) {
-    out.push(Msg::ReadingTest(m));
-}
-
-/// Where the reading-speed baseline comes from, and the test that measures it.
-fn reading_speed(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    crate::view::kit::section(ui, "Reading speed");
-    let source = if state.app.reading_wpm.is_some() {
-        "measured"
-    } else {
-        "default, not measured"
-    };
-    ui.label(format!(
-        "{} words per minute ({source})",
-        current_wpm(state)
-    ));
-    ui.weak("Rehearsal compares how long you read an answer with this speed to suggest easier or harder ratings.");
-    match state.reading_test.phase {
-        TestPhase::Idle => idle(state, ui, out),
-        TestPhase::Reading(_) => {
-            ui.group(|ui| ui.label(TEXT));
-            ui.label("Read at your normal pace, then press the button.");
-            if ui.button("I have finished reading").clicked() {
-                test_msg(out, ReadingTestMsg::Finish);
-            }
-        }
-        TestPhase::Result(Some(wpm)) => {
-            ui.label(format!("You read {wpm} words per minute."));
-            ui.horizontal(|ui| {
-                if ui.button("Use this speed").clicked() {
-                    test_msg(out, ReadingTestMsg::Save);
-                }
-                if ui.button("Discard").clicked() {
-                    test_msg(out, ReadingTestMsg::Discard);
-                }
-            });
-        }
-        TestPhase::Result(None) => {
-            ui.label("That was too fast or too slow to be a reading test. Please try again.");
-            if ui.button("Try again").clicked() {
-                test_msg(out, ReadingTestMsg::Start);
-            }
-        }
-    }
-}
-
-fn idle(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.horizontal(|ui| {
-        if ui.button("Measure my reading speed").clicked() {
-            test_msg(out, ReadingTestMsg::Start);
-        }
-        if state.app.reading_wpm.is_some() && ui.button("Use the default speed").clicked() {
-            test_msg(out, ReadingTestMsg::Reset);
-        }
-    });
 }
 
 /// How typed answers are compared, and the thresholds that turn reading time into suggestions.

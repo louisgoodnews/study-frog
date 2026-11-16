@@ -2,7 +2,7 @@
 id: STORY-0159
 type: story
 title: "Embedding-Powered Distractor Generator for Multiple-Choice Exams"
-status: backlog
+status: done
 epic: EPIC-053
 parents: ['EPIC-053']
 estimate: 5
@@ -20,9 +20,9 @@ Authentic multiple-choice exam preparation with semantically challenging distrac
 Generate challenging multiple-choice tests by finding semantically related distractor answers across the active stack using MiniLM vector embeddings.
 
 ## Acceptance Criteria
-- [ ] Semantic distractor extractor finds nearest-neighbor answers using MiniLM embeddings
-- [ ] Multiple-choice question builder generates 4 options (1 correct, 3 plausible distractors)
-- [ ] Exam simulator integrates multiple-choice sections with automated scoring
+- [x] Semantic distractor extractor finds nearest-neighbor answers using MiniLM embeddings
+- [x] Multiple-choice question builder generates 4 options (1 correct, 3 plausible distractors)
+- [x] Exam simulator integrates multiple-choice sections with automated scoring
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

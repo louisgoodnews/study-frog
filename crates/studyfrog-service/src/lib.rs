@@ -49,6 +49,7 @@ pub mod folder_ops_plan;
 mod folder_ops_rollback;
 pub mod folder_ops_types;
 mod folder_ops_walk;
+pub mod fsrs_optimize;
 pub mod goals;
 pub mod help;
 mod help_pages;

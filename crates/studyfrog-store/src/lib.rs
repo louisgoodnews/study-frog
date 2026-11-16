@@ -17,6 +17,7 @@ pub mod hash;
 pub mod home;
 pub mod index;
 pub mod index_item;
+pub mod inline_index;
 pub mod item_keys;
 pub mod item_meta;
 mod item_rows;

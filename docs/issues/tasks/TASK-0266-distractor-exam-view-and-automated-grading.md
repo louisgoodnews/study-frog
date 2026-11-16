@@ -2,7 +2,7 @@
 id: TASK-0266
 type: task
 title: "Distractor exam view and automated grading"
-status: backlog
+status: done
 epic: EPIC-053
 parents: ['STORY-0159']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0159.
 See STORY-0159 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Create interactive multiple-choice question UI in studyfrog-ui with instant selection feedback and graded exam reporting
+- [x] Create interactive multiple-choice question UI in studyfrog-ui with instant selection feedback and graded exam reporting
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

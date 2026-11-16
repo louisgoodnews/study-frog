@@ -2,7 +2,7 @@
 id: TASK-0268
 type: task
 title: "FSRS parameter evaluation metrics and settings UI integration"
-status: backlog
+status: done
 epic: EPIC-054
 parents: ['STORY-0160']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0160.
 See STORY-0160 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Add Optimize Parameters action in Rehearsal Settings UI displaying log-loss improvements and RMSE metrics
+- [x] Add Optimize Parameters action in Rehearsal Settings UI displaying log-loss improvements and RMSE metrics
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

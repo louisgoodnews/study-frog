@@ -2,7 +2,7 @@
 id: TASK-0270
 type: task
 title: "Virtual item indexing and lifecycle sync for inline cards"
-status: backlog
+status: done
 epic: EPIC-054
 parents: ['STORY-0161']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0161.
 See STORY-0161 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Update studyfrog-store vault scanner to index inline cards as virtual items and sync edits cleanly on save
+- [x] Update studyfrog-store vault scanner to index inline cards as virtual items and sync edits cleanly on save
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.
