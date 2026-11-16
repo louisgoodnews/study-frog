@@ -2,7 +2,7 @@
 id: TASK-0265
 type: task
 title: "Semantic distractor extraction via MiniLM embeddings nearest neighbors"
-status: backlog
+status: done
 epic: EPIC-053
 parents: ['STORY-0159']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0159.
 See STORY-0159 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Implement semantic distractor retrieval in studyfrog-candle/studyfrog-service via cosine similarity over card answers
+- [x] Implement semantic distractor retrieval in studyfrog-candle/studyfrog-service via cosine similarity over card answers
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

@@ -25,6 +25,7 @@ mod contrast_save;
 pub mod create;
 pub mod create_more;
 pub mod day;
+pub mod distractor_service;
 pub mod document;
 pub mod drill;
 pub mod exam;

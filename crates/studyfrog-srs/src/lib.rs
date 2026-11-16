@@ -4,6 +4,7 @@ pub mod difficulty;
 pub mod familiarity;
 pub mod fsrs;
 pub mod fuzz;
+pub mod optimizer;
 pub mod params;
 pub mod priority_slice;
 pub mod sm2;

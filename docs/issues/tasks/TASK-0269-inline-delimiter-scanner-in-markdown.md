@@ -2,7 +2,7 @@
 id: TASK-0269
 type: task
 title: "Inline delimiter scanner for Term :: Definition in markdown documents"
-status: backlog
+status: done
 epic: EPIC-054
 parents: ['STORY-0161']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0161.
 See STORY-0161 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Implement inline card parser in studyfrog-md extracting term, definition, and line coordinates from note bodies
+- [x] Implement inline card parser in studyfrog-md extracting term, definition, and line coordinates from note bodies
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.
