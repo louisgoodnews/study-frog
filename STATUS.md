@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M14 completed; released 0.8.0. **Date:** 2026-11-11. **Branch:** `main`.
+**Phase:** M15 completed; released 0.9.0. **Date:** 2026-11-16. **Branch:** `main`.
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
@@ -15,6 +15,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
 ## Latest
+- **0.9.0 released (2026-11-16):** FrogCanvas 2D spatial concept board (`crates/studyfrog-ui`, `crates/studyfrog-store`), PDF precision area cropping and synchronized split navigation (`crates/studyfrog-pdf`), continuous priority queue and anti-paralysis slicing (`crates/studyfrog-srs`), gamified match mode and embedding distractor exams (`crates/studyfrog-ui`, `crates/studyfrog-candle`), FSRS Adam parameter optimizer and inline card syntax scanner (`crates/studyfrog-srs`, `crates/studyfrog-md`), and private offline local SLM assistant sidecar (`crates/studyfrog-agent`, `crates/studyfrog-app`). See `docs/RELEASE_NOTES_0.9.0.md`.
 - **0.8.0 released (2026-11-11):** FrogScript standalone domain-specific language engine (`crates/studyfrog-script`), ScriptStudio multi-tab automation workbench with in-vault script persistence (`.studyfrog/scripts/`), dedicated stdout and stderr stream execution logging with filter controls, and full 14-event reactive application lifecycle event bus. See `docs/RELEASE_NOTES_0.8.0.md`.
 - **0.7.1 released (2026-11-11):** Assistant conversational chat interface, universal importer integration in items view, file launching in folders view, dedicated item deletion modal popup, difficulty-weighted metacognitive calibration, window icon integration, ScriptStudio & FrogScript rebranding and language specification, and critical fixes for calendar rehearsal setup and due item calculation. See `docs/RELEASE_NOTES_0.7.1.md`.
 - **0.7.0 released (2026-11-10):** Phase M13 completed: Timetable schedule planner for lessons and lectures (STORY-0141, EPIC-044), calendar daily and weekly schedule views (STORY-0142, EPIC-044), expanded markdown macro library with escaping syntax (STORY-0143, STORY-0144, EPIC-045), enhanced markdown list syntax (STORY-0145, EPIC-046), stylized *Breviceps macrops* mascot icon (STORY-0146, EPIC-047), UX research and working prototype of floating burger navigation (STORY-0147, EPIC-047), scriptrunner development environment with internal Python API (STORY-0148, EPIC-048), profile and vault switcher overhaul (STORY-0138, EPIC-043), file navigator and in-app file dialogue overhaul (STORY-0139, EPIC-043), expandable comments drawer during rehearsal and exam modes (STORY-0140, EPIC-043), high-contrast bold markdown text (BUG-0017), code block indentation preservation (BUG-0018), and optional stack membership for notes (BUG-0019). See `docs/RELEASE_NOTES_0.7.0.md`.

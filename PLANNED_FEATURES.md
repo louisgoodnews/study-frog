@@ -27,7 +27,7 @@ All planned epics, stories, and bug fixes for Phase M13 are built, verified, and
 - **ScriptRunner & Internal Automation API (`EPIC-048`, `STORY-0148`)**: In-app code editor, runner, stdout/stderr, and API spec.
 - **Bug Fixes**: BUG-0016 (calibration baseline), BUG-0017 (bold text visibility), BUG-0018 (code block indentations), BUG-0019 (notes stack membership optional), and in-rehearsal item editing with Again queue repositioning.
 
-## Upcoming features (Phase M14 / 0.8.0)
+## Completed features in Phase M14 (0.8.0)
 
 | Epic / Story | Summary |
 | :--- | :--- |
