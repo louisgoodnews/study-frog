@@ -13,6 +13,7 @@ pub mod mcp_stage;
 pub mod mcp_types;
 pub mod mcp_uri;
 pub mod model_catalog;
+pub mod model_provider;
 pub mod provider;
 pub mod settings;
 pub mod sidecar_process;

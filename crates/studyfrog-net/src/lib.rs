@@ -4,6 +4,7 @@
 pub mod http_req;
 pub mod mcp_http;
 pub mod model_download;
+pub mod sidecar_client;
 
 use std::io::ErrorKind;
 use std::time::Duration;

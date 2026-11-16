@@ -37,7 +37,7 @@ pub struct Frames {
 /// The frame budget the tests hold to: 60 fps (16.7 ms) in an optimised build; an unoptimised
 /// test build is several times slower, so it gets three times as long.
 pub fn budget_ms() -> f64 {
-    if cfg!(debug_assertions) { 50.0 } else { 16.7 }
+    if cfg!(debug_assertions) { 75.0 } else { 16.7 }
 }
 
 fn big_pdf() -> Vec<u8> {

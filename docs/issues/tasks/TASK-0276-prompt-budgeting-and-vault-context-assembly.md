@@ -2,7 +2,7 @@
 id: TASK-0276
 type: task
 title: "1024-token prompt budgeting and vault context assembly"
-status: backlog
+status: done
 epic: EPIC-055
 parents: ['STORY-0164']
 estimate: 3
@@ -18,7 +18,7 @@ Part of STORY-0164.
 See STORY-0164 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Implement prompt assembler in studyfrog-service enforcing <= 1024 tokens and prefill thinking UX indicator
+- [x] Implement prompt assembler in studyfrog-service enforcing <= 1024 tokens and prefill thinking UX indicator
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

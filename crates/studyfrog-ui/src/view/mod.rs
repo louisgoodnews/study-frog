@@ -3,6 +3,7 @@
 mod achievements;
 mod agent;
 mod agent_chat;
+pub mod agent_chat_stream;
 mod agent_conn_test;
 mod agent_describe;
 mod agent_exam;

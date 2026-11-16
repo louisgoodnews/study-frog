@@ -4,11 +4,11 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (3) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (288) |
+| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (291) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0274](docs/issues/tasks/TASK-0274-sse-streaming-parser-and-chat-streaming-ui.md) Server-Sent Events streaming parser and chat UI streaming renderer (3) |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [TASK-0275](docs/issues/tasks/TASK-0275-sqlite-vault-embeddings-and-vector-search.md) SQLite vault embeddings table and vector similarity search (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
-| [TASK-0276](docs/issues/tasks/TASK-0276-prompt-budgeting-and-vault-context-assembly.md) 1024-token prompt budgeting and vault context assembly (3) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+|  |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+|  |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+|  |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 |  |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
 |  |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
 |  |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
@@ -294,6 +294,9 @@
 |  |  |  |  |  | [TASK-0271](docs/issues/tasks/TASK-0271-sidecar-child-process-spawning-and-watchdog.md) Sidecar child process spawning, loopback port binding, and stdin watchdog (5) |
 |  |  |  |  |  | [TASK-0272](docs/issues/tasks/TASK-0272-five-minute-idle-auto-shutdown-supervisor.md) Five-minute idle auto-shutdown and memory reclamation supervisor (3) |
 |  |  |  |  |  | [TASK-0273](docs/issues/tasks/TASK-0273-gguf-model-catalog-and-resumable-downloader.md) GGUF model catalog and range-resuming downloader (3) |
+|  |  |  |  |  | [TASK-0274](docs/issues/tasks/TASK-0274-sse-streaming-parser-and-chat-streaming-ui.md) Server-Sent Events streaming parser and chat UI streaming renderer (3) |
+|  |  |  |  |  | [TASK-0275](docs/issues/tasks/TASK-0275-sqlite-vault-embeddings-and-vector-search.md) SQLite vault embeddings table and vector similarity search (3) |
+|  |  |  |  |  | [TASK-0276](docs/issues/tasks/TASK-0276-prompt-budgeting-and-vault-context-assembly.md) 1024-token prompt budgeting and vault context assembly (3) |
 
 ## Stories
 
@@ -460,8 +463,8 @@
 | [STORY-0160](docs/issues/stories/STORY-0160-fsrs-parameter-optimization-engine.md) Local FSRS-6 Parameter Optimization Engine (5) | done | 2/2 |
 | [STORY-0161](docs/issues/stories/STORY-0161-inline-card-syntax-scanner.md) Markdown Inline Card Syntax Scanner (5) | done | 2/2 |
 | [STORY-0162](docs/issues/stories/STORY-0162-managed-local-sidecar-process.md) Managed Local Background Sidecar Process and Supervisor (5) | done | 2/2 |
-| [STORY-0163](docs/issues/stories/STORY-0163-model-catalog-and-streaming-generation.md) GGUF Model Catalog, Downloader, and Streaming Generation (5) | backlog | 1/2 |
-| [STORY-0164](docs/issues/stories/STORY-0164-on-device-rag-and-cpu-prompt-budgeting.md) On-Device Vault RAG Pipeline and CPU Prompt Budgeting (5) | backlog | 0/2 |
+| [STORY-0163](docs/issues/stories/STORY-0163-model-catalog-and-streaming-generation.md) GGUF Model Catalog, Downloader, and Streaming Generation (5) | done | 2/2 |
+| [STORY-0164](docs/issues/stories/STORY-0164-on-device-rag-and-cpu-prompt-budgeting.md) On-Device Vault RAG Pipeline and CPU Prompt Budgeting (5) | done | 2/2 |
 
 ## Epics
 
@@ -521,4 +524,4 @@
 | [EPIC-052](docs/issues/epics/EPIC-052-continuous-priority-queue-and-anti-paralysis-slicing.md) Continuous Priority Queue and Anti-Paralysis Slicing | done | 1/1 |
 | [EPIC-053](docs/issues/epics/EPIC-053-gamified-multi-modal-recall-match-mode-and-distractors.md) Gamified and Multi-Modal Active Recall | done | 2/2 |
 | [EPIC-054](docs/issues/epics/EPIC-054-fsrs-auto-tuning-and-inline-card-capture.md) FSRS Auto-Tuning and Inline Card Capture | done | 2/2 |
-| [EPIC-055](docs/issues/epics/EPIC-055-offline-local-slm-internal-assistant.md) Offline Local SLM Internal Assistant | backlog | 1/3 |
+| [EPIC-055](docs/issues/epics/EPIC-055-offline-local-slm-internal-assistant.md) Offline Local SLM Internal Assistant | done | 3/3 |

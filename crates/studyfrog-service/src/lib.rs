@@ -86,6 +86,7 @@ pub mod prompts;
 pub mod prompts_meta;
 pub mod queue;
 pub mod queue_data;
+pub mod rag_pipeline;
 pub mod rehearse;
 pub mod reminders;
 pub mod report_csv;

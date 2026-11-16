@@ -31,6 +31,7 @@ pub mod pdf_index;
 pub mod pdf_notes;
 pub mod pdf_search;
 pub mod poll;
+pub mod rag_store;
 pub mod refs_index;
 pub mod reindex;
 pub mod report_stacks;
