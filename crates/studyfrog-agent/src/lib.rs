@@ -3,6 +3,7 @@
 //! what the model proposes. Sending a request is the job of a [`provider::Transport`] the application
 //! supplies, so this crate does no I/O and links no network library.
 
+pub mod assistant_backend;
 pub mod exam;
 pub mod mcp_client;
 pub mod mcp_client_cfg;
@@ -11,8 +12,12 @@ pub mod mcp_route;
 pub mod mcp_stage;
 pub mod mcp_types;
 pub mod mcp_uri;
+pub mod model_catalog;
 pub mod provider;
 pub mod settings;
+pub mod sidecar_process;
+pub mod sidecar_supervisor;
+pub mod sidecar_types;
 pub mod wiki;
 pub mod wiki_change;
 pub mod wiki_pages;

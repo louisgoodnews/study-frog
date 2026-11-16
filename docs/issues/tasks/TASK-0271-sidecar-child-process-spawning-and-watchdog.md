@@ -2,7 +2,7 @@
 id: TASK-0271
 type: task
 title: "Sidecar child process spawning, loopback port binding, and stdin watchdog"
-status: backlog
+status: done
 epic: EPIC-055
 parents: ['STORY-0162']
 estimate: 5
@@ -18,7 +18,7 @@ Part of STORY-0162.
 See STORY-0162 and docs/v0.9.0-roadmap.md.
 
 ## Acceptance Criteria
-- [ ] Implement sidecar process management in studyfrog-agent with ephemeral loopback port and stdin watchdog termination
+- [x] Implement sidecar process management in studyfrog-agent with ephemeral loopback port and stdin watchdog termination
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.

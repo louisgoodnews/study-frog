@@ -2,7 +2,7 @@
 id: STORY-0162
 type: story
 title: "Managed Local Background Sidecar Process and Supervisor"
-status: backlog
+status: done
 epic: EPIC-055
 parents: ['EPIC-055']
 estimate: 5
@@ -20,9 +20,9 @@ Running local LLMs safely without crashing the desktop app or hoarding system RA
 Implement a managed local background sidecar supervisor in studyfrog-agent that launches llama-server on demand, enforces loopback security, and auto-shuts down when idle.
 
 ## Acceptance Criteria
-- [ ] SidecarSupervisor spawns local llama-server process on ephemeral loopback port
-- [ ] Stdin watchdog pipe and graceful signal termination ensure no orphaned processes
-- [ ] 5-minute idle timer automatically shuts down sidecar process to reclaim 100% of RAM
+- [x] SidecarSupervisor spawns local llama-server process on ephemeral loopback port
+- [x] Stdin watchdog pipe and graceful signal termination ensure no orphaned processes
+- [x] 5-minute idle timer automatically shuts down sidecar process to reclaim 100% of RAM
 
 ## Design Notes
 See docs/v0.9.0-roadmap.md.
