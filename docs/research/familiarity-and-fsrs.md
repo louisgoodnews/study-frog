@@ -72,7 +72,13 @@ interval      = round(I(r, S) * m)               // never below 1 day, never abo
   `S / (S + 30)` is the cold-start curve.
 - **Evidence guard:** no adjustment before the third review of an item (`beta` ramps in from review 2 to 4). A new card's
   familiarity rises faster than `F_expected` for small S, which would otherwise double its first intervals (the table
-  below shows 1.6 to 2.0 at S = 2.3). The simulation did not include this guard; it is part of the evaluation task.
+  below shows 1.6 to 2.0 at S = 2.3). The ramp-up is implemented as a piecewise linear ramp:
+  ```
+  ramp(r) = clamp((max(0, r - 2)) / max(1, full_at_review - 2), 0.0, 1.0)
+  ```
+  with `full_at_review = 4`. A linear ramp is preferred over a smooth sigmoid because it guarantees exact zero influence
+  at `r <= 2` (strict evidence safety) without needing an artificial epsilon cutoff, while remaining completely transparent
+  and computationally trivial.
 - SM-2 uses the same factor with the current interval as S.
 
 ### Worked values (`beta = 2`, `S_half = 30`)
@@ -135,16 +141,24 @@ on the user's own history instead of a simulation:
    the first 80 % and test on the last 20 %. The verdict says whether `R_adj` has lower log loss than `R`.
 3. **Workload check.** Report the change in reviews per year the factor causes for the same history, so the user sees
    the trade-off. Use the simulator of the forecast report (`docs/specs/reports.md`) for it.
-4. **Switch.** The model is **on from the start** (owner's decision, 2026-11-02) with `beta = 2`. Settings shows the replay
-   verdict; if it says plain FSRS predicts better, Settings suggests turning the model off or using the fitted values. It
-   never switches itself off.
+4. **Switch & UI Indicator.** The model is **on from the start** (owner's decision, 2026-11-02) with `beta = 2`. Settings shows
+   the replay verdict accompanied by a clear quantitative accuracy indicator: e.g. *"Model outperforms plain FSRS by +X.X%
+   in historical log loss"*, allowing learners to verify how well default or fitted weights suit their individual study history.
+   If plain FSRS predicts better, Settings suggests turning the model off or adopting the fitted values. It never switches itself off.
 
 ## 8. Risks
 
 - **Double counting.** Ratings feed both FSRS and familiarity. The relative form limits this because it reacts to the
   difference, but the replay in section 7 is what proves there is no net harm.
-- **Feedback.** Shorter intervals mean more reviews, more views and a higher F. Views raise F only marginally, and the
-  evidence guard and the clamp bound the effect.
+- **Feedback.** Shorter intervals mean more reviews, more views and a higher F. The design includes multiple damping
+  layers to prevent an uncontrolled positive feedback loop:
+  1. *Temporal spacing & debouncing:* `view_gap_ms` enforces a minimum time between countable passive views (e.g. 1 hour),
+     and `min_view_ms` discards brief passing scrolls (< 1.5 s).
+  2. *Diminishing marginal gains:* passive view increments scale with `(1.0 - F) * s`, ensuring logarithmic-style saturation
+     as familiarity increases rather than linear compounding.
+  3. *Confidence caps on passive interaction:* views without active retrieval practice can never exceed confidence ceilings
+     or note caps (`note_cap = 0.8`), ensuring passive browsing cannot masquerade as robust retrieval strength.
+  4. *Evidence guard & clamps:* the hard bounds `[m_min, m_max]` strictly contain any extreme runaway drift.
 - **Sparse data.** `F_expected(S)` needs many items; the cold-start curve covers the start and per-user fitting
   takes over once there are enough items.
 - **Exam bound.** The factor never plans past an exam or due date; near an exam a factor above 1 is cut off.
@@ -155,11 +169,21 @@ on the user's own history instead of a simulation:
 
 In `studyfrog-srs`, as free functions (no inherent impls, P1), leaving `interval_days` and the golden tests alone:
 
+```rust
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct FactorParams {
+    pub strength: f32,       // beta
+    pub s_half: f32,
+    pub bounds: (f32, f32),  // min_factor, max_factor
+    pub full_at_review: u32,
+}
+pub fn familiarity_factor(fam: f32, stability: f32, reviews: u32, p: &FactorParams) -> f32;
+pub fn interval_days_with(state: &MemState, factor: f32, p: &Params) -> u32;   // exam bound applied by the caller
 ```
-pub struct FamParams { pub strength: f32 /* beta */, pub s_half: f32, pub min_factor: f32, pub max_factor: f32 }
-pub fn familiarity_factor(fam: f32, stability: f32, reviews: u32, p: &FamParams) -> f32
-pub fn interval_days_with(state: &MemState, factor: f32, p: &Params) -> u32   // exam bound applied by the caller
-```
+
+To support local user personalization and persistence, parameter structures or vault overrides support serialization
+(e.g. `serde` via `VaultSettings`), allowing user-customized hyperparameters or fitted replay values to be persisted directly
+into the local vault configuration.
 
 Properties to test: `strength = 0` gives factor 1; the factor never decreases when familiarity rises; it stays inside
 the clamp; it is 1 when `F == F_expected(S)`; the interval is at least 1 day and at most the maximum.
