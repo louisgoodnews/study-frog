@@ -476,6 +476,18 @@
 | [STORY-0173](docs/issues/stories/STORY-0173-memory-session-engine-and-pair-mechanics.md) Memory Session Engine, Card Deck Pairing, and Flip-State Transitions (3) | backlog | 0/0 |
 | [STORY-0174](docs/issues/stories/STORY-0174-memory-mode-interactive-grid-ui-and-animations.md) Memory Mode Interactive Card Grid UI, Card Back Styling, and Audio-Visual Feedback (3) | backlog | 0/0 |
 | [STORY-0175](docs/issues/stories/STORY-0175-memory-time-attack-records-and-rehearsal-launch.md) Time-Attack Countdown Mode, Session Records, and Rehearsal Launch Entry Points (2) | backlog | 0/0 |
+| [STORY-0176](docs/issues/stories/STORY-0176-persistent-cognitive-telemetry-and-interaction-metrics.md) Persistent Interaction Telemetry and Cognitive Metrics Schema in SQLite (3) | backlog | 0/0 |
+| [STORY-0177](docs/issues/stories/STORY-0177-adaptive-cognitive-difficulty-and-learning-velocity-estimator.md) Adaptive Cognitive Difficulty and Learning Velocity Estimation Engine (5) | backlog | 0/0 |
+| [STORY-0178](docs/issues/stories/STORY-0178-cognitive-profile-dashboard-and-velocity-visualizer.md) Cognitive Profile Dashboard and Learning Velocity Visualization in Reports (3) | backlog | 0/0 |
+| [STORY-0179](docs/issues/stories/STORY-0179-scenario-diagnostic-case-study-schema-and-model.md) Scenario-Based Diagnostic Case Study Item Schema and Domain Model (3) | backlog | 0/0 |
+| [STORY-0180](docs/issues/stories/STORY-0180-slm-multi-criteria-semantic-evaluator.md) SLM Multi-Criteria Semantic Evaluator for Decision Choices and Conceptual Rationales (5) | backlog | 0/0 |
+| [STORY-0181](docs/issues/stories/STORY-0181-interactive-case-study-rehearsal-ui.md) Interactive Case-Study Rehearsal UI and Multi-Step Feedback Display (3) | backlog | 0/0 |
+| [STORY-0182](docs/issues/stories/STORY-0182-psychometric-formula-engine-and-parameter-generator.md) Psychometric Formula Engine and Dynamic Parameter Generator (3) | backlog | 0/0 |
+| [STORY-0183](docs/issues/stories/STORY-0183-step-by-step-calculation-validator.md) Step-by-Step Intermediate Calculation Validator and Error Diagnostics (5) | backlog | 0/0 |
+| [STORY-0184](docs/issues/stories/STORY-0184-math-drill-ui-and-scratchpad.md) Interactive Math Drill View with Formula Rendering, Scratchpad, and Step Reveal (3) | backlog | 0/0 |
+| [STORY-0185](docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock Exam Structure, Weighted Point Allocations, and Strict Timer Controls (3) | backlog | 0/0 |
+| [STORY-0186](docs/issues/stories/STORY-0186-lecture-slide-driven-exam-generator.md) Lecture Slide and Script-Driven Exam Generation Engine via Local SLM (5) | backlog | 0/0 |
+| [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Mock Exam Grading Report, German University Grade Scale (1.0 - 5.0), and Chapter Analytics (3) | backlog | 0/0 |
 
 ## Epics
 
@@ -540,3 +552,7 @@
 | [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | backlog | 0/3 |
 | [EPIC-058](docs/issues/epics/EPIC-058-in-gui-frogscript-wiki-and-reference.md) In-GUI FrogScript Wiki and Interactive Documentation | backlog | 0/2 |
 | [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time | backlog | 0/3 |
+| [EPIC-060](docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | backlog | 0/3 |
+| [EPIC-061](docs/issues/epics/EPIC-061-case-study-and-diagnostic-decision-matrix.md) Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification | backlog | 0/3 |
+| [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | backlog | 0/3 |
+| [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | backlog | 0/3 |
