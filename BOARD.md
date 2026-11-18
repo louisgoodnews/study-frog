@@ -473,6 +473,9 @@
 | [STORY-0170](docs/issues/stories/STORY-0170-navigation-and-menu-decluttering.md) Menu De-Cluttering, Visual Spacing, and Progressive Disclosure (5) | backlog | 0/0 |
 | [STORY-0171](docs/issues/stories/STORY-0171-in-gui-frogscript-wiki-browser.md) In-App FrogScript Wiki and Standard Library Reference Browser (5) | backlog | 0/0 |
 | [STORY-0172](docs/issues/stories/STORY-0172-runnable-script-cookbook-and-live-templates.md) Interactive FrogScript Cookbook and 1-Click Code Templates (3) | backlog | 0/0 |
+| [STORY-0173](docs/issues/stories/STORY-0173-memory-session-engine-and-pair-mechanics.md) Memory Session Engine, Card Deck Pairing, and Flip-State Transitions (3) | backlog | 0/0 |
+| [STORY-0174](docs/issues/stories/STORY-0174-memory-mode-interactive-grid-ui-and-animations.md) Memory Mode Interactive Card Grid UI, Card Back Styling, and Audio-Visual Feedback (3) | backlog | 0/0 |
+| [STORY-0175](docs/issues/stories/STORY-0175-memory-time-attack-records-and-rehearsal-launch.md) Time-Attack Countdown Mode, Session Records, and Rehearsal Launch Entry Points (2) | backlog | 0/0 |
 
 ## Epics
 
@@ -536,3 +539,4 @@
 | [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration | backlog | 0/3 |
 | [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | backlog | 0/3 |
 | [EPIC-058](docs/issues/epics/EPIC-058-in-gui-frogscript-wiki-and-reference.md) In-GUI FrogScript Wiki and Interactive Documentation | backlog | 0/2 |
+| [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time | backlog | 0/3 |
