@@ -2,6 +2,9 @@
 //! Temporary vaults and a loop that runs effects until the UI is idle.
 
 pub mod analytics;
+pub mod e2e_helpers;
+pub mod e2e_helpers_fixtures;
+pub mod e2e_helpers_hw;
 pub mod ext;
 pub mod flow;
 pub mod reports;

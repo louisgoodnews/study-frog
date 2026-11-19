@@ -7,6 +7,26 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Added
+- **Homework data model and vault persistence (`crates/studyfrog-calendar`, `crates/studyfrog-config`, `crates/studyfrog-store`, `crates/studyfrog-service`)**:
+  - Homework item types in the calendar crate (`homework.rs`, `homework_ops.rs`) covering title, subject, due and start dates, estimated minutes, priority, status, and checklist (STORY-0165, EPIC-056).
+  - TOML persistence and deterministic rendering of homework items in the vault config (`homework.rs`, `homework_render.rs`) (STORY-0165, EPIC-056).
+  - Schema migration V29 adding homework, checklist, and reminder tables to the store (STORY-0165, EPIC-056).
+  - Homework is synced from the vault when it is opened (`sync_homework_on_open`) (STORY-0165, EPIC-056).
+- **Universal Import Hub (`crates/studyfrog-ui`, `crates/studyfrog-service`)**:
+  - Single import dialog with a drop zone and file or folder pickers, auto-detecting the source format and showing it as a badge (STORY-0168, EPIC-057).
+  - Destination picker choosing an existing stack, a new stack with a given name, or unstacked notes in the vault root (Inbox) (STORY-0168, EPIC-057).
+  - Standalone Markdown (`.md`, `.markdown`) import through `xfer_markdown.rs` (STORY-0168, EPIC-057).
+  - PDF handling in the hub: PDF files are routed to the stack PDF library (`xfer_pdf.rs`) (STORY-0168, EPIC-057).
+  - Import destination resolution shared by plan and apply (`xfer_target.rs`) (STORY-0168, EPIC-057).
+
+### Changed
+- The Import entry points now open the single transfer and import modal; the separate Import dialog (`modal_import.rs`) is removed and replaced by `modal_import_cards.rs` and `modal_import_dest.rs` (STORY-0168, EPIC-057).
+- The library's "Import…" button and the PDF library's own "Add PDF" button are removed in favour of the unified entry point (STORY-0168, EPIC-057).
+- Import planning and apply take an explicit `ImportTarget` (`FromSource`, `ExistingStack`, `NewStack`, `VaultRootNotes`) instead of an optional folder string (`plan_import_to`, `apply_import_to`) (STORY-0168, EPIC-057).
+- The transfer modal body scrolls as one area (`modal-transfer-scroll`) (STORY-0168, EPIC-057).
+- Import file reading: CSV and TSV decoding is split from file reading, and unsupported-format messages now list Markdown and PDF (STORY-0168, EPIC-057).
+
 ## [0.9.0] - 2026-11-16
 
 ### Added

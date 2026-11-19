@@ -12,7 +12,7 @@ use studyfrog_core::uid::Uid;
 use studyfrog_service::xfer_zip::read_zip;
 use studyfrog_store::schedule::insert_review;
 use studyfrog_ui::library_ui::LibraryMsg;
-use studyfrog_ui::modal::{Modal, ModalMsg};
+use studyfrog_ui::modal::Modal;
 use studyfrog_ui::msg::Msg;
 use studyfrog_ui::state::{Screen, Selection};
 use studyfrog_ui::transfer_ui::{Format, Tab, TransferMsg};
@@ -29,7 +29,7 @@ fn scratch(label: &str) -> std::path::PathBuf {
 }
 
 #[test]
-fn the_dialog_opens_from_the_stack_page_the_create_dialog_and_settings() {
+fn the_dialog_opens_from_the_top_bar_import_stack_export_and_settings() {
     let (_v, mut model, mut worker) = opened("transfer-open");
     send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
     send(
@@ -39,22 +39,27 @@ fn the_dialog_opens_from_the_stack_page_the_create_dialog_and_settings() {
     );
     let mut h = harness(model);
     h.run_steps(4);
+    assert!(
+        h.query_by_label("Import…").is_none() && h.query_by_label("Import or export…").is_none(),
+        "redundant list import buttons are removed"
+    );
     h.get_by_label("More actions").click();
     h.run_steps(4);
-    h.get_by_label("Import or export…").click();
+    assert!(
+        h.query_by_label("Import…").is_none() && h.query_by_label("Import or export…").is_none(),
+        "stack menu no longer has import buttons"
+    );
+    h.get_by_label("Export…").click();
     h.run_steps(4);
     assert!(matches!(h.state().0.state.modal, Some(Modal::Transfer)));
     let s = &h.state().0.state.transfer;
     assert_eq!((s.tab, s.scope.as_deref()), (Tab::Export, Some("french")));
     assert_all_named(&h, "export tab");
 
-    let (_v2, mut m2, mut w2) = opened("transfer-open2");
-    send(&mut m2, &mut w2, Msg::Modal(ModalMsg::OpenCreate));
+    let (_v2, m2, _w2) = opened("transfer-open2");
     let mut h = harness(m2);
-    h.run_steps(8);
-    h.get_by_label("More").click();
     h.run_steps(4);
-    h.get_by_label("Import or export…").click();
+    h.get_by_label("Import").click();
     h.run_steps(4);
     assert!(matches!(h.state().0.state.modal, Some(Modal::Transfer)));
     assert_eq!(h.state().0.state.transfer.tab, Tab::Import);
@@ -65,7 +70,7 @@ fn the_dialog_opens_from_the_stack_page_the_create_dialog_and_settings() {
     send(&mut m3, &mut w3, Msg::Navigate(Screen::Settings));
     let mut h = harness(m3);
     h.run_steps(4);
-    assert!(h.query_by_label("Export…").is_some() && h.query_by_label("Import…").is_some());
+    assert!(h.query_by_label("Export…").is_some() && h.query_by_label("Import…").is_none());
 }
 
 #[test]

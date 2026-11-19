@@ -465,10 +465,10 @@
 | [STORY-0162](docs/issues/stories/STORY-0162-managed-local-sidecar-process.md) Managed Local Background Sidecar Process and Supervisor (5) | done | 2/2 |
 | [STORY-0163](docs/issues/stories/STORY-0163-model-catalog-and-streaming-generation.md) GGUF Model Catalog, Downloader, and Streaming Generation (5) | done | 2/2 |
 | [STORY-0164](docs/issues/stories/STORY-0164-on-device-rag-and-cpu-prompt-budgeting.md) On-Device Vault RAG Pipeline and CPU Prompt Budgeting (5) | done | 2/2 |
-| [STORY-0165](docs/issues/stories/STORY-0165-homework-domain-model-and-vault-persistence.md) Homework Data Model, Lifecycle, and Vault Persistence (5) | backlog | 0/0 |
-| [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Homework Due Date Reminders and Calendar Integration (5) | backlog | 0/0 |
+| [STORY-0165](docs/issues/stories/STORY-0165-homework-domain-model-and-vault-persistence.md) Homework Data Model, Lifecycle, and Vault Persistence (5) | done | 0/0 |
+| [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Homework Due Date Reminders and Calendar Integration (5) | in_progress | 0/0 |
 | [STORY-0167](docs/issues/stories/STORY-0167-homework-management-and-planner-ui.md) Interactive Homework Planner Screen and Creation Dialog (5) | backlog | 0/0 |
-| [STORY-0168](docs/issues/stories/STORY-0168-unified-universal-import-hub.md) Unified Universal Import Entry Point and Redundant Button Consolidation (3) | backlog | 0/0 |
+| [STORY-0168](docs/issues/stories/STORY-0168-unified-universal-import-hub.md) Unified Universal Import Entry Point and Redundant Button Consolidation (3) | in_progress | 0/0 |
 | [STORY-0169](docs/issues/stories/STORY-0169-contextual-tooltips-and-hover-hints.md) Contextual Tooltips, Hover Hints, and Keyboard Shortcut Badges (3) | backlog | 0/0 |
 | [STORY-0170](docs/issues/stories/STORY-0170-navigation-and-menu-decluttering.md) Menu De-Cluttering, Visual Spacing, and Progressive Disclosure (5) | backlog | 0/0 |
 | [STORY-0171](docs/issues/stories/STORY-0171-in-gui-frogscript-wiki-browser.md) In-App FrogScript Wiki and Standard Library Reference Browser (5) | backlog | 0/0 |
@@ -548,7 +548,7 @@
 | [EPIC-053](docs/issues/epics/EPIC-053-gamified-multi-modal-recall-match-mode-and-distractors.md) Gamified and Multi-Modal Active Recall | done | 2/2 |
 | [EPIC-054](docs/issues/epics/EPIC-054-fsrs-auto-tuning-and-inline-card-capture.md) FSRS Auto-Tuning and Inline Card Capture | done | 2/2 |
 | [EPIC-055](docs/issues/epics/EPIC-055-offline-local-slm-internal-assistant.md) Offline Local SLM Internal Assistant | done | 3/3 |
-| [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration | backlog | 0/3 |
+| [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration | backlog | 1/3 |
 | [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | backlog | 0/3 |
 | [EPIC-058](docs/issues/epics/EPIC-058-in-gui-frogscript-wiki-and-reference.md) In-GUI FrogScript Wiki and Interactive Documentation | backlog | 0/2 |
 | [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time | backlog | 0/3 |

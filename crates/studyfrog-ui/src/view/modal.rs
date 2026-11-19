@@ -28,8 +28,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         match modal {
             Modal::Create(form) => super::modal_create::create(state, form, ui, out),
             Modal::Vault => vault(state, ui, out),
-            Modal::Import => super::modal_import::import(state, ui, out),
-            Modal::Transfer => super::modal_transfer::transfer(state, ui, out),
+            Modal::Transfer | Modal::Import => super::modal_transfer::transfer(state, ui, out),
             Modal::ConfirmUnmark(plan) => super::modal_unmark::draw(plan, ui, out),
             Modal::PdfExport(form) => super::modal_pdf_export::draw(state, form, ui, out),
             Modal::EditItem(form) => super::modal_edit_item::draw(state, form, ui, out),

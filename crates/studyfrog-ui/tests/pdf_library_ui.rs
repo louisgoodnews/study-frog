@@ -123,7 +123,7 @@ fn the_stack_page_shows_its_pdfs_with_page_counts_and_the_home_page_lists_them()
     model.state.app.stack_tabs = vec!["bio:list".into()];
     let mut h = common::views::harness(model);
     h.run_steps(2);
-    assert!(h.query_by_label("Add PDF ...").is_some());
+    assert!(h.query_by_label("Add PDF ...").is_none());
     assert!(h.query_by_label_contains("(3 pages)").is_some());
     let link = h.get_by_label_contains("(3 pages)");
     link.click();
@@ -135,7 +135,7 @@ fn the_stack_page_shows_its_pdfs_with_page_counts_and_the_home_page_lists_them()
 }
 
 #[test]
-fn the_create_dialog_offers_adding_a_pdf() {
+fn the_create_dialog_has_no_redundant_import_or_pdf_buttons() {
     let (_d, mut model, _w) = vault("dialog");
     apply(
         &mut model,
@@ -143,9 +143,8 @@ fn the_create_dialog_offers_adding_a_pdf() {
     );
     let mut h = common::views::harness(model);
     h.run_steps(8);
-    h.get_by_label("More").click();
-    h.run_steps(8);
-    assert!(h.query_by_label("Add PDF ...").is_some());
+    assert!(h.query_by_label("More").is_none());
+    assert!(h.query_by_label("Add PDF ...").is_none());
 }
 
 #[test]

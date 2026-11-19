@@ -200,16 +200,22 @@ pub fn transfer(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.add_space(4.0);
     ui.separator();
 
-    match t.tab {
-        Tab::Export => export_tab(state, ui, out),
-        Tab::Import => super::modal_transfer_import::import_tab(state, ui, out),
-    }
-    if t.busy {
-        ui.add_space(8.0);
-        ui.spinner();
-    }
-    if let Some(s) = &t.status {
-        ui.add_space(8.0);
-        ui.label(RichText::new(s).color(palette_of(ui).text_weak));
-    }
+    egui::ScrollArea::vertical()
+        .id_salt("modal-transfer-scroll")
+        .max_height((ui.ctx().content_rect().height() - 120.0).clamp(320.0, 680.0))
+        .auto_shrink([false, true])
+        .show(ui, |ui| {
+            match t.tab {
+                Tab::Export => export_tab(state, ui, out),
+                Tab::Import => super::modal_transfer_import::import_tab(state, ui, out),
+            }
+            if t.busy {
+                ui.add_space(8.0);
+                ui.spinner();
+            }
+            if let Some(s) = &t.status {
+                ui.add_space(8.0);
+                ui.label(RichText::new(s).color(palette_of(ui).text_weak));
+            }
+        });
 }

@@ -64,7 +64,6 @@ fn the_stack_and_the_type_are_in_the_header_and_the_editors_and_the_dialog_can_b
         "Resize Back",
         "Resize the dialog",
         "Enlarge the dialog",
-        "More",
         "More fields",
     ] {
         assert!(h.query_all_by_label(name).count() >= 1, "missing {name}");
@@ -106,7 +105,6 @@ fn at_the_normal_width_no_header_control_overlaps_another() {
         "Parent stack",
         "Type of item",
         "Enlarge the dialog",
-        "More",
         "Close",
     ];
     let rects: Vec<_> = names.iter().map(|n| (*n, rect_of(&h, n))).collect();

@@ -70,8 +70,8 @@ fn left_and_middle(
     section(ui, left_w, &mut |ui| brand_cluster(state, ui, out, anchors));
     section(ui, middle_w, &mut |ui| {
         if state.vault.is_some() {
-            let search_w = (middle_w * 0.8 - 90.0).clamp(110.0, 560.0);
-            ui.add_space(((middle_w - search_w - 90.0) / 2.0).max(0.0));
+            let search_w = (middle_w * 0.8 - 170.0).clamp(110.0, 560.0);
+            ui.add_space(((middle_w - search_w - 170.0) / 2.0).max(0.0));
             search_cluster(state, ui, out, search_w);
         }
     });
@@ -145,10 +145,17 @@ fn search_cluster(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f
         chrome(out, ChromeMsg::SearchClear);
     }
     menus::search_results(state, ui, field.rect, out);
-    // The view below owns the one accent-filled action; Create stays findable by its accent label.
+    // The view below owns the one accent-filled action; Create and Import stay findable by their accent labels.
     let create = kit::quiet_button(ui, "+ Create");
     if create.clicked() {
         out.push(Msg::Modal(ModalMsg::OpenCreate));
+    }
+    let import = kit::quiet_button(ui, "Import");
+    if import
+        .on_hover_text("Import files, folders, decks, or PDFs")
+        .clicked()
+    {
+        out.push(Msg::Modal(ModalMsg::OpenImport));
     }
 }
 

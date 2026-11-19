@@ -134,3 +134,55 @@ pub fn safe_folder(folder: &str) -> bool {
                 && !p.chars().any(char::is_control)
         })
 }
+
+/// Where an import places its items in the vault.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub enum ImportTarget {
+    /// Use each item's own `stack` field (error if an item names no stack).
+    #[default]
+    FromSource,
+    /// Import into an existing stack folder (nesting `item.stack` beneath it if non-empty).
+    ExistingStack(String),
+    /// Create a new top-level stack with this title (slugged) and import into it.
+    NewStack(String),
+    /// Import directly at the vault root (unstacked / Inbox), ignoring `item.stack`.
+    VaultRootNotes,
+}
+
+/// Detected importable source kind from a path.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SourceFormat {
+    /// StudyFrog JSON export.
+    Json,
+    /// StudyFrog TOML export.
+    Toml,
+    /// StudyFrog RON export.
+    Ron,
+    /// StudyFrog export zip or Obsidian vault zip.
+    Zip,
+    /// CSV, TSV, or delimited text cards.
+    Csv,
+    /// Anki `.apkg` package.
+    Anki,
+    /// Standalone `.md` / `.markdown` note, card, or deck.
+    Markdown,
+    /// Obsidian vault folder.
+    ObsidianFolder,
+    /// PDF document.
+    Pdf,
+}
+
+/// Human-readable label for a [`SourceFormat`].
+pub fn format_label(fmt: SourceFormat) -> &'static str {
+    match fmt {
+        SourceFormat::Json => "JSON",
+        SourceFormat::Toml => "TOML",
+        SourceFormat::Ron => "RON",
+        SourceFormat::Zip => "Zip archive",
+        SourceFormat::Csv => "CSV / TSV",
+        SourceFormat::Anki => "Anki (.apkg)",
+        SourceFormat::Markdown => "Markdown",
+        SourceFormat::ObsidianFolder => "Obsidian / Markdown folder",
+        SourceFormat::Pdf => "PDF",
+    }
+}

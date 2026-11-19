@@ -65,15 +65,10 @@ fn row(state: &State, row: &PdfRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     rename_row(state, row, ui, out);
 }
 
-/// The PDFs that sit directly in the stack's folder, with the button that adds one.
+/// The PDFs that sit directly in the stack's folder.
 pub fn stack_section(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.separator();
-    ui.horizontal(|ui| {
-        ui.strong("PDF files");
-        if ui.button("Add PDF ...").clicked() {
-            send(out, LibraryMsg::AddTo(folder.to_owned()));
-        }
-    });
+    ui.strong("PDF files");
     let prefix = format!("{folder}/");
     let here = state.pdf_library.rows.iter().filter(|r| {
         r.path

@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M15 completed; released 0.9.0. **Date:** 2026-11-16. **Branch:** `main`.
+**Phase:** 0.9.0 released (2026-11-16); active work is the v1.0.0 scope (phase m14, EPIC-056 to EPIC-063, see [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md)). **Date:** 2026-11-19. **Branch:** `main`.
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists
@@ -15,6 +15,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
 ## Latest
+- **Active: v1.0.0 scope (EPIC-056 to EPIC-063).** STORY-0165 (homework data model and vault persistence) is implemented in the working tree but not yet committed. The release gate was failing on formatting and debug output; that is being fixed in parallel. All other v1.0.0 epics are in backlog.
 - **0.9.0 released (2026-11-16):** FrogCanvas 2D spatial concept board (`crates/studyfrog-ui`, `crates/studyfrog-store`), PDF precision area cropping and synchronized split navigation (`crates/studyfrog-pdf`), continuous priority queue and anti-paralysis slicing (`crates/studyfrog-srs`), gamified match mode and embedding distractor exams (`crates/studyfrog-ui`, `crates/studyfrog-candle`), FSRS Adam parameter optimizer and inline card syntax scanner (`crates/studyfrog-srs`, `crates/studyfrog-md`), and private offline local SLM assistant sidecar (`crates/studyfrog-agent`, `crates/studyfrog-app`). See `docs/RELEASE_NOTES_0.9.0.md`.
 - **0.8.0 released (2026-11-11):** FrogScript standalone domain-specific language engine (`crates/studyfrog-script`), ScriptStudio multi-tab automation workbench with in-vault script persistence (`.studyfrog/scripts/`), dedicated stdout and stderr stream execution logging with filter controls, and full 14-event reactive application lifecycle event bus. See `docs/RELEASE_NOTES_0.8.0.md`.
 - **0.7.1 released (2026-11-11):** Assistant conversational chat interface, universal importer integration in items view, file launching in folders view, dedicated item deletion modal popup, difficulty-weighted metacognitive calibration, window icon integration, ScriptStudio & FrogScript rebranding and language specification, and critical fixes for calendar rehearsal setup and due item calculation. See `docs/RELEASE_NOTES_0.7.1.md`.
@@ -102,6 +103,15 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   unverified from memory. The remote `origin` exists (github.com/louisgoodnews/study-frog); CI has not run on this code yet.
 
 ## Next
+- **v1.0.0 (phase m14, `docs/v1.0.0-roadmap.md`):** EPIC-056 to EPIC-063, 23 stories, in the order of [priority-list.md](priority-list.md). Next task: STORY-0166 (homework due dates and lead-time triggers), after STORY-0165 is committed.
+- **Release gate:** `scripts/check.sh` must pass before the v1.0.0 commit; formatting and debug-output fixes are in progress in parallel.
+
+## Open flags
+- **Phase naming mismatch:** `docs/roadmap/ROADMAP.md` stops at M13; this file said M15 before this update; `docs/v1.0.0-roadmap.md` calls the release phase `m14`; and `priority-list.md` already uses "phase M14" for 0.8.0 (scripting). Unresolved: M14 names two different phases.
+- **In review:** EPIC-036 (UI aesthetics; STORY-0114 reading measure in characters, not the pixel width the story names), EPIC-038 (CLI control protocol; STORY-0124), STORY-0114 and STORY-0124.
+- **Not verified in an interactive window:** the Zen mode and type scale (EPIC-036), exam mode (EPIC-033), item colours (EPIC-032), the active-recall screens (EPIC-035), the control protocol screens (STORY-0124), and the assistant's MCP tool servers (STORY-0121). Tested headless or in screenshots only.
+
+## Earlier plan (0.3.0 era, superseded; kept for history)
 - **0.3.0 and 0.3.1 (phase M10) are released.** **Now (0.4.0, phase M11), built and committed on local `main`, not pushed and not released (the owner wants the whole priority list done first):** appearance settings, navigation history, list continuation, PDF names, auto-save with the "Saved" toast, Open on the created notice, import formats and examples, CSV mapping, standard prompts and the Prompts tab, running a prompt through the assistant, tables, underline, colour, a table of contents, code highlighting, text macros, ADR 0011, `referenced_by` with the `membership` view (schema v20), and the services, library column, JSON, CSV and import following the membership (TASK-0212).
 - **Done:** TASK-0218 (memory per stack: schema v21 and v22, ratings, queues, daily counts, Home, calendar, rerate) and TASK-0219 (familiarity and difficulty per stack, averaged on the item). Screens that show one value per item (status, due column, reports' item lists) still read the primary stack's schedule through the views `mem_primary`, `sm2_primary` and `review_once`.
 - **Next, in `priority-list.md` order:** TASK-0213 (references in the interface, in progress), TASK-0217 (mark a folder as a stack), TASK-0220 (TOML and RON export), then the views (TASK-0202 spec, TASK-0203, TASK-0204), TASK-0195 (calm the remaining screens), the diary (TASK-0170 to TASK-0174), then the release steps of `docs/contributing/RELEASING.md` (version bump to 0.4.0, notes with the install steps, AppImage, tag, push).

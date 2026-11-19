@@ -11,7 +11,8 @@ use studyfrog_store::stackmap::STACK_FILE;
 use crate::create::default_card_title;
 use crate::document::load_document;
 use crate::session::{ServiceError, VaultSession};
-use crate::xfer_model::{Bundle, XItem, safe_folder};
+pub use crate::xfer_model::ImportTarget;
+use crate::xfer_model::{Bundle, XItem};
 
 /// Most items one import may write.
 pub const MAX_ITEMS: usize = 20_000;
@@ -70,20 +71,6 @@ pub fn counts(plan: &ImportPlan) -> (usize, usize, usize) {
     )
 }
 
-fn destination(item: &XItem, target: Option<&str>) -> Result<String, String> {
-    let folder = match (target, item.stack.trim()) {
-        (Some(t), "") => t.to_owned(),
-        (Some(t), s) => format!("{t}/{s}"),
-        (None, "") => return Err("it names no stack; choose one to import into".to_owned()),
-        (None, s) => s.to_owned(),
-    };
-    if safe_folder(&folder) {
-        Ok(folder)
-    } else {
-        Err(format!("\"{folder}\" is not a usable stack folder"))
-    }
-}
-
 pub(crate) fn label(item: &XItem) -> String {
     if item.title.trim().is_empty() {
         default_card_title(&item.text)
@@ -107,9 +94,7 @@ pub(crate) fn known(session: &VaultSession) -> Result<Known, ServiceError> {
     };
     for (uid, m) in load_item_meta(&session.conn).map_err(ServiceError::Store)? {
         k.by_id.insert(uid, m.path.clone());
-        let Some(folder) = m.stack.clone() else {
-            continue;
-        };
+        let folder = m.stack.clone().unwrap_or_default();
         if let Ok(loaded) = load_document(session, uid) {
             let (a, b) = match &loaded.doc {
                 Doc::Card(d) => (d.front.clone(), d.back.clone()),
@@ -147,7 +132,7 @@ pub(crate) fn find(k: &Known, item: &XItem, folder: &str) -> Option<Existing> {
 
 fn missing_stacks(session: &VaultSession, folders: &[String]) -> usize {
     let mut seen: Vec<String> = Vec::new();
-    for f in folders {
+    for f in folders.iter().filter(|f| !f.is_empty()) {
         let mut upto = String::new();
         for part in f.split('/') {
             upto = if upto.is_empty() {
@@ -163,12 +148,16 @@ fn missing_stacks(session: &VaultSession, folders: &[String]) -> usize {
     seen.len()
 }
 
-/// The dry run: what the import would create, what exists already and what fails. Nothing is written.
-pub fn plan_import(
+/// The dry run against an explicit [`ImportTarget`]. Nothing is written.
+pub fn plan_import_to(
     session: &VaultSession,
     b: &Bundle,
-    target: Option<&str>,
+    target: &ImportTarget,
 ) -> Result<ImportPlan, ServiceError> {
+    let new_folder = match target {
+        ImportTarget::NewStack(name) => Some(crate::xfer_target::new_stack_folder(session, name)?),
+        _ => None,
+    };
     let k = known(session)?;
     let mut plan = ImportPlan {
         warnings: b.warnings.clone(),
@@ -182,24 +171,28 @@ pub fn plan_import(
         )));
     }
     for item in &b.items {
-        let (folder, verdict) = match destination(item, target) {
-            Err(e) => (String::new(), Verdict::Error(e)),
-            Ok(f) if crate::create::check_title(&label(item)).is_err() => (
-                f,
-                Verdict::Error("its title must be one line without control characters".to_owned()),
-            ),
-            Ok(f) if item.text.trim().is_empty() => {
-                (f, Verdict::Error("it has no text".to_owned()))
-            }
-            Ok(f) if item.kind != ItemKind::Note && item.answer.trim().is_empty() => {
-                (f, Verdict::Error("it has no back".to_owned()))
-            }
-            Ok(f) => {
-                folders.push(f.clone());
-                let v = find(&k, item, &f).map_or(Verdict::Create, |(_, p)| Verdict::Duplicate(p));
-                (f, v)
-            }
-        };
+        let (folder, verdict) =
+            match crate::xfer_target::resolve_folder(item, target, new_folder.as_deref()) {
+                Err(e) => (String::new(), Verdict::Error(e)),
+                Ok(f) if crate::create::check_title(&label(item)).is_err() => (
+                    f,
+                    Verdict::Error(
+                        "its title must be one line without control characters".to_owned(),
+                    ),
+                ),
+                Ok(f) if item.text.trim().is_empty() => {
+                    (f, Verdict::Error("it has no text".to_owned()))
+                }
+                Ok(f) if item.kind != ItemKind::Note && item.answer.trim().is_empty() => {
+                    (f, Verdict::Error("it has no back".to_owned()))
+                }
+                Ok(f) => {
+                    folders.push(f.clone());
+                    let v =
+                        find(&k, item, &f).map_or(Verdict::Create, |(_, p)| Verdict::Duplicate(p));
+                    (f, v)
+                }
+            };
         plan.lines.push(PlanLine {
             title: label(item),
             folder,
@@ -208,4 +201,13 @@ pub fn plan_import(
     }
     plan.new_stacks = missing_stacks(session, &folders);
     Ok(plan)
+}
+
+/// The dry run: what the import would create, what exists already and what fails. Nothing is written.
+pub fn plan_import(
+    session: &VaultSession,
+    b: &Bundle,
+    target: Option<&str>,
+) -> Result<ImportPlan, ServiceError> {
+    plan_import_to(session, b, &crate::xfer_target::target_from_opt(target))
 }

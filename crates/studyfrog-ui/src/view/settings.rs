@@ -94,21 +94,14 @@ fn view_tracking(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.weak("Used to tell how familiar you are with an item. Only the time and the item are stored, on this computer, and they are part of backups.");
 }
 
-/// Import and export of the library or a stack.
+/// Export of the library or a stack.
 fn transfer(_: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    crate::view::kit::section(ui, "Import and export");
-    ui.weak("Write the library or a stack as JSON, CSV or Markdown, or read a file, an Anki package or an Obsidian vault, with a preview first.");
-    ui.horizontal(|ui| {
-        for (label, tab) in [
-            ("Export…", crate::transfer_ui::Tab::Export),
-            ("Import…", crate::transfer_ui::Tab::Import),
-        ] {
-            if ui.button(label).clicked() {
-                let open = crate::transfer_ui::TransferMsg::Open(tab, None);
-                out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
-            }
-        }
-    });
+    crate::view::kit::section(ui, "Export");
+    ui.weak("Write the library or a stack as JSON, CSV or Markdown. Use Import in the top bar to import files, folders or PDFs.");
+    if ui.button("Export…").clicked() {
+        let open = crate::transfer_ui::TransferMsg::Open(crate::transfer_ui::Tab::Export, None);
+        out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
+    }
 }
 
 /// Whether familiarity improves the predictions on the user's history.

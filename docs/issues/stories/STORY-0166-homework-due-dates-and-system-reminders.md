@@ -2,7 +2,7 @@
 id: STORY-0166
 type: story
 title: "Homework Due Date Reminders and Calendar Integration"
-status: backlog
+status: in_progress
 epic: EPIC-056
 parents: ['EPIC-056']
 estimate: 5

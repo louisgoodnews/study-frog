@@ -17,11 +17,12 @@ use studyfrog_ui::model::{Model, apply};
 use studyfrog_ui::msg::Msg;
 use studyfrog_ui::state::Screen;
 
-const BAR: [&str; 8] = [
+const BAR: [&str; 9] = [
     "Show or hide the sidebar",
     "Switch vault",
     "Search items",
     "+ Create",
+    "Import",
     "Notifications",
     "Help for this screen (F1)",
     "Application settings",
@@ -71,6 +72,7 @@ fn without_a_vault_only_the_brand_and_help_are_shown() {
     for gone in [
         "Search items",
         "+ Create",
+        "Import",
         "Notifications",
         "Show or hide the sidebar",
         "Folders",

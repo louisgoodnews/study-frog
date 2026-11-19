@@ -51,6 +51,11 @@ pub const MIGRATIONS: &[Migration] = &[
         name: "timetable entries for lectures and lessons",
         sql: crate::schema_timetable::V28,
     },
+    Migration {
+        version: 29,
+        name: "homework items, checklists, and reminders",
+        sql: crate::schema_homework::V29,
+    },
 ];
 
 /// Derived index (rebuildable from the vault) followed by authoritative history. History tables

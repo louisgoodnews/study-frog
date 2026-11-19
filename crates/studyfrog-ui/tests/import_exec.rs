@@ -128,26 +128,29 @@ fn the_import_dialog_offers_card_types_and_files_only_when_extensions_exist() {
         h.query_by_label("Card front").is_none(),
         "the page holds no card form any more"
     );
-    h.get_by_label("More actions").click();
-    h.run();
-    h.get_by_label("Import…").click();
-    h.run();
+    h.get_by_label("Import").click();
+    h.run_steps(4);
     assert_all_named(&h, "import dialog");
     for text in [
         "Card type:",
         "Two cards",
-        "Import cards",
-        "Reads: Comma lines",
-        "File to import",
-        "Browse…",
+        "File or folder to import",
+        "Choose file…",
+        "Choose folder…",
     ] {
         assert!(h.query_by_label(text).is_some(), "missing {text}");
     }
-    h.get_by_label("Two cards").click();
-    h.run();
+    // The section sits below the dialog's scroll viewport, so bring it into view first.
+    h.get_by_label("Two cards").scroll_to_me();
+    h.run_steps(4);
+    let node = h.get_by_label("Two cards");
+    node.click();
+    h.run_steps(4);
     assert_eq!(
         h.state().0.state.browser.card_type.as_deref(),
-        Some("twice")
+        Some("twice"),
+        "modal={:?}",
+        h.state().0.state.modal
     );
     assert!(
         h.query_by_label("Source text").is_some() && h.query_by_label("Write a word.").is_some()
@@ -158,8 +161,10 @@ fn the_import_dialog_offers_card_types_and_files_only_when_extensions_exist() {
     apply(&mut plain, Msg::Select(Selection::Stack("french".into())));
     let mut h = harness(plain);
     h.run();
+    h.get_by_label("Import").click();
+    h.run_steps(4);
     assert!(
-        h.query_by_label("Import…").is_none(),
-        "without extensions there is nothing to import with"
+        h.query_by_label("Card type:").is_none(),
+        "without extensions no card-type section is shown"
     );
 }

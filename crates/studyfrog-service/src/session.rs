@@ -121,6 +121,7 @@ pub fn open_vault(path: &str) -> Result<(VaultSession, VaultInfo), ServiceError>
     let poll = prime(&root).map_err(store)?;
     reindex(&mut conn, &root).map_err(store)?;
     abort_unfinished_runs(&mut conn).map_err(store)?;
+    crate::homework::sync_homework_on_open(&mut conn, &root)?;
     let info = vault_info(&root, &conn)?;
     Ok((
         VaultSession {

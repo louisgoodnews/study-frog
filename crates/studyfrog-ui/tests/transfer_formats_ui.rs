@@ -35,6 +35,8 @@ fn the_list_of_formats_opens_and_saving_an_example_asks_for_a_file_write() {
     apply(&mut m, t(TransferMsg::Open(Tab::Import, None)));
     let mut h = harness(m);
     h.run_steps(6);
+    h.get_by_label("Which files can I import?").scroll_to_me();
+    h.run_steps(4);
     h.get_by_label("Which files can I import?").click();
     h.run_steps(6);
     assert!(
@@ -46,6 +48,9 @@ fn the_list_of_formats_opens_and_saving_an_example_asks_for_a_file_write() {
             .is_some()
     );
     assert_all_named(&h, "import formats");
+    h.get_by_label("Save example (studyfrog-example.csv)")
+        .scroll_to_me();
+    h.run_steps(4);
     h.get_by_label("Save example (studyfrog-example.csv)")
         .click();
     h.run_steps(4);
@@ -75,8 +80,13 @@ fn toml_and_ron_examples_can_be_saved() {
     apply(&mut m, t(TransferMsg::Open(Tab::Import, None)));
     let mut h = harness(m);
     h.run_steps(6);
+    h.get_by_label("Which files can I import?").scroll_to_me();
+    h.run_steps(4);
     h.get_by_label("Which files can I import?").click();
     h.run_steps(6);
+    h.get_by_label("Save example (studyfrog-example.toml)")
+        .scroll_to_me();
+    h.run_steps(4);
     h.get_by_label("Save example (studyfrog-example.toml)")
         .click();
     h.run_steps(4);
@@ -89,6 +99,9 @@ fn toml_and_ron_examples_can_be_saved() {
     });
     assert!(wrote_toml);
 
+    h.get_by_label("Save example (studyfrog-example.ron)")
+        .scroll_to_me();
+    h.run_steps(4);
     h.get_by_label("Save example (studyfrog-example.ron)")
         .click();
     h.run_steps(4);
@@ -108,12 +121,16 @@ fn the_csv_entry_offers_a_prompt_and_the_way_to_all_of_them() {
     apply(&mut m, t(TransferMsg::Open(Tab::Import, None)));
     let mut h = harness(m);
     h.run_steps(6);
+    h.get_by_label("Which files can I import?").scroll_to_me();
+    h.run_steps(4);
     h.get_by_label("Which files can I import?").click();
     h.run_steps(6);
     assert!(
         h.query_by_label("Copy a prompt that makes this file")
             .is_some()
     );
+    h.get_by_label("More prompts…").scroll_to_me();
+    h.run_steps(4);
     h.get_by_label("More prompts…").click();
     h.run_steps(6);
     let s = &h.state().0.state;

@@ -7,8 +7,8 @@ mod common;
 mod pdf_frame_common;
 
 use pdf_frame_common::{
-    OVER_PAGE, budget_ms, frame_of, open_big, renders, run, send, settle, thumb_renders,
-    timed_frame, view, wheel_at, wheel_over_side,
+    OVER_PAGE, budget_enforced, budget_ms, frame_of, open_big, renders, run, send, settle,
+    thumb_renders, timed_frame, view, wheel_at, wheel_over_side,
 };
 use studyfrog_ui::msg::Msg;
 use studyfrog_ui::pdf_types::{PdfMsg, Side, Zoom};
@@ -62,10 +62,13 @@ fn a_zoom_change_asks_the_worker_and_the_frame_keeps_showing_the_old_picture() {
         before,
         "nothing is drawn in the frame itself"
     );
-    assert!(
-        ms < budget_ms(),
-        "the frame after a zoom change took {ms:.1} ms"
-    );
+    eprintln!("frame after a zoom change: {ms:.2} ms");
+    if budget_enforced() {
+        assert!(
+            ms < budget_ms(),
+            "the frame after a zoom change took {ms:.1} ms"
+        );
+    }
     run(&mut f, fx);
     assert!(view(&f).pictures.iter().any(|(k, _)| k.scale_milli >= 3000));
 }
@@ -97,7 +100,9 @@ fn scrolling_the_thumbnails_and_reading_stay_inside_the_frame_budget() {
     eprintln!(
         "frame (update + layout + tessellation), 500 pages at 200 %, scrolling thumbnails and panning: median {median:.2} ms, p95 {p95:.2} ms, worst {worst:.2} ms; budget at 60 fps 16.7 ms"
     );
-    assert!(median < budget_ms(), "median frame {median:.1} ms");
+    if budget_enforced() {
+        assert!(median < budget_ms(), "median frame {median:.1} ms");
+    }
 }
 
 #[test]

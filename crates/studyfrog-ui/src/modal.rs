@@ -171,13 +171,7 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             },
             Vec::new(),
         ),
-        ModalMsg::OpenImport => (
-            State {
-                modal: Some(Modal::Import),
-                ..state
-            },
-            Vec::new(),
-        ),
+        ModalMsg::OpenImport => crate::import_hub::open(state),
         ModalMsg::Close => crate::modal_discard::close(state),
         ModalMsg::KeepEditing => crate::modal_discard::keep_editing(state),
         ModalMsg::Discard => crate::modal_discard::discard(state),

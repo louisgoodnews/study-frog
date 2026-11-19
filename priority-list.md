@@ -5,7 +5,43 @@ The order in which Claude works on the planned items of phase M10 (0.3.0), kept 
 [docs/roadmap/M10-usability-and-insight.md](docs/roadmap/M10-usability-and-insight.md). Tick an item when it is done and
 verified (`scripts/check.sh` passes), and report it to the owner. The owner may reorder the list at any time.
 
-Last updated: 2026-11-09 (0.6.0 released; everything of phase M12 is built; STORY-0114 and STORY-0124 are in review, see below).
+Last updated: 2026-11-19 (v1.0.0 section added at the top; 0.9.0 released 2026-11-16).
+
+## v1.0.0 (phase M14)
+Scope and order from [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md), section 3: EPIC-056 to EPIC-063 in epic order.
+Tick a story only when its issue file says `done`. Phase naming is an open flag in [STATUS.md](STATUS.md).
+
+- EPIC-056 Homework and assignment planner
+  - [x] 1. STORY-0165 Homework data model, lifecycle and vault persistence (done in the working tree; not yet committed)
+  - [ ] 2. STORY-0166 Homework due dates, lead-time triggers and system notifications
+  - [ ] 3. STORY-0167 Homework management planner UI and timetable integration
+- EPIC-057 UI/UX streamlining and universal import hub
+  - [ ] 4. STORY-0168 Unified universal import entry point and redundant button consolidation
+  - [ ] 5. STORY-0169 Systematic contextual tooltips, hover hints and shortcut badges
+  - [ ] 6. STORY-0170 Menu de-cluttering, visual spacing and progressive disclosure
+- EPIC-058 In-GUI FrogScript wiki and reference
+  - [ ] 7. STORY-0171 In-app FrogScript wiki and standard library reference browser
+  - [ ] 8. STORY-0172 Interactive FrogScript cookbook and 1-click code templates
+- EPIC-059 Memory Mode rehearsal against time
+  - [ ] 9. STORY-0173 Memory session engine, card deck pairing and flip-state transitions
+  - [ ] 10. STORY-0174 Memory Mode interactive card grid UI, card back styling and visual feedback
+  - [ ] 11. STORY-0175 Time-attack countdown mode, session records and rehearsal launch
+- EPIC-060 Persistent cognitive profiling and telemetry
+  - [ ] 12. STORY-0176 Persistent interaction telemetry and cognitive metrics schema in SQLite
+  - [ ] 13. STORY-0177 Adaptive cognitive difficulty and learning velocity estimation engine
+  - [ ] 14. STORY-0178 Cognitive profile dashboard and learning velocity visualization in reports
+- EPIC-061 Scenario-based diagnostic decision matrices
+  - [ ] 15. STORY-0179 Scenario-based diagnostic case study item schema and domain model
+  - [ ] 16. STORY-0180 SLM multi-criteria semantic evaluator for choices and rationales
+  - [ ] 17. STORY-0181 Interactive case-study rehearsal UI and multi-step feedback display
+- EPIC-062 Psychometric formula engine and math drills
+  - [ ] 18. STORY-0182 Psychometric formula engine and dynamic parameter generator
+  - [ ] 19. STORY-0183 Step-by-step intermediate calculation validator and error diagnostics
+  - [ ] 20. STORY-0184 Interactive math drill view with formula rendering, scratchpad and step reveal
+- EPIC-063 Altklausur lab and mock exam simulation
+  - [ ] 21. STORY-0185 Mock exam structure, weighted point allocations and strict timer controls
+  - [ ] 22. STORY-0186 Lecture slide and script-driven exam generation engine via local SLM
+  - [ ] 23. STORY-0187 Mock exam grading report, German university grade scale (1.0 to 5.0) and analytics
 
 ## Wave 1: start now
 - [x] 1. [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Names with commas cannot be used

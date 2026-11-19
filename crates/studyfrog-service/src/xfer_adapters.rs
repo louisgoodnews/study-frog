@@ -5,6 +5,7 @@ use std::fs;
 use std::path::Path;
 
 use crate::xfer_model::Bundle;
+pub use crate::xfer_model::{SourceFormat, format_label};
 use crate::xfer_zip::{MAX_ENTRY, read_zip};
 
 /// A format the app can read.
@@ -176,13 +177,37 @@ pub fn read_csv_source(
         .file_name()
         .map(|n| n.to_string_lossy().into_owned())
         .unwrap_or_default();
+    let bytes = read_bytes(path, &name)?;
+    crate::xfer_csv_map::read_csv(&bytes, options)
+        .map_err(|e| format!("{name}: {e}. {} expects: {CSV_LAYOUT}", "CSV or TSV cards"))
+}
+
+/// Detect the importable source format from a file or folder path.
+pub fn detect_format(path: &Path) -> Option<SourceFormat> {
+    if path.is_dir() {
+        return Some(SourceFormat::ObsidianFolder);
+    }
+    let name = path.file_name()?.to_string_lossy();
+    let ext = name.rsplit_once('.')?.1.to_ascii_lowercase();
+    match ext.as_str() {
+        "md" | "markdown" => Some(SourceFormat::Markdown),
+        "pdf" => Some(SourceFormat::Pdf),
+        "json" => Some(SourceFormat::Json),
+        "toml" => Some(SourceFormat::Toml),
+        "ron" => Some(SourceFormat::Ron),
+        "zip" => Some(SourceFormat::Zip),
+        "csv" | "tsv" | "txt" => Some(SourceFormat::Csv),
+        "apkg" => Some(SourceFormat::Anki),
+        _ => None,
+    }
+}
+
+fn read_bytes(path: &Path, name: &str) -> Result<Vec<u8>, String> {
     let meta = fs::metadata(path).map_err(|e| format!("{name}: {e}"))?;
     if meta.len() > MAX_ENTRY * 4 {
         return Err(format!("{name} is too large to import"));
     }
-    let bytes = fs::read(path).map_err(|e| format!("{name}: {e}"))?;
-    crate::xfer_csv_map::read_csv(&bytes, options)
-        .map_err(|e| format!("{name}: {e}. {} expects: {CSV_LAYOUT}", "CSV or TSV cards"))
+    fs::read(path).map_err(|e| format!("{name}: {e}"))
 }
 
 /// Read a file or an Obsidian vault folder, and say which adapter read it.
@@ -194,12 +219,26 @@ pub fn read_source(path: &Path) -> Result<(Bundle, &'static str), String> {
         .file_name()
         .map(|n| n.to_string_lossy().into_owned())
         .unwrap_or_default();
-    let adapter = adapter_for(&name).ok_or_else(|| format!("{name}: no importer reads this kind of file; supported: json, toml, ron, zip, csv, tsv, apkg or an Obsidian vault folder"))?;
-    let meta = fs::metadata(path).map_err(|e| format!("{name}: {e}"))?;
-    if meta.len() > MAX_ENTRY * 4 {
-        return Err(format!("{name} is too large to import"));
+    let ext = name.rsplit_once('.').map(|(_, e)| e.to_ascii_lowercase());
+    match ext.as_deref() {
+        Some("md" | "markdown") => {
+            let bytes = read_bytes(path, &name)?;
+            let txt = text(&bytes)?;
+            return crate::xfer_markdown::from_markdown(&name, txt)
+                .map(|b| (b, "Markdown"))
+                .map_err(|e| format!("{name}: {e}"));
+        }
+        Some("pdf") => {
+            return Err(format!(
+                "{name}: PDF files are added directly to a stack PDF library"
+            ));
+        }
+        _ => {}
     }
-    let bytes = fs::read(path).map_err(|e| format!("{name}: {e}"))?;
+    let adapter = adapter_for(&name).ok_or_else(|| {
+        format!("{name}: no importer reads this kind of file; supported: md, pdf, json, toml, ron, zip, csv, tsv, apkg or an Obsidian vault folder")
+    })?;
+    let bytes = read_bytes(path, &name)?;
     (adapter.read)(&bytes)
         .map(|b| (b, adapter.name))
         .map_err(|e| format!("{name}: {e}. {} expects: {}", adapter.name, adapter.layout))

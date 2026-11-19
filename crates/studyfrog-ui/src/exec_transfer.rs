@@ -4,46 +4,76 @@ use std::fs;
 use std::path::Path;
 
 use studyfrog_core::civil::{date_from_days, format_date};
+use studyfrog_ext::registry::importer_for_file;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::xfer_adapters::{is_csv_path, read_csv_source, read_source};
 use studyfrog_service::xfer_csv::to_csv;
-use studyfrog_service::xfer_csv_map::{CsvOptions, problem_text};
+use studyfrog_service::xfer_csv_map::CsvOptions;
 use studyfrog_service::xfer_export::{export_bundle, export_json_zip, export_markdown_zip};
 use studyfrog_service::xfer_import::apply_import;
 use studyfrog_service::xfer_model::Bundle;
-use studyfrog_service::xfer_plan::{counts, plan_import};
+use studyfrog_service::xfer_plan::plan_import;
 
 use crate::exec::Worker;
 use crate::library_ui::LibraryMsg;
 use crate::msg::Msg;
 use crate::transfer_ui::{CsvInfo, Format, Imported, Preview, TransferJob, TransferMsg};
 
-const SHOWN_LINES: usize = 100;
-const EXTENSIONS: [&str; 8] = ["json", "toml", "ron", "zip", "csv", "tsv", "txt", "apkg"];
+fn import_extensions(w: &Worker) -> Vec<&'static str> {
+    let mut exts = vec![
+        "md", "pdf", "csv", "tsv", "txt", "apkg", "json", "toml", "ron", "zip",
+    ];
+    for imp in &w.registry.importers {
+        for &e in imp.extensions {
+            if !exts.contains(&e) {
+                exts.push(e);
+            }
+        }
+    }
+    exts
+}
 
 fn msg(m: TransferMsg) -> Msg {
     Msg::Library(LibraryMsg::Transfer(m))
 }
 
 /// A file read: its items, the name of the reader and, for CSV, how it was read.
-type Read = (Bundle, String, Option<Box<CsvInfo>>);
+pub(crate) type Read = (Bundle, String, Option<Box<CsvInfo>>);
 
-/// Read the file; a CSV file with the user's choices, and then also how it was read.
-fn read(path: &str, csv: &CsvOptions) -> Result<Read, String> {
-    let path = Path::new(path);
-    if !is_csv_path(path) {
-        return read_source(path).map(|(b, a)| (b, a.to_owned(), None));
+/// Read the file; a CSV file with the user's choices, or fall back to registered extension importers.
+pub(crate) fn read_any(w: &Worker, path: &str, csv: &CsvOptions) -> Result<Read, String> {
+    let p = Path::new(path);
+    if is_csv_path(p) {
+        let r = read_csv_source(p, csv)?;
+        let info = CsvInfo {
+            sheet: r.sheet,
+            problems: r.problems,
+        };
+        return Ok((
+            r.bundle,
+            "CSV or TSV cards".to_owned(),
+            Some(Box::new(info)),
+        ));
     }
-    let r = read_csv_source(path, csv)?;
-    let info = CsvInfo {
-        sheet: r.sheet,
-        problems: r.problems,
-    };
-    Ok((
-        r.bundle,
-        "CSV or TSV cards".to_owned(),
-        Some(Box::new(info)),
-    ))
+    match read_source(p) {
+        Ok((b, a)) => Ok((b, a.to_owned(), None)),
+        Err(err) => {
+            let name = p.file_name().and_then(|n| n.to_str()).unwrap_or(path);
+            let Some(imp) = (!p.is_dir())
+                .then(|| importer_for_file(&w.registry, name))
+                .flatten()
+            else {
+                return Err(err);
+            };
+            let text = fs::read_to_string(p).map_err(|e| format!("{path}: {e}"))?;
+            let cards = (imp.import)(&text).map_err(|e| format!("{}: {e}", imp.name))?;
+            Ok((
+                crate::exec_import_hub::cards_bundle(cards),
+                imp.name.to_owned(),
+                None,
+            ))
+        }
+    }
 }
 
 fn preview(
@@ -52,27 +82,11 @@ fn preview(
     (target, csv): (Option<&str>, &CsvOptions),
 ) -> Result<Box<Preview>, String> {
     let session = w.session.as_ref().ok_or("no vault is open")?;
-    let (bundle, adapter, csv) = read(path, csv)?;
+    let (bundle, adapter, csv) = read_any(w, path, csv)?;
     let plan = plan_import(session, &bundle, target).map_err(|e| e.to_string())?;
-    Ok(Box::new(Preview {
-        adapter,
-        total: plan.lines.len(),
-        counts: counts(&plan),
-        new_stacks: plan.new_stacks,
-        warnings: plan
-            .warnings
-            .iter()
-            .filter(|w| {
-                !csv.as_ref()
-                    .is_some_and(|c| c.problems.iter().any(|p| problem_text(p) == **w))
-            })
-            .cloned()
-            .collect(),
-        scheduling: bundle.scheduling && bundle.items.iter().any(|i| !i.reviews.is_empty()),
-        files: bundle.files.len(),
-        lines: plan.lines.into_iter().take(SHOWN_LINES).collect(),
-        csv,
-    }))
+    Ok(crate::exec_import_hub::build_preview(
+        plan, &bundle, adapter, csv,
+    ))
 }
 
 fn import(
@@ -87,7 +101,7 @@ fn import(
     now_ns: i64,
 ) -> Result<Box<Imported>, String> {
     let (path, target, policy, with_schedule, csv) = job;
-    let (bundle, _, _) = read(path, csv)?;
+    let (bundle, _, _) = read_any(w, path, csv)?;
     let session = w.session.as_mut().ok_or("no vault is open")?;
     let ids = fresh_id_source(u64::try_from(now_ns / 1_000_000).unwrap_or(0))
         .map_err(|e| e.to_string())?;
@@ -167,10 +181,11 @@ pub fn run(w: &mut Worker, job: TransferJob, now_ns: i64) -> Msg {
         )),
         TransferJob::Discover => crate::transfer_found::look(),
         TransferJob::Browse(folder) => {
+            let exts = import_extensions(w);
             let picked = if folder {
                 w.folder_picker.and_then(|p| p())
             } else {
-                w.file_picker.and_then(|p| p(&EXTENSIONS))
+                w.file_picker.and_then(|p| p(&exts))
             };
             msg(TransferMsg::Browsed(
                 folder,
@@ -206,5 +221,6 @@ pub fn run(w: &mut Worker, job: TransferJob, now_ns: i64) -> Msg {
             (&folder, scope.as_deref(), format, scheduling),
             now_ns,
         ))),
+        TransferJob::Hub(j) => crate::exec_import_hub::run(w, j, now_ns),
     }
 }

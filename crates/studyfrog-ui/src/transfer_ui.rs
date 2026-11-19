@@ -65,6 +65,8 @@ pub enum TransferMsg {
     Import,
     /// The import finished.
     Imported(Result<Box<Imported>, String>),
+    /// Universal Import Hub messages.
+    Hub(Box<crate::import_hub::HubMsg>),
 }
 
 fn job(effect: TransferJob) -> Vec<Effect> {
@@ -88,6 +90,7 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
                 destination: t.destination.clone(),
                 ..TransferState::default()
             };
+            crate::import_hub::init_on_open(&mut state, tab);
             state.modal = Some(Modal::Transfer);
         }
         TransferMsg::Tab(tab) => (t.tab, t.status) = (tab, None),
@@ -97,16 +100,32 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
         TransferMsg::BackToExport => t.choosing_mode = false,
         TransferMsg::Mode(advanced) => t.scheduling = advanced,
         TransferMsg::Destination(text) => t.destination = text,
-        TransferMsg::Path(text) => (t.path, t.preview, t.csv) = (text, None, Default::default()),
+        TransferMsg::Path(text) => {
+            (t.path, t.preview, t.csv, t.hub.is_folder) = (text, None, Default::default(), false);
+        }
         TransferMsg::Browse(_, folder) => return (state, job(TransferJob::Browse(folder))),
         TransferMsg::Browsed(folder, Some(p)) => {
-            let target = if folder && t.tab == Tab::Export {
-                &mut t.destination
+            if folder && t.tab == Tab::Export {
+                t.destination = p;
+                (t.preview, t.csv) = (None, Default::default());
             } else {
-                &mut t.path
-            };
-            *target = p;
-            (t.preview, t.csv) = (None, Default::default());
+                t.path = p;
+                t.hub.is_folder = folder;
+                (t.preview, t.csv, t.status) = (None, Default::default(), None);
+                if t.tab == Tab::Import
+                    && !crate::import_hub::is_pdf_format(
+                        crate::import_hub::detect_format(
+                            &t.path,
+                            folder,
+                            &state.extensions.importers,
+                        )
+                        .as_ref(),
+                    )
+                {
+                    let fx = crate::import_hub::preview_effects(&mut state);
+                    return (state, fx);
+                }
+            }
         }
         TransferMsg::Browsed(_, None) => {}
         TransferMsg::Export => {
@@ -176,11 +195,8 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
         TransferMsg::Policy(p) => t.policy = p,
         TransferMsg::WithSchedule(on) => t.with_schedule = on,
         TransferMsg::Preview => {
-            t.busy = true;
-            t.status = None;
-            let (path, scope) = (t.path.trim().to_owned(), t.scope.clone());
-            let csv = t.csv.clone();
-            return (state, job(TransferJob::Preview(path, scope, csv)));
+            let fx = crate::import_hub::preview_effects(&mut state);
+            return (state, fx);
         }
         TransferMsg::Previewed(result) => {
             t.busy = false;
@@ -190,19 +206,8 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
             }
         }
         TransferMsg::Import => {
-            t.busy = true;
-            let (path, target, policy) = (t.path.trim().to_owned(), t.scope.clone(), t.policy);
-            let (with_schedule, csv) = (t.with_schedule, t.csv.clone());
-            return (
-                state,
-                job(TransferJob::Import {
-                    path,
-                    target,
-                    policy,
-                    with_schedule,
-                    csv,
-                }),
-            );
+            let fx = crate::import_hub::import_effects(&mut state);
+            return (state, fx);
         }
         TransferMsg::Imported(result) => {
             t.busy = false;
@@ -224,6 +229,7 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
                 ),
             }
         }
+        TransferMsg::Hub(m) => return crate::import_hub::update(state, *m),
     }
     let effects = crate::transfer_found::want(&mut state);
     (state, effects)

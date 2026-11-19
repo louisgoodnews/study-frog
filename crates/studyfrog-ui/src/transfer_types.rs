@@ -75,6 +75,40 @@ pub struct Imported {
     pub info: VaultInfo,
 }
 
+/// How the Universal Import Hub chooses where imported items are placed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum ImportDestination {
+    /// Import into an existing stack (or per-item stack when scope is `None`).
+    #[default]
+    ExistingStack,
+    /// Create a new top-level stack and import into it.
+    NewStack,
+    /// Import directly as unstacked vault notes (Inbox).
+    UnstackedNotes,
+}
+
+/// Extra Universal Import Hub state carried inside [`TransferState`].
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct HubState {
+    /// Which destination option is selected.
+    pub dest_mode: ImportDestination,
+    /// Title for the new stack when `dest_mode == ImportDestination::NewStack`.
+    pub new_stack_name: String,
+    /// Whether the chosen path was picked via the folder dialog.
+    pub is_folder: bool,
+}
+
+/// Concrete target sent to the worker for Universal Import Hub jobs.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum HubTarget {
+    /// Existing stack folder, or `None` ("As the file says").
+    Existing(Option<String>),
+    /// Create a new stack with this title.
+    NewStack(String),
+    /// Unstacked vault root (Inbox).
+    UnstackedNotes,
+}
+
 /// The dialog's fields.
 #[derive(Debug, Clone, PartialEq)]
 pub struct TransferState {
@@ -108,6 +142,8 @@ pub struct TransferState {
     pub looking: bool,
     /// What the user chose for reading a CSV file.
     pub csv: studyfrog_service::xfer_csv_map::CsvOptions,
+    /// Universal Import Hub state (destination mode, new stack name, folder flag).
+    pub hub: HubState,
 }
 
 impl Default for TransferState {
@@ -128,6 +164,7 @@ impl Default for TransferState {
             found: None,
             looking: false,
             csv: Default::default(),
+            hub: Default::default(),
         }
     }
 }
@@ -181,4 +218,29 @@ pub enum TransferJob {
         /// Include scheduling.
         scheduling: bool,
     },
+    /// Universal Import Hub jobs (custom target, PDF, extension card types).
+    Hub(HubJob),
+}
+
+/// Worker jobs specific to the Universal Import Hub.
+#[derive(Debug, Clone, PartialEq)]
+pub enum HubJob {
+    /// Dry-run preview against `(path, target, csv)`.
+    PreviewHub(
+        String,
+        HubTarget,
+        studyfrog_service::xfer_csv_map::CsvOptions,
+    ),
+    /// Commit import against `(path, target, policy, with_schedule, csv)`.
+    ImportHub(
+        String,
+        HubTarget,
+        Policy,
+        bool,
+        studyfrog_service::xfer_csv_map::CsvOptions,
+    ),
+    /// Add and index a PDF file into `(path, target)`.
+    ImportPdf(String, HubTarget),
+    /// Expand `(target, type_id, source)` and write cards into a stack.
+    CreateCardType(HubTarget, String, String),
 }

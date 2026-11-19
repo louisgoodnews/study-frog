@@ -36,7 +36,12 @@ fn line_item(ui: &mut egui::Ui, title: &str, folder: &str, v: &Verdict) {
         verdict_badge(ui, v);
         ui.add_space(2.0);
         ui.label(RichText::new(title).strong());
-        ui.weak(format!("in {folder} ({})", verdict_text(v)));
+        let place = if folder.is_empty() {
+            "Inbox (vault root)"
+        } else {
+            folder
+        };
+        ui.weak(format!("in {place} ({})", verdict_text(v)));
     });
 }
 
@@ -144,16 +149,16 @@ pub fn preview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
     ui.add_space(6.0);
     let can_import = !t.busy && create + dup > 0;
-    let import_btn = egui::Button::new(
-        RichText::new("Import")
-            .strong()
-            .size(crate::typo::size(ui, crate::typo::Tier::Body))
-            .color(palette_of(ui).on_accent),
-    )
-    .fill(palette_of(ui).accent)
-    .min_size(vec2(130.0, 32.0));
-
-    if ui.add_enabled(can_import, import_btn).clicked() {
+    let clicked = if can_import {
+        kit::primary_button(ui, "Import").clicked()
+    } else {
+        ui.add_enabled(
+            false,
+            egui::Button::new("Import").min_size(vec2(130.0, 32.0)),
+        )
+        .clicked()
+    };
+    if clicked {
         send(out, TransferMsg::Import);
     }
 }

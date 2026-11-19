@@ -84,6 +84,11 @@ fn problem_of(msg: &Msg) -> Option<&str> {
             | TransferMsg::Previewed(Err(e))
             | TransferMsg::Imported(Err(e)),
         )) => e,
+        Msg::Library(LibraryMsg::Transfer(TransferMsg::Hub(h))) => match &**h {
+            crate::import_hub::HubMsg::PdfImported(Err(e))
+            | crate::import_hub::HubMsg::CardTypeCreated(Err(e)) => e,
+            _ => return None,
+        },
         _ => return None,
     };
     Some(e.as_str())
@@ -132,6 +137,11 @@ fn transfer_lines(msg: &Msg, out: &mut Vec<(LogLevel, String)>) {
                 i.notes
                     .iter()
                     .for_each(|n| push(LogLevel::Info, format!("import: {n}")));
+            }
+            TransferMsg::Hub(h) => {
+                if let crate::import_hub::HubMsg::PdfImported(Ok((rel, _))) = &**h {
+                    push(LogLevel::Info, format!("import pdf: {rel}"));
+                }
             }
             _ => {}
         },
