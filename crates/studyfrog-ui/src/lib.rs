@@ -223,6 +223,7 @@ pub mod stack_roadmap;
 pub mod stack_tabs;
 pub mod stack_view_ui;
 pub mod state;
+pub mod state_browser;
 pub mod subjects_ui;
 pub mod summary;
 pub mod theme;

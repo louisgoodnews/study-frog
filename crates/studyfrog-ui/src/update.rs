@@ -2,7 +2,7 @@
 
 use crate::effect::Effect;
 use crate::msg::Msg;
-use crate::state::{Screen, State};
+use crate::state::{Notice, NoticeKind, Screen, State};
 use crate::vault_ui::{open, open_typed_path, started, vault_opened};
 
 /// Advance the state by one message. Every new notice also goes to the notification list.
@@ -115,6 +115,23 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Logs(m) => crate::logs_ui::update(state, m),
         Msg::Plan(m) => crate::planner::update(state, m),
         Msg::Board(m) => crate::kanban::update(state, m),
+        Msg::HomeworkLoaded(Ok(items)) => (
+            State {
+                homework: items,
+                ..state
+            },
+            Vec::new(),
+        ),
+        Msg::HomeworkLoaded(Err(text)) => (
+            State {
+                notice: Some(Notice {
+                    kind: NoticeKind::Error,
+                    text: format!("Could not load homework: {text}"),
+                }),
+                ..state
+            },
+            Vec::new(),
+        ),
         import @ (Msg::CardTypeChosen(_)
         | Msg::ImportPathEdited(_)
         | Msg::BrowseImportClicked

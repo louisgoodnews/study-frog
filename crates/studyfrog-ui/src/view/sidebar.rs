@@ -24,7 +24,11 @@ const GROUPS: &[Group] = &[
     },
     Group {
         caption: Some("Plan"),
-        screens: &[(Screen::Calendar, "Calendar"), (Screen::Board, "Board")],
+        screens: &[
+            (Screen::Calendar, "Calendar"),
+            (Screen::Homework, "Homework"),
+            (Screen::Board, "Board"),
+        ],
     },
     Group {
         caption: Some("Insight"),

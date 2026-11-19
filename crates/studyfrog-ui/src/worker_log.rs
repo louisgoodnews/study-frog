@@ -73,6 +73,7 @@ fn problem_of(msg: &Msg) -> Option<&str> {
         | Msg::GraphLoaded(Err(e))
         | Msg::ReportsBuilt(Err(e))
         | Msg::AchievementsChecked(Err(e))
+        | Msg::HomeworkLoaded(Err(e))
         | Msg::Pdf(
             PdfMsg::Opened(_, Err(e))
             | PdfMsg::Rendered(_, _, Err(e))

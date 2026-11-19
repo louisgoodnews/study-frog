@@ -12,6 +12,8 @@ use studyfrog_service::document::{LoadedDoc, Saved};
 use studyfrog_service::reports::ReportBundle;
 use studyfrog_store::overview::LinkGraph;
 
+use studyfrog_calendar::homework::HomeworkItem;
+
 use crate::chrome::ChromeMsg;
 use crate::home_ui::HomeMsg;
 use crate::import_ui::ImportOutcome;
@@ -213,6 +215,8 @@ pub enum Msg {
     Plan(PlanMsg),
     /// Something happened on the board screen.
     Board(BoardMsg),
+    /// The homework items were read (or reading them failed).
+    HomeworkLoaded(Result<Vec<HomeworkItem>, String>),
     /// The answer-comparison choice on the settings screen changed.
     SetAnswerEngine(AnswerEngine),
     /// Something happened in the reading-speed test.

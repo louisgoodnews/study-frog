@@ -32,6 +32,7 @@ pub fn screen_name(screen: Screen) -> &'static str {
         Screen::Help => "help",
         Screen::Canvas => "canvas",
         Screen::Match => "match",
+        Screen::Homework => "homework",
     }
 }
 

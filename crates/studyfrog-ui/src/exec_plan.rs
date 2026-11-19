@@ -76,6 +76,15 @@ pub fn load_sessions(w: &mut Worker, now_ns: i64) -> Msg {
     Msg::Plan(PlanMsg::Loaded(result))
 }
 
+/// Read every homework item in due-date order.
+pub fn load_homework(w: &Worker) -> Msg {
+    let result = match &w.session {
+        Some(s) => studyfrog_service::homework::list_homework(s).map_err(|e| e.to_string()),
+        None => Err(NO_VAULT.to_owned()),
+    };
+    Msg::HomeworkLoaded(result)
+}
+
 /// Store a session, giving a new one its id first.
 pub fn save(w: &mut Worker, s: Session, now_ns: i64) -> Msg {
     run_sessions(w, |session| {

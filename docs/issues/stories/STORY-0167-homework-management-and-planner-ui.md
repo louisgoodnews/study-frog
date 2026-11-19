@@ -2,7 +2,7 @@
 id: STORY-0167
 type: story
 title: "Interactive Homework Planner Screen and Creation Dialog"
-status: backlog
+status: in_progress
 epic: EPIC-056
 parents: ['EPIC-056']
 estimate: 5
@@ -23,7 +23,7 @@ Build the Homework management user interface in `studyfrog-ui`:
 - Implement an accessible modal creation/edit dialog with subject selection, date-time picker, estimated duration slider, and reminder lead times.
 
 ## Acceptance Criteria
-- [ ] Dedicated Homework navigation tab/view accessible from main navigation rail
+- [x] Dedicated Homework navigation tab/view accessible from main navigation rail
 - [ ] Interactive assignment list with status filtering (All, Active, Due Today, Overdue, Completed)
 - [ ] Modal dialog to create, edit, estimate, and complete homework tasks with course association
 

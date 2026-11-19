@@ -49,6 +49,7 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
         ),
         Screen::Achievements => (State { screen, ..state }, vec![Effect::CheckAchievements]),
         Screen::Board => (State { screen, ..state }, vec![Effect::LoadBoard]),
+        Screen::Homework => (State { screen, ..state }, vec![Effect::LoadHomework]),
         Screen::Rehearse => crate::setup::refresh_preview(State { screen, ..state }),
         _ => (State { screen, ..state }, Vec::new()),
     }

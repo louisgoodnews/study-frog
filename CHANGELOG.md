@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Homework planner screen (`crates/studyfrog-ui`)**: a sidebar entry lists homework sorted by due date, with urgency labels and completed items under their own heading; items load from the vault when the screen opens (STORY-0167, EPIC-056).
 - **Homework data model and vault persistence (`crates/studyfrog-calendar`, `crates/studyfrog-config`, `crates/studyfrog-store`, `crates/studyfrog-service`)**:
   - Homework item types in the calendar crate (`homework.rs`, `homework_ops.rs`) covering title, subject, due and start dates, estimated minutes, priority, status, and checklist (STORY-0165, EPIC-056).
   - TOML persistence and deterministic rendering of homework items in the vault config (`homework.rs`, `homework_render.rs`) (STORY-0165, EPIC-056).

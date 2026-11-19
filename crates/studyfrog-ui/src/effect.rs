@@ -199,6 +199,8 @@ pub enum Effect {
     LoadGraph,
     /// Read all sessions and today's local date.
     LoadSessions,
+    /// Read every homework item, in due-date order.
+    LoadHomework,
     /// Read, move or put back the reviews the schedule planned.
     Reviews(crate::planner_reviews::ReviewEffect),
     /// Store a session; id `0` means a new one.

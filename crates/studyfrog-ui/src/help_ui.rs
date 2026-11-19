@@ -33,6 +33,7 @@ pub fn page_for(state: &State) -> &'static str {
         Screen::Pdf => "pdf",
         Screen::Canvas => "graph",
         Screen::Match => "rehearse",
+        Screen::Homework => "calendar",
     }
 }
 

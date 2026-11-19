@@ -46,6 +46,7 @@ mod help;
 mod help_edit;
 mod home;
 mod home_cards;
+mod homework_planner;
 mod icons;
 pub(crate) mod image;
 mod item_details;
@@ -206,6 +207,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
             Screen::Console => console::draw(state, ui, &mut out),
             Screen::Canvas => canvas::draw(state, ui, &mut out),
             Screen::Match => match_grid::draw(state, ui, &mut out),
+            Screen::Homework => homework_planner::draw(state, ui, &mut out),
         });
     if ui.input(|i| i.key_pressed(egui::Key::F1)) {
         out.push(Msg::Help(crate::help_types::HelpMsg::ForScreen));
