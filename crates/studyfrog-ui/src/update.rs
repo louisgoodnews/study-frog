@@ -54,6 +54,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
             Vec::new(),
         ),
         Msg::Memory(m) => crate::setup::memory::update(state, m),
+        Msg::Srs(m) => crate::app_settings_ui::srs(state, m),
         Msg::Tick => {
             let (state, _) = crate::setup::memory::tick(state);
             let (state, polled) = crate::poll_ui::tick(state);

@@ -169,7 +169,7 @@ fn rate_in_stack(
         Scheduler::Fsrs => {
             let params = params_for(vault, home.and_then(|h| h.request_retention));
             let prev = load_mem_state_in(conn, key)?;
-            let observed = if prev.is_none() {
+            let observed = if prev.is_none() && vault.calibrated_start {
                 observed_difficulties(conn)?
             } else {
                 Vec::new()

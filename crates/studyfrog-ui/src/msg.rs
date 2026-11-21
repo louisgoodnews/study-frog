@@ -117,6 +117,8 @@ pub enum Msg {
     AddCardClicked,
     /// A stack or card was created (or not); carries the refreshed vault.
     Created(Result<VaultInfo, String>),
+    /// A scheduling switch of the vault.
+    Srs(crate::app_settings_ui::SrsMsg),
     /// A message of the memory game.
     Memory(crate::setup::memory::MemoryMsg),
     /// A field of the run setup form changed.

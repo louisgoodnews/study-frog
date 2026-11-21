@@ -148,3 +148,37 @@ pub fn saved(state: State, result: Result<(), String>) -> (State, Vec<Effect>) {
         }
     }
 }
+
+/// Messages of the vault's scheduling switches.
+#[derive(Debug, Clone, PartialEq)]
+pub enum SrsMsg {
+    /// The calibrated starting difficulty was switched on or off.
+    CalibratedStart(bool),
+    /// The switch was written: the refreshed vault, or why it could not be.
+    CalibratedStartApplied(Result<Box<crate::state::VaultInfo>, String>),
+}
+
+/// Ask for the switch to be written, and keep the refreshed vault (or say why it failed).
+pub fn srs(state: State, msg: SrsMsg) -> (State, Vec<Effect>) {
+    match msg {
+        SrsMsg::CalibratedStart(on) => (state, vec![Effect::SetCalibratedStart(on)]),
+        SrsMsg::CalibratedStartApplied(Ok(info)) => {
+            let mut state = state;
+            state.vault = Some(*info);
+            state.notice = Some(Notice {
+                kind: NoticeKind::Info,
+                text: "The starting difficulty setting was saved; new cards use it from their first answer."
+                    .to_owned(),
+            });
+            (state, Vec::new())
+        }
+        SrsMsg::CalibratedStartApplied(Err(e)) => {
+            let mut state = state;
+            state.notice = Some(Notice {
+                kind: NoticeKind::Error,
+                text: format!("Could not save the starting difficulty setting: {e}"),
+            });
+            (state, Vec::new())
+        }
+    }
+}

@@ -121,7 +121,7 @@ fn replay(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
 }
 
 /// The scheduler settings the vault uses (read-only) and where to change them.
-fn scheduling(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
+fn scheduling(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     crate::view::kit::section(ui, "Scheduling");
     let Some(vault) = &state.vault else { return };
     if let Some(e) = &vault.settings_error {
@@ -169,6 +169,17 @@ fn scheduling(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
             });
             ui.end_row();
         });
+    let mut calibrated = s.calibrated_start;
+    if ui
+        .checkbox(
+            &mut calibrated,
+            "Calibrate a new card's starting difficulty from my earlier answers",
+        )
+        .on_hover_text("On: the first rating of a new card starts from your own answer times, once you have timed answers. Off: the scheduler's standard starting difficulty.")
+        .changed()
+    {
+        out.push(Msg::Srs(crate::app_settings_ui::SrsMsg::CalibratedStart(calibrated)));
+    }
     ui.add_space(8.0);
     ui.weak("Edit studyfrog.toml in the vault folder, and _stack.toml next to a stack, to change these (familiarity_strength, familiarity_threshold, and familiarity = false to switch it off for one stack).");
 }

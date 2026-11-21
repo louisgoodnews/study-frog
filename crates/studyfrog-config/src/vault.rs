@@ -19,6 +19,7 @@ struct RawSrs {
     weights: Option<Vec<f64>>,
     familiarity_strength: Option<f64>,
     familiarity_threshold: Option<f64>,
+    calibrated_start: Option<bool>,
 }
 
 #[derive(Deserialize)]
@@ -74,6 +75,7 @@ pub fn parse_vault_settings(text: &str) -> Result<VaultSettings, ConfigError> {
         weights: None,
         familiarity_strength: None,
         familiarity_threshold: None,
+        calibrated_start: None,
     });
     let base = vault_settings_default();
     let max = srs
@@ -97,6 +99,7 @@ pub fn parse_vault_settings(text: &str) -> Result<VaultSettings, ConfigError> {
             .transpose()?
             .unwrap_or(base.request_retention),
         maximum_interval_days: max,
+        calibrated_start: srs.calibrated_start.unwrap_or(base.calibrated_start),
         weights: srs.weights.map(|w| weights_value(text, &w)).transpose()?,
         familiarity_strength: strength_value(
             text,
@@ -134,6 +137,7 @@ pub fn render_vault_settings(s: &VaultSettings) -> String {
         "familiarity_threshold = {}\n",
         float_text(s.familiarity_threshold)
     ));
+    out.push_str(&format!("calibrated_start = {}\n", s.calibrated_start));
     if let Some(w) = s.weights {
         let items: Vec<String> = w.iter().map(|x| float_text(*x)).collect();
         out.push_str(&format!("weights = [{}]\n", items.join(", ")));

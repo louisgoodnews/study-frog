@@ -52,6 +52,8 @@ pub enum Effect {
     RecordView(crate::view_time::ViewRecord),
     /// Read the cards of a stack (the inbox when `None`) for a memory game.
     MemoryDeck(Option<String>),
+    /// Write the calibrated-start switch into the vault's `studyfrog.toml`.
+    SetCalibratedStart(bool),
     /// Count the items a run built from this plan would contain.
     PreviewQueue {
         /// The plan.

@@ -16,7 +16,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## Active work: v1.0.0 (2026-11-21)
 Working through [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md) in the milestone order, tracked in the v1.0.0 section of [priority-list.md](priority-list.md).
-- **Next task:** STORY-0177 is in review: the consolidation chart and the calibrated starting difficulty (on by default) are built; the rerate path still uses the plain prior. The first-run toast now sits at the top right.
+- **Next task:** STORY-0177 is in review: the consolidation chart, the calibrated starting difficulty (on by default, with a switch in Settings) are built; rerating still uses the plain prior.
 - **Open flags:** STORY-0187 result screen and review are UI work; the new v1.0 stories are not yet in the app's UI.
 - **Done in this stretch:** STORY-0165 (model, storage, TOML mirror), STORY-0173 (Memory Mode engine), STORY-0185 (mock exam model, navigation, timer), STORY-0187 engine part, STORY-0182 and STORY-0183 (psychometric formulas, diagnosis), STORY-0176 (telemetry storage); engines in review: STORY-0175, 0177, 0179, 0180.
 

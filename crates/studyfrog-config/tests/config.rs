@@ -107,7 +107,7 @@ proptest! {
         threshold in decimal(100),
         weights in prop::option::of(prop::array::uniform21((-5_000_i32..30_000).prop_map(|n| n as f32 / 1000.0))),
     ) {
-        let s = VaultSettings { scheduler: sched, request_retention: retention, maximum_interval_days: max, weights, familiarity_strength: strength, familiarity_threshold: threshold };
+        let s = VaultSettings { scheduler: sched, request_retention: retention, maximum_interval_days: max, weights, familiarity_strength: strength, familiarity_threshold: threshold, calibrated_start: true };
         prop_assert_eq!(parse_vault_settings(&render_vault_settings(&s)), Ok(s));
     }
 }

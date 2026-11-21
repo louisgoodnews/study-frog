@@ -8,6 +8,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Switch for the calibrated starting difficulty (`crates/studyfrog-config`, `crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0177)**: Settings, Scheduling, has a checkbox (on by default) that writes `calibrated_start` under `[srs]` in `studyfrog.toml`.
+- **Welcome tour offer expires after 20 seconds (`crates/studyfrog-ui`)**: the tour stays in Help; the toast no longer lingers over the screen.
 - **Calibrated starting difficulty (`crates/studyfrog-service`, `crates/studyfrog-store`, STORY-0177)**: a new item's first FSRS review starts from the scheduler's prior blended with the user's earlier first-answer difficulties. On by default; unchanged until the user has timed answers.
 - **Welcome and notification toasts at the top right (`crates/studyfrog-ui`)**: they sit under the header, 340 points wide, so they no longer cover the setup's Next button or the step bar.
 - **Consolidation chart on the Cognitive profile tab (`crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0177)**: the mean days between passing reviews, by week, from the review history.

@@ -3,11 +3,9 @@
 
 use crate::values::float_text;
 
-const KEY: &str = "request_retention";
-
-fn is_key_line(line: &str) -> bool {
+fn is_key_line(key: &str, line: &str) -> bool {
     line.trim_start()
-        .strip_prefix(KEY)
+        .strip_prefix(key)
         .is_some_and(|rest| rest.trim_start().starts_with('='))
 }
 
@@ -35,11 +33,21 @@ fn section(lines: &[&str], table: Option<&str>) -> Option<(usize, usize)> {
 /// `table` (`Some("srs")`, as in `studyfrog.toml`): the line replaced when there is one, else added at the start of
 /// the table (at the end of the top level), or a new table at the end of the file.
 pub fn with_request_retention(text: &str, r: f32, table: Option<&str>) -> String {
-    let line = format!("{KEY} = {}", float_text(r));
+    with_setting_line(
+        text,
+        "request_retention",
+        format!("request_retention = {}", float_text(r)),
+        table,
+    )
+}
+
+/// The text with the line `line` (a `key = value` line) in place of the line for `key`, in the top level
+/// (`table` `None`) or in `table`; added when absent, as [`with_request_retention`] does.
+pub fn with_setting_line(text: &str, key: &str, line: String, table: Option<&str>) -> String {
     let lines: Vec<&str> = text.lines().collect();
     let mut out: Vec<String> = lines.iter().map(|l| (*l).to_owned()).collect();
     match section(&lines, table) {
-        Some((from, to)) => match lines[from..to].iter().position(|l| is_key_line(l)) {
+        Some((from, to)) => match lines[from..to].iter().position(|l| is_key_line(key, l)) {
             Some(i) => out[from + i] = line,
             None if table.is_some() => out.insert(from, line),
             None => out.insert(to, line),

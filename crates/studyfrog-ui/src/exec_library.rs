@@ -85,3 +85,14 @@ pub fn run(w: &mut Worker, effect: LibraryEffect, now_ns: i64) -> Msg {
         )),
     }
 }
+
+/// Write the calibrated-start switch into the vault's settings file and return the refreshed vault.
+pub fn set_calibrated_start(w: &mut Worker, on: bool) -> Msg {
+    let done = match w.session.as_mut() {
+        None => Err("no vault is open".to_owned()),
+        Some(s) => studyfrog_service::srs_setting::apply_calibrated_start(s, on)
+            .map(Box::new)
+            .map_err(|e| studyfrog_service::session::describe_service_error(&e)),
+    };
+    Msg::Srs(crate::app_settings_ui::SrsMsg::CalibratedStartApplied(done))
+}

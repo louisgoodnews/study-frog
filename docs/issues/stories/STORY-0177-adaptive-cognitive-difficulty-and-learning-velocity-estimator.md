@@ -36,9 +36,9 @@ EPIC-060, STORY-0176
 ## Implementation (2026-11-21)
 `studyfrog-report::difficulty`: D_emp on [1, 10], the velocity slope, and `calibrated_prior` (the prior counts as five observations). Tests: `tests/difficulty.rs`. The Cognitive profile tab (STORY-0178) shows a consolidation chart: the mean days between passing reviews, by week (`studyfrog-service::cognitive_report`). The history keeps no stability, so the gap stands in for it. Test: `studyfrog-service/tests/cognitive_report.rs`; the tab's section is checked by `studyfrog-ui/tests/reports_cognitive_ui.rs` (the screenshot does not reach it below the fold).
 
-The calibrated starting difficulty is on by default. A first FSRS review blends the scheduler's prior with the difficulties of the user's earlier first answers (`studyfrog-service::schedule::calibrated_initial`, the last 500 first reviews that have timing). With no timed history the prior is used unchanged, so new users get the same schedule as before. Rerating (`rerate.rs`) still replays with the plain prior; there is no switch yet to turn the calibration off.
+The calibrated starting difficulty is on by default, and the Scheduling section of Settings has a checkbox for it (it writes `calibrated_start` under `[srs]` in `studyfrog.toml`, keeping the rest of the file; `studyfrog-service::srs_setting`). A first FSRS review blends the scheduler's prior with the difficulties of the user's earlier first answers (`studyfrog-service::schedule::calibrated_initial`, the last 500 first reviews that have timing). With no timed history the prior is used unchanged, so new users get the same schedule as before. Rerating (`rerate.rs`) still replays with the plain prior;
 
-Tests: `studyfrog-service/tests/calibrated_start.rs` (prior unchanged without data, direction of the blend, one timing per item).
+Tests: `studyfrog-service/tests/calibrated_start.rs` (prior unchanged without data, direction of the blend, one timing per item), `studyfrog-service/tests/calibrated_switch.rs` (the switch is written, kept in the file and read back), `studyfrog-config/tests/srs_switch.rs`, and `studyfrog-ui/tests/srs_switch_ui.rs`.
 
 ## Open Questions
 None.

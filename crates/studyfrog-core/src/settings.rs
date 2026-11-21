@@ -33,6 +33,8 @@ pub struct VaultSettings {
     pub familiarity_strength: f32,
     /// A due item at or above this familiarity (0 to 1) is left out of the daily queue; 1 leaves nothing out.
     pub familiarity_threshold: f32,
+    /// Calibrate a new card's starting difficulty from the user's earlier first answers.
+    pub calibrated_start: bool,
 }
 
 /// Defaults used when `studyfrog.toml` is absent or leaves a key out.
@@ -44,6 +46,7 @@ pub fn vault_settings_default() -> VaultSettings {
         weights: None,
         familiarity_strength: 2.0,
         familiarity_threshold: 1.0,
+        calibrated_start: true,
     }
 }
 
