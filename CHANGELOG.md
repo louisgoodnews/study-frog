@@ -48,6 +48,10 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - **Homework on the calendar (`crates/studyfrog-ui`, `studyfrog-calendar`)**: homework deadlines appear as urgency-coloured dots on the month and week grids and as a "Homework due" card in the day view; `due_on` and `most_urgent` in `homework_query` pick the day's items and their most pressing urgency (STORY-0166, EPIC-056).
 - **German grade scale (`crates/studyfrog-rehearsal`)**: percentage and points summation, the eleven-band scale from 1.0 to 5.0, and a pass mark that forces a fail below it (STORY-0187, EPIC-063).
 
+### Fixed
+- **Faster first ratings in large vaults (`crates/studyfrog-store`, `crates/studyfrog-service`, STORY-0177)**: a new card's first rating no longer reads the whole vault's overview for its deadlines (about 640 ms to about 6 ms at 100,000 cards, debug build). The starting-difficulty lookup is bounded and stays about 5 ms at a million reviews.
+- **Rerating keeps the calibrated start (`crates/studyfrog-service`, STORY-0177)**: replaying a first review uses the calibration in force when it was made, so rerating to the same rating leaves the schedule unchanged.
+
 ## [0.9.0] - 2026-11-16
 
 ### Added

@@ -12,7 +12,7 @@ use studyfrog_srs::fsrs::{initial_state, interval_days, next_state};
 use studyfrog_srs::params::Params;
 use studyfrog_srs::sm2::{sm2_initial, sm2_next};
 use studyfrog_store::error::StoreError;
-use studyfrog_store::first_timing::first_review_timings;
+use studyfrog_store::first_timing::first_review_timings_before;
 use studyfrog_store::schedule::{StoredMem, StoredSm2};
 
 const MS_PER_DAY: i64 = 86_400_000;
@@ -38,11 +38,14 @@ pub fn apply_rating(
     apply_rating_calibrated(prev, item, rating, now, params, &[])
 }
 
-/// The difficulties the user's first answers imply, on the scale of the difficulty engine. Each is
-/// computed from the answer time and the reading time the words should take; semantic scores are
-/// not stored, so a neutral score is used.
-pub fn observed_difficulties(conn: &Connection) -> Result<Vec<f64>, StoreError> {
-    Ok(first_review_timings(conn)?
+/// The difficulties the user's first answers imply, on the scale of the difficulty engine, from the
+/// answers made before `before_ms`. Each is computed from the answer time and the reading time the
+/// words should take; semantic scores are not stored, so a neutral score is used.
+pub fn observed_difficulties_before(
+    conn: &Connection,
+    before_ms: i64,
+) -> Result<Vec<f64>, StoreError> {
+    Ok(first_review_timings_before(conn, before_ms)?
         .into_iter()
         .map(|(answer_ms, expected_ms)| {
             empirical_difficulty(&Observation {
@@ -53,6 +56,11 @@ pub fn observed_difficulties(conn: &Connection) -> Result<Vec<f64>, StoreError> 
             })
         })
         .collect())
+}
+
+/// The difficulties of every answer so far (see [`observed_difficulties_before`]).
+pub fn observed_difficulties(conn: &Connection) -> Result<Vec<f64>, StoreError> {
+    observed_difficulties_before(conn, i64::MAX)
 }
 
 /// Like [`apply_rating`], but the starting difficulty of a first review is calibrated: the scheduler's

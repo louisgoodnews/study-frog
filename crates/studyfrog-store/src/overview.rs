@@ -97,6 +97,23 @@ fn subjects_of(list: Option<String>) -> Vec<String> {
     list.as_deref().map_or_else(Vec::new, decode_names)
 }
 
+/// Each stack's uid and folder, without the item counts: what a lookup by folder needs. The counts of
+/// [`load_overview`] scan the item table once per stack, so a per-rating lookup must not use them.
+pub fn stack_folders(conn: &Connection) -> Result<Vec<(Uid, String)>, StoreError> {
+    let mut stmt = conn
+        .prepare("SELECT s.uid, s.folder FROM stack_setting s")
+        .map_err(sql_err)?;
+    let rows = stmt
+        .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))
+        .map_err(sql_err)?;
+    rows.map(|row| {
+        let (id, folder) = row.map_err(sql_err)?;
+        let uid = parse_ulid(&id).ok_or_else(|| StoreError::Corrupt(format!("ulid: {id:?}")))?;
+        Ok((uid, folder))
+    })
+    .collect()
+}
+
 fn stacks(conn: &Connection) -> Result<Vec<StackRow>, StoreError> {
     let mut stmt = conn.prepare(STACKS_SQL).map_err(sql_err)?;
     let rows = stmt.query_map([], stack_row).map_err(sql_err)?;

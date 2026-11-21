@@ -16,14 +16,24 @@ use studyfrog_store::schedule::{
 };
 use studyfrog_store::stack_scope::{review_stacks, stack_home};
 
-use crate::schedule::{apply_rating, apply_rating_sm2};
+use crate::schedule::{apply_rating_calibrated, apply_rating_sm2, observed_difficulties_before};
 use crate::session::{ServiceError, VaultSession, current_settings};
 use crate::settings::{params_for, scheduler_for};
 
 /// The FSRS state after replaying `reviews` from the start.
 pub fn replay_fsrs(reviews: &[Review], params: &Params) -> Option<StoredMem> {
+    replay_fsrs_calibrated(reviews, params, &[])
+}
+
+/// The FSRS state after replaying `reviews`, a first review starting from `observed` (the calibration
+/// in force when those reviews were made; empty for the plain prior).
+pub fn replay_fsrs_calibrated(
+    reviews: &[Review],
+    params: &Params,
+    observed: &[f64],
+) -> Option<StoredMem> {
     reviews.iter().fold(None, |prev, r| {
-        Some(apply_rating(prev.as_ref(), r.item, r.rating, r.at, params).1)
+        Some(apply_rating_calibrated(prev.as_ref(), r.item, r.rating, r.at, params, observed).1)
     })
 }
 
@@ -45,7 +55,14 @@ fn rebuild(conn: &Connection, item: Uid, vault: &VaultSettings) -> Result<(), St
         match scheduler_for(vault, home.as_ref()) {
             Scheduler::Fsrs => {
                 let params = params_for(vault, home.and_then(|h| h.request_retention));
-                replay_fsrs(&reviews, &params)
+                // The calibration in force when the first review was made: the answers before it.
+                let observed = match reviews.first() {
+                    Some(first) if vault.calibrated_start => {
+                        observed_difficulties_before(conn, first.at.0)?
+                    }
+                    _ => Vec::new(),
+                };
+                replay_fsrs_calibrated(&reviews, &params, &observed)
                     .map_or(Ok(()), |m| save_mem_state_in(conn, (item, stack), &m))?;
             }
             Scheduler::Sm2 => {

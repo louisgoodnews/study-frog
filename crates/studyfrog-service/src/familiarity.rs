@@ -93,22 +93,17 @@ fn deadline_dates(conn: &Connection, home: Option<&ItemHome>) -> Result<Vec<Date
     let Some(home) = home else {
         return Ok(Vec::new());
     };
-    let overview = studyfrog_store::overview::load_overview(conn)?;
-    let own = overview
-        .stacks
-        .iter()
-        .find(|s| s.uid == home.stack)
-        .map(|s| s.folder.clone());
-    let above = |uid: Uid| {
-        let folder = overview
-            .stacks
+    let folders = studyfrog_store::overview::stack_folders(conn)?;
+    let folder_of = |uid: Uid| {
+        folders
             .iter()
-            .find(|s| s.uid == uid)
-            .map(|s| s.folder.as_str());
-        match (folder, own.as_deref()) {
-            (Some(f), Some(own)) => own == f || own.starts_with(&format!("{f}/")),
-            _ => false,
-        }
+            .find(|(u, _)| *u == uid)
+            .map(|(_, f)| f.as_str())
+    };
+    let own = folder_of(home.stack).map(str::to_owned);
+    let above = |uid: Uid| match (folder_of(uid), own.as_deref()) {
+        (Some(f), Some(own)) => own == f || own.starts_with(&format!("{f}/")),
+        _ => false,
     };
     Ok(load_sessions(conn)?
         .into_iter()
