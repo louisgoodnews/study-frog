@@ -17,6 +17,8 @@ pub enum ReportTab {
     Familiarity,
     /// Self-assessment calibration against measured performance.
     Calibration,
+    /// Timing, weekly recall, velocity and calibration from the review history.
+    Cognitive,
     /// The history of runs.
     Runs,
     /// Recall by hour and weekday, and fatigue within a run.

@@ -69,6 +69,8 @@ pub struct ReportBundle {
     pub calibration: studyfrog_report::calibration::CalibrationReport,
     /// The behavioural analytics (EPIC-034).
     pub analytics: Box<crate::analytics::Analytics>,
+    /// The cognitive profile: timing, velocity, weekly recall and calibration.
+    pub cognitive: crate::cognitive_report::CognitiveProfile,
 }
 
 fn day_of(ms: i64, offset_minutes: i32) -> i64 {
@@ -188,6 +190,7 @@ pub fn build_reports_with(
     let model = estimate_model(&history, today);
     Ok(ReportBundle {
         reviews: rows.len(),
+        cognitive: crate::cognitive_report::profile(&rows),
         retention: retention_curve(&points),
         latency: latency_stats(&mut all),
         histogram: bins,

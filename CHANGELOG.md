@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Cognitive profile tab on the Reports screen (`crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0178)**: latency against word length, weekly passing share, learning velocity and a metacognitive calibration widget, all from the review history. Telemetry is not recorded yet, so semantic scores and stability are not shown.
 - **Memory mode game on the rehearse screen (`crates/studyfrog-ui`, STORY-0174)**: a "Memory game" button in the setup starts a game from the open stack. Cards lay out in 2 to 8 columns at the largest size that fits; the board has dot-patterned backs, a match glow, a shaking mismatch and a HUD with time, moves, pairs left and streak.
 - **Homework model, storage and reminders (`crates/studyfrog-calendar`, `crates/studyfrog-store`, `crates/studyfrog-service`)**:
   - Pure homework item model with title, course, start and due date and time, estimate, priority, status, checklist, and notes, with validation and lifecycle helpers (STORY-0165, EPIC-056).

@@ -97,6 +97,7 @@ fn an_empty_history_says_so_and_still_draws() {
         },
         calibration: studyfrog_report::calibration::calibration_report(&[], &[]),
         analytics: Default::default(),
+        cognitive: Default::default(),
     };
     apply(&mut m, Msg::ReportsBuilt(Ok(empty)));
     let mut h = harness(m);

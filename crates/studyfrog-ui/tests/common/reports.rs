@@ -80,5 +80,6 @@ pub fn bundle() -> ReportBundle {
         },
         calibration: studyfrog_report::calibration::calibration_report(&[], &[]),
         analytics: Default::default(),
+        cognitive: Default::default(),
     }
 }

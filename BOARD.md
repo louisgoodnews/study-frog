@@ -478,7 +478,7 @@
 | [STORY-0175](docs/issues/stories/STORY-0175-memory-time-attack-records-and-rehearsal-launch.md) Time-Attack Countdown Mode, Session Records, and Rehearsal Launch Entry Points (2) | review | 0/0 |
 | [STORY-0176](docs/issues/stories/STORY-0176-persistent-cognitive-telemetry-and-interaction-metrics.md) Persistent Interaction Telemetry and Cognitive Metrics Schema in SQLite (3) | done | 0/0 |
 | [STORY-0177](docs/issues/stories/STORY-0177-adaptive-cognitive-difficulty-and-learning-velocity-estimator.md) Adaptive Cognitive Difficulty and Learning Velocity Estimation Engine (5) | review | 0/0 |
-| [STORY-0178](docs/issues/stories/STORY-0178-cognitive-profile-dashboard-and-velocity-visualizer.md) Cognitive Profile Dashboard and Learning Velocity Visualization in Reports (3) | backlog | 0/0 |
+| [STORY-0178](docs/issues/stories/STORY-0178-cognitive-profile-dashboard-and-velocity-visualizer.md) Cognitive Profile Dashboard and Learning Velocity Visualization in Reports (3) | review | 0/0 |
 | [STORY-0179](docs/issues/stories/STORY-0179-scenario-diagnostic-case-study-schema-and-model.md) Scenario-Based Diagnostic Case Study Item Schema and Domain Model (3) | review | 0/0 |
 | [STORY-0180](docs/issues/stories/STORY-0180-slm-multi-criteria-semantic-evaluator.md) SLM Multi-Criteria Semantic Evaluator for Decision Choices and Conceptual Rationales (5) | review | 0/0 |
 | [STORY-0181](docs/issues/stories/STORY-0181-interactive-case-study-rehearsal-ui.md) Interactive Case-Study Rehearsal UI and Multi-Step Feedback Display (3) | backlog | 0/0 |

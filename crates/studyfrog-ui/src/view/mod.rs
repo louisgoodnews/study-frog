@@ -108,6 +108,8 @@ mod report_pacer;
 mod report_rows;
 mod reports;
 mod reports_calibration;
+mod reports_cognitive;
+mod reports_cognitive_charts;
 mod reports_fam;
 mod reports_habits;
 pub(crate) mod reports_leeches;

@@ -16,6 +16,7 @@ pub mod attention;
 pub mod backup;
 pub mod bulk;
 pub mod calibration_report;
+pub mod cognitive_report;
 pub mod compare;
 pub mod content;
 pub mod content_cloze;
