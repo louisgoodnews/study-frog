@@ -108,6 +108,18 @@ pub struct TransferState {
     pub looking: bool,
     /// What the user chose for reading a CSV file.
     pub csv: studyfrog_service::xfer_csv_map::CsvOptions,
+    /// The name of a stack the import creates, when the user chose "New stack"; `None` otherwise.
+    pub new_stack: Option<String>,
+}
+
+/// Where an import puts its items, from the dialog's choices. `Ok(None)` is "as the file says",
+/// `Some("")` the vault root, `Some(folder)` a stack (existing or new).
+pub fn import_target(t: &TransferState) -> Result<Option<String>, String> {
+    match &t.new_stack {
+        Some(name) if name.trim().is_empty() => Err("Name the new stack first.".to_owned()),
+        Some(name) => Ok(Some(name.trim().to_owned())),
+        None => Ok(t.scope.clone()),
+    }
 }
 
 impl Default for TransferState {
@@ -128,6 +140,7 @@ impl Default for TransferState {
             found: None,
             looking: false,
             csv: Default::default(),
+            new_stack: None,
         }
     }
 }
@@ -181,4 +194,13 @@ pub enum TransferJob {
         /// Include scheduling.
         scheduling: bool,
     },
+}
+
+/// Show why an action was not started, and do nothing else.
+pub fn refused(
+    mut state: crate::state::State,
+    text: String,
+) -> (crate::state::State, Vec<crate::effect::Effect>) {
+    state.transfer.status = Some(text);
+    (state, Vec::new())
 }

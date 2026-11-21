@@ -70,14 +70,18 @@ pub fn counts(plan: &ImportPlan) -> (usize, usize, usize) {
     )
 }
 
+/// Where an item goes. `None` is "as the file says"; `Some("")` is the vault root (an item with no stack
+/// goes there, and its stack, if it names one, is made at the root); `Some(folder)` puts items in that
+/// folder, nested by their own stack.
 fn destination(item: &XItem, target: Option<&str>) -> Result<String, String> {
     let folder = match (target, item.stack.trim()) {
+        (Some(""), s) => s.to_owned(),
         (Some(t), "") => t.to_owned(),
         (Some(t), s) => format!("{t}/{s}"),
         (None, "") => return Err("it names no stack; choose one to import into".to_owned()),
         (None, s) => s.to_owned(),
     };
-    if safe_folder(&folder) {
+    if folder.is_empty() || safe_folder(&folder) {
         Ok(folder)
     } else {
         Err(format!("\"{folder}\" is not a usable stack folder"))

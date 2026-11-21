@@ -10,6 +10,7 @@ use crate::state::{Notice, NoticeKind, State};
 pub use crate::transfer_types::{
     CsvInfo, Format, Imported, Preview, Tab, TransferJob, TransferState,
 };
+use crate::transfer_types::{import_target, refused};
 
 /// What happened in the dialog.
 #[derive(Debug, Clone, PartialEq)]
@@ -20,6 +21,10 @@ pub enum TransferMsg {
     Tab(Tab),
     /// Choose the stack (or the whole library).
     Scope(Option<String>),
+    /// Import into a new stack, named by the text field that follows.
+    ChooseNewStack,
+    /// The name of the new stack was edited.
+    NewStackName(String),
     /// Choose the export format.
     Format(Format),
     /// "Export…" was pressed: ask for the mode.
@@ -91,7 +96,9 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
             state.modal = Some(Modal::Transfer);
         }
         TransferMsg::Tab(tab) => (t.tab, t.status) = (tab, None),
-        TransferMsg::Scope(s) => (t.scope, t.preview) = (s, None),
+        TransferMsg::Scope(s) => (t.scope, t.preview, t.new_stack) = (s, None, None),
+        TransferMsg::ChooseNewStack => (t.new_stack, t.preview) = (Some(String::new()), None),
+        TransferMsg::NewStackName(name) => (t.new_stack, t.preview) = (Some(name), None),
         TransferMsg::Format(f) => t.format = f,
         TransferMsg::AskMode => t.choosing_mode = true,
         TransferMsg::BackToExport => t.choosing_mode = false,
@@ -178,9 +185,13 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
         TransferMsg::Preview => {
             t.busy = true;
             t.status = None;
-            let (path, scope) = (t.path.trim().to_owned(), t.scope.clone());
+            let path = t.path.trim().to_owned();
             let csv = t.csv.clone();
-            return (state, job(TransferJob::Preview(path, scope, csv)));
+            let target = match import_target(t) {
+                Ok(target) => target,
+                Err(e) => return refused(state, e),
+            };
+            return (state, job(TransferJob::Preview(path, target, csv)));
         }
         TransferMsg::Previewed(result) => {
             t.busy = false;
@@ -191,7 +202,14 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
         }
         TransferMsg::Import => {
             t.busy = true;
-            let (path, target, policy) = (t.path.trim().to_owned(), t.scope.clone(), t.policy);
+            let (path, policy) = (t.path.trim().to_owned(), t.policy);
+            let target = match import_target(t) {
+                Ok(target) => target,
+                Err(e) => {
+                    t.busy = false;
+                    return refused(state, e);
+                }
+            };
             let (with_schedule, csv) = (t.with_schedule, t.csv.clone());
             return (
                 state,

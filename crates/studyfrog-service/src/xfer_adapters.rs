@@ -219,6 +219,9 @@ pub fn describe_input(path: &str, is_dir: bool) -> String {
     let name = path.rsplit(['/', '\\']).next().unwrap_or(path);
     match adapter_for(name) {
         Some(a) => format!("Looks like {}.", a.name),
+        None if name.to_lowercase().ends_with(".pdf") => format!(
+            "{name} is a PDF document. Add it with Add PDF… in a stack; PDFs are not imported as cards."
+        ),
         None => {
             let known: Vec<&str> = ADAPTERS
                 .iter()

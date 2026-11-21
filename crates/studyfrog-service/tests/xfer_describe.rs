@@ -24,10 +24,19 @@ fn a_folder_is_read_as_an_obsidian_vault() {
 
 #[test]
 fn an_unsupported_file_says_so_and_lists_what_is_supported() {
-    let text = describe_input("/docs/lecture.pdf", false);
+    let text = describe_input("/docs/notes.docx", false);
     assert!(
-        text.starts_with("lecture.pdf is not a file an importer reads yet"),
+        text.starts_with("notes.docx is not a file an importer reads yet"),
         "{text}"
     );
     assert!(text.contains("csv") && text.contains("apkg"), "{text}");
+}
+
+#[test]
+fn a_pdf_is_pointed_at_add_pdf() {
+    let pdf = describe_input("/docs/lecture.pdf", false);
+    assert!(
+        pdf.contains("Add PDF") && pdf.contains("not imported as cards"),
+        "{pdf}"
+    );
 }

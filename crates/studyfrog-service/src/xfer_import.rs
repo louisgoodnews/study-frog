@@ -98,7 +98,7 @@ pub(crate) fn ensure_stacks(
     n: &mut usize,
 ) -> Result<(), ServiceError> {
     let mut upto = String::new();
-    for part in folder.split('/') {
+    for part in folder.split('/').filter(|p| !p.is_empty()) {
         upto = if upto.is_empty() {
             part.to_owned()
         } else {
