@@ -50,6 +50,8 @@ pub struct Planner {
     pub homework: Vec<HomeworkItem>,
     /// The clock the homework was read at, for urgency; `None` until it is read.
     pub homework_now: Option<LocalTime>,
+    /// The homework screen's tab, dialog and last error.
+    pub homework_ui: crate::homework_msg::HomeworkUi,
     /// The reviews the schedule planned for the visible grid.
     pub reviews: Vec<studyfrog_calendar::review_plan::PlanEntry>,
     /// The entry whose date is being chosen.
@@ -80,6 +82,7 @@ impl Default for Planner {
             form_error: None,
             homework: Vec::new(),
             homework_now: None,
+            homework_ui: crate::homework_msg::HomeworkUi::default(),
             reviews: Vec::new(),
             moving: None,
             undo: None,

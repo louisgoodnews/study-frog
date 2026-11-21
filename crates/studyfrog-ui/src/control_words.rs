@@ -22,6 +22,7 @@ pub fn screen_by_name(name: &str) -> Option<Screen> {
         "board" => Screen::Board,
         "reports" => Screen::Reports,
         "diary" => Screen::Diary,
+        "homework" => Screen::Homework,
         "achievements" => Screen::Achievements,
         "graph" => Screen::Graph,
         "assistant" | "agent" => Screen::Agent,

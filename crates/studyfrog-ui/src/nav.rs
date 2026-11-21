@@ -7,6 +7,7 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
     match screen {
         Screen::Graph => (State { screen, ..state }, vec![Effect::LoadGraph]),
         Screen::Calendar => (State { screen, ..state }, vec![Effect::LoadSessions]),
+        Screen::Homework => (State { screen, ..state }, vec![Effect::LoadHomework]),
         Screen::Folders => (
             State { screen, ..state },
             vec![

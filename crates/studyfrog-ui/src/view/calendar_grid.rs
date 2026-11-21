@@ -5,12 +5,12 @@ use studyfrog_calendar::session::{EventKind, Occurrence, Session};
 use studyfrog_core::civil::{Date, format_date};
 use studyfrog_core::uid::Uid;
 
-use crate::homework_marks;
 use crate::msg::Msg;
 use crate::planner::{PlanMsg, grid_of};
 use crate::state::State;
 use crate::theme::{Palette, palette_of, tint};
 use crate::view::calendar_reviews;
+use crate::view::homework_marks;
 
 const MONTHS: [&str; 12] = [
     "January",

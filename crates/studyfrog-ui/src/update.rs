@@ -115,6 +115,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Achievements(m) => crate::achievements::update(state, m),
         Msg::Logs(m) => crate::logs_ui::update(state, m),
         Msg::Plan(m) => crate::planner::update(state, m),
+        Msg::Homework(m) => crate::homework_update::update(state, m),
         Msg::Board(m) => crate::kanban::update(state, m),
         import @ (Msg::CardTypeChosen(_)
         | Msg::ImportPathEdited(_)

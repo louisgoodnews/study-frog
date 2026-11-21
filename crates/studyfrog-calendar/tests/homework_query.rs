@@ -3,7 +3,8 @@
 
 use studyfrog_calendar::homework::{HomeworkItem, HomeworkPriority, HomeworkStatus};
 use studyfrog_calendar::homework_query::{
-    HomeworkFilter, Urgency, due_on, most_urgent, planner_order, urgency,
+    HomeworkFilter, HomeworkTab, Urgency, countdown, due_on, most_urgent, planner_order,
+    tab_filter, urgency,
 };
 use studyfrog_core::civil::{Date, LocalTime};
 use studyfrog_core::uid::Uid;
@@ -121,5 +122,61 @@ fn due_on_lists_one_day_earliest_first_and_most_urgent_wins() {
     assert_eq!(
         most_urgent(&due_on(&late, overdue_day), now),
         Some(Urgency::Overdue)
+    );
+}
+
+#[test]
+fn tabs_show_the_expected_items() {
+    let now = at(10, 12);
+    let items = [
+        hw(1, at(10, 18), HomeworkStatus::NotStarted, None),
+        hw(2, at(9, 9), HomeworkStatus::InProgress, None),
+        hw(3, at(12, 9), HomeworkStatus::Completed, None),
+        hw(4, at(20, 9), HomeworkStatus::NotStarted, None),
+    ];
+    let ids = |tab| -> Vec<u128> {
+        planner_order(&items, &tab_filter(tab, None), now)
+            .iter()
+            .map(|i| i.id.0)
+            .collect()
+    };
+    assert_eq!(ids(HomeworkTab::All).len(), 4);
+    assert_eq!(ids(HomeworkTab::Active), vec![2, 1, 4]);
+    assert_eq!(ids(HomeworkTab::DueToday), vec![1]);
+    assert_eq!(ids(HomeworkTab::Overdue), vec![2]);
+    assert_eq!(ids(HomeworkTab::Completed), vec![3]);
+    let course_only = tab_filter(HomeworkTab::Active, Some(Uid(9)));
+    assert!(planner_order(&items, &course_only, now).is_empty());
+    assert_eq!(HomeworkTab::default(), HomeworkTab::All);
+}
+
+#[test]
+fn countdown_reads_in_minutes_hours_and_days() {
+    let now = at(10, 12);
+    let label = |due: LocalTime, status| {
+        let mut item = hw(1, due, status, None);
+        item.due = due;
+        countdown(&item, now)
+    };
+    let at_minute = |d: u8, minute: u16| LocalTime { minute, ..at(d, 0) };
+    assert_eq!(
+        label(at_minute(10, 12 * 60 + 30), HomeworkStatus::NotStarted),
+        "due in 30 min"
+    );
+    assert_eq!(
+        label(at_minute(10, 15 * 60), HomeworkStatus::NotStarted),
+        "due in 3 h"
+    );
+    assert_eq!(
+        label(at_minute(12, 9 * 60), HomeworkStatus::NotStarted),
+        "due in 1 d"
+    );
+    assert_eq!(
+        label(at_minute(9, 9 * 60), HomeworkStatus::NotStarted),
+        "overdue by 1 d"
+    );
+    assert_eq!(
+        label(at_minute(9, 9 * 60), HomeworkStatus::Completed),
+        "done"
     );
 }

@@ -94,6 +94,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::LoadGraph => exec_doc::load_graph_msg(w),
         Effect::LoadSessions => exec_plan::load_sessions(w, now_ns),
         Effect::LoadHomework => exec_plan::load_homework(w, now_ns),
+        Effect::Homework(e) => crate::exec_homework::execute(w, e, now_ns),
         Effect::Reviews(e) => exec_plan::reviews_effect(w, e, now_ns),
         Effect::SaveSession(s) => exec_plan::save(w, s, now_ns),
         Effect::DeleteSession(id) => exec_plan::delete(w, id),

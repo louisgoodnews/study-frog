@@ -5,12 +5,12 @@ use studyfrog_calendar::session::{EventKind, Occurrence, Repeat, Session, event_
 use studyfrog_core::civil::{format_date, format_minute};
 use studyfrog_core::uid::Uid;
 
-use crate::homework_marks;
 use crate::msg::Msg;
 use crate::plan_msg::PlanMsg;
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::calendar_grid::kind_color;
+use crate::view::homework_marks;
 use crate::view::kit;
 
 const START_HOUR: u16 = 6;

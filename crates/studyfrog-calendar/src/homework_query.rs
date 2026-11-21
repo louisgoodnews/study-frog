@@ -2,7 +2,7 @@
 
 use std::cmp::Ordering;
 
-use studyfrog_core::civil::{Date, LocalTime, add_days};
+use studyfrog_core::civil::{Date, LocalTime, add_days, date_to_days};
 use studyfrog_core::uid::Uid;
 
 use crate::homework::{HomeworkItem, HomeworkPriority, HomeworkStatus};
@@ -50,6 +50,72 @@ pub fn most_urgent(items: &[&HomeworkItem], now: LocalTime) -> Option<Urgency> {
         .iter()
         .map(|i| urgency(i, now))
         .min_by_key(|u| rank(*u))
+}
+
+/// The quick-filter tabs of the homework planner.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+pub enum HomeworkTab {
+    /// Everything, completed items included.
+    #[default]
+    All,
+    /// Everything not yet completed.
+    Active,
+    /// Open items due today.
+    DueToday,
+    /// Open items past their due time.
+    Overdue,
+    /// Completed items.
+    Completed,
+}
+
+/// Every tab, in display order.
+pub const HOMEWORK_TABS: [HomeworkTab; 5] = [
+    HomeworkTab::All,
+    HomeworkTab::Active,
+    HomeworkTab::DueToday,
+    HomeworkTab::Overdue,
+    HomeworkTab::Completed,
+];
+
+/// The filter a tab shows, optionally narrowed to one course.
+pub fn tab_filter(tab: HomeworkTab, course: Option<Uid>) -> HomeworkFilter {
+    let (show_completed, urgency) = match tab {
+        HomeworkTab::All => (true, None),
+        HomeworkTab::Active => (false, None),
+        HomeworkTab::DueToday => (false, Some(Urgency::DueToday)),
+        HomeworkTab::Overdue => (false, Some(Urgency::Overdue)),
+        HomeworkTab::Completed => (true, Some(Urgency::Completed)),
+    };
+    HomeworkFilter {
+        course,
+        urgency,
+        show_completed,
+    }
+}
+
+/// How far away the due time is, for a label: "due in 3 h", "overdue by 2 d", or "done".
+pub fn countdown(item: &HomeworkItem, now: LocalTime) -> String {
+    if item.status == HomeworkStatus::Completed {
+        return "done".to_owned();
+    }
+    let minutes = (date_to_days(item.due.date) - date_to_days(now.date)) * 1440
+        + i64::from(item.due.minute)
+        - i64::from(now.minute);
+    if minutes < 0 {
+        format!("overdue by {}", span(-minutes))
+    } else {
+        format!("due in {}", span(minutes))
+    }
+}
+
+fn span(minutes: i64) -> String {
+    if minutes < 60 {
+        format!("{minutes} min")
+    } else if minutes < 1440 {
+        format!("{} h", minutes / 60)
+    } else {
+        format!("{} d", minutes / 1440)
+    }
 }
 
 /// Which items the planner shows.

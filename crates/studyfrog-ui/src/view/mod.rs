@@ -46,6 +46,9 @@ mod help;
 mod help_edit;
 mod home;
 mod home_cards;
+pub(crate) mod homework;
+mod homework_form_view;
+pub(crate) mod homework_marks;
 mod icons;
 pub(crate) mod image;
 mod item_details;
@@ -194,6 +197,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
             }
             Screen::Graph => graph::draw(state, ui, &mut out),
             Screen::Calendar => calendar::draw(state, ui, &mut out),
+            Screen::Homework => homework::draw(state, ui, &mut out),
             Screen::Board => board::draw(state, ui, &mut out),
             Screen::Achievements => achievements::draw(state, ui, &mut out),
             Screen::Agent => agent::draw(state, ui, &mut out),

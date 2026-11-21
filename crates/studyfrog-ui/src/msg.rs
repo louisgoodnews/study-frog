@@ -215,6 +215,8 @@ pub enum Msg {
     Achievements(crate::achievements::AchievementsMsg),
     /// Something happened on the calendar screen.
     Plan(PlanMsg),
+    /// Messages of the homework screen.
+    Homework(crate::homework_msg::HomeworkMsg),
     /// Something happened on the board screen.
     Board(BoardMsg),
     /// The answer-comparison choice on the settings screen changed.

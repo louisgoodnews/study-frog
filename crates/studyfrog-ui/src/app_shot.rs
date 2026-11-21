@@ -49,6 +49,7 @@ fn screen_named(name: &str) -> Option<Screen> {
         "settings" => Screen::Settings,
         "help" => Screen::Help,
         "calendar" => Screen::Calendar,
+        "homework" => Screen::Homework,
         "board" => Screen::Board,
         "reports" => Screen::Reports,
         "diary" => Screen::Diary,

@@ -2,7 +2,7 @@
 
 use eframe::egui::{self, RichText, Sense, vec2};
 
-use crate::homework_marks;
+use crate::view::homework_marks;
 use studyfrog_calendar::recurrence::occurrences_all;
 use studyfrog_calendar::session::{Occurrence, Session, event_kind_name};
 use studyfrog_core::civil::{Date, add_days, format_date, format_minute, weekday, weekday_index};

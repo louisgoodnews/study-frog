@@ -21,6 +21,7 @@ const SCREENS: &[(Screen, &str, &str)] = &[
         "Calendar",
         "Multi-view schedule & timetable",
     ),
+    (Screen::Homework, "Homework", "Assignments with due dates"),
     (Screen::Board, "Board", "Kanban study workflow"),
     (Screen::Reports, "Reports", "Analytics & memory retention"),
     (

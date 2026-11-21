@@ -2,7 +2,7 @@
 id: STORY-0167
 type: story
 title: "Interactive Homework Planner Screen and Creation Dialog"
-status: backlog
+status: review
 epic: EPIC-056
 parents: ['EPIC-056']
 estimate: 5
@@ -23,15 +23,20 @@ Build the Homework management user interface in `studyfrog-ui`:
 - Implement an accessible modal creation/edit dialog with subject selection, date-time picker, estimated duration slider, and reminder lead times.
 
 ## Acceptance Criteria
-- [ ] Dedicated Homework navigation tab/view accessible from main navigation rail
-- [ ] Interactive assignment list with status filtering (All, Active, Due Today, Overdue, Completed)
-- [ ] Modal dialog to create, edit, estimate, and complete homework tasks with course association
+- [x] Dedicated Homework navigation tab/view accessible from main navigation rail
+- [x] Interactive assignment list with status filtering (All, Active, Due Today, Overdue, Completed)
+- [x] Modal dialog to create, edit, estimate, and complete homework tasks with course association
 
 ## Design Notes
 Adhere strictly to StudyFrog design tokens, accessible names, keyboard navigation, and `palette_of(ui)` theming (no raw RGB).
 
 ## Dependencies
 EPIC-056
+
+## Implementation (2026-11-21)
+Homework screen in the Plan group of the sidebar and the burger menu (`Screen::Homework`, `view/homework.rs`). Tabs All, Active, Due today, Overdue and Completed (`studyfrog-calendar::homework_query::{HomeworkTab, tab_filter}`). Each row shows urgency, a countdown (`countdown`), the stack as a course badge, priority, estimate, and checklist steps to tick. The dialog (`homework_form.rs`, `view/homework_form_view.rs`) creates and edits items with title, stack, due date and time, an estimate slider, priority, a checklist and notes. Start, Complete and Reopen move an item on through `next_status`. Saves go through `save_homework_checked`; the screen is `homework_update.rs` (pure) with `exec_homework.rs` as the worker side. Tests: `studyfrog-calendar/tests/homework_query.rs`, `studyfrog-ui/tests/homework_screen.rs`.
+
+Not done: deleting an item (left out until it has a confirmation step), reminder lead-time choice in the dialog (lead times are global), and timetable integration beyond the stack course. The screen has not been exercised in the running app.
 
 ## Open Questions
 None.

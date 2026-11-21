@@ -43,6 +43,8 @@ pub enum Screen {
     Graph,
     /// Planned study sessions.
     Calendar,
+    /// The homework planner: assignments, due dates and checklists.
+    Homework,
     /// The kanban board.
     Board,
     /// Achievements and their progress.

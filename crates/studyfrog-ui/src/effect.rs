@@ -32,6 +32,8 @@ pub enum Effect {
     PollVault,
     /// Look for calendar reminders that have come due.
     CheckReminders,
+    /// Work of the homework screen (save, advance, tick a step).
+    Homework(crate::homework_msg::HomeworkEffect),
     /// Read the homework items for the calendar's deadline markers.
     LoadHomework,
     /// Look for homework deadline reminders that have come due.

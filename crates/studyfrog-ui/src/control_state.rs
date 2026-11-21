@@ -28,6 +28,7 @@ pub fn screen_name(screen: Screen) -> &'static str {
         Screen::Achievements => "achievements",
         Screen::Reports => "reports",
         Screen::Diary => "diary",
+        Screen::Homework => "homework",
         Screen::Pdf => "pdf",
         Screen::Help => "help",
         Screen::Canvas => "canvas",
