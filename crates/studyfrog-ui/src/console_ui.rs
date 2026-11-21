@@ -90,6 +90,8 @@ pub enum ConsoleMsg {
     StudioSetFilter(crate::script_studio::ConsoleFilter),
     /// ScriptStudio: toggle editor visibility.
     StudioToggleExpanded,
+    /// The FrogScript reference panel: show or hide, search, pick a topic.
+    Wiki(crate::script_studio::wiki_panel::WikiMsg),
     /// ScriptStudio: refresh script file list.
     StudioRefreshList,
 }
@@ -237,6 +239,7 @@ pub fn update(state: State, m: ConsoleMsg) -> (State, Vec<Effect>) {
         | ConsoleMsg::StudioRefreshList => {
             crate::script_studio_exec::apply_studio_msg(&mut state, m);
         }
+        ConsoleMsg::Wiki(w) => crate::script_studio::wiki_panel::apply(&mut state.console, w),
         _ => apply_console(&mut state.console, m),
     }
     (state, Vec::new())

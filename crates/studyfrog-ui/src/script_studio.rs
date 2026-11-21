@@ -1,5 +1,6 @@
 //! Multi-tab ScriptStudio workbench and script manager for FrogScript and Python scripts.
 
+pub mod wiki_panel;
 use std::path::{Path, PathBuf};
 
 /// A script open in an editor tab.
@@ -42,6 +43,8 @@ pub struct StudioState {
     pub available_scripts: Vec<PathBuf>,
     /// Whether ScriptStudio panel is expanded in console.
     pub expanded: bool,
+    /// The FrogScript reference panel.
+    pub wiki: crate::script_studio::wiki_panel::WikiView,
 }
 
 const DEFAULT_RECIPE: &str = "# FrogScript Study Automation
@@ -72,6 +75,7 @@ pub fn studio_new() -> StudioState {
         filter: ConsoleFilter::All,
         available_scripts: Vec::new(),
         expanded: false,
+        wiki: Default::default(),
     }
 }
 

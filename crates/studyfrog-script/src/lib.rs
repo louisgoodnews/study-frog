@@ -20,6 +20,9 @@ pub mod pipe_parser;
 pub mod primary_parser;
 pub mod token;
 pub mod val;
+pub mod wiki;
+pub mod wiki_topics;
+pub mod wiki_topics_library;
 
 use ast::Program;
 use env::{env_define, new_global_env};

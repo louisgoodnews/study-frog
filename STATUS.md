@@ -16,7 +16,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## Active work: v1.0.0 (2026-11-21)
 Working through [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md) in the milestone order, tracked in the v1.0.0 section of [priority-list.md](priority-list.md).
-- **Next task:** explain the text buttons (STORY-0189; the guard's baseline is 415). STORY-0190 (homework in the control protocol) is in review. New backlog: EPIC-064 (protocol coverage, stories 0191 to 0194), EPIC-065 (rehearsal view, 0195 to 0197), EPIC-066 (node-based learn-mode editor, 0198). STORY-0166 and STORY-0167 are in review (the homework screen is not yet exercised in the app). The engines of STORY-0175, 0177, 0179 and 0180 are in review: their screens and wiring are open.
+- **Next task:** explain the text buttons (STORY-0189; the guard's baseline is 415). STORY-0171 (FrogScript reference) and STORY-0190 (homework in the control protocol) are in review. New backlog: EPIC-064 (protocol coverage, stories 0191 to 0194), EPIC-065 (rehearsal view, 0195 to 0197), EPIC-066 (node-based learn-mode editor, 0198). STORY-0166 and STORY-0167 are in review (the homework screen is not yet exercised in the app). The engines of STORY-0175, 0177, 0179 and 0180 are in review: their screens and wiring are open.
 - **Open flags:** STORY-0187 result screen and review are UI work; the new v1.0 stories are not yet in the app's UI.
 - **Done in this stretch:** STORY-0165 (model, storage, TOML mirror), STORY-0173 (Memory Mode engine), STORY-0185 (mock exam model, navigation, timer), STORY-0187 engine part, STORY-0182 and STORY-0183 (psychometric formulas, diagnosis), STORY-0176 (telemetry storage); engines in review: STORY-0175, 0177, 0179, 0180.
 

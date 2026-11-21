@@ -471,7 +471,7 @@
 | [STORY-0168](docs/issues/stories/STORY-0168-unified-universal-import-hub.md) Unified Universal Import Entry Point and Redundant Button Consolidation (3) | review | 0/0 |
 | [STORY-0169](docs/issues/stories/STORY-0169-contextual-tooltips-and-hover-hints.md) Contextual Tooltips, Hover Hints, and Keyboard Shortcut Badges (3) | review | 0/0 |
 | [STORY-0170](docs/issues/stories/STORY-0170-navigation-and-menu-decluttering.md) Menu De-Cluttering, Visual Spacing, and Progressive Disclosure (5) | review | 0/0 |
-| [STORY-0171](docs/issues/stories/STORY-0171-in-gui-frogscript-wiki-browser.md) In-App FrogScript Wiki and Standard Library Reference Browser (5) | backlog | 0/0 |
+| [STORY-0171](docs/issues/stories/STORY-0171-in-gui-frogscript-wiki-browser.md) In-App FrogScript Wiki and Standard Library Reference Browser (5) | review | 0/0 |
 | [STORY-0172](docs/issues/stories/STORY-0172-runnable-script-cookbook-and-live-templates.md) Interactive FrogScript Cookbook and 1-Click Code Templates (3) | backlog | 0/0 |
 | [STORY-0173](docs/issues/stories/STORY-0173-memory-session-engine-and-pair-mechanics.md) Memory Session Engine, Card Deck Pairing, and Flip-State Transitions (3) | done | 0/0 |
 | [STORY-0174](docs/issues/stories/STORY-0174-memory-mode-interactive-grid-ui-and-animations.md) Memory Mode Interactive Card Grid UI, Card Back Styling, and Audio-Visual Feedback (3) | backlog | 0/0 |

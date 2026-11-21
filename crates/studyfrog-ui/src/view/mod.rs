@@ -143,6 +143,7 @@ mod stack_summary_view;
 mod stack_tree_view;
 mod stack_view;
 pub mod status_ui;
+mod studio_reference;
 mod subjects;
 mod summary;
 mod summary_items;

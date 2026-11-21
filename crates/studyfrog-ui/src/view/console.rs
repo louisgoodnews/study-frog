@@ -83,11 +83,34 @@ fn studio_tab_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             if kit::quiet_button(ui, "Save").clicked() {
                 out.push(Msg::Console(ConsoleMsg::StudioSaveScript(None)));
             }
+            let open = state.console.studio.wiki.open;
+            let label = if open { "Hide reference" } else { "Reference" };
+            let tip = "The FrogScript reference: syntax, operators, control flow, built-in functions and vault objects";
+            if ui.button(label).on_hover_text(tip).clicked() {
+                out.push(Msg::Console(ConsoleMsg::Wiki(
+                    crate::script_studio::wiki_panel::WikiMsg::Toggle,
+                )));
+            }
         });
     });
 }
 
+/// The editor, and the FrogScript reference beside it when it is open.
 fn studio_editor(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if !state.console.studio.wiki.open {
+        editor_column(state, ui, out);
+        return;
+    }
+    let (w, h) = (ui.available_width(), ui.available_height());
+    ui.horizontal_top(|ui| {
+        ui.allocate_ui(egui::vec2(w * 0.62, h), |ui| editor_column(state, ui, out));
+        ui.allocate_ui(egui::vec2(w * 0.36, h), |ui| {
+            crate::view::studio_reference::draw(state, ui, out);
+        });
+    });
+}
+
+fn editor_column(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let studio = &state.console.studio;
     studio_tab_bar(state, ui, out);
     ui.add_space(4.0);
@@ -99,6 +122,7 @@ fn studio_editor(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .desired_rows(6)
         .desired_width(f32::INFINITY);
     let response = ui.add(edit);
+    response.widget_info(|| egui::WidgetInfo::labeled(egui::Role::TextInput, true, "Script text"));
     if response.changed() {
         out.push(Msg::Console(ConsoleMsg::StudioEditCode(code)));
     }
