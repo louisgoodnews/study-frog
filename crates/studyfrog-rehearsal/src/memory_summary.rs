@@ -10,9 +10,10 @@ pub const TIME_ATTACK_OPTIONS_SEC: [u32; 3] = [60, 90, 120];
 pub const BONUS_PER_SECOND: u32 = 10;
 
 /// How a Memory Mode game is timed.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum MemoryTimer {
     /// Open-ended: the fastest clear wins.
+    #[default]
     Stopwatch,
     /// A fixed countdown, in seconds.
     TimeAttack(u32),

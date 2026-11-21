@@ -25,7 +25,7 @@ Complete the user journey for Memory Mode:
 - Integrate "Play Memory Mode" button in Rehearsal Setup alongside existing drill modes, with automatic selection of due or active cards from the selected stack.
 
 ## Acceptance Criteria
-- [ ] Time-attack mode with countdown options (e.g. 60s, 90s, 120s) and timeout defeat condition
+- [x] Time-attack mode with countdown options (e.g. 60s, 90s, 120s) and timeout defeat condition
 - [ ] Victory summary modal detailing elapsed time, move accuracy, speed score, and personal best records
 - [ ] Memory Mode launch action integrated into the Rehearse setup screen and Stack detail view
 
@@ -36,7 +36,15 @@ Store personal bests in application settings or stack rehearsal statistics. Conn
 EPIC-059, STORY-0173, STORY-0174
 
 ## Implementation (2026-11-21)
-`studyfrog-rehearsal::memory_summary`: time-attack options (60, 90, 120 s), danger levels, the victory summary (time, moves, accuracy, speed, bonus, personal best), and the defeat line. Tests: `tests/memory_summary.rs`. Open: the mode choice in the setup screen, the danger colours and the summary modal, and the Rehearse and Stack entry points.
+The engine (`studyfrog-rehearsal::memory_summary`) provides the time-attack options (60, 90, 120 s), danger levels, the victory summary and the defeat line. The UI now uses them:
+- **Mode choice:** Stopwatch, 60 s, 90 s or 120 s, in the rehearse setup's What step. The choice is kept in the rehearse state and passed to the next game as the engine's time limit.
+- **Danger colours:** the HUD time turns the warning colour under 30 s and the danger colour under 10 s of a countdown.
+- **Summary:** a completed game shows the time, moves, accuracy, speed, best streak, the time bonus and the personal-best line; a timeout shows the encouraging line. Both have "Play again". The summary is an inline line under the HUD, not a modal.
+- **Entry points:** "Memory game" in the rehearse setup, and "Memory game" beside "Start rehearsal" on the stack page.
+
+Open: the personal best is kept for the session only (`Rehearse.memory_best_ms`). Keeping it across restarts needs a store or settings field, so the criterion about personal-best records is not ticked yet.
+
+Tests: `studyfrog-ui/tests/memory_mode.rs` (timeout, best time, timing choice, stack start) and `tests/memory_summary_ui.rs` (summary and timeout text on screen). Screenshots checked the timing row and the board; the summary was checked by the harness, not visually.
 
 ## Open Questions
 None.

@@ -2,8 +2,9 @@
 //! the engine; this only draws the state it is given and reports presses.
 
 use eframe::egui::{self, Color32, Pos2, Rect, Sense, Stroke, StrokeKind, Vec2, WidgetInfo};
-use studyfrog_rehearsal::memory::{MemoryOutcome, MemorySession};
+use studyfrog_rehearsal::memory::MemorySession;
 use studyfrog_rehearsal::memory_deck::{FlipState, MemoryTile};
+use studyfrog_rehearsal::memory_summary::{DangerLevel, danger_level};
 
 use crate::msg::Msg;
 use crate::setup::memory::{MemoryMsg, MemoryUi};
@@ -21,7 +22,7 @@ const MAX_BOARD_H: f32 = 900.0;
 pub fn draw(ui: &mut egui::Ui, memory: &MemoryUi, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         match &memory.session {
-            Some(session) => hud(ui, session),
+            Some(session) => hud(ui, session, memory),
             None if memory.loading => {
                 ui.label(crate::typo::text(
                     ui,
@@ -43,7 +44,7 @@ pub fn draw(ui: &mut egui::Ui, memory: &MemoryUi, out: &mut Vec<Msg>) {
         ui.colored_label(pal.danger, error);
     }
     if let Some(session) = &memory.session {
-        end_line(ui, session, out);
+        super::memory_end::end_line(ui, session, memory, out);
         board(ui, session, out);
         if session.outcome.is_none() {
             out.push(Msg::Memory(MemoryMsg::Clock));
@@ -52,40 +53,30 @@ pub fn draw(ui: &mut egui::Ui, memory: &MemoryUi, out: &mut Vec<Msg>) {
     }
 }
 
-/// The time, moves, pairs still to find and the current streak.
-fn hud(ui: &mut egui::Ui, s: &MemorySession) {
+/// The time (coloured by how urgent the countdown is), moves, pairs still to find and the streak.
+fn hud(ui: &mut egui::Ui, s: &MemorySession, memory: &MemoryUi) {
+    let pal = palette_of(ui);
     let unmatched = s
         .tiles
         .iter()
         .filter(|t| t.state != FlipState::Matched)
         .count();
-    let line = format!(
-        "Time {}  ·  Moves {}  ·  Pairs left {}  ·  Streak {}",
-        clock_text(s.elapsed_ms),
-        s.moves,
-        unmatched / 2,
-        s.streak
-    );
-    ui.label(crate::typo::text(ui, line, crate::typo::Tier::Body));
-}
-
-/// Say how the game ended, with a button to play again.
-fn end_line(ui: &mut egui::Ui, s: &MemorySession, out: &mut Vec<Msg>) {
-    let text = match s.outcome {
-        None => return,
-        Some(MemoryOutcome::Completed { elapsed_ms }) => {
-            format!("All pairs found in {}.", clock_text(elapsed_ms))
-        }
-        Some(MemoryOutcome::TimedOut) => "Time is up.".to_owned(),
+    let time_color = match danger_level(memory.timer, s.elapsed_ms) {
+        DangerLevel::Calm => pal.text,
+        DangerLevel::Warning => pal.warning,
+        DangerLevel::Critical => pal.danger,
     };
+    let body = crate::typo::Tier::Body;
     ui.horizontal(|ui| {
-        ui.label(crate::typo::text(ui, text, crate::typo::Tier::Body));
-        if kit::primary_button(ui, "Play again")
-            .on_hover_text("Shuffles the same cards into a new game.")
-            .clicked()
-        {
-            out.push(Msg::Memory(MemoryMsg::Start));
-        }
+        let time = format!("Time {}", clock_text(s.elapsed_ms));
+        ui.label(crate::typo::text(ui, time, body).color(time_color));
+        let rest = format!(
+            "·  Moves {}  ·  Pairs left {}  ·  Streak {}",
+            s.moves,
+            unmatched / 2,
+            s.streak
+        );
+        ui.label(crate::typo::text(ui, rest, body));
     });
 }
 
@@ -206,7 +197,7 @@ fn text(ui: &egui::Ui, rect: Rect, s: &str, color: Color32) {
 }
 
 /// Minutes and seconds, e.g. `2:05`.
-fn clock_text(ms: u64) -> String {
+pub(super) fn clock_text(ms: u64) -> String {
     let secs = ms / 1000;
     format!("{}:{:02}", secs / 60, secs % 60)
 }

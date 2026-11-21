@@ -56,6 +56,10 @@ pub struct Rehearse {
     pub run: Option<RunView>,
     /// The memory game on screen, if one was started.
     pub memory: Option<memory::MemoryUi>,
+    /// The timing chosen for the next memory game.
+    pub memory_timer: studyfrog_rehearsal::memory_summary::MemoryTimer,
+    /// The best memory-game time this session, in milliseconds (not yet kept across restarts).
+    pub memory_best_ms: Option<u64>,
 }
 
 /// Ask for a fresh count (or show why the form is invalid).

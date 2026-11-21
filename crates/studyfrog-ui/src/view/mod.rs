@@ -66,6 +66,7 @@ pub mod library_table;
 pub mod match_grid;
 mod md_editor;
 mod memory_board;
+mod memory_end;
 mod menus;
 mod modal;
 mod modal_create;

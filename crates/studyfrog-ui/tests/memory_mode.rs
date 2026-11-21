@@ -1,6 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Memory mode: the grid's shape and the game's state (start, load, flip, clock, close).
 
+use studyfrog_rehearsal::memory::MemoryOutcome;
+use studyfrog_rehearsal::memory_summary::MemoryTimer;
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::msg::Msg;
 use studyfrog_ui::setup::memory::{MemoryMsg, MemoryUi};
@@ -132,4 +134,86 @@ fn close_removes_the_game() {
     let (state, _) = send(state, MemoryMsg::Start);
     let (state, _) = send(state, MemoryMsg::Close);
     assert!(state.rehearse.memory.is_none());
+}
+
+fn started_on(folder: &str, timer: MemoryTimer, n: usize) -> State {
+    let mut state = State::default();
+    state.rehearse.memory_timer = timer;
+    state.browser.selection = Selection::Stack(folder.to_owned());
+    let (state, _) = send(state, MemoryMsg::Start);
+    let (mut state, _) = send(state, MemoryMsg::Loaded(Ok(cards(n))));
+    state.wall_ms = memory(&state).started_ms;
+    state
+}
+
+/// Flip every pair in turn, so the game completes at the clock's current time.
+fn finish_game(mut state: State) -> State {
+    let session = memory(&state).session.clone().expect("a game");
+    let pairs: std::collections::BTreeSet<u32> = session.tiles.iter().map(|t| t.pair).collect();
+    for pair in pairs {
+        let idx: Vec<usize> = session
+            .tiles
+            .iter()
+            .enumerate()
+            .filter(|(_, t)| t.pair == pair)
+            .map(|(i, _)| i)
+            .collect();
+        for i in idx {
+            state = send(state, MemoryMsg::Flip(i)).0;
+        }
+    }
+    state
+}
+
+#[test]
+fn a_countdown_ends_in_a_timeout_after_its_limit() {
+    let mut state = started_on("s", MemoryTimer::TimeAttack(60), 4);
+    state.wall_ms += 61_000;
+    let (state, _) = send(state, MemoryMsg::Clock);
+    let session = memory(&state).session.clone().expect("a game");
+    assert_eq!(session.outcome, Some(MemoryOutcome::TimedOut));
+}
+
+#[test]
+fn a_finished_game_records_its_time_as_the_best() {
+    let mut state = started_on("s", MemoryTimer::Stopwatch, 2);
+    state.wall_ms += 30_000;
+    let (state, _) = send(state, MemoryMsg::Clock);
+    let state = finish_game(state);
+    assert_eq!(state.rehearse.memory_best_ms, Some(30_000));
+    // A faster second game lowers the best; a slower one does not raise it.
+    let mut faster = started_on("s", MemoryTimer::Stopwatch, 2);
+    faster.rehearse.memory_best_ms = state.rehearse.memory_best_ms;
+    faster.wall_ms += 20_000;
+    let (faster, _) = send(faster, MemoryMsg::Clock);
+    let faster = finish_game(faster);
+    assert_eq!(faster.rehearse.memory_best_ms, Some(20_000));
+    let mut slower = started_on("s", MemoryTimer::Stopwatch, 2);
+    slower.rehearse.memory_best_ms = faster.rehearse.memory_best_ms;
+    slower.wall_ms += 50_000;
+    let (slower, _) = send(slower, MemoryMsg::Clock);
+    let slower = finish_game(slower);
+    assert_eq!(slower.rehearse.memory_best_ms, Some(20_000));
+}
+
+#[test]
+fn the_chosen_timing_is_used_by_the_next_game() {
+    let state = State::default();
+    let (state, _) = send(state, MemoryMsg::Mode(MemoryTimer::TimeAttack(90)));
+    assert_eq!(state.rehearse.memory_timer, MemoryTimer::TimeAttack(90));
+    let mut state = state;
+    state.browser.selection = Selection::Inbox;
+    let (state, _) = send(state, MemoryMsg::Start);
+    let (state, _) = send(state, MemoryMsg::Loaded(Ok(cards(4))));
+    assert_eq!(memory(&state).timer, MemoryTimer::TimeAttack(90));
+    let session = memory(&state).session.clone().expect("a game");
+    assert_eq!(session.limit_ms, Some(90_000));
+}
+
+#[test]
+fn the_stack_page_starts_a_game_from_its_stack() {
+    let state = State::default();
+    let (state, effects) = send(state, MemoryMsg::StartStack("bio".to_owned()));
+    assert_eq!(effects, vec![Effect::MemoryDeck(Some("bio".to_owned()))]);
+    assert_eq!(state.browser.selection, Selection::Stack("bio".to_owned()));
 }

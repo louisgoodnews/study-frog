@@ -67,7 +67,16 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 );
                 ui.label(RichText::new(hint).color(palette_of(ui).text_weak));
                 match step {
-                    SetupStep::What => setup_what::draw(state, ui, out),
+                    SetupStep::What => {
+                        ui.horizontal_wrapped(|ui| {
+                            ui.label(
+                                RichText::new("Memory game timing").color(palette_of(ui).text_weak),
+                            );
+                            timing_choice(state, ui, out);
+                        });
+                        ui.add_space(8.0);
+                        setup_what::draw(state, ui, out);
+                    }
                     SetupStep::How => setup_how::draw(state, ui, out),
                     SetupStep::Review => setup_review::draw(state, ui, out),
                 }
@@ -118,7 +127,7 @@ fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         match step {
             SetupStep::What => {
                 if kit::quiet_button(ui, "Memory game")
-                    .on_hover_text("Plays a memory game with the cards of the stack you have open.")
+                    .on_hover_text("Plays a memory game with the cards of the stack you have open, with the timing chosen beside it.")
                     .clicked()
                 {
                     out.push(Msg::Memory(crate::setup::memory::MemoryMsg::Start));
@@ -181,4 +190,30 @@ fn count_hint(preview: &Preview, ui: &mut egui::Ui) {
             format!("Could not count: {reason}"),
         ),
     };
+}
+
+/// The timing of a memory game: open-ended, or a countdown of each option in seconds.
+fn timing_choice(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    use studyfrog_rehearsal::memory_summary::{MemoryTimer, TIME_ATTACK_OPTIONS_SEC};
+    let current = state.rehearse.memory_timer;
+    let options = std::iter::once((MemoryTimer::Stopwatch, "Stopwatch".to_owned())).chain(
+        TIME_ATTACK_OPTIONS_SEC
+            .iter()
+            .map(|s| (MemoryTimer::TimeAttack(*s), format!("{s} s"))),
+    );
+    for (option, label) in options {
+        let hint = match option {
+            MemoryTimer::Stopwatch => {
+                "Memory game without a limit: the fastest clear wins.".to_owned()
+            }
+            MemoryTimer::TimeAttack(s) => format!("Memory game against a {s}-second countdown."),
+        };
+        if ui
+            .selectable_label(current == option, label)
+            .on_hover_text(hint)
+            .clicked()
+        {
+            out.push(Msg::Memory(crate::setup::memory::MemoryMsg::Mode(option)));
+        }
+    }
 }

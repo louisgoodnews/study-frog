@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Memory game timing, summary and entry points (`crates/studyfrog-ui`, STORY-0175)**: Stopwatch or a 60, 90 or 120 second countdown; the HUD time changes colour as the countdown runs out; a victory summary (time, moves, accuracy, speed, bonus, best streak, personal best for this session) or the timeout line; "Memory game" on the stack page.
 - **Telemetry recording on timed ratings (`crates/studyfrog-service`, STORY-0176)**: every rated answer with timing writes one telemetry row; untimed ratings write none.
 - **Memory game screen fixes (`crates/studyfrog-ui`, STORY-0174)**: the close button sits in the HUD row, so it no longer needs scrolling.
 - **Cognitive profile tab on the Reports screen (`crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0178)**: latency against word length, weekly passing share, learning velocity and a metacognitive calibration widget, all from the review history. Telemetry is not recorded yet, so semantic scores and stability are not shown.
