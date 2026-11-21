@@ -1,7 +1,7 @@
 //! What the control protocol lets through: each command has a class, and the policy says which
 //! classes may run. Like `McpPolicy`, destructive commands are refused unless switched on.
 
-use crate::control_cmd::{Command, ItemCmd, RehearseCmd, StackCmd};
+use crate::control_cmd::{Command, HomeworkCmd, ItemCmd, RehearseCmd, StackCmd};
 
 /// How much a command may change.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -46,6 +46,8 @@ pub fn class_of(cmd: &Command) -> Class {
         C::Item(ItemCmd::Open(_)) | C::Stack(StackCmd::Open(_) | StackCmd::Settings(_)) => {
             Class::Read
         }
+        C::Homework(HomeworkCmd::List | HomeworkCmd::Tab(_)) => Class::Read,
+        C::Homework(_) => Class::Write,
         C::Item(_) | C::Stack(_) | C::Import { .. } | C::Export(_) => Class::Write,
         C::VaultOpen(_) | C::VaultClose | C::Screenshot(_) => Class::Write,
         C::Rehearse(RehearseCmd::Setup(_) | RehearseCmd::Leave | RehearseCmd::Finish) => {

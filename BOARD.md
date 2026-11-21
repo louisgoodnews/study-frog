@@ -490,6 +490,15 @@
 | [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Mock Exam Grading Report, German University Grade Scale (1.0 - 5.0), and Chapter Analytics (3) | in_progress | 0/0 |
 | [STORY-0188](docs/issues/stories/STORY-0188-search-keyboard-shortcut.md) Keyboard Shortcut to Focus Search (Ctrl+F and /) (3) | review | 0/0 |
 | [STORY-0189](docs/issues/stories/STORY-0189-tooltips-for-text-buttons.md) Hover Explanations for Text Buttons Across the App (5) | backlog | 0/0 |
+| [STORY-0190](docs/issues/stories/STORY-0190-homework-commands-in-the-control-protocol.md) Homework commands in the control protocol (2) | review | 0/0 |
+| [STORY-0191](docs/issues/stories/STORY-0191-import-destinations-and-pdf-cards-in-the-control-protocol.md) Import destinations and PDF cards in the control protocol (3) | backlog | 0/0 |
+| [STORY-0192](docs/issues/stories/STORY-0192-search-and-tooltips-in-the-control-protocol.md) Search and tooltips in the control protocol (2) | backlog | 0/0 |
+| [STORY-0193](docs/issues/stories/STORY-0193-appearance-and-density-in-the-control-protocol.md) Appearance and density in the control protocol (2) | backlog | 0/0 |
+| [STORY-0194](docs/issues/stories/STORY-0194-calendar-reminders-and-homework-markers-in-the-control-protocol.md) Calendar, reminders and homework markers in the control protocol (3) | backlog | 0/0 |
+| [STORY-0195](docs/issues/stories/STORY-0195-in-rehearsal-view-the-item-takes-more-of-the-screen.md) In rehearsal view, the item takes more of the screen (3) | backlog | 0/0 |
+| [STORY-0196](docs/issues/stories/STORY-0196-in-rehearsal-view-the-previous-rating-shows-on-the-rating-button-in-its-colour.md) In rehearsal view, the previous rating shows on the rating button in its colour (3) | backlog | 0/0 |
+| [STORY-0197](docs/issues/stories/STORY-0197-the-item-colour-paints-the-item-in-rehearsal-view.md) The item colour paints the item in rehearsal view (3) | backlog | 0/0 |
+| [STORY-0198](docs/issues/stories/STORY-0198-visual-node-based-editor-for-learn-modes.md) Visual node-based editor for learn modes (8) | backlog | 0/0 |
 
 ## Epics
 
@@ -558,3 +567,6 @@
 | [EPIC-061](docs/issues/epics/EPIC-061-case-study-and-diagnostic-decision-matrix.md) Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification | in_progress | 0/3 |
 | [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | in_progress | 2/3 |
 | [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | backlog | 1/3 |
+| [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | in_progress | 0/5 |
+| [EPIC-065](docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | backlog | 0/3 |
+| [EPIC-066](docs/issues/epics/EPIC-066-learn-mode-research-platform.md) Learn-mode research platform: visual node-based technique editor | backlog | 0/1 |

@@ -60,6 +60,21 @@ pub const COMMANDS: &[Row] = &[
         "destructive",
     ),
     (
+        "homework list | homework tab all|active|due-today|overdue|completed",
+        "The homework items as the app last read them (JSON); the tab shown in the homework screen",
+        "read",
+    ),
+    (
+        "homework new <title> [--due YYYY-MM-DD] [--time HH:MM] [--estimate MIN] [--priority low|medium|high] [--stack F] [--checklist \"a;b\"]",
+        "Homework: the dialog filled in and saved (a refusal is an error)",
+        "write",
+    ),
+    (
+        "homework advance <ULID> | homework tick <ULID> <step>",
+        "Homework: advance an item's status (not started, in progress, completed); tick checklist step n (from 1)",
+        "write",
+    ),
+    (
         "stack create <title> [--parent F]",
         "Modal: OpenCreate, SetKind(Stack), SetParent, Edit(Title), Submit",
         "write",

@@ -18,6 +18,8 @@ use crate::state::{Screen, Selection, State};
 use crate::transfer_types::Tab;
 use crate::transfer_ui::TransferMsg;
 
+pub mod homework;
+
 /// Phases of messages; background work settles between phases.
 pub type Plan = Vec<Vec<Msg>>;
 
@@ -203,6 +205,7 @@ pub fn plan_for(state: &State, cmd: &Command) -> Result<Plan, String> {
         Command::VaultClose => one(Msg::CloseVault),
         Command::Item(c) => item(state, c),
         Command::Stack(c) => stack(state, c),
+        Command::Homework(c) => homework::plan(state, c),
         Command::Rehearse(c) => rehearse(state, c),
         Command::Query(text) => Ok(vec![vec![
             Msg::Navigate(Screen::Library),

@@ -6,6 +6,8 @@ use studyfrog_core::run::RunMode;
 
 use crate::control_cmd::{Command, ExportArgs, LogsQuery, RehearseCmd, SetupArgs};
 use crate::control_words_items::{flag, item, need, split_flags, stack};
+
+pub mod homework;
 use crate::setup::Preset;
 use crate::state::Screen;
 use crate::transfer_types::Format;
@@ -19,10 +21,10 @@ pub fn screen_by_name(name: &str) -> Option<Screen> {
         "items" | "library" | "stacks" => Screen::Library,
         "rehearse" | "rehearsal" => Screen::Rehearse,
         "calendar" => Screen::Calendar,
+        "homework" => Screen::Homework,
         "board" => Screen::Board,
         "reports" => Screen::Reports,
         "diary" => Screen::Diary,
-        "homework" => Screen::Homework,
         "achievements" => Screen::Achievements,
         "graph" => Screen::Graph,
         "assistant" | "agent" => Screen::Agent,
@@ -162,6 +164,7 @@ fn two_words(words: &[String]) -> Result<Command, String> {
         },
         "item" => Command::Item(item(rest)?),
         "stack" => Command::Stack(stack(rest)?),
+        "homework" => Command::Homework(homework::parse(rest)?),
         "rehearse" => Command::Rehearse(rehearse(rest)?),
         "screenshot" => Command::Screenshot(arg(0, "PNG path")?.into()),
         "logs" => Command::Logs(logs_query(rest)?),

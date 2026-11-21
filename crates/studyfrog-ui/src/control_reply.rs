@@ -3,11 +3,13 @@
 
 use serde_json::{Value, json};
 
-use crate::control_cmd::{Command, StackCmd};
+use crate::control_cmd::{Command, HomeworkCmd, StackCmd};
 use crate::control_help::help_json;
 use crate::control_parts::shown_rows;
 use crate::control_state::{notices_json, state_json, ulid};
 use crate::state::{Notice, NoticeKind, State};
+
+pub mod homework;
 
 /// Rows a `query` answers with at most.
 pub const MAX_QUERY_ROWS: usize = 500;
@@ -85,7 +87,14 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
     if let Some(e) = form_error(state).filter(|_| creates) {
         return Err(format!("{e} (the dialog is still open; `close` closes it)"));
     }
+    if let Command::Homework(h) = cmd
+        && !matches!(h, HomeworkCmd::List | HomeworkCmd::Tab(_))
+        && let Some(e) = homework::refusal(state)
+    {
+        return Err(e);
+    }
     match cmd {
+        Command::Homework(HomeworkCmd::List) => Ok(homework::list_json(state)),
         Command::Help => Ok(help_json()),
         Command::Notices => Ok(notices_json(state)),
         Command::Query(text) => query_result(state, text),
