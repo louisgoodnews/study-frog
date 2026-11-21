@@ -145,6 +145,7 @@ pub mod status_ui;
 mod subjects;
 mod summary;
 mod summary_items;
+pub mod tips;
 mod toast;
 mod tutorial;
 pub(crate) mod vault_menu;

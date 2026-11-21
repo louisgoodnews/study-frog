@@ -121,7 +121,11 @@ fn rating_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .fill(tint(c, if strong { 90 } else { 32 }))
                 .stroke(Stroke::new(if strong { 2.0 } else { 1.0 }, c))
                 .min_size(vec2(width, 46.0));
-            if cols[i].add(button).clicked() {
+            if cols[i]
+                .add(button)
+                .on_hover_text(crate::view::tips::rating(i))
+                .clicked()
+            {
                 act(out, Action::Rate(rating));
             }
         }
@@ -194,10 +198,17 @@ fn reveal_controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         } else {
             kit::primary_button(ui, label)
         };
-        if show.clicked() {
+        if show
+            .on_hover_text(crate::view::tips::show_answer())
+            .clicked()
+        {
             act(out, Action::Flip);
         }
-        if ui.button("Skip (S)").clicked() {
+        if ui
+            .button("Skip (S)")
+            .on_hover_text(crate::view::tips::skip())
+            .clicked()
+        {
             act(out, Action::Skip);
         }
     });
@@ -211,6 +222,7 @@ fn mark_row(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         for (difficulty, label, _) in MARKS {
             if ui
                 .selectable_label(chosen == Some(difficulty), label)
+                .on_hover_text(crate::view::tips::mark(difficulty))
                 .clicked()
             {
                 act(out, Action::Mark(difficulty));

@@ -177,5 +177,5 @@ pub fn icon_button(ui: &mut egui::Ui, glyph: Glyph, name: &str, active: bool) ->
     }
     paint(ui, rect, glyph, visuals.text_color());
     response.widget_info(|| WidgetInfo::labeled(Role::Button, true, name));
-    response.clone().on_hover_text(name)
+    response.on_hover_text(crate::view::tips::for_name(name))
 }

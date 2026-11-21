@@ -16,7 +16,7 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## Active work: v1.0.0 (2026-11-21)
 Working through [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md) in the milestone order, tracked in the v1.0.0 section of [priority-list.md](priority-list.md).
-- **Next task:** STORY-0169 (tooltips and shortcut badges). STORY-0168 is in review: PDF import as cards is in, one card per page. STORY-0166 and STORY-0167 are in review (the homework screen is not yet exercised in the app). The engines of STORY-0175, 0177, 0179 and 0180 are in review: their screens and wiring are open.
+- **Next task:** STORY-0170 (menu de-cluttering). STORY-0168 and STORY-0169 are in review; the tooltips have not been checked on screen. STORY-0166 and STORY-0167 are in review (the homework screen is not yet exercised in the app). The engines of STORY-0175, 0177, 0179 and 0180 are in review: their screens and wiring are open.
 - **Open flags:** STORY-0187 result screen and review are UI work; the new v1.0 stories are not yet in the app's UI.
 - **Done in this stretch:** STORY-0165 (model, storage, TOML mirror), STORY-0173 (Memory Mode engine), STORY-0185 (mock exam model, navigation, timer), STORY-0187 engine part, STORY-0182 and STORY-0183 (psychometric formulas, diagnosis), STORY-0176 (telemetry storage); engines in review: STORY-0175, 0177, 0179, 0180.
 
