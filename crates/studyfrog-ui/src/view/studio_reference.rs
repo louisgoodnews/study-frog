@@ -3,12 +3,13 @@
 //! the script.
 
 use eframe::egui::{self, RichText, TextStyle};
+use studyfrog_script::cookbook::RECIPES;
 use studyfrog_script::wiki::{CATEGORIES, Topic, label, search, topics};
 
 use crate::console_ui::ConsoleMsg;
 use crate::msg::Msg;
 use crate::script_studio::active_tab;
-use crate::script_studio::wiki_panel::WikiMsg;
+use crate::script_studio::wiki_panel::{WikiMsg, append_code, run_in_console};
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::kit;
@@ -25,6 +26,41 @@ pub fn key_of(t: &Topic) -> String {
 fn picked(key: Option<&str>) -> Option<&'static Topic> {
     let key = key?;
     topics().into_iter().find(|t| key_of(t) == key)
+}
+
+/// Add code to the end of the active tab.
+fn insert_code(state: &State, code: &str, out: &mut Vec<Msg>) {
+    let current = active_tab(&state.console.studio).map_or("", |tab| tab.content.as_str());
+    out.push(Msg::Console(ConsoleMsg::StudioEditCode(append_code(
+        current, code,
+    ))));
+}
+
+/// The cookbook: each recipe, with "Insert into editor" and, for read-only ones, "Run in console".
+fn cookbook(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.label(RichText::new("Cookbook").strong());
+    for r in RECIPES {
+        ui.label(RichText::new(r.name).strong());
+        ui.label(r.summary);
+        ui.horizontal_wrapped(|ui| {
+            let insert = kit::quiet_button(ui, "Insert into editor")
+                .on_hover_text("Adds this recipe to the end of the script in the active tab.");
+            if insert.clicked() {
+                insert_code(state, r.code, out);
+            }
+            if r.read_only {
+                let run = kit::quiet_button(ui, "Run in console").on_hover_text(
+                    "Runs this read-only recipe in a new tab; your current tab is kept.",
+                );
+                if run.clicked() {
+                    for m in run_in_console(r.code) {
+                        out.push(Msg::Console(m));
+                    }
+                }
+            }
+        });
+        ui.add_space(6.0);
+    }
 }
 
 /// Draw the reference panel.
@@ -47,6 +83,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 ui.separator();
             }
             list(w.query.as_str(), w.topic.as_deref(), ui, out);
+            ui.separator();
+            cookbook(state, ui, out);
         });
 }
 
@@ -96,13 +134,6 @@ fn details(state: &State, t: &Topic, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         "Adds the example to the end of the script, where it can be run and changed.",
     );
     if add.clicked() {
-        let mut code =
-            active_tab(&state.console.studio).map_or_else(String::new, |tab| tab.content.clone());
-        if !code.is_empty() && !code.ends_with('\n') {
-            code.push('\n');
-        }
-        code.push_str(t.example);
-        code.push('\n');
-        out.push(Msg::Console(ConsoleMsg::StudioEditCode(code)));
+        insert_code(state, t.example, out);
     }
 }

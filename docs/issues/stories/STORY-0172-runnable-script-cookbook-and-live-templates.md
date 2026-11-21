@@ -2,7 +2,7 @@
 id: STORY-0172
 type: story
 title: "Interactive FrogScript Cookbook and 1-Click Code Templates"
-status: backlog
+status: review
 epic: EPIC-058
 parents: ['EPIC-058']
 estimate: 3
@@ -23,9 +23,18 @@ Provide an interactive cookbook of practical scripts within the FrogScript Wiki:
 - Add a "Run in Console" action that executes read-only query recipes immediately and displays the output in the console stream.
 
 ## Acceptance Criteria
-- [ ] Curated cookbook of at least 8 ready-to-run script recipes for common study automation tasks
-- [ ] 1-click "Insert into Editor" button copying cookbook code directly into the active editor tab
-- [ ] 1-click "Run in Console" button executing sample scripts with instant output preview
+- [x] Curated cookbook of at least 8 ready-to-run script recipes for common study automation tasks
+- [x] 1-click "Insert into Editor" button copying cookbook code directly into the active editor tab
+- [x] 1-click "Run in Console" button executing sample scripts with instant output preview
+
+## Implementation (2026-11-21)
+`studyfrog-script::cookbook` holds ten recipes: seven read-only (overdue review analyzer, due today, weekly progress, stack summary, exams in the next two weeks, tag census, backup reminder) and three that change items (bulk card tagger, vocabulary cleaner, priority reset). The cookbook sits at the foot of the FrogScript reference panel.
+
+"Insert into editor" adds a recipe to the end of the active tab, as the acceptance criteria say. The description asked for a new tab; the criteria win, so the user's work is only ever appended to. "Run in console" is offered only for read-only recipes; it opens a new tab, loads the recipe and runs it, so the user's tab is kept and the output reaches the console.
+
+The backup recipe is a reminder: the language cannot start a backup, and the recipe says so.
+
+Tests: `studyfrog-script/tests/cookbook.rs` (parse, run on an empty engine, no writes in read-only recipes) and `studyfrog-ui/tests/studio_reference.rs` (every recipe offered, run path, appending). Recipes that reach `vault.` or `calendar.` are not run by the engine test, because the app provides those names when it runs a script.
 
 ## Design Notes
 Keep cookbook templates self-contained and documented with inline comments.

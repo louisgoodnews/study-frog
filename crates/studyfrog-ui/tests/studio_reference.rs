@@ -65,3 +65,57 @@ fn the_console_screen_shows_the_reference_when_it_is_open() {
         "the categories are listed"
     );
 }
+
+#[test]
+fn the_cookbook_offers_every_recipe_and_runs_the_read_only_ones() {
+    use studyfrog_script::cookbook::RECIPES;
+    let mut m = open_model();
+    apply(&mut m, Msg::Navigate(Screen::Console));
+    apply(&mut m, Msg::Console(ConsoleMsg::StudioToggleExpanded));
+    wiki(&mut m, WikiMsg::Toggle);
+    let mut h = harness(m);
+    h.run_steps(4);
+    let inserts = h.query_all_by_label("Insert into editor").count();
+    assert_eq!(inserts, RECIPES.len(), "every recipe can be inserted");
+    let runs = h.query_all_by_label("Run in console").count();
+    assert_eq!(runs, RECIPES.iter().filter(|r| r.read_only).count());
+}
+
+#[test]
+fn running_a_recipe_opens_a_new_tab_and_keeps_the_users_tab() {
+    use studyfrog_script::cookbook::recipe;
+    use studyfrog_ui::script_studio::wiki_panel::run_in_console;
+    let mut m = open_model();
+    let before = m.state.console.studio.tabs.len();
+    let user_code = m.state.console.studio.tabs[m.state.console.studio.active_tab]
+        .content
+        .clone();
+    let due = recipe("Due today").unwrap();
+    for msg in run_in_console(due.code) {
+        apply(&mut m, Msg::Console(msg));
+    }
+    let studio = &m.state.console.studio;
+    assert_eq!(studio.tabs.len(), before + 1, "a new tab");
+    assert_eq!(studio.tabs[studio.active_tab].content, due.code);
+    assert_eq!(
+        studio.tabs[before - 1].content,
+        user_code,
+        "the user's tab is untouched"
+    );
+    assert!(
+        m.state
+            .console
+            .entries
+            .iter()
+            .any(|e| e.text.contains("due today")),
+        "the recipe's output reaches the console"
+    );
+}
+
+#[test]
+fn appending_code_puts_it_on_its_own_line() {
+    use studyfrog_ui::script_studio::wiki_panel::append_code;
+    assert_eq!(append_code("a", "b"), "a\nb\n");
+    assert_eq!(append_code("", "x"), "x\n");
+    assert_eq!(append_code("a\n", "b\n"), "a\nb\n");
+}

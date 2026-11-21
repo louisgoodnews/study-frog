@@ -4,6 +4,7 @@
 //! active-recall queue steering, closure transformations, and dedicated execution logging.
 
 pub mod ast;
+pub mod cookbook;
 pub mod env;
 pub mod error;
 pub mod eval;
