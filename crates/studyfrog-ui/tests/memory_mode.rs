@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Memory mode: the grid's shape and the game's state (start, load, flip, clock, close).
 
+use studyfrog_core::settings::{memory_best_of, with_memory_best};
 use studyfrog_rehearsal::memory::MemoryOutcome;
 use studyfrog_rehearsal::memory_summary::MemoryTimer;
 use studyfrog_ui::effect::Effect;
@@ -147,7 +148,8 @@ fn started_on(folder: &str, timer: MemoryTimer, n: usize) -> State {
 }
 
 /// Flip every pair in turn, so the game completes at the clock's current time.
-fn finish_game(mut state: State) -> State {
+fn finish_all(mut state: State) -> (State, Vec<Effect>) {
+    let mut effects = Vec::new();
     let session = memory(&state).session.clone().expect("a game");
     let pairs: std::collections::BTreeSet<u32> = session.tiles.iter().map(|t| t.pair).collect();
     for pair in pairs {
@@ -159,10 +161,12 @@ fn finish_game(mut state: State) -> State {
             .map(|(i, _)| i)
             .collect();
         for i in idx {
-            state = send(state, MemoryMsg::Flip(i)).0;
+            let (next, fx) = send(state, MemoryMsg::Flip(i));
+            state = next;
+            effects.extend(fx);
         }
     }
-    state
+    (state, effects)
 }
 
 #[test]
@@ -175,25 +179,45 @@ fn a_countdown_ends_in_a_timeout_after_its_limit() {
 }
 
 #[test]
-fn a_finished_game_records_its_time_as_the_best() {
+fn a_finished_game_saves_its_time_as_the_stacks_best() {
     let mut state = started_on("s", MemoryTimer::Stopwatch, 2);
+    state.app.vault = Some("/vault".to_owned());
     state.wall_ms += 30_000;
     let (state, _) = send(state, MemoryMsg::Clock);
-    let state = finish_game(state);
-    assert_eq!(state.rehearse.memory_best_ms, Some(30_000));
-    // A faster second game lowers the best; a slower one does not raise it.
-    let mut faster = started_on("s", MemoryTimer::Stopwatch, 2);
-    faster.rehearse.memory_best_ms = state.rehearse.memory_best_ms;
-    faster.wall_ms += 20_000;
-    let (faster, _) = send(faster, MemoryMsg::Clock);
-    let faster = finish_game(faster);
-    assert_eq!(faster.rehearse.memory_best_ms, Some(20_000));
-    let mut slower = started_on("s", MemoryTimer::Stopwatch, 2);
-    slower.rehearse.memory_best_ms = faster.rehearse.memory_best_ms;
-    slower.wall_ms += 50_000;
-    let (slower, _) = send(slower, MemoryMsg::Clock);
-    let slower = finish_game(slower);
-    assert_eq!(slower.rehearse.memory_best_ms, Some(20_000));
+    let (state, effects) = finish_all(state);
+    assert_eq!(memory_best_of(&state.app, "/vault", "s"), Some(30_000));
+    assert!(
+        matches!(effects.as_slice(), [Effect::SaveAppSettings(_)]),
+        "{effects:?}"
+    );
+}
+
+#[test]
+fn a_faster_game_lowers_the_best_and_a_slower_one_does_not_raise_it() {
+    let mut state = State::default();
+    state.app.vault = Some("/vault".to_owned());
+    for (ms, expected) in [(30_000, 30_000), (20_000, 20_000), (50_000, 20_000)] {
+        let mut game = started_on("s", MemoryTimer::Stopwatch, 2);
+        game.app = state.app.clone();
+        game.wall_ms += ms;
+        let (game, _) = send(game, MemoryMsg::Clock);
+        let (game, _) = finish_all(game);
+        assert_eq!(memory_best_of(&game.app, "/vault", "s"), Some(expected));
+        state = game;
+    }
+}
+
+#[test]
+fn the_prior_best_is_read_when_a_game_starts() {
+    let mut state = State::default();
+    state.app.vault = Some("/vault".to_owned());
+    state.app = with_memory_best(&state.app, "/vault", "s", 12_000);
+    let game = started_on("s", MemoryTimer::Stopwatch, 2);
+    let mut game = game;
+    game.app = state.app.clone();
+    game.browser.selection = Selection::Stack("s".to_owned());
+    let (game, _) = send(game, MemoryMsg::Start);
+    assert_eq!(memory(&game).prior_best_ms, Some(12_000));
 }
 
 #[test]

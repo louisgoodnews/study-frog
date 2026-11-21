@@ -2,7 +2,7 @@
 
 use serde::Deserialize;
 use studyfrog_core::settings::{
-    AnswerEngine, AppSettings, MAX_READING_WPM as MAX_WPM, MIN_READING_WPM as MIN_WPM,
+    AnswerEngine, AppSettings, MAX_READING_WPM as MAX_WPM, MIN_READING_WPM as MIN_WPM, MemoryBest,
     ReadingTuning, answer_engine_from_name, answer_engine_name,
 };
 
@@ -11,6 +11,14 @@ use crate::values::toml_string;
 
 /// File name inside the user's StudyFrog config directory.
 pub const APP_CONFIG_FILE: &str = "app.toml";
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawMemoryBest {
+    vault: String,
+    stack: String,
+    best_ms: u64,
+}
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -31,6 +39,8 @@ struct RawApp {
     stack_tabs: Option<Vec<String>>,
     tutorial_offered: Option<bool>,
     appearance: Option<crate::app_appearance::RawAppearance>,
+    #[serde(default)]
+    memory_best: Vec<RawMemoryBest>,
 }
 
 /// `value` if it is inside `range`, else an error naming the key and its line.
@@ -101,6 +111,15 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
         stack_tabs: raw.stack_tabs.unwrap_or_default(),
         tutorial_offered: raw.tutorial_offered == Some(true),
         appearance: crate::app_appearance::parse(text, raw.appearance)?,
+        memory_best: raw
+            .memory_best
+            .into_iter()
+            .map(|b| MemoryBest {
+                vault: b.vault,
+                stack: b.stack,
+                best_ms: b.best_ms,
+            })
+            .collect(),
     })
 }
 
@@ -155,5 +174,14 @@ pub fn render_app_settings(s: &AppSettings) -> String {
         out.push_str(&format!("settings_tab = {}\n", toml_string(tab)));
     }
     out.push_str(&crate::app_appearance::render(&s.appearance));
+    // Tables come last: keys after a table header would belong to it.
+    for b in &s.memory_best {
+        out.push_str(&format!(
+            "\n[[memory_best]]\nvault = {}\nstack = {}\nbest_ms = {}\n",
+            toml_string(&b.vault),
+            toml_string(&b.stack),
+            b.best_ms
+        ));
+    }
     out
 }

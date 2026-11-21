@@ -19,6 +19,11 @@ pub enum Modal {
     Transfer,
     /// Confirm turning a stack into a normal folder.
     ConfirmUnmark(Box<studyfrog_service::stack_mark::UnmarkPlan>),
+    /// The victory summary of a memory game.
+    MemorySummary(
+        Box<studyfrog_rehearsal::memory_summary::VictorySummary>,
+        Option<u64>,
+    ),
     /// Export items or stacks to PDF.
     PdfExport(Box<crate::pdf_export_types::PdfExportState>),
     /// Edit an item during rehearsal.

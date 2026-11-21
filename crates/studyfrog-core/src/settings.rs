@@ -123,6 +123,53 @@ pub struct AppSettings {
     pub tutorial_offered: bool,
     /// Theme, size, colours, start-up and window.
     pub appearance: crate::appearance::Appearance,
+    /// The best memory-game time of each stack in each vault (most recent first).
+    pub memory_best: Vec<MemoryBest>,
+}
+
+/// The most memory-game records kept.
+pub const MAX_MEMORY_BEST: usize = 200;
+
+/// The best memory-game time of one stack in one vault.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MemoryBest {
+    /// The vault's path.
+    pub vault: String,
+    /// The stack's folder (empty for the inbox).
+    pub stack: String,
+    /// The best time, in milliseconds.
+    pub best_ms: u64,
+}
+
+/// The best time recorded for a stack in a vault, if any.
+pub fn memory_best_of(settings: &AppSettings, vault: &str, stack: &str) -> Option<u64> {
+    settings
+        .memory_best
+        .iter()
+        .find(|b| b.vault == vault && b.stack == stack)
+        .map(|b| b.best_ms)
+}
+
+/// `settings` with `ms` kept as the stack's best if it beats the stored one (or there is none).
+pub fn with_memory_best(settings: &AppSettings, vault: &str, stack: &str, ms: u64) -> AppSettings {
+    let best = memory_best_of(settings, vault, stack).map_or(ms, |b| b.min(ms));
+    let mut records = vec![MemoryBest {
+        vault: vault.to_owned(),
+        stack: stack.to_owned(),
+        best_ms: best,
+    }];
+    records.extend(
+        settings
+            .memory_best
+            .iter()
+            .filter(|b| !(b.vault == vault && b.stack == stack))
+            .cloned(),
+    );
+    records.truncate(MAX_MEMORY_BEST);
+    AppSettings {
+        memory_best: records,
+        ..settings.clone()
+    }
 }
 
 /// Most stacks whose tab is remembered.

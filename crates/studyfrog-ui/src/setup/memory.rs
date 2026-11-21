@@ -2,12 +2,12 @@
 //! ([`studyfrog_rehearsal::memory`]) decides the rules; this module keeps the session on screen,
 //! starts it from the open stack with the chosen timing, and feeds it the clock. No egui, no I/O.
 
-use studyfrog_rehearsal::memory::{
-    MemoryOutcome, MemorySession, flip_tile, new_memory_session, tick_memory_timer,
-};
-use studyfrog_rehearsal::memory_summary::MemoryTimer;
+use studyfrog_core::settings::{memory_best_of, with_memory_best};
+use studyfrog_rehearsal::memory::{MemoryOutcome, MemorySession, flip_tile, tick_memory_timer};
+use studyfrog_rehearsal::memory_summary::{MemoryTimer, victory_summary};
 
 use crate::effect::Effect;
+use crate::modal_types::Modal;
 use crate::state::{Selection, State};
 
 /// The most pairs in one game (a 4 x 4 grid of cards).
@@ -47,6 +47,8 @@ pub struct MemoryUi {
     pub started_ms: i64,
     /// The timing of this game.
     pub timer: MemoryTimer,
+    /// The stack this game is played with (empty for the inbox), for its record.
+    pub stack: String,
     /// The best time before this game started, in milliseconds.
     pub prior_best_ms: Option<u64>,
     /// Whether this game's time has been counted towards the best.
@@ -65,16 +67,16 @@ pub fn update(state: State, msg: MemoryMsg) -> (State, Vec<Effect>) {
             ..state
         }),
         MemoryMsg::Mode(timer) => (with_timer(state, timer), Vec::new()),
-        MemoryMsg::Loaded(result) => loaded(state, result),
-        MemoryMsg::Flip(idx) => (flip(state, idx), Vec::new()),
-        MemoryMsg::Clock => (clock(state), Vec::new()),
+        MemoryMsg::Loaded(result) => super::memory_deck::loaded(state, result),
+        MemoryMsg::Flip(idx) => flip(state, idx),
+        MemoryMsg::Clock => clock(state),
         MemoryMsg::Close => (with_memory(state, None), Vec::new()),
     }
 }
 
 /// Advance the clock of a running game (called on every tick).
 pub fn tick(state: State) -> (State, Vec<Effect>) {
-    (clock(state), Vec::new())
+    clock(state)
 }
 
 /// The engine's time limit for a timing, in milliseconds.
@@ -85,7 +87,7 @@ pub fn limit_ms(timer: MemoryTimer) -> Option<u64> {
     }
 }
 
-fn with_memory(state: State, memory: Option<MemoryUi>) -> State {
+pub(super) fn with_memory(state: State, memory: Option<MemoryUi>) -> State {
     State {
         rehearse: crate::setup::Rehearse {
             memory,
@@ -108,120 +110,100 @@ fn with_timer(state: State, timer: MemoryTimer) -> State {
 fn start(state: State) -> (State, Vec<Effect>) {
     let started_ms = state.wall_ms;
     let timer = state.rehearse.memory_timer;
-    let prior_best_ms = state.rehearse.memory_best_ms;
+    let vault = state.app.vault.clone().unwrap_or_default();
+    let folder = match &state.browser.selection {
+        Selection::Stack(f) => Some(f.clone()),
+        Selection::Inbox => Some(String::new()),
+        Selection::Nothing => None,
+    };
+    let stack = folder.clone().unwrap_or_default();
+    let prior_best_ms = memory_best_of(&state.app, &vault, &stack);
     let base = MemoryUi {
         started_ms,
         timer,
+        stack,
         prior_best_ms,
         ..MemoryUi::default()
     };
-    let folder = match &state.browser.selection {
-        Selection::Stack(f) => Some(f.clone()),
-        Selection::Inbox => None,
-        Selection::Nothing => {
-            let memory = MemoryUi {
-                error: Some("Open a stack first, then start the memory game.".to_owned()),
-                ..base
-            };
-            return (with_memory(state, Some(memory)), Vec::new());
-        }
+    let Some(folder) = folder else {
+        let memory = MemoryUi {
+            error: Some("Open a stack first, then start the memory game.".to_owned()),
+            ..base
+        };
+        return (with_memory(state, Some(memory)), Vec::new());
     };
     let memory = MemoryUi {
         loading: true,
         ..base
     };
+    let stack_arg = if folder.is_empty() {
+        None
+    } else {
+        Some(folder)
+    };
     (
         with_memory(state, Some(memory)),
-        vec![Effect::MemoryDeck(folder)],
+        vec![Effect::MemoryDeck(stack_arg)],
     )
 }
 
-fn loaded(state: State, result: Result<Vec<(String, String)>, String>) -> (State, Vec<Effect>) {
+fn flip(state: State, idx: usize) -> (State, Vec<Effect>) {
     let Some(memory) = state.rehearse.memory.clone() else {
         return (state, Vec::new());
     };
-    let seed = memory.started_ms.unsigned_abs();
-    let memory = match result {
-        Err(e) => MemoryUi {
-            loading: false,
-            error: Some(e),
-            ..memory
-        },
-        Ok(cards) => {
-            let usable = cards
-                .iter()
-                .filter(|(f, b)| !f.trim().is_empty() && !b.trim().is_empty())
-                .count();
-            if usable < 2 {
-                MemoryUi {
-                    loading: false,
-                    error: Some("This stack needs at least two cards to play.".to_owned()),
-                    ..memory
-                }
-            } else {
-                let session = new_memory_session(
-                    &cards,
-                    usable.min(MAX_PAIRS),
-                    seed,
-                    MISMATCH_MS,
-                    limit_ms(memory.timer),
-                );
-                MemoryUi {
-                    session: Some(session),
-                    loading: false,
-                    error: None,
-                    ..memory
-                }
-            }
-        }
-    };
-    (with_memory(state, Some(memory)), Vec::new())
-}
-
-fn flip(state: State, idx: usize) -> State {
-    let Some(memory) = state.rehearse.memory.clone() else {
-        return state;
-    };
     let Some(session) = &memory.session else {
-        return state;
+        return (state, Vec::new());
     };
     match flip_tile(session, idx) {
         Ok(next) => put(state, memory, next),
-        Err(_) => state,
+        Err(_) => (state, Vec::new()),
     }
 }
 
-fn clock(state: State) -> State {
+fn clock(state: State) -> (State, Vec<Effect>) {
     let Some(memory) = state.rehearse.memory.clone() else {
-        return state;
+        return (state, Vec::new());
     };
     let Some(session) = &memory.session else {
-        return state;
+        return (state, Vec::new());
     };
     let now = (state.wall_ms - memory.started_ms).max(0) as u64;
     let next = tick_memory_timer(session, now);
     put(state, memory, next)
 }
 
-/// Store the game's new session, and count a completed game's time towards the session's best.
-fn put(state: State, memory: MemoryUi, session: MemorySession) -> State {
+/// Store the game's new session. A completed game's time becomes the stack's best if it beats the
+/// stored one, and the settings are saved.
+fn put(state: State, memory: MemoryUi, session: MemorySession) -> (State, Vec<Effect>) {
     let mut memory = MemoryUi {
         session: Some(session.clone()),
         ..memory
     };
-    let mut best = state.rehearse.memory_best_ms;
+    let mut app = state.app.clone();
+    let mut effects = Vec::new();
+    let mut just_completed = false;
     if let Some(MemoryOutcome::Completed { elapsed_ms }) = session.outcome
         && !memory.recorded
     {
-        best = Some(best.map_or(elapsed_ms, |b| b.min(elapsed_ms)));
         memory.recorded = true;
+        just_completed = true;
+        let vault = state.app.vault.clone().unwrap_or_default();
+        app = with_memory_best(&state.app, &vault, &memory.stack, elapsed_ms);
+        effects.push(Effect::SaveAppSettings(app.clone()));
     }
-    State {
+    // The summary opens once, when the game is completed; later frames must not reopen it.
+    let modal = just_completed
+        .then(|| victory_summary(&session, memory.timer, memory.prior_best_ms))
+        .flatten()
+        .map(|v| Modal::MemorySummary(Box::new(v), memory.prior_best_ms));
+    let next = State {
+        app,
+        modal: modal.or(state.modal.clone()),
         rehearse: crate::setup::Rehearse {
             memory: Some(memory),
-            memory_best_ms: best,
             ..state.rehearse.clone()
         },
         ..state
-    }
+    };
+    (next, effects)
 }

@@ -7,6 +7,7 @@ use crate::run_state::RunView;
 use crate::state::State;
 
 pub mod memory;
+pub mod memory_deck;
 pub mod memory_layout;
 
 pub use crate::setup_form::{
@@ -58,8 +59,6 @@ pub struct Rehearse {
     pub memory: Option<memory::MemoryUi>,
     /// The timing chosen for the next memory game.
     pub memory_timer: studyfrog_rehearsal::memory_summary::MemoryTimer,
-    /// The best memory-game time this session, in milliseconds (not yet kept across restarts).
-    pub memory_best_ms: Option<u64>,
 }
 
 /// Ask for a fresh count (or show why the form is invalid).

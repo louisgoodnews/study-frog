@@ -36,7 +36,7 @@ The game is on the rehearse screen: "Memory game" in the What step starts it fro
 
 `setup/memory_layout.rs` picks the column count (2 to 8) that gives the largest cards at the card aspect, so 12, 16 and 20 cards fill the window with 3, 4 or 5 columns. The board (`view/memory_board.rs`) paints face-down cards with a dot lattice in palette tokens, face-up text wrapped inside the card, a success glow on matches, and a danger outline that shakes on a mismatch. The HUD shows time, moves, pairs left and the streak; the end line offers "Play again". A clock message is sent each frame while a game runs, so the mismatch delay runs on the wall clock.
 
-Tests: `studyfrog-ui/tests/memory_mode.rs` (grid fit and aspect, start and load paths, the eight-pair limit, the mismatch delay, close). The on-screen look is not yet checked in a screenshot: the screenshot tool cannot open a running game.
+Tests: `studyfrog-ui/tests/memory_mode.rs` (grid fit and aspect, start and load paths, the eight-pair limit, the mismatch delay, close). Screenshots (`--screen memory-demo`, `memory:<stack>`) show the board, a matched pair with its glow, a face-up card and a mismatch outline; a person has not yet played a round.
 
 ## Design Notes
 Use `egui` drawing primitives, strictly adhering to `palette_of(ui)` without hardcoded RGB values. Ensure file line counts remain $\le 250$ LOC per file (Invariant P6).

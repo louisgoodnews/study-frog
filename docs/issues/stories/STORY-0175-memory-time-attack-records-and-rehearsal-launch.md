@@ -26,7 +26,7 @@ Complete the user journey for Memory Mode:
 
 ## Acceptance Criteria
 - [x] Time-attack mode with countdown options (e.g. 60s, 90s, 120s) and timeout defeat condition
-- [ ] Victory summary modal detailing elapsed time, move accuracy, speed score, and personal best records
+- [x] Victory summary modal detailing elapsed time, move accuracy, speed score, and personal best records
 - [ ] Memory Mode launch action integrated into the Rehearse setup screen and Stack detail view
 
 ## Design Notes
@@ -36,15 +36,14 @@ Store personal bests in application settings or stack rehearsal statistics. Conn
 EPIC-059, STORY-0173, STORY-0174
 
 ## Implementation (2026-11-21)
-The engine (`studyfrog-rehearsal::memory_summary`) provides the time-attack options (60, 90, 120 s), danger levels, the victory summary and the defeat line. The UI now uses them:
+The engine (`studyfrog-rehearsal::memory_summary`) provides the time-attack options (60, 90, 120 s), danger levels, the victory summary and the defeat line. The UI uses them:
 - **Mode choice:** Stopwatch, 60 s, 90 s or 120 s, in the rehearse setup's What step. The choice is kept in the rehearse state and passed to the next game as the engine's time limit.
 - **Danger colours:** the HUD time turns the warning colour under 30 s and the danger colour under 10 s of a countdown.
-- **Summary:** a completed game shows the time, moves, accuracy, speed, best streak, the time bonus and the personal-best line; a timeout shows the encouraging line. Both have "Play again". The summary is an inline line under the HUD, not a modal.
-- **Entry points:** "Memory game" in the rehearse setup, and "Memory game" beside "Start rehearsal" on the stack page.
+- **Summary:** a completed game opens a victory dialog (time, moves, accuracy, speed, best streak, the time bonus and the personal-best line) once, when the game is completed. A timeout shows the encouraging line under the HUD. Both have "Play again".
+- **Records:** the best time of each stack in each vault is saved in `app.toml` as `[[memory_best]]` tables (`studyfrog-config::app`), so it survives restarts. The records live with the user's app settings, not in the vault, so a vault copied to another machine starts with no records.
+- **Entry points:** "Memory game" in the rehearse setup, and beside "Start rehearsal" on the stack page.
 
-Open: the personal best is kept for the session only (`Rehearse.memory_best_ms`). Keeping it across restarts needs a store or settings field, so the criterion about personal-best records is not ticked yet.
-
-Tests: `studyfrog-ui/tests/memory_mode.rs` (timeout, best time, timing choice, stack start) and `tests/memory_summary_ui.rs` (summary and timeout text on screen). Screenshots checked the timing row and the board; the summary was checked by the harness, not visually.
+Tests: `studyfrog-ui/tests/memory_mode.rs` (timeout, saved best, timing choice, stack start), `tests/memory_summary_ui.rs` (dialog and timeout text on screen) and `studyfrog-config/tests/memory_best_app.rs` (records round-trip through `app.toml`). Screenshots checked the timing row, the board, matched and mismatch cards, and the victory dialog.
 
 ## Open Questions
 None.

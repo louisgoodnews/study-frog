@@ -54,12 +54,14 @@ fn a_finished_game_shows_the_summary_and_the_first_record() {
     }
     let mut h = harness(m);
     h.run_steps(4);
+    assert!(h.query_by_label("Memory game complete").is_some());
     assert!(
-        h.query_by_label_contains("All pairs found in 0:30.")
-            .is_some()
+        h.query_all_by_label_contains("All pairs found in 0:30.")
+            .count()
+            >= 1
     );
     assert!(h.query_by_label("Your first time on record.").is_some());
-    assert!(h.query_by_label("Play again").is_some());
+    assert!(h.query_all_by_label("Play again").count() >= 1);
 }
 
 #[test]

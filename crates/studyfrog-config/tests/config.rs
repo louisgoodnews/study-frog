@@ -115,6 +115,7 @@ proptest! {
 #[test]
 fn app_settings_round_trip_awkward_paths_and_track_recent_vaults() {
     let s = AppSettings {
+        memory_best: Vec::new(),
         vault: Some("/home/me/\"notes\" \\ tab\there \u{e9}".into()),
         recent: vec!["/a".into(), "C:\\vault".into()],
         reading_wpm: Some(215),
@@ -157,7 +158,7 @@ fn app_settings_round_trip_awkward_paths_and_track_recent_vaults() {
 proptest! {
     #[test]
     fn any_vault_path_round_trips(path in "\\PC{0,40}") {
-        let s = AppSettings { vault: Some(path.clone()), recent: vec![path], reading_wpm: None, answer_engine: Default::default(), reading: Default::default(), settings_tab: None, views_untracked: false, library_columns: None, calendar_reviews_off: false, slow_answer_notice_off: false, stack_tabs: Vec::new(), tutorial_offered: false, appearance: Default::default(), };
+        let s = AppSettings { memory_best: Vec::new(), vault: Some(path.clone()), recent: vec![path], reading_wpm: None, answer_engine: Default::default(), reading: Default::default(), settings_tab: None, views_untracked: false, library_columns: None, calendar_reviews_off: false, slow_answer_notice_off: false, stack_tabs: Vec::new(), tutorial_offered: false, appearance: Default::default(), };
         prop_assert_eq!(parse_app_settings(&render_app_settings(&s)), Ok(s));
     }
 }
