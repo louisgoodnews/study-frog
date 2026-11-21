@@ -488,6 +488,8 @@
 | [STORY-0185](docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock Exam Structure, Weighted Point Allocations, and Strict Timer Controls (3) | done | 0/0 |
 | [STORY-0186](docs/issues/stories/STORY-0186-lecture-slide-driven-exam-generator.md) Lecture Slide and Script-Driven Exam Generation Engine via Local SLM (5) | backlog | 0/0 |
 | [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Mock Exam Grading Report, German University Grade Scale (1.0 - 5.0), and Chapter Analytics (3) | in_progress | 0/0 |
+| [STORY-0188](docs/issues/stories/STORY-0188-search-keyboard-shortcut.md) Keyboard Shortcut to Focus Search (Ctrl+F and /) (3) | backlog | 0/0 |
+| [STORY-0189](docs/issues/stories/STORY-0189-tooltips-for-text-buttons.md) Hover Explanations for Text Buttons Across the App (5) | backlog | 0/0 |
 
 ## Epics
 
@@ -549,7 +551,7 @@
 | [EPIC-054](docs/issues/epics/EPIC-054-fsrs-auto-tuning-and-inline-card-capture.md) FSRS Auto-Tuning and Inline Card Capture | done | 2/2 |
 | [EPIC-055](docs/issues/epics/EPIC-055-offline-local-slm-internal-assistant.md) Offline Local SLM Internal Assistant | done | 3/3 |
 | [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration | in_progress | 1/3 |
-| [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | backlog | 0/3 |
+| [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | backlog | 0/5 |
 | [EPIC-058](docs/issues/epics/EPIC-058-in-gui-frogscript-wiki-and-reference.md) In-GUI FrogScript Wiki and Interactive Documentation | backlog | 0/2 |
 | [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time | in_progress | 1/3 |
 | [EPIC-060](docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | in_progress | 1/3 |
