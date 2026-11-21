@@ -50,6 +50,8 @@ pub enum Effect {
     Notifications(crate::notify::NotifyEffect),
     /// Record how long an item was viewed or worked on.
     RecordView(crate::view_time::ViewRecord),
+    /// Read the cards of a stack (the inbox when `None`) for a memory game.
+    MemoryDeck(Option<String>),
     /// Count the items a run built from this plan would contain.
     PreviewQueue {
         /// The plan.

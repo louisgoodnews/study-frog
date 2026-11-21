@@ -6,6 +6,9 @@ use crate::msg::Msg;
 use crate::run_state::RunView;
 use crate::state::State;
 
+pub mod memory;
+pub mod memory_layout;
+
 pub use crate::setup_form::{
     Preset, SetupEdit, SetupForm, apply_edit, form_for_preset, plan_from_form,
 };
@@ -51,6 +54,8 @@ pub struct Rehearse {
     pub starting: bool,
     /// The run on screen, if any.
     pub run: Option<RunView>,
+    /// The memory game on screen, if one was started.
+    pub memory: Option<memory::MemoryUi>,
 }
 
 /// Ask for a fresh count (or show why the form is invalid).

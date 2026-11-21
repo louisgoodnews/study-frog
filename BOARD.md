@@ -474,7 +474,7 @@
 | [STORY-0171](docs/issues/stories/STORY-0171-in-gui-frogscript-wiki-browser.md) In-App FrogScript Wiki and Standard Library Reference Browser (5) | review | 0/0 |
 | [STORY-0172](docs/issues/stories/STORY-0172-runnable-script-cookbook-and-live-templates.md) Interactive FrogScript Cookbook and 1-Click Code Templates (3) | review | 0/0 |
 | [STORY-0173](docs/issues/stories/STORY-0173-memory-session-engine-and-pair-mechanics.md) Memory Session Engine, Card Deck Pairing, and Flip-State Transitions (3) | done | 0/0 |
-| [STORY-0174](docs/issues/stories/STORY-0174-memory-mode-interactive-grid-ui-and-animations.md) Memory Mode Interactive Card Grid UI, Card Back Styling, and Audio-Visual Feedback (3) | backlog | 0/0 |
+| [STORY-0174](docs/issues/stories/STORY-0174-memory-mode-interactive-grid-ui-and-animations.md) Memory Mode Interactive Card Grid UI, Card Back Styling, and Audio-Visual Feedback (3) | review | 0/0 |
 | [STORY-0175](docs/issues/stories/STORY-0175-memory-time-attack-records-and-rehearsal-launch.md) Time-Attack Countdown Mode, Session Records, and Rehearsal Launch Entry Points (2) | review | 0/0 |
 | [STORY-0176](docs/issues/stories/STORY-0176-persistent-cognitive-telemetry-and-interaction-metrics.md) Persistent Interaction Telemetry and Cognitive Metrics Schema in SQLite (3) | done | 0/0 |
 | [STORY-0177](docs/issues/stories/STORY-0177-adaptive-cognitive-difficulty-and-learning-velocity-estimator.md) Adaptive Cognitive Difficulty and Learning Velocity Estimation Engine (5) | review | 0/0 |

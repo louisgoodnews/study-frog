@@ -79,6 +79,7 @@ pub mod exec_library;
 pub mod exec_log;
 pub mod exec_mark;
 pub mod exec_mcp;
+pub mod exec_memory;
 pub mod exec_pdf;
 pub mod exec_pdf_export;
 pub mod exec_pdf_items;

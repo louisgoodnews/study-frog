@@ -21,6 +21,16 @@ fn go(out: &mut Vec<Msg>, step: SetupStep) {
 
 /// The whole screen: the steps scroll, the Back and Next buttons stay in view.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if let Some(memory) = &state.rehearse.memory {
+        egui::ScrollArea::vertical()
+            .auto_shrink([false, false])
+            .show(ui, |ui| {
+                kit::column(ui, kit::READING_WIDTH, |ui| {
+                    super::memory_board::draw(ui, memory, out);
+                });
+            });
+        return;
+    }
     let step = state.rehearse.step;
     egui::Panel::bottom("setup-nav")
         .show_separator_line(false)
@@ -107,6 +117,12 @@ fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         match step {
             SetupStep::What => {
+                if kit::quiet_button(ui, "Memory game")
+                    .on_hover_text("Plays a memory game with the cards of the stack you have open.")
+                    .clicked()
+                {
+                    out.push(Msg::Memory(crate::setup::memory::MemoryMsg::Start));
+                }
                 if kit::primary_button(ui, "Next: configure")
                     .on_hover_text("Goes on to the configuration step.")
                     .clicked()
