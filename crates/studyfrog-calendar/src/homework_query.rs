@@ -1,0 +1,101 @@
+//! Urgency and ordering for the homework planner (STORY-0167). Pure.
+
+use std::cmp::Ordering;
+
+use studyfrog_core::civil::{LocalTime, add_days};
+use studyfrog_core::uid::Uid;
+
+use crate::homework::{HomeworkItem, HomeworkPriority, HomeworkStatus};
+
+/// How pressing an item is at a given moment. Used for filters and badges.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Urgency {
+    /// Open, and the due time has passed.
+    Overdue,
+    /// Open, due later today.
+    DueToday,
+    /// Open, due within the next seven days (after today).
+    Upcoming,
+    /// Open, due later than the next seven days.
+    Later,
+    /// Completed.
+    Completed,
+}
+
+/// Classify an item relative to `now`.
+pub fn urgency(item: &HomeworkItem, now: LocalTime) -> Urgency {
+    if item.status == HomeworkStatus::Completed {
+        Urgency::Completed
+    } else if item.due < now {
+        Urgency::Overdue
+    } else if item.due.date == now.date {
+        Urgency::DueToday
+    } else if item.due.date <= add_days(now.date, 7) {
+        Urgency::Upcoming
+    } else {
+        Urgency::Later
+    }
+}
+
+/// Which items the planner shows.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct HomeworkFilter {
+    /// Only this course, if set.
+    pub course: Option<Uid>,
+    /// Only this urgency, if set.
+    pub urgency: Option<Urgency>,
+    /// Whether completed items are shown.
+    pub show_completed: bool,
+}
+
+/// Whether an item passes the filter at `now`.
+pub fn matches_filter(item: &HomeworkItem, filter: &HomeworkFilter, now: LocalTime) -> bool {
+    let u = urgency(item, now);
+    if !filter.show_completed && u == Urgency::Completed {
+        return false;
+    }
+    filter.course.is_none_or(|c| item.course == Some(c))
+        && filter.urgency.is_none_or(|want| want == u)
+}
+
+/// The filtered items in planner order: overdue first, then by due time, higher priority first on
+/// ties.
+pub fn planner_order(
+    items: &[HomeworkItem],
+    filter: &HomeworkFilter,
+    now: LocalTime,
+) -> Vec<HomeworkItem> {
+    let mut out: Vec<HomeworkItem> = items
+        .iter()
+        .filter(|i| matches_filter(i, filter, now))
+        .cloned()
+        .collect();
+    out.sort_by(|a, b| compare(a, b, now));
+    out
+}
+
+fn rank(u: Urgency) -> u8 {
+    match u {
+        Urgency::Overdue => 0,
+        Urgency::DueToday => 1,
+        Urgency::Upcoming => 2,
+        Urgency::Later => 3,
+        Urgency::Completed => 4,
+    }
+}
+
+fn compare(a: &HomeworkItem, b: &HomeworkItem, now: LocalTime) -> Ordering {
+    rank(urgency(a, now))
+        .cmp(&rank(urgency(b, now)))
+        .then(a.due.cmp(&b.due))
+        .then(priority_rank(b.priority).cmp(&priority_rank(a.priority)))
+        .then(a.id.0.cmp(&b.id.0))
+}
+
+fn priority_rank(p: HomeworkPriority) -> u8 {
+    match p {
+        HomeworkPriority::Low => 0,
+        HomeworkPriority::Medium => 1,
+        HomeworkPriority::High => 2,
+    }
+}

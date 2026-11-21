@@ -5389,12 +5389,14 @@ dependencies = [
  "criterion",
  "proptest",
  "rusqlite",
+ "serde",
  "serde_json",
  "studyfrog-board",
  "studyfrog-calendar",
  "studyfrog-config",
  "studyfrog-core",
  "studyfrog-md",
+ "toml",
 ]
 
 [[package]]

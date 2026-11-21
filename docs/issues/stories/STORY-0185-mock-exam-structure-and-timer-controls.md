@@ -2,7 +2,7 @@
 id: STORY-0185
 type: story
 title: "Mock Exam Structure, Weighted Point Allocations, and Strict Timer Controls"
-status: backlog
+status: done
 epic: EPIC-063
 parents: ['EPIC-063']
 estimate: 3
@@ -27,15 +27,18 @@ Develop the mock exam domain model in `studyfrog-rehearsal`:
 - Enforce strict timer controls with optional warning alerts (10 minutes remaining, 2 minutes remaining) and automatic submission when the clock expires.
 
 ## Acceptance Criteria
-- [ ] Domain model for MockExamDefinition, ExamSection, and QuestionPoints in crates/studyfrog-rehearsal
-- [ ] Strict test mode state machine tracking elapsed time against total exam budget with auto-submit on timeout
-- [ ] Question navigation allowing jumping between unanswered questions and flagging items for review
+- [x] Domain model for MockExamDefinition, ExamSection, and QuestionPoints in crates/studyfrog-rehearsal
+- [x] Strict test mode state machine tracking elapsed time against total exam budget with auto-submit on timeout
+- [x] Question navigation allowing jumping between unanswered questions and flagging items for review
 
 ## Design Notes
 Keep all operations free functions with zero inherent `impl` blocks (Invariant P1). Thoroughly test timer expiration, boundary points, and navigation state transitions.
 
 ## Dependencies
 EPIC-063
+
+## Implementation (2026-11-21)
+`studyfrog-rehearsal::mock_exam` (model and validation), `mock_nav` (jump, flag, next unanswered, review overview), `mock_timer` (10-minute and 2-minute alerts, expiry). Tests: `tests/mock_exam.rs`. The exam screens are part of STORY-0187.
 
 ## Open Questions
 None.

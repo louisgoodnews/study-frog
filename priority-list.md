@@ -159,3 +159,33 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
   - [ ] [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and DSL research
   - [ ] [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers
   - [ ] [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging
+
+## v1.0.0 (milestones 14.1 to 14.5, [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md))
+Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its acceptance criteria hold and `scripts/check.sh` passes.
+
+**Milestone 14.1: UX ergonomics and operational planning**
+- [ ] [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework planner
+  - [x] [STORY-0165](docs/issues/stories/STORY-0165-homework-domain-model-and-vault-persistence.md) Homework model, storage and TOML form
+  - [ ] [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Lead-time reminders (engine and persistence done; the app's notification flow and the calendar markers are open)
+  - [ ] [STORY-0167](docs/issues/stories/STORY-0167-homework-management-and-planner-ui.md) Planner screen
+- [ ] EPIC-057 UI/UX streamlining and Universal Import Hub: STORY-0168, STORY-0169, STORY-0170
+
+**Milestone 14.2: In-app extensibility and memory drills**
+- [ ] EPIC-058 FrogScript Wiki: STORY-0171, STORY-0172
+- [ ] [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode
+  - [x] [STORY-0173](docs/issues/stories/STORY-0173-memory-session-engine-and-pair-mechanics.md) Session engine, deck pairing, flip states
+  - [ ] STORY-0174 Grid UI and card backs; STORY-0175 Time attack and records
+
+**Milestone 14.3: Cognitive telemetry and user modeling**
+- [ ] EPIC-060 Cognitive profiling: STORY-0176, STORY-0177, STORY-0178
+
+**Milestone 14.4: University academic mastery lab**
+- [ ] EPIC-061 Case-study decision matrices: STORY-0179, STORY-0180, STORY-0181
+- [ ] EPIC-062 Psychometric formula engine: STORY-0182, STORY-0183, STORY-0184
+- [ ] [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur lab
+  - [x] [STORY-0185](docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock exam structure, navigation and timer
+  - [ ] STORY-0186 Exam generation from slides via the local SLM
+  - [ ] [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Grade scale and summation (engine done; result screen and review open)
+
+**Milestone 14.5: release hardening and 1.0.0 launch**
+- [ ] Regression audit, packaging (AppImage, tarball), documentation, release tag `v1.0.0`

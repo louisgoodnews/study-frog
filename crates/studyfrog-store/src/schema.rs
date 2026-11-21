@@ -5,6 +5,7 @@ use crate::schema_diary::V23;
 use crate::schema_early::{V2, V3};
 use crate::schema_exam::V25;
 use crate::schema_focus::V26;
+use crate::schema_homework::V29;
 use crate::schema_keys::V24;
 use crate::schema_later::{
     V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19,
@@ -50,6 +51,11 @@ pub const MIGRATIONS: &[Migration] = &[
         version: 28,
         name: "timetable entries for lectures and lessons",
         sql: crate::schema_timetable::V28,
+    },
+    Migration {
+        version: 29,
+        name: "homework items and checklist steps",
+        sql: V29,
     },
 ];
 

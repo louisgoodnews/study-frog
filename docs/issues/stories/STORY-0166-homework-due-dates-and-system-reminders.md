@@ -2,7 +2,7 @@
 id: STORY-0166
 type: story
 title: "Homework Due Date Reminders and Calendar Integration"
-status: backlog
+status: in_progress
 epic: EPIC-056
 parents: ['EPIC-056']
 estimate: 5
@@ -32,6 +32,9 @@ Reuse the existing `due_reminders` calculation and `LocalTime` abstractions from
 
 ## Dependencies
 EPIC-056
+
+## Implementation so far (2026-11-21)
+`studyfrog-calendar::homework_reminders` (lead times 24 h, 2 h and 15 min; the most specific begun lead is shown once) and `studyfrog-service::homework::take_due_homework_reminders` (shown reminders persist in `homework_fired`). Tests: `studyfrog-calendar/tests/homework_reminders.rs`, `studyfrog-store/tests/homework_fired.rs`. Still to do: show these reminders in the app's notification flow.
 
 ## Open Questions
 None.

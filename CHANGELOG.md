@@ -7,6 +7,15 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Added
+- **Homework model, storage and reminders (`crates/studyfrog-calendar`, `crates/studyfrog-store`, `crates/studyfrog-service`)**:
+  - Pure homework item model with title, course, start and due date and time, estimate, priority, status, checklist, and notes, with validation and lifecycle helpers (STORY-0165, EPIC-056).
+  - SQLite storage in schema step 29 (`homework_item`, `homework_step`, `homework_fired`) and a deterministic TOML form, mirrored to `.studyfrog/homework.toml` on every change (STORY-0165).
+  - Lead-time reminders at 24 hours, 2 hours and 15 minutes before a deadline, each shown once and remembered across restarts (STORY-0166).
+- **Memory Mode engine (`crates/studyfrog-rehearsal`)**: deck pairing of each card's front and back, a seeded deterministic shuffle, the two-turn flip cycle with mismatch display delay, move and streak counters, and a time limit (STORY-0173, EPIC-059).
+- **Mock exam model (`crates/studyfrog-rehearsal`)**: weighted sections and questions with validation, navigation with flags and an unanswered-question review, and a strict timer with 10-minute and 2-minute alerts and expiry (STORY-0185, EPIC-063).
+- **German grade scale (`crates/studyfrog-rehearsal`)**: percentage and points summation, the eleven-band scale from 1.0 to 5.0, and a pass mark that forces a fail below it (STORY-0187, EPIC-063).
+
 ## [0.9.0] - 2026-11-16
 
 ### Added

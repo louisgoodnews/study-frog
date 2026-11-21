@@ -55,6 +55,7 @@ pub mod help;
 mod help_pages;
 pub mod help_user;
 pub mod home;
+pub mod homework;
 pub mod images;
 pub mod import;
 pub mod inline_sync;
