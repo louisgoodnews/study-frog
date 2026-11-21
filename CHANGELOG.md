@@ -14,6 +14,12 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   - Lead-time reminders at 24 hours, 2 hours and 15 minutes before a deadline, each shown once and remembered across restarts (STORY-0166).
 - **Memory Mode engine (`crates/studyfrog-rehearsal`)**: deck pairing of each card's front and back, a seeded deterministic shuffle, the two-turn flip cycle with mismatch display delay, move and streak counters, and a time limit (STORY-0173, EPIC-059).
 - **Mock exam model (`crates/studyfrog-rehearsal`)**: weighted sections and questions with validation, navigation with flags and an unanswered-question review, and a strict timer with 10-minute and 2-minute alerts and expiry (STORY-0185, EPIC-063).
+- **Psychometric formula engine and step diagnosis (`crates/studyfrog-rehearsal`)**: standard error of measurement, confidence intervals, standard scores, Spearman-Brown, and z-values; a seeded exercise generator; a three-step trace of the standard error with a diagnosis that names the first wrong step and the likely mistake (STORY-0182, STORY-0183, EPIC-062).
+- **Cognitive telemetry storage (`crates/studyfrog-store`)**: `review_telemetry` in schema step 30 with latency, dwell, semantic score and text size per answer, loaded by item list or time range (STORY-0176, EPIC-060).
+- **Difficulty and velocity engine (`crates/studyfrog-report`)**: empirical item difficulty on a 1 to 10 scale, the learning-velocity slope, and a prior calibrated from telemetry (STORY-0177, EPIC-060).
+- **Memory Mode summaries (`crates/studyfrog-rehearsal`)**: time-attack options, the danger level as the countdown runs out, and the victory summary with speed, bonus and personal best (STORY-0175, EPIC-059).
+- **Case-study model (`crates/studyfrog-rehearsal`)**: vignette, decision, options, expected choices and rubric, with validation (STORY-0179, EPIC-061).
+- **Rubric evaluator (`crates/studyfrog-agent`)**: parses the local model's JSON, recomputes the score (40 % choice, 60 % rubric), and falls back to a keyword check when no model runs (STORY-0180, EPIC-061).
 - **German grade scale (`crates/studyfrog-rehearsal`)**: percentage and points summation, the eleven-band scale from 1.0 to 5.0, and a pass mark that forces a fail below it (STORY-0187, EPIC-063).
 
 ## [0.9.0] - 2026-11-16

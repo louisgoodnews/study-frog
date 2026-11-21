@@ -2,7 +2,7 @@
 id: EPIC-062
 type: epic
 title: "Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification"
-status: backlog
+status: in_progress
 parents: []
 labels: [m14, rehearse, ui]
 acceptance_criteria:

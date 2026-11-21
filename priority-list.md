@@ -174,14 +174,23 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 - [ ] EPIC-058 FrogScript Wiki: STORY-0171, STORY-0172
 - [ ] [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode
   - [x] [STORY-0173](docs/issues/stories/STORY-0173-memory-session-engine-and-pair-mechanics.md) Session engine, deck pairing, flip states
-  - [ ] STORY-0174 Grid UI and card backs; STORY-0175 Time attack and records
+  - [ ] STORY-0174 Grid UI and card backs; STORY-0175 Time attack and records (engine done: time-attack options, danger levels, victory summary; the screens are open)
 
 **Milestone 14.3: Cognitive telemetry and user modeling**
-- [ ] EPIC-060 Cognitive profiling: STORY-0176, STORY-0177, STORY-0178
+- [ ] EPIC-060 Cognitive profiling
+  - [x] STORY-0176 Telemetry schema, recording and queries (step 30)
+  - [ ] STORY-0177 Difficulty and velocity engine (done; the D0 wiring into `initial_state` and the report chart are open)
+  - [ ] STORY-0178 Cognitive profile dashboard
 
 **Milestone 14.4: University academic mastery lab**
-- [ ] EPIC-061 Case-study decision matrices: STORY-0179, STORY-0180, STORY-0181
-- [ ] EPIC-062 Psychometric formula engine: STORY-0182, STORY-0183, STORY-0184
+- [ ] EPIC-061 Case-study decision matrices
+  - [ ] STORY-0179 Case-study model (done; vault serialization open)
+  - [ ] STORY-0180 Rubric evaluator (done; the prompt template open)
+  - [ ] STORY-0181 Case-study rehearsal UI
+- [ ] EPIC-062 Psychometric formula engine
+  - [x] STORY-0182 Formulas, seeded generator, precision tests
+  - [x] STORY-0183 Step trace and diagnosis
+  - [ ] STORY-0184 Math drill view
 - [ ] [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur lab
   - [x] [STORY-0185](docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock exam structure, navigation and timer
   - [ ] STORY-0186 Exam generation from slides via the local SLM

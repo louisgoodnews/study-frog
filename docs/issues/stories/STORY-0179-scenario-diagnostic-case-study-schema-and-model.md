@@ -2,7 +2,7 @@
 id: STORY-0179
 type: story
 title: "Scenario-Based Diagnostic Case Study Item Schema and Domain Model"
-status: backlog
+status: review
 epic: EPIC-061
 parents: ['EPIC-061']
 estimate: 3
@@ -36,6 +36,9 @@ Strictly adhere to Invariant P1 (zero inherent `impl` blocks). Maintain backward
 
 ## Dependencies
 EPIC-061
+
+## Implementation (2026-11-21)
+`studyfrog-rehearsal::case_study`: the model (vignette, decision, options, expected choices, rubric), validation with the length limits, and the order-free choice check. Tests: `tests/case_study.rs`. Open: Markdown front matter serialization in the vault.
 
 ## Open Questions
 None.

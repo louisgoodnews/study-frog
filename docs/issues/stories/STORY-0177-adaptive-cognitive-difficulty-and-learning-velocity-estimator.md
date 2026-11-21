@@ -2,7 +2,7 @@
 id: STORY-0177
 type: story
 title: "Adaptive Cognitive Difficulty and Learning Velocity Estimation Engine"
-status: backlog
+status: review
 epic: EPIC-060
 parents: ['EPIC-060']
 estimate: 5
@@ -23,8 +23,8 @@ Develop a mathematical engine in `studyfrog-report` (or `studyfrog-srs`):
 - Feed calibrated item difficulty into initial memory state estimation (`initial_state`), preventing over-scheduling of deceptively long or under-recalled cards.
 
 ## Acceptance Criteria
-- [ ] Pure mathematical engine computing empirical item difficulty from latency, dwell time, and semantic accuracy
-- [ ] User-level learning velocity estimator quantifying personal memory consolidation rate over time
+- [x] Pure mathematical engine computing empirical item difficulty from latency, dwell time, and semantic accuracy
+- [x] User-level learning velocity estimator quantifying personal memory consolidation rate over time
 - [ ] Automated calibration of initial item difficulty priors (D0) based on cognitive telemetry
 
 ## Design Notes
@@ -32,6 +32,9 @@ Implement strictly as free functions adhering to Invariant P1 (zero inherent `im
 
 ## Dependencies
 EPIC-060, STORY-0176
+
+## Implementation (2026-11-21)
+`studyfrog-report::difficulty`: D_emp on [1, 10], the velocity slope, and `calibrated_prior` (the prior counts as five observations). Tests: `tests/difficulty.rs`. Open: feeding the calibrated D0 into `initial_state` in `studyfrog-srs`, and the velocity chart in the report.
 
 ## Open Questions
 None.

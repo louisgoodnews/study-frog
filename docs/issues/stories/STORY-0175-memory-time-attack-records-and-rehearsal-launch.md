@@ -2,7 +2,7 @@
 id: STORY-0175
 type: story
 title: "Time-Attack Countdown Mode, Session Records, and Rehearsal Launch Entry Points"
-status: backlog
+status: review
 epic: EPIC-059
 parents: ['EPIC-059']
 estimate: 2
@@ -34,6 +34,9 @@ Store personal bests in application settings or stack rehearsal statistics. Conn
 
 ## Dependencies
 EPIC-059, STORY-0173, STORY-0174
+
+## Implementation (2026-11-21)
+`studyfrog-rehearsal::memory_summary`: time-attack options (60, 90, 120 s), danger levels, the victory summary (time, moves, accuracy, speed, bonus, personal best), and the defeat line. Tests: `tests/memory_summary.rs`. Open: the mode choice in the setup screen, the danger colours and the summary modal, and the Rehearse and Stack entry points.
 
 ## Open Questions
 None.

@@ -2,7 +2,7 @@
 id: EPIC-059
 type: epic
 title: "Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time"
-status: backlog
+status: in_progress
 parents: []
 labels: [m14, rehearse, ui]
 acceptance_criteria:

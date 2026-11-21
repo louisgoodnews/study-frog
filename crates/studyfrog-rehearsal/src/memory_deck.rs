@@ -1,6 +1,8 @@
 //! Memory Mode decks: each flashcard becomes two face-down tiles, its front and its back, shuffled
 //! with a seeded generator so the same seed always gives the same layout (STORY-0173). Pure.
 
+use crate::rng::splitmix_next;
+
 /// Which side of the card a tile shows.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum TileRole {
@@ -38,20 +40,11 @@ pub struct MemoryTile {
     pub state: FlipState,
 }
 
-/// Deterministic shuffle source (SplitMix64).
-fn next_random(state: &mut u64) -> u64 {
-    *state = state.wrapping_add(0x9E37_79B9_7F4A_7C15);
-    let mut z = *state;
-    z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
-    z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
-    z ^ (z >> 31)
-}
-
 /// Fisher-Yates with the seeded generator.
 pub fn shuffle_seeded<T>(items: &mut [T], seed: u64) {
     let mut state = seed;
     for i in (1..items.len()).rev() {
-        let j = (next_random(&mut state) % (i as u64 + 1)) as usize;
+        let j = (splitmix_next(&mut state) % (i as u64 + 1)) as usize;
         items.swap(i, j);
     }
 }

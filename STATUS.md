@@ -16,9 +16,9 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## Active work: v1.0.0 (2026-11-21)
 Working through [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md) in the milestone order, tracked in the v1.0.0 section of [priority-list.md](priority-list.md).
-- **Next task:** STORY-0166 (wire the homework reminders into the app's notification flow), then STORY-0167 (planner screen).
+- **Next task:** STORY-0166 (wire the homework reminders into the app's notification flow), then STORY-0167 (planner screen). The engines of STORY-0175, 0177, 0179 and 0180 are in review: their screens and wiring are open.
 - **Open flags:** STORY-0187 result screen and review are UI work; the new v1.0 stories are not yet in the app's UI.
-- **Done in this stretch:** STORY-0165 (model, storage, TOML mirror), STORY-0173 (Memory Mode engine), STORY-0185 (mock exam model, navigation, timer), STORY-0187 engine part.
+- **Done in this stretch:** STORY-0165 (model, storage, TOML mirror), STORY-0173 (Memory Mode engine), STORY-0185 (mock exam model, navigation, timer), STORY-0187 engine part, STORY-0182 and STORY-0183 (psychometric formulas, diagnosis), STORY-0176 (telemetry storage); engines in review: STORY-0175, 0177, 0179, 0180.
 
 ## Latest
 - **0.9.0 released (2026-11-16):** FrogCanvas 2D spatial concept board (`crates/studyfrog-ui`, `crates/studyfrog-store`), PDF precision area cropping and synchronized split navigation (`crates/studyfrog-pdf`), continuous priority queue and anti-paralysis slicing (`crates/studyfrog-srs`), gamified match mode and embedding distractor exams (`crates/studyfrog-ui`, `crates/studyfrog-candle`), FSRS Adam parameter optimizer and inline card syntax scanner (`crates/studyfrog-srs`, `crates/studyfrog-md`), and private offline local SLM assistant sidecar (`crates/studyfrog-agent`, `crates/studyfrog-app`). See `docs/RELEASE_NOTES_0.9.0.md`.

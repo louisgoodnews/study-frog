@@ -12,6 +12,7 @@ use crate::schema_later::{
 };
 use crate::schema_memory::{V21, V22};
 use crate::schema_refs::V20;
+use crate::schema_telemetry::V30;
 
 /// All migrations, oldest first.
 #[rustfmt::skip]
@@ -56,6 +57,11 @@ pub const MIGRATIONS: &[Migration] = &[
         version: 29,
         name: "homework items and checklist steps",
         sql: V29,
+    },
+    Migration {
+        version: 30,
+        name: "cognitive interaction telemetry",
+        sql: V30,
     },
 ];
 

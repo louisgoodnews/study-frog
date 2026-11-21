@@ -2,7 +2,7 @@
 id: STORY-0180
 type: story
 title: "SLM Multi-Criteria Semantic Evaluator for Decision Choices and Conceptual Rationales"
-status: backlog
+status: review
 epic: EPIC-061
 parents: ['EPIC-061']
 estimate: 5
@@ -39,6 +39,9 @@ Keep all prompt construction and response parsing in pure functions without inhe
 
 ## Dependencies
 EPIC-061, STORY-0179
+
+## Implementation (2026-11-21)
+`studyfrog-agent::rubric_eval`: parsing the model's JSON (matched to the rubric by text), a recomputed overall score (40 % choice, 60 % rubric), and the deterministic keyword fallback when no model runs. Tests: `tests/rubric_eval.rs`. Open: the dual-pass prompt template and the caveats field.
 
 ## Open Questions
 None.
