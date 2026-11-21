@@ -16,34 +16,39 @@ const RADIUS: u8 = 10;
 /// Upper bound on the board's height, so cards stay a sensible size on tall windows.
 const MAX_BOARD_H: f32 = 900.0;
 
-/// Draw the game on screen: the loading or error line, or the HUD, the end line and the board.
+/// Draw the game on screen: the HUD with a close button, the end line and the board, or the loading
+/// or error line while there is no game yet.
 pub fn draw(ui: &mut egui::Ui, memory: &MemoryUi, out: &mut Vec<Msg>) {
-    if memory.loading {
-        ui.label(crate::typo::text(
-            ui,
-            "Reading the cards…",
-            crate::typo::Tier::Body,
-        ));
-    }
+    ui.horizontal(|ui| {
+        match &memory.session {
+            Some(session) => hud(ui, session),
+            None if memory.loading => {
+                ui.label(crate::typo::text(
+                    ui,
+                    "Reading the cards…",
+                    crate::typo::Tier::Body,
+                ));
+            }
+            None => {}
+        }
+        if kit::quiet_button(ui, "Close game")
+            .on_hover_text("Closes the memory game and returns to the setup.")
+            .clicked()
+        {
+            out.push(Msg::Memory(MemoryMsg::Close));
+        }
+    });
     if let Some(error) = &memory.error {
         let pal = palette_of(ui);
         ui.colored_label(pal.danger, error);
     }
     if let Some(session) = &memory.session {
-        hud(ui, session);
         end_line(ui, session, out);
         board(ui, session, out);
         if session.outcome.is_none() {
             out.push(Msg::Memory(MemoryMsg::Clock));
             ui.ctx().request_repaint();
         }
-    }
-    ui.add_space(8.0);
-    if kit::quiet_button(ui, "Close game")
-        .on_hover_text("Closes the memory game and returns to the setup.")
-        .clicked()
-    {
-        out.push(Msg::Memory(MemoryMsg::Close));
     }
 }
 

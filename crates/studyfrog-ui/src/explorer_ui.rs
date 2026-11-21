@@ -30,11 +30,12 @@ pub enum ReportTab {
 }
 
 /// The tabs by the word that names them on the command line (`--screen reports:<word>`).
-pub const TAB_WORDS: [(&str, ReportTab); 8] = [
+pub const TAB_WORDS: [(&str, ReportTab); 9] = [
     ("performance", ReportTab::Performance),
     ("memory", ReportTab::Memory),
     ("familiarity", ReportTab::Familiarity),
     ("calibration", ReportTab::Calibration),
+    ("cognitive", ReportTab::Cognitive),
     ("runs", ReportTab::Runs),
     ("habits", ReportTab::Habits),
     ("leeches", ReportTab::Leeches),

@@ -40,7 +40,7 @@ Keep schema lightweight and fast. Write pure query loader functions in `studyfro
 EPIC-060
 
 ## Implementation (2026-11-21)
-Schema step 30 (`review_telemetry`, indexed by item and time), `studyfrog-store::telemetry` (record, load by item list and time range, decode errors are reported). A stack's series is the load for all its item ids. Tests: `studyfrog-store/tests/telemetry.rs`. Recording from the rehearsal screen is not wired yet.
+Schema step 30 (`review_telemetry`, indexed by item and time), `studyfrog-store::telemetry` (record, load by item list and time range, decode errors are reported). A stack's series is the load for all its item ids. Tests: `studyfrog-store/tests/telemetry.rs`. Recording is wired: every timed rating (rehearsal or assistant) writes one `review_telemetry` row (`studyfrog-service::rehearse::rate_item_in`) with the answer time as latency and dwell, the expected reading time as the length measure, and no semantic score yet. Tests: `studyfrog-service/tests/telemetry_recording.rs`.
 
 ## Open Questions
 None.

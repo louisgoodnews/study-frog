@@ -52,7 +52,7 @@ fn calibration_and_velocity_are_shown_with_their_charts() {
         "Answered in time",
         "Learning velocity",
         "Answer time against the length of the words",
-        "Passing answers each week",
+        "Share of answers that passed, cumulative by week",
     ] {
         assert!(h.query_by_label(text).is_some(), "missing {text}");
     }

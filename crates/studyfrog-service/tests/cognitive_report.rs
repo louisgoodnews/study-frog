@@ -57,7 +57,7 @@ fn calibration_compares_easy_ratings_with_in_time_answers() {
 }
 
 #[test]
-fn weekly_pass_shares_per_week() {
+fn weekly_pass_is_the_cumulative_share_per_week() {
     let rows = [
         row(Rating::Good, 0, None, None),
         row(Rating::Again, 1, None, None),
@@ -66,7 +66,9 @@ fn weekly_pass_shares_per_week() {
     let weeks = profile(&rows).weekly_pass;
     assert_eq!(weeks.len(), 2);
     assert_eq!(weeks[0], (0.0, 0.5));
-    assert_eq!(weeks[1], (1.0, 1.0));
+    // Cumulative: two of three answers so far passed.
+    assert_eq!(weeks[1].0, 1.0);
+    assert!((weeks[1].1 - 2.0 / 3.0).abs() < 1e-6);
 }
 
 #[test]

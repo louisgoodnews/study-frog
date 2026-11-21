@@ -66,6 +66,15 @@ fn screen_named(name: &str) -> Option<Screen> {
 }
 
 fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
+    if let Some(which) = name.strip_prefix("memory:") {
+        let mut fx = apply(model, Msg::Navigate(Screen::Rehearse));
+        model.state.browser.selection = crate::state::Selection::Stack(which.to_owned());
+        fx.extend(apply(
+            model,
+            Msg::Memory(crate::setup::memory::MemoryMsg::Start),
+        ));
+        return fx;
+    }
     if let Some(fx) = crate::app_shot_recall::setup(model, name) {
         return fx;
     }

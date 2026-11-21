@@ -6,8 +6,10 @@ use crate::theme::palette_of;
 
 /// Height of a chart, in points.
 const HEIGHT: f32 = 220.0;
-/// Room for the axis labels, in points.
-const MARGIN: f32 = 30.0;
+/// Room left of the plot for the value labels, in points.
+const LEFT: f32 = 64.0;
+/// Room below the plot for the value labels, in points.
+const BOTTOM: f32 = 30.0;
 /// Widest a chart is drawn, in points.
 const MAX_WIDTH: f32 = 560.0;
 
@@ -15,7 +17,12 @@ const MAX_WIDTH: f32 = 560.0;
 fn area(ui: &mut egui::Ui) -> (Rect, egui::Painter) {
     let width = ui.available_width().min(MAX_WIDTH);
     let (resp, painter) = ui.allocate_painter(Vec2::new(width, HEIGHT), Sense::hover());
-    (resp.rect.shrink(MARGIN), painter)
+    let r = resp.rect;
+    let plot = Rect::from_min_max(
+        Pos2::new(r.left() + LEFT, r.top() + 12.0),
+        Pos2::new(r.right() - 12.0, r.bottom() - BOTTOM),
+    );
+    (plot, painter)
 }
 
 /// The two axes, drawn from the plotting area's bottom-left corner.
@@ -78,7 +85,7 @@ pub fn latency_scatter(ui: &mut egui::Ui, points: &[(f32, f32)]) {
     );
 }
 
-/// The share of passing answers in each week: the line rises as recall improves.
+/// The cumulative share of passing answers at each week: a steady rise means recall is improving.
 pub fn weekly_line(ui: &mut egui::Ui, weeks: &[(f32, f32)]) {
     let pal = palette_of(ui);
     let (r, painter) = area(ui);

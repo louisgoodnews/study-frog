@@ -36,7 +36,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
                 latency_scatter(ui, &p.length_points);
             }
             ui.add_space(16.0);
-            section(ui, "Passing answers each week");
+            section(ui, "Share of answers that passed, cumulative by week");
             if p.weekly_pass.is_empty() {
                 ui.label("No reviews yet.");
             } else {

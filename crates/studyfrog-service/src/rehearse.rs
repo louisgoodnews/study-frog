@@ -17,6 +17,7 @@ use studyfrog_store::schedule::{
     insert_review_of, load_mem_state_in, load_sm2_state_in, save_mem_state_in, save_sm2_state_in,
 };
 use studyfrog_store::stack_scope::{holders_of, rated_stacks, stack_home};
+use studyfrog_store::telemetry::{TelemetryPoint, record_telemetry};
 
 use studyfrog_md::ulid::{compose_ulid, format_ulid};
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
@@ -136,6 +137,19 @@ pub(crate) fn rate_item_in(
     for stack in stacks {
         let id = rate_in_stack(conn, (item, *stack, first), given, now, vault)?;
         first = first.or(Some(id));
+    }
+    if let Some(t) = given.1 {
+        record_telemetry(
+            conn,
+            &TelemetryPoint {
+                item,
+                reviewed_at_ms: now.0,
+                latency_ms: t.answer_ms,
+                dwell_ms: t.answer_ms,
+                semantic_score: None,
+                text_complexity: t.expected_ms,
+            },
+        )?;
     }
     Ok(())
 }

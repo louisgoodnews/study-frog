@@ -39,9 +39,9 @@ Deviations from the description, because the data is not stored: the app records
 - Recall trend: the share of passing answers in each week, in place of a semantic accuracy trend.
 - Calibration: the share of timed answers rated Easy against the share answered within the expected time, with a note when they differ by more than 15 points.
 
-Recording telemetry during reviews is a separate gap: STORY-0176 wrote the store but nothing calls it. The profile will gain semantic scores and stability once that is wired.
+Telemetry is now recorded on every timed rating (STORY-0176). The profile still reads the review history; semantic scores are not produced yet, so they are not shown.
 
-Tests: `studyfrog-service/tests/cognitive_report.rs` (empty history, calibration, weekly shares, velocity, the 500-point cap) and `studyfrog-ui/tests/reports_cognitive_ui.rs` (charts and calibration shown; the empty-state message). The tab has not been checked in a screenshot.
+Tests: `studyfrog-service/tests/cognitive_report.rs` (empty history, calibration, weekly shares, velocity, the 500-point cap) and `studyfrog-ui/tests/reports_cognitive_ui.rs` (charts and calibration shown; the empty-state message). Checked with a screenshot of a fixture vault (light and dark). The screenshot showed clipped axis labels and a zigzag weekly line; both are fixed: the weekly line is now the cumulative share of passing answers.
 
 ## Design Notes
 Strictly follow `palette_of(ui)` colors without hardcoded RGB values. Adhere to visual rhythm rules of halves and Invariant P6 ($\le 250$ LOC).

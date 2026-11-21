@@ -35,7 +35,7 @@ pub struct CognitiveProfile {
     pub length_points: Vec<(f32, f32)>,
     /// Passing answers gained per minute of answering time; `None` with too little data.
     pub velocity: Option<f64>,
-    /// Per week since the first review: (week number, share of answers that passed).
+    /// Per week since the first review: (week number, share of all answers so far that passed).
     pub weekly_pass: Vec<(f32, f32)>,
     /// Self-assessment against timing; `None` without timed answers.
     pub calibration: Option<Calibration>,
@@ -84,21 +84,23 @@ fn velocity(timed: &[(&HistoryRow, u32, u32)]) -> Option<f64> {
     learning_velocity(&points)
 }
 
-/// Share of passing answers in each week since the first review.
+/// The cumulative share of passing answers at the end of each week since the first review.
 fn weekly_pass(rows: &[HistoryRow]) -> Vec<(f32, f32)> {
     let Some(first) = rows.first() else {
         return Vec::new();
     };
     let mut weeks: Vec<(i64, usize, usize)> = Vec::new();
+    let (mut passes, mut total) = (0usize, 0usize);
     for r in rows {
         let week = (r.at_ms - first.at_ms).max(0) / WEEK_MS;
-        let pass = usize::from(passed(r.rating));
+        passes += usize::from(passed(r.rating));
+        total += 1;
         match weeks.last_mut() {
             Some(last) if last.0 == week => {
-                last.1 += pass;
-                last.2 += 1;
+                last.1 = passes;
+                last.2 = total;
             }
-            _ => weeks.push((week, pass, 1)),
+            _ => weeks.push((week, passes, total)),
         }
     }
     weeks
