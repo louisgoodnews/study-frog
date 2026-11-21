@@ -6,7 +6,7 @@ use studyfrog_core::civil::{Date, utc_to_local};
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_service::create::{IdSource, fresh_id_source};
-use studyfrog_service::homework::take_due_homework_reminders;
+use studyfrog_service::homework::{list_homework, take_due_homework_reminders};
 use studyfrog_service::kanban::{apply_board_op, board_or_default};
 use studyfrog_service::planning::{
     cancel_occurrence, delete_session_checked, list_sessions, new_session_id, save_session_checked,
@@ -64,6 +64,19 @@ fn run_sessions(
         None => Err(NO_VAULT.to_owned()),
     };
     Msg::Plan(PlanMsg::Changed(result))
+}
+
+/// Read the homework items and the clock, for the calendar's deadline markers.
+pub fn load_homework(w: &Worker, now_ns: i64) -> Msg {
+    let now = UnixMs(now_ns / 1_000_000);
+    let clock = utc_to_local(now, local_offset_minutes(now));
+    let result = match &w.session {
+        Some(s) => list_homework(s)
+            .map(|items| (items, clock))
+            .map_err(|e| e.to_string()),
+        None => Ok((Vec::new(), clock)),
+    };
+    Msg::Plan(PlanMsg::HomeworkLoaded(result))
 }
 
 /// Read the sessions and today's date.

@@ -5,6 +5,7 @@ use studyfrog_calendar::session::{EventKind, Occurrence, Repeat, Session, event_
 use studyfrog_core::civil::{format_date, format_minute};
 use studyfrog_core::uid::Uid;
 
+use crate::homework_marks;
 use crate::msg::Msg;
 use crate::plan_msg::PlanMsg;
 use crate::state::State;
@@ -60,6 +61,11 @@ pub fn draw(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<
             });
         });
         ui.add_space(6.0);
+    }
+
+    if let Some(now) = p.homework_now {
+        let due = homework_marks::due_for(p, p.selected, scope);
+        homework_marks::day_card(ui, &due, now, &palette_of(ui));
     }
 
     // Hourly agenda timeline

@@ -1,8 +1,9 @@
 //! The calendar screen: state and update logic (STORY-0141, STORY-0142).
 
+use studyfrog_calendar::homework::HomeworkItem;
 use studyfrog_calendar::session::{Occurrence, Session};
 use studyfrog_calendar::timetable::TimetableEntry;
-use studyfrog_core::civil::{Date, Weekday, month_grid};
+use studyfrog_core::civil::{Date, LocalTime, Weekday, month_grid};
 
 use crate::calendar_mode::CalendarViewMode;
 use crate::effect::Effect;
@@ -45,6 +46,10 @@ pub struct Planner {
     pub form: Option<SessionForm>,
     /// Why the last save was refused.
     pub form_error: Option<String>,
+    /// Homework items, shown as deadline markers.
+    pub homework: Vec<HomeworkItem>,
+    /// The clock the homework was read at, for urgency; `None` until it is read.
+    pub homework_now: Option<LocalTime>,
     /// The reviews the schedule planned for the visible grid.
     pub reviews: Vec<studyfrog_calendar::review_plan::PlanEntry>,
     /// The entry whose date is being chosen.
@@ -73,6 +78,8 @@ impl Default for Planner {
             timetable_error: None,
             form: None,
             form_error: None,
+            homework: Vec::new(),
+            homework_now: None,
             reviews: Vec::new(),
             moving: None,
             undo: None,
@@ -94,6 +101,7 @@ pub fn update(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
     let (state, mut effects) = update_one(state, msg);
     if refresh {
         effects.extend(crate::planner_reviews::reload(&state));
+        effects.push(Effect::LoadHomework);
     }
     (state, effects)
 }
@@ -107,6 +115,15 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
         PlanMsg::ShiftPeriod(delta) => with(state, shift_period(p, delta)),
         PlanMsg::TimetableLoaded(Ok(timetable)) => with(state, Planner { timetable, ..p }),
         PlanMsg::TimetableLoaded(Err(e)) => failed(state, e),
+        PlanMsg::HomeworkLoaded(Ok((homework, now))) => with(
+            state,
+            Planner {
+                homework,
+                homework_now: Some(now),
+                ..p
+            },
+        ),
+        PlanMsg::HomeworkLoaded(Err(e)) => failed(state, e),
         PlanMsg::OpenTimetableForm(entry) => {
             let form = entry
                 .as_ref()

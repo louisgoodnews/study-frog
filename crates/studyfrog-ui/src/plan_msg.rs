@@ -1,8 +1,9 @@
 //! Messages of the calendar screen.
 
+use studyfrog_calendar::homework::HomeworkItem;
 use studyfrog_calendar::session::Session;
 use studyfrog_calendar::timetable::TimetableEntry;
-use studyfrog_core::civil::Date;
+use studyfrog_core::civil::{Date, LocalTime};
 use studyfrog_core::uid::Uid;
 
 use crate::calendar_mode::CalendarViewMode;
@@ -13,6 +14,8 @@ use crate::session_form::FormEdit;
 pub enum PlanMsg {
     /// Sessions and today's date were read.
     Loaded(Result<(Vec<Session>, Date), String>),
+    /// Homework items were read, with the clock they were read at.
+    HomeworkLoaded(Result<(Vec<HomeworkItem>, LocalTime), String>),
     /// Switch calendar display mode (Month, Week, Day, Timetable).
     SetViewMode(CalendarViewMode),
     /// Shift visible date period (day, week, or month).

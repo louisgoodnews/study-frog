@@ -2,7 +2,9 @@
 //! Tests for planner urgency classification, filters, and ordering.
 
 use studyfrog_calendar::homework::{HomeworkItem, HomeworkPriority, HomeworkStatus};
-use studyfrog_calendar::homework_query::{HomeworkFilter, Urgency, planner_order, urgency};
+use studyfrog_calendar::homework_query::{
+    HomeworkFilter, Urgency, due_on, most_urgent, planner_order, urgency,
+};
 use studyfrog_core::civil::{Date, LocalTime};
 use studyfrog_core::uid::Uid;
 
@@ -95,4 +97,29 @@ fn filter_by_course_and_urgency() {
         ..Default::default()
     };
     assert_eq!(planner_order(&items, &overdue, now)[0].id, Uid(1));
+}
+
+#[test]
+fn due_on_lists_one_day_earliest_first_and_most_urgent_wins() {
+    let now = at(10, 12);
+    let items = [
+        hw(1, at(10, 18), HomeworkStatus::NotStarted, None),
+        hw(2, at(10, 9), HomeworkStatus::NotStarted, None),
+        hw(3, at(11, 9), HomeworkStatus::NotStarted, None),
+    ];
+    let day = at(10, 0).date;
+    let due: Vec<u128> = due_on(&items, day).iter().map(|i| i.id.0).collect();
+    assert_eq!(due, vec![2, 1]);
+    // Item 2 (09:00) is already past at 12:00, so the day's most pressing item is overdue.
+    assert_eq!(
+        most_urgent(&due_on(&items, day), now),
+        Some(Urgency::Overdue)
+    );
+    assert_eq!(most_urgent(&[], now), None);
+    let late = [hw(4, at(9, 9), HomeworkStatus::NotStarted, None)];
+    let overdue_day = at(9, 0).date;
+    assert_eq!(
+        most_urgent(&due_on(&late, overdue_day), now),
+        Some(Urgency::Overdue)
+    );
 }

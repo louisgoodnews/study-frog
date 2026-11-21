@@ -21,6 +21,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - **Case-study model (`crates/studyfrog-rehearsal`)**: vignette, decision, options, expected choices and rubric, with validation (STORY-0179, EPIC-061).
 - **Rubric evaluator (`crates/studyfrog-agent`)**: parses the local model's JSON, recomputes the score (40 % choice, 60 % rubric), and falls back to a keyword check when no model runs (STORY-0180, EPIC-061).
 - **Homework reminders in the app (`crates/studyfrog-ui`)**: homework deadlines are checked on the same schedule as calendar reminders and shown as a toast and a notification line (STORY-0166, EPIC-056).
+- **Homework on the calendar (`crates/studyfrog-ui`, `studyfrog-calendar`)**: homework deadlines appear as urgency-coloured dots on the month and week grids and as a "Homework due" card in the day view; `due_on` and `most_urgent` in `homework_query` pick the day's items and their most pressing urgency (STORY-0166, EPIC-056).
 - **German grade scale (`crates/studyfrog-rehearsal`)**: percentage and points summation, the eleven-band scale from 1.0 to 5.0, and a pass mark that forces a fail below it (STORY-0187, EPIC-063).
 
 ## [0.9.0] - 2026-11-16

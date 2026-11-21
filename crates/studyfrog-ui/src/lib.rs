@@ -103,6 +103,7 @@ pub mod help_types;
 pub mod help_ui;
 pub mod history;
 pub mod home_ui;
+pub mod homework_marks;
 pub mod hooks;
 pub mod host;
 pub mod image_ui;

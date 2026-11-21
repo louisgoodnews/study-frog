@@ -2,7 +2,7 @@
 
 use std::cmp::Ordering;
 
-use studyfrog_core::civil::{LocalTime, add_days};
+use studyfrog_core::civil::{Date, LocalTime, add_days};
 use studyfrog_core::uid::Uid;
 
 use crate::homework::{HomeworkItem, HomeworkPriority, HomeworkStatus};
@@ -35,6 +35,21 @@ pub fn urgency(item: &HomeworkItem, now: LocalTime) -> Urgency {
     } else {
         Urgency::Later
     }
+}
+
+/// The items due on `day`, earliest due time first.
+pub fn due_on(items: &[HomeworkItem], day: Date) -> Vec<&HomeworkItem> {
+    let mut out: Vec<&HomeworkItem> = items.iter().filter(|i| i.due.date == day).collect();
+    out.sort_by_key(|i| i.due);
+    out
+}
+
+/// The most pressing urgency among the items, or `None` when there are none.
+pub fn most_urgent(items: &[&HomeworkItem], now: LocalTime) -> Option<Urgency> {
+    items
+        .iter()
+        .map(|i| urgency(i, now))
+        .min_by_key(|u| rank(*u))
 }
 
 /// Which items the planner shows.

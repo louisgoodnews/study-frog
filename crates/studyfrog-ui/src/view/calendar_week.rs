@@ -1,6 +1,8 @@
 //! Calendar 7-day weekly schedule view (STORY-0142).
 
 use eframe::egui::{self, RichText, Sense, vec2};
+
+use crate::homework_marks;
 use studyfrog_calendar::recurrence::occurrences_all;
 use studyfrog_calendar::session::{Occurrence, Session, event_kind_name};
 use studyfrog_core::civil::{Date, add_days, format_date, format_minute, weekday, weekday_index};
@@ -72,6 +74,10 @@ pub fn draw(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<
                 crate::typo::font(ui, crate::typo::Tier::Label),
                 if is_today { pal.accent } else { pal.text },
             );
+            if let Some(now) = p.homework_now {
+                let due = homework_marks::due_for(p, day, scope);
+                homework_marks::draw_dots(ui.painter(), rect, &due, now, &pal);
+            }
         }
     });
 

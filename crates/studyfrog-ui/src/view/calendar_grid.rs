@@ -5,6 +5,7 @@ use studyfrog_calendar::session::{EventKind, Occurrence, Session};
 use studyfrog_core::civil::{Date, format_date};
 use studyfrog_core::uid::Uid;
 
+use crate::homework_marks;
 use crate::msg::Msg;
 use crate::planner::{PlanMsg, grid_of};
 use crate::state::State;
@@ -151,7 +152,21 @@ fn day_cell(
     );
     let used = chips(&painter, rect, &entries, &pal);
     let reviews = calendar_reviews::day_chips(state, day, (rect, used), scope, (ui, out));
-    if response.on_hover_text(format_date(day)).clicked() {
+    let due = homework_marks::due_for(p, day, scope);
+    let tip = match p.homework_now {
+        Some(now) if !due.is_empty() => {
+            format!(
+                "{}\n{}",
+                format_date(day),
+                homework_marks::tooltip(&due, now)
+            )
+        }
+        _ => format_date(day),
+    };
+    if let Some(now) = p.homework_now {
+        homework_marks::draw_dots(&painter, rect, &due, now, &pal);
+    }
+    if response.on_hover_text(tip).clicked() {
         plan(out, PlanMsg::Select(day));
     }
     (rect, reviews)
