@@ -183,7 +183,11 @@ fn link_question(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     };
     ui.horizontal_wrapped(|ui| {
         ui.label(format!("This PDF links to {url}. Open it in your browser?"));
-        if ui.button("Open").on_hover_text("Opens this.").clicked() {
+        if ui
+            .button("Open")
+            .on_hover_text("Opens the link in your browser.")
+            .clicked()
+        {
             ui.ctx().open_url(egui::OpenUrl::new_tab(url));
             out.push(Msg::Pdf(PdfMsg::Link(LinkMsg::Approve)));
         }

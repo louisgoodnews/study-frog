@@ -107,7 +107,7 @@ pub(super) fn delete(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if !state.library.confirm_delete {
         if ui
             .button("Delete")
-            .on_hover_text("Deletes the selected item after you confirm.")
+            .on_hover_text("Deletes the selected items after you confirm.")
             .clicked()
         {
             apply(out, BulkEdit::Delete);

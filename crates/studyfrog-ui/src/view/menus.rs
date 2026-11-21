@@ -121,7 +121,7 @@ pub fn search_results(state: &State, ui: &mut egui::Ui, field: Rect, out: &mut V
             for item in &state.chrome.results {
                 if ui
                     .button(format!("{} · {}", item_kind_name(item.kind), item.title))
-                    .on_hover_text("Opens this item.")
+                    .on_hover_text("Opens this search result.")
                     .clicked()
                 {
                     out.push(Msg::OpenItem(item.uid));

@@ -87,7 +87,7 @@ pub fn card(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 let remove_label = format!("Remove from {title}");
                 let r = ui
                     .small_button("Remove")
-                    .on_hover_text("Removes this from the list; the item itself is kept.");
+                    .on_hover_text("Removes this item from the stack; the item itself is kept.");
                 r.widget_info(|| WidgetInfo::labeled(Role::Button, true, remove_label.clone()));
                 if r.clicked() {
                     out.push(Msg::Edit(EditAction::RemoveReference(id.clone())));

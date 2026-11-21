@@ -80,7 +80,7 @@ fn studio_tab_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             if kit::primary_button(ui, "Run FrogScript").on_hover_text("Runs the script in the active tab.").clicked() {
                 out.push(Msg::Console(ConsoleMsg::StudioRunScript));
             }
-            if kit::quiet_button(ui, "Save").on_hover_text("Saves your changes.").clicked() {
+            if kit::quiet_button(ui, "Save").on_hover_text("Saves the script in the active tab.").clicked() {
                 out.push(Msg::Console(ConsoleMsg::StudioSaveScript(None)));
             }
             let open = state.console.studio.wiki.open;

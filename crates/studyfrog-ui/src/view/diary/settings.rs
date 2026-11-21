@@ -97,9 +97,9 @@ fn custom_scales_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     ui.strong(&scale.name);
                     ui.label(format!("({}..={}): {}", scale.min, scale.max, scale.prompt));
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                        let del = ui
-                            .button("Remove")
-                            .on_hover_text("Removes this from the list; the item itself is kept.");
+                        let del = ui.button("Remove").on_hover_text(
+                            "Removes this rating scale; past entries keep their ratings.",
+                        );
                         del.widget_info(|| {
                             WidgetInfo::labeled(
                                 Role::Button,

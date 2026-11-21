@@ -40,7 +40,7 @@ The guard (`tests/text_button_tooltips.rs`) scans the source for button calls. A
 
 Two exceptions are marked in the source: the shared `kit` helpers wrap their caller's text, so their line carries `hover: from the caller`.
 
-Limits to review: many labels share one generic explanation, such as "Delete" or "Edit", so a few are less specific than the screen they are on. The explanations are not read aloud separately; screen readers use the button label.
+Review: the explanations that were reused were checked against their buttons. Where one wording was wrong for a screen (a Delete that removes a help page, an Open that opens a file, a Remove that removes a rating scale or a saved filter), it was rewritten for that button. Explanations used once were not re-read. Screen readers use the button label; the explanation is the hover text.
 
 ## Open Questions
 None. The two questions were decided; see the implementation notes above.

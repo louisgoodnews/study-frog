@@ -48,7 +48,7 @@ pub fn reading_speed(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 }
                 if ui
                     .button("Discard")
-                    .on_hover_text("Throws away the changes and closes.")
+                    .on_hover_text("Throws away this reading test without saving it.")
                     .clicked()
                 {
                     test_msg(out, ReadingTestMsg::Discard);

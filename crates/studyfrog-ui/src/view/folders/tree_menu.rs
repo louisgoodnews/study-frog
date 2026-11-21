@@ -100,7 +100,7 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
     let delete = ui
         .button("Delete")
-        .on_hover_text("Deletes the selected item after you confirm.");
+        .on_hover_text("Deletes this file or folder after you confirm.");
     delete
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Delete folder"));
@@ -111,7 +111,7 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 fn draw_file_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let open = ui.button("Open").on_hover_text("Opens this.");
+    let open = ui.button("Open").on_hover_text("Opens this file.");
     open.clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Open file"));
     if open.clicked() {
@@ -143,7 +143,7 @@ fn draw_file_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
     let delete = ui
         .button("Delete")
-        .on_hover_text("Deletes the selected item after you confirm.");
+        .on_hover_text("Deletes this file or folder after you confirm.");
     delete
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Delete file"));

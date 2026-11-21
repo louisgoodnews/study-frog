@@ -69,7 +69,7 @@ fn new_comment_input(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let valid = !draft.trim().is_empty();
         if ui
             .add_enabled(valid, egui::Button::new("Add"))
-            .on_hover_text("Adds a new entry.")
+            .on_hover_text("Adds this comment.")
             .clicked()
         {
             let now = std::time::SystemTime::now()

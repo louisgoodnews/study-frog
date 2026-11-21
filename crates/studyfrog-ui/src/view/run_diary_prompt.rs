@@ -133,7 +133,7 @@ fn draw_scale_row(
             if let Some((lbl, _)) = scale_level_label(info.id, lvl) {
                 ui.label(RichText::new(format!("— {lbl}")).color(p.accent).strong());
             }
-            let clr = ui.button("Clear").on_hover_text("Clears the entry.");
+            let clr = ui.button("Clear").on_hover_text("Clears this rating.");
             clr.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Clear rating"));
             if clr.clicked() {
                 out.push(Msg::Diary(DiaryMsg::PromptRating(info.id.to_owned(), None)));

@@ -102,7 +102,7 @@ fn entry(view: &PdfView, at: usize, mark: &PdfMark, ui: &mut egui::Ui, out: &mut
             }
             if ui
                 .small_button("Delete")
-                .on_hover_text("Deletes the selected item after you confirm.")
+                .on_hover_text("Deletes this note from the PDF after you confirm.")
                 .clicked()
             {
                 send(out, MarkMsg::Delete(mark.id));

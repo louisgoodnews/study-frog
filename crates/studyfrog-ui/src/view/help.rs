@@ -182,7 +182,7 @@ fn user_actions(help: &HelpState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if !help.ask_delete {
         if ui
             .button("Delete")
-            .on_hover_text("Deletes the selected item after you confirm.")
+            .on_hover_text("Deletes this page of your own help after you confirm.")
             .clicked()
         {
             send(out, HelpMsg::AskDelete(true));

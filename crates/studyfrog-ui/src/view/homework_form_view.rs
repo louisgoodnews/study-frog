@@ -147,7 +147,7 @@ pub fn draw(state: &State, form: &HomeworkForm, ui: &mut egui::Ui, out: &mut Vec
         }
         ui.horizontal(|ui| {
             if kit::primary_button(ui, "Save")
-                .on_hover_text("Saves your changes.")
+                .on_hover_text("Saves this homework item.")
                 .clicked()
             {
                 out.push(Msg::Homework(HomeworkMsg::Save));

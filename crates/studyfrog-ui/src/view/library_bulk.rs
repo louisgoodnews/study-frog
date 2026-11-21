@@ -40,7 +40,7 @@ pub fn filters_menu(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 }
                 if ui
                     .small_button(format!("Remove {}", f.name))
-                    .on_hover_text("Removes this from the list; the item itself is kept.")
+                    .on_hover_text("Removes this saved filter; the items are kept.")
                     .clicked()
                 {
                     send(out, BulkMsg::DeleteFilter(f.name.clone()));

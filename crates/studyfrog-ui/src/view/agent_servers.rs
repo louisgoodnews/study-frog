@@ -103,7 +103,7 @@ fn server_card(state: &State, s: &McpServer, ui: &mut egui::Ui, out: &mut Vec<Ms
             }
             if ui
                 .small_button(format!("Remove {}", s.name))
-                .on_hover_text("Removes this from the list; the item itself is kept.")
+                .on_hover_text("Removes this server from the list; it can be added again.")
                 .clicked()
             {
                 send(out, McpMsg::RemoveServer(s.name.clone()));

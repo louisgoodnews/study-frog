@@ -98,7 +98,7 @@ fn new_comment_box(
         let enter_pressed = resp.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
         let add_clicked = ui
             .add_enabled(can_submit, egui::Button::new("Add"))
-            .on_hover_text("Adds a new entry.")
+            .on_hover_text("Adds this comment.")
             .clicked();
 
         if can_submit && (enter_pressed || add_clicked) {

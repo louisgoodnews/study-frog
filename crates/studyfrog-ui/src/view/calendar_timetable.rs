@@ -154,7 +154,7 @@ fn draw_entry_card(state: &State, entry: &TimetableEntry, ui: &mut egui::Ui, out
             }
             if ui
                 .small_button("Delete")
-                .on_hover_text("Deletes the selected item after you confirm.")
+                .on_hover_text("Deletes this timetable entry after you confirm.")
                 .clicked()
             {
                 out.push(Msg::Plan(PlanMsg::DeleteTimetable(entry.id)));

@@ -77,7 +77,7 @@ pub(super) fn draw_form(
         ui.add_space(8.0);
         ui.horizontal(|ui| {
             if kit::primary_button(ui, "Save")
-                .on_hover_text("Saves your changes.")
+                .on_hover_text("Saves this timetable entry.")
                 .clicked()
             {
                 let res = crate::timetable_form::timetable_from_form(&draft);

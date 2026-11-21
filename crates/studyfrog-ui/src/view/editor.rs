@@ -93,7 +93,7 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         if ui
             .button("Back")
-            .on_hover_text("Goes back to the previous step.")
+            .on_hover_text("Closes the editor and goes back to the list.")
             .clicked()
         {
             out.push(Msg::CloseEditor);

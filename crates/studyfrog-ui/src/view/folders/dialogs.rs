@@ -115,7 +115,7 @@ fn draw_confirm_delete(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.horizontal(|ui| {
                 let delete_btn = ui
                     .button("Delete")
-                    .on_hover_text("Deletes the selected item after you confirm.");
+                    .on_hover_text("Deletes it for good, after you confirm.");
                 delete_btn
                     .clone()
                     .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Confirm delete"));

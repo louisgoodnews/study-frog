@@ -197,7 +197,7 @@ fn draw_day_card(
             }
             if ui
                 .small_button("Delete")
-                .on_hover_text("Deletes the selected item after you confirm.")
+                .on_hover_text("Deletes this study session.")
                 .clicked()
             {
                 out.push(Msg::Plan(PlanMsg::Delete(s.id)));

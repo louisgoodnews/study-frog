@@ -172,7 +172,7 @@ fn entry_card(state: &State, e: &PlanEntry, ui: &mut egui::Ui, out: &mut Vec<Msg
             }
             if ui
                 .button(format!("Open {title}"))
-                .on_hover_text("Opens this item.")
+                .on_hover_text("Opens the item this review is for.")
                 .clicked()
             {
                 send(out, ReviewMsg::OpenStack(e.stack));

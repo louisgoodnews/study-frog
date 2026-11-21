@@ -83,7 +83,7 @@ fn standard_scale_row(
             if let Some((lbl, _)) = scale_level_label(info.id, lvl) {
                 ui.label(RichText::new(format!("— {lbl}")).color(p.accent).strong());
             }
-            let clear_btn = ui.button("Clear").on_hover_text("Clears the entry.");
+            let clear_btn = ui.button("Clear").on_hover_text("Clears this rating.");
             clear_btn.widget_info(|| {
                 WidgetInfo::labeled(
                     Role::Button,

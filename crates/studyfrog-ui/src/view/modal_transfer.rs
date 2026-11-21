@@ -89,7 +89,7 @@ fn mode_question(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.add_space(6.0);
             if ui
                 .add(egui::Button::new("Back").min_size(vec2(80.0, 32.0)))
-                .on_hover_text("Goes back to the previous step.")
+                .on_hover_text("Goes back to the export options.")
                 .clicked()
             {
                 send(out, TransferMsg::BackToExport);
