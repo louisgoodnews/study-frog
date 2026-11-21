@@ -91,3 +91,28 @@ fn length_points_keep_the_most_recent_five_hundred() {
     assert_eq!(p.length_points.len(), 500);
     assert!((p.length_points[0].1 - 1.1).abs() < 1e-3);
 }
+
+#[test]
+fn consolidation_is_the_mean_gap_of_passing_reviews_per_week() {
+    // The first review of an item has no gap (elapsed 0), so it is left out.
+    let mut rows = vec![HistoryRow {
+        elapsed_days: 0.0,
+        ..row(Rating::Good, 0, None, None)
+    }];
+    rows.push(HistoryRow {
+        elapsed_days: 2.0,
+        ..row(Rating::Good, 1, None, None)
+    });
+    rows.push(HistoryRow {
+        elapsed_days: 4.0,
+        ..row(Rating::Easy, 2, None, None)
+    });
+    rows.push(HistoryRow {
+        elapsed_days: 9.0,
+        ..row(Rating::Again, 3, None, None)
+    });
+    let c = profile(&rows).consolidation;
+    assert_eq!(c.len(), 1, "{c:?}");
+    assert_eq!(c[0].0, 0.0);
+    assert!((c[0].1 - 3.0).abs() < 1e-6, "{c:?}");
+}

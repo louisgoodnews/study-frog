@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Consolidation chart on the Cognitive profile tab (`crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0177)**: the mean days between passing reviews, by week, from the review history.
 - **Memory game records and victory dialog (`crates/studyfrog-config`, `crates/studyfrog-ui`, STORY-0175)**: the best time of each stack is saved in `app.toml` and survives restarts; a completed game opens a victory dialog with the summary and the personal-best line.
 - **Memory game timing, summary and entry points (`crates/studyfrog-ui`, STORY-0175)**: Stopwatch or a 60, 90 or 120 second countdown; the HUD time changes colour as the countdown runs out; a victory summary (time, moves, accuracy, speed, bonus, best streak, personal best for this session) or the timeout line; "Memory game" on the stack page.
 - **Telemetry recording on timed ratings (`crates/studyfrog-service`, STORY-0176)**: every rated answer with timing writes one telemetry row; untimed ratings write none.

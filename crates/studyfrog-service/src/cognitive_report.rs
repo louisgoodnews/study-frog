@@ -39,6 +39,9 @@ pub struct CognitiveProfile {
     pub weekly_pass: Vec<(f32, f32)>,
     /// Self-assessment against timing; `None` without timed answers.
     pub calibration: Option<Calibration>,
+    /// Per week since the first review: (week number, mean days between passing reviews). A rising
+    /// gap is consolidation: the items are remembered for longer between reviews.
+    pub consolidation: Vec<(f32, f32)>,
 }
 
 /// Whether a rating counts as recalled.
@@ -64,6 +67,7 @@ pub fn profile(rows: &[HistoryRow]) -> CognitiveProfile {
         velocity: velocity(&timed),
         weekly_pass: weekly_pass(rows),
         calibration: calibration(&timed),
+        consolidation: consolidation(rows),
     }
 }
 
@@ -124,4 +128,30 @@ fn calibration(timed: &[(&HistoryRow, u32, u32)]) -> Option<Calibration> {
         easy_share: easy / n,
         in_time_share: in_time / n,
     })
+}
+
+/// The mean gap in days between passing reviews, per week since the first review. The first review
+/// of an item has no gap and is left out.
+fn consolidation(rows: &[HistoryRow]) -> Vec<(f32, f32)> {
+    let Some(first) = rows.first() else {
+        return Vec::new();
+    };
+    let mut weeks: Vec<(i64, f32, usize)> = Vec::new();
+    for r in rows
+        .iter()
+        .filter(|r| passed(r.rating) && r.elapsed_days > 0.0)
+    {
+        let week = (r.at_ms - first.at_ms).max(0) / WEEK_MS;
+        match weeks.last_mut() {
+            Some(last) if last.0 == week => {
+                last.1 += r.elapsed_days;
+                last.2 += 1;
+            }
+            _ => weeks.push((week, r.elapsed_days, 1)),
+        }
+    }
+    weeks
+        .into_iter()
+        .map(|(week, sum, n)| (week as f32, sum / n as f32))
+        .collect()
 }

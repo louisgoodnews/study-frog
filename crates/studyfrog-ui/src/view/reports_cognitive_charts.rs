@@ -85,19 +85,21 @@ pub fn latency_scatter(ui: &mut egui::Ui, points: &[(f32, f32)]) {
     );
 }
 
-/// The cumulative share of passing answers at each week: a steady rise means recall is improving.
-pub fn weekly_line(ui: &mut egui::Ui, weeks: &[(f32, f32)]) {
+/// A line over weeks: `points` are (week, value) and the value runs from zero to `top`, which the
+/// top label names (for example `100%` or `12 days`).
+pub fn weekly_line(ui: &mut egui::Ui, points: &[(f32, f32)], top: f32, top_label: &str) {
     let pal = palette_of(ui);
     let (r, painter) = area(ui);
     axes(&painter, r, pal.border);
-    let last = weeks.iter().fold(1.0_f32, |m, (w, _)| m.max(*w));
-    let at = |w: f32, share: f32| {
+    let last = points.iter().fold(1.0_f32, |m, (w, _)| m.max(*w));
+    let top = top.max(f32::EPSILON);
+    let at = |w: f32, v: f32| {
         Pos2::new(
             r.left() + w / last * r.width(),
-            r.bottom() - share.clamp(0.0, 1.0) * r.height(),
+            r.bottom() - (v / top).clamp(0.0, 1.0) * r.height(),
         )
     };
-    let pts: Vec<Pos2> = weeks.iter().map(|(w, s)| at(*w, *s)).collect();
+    let pts: Vec<Pos2> = points.iter().map(|(w, v)| at(*w, *v)).collect();
     if pts.len() > 1 {
         painter.add(Shape::line(pts.clone(), Stroke::new(2.0, pal.accent)));
     }
@@ -108,14 +110,14 @@ pub fn weekly_line(ui: &mut egui::Ui, weeks: &[(f32, f32)]) {
         &painter,
         r.left_top() - Vec2::new(4.0, 0.0),
         Align2::RIGHT_TOP,
-        "100%",
+        top_label,
         pal.text_weak,
     );
     label(
         &painter,
         r.left_bottom() - Vec2::new(4.0, 0.0),
         Align2::RIGHT_BOTTOM,
-        "0%",
+        "0",
         pal.text_weak,
     );
     label(

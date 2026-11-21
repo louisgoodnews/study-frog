@@ -40,7 +40,15 @@ pub fn draw(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
             if p.weekly_pass.is_empty() {
                 ui.label("No reviews yet.");
             } else {
-                weekly_line(ui, &p.weekly_pass);
+                weekly_line(ui, &p.weekly_pass, 1.0, "100%");
+            }
+            ui.add_space(16.0);
+            section(ui, "Days between passing reviews, by week (consolidation)");
+            if p.consolidation.is_empty() {
+                ui.label("No passing reviews with a gap yet.");
+            } else {
+                let top = p.consolidation.iter().fold(1.0_f32, |m, (_, d)| m.max(*d));
+                weekly_line(ui, &p.consolidation, top, &format!("{top:.0} days"));
             }
         });
     });

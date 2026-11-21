@@ -53,6 +53,7 @@ fn calibration_and_velocity_are_shown_with_their_charts() {
         "Learning velocity",
         "Answer time against the length of the words",
         "Share of answers that passed, cumulative by week",
+        "Days between passing reviews, by week (consolidation)",
     ] {
         assert!(h.query_by_label(text).is_some(), "missing {text}");
     }

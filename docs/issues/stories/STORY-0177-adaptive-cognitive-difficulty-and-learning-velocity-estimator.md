@@ -34,7 +34,9 @@ Implement strictly as free functions adhering to Invariant P1 (zero inherent `im
 EPIC-060, STORY-0176
 
 ## Implementation (2026-11-21)
-`studyfrog-report::difficulty`: D_emp on [1, 10], the velocity slope, and `calibrated_prior` (the prior counts as five observations). Tests: `tests/difficulty.rs`. Open: feeding the calibrated D0 into `initial_state` in `studyfrog-srs`, and the velocity chart in the report.
+`studyfrog-report::difficulty`: D_emp on [1, 10], the velocity slope, and `calibrated_prior` (the prior counts as five observations). Tests: `tests/difficulty.rs`. The Cognitive profile tab (STORY-0178) shows a consolidation chart: the mean days between passing reviews, by week (`studyfrog-service::cognitive_report`). The history keeps no stability, so the gap stands in for it. Test: `studyfrog-service/tests/cognitive_report.rs`; the tab's section is checked by `studyfrog-ui/tests/reports_cognitive_ui.rs` (the screenshot does not reach it below the fold).
+
+Open: feeding the calibrated D0 into `initial_state` in `studyfrog-srs`. This changes the schedule of every new card, so it needs a decision on the default before it lands.
 
 ## Open Questions
 None.
