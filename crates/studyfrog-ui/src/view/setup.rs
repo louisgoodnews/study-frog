@@ -21,12 +21,22 @@ fn go(out: &mut Vec<Msg>, step: SetupStep) {
 
 /// The whole screen: the steps scroll, the Back and Next buttons stay in view.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if let Some(cs) = &state.rehearse.case_study {
+        egui::ScrollArea::vertical()
+            .auto_shrink([false, false])
+            .show(ui, |ui| {
+                kit::column(ui, kit::READING_WIDTH, |ui| {
+                    super::case_view::draw(ui, cs, out);
+                });
+            });
+        return;
+    }
     if let Some(memory) = &state.rehearse.memory {
         egui::ScrollArea::vertical()
             .auto_shrink([false, false])
             .show(ui, |ui| {
                 kit::column(ui, kit::READING_WIDTH, |ui| {
-                    super::memory_board::draw(ui, memory, out);
+                    super::memory::board::draw(ui, memory, out);
                 });
             });
         return;
@@ -126,6 +136,12 @@ fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         match step {
             SetupStep::What => {
+                if kit::quiet_button(ui, "Case study")
+                    .on_hover_text("Opens the case studies of the stack you have open: a decision, and a justification checked against a rubric.")
+                    .clicked()
+                {
+                    out.push(Msg::Case(crate::setup::case::CaseMsg::Open));
+                }
                 if kit::quiet_button(ui, "Memory game")
                     .on_hover_text("Plays a memory game with the cards of the stack you have open, with the timing chosen beside it.")
                     .clicked()

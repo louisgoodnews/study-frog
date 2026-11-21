@@ -2,7 +2,7 @@
 id: STORY-0181
 type: story
 title: "Interactive Case-Study Rehearsal UI and Multi-Step Feedback Display"
-status: backlog
+status: review
 epic: EPIC-061
 parents: ['EPIC-061']
 estimate: 3
@@ -28,9 +28,16 @@ Implement the interactive case-study view in `crates/studyfrog-ui`:
   - Explanatory feedback explaining why a specific criterion (e.g. social desirability control) was critical.
 
 ## Acceptance Criteria
-- [ ] Responsive case-study rehearsal view rendering scenario vignette with clean typography
-- [ ] Dual-input controls for test/procedure selection and multi-line rationale drafting
-- [ ] Criterion-by-criterion evaluation breakdown displaying green/red pill badges and diagnostic advice
+- [x] Responsive case-study rehearsal view rendering scenario vignette with clean typography
+- [x] Dual-input controls for test/procedure selection and multi-line rationale drafting
+- [x] Criterion-by-criterion evaluation breakdown displaying green/red pill badges and diagnostic advice
+
+## Implementation (2026-11-21)
+Reached from the rehearse setup's What step: "Case study" opens the valid cases of the stack that is open (`setup::case`, pure state and update; `view::case_view`). Each case shows its vignette in a framed block, its decision with the options as checkboxes, and a multi-line justification. "Check my answer" scores the choice (`choice_is_correct`) and the justification against the rubric (`rubric_eval::fallback_evaluate`). The result shows a status pill (Solid decision, Partial match, Alternative procedure recommended, Needs more justification), the score, a choice pill, and a Met or Missing pill per criterion with its feedback.
+
+Open or changed against the description: the view is a practice screen of its own, not a step inside a rehearsal run, so cases are not yet mixed into a run's queue. The scoring uses the keyword fallback only: the local model's JSON path exists (`parse_model_report`), but the view does not call a model yet, and the STORY-0180 prompt template is still open.
+
+Tests: `studyfrog-ui/tests/case_study_ui.rs` (opening, scoring, next, view text). A screenshot (`--screen case-demo`) shows the layout and the pills.
 
 ## Design Notes
 Strictly utilize `palette_of(ui)` theme tokens (success, warning, danger, surface, border). Ensure line counts $\le 250$ LOC per file (Invariant P6).

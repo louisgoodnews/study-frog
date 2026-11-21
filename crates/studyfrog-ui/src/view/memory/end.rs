@@ -8,7 +8,7 @@ use studyfrog_rehearsal::memory_summary::{VictorySummary, defeat_message};
 use crate::msg::Msg;
 use crate::setup::memory::MemoryMsg;
 use crate::view::kit;
-use crate::view::memory_board::clock_text;
+use crate::view::memory::board::clock_text;
 
 /// The lines of a victory summary; the personal-best line depends on the best before this game.
 pub fn summary_lines(v: &VictorySummary, prior_best_ms: Option<u64>) -> Vec<String> {

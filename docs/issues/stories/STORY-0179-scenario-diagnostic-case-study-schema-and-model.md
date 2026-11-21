@@ -27,9 +27,9 @@ Implement the core data model in `studyfrog-core` / `studyfrog-rehearsal`:
 - Implement pure validation functions.
 
 ## Acceptance Criteria
-- [ ] Pure Rust data model for CaseStudyItem with vignette, prompt, expected decision, and rubric criteria
-- [ ] Markdown frontmatter and storage serialization in vaults under existing stack hierarchies
-- [ ] Validation functions ensuring well-formed rubrics and scenario length limits
+- [x] Pure Rust data model for CaseStudyItem with vignette, prompt, expected decision, and rubric criteria
+- [x] Markdown frontmatter and storage serialization in vaults under existing stack hierarchies
+- [x] Validation functions ensuring well-formed rubrics and scenario length limits
 
 ## Design Notes
 Strictly adhere to Invariant P1 (zero inherent `impl` blocks). Maintain backward compatibility with existing card readers.
@@ -38,7 +38,7 @@ Strictly adhere to Invariant P1 (zero inherent `impl` blocks). Maintain backward
 EPIC-061
 
 ## Implementation (2026-11-21)
-`studyfrog-rehearsal::case_study`: the model (vignette, decision, options, expected choices, rubric), validation with the length limits, and the order-free choice check. Tests: `tests/case_study.rs`. Open: Markdown front matter serialization in the vault.
+`studyfrog-rehearsal::case_study`: the model (vignette, decision, options, expected choices, rubric), validation with the length limits, and the order-free choice check. Tests: `tests/case_study.rs`. Vault storage: a case is a question file (`studyfrog-service::case_codec`, pure): the vignette is the prompt, the expected choices are the `accepted` list, the rubric is the `rubric` list, and the decision and options are extra front-matter lines (`decision`, `options`, separated by ` | `). Plain readers still see a question with its rubric. `case_items::create_case_study` writes the file and `load_case_studies` reads the valid cases of a stack back; plain questions and malformed cases are skipped. Tests: `studyfrog-service/tests/case_items.rs` and the codec's unit tests.
 
 ## Open Questions
 None.

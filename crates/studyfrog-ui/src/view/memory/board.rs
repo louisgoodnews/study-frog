@@ -44,7 +44,7 @@ pub fn draw(ui: &mut egui::Ui, memory: &MemoryUi, out: &mut Vec<Msg>) {
         ui.colored_label(pal.danger, error);
     }
     if let Some(session) = &memory.session {
-        super::memory_end::end_line(ui, session, out);
+        super::end::end_line(ui, session, out);
         board(ui, session, out);
         if session.outcome.is_none() {
             out.push(Msg::Memory(MemoryMsg::Clock));

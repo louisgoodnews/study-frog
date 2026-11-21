@@ -117,6 +117,8 @@ pub enum Msg {
     AddCardClicked,
     /// A stack or card was created (or not); carries the refreshed vault.
     Created(Result<VaultInfo, String>),
+    /// A message of the case-study view.
+    Case(crate::setup::case::CaseMsg),
     /// A scheduling switch of the vault.
     Srs(crate::app_settings_ui::SrsMsg),
     /// A message of the memory game.
@@ -245,5 +247,4 @@ pub enum Msg {
     Match(crate::match_ui::MatchMsg),
 }
 
-pub use crate::edit_form::EditAction;
-pub use crate::state::DraftField;
+pub use crate::{edit_form::EditAction, state::DraftField};

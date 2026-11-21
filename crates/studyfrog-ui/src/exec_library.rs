@@ -96,3 +96,13 @@ pub fn set_calibrated_start(w: &mut Worker, on: bool) -> Msg {
     };
     Msg::Srs(crate::app_settings_ui::SrsMsg::CalibratedStartApplied(done))
 }
+
+/// Read the case studies of a stack for the case-study view.
+pub fn load_cases(w: &mut Worker, folder: Option<String>) -> Msg {
+    let done = match w.session.as_ref() {
+        None => Err("no vault is open".to_owned()),
+        Some(s) => studyfrog_service::case_items::load_case_studies(s, folder.as_deref())
+            .map_err(|e| studyfrog_service::session::describe_service_error(&e)),
+    };
+    Msg::Case(crate::setup::case::CaseMsg::Loaded(done))
+}

@@ -31,7 +31,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             Modal::Import => super::modal_import::import(state, ui, out),
             Modal::Transfer => super::modal_transfer::transfer(state, ui, out),
             Modal::ConfirmUnmark(plan) => super::modal_unmark::draw(plan, ui, out),
-            Modal::MemorySummary(v, prior) => super::memory_end::summary_dialog(v, *prior, ui, out),
+            Modal::MemorySummary(v, prior) => {
+                super::memory::end::summary_dialog(v, *prior, ui, out)
+            }
             Modal::PdfExport(form) => super::modal_pdf_export::draw(state, form, ui, out),
             Modal::EditItem(form) => super::modal_edit_item::draw(state, form, ui, out),
             Modal::DeleteItem(_uid, title) => delete_item_dialog(title, ui, out),

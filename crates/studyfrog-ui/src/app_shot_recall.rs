@@ -173,7 +173,34 @@ pub fn memory_setup(model: &mut Model, name: &str) -> Option<Vec<crate::effect::
     match name {
         "memory-demo" => memory_demo(model),
         "memory-won" => memory_won(model),
+        "case-demo" => case_demo(model),
         _ => return None,
     }
     Some(Vec::new())
+}
+
+/// A case study open with a choice ticked and a justification checked, so the evaluation shows.
+pub fn case_demo(model: &mut Model) {
+    use studyfrog_rehearsal::case_study::CaseStudyItem;
+    let case = CaseStudyItem {
+        vignette: "A clinic wants a short screen for anxiety. Staff are rushed, the test must be quick to score, and the clinic serves patients from several language groups.".to_owned(),
+        decision_prompt: "Which instrument should the clinic use?".to_owned(),
+        options: vec!["Short screen".to_owned(), "Full interview".to_owned(), "Self-report scale".to_owned()],
+        expected_choices: vec!["Short screen".to_owned()],
+        rubric_criteria: vec!["addresses scoring speed".to_owned(), "cites criterion validity".to_owned(), "addresses language groups".to_owned()],
+    };
+    let rationale = "A short screen keeps the scoring speed the staff need, and its criterion validity is documented.".to_owned();
+    let mut cs = crate::setup::case::CaseUi {
+        cases: vec![(studyfrog_core::uid::Uid(1), case.clone())],
+        picked: vec![true, false, false],
+        rationale: rationale.clone(),
+        ..Default::default()
+    };
+    cs.report = Some(studyfrog_agent::rubric_eval::fallback_evaluate(
+        &rationale,
+        true,
+        &case.rubric_criteria,
+    ));
+    model.state.screen = Screen::Rehearse;
+    model.state.rehearse.case_study = Some(cs);
 }

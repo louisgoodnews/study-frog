@@ -481,7 +481,7 @@
 | [STORY-0178](docs/issues/stories/STORY-0178-cognitive-profile-dashboard-and-velocity-visualizer.md) Cognitive Profile Dashboard and Learning Velocity Visualization in Reports (3) | review | 0/0 |
 | [STORY-0179](docs/issues/stories/STORY-0179-scenario-diagnostic-case-study-schema-and-model.md) Scenario-Based Diagnostic Case Study Item Schema and Domain Model (3) | review | 0/0 |
 | [STORY-0180](docs/issues/stories/STORY-0180-slm-multi-criteria-semantic-evaluator.md) SLM Multi-Criteria Semantic Evaluator for Decision Choices and Conceptual Rationales (5) | review | 0/0 |
-| [STORY-0181](docs/issues/stories/STORY-0181-interactive-case-study-rehearsal-ui.md) Interactive Case-Study Rehearsal UI and Multi-Step Feedback Display (3) | backlog | 0/0 |
+| [STORY-0181](docs/issues/stories/STORY-0181-interactive-case-study-rehearsal-ui.md) Interactive Case-Study Rehearsal UI and Multi-Step Feedback Display (3) | review | 0/0 |
 | [STORY-0182](docs/issues/stories/STORY-0182-psychometric-formula-engine-and-parameter-generator.md) Psychometric Formula Engine and Dynamic Parameter Generator (3) | done | 0/0 |
 | [STORY-0183](docs/issues/stories/STORY-0183-step-by-step-calculation-validator.md) Step-by-Step Intermediate Calculation Validator and Error Diagnostics (5) | done | 0/0 |
 | [STORY-0184](docs/issues/stories/STORY-0184-math-drill-ui-and-scratchpad.md) Interactive Math Drill View with Formula Rendering, Scratchpad, and Step Reveal (3) | backlog | 0/0 |

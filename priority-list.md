@@ -184,9 +184,9 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 
 **Milestone 14.4: University academic mastery lab**
 - [ ] EPIC-061 Case-study decision matrices
-  - [ ] STORY-0179 Case-study model (done; vault serialization open)
+  - [x] STORY-0179 Case-study model and vault storage (built: model, validation, question files with the case fields)
   - [ ] STORY-0180 Rubric evaluator (done; the prompt template open)
-  - [ ] STORY-0181 Case-study rehearsal UI
+  - [x] STORY-0181 Case-study rehearsal UI (built: vignette, choice and justification, evaluation pills; not yet inside a rehearsal run)
 - [ ] EPIC-062 Psychometric formula engine
   - [x] STORY-0182 Formulas, seeded generator, precision tests
   - [x] STORY-0183 Step trace and diagnosis

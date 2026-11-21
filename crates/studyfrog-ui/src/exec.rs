@@ -88,6 +88,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::Folders(e) => return crate::exec_folders::execute(w, e, now_ns),
         Effect::Notifications(op) => return crate::exec_items::notifications(w, op, now_ns),
         Effect::LoadStatusCounts(selection) => crate::exec_items::counts(w, &selection),
+        Effect::LoadCases(folder) => crate::exec_library::load_cases(w, folder),
         Effect::SetCalibratedStart(on) => crate::exec_library::set_calibrated_start(w, on),
         Effect::MemoryDeck(folder) => crate::exec_items::memory_deck(w, folder),
         Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
