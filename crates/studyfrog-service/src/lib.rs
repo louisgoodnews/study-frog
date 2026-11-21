@@ -128,6 +128,7 @@ pub mod xfer_json;
 pub mod xfer_model;
 pub mod xfer_obsidian;
 pub mod xfer_obsidian_front;
+pub mod xfer_pdf;
 pub mod xfer_plan;
 mod xfer_refs;
 pub mod xfer_ron;

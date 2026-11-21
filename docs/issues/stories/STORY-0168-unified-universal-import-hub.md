@@ -2,7 +2,7 @@
 id: STORY-0168
 type: story
 title: "Unified Universal Import Entry Point and Redundant Button Consolidation"
-status: in_progress
+status: review
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 3
@@ -24,7 +24,7 @@ Consolidate all import workflows into a single unified entry point:
 
 ## Acceptance Criteria
 - [x] Single top-level Import button in the UI replaces separate card, stack, note, and question buttons
-- [ ] Importer wizard auto-detects input file format (CSV, TSV, Markdown, Anki, PDF, JSON)
+- [x] Importer wizard auto-detects input file format (CSV, TSV, Markdown, Anki, PDF, JSON)
 - [x] Clear target destination picker (existing stack, new stack, or unstacked vault notes)
 
 ## Implementation so far (2026-11-21)

@@ -33,10 +33,7 @@ fn an_unsupported_file_says_so_and_lists_what_is_supported() {
 }
 
 #[test]
-fn a_pdf_is_pointed_at_add_pdf() {
+fn a_pdf_is_read_one_card_per_page() {
     let pdf = describe_input("/docs/lecture.pdf", false);
-    assert!(
-        pdf.contains("Add PDF") && pdf.contains("not imported as cards"),
-        "{pdf}"
-    );
+    assert!(pdf.starts_with("Looks like PDF document"), "{pdf}");
 }
