@@ -144,6 +144,7 @@ fn every_screen_has_at_most_one_accent_filled_primary_action() {
         Screen::Achievements,
         Screen::Graph,
         Screen::Folders,
+        Screen::Homework,
     ];
     for s in screens {
         let mut m = open_model();

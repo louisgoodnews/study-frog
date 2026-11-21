@@ -2,6 +2,8 @@
 //! Hover tooltips (STORY-0169): every icon button explains itself, and shortcuts are shown where
 //! the app has them.
 
+mod common;
+
 use studyfrog_core::event::Difficulty;
 use studyfrog_ui::view::tips;
 
@@ -61,5 +63,25 @@ fn a_key_is_its_own_line_after_the_explanation() {
     assert_eq!(
         tips::with_key("Shows the answer.", "Space"),
         "Shows the answer.\nShortcut: Space"
+    );
+}
+
+#[test]
+fn hovering_a_text_button_shows_its_explanation() {
+    use common::views::{harness, open_model};
+    use egui_kittest::kittest::Queryable;
+    use studyfrog_ui::model::apply;
+    use studyfrog_ui::msg::Msg;
+    use studyfrog_ui::state::Screen;
+    let mut m = open_model();
+    apply(&mut m, Msg::Navigate(Screen::Library));
+    let mut h = harness(m);
+    h.run_steps(3);
+    h.get_by_label("Columns").hover();
+    h.run_steps(5);
+    assert!(
+        h.query_by_label("Shows or hides the columns of the list.")
+            .is_some(),
+        "the explanation shows while the pointer rests on the button"
     );
 }

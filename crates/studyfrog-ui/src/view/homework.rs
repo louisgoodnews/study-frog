@@ -98,7 +98,7 @@ fn row(state: &State, item: &HomeworkItem, now: LocalTime, ui: &mut egui::Ui, ou
             }
         }
         ui.horizontal(|ui| {
-            if kit::primary_button(ui, advance_label(item.status))
+            if kit::quiet_button(ui, advance_label(item.status))
                 .on_hover_text("Moves this item to its next status.")
                 .clicked()
             {
