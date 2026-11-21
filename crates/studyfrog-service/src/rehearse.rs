@@ -26,7 +26,7 @@ use crate::create::IdSource;
 use crate::day::DayWindow;
 use crate::familiarity::{retime_fsrs, retime_sm2};
 use crate::queue::{NewRun, new_run};
-use crate::schedule::{apply_rating, apply_rating_sm2};
+use crate::schedule::{apply_rating_calibrated, apply_rating_sm2, observed_difficulties};
 use crate::session::{ServiceError, VaultSession, current_settings};
 use crate::settings::{params_for, scheduler_for};
 
@@ -169,7 +169,13 @@ fn rate_in_stack(
         Scheduler::Fsrs => {
             let params = params_for(vault, home.and_then(|h| h.request_retention));
             let prev = load_mem_state_in(conn, key)?;
-            let (review, mut mem) = apply_rating(prev.as_ref(), item, rating, now, &params);
+            let observed = if prev.is_none() {
+                observed_difficulties(conn)?
+            } else {
+                Vec::new()
+            };
+            let (review, mut mem) =
+                apply_rating_calibrated(prev.as_ref(), item, rating, now, &params, &observed);
             retime_fsrs(conn, &mut mem, given, (&params, vault, home.as_ref()))?;
             let id = insert_review_of(conn, &review, (stack, first), timed)?;
             save_mem_state_in(conn, key, &mem).map(|()| id)

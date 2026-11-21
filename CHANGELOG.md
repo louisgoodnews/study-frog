@@ -8,6 +8,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Calibrated starting difficulty (`crates/studyfrog-service`, `crates/studyfrog-store`, STORY-0177)**: a new item's first FSRS review starts from the scheduler's prior blended with the user's earlier first-answer difficulties. On by default; unchanged until the user has timed answers.
+- **Welcome and notification toasts at the top right (`crates/studyfrog-ui`)**: they sit under the header, 340 points wide, so they no longer cover the setup's Next button or the step bar.
 - **Consolidation chart on the Cognitive profile tab (`crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0177)**: the mean days between passing reviews, by week, from the review history.
 - **Memory game records and victory dialog (`crates/studyfrog-config`, `crates/studyfrog-ui`, STORY-0175)**: the best time of each stack is saved in `app.toml` and survives restarts; a completed game opens a victory dialog with the summary and the personal-best line.
 - **Memory game timing, summary and entry points (`crates/studyfrog-ui`, STORY-0175)**: Stopwatch or a 60, 90 or 120 second countdown; the HUD time changes colour as the countdown runs out; a victory summary (time, moves, accuracy, speed, bonus, best streak, personal best for this session) or the timeout line; "Memory game" on the stack page.

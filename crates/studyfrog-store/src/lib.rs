@@ -12,6 +12,7 @@ mod diary_query;
 pub mod due_dates;
 pub mod error;
 pub mod exam_results;
+pub mod first_timing;
 pub mod focus;
 pub mod hash;
 pub mod home;

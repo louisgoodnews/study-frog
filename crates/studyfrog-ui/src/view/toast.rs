@@ -1,5 +1,5 @@
-//! In-app notifications that can be clicked, shown at the bottom right, above the status bar, so they
-//! do not cover the controls at the top.
+//! In-app notifications that can be clicked. They sit at the top right, just under the header, so they
+//! never cover the controls at the bottom of a screen (the setup's Next button, the status bar).
 
 use eframe::egui::{self, Align2, Button, Order, vec2};
 
@@ -8,15 +8,19 @@ use crate::msg::Msg;
 use crate::state::State;
 use crate::view::icons::{Glyph, icon_button};
 
-/// The toasts, newest at the bottom.
+/// The widest a toast is drawn, in points: narrow enough to stay clear of the step bars.
+const TOAST_WIDTH: f32 = 340.0;
+
+/// The toasts, newest at the bottom of their stack.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if state.toasts.is_empty() || state.modal.is_some() {
         return;
     }
     egui::Area::new(egui::Id::unique("toasts"))
         .order(Order::Foreground)
-        .anchor(Align2::RIGHT_BOTTOM, vec2(-16.0, -44.0))
+        .anchor(Align2::RIGHT_TOP, vec2(-16.0, 56.0))
         .show(ui.ctx(), |ui| {
+            ui.set_max_width(TOAST_WIDTH);
             for (i, toast) in state.toasts.iter().enumerate() {
                 egui::Frame::popup(ui.style()).show(ui, |ui| {
                     ui.horizontal(|ui| {
