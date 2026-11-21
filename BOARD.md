@@ -466,7 +466,7 @@
 | [STORY-0163](docs/issues/stories/STORY-0163-model-catalog-and-streaming-generation.md) GGUF Model Catalog, Downloader, and Streaming Generation (5) | done | 2/2 |
 | [STORY-0164](docs/issues/stories/STORY-0164-on-device-rag-and-cpu-prompt-budgeting.md) On-Device Vault RAG Pipeline and CPU Prompt Budgeting (5) | done | 2/2 |
 | [STORY-0165](docs/issues/stories/STORY-0165-homework-domain-model-and-vault-persistence.md) Homework Data Model, Lifecycle, and Vault Persistence (5) | done | 0/0 |
-| [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Homework Due Date Reminders and Calendar Integration (5) | in_progress | 0/0 |
+| [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Homework Due Date Reminders and Calendar Integration (5) | review | 0/0 |
 | [STORY-0167](docs/issues/stories/STORY-0167-homework-management-and-planner-ui.md) Interactive Homework Planner Screen and Creation Dialog (5) | review | 0/0 |
 | [STORY-0168](docs/issues/stories/STORY-0168-unified-universal-import-hub.md) Unified Universal Import Entry Point and Redundant Button Consolidation (3) | backlog | 0/0 |
 | [STORY-0169](docs/issues/stories/STORY-0169-contextual-tooltips-and-hover-hints.md) Contextual Tooltips, Hover Hints, and Keyboard Shortcut Badges (3) | backlog | 0/0 |

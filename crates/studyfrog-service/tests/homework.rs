@@ -64,3 +64,29 @@ fn saves_are_mirrored_and_deletes_are_too() {
     let text = std::fs::read_to_string(dir.0.join(HOMEWORK_FILE)).unwrap();
     assert!(homework_from_toml(&text).unwrap().is_empty());
 }
+
+#[test]
+fn a_homework_deadline_reminds_once_through_the_calendar_reminders() {
+    use studyfrog_core::time::UnixMs;
+    use studyfrog_service::reminders::take_due_reminders;
+    let (_dir, mut session) = open("remind");
+    save_homework_checked(&mut session, sample(5, "Lab report")).unwrap();
+    // 2 December 2026 at 09:00 UTC is 2 hours after 07:00: the 2-hour lead has begun.
+    let day = studyfrog_core::civil::date_to_days(Date {
+        year: 2026,
+        month: 12,
+        day: 2,
+    });
+    let at = |minute: i64| UnixMs(day * 86_400_000 + minute * 60_000);
+    let first = take_due_reminders(&session, at(7 * 60), 0).unwrap();
+    assert_eq!(first.homework.len(), 1);
+    assert_eq!(first.homework[0].lead_min, 120);
+    assert!(first.sessions.is_empty());
+    assert!(
+        take_due_reminders(&session, at(7 * 60 + 5), 0)
+            .unwrap()
+            .homework
+            .is_empty(),
+        "shown once"
+    );
+}

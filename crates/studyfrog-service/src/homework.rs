@@ -3,14 +3,10 @@
 use studyfrog_calendar::homework::{
     HomeworkItem, next_status, toggle_checklist_step, validate_homework,
 };
-use studyfrog_calendar::homework_reminders::{DueHomeworkReminder, due_homework_reminders};
-use studyfrog_core::civil::utc_to_local;
-use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_md::ulid::compose_ulid;
 use studyfrog_store::homework::{
-    delete_homework, fired_homework_reminders, load_homework, load_homework_item,
-    mark_homework_reminder_fired, save_homework,
+    delete_homework, load_homework, load_homework_item, save_homework,
 };
 use studyfrog_store::homework_toml::homework_to_toml;
 
@@ -103,22 +99,4 @@ fn load_item_or_err(session: &VaultSession, id: Uid) -> Result<HomeworkItem, Ser
     load_homework_item(&session.conn, id)
         .map_err(ServiceError::Store)?
         .ok_or_else(|| ServiceError::Invalid("that homework item no longer exists".to_owned()))
-}
-
-/// The homework reminders whose lead time has begun at `now`; each is recorded as shown, so the next
-/// call does not return it again.
-pub fn take_due_homework_reminders(
-    session: &VaultSession,
-    now: UnixMs,
-    offset_minutes: i32,
-) -> Result<Vec<DueHomeworkReminder>, ServiceError> {
-    let local = utc_to_local(now, offset_minutes);
-    let items = load_homework(&session.conn).map_err(ServiceError::Store)?;
-    let fired = fired_homework_reminders(&session.conn).map_err(ServiceError::Store)?;
-    let due = due_homework_reminders(&items, local, &fired);
-    for d in &due {
-        mark_homework_reminder_fired(&session.conn, d.item, d.lead_min)
-            .map_err(ServiceError::Store)?;
-    }
-    Ok(due)
 }

@@ -74,7 +74,6 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Subjects(m) => crate::subjects_ui::update(state, m),
         Msg::Console(m) => crate::console_ui::update(state, m),
         Msg::RemindersDue(r) => crate::reminder_ui::arrived(state, r),
-        Msg::HomeworkRemindersDue(r) => crate::reminder_ui::homework_arrived(state, r),
         Msg::VaultPolled(result) => crate::poll_ui::vault_polled(state, result),
         Msg::AppSettingsSaved(result) => crate::app_settings_ui::saved(state, result),
         browse @ (Msg::Select(_)

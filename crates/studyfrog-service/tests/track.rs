@@ -160,10 +160,13 @@ fn each_reminder_comes_once_when_its_time_has_come() {
         UnixMs(day * 86_400_000 + (h * 60 + m) * 60_000)
     };
     assert!(
-        take_due_reminders(&s, at(27, 8, 0), 0).unwrap().is_empty(),
+        take_due_reminders(&s, at(27, 8, 0), 0)
+            .unwrap()
+            .sessions
+            .is_empty(),
         "a day and an hour early is too early"
     );
-    let day_before = take_due_reminders(&s, at(28, 9, 5), 0).unwrap();
+    let day_before = take_due_reminders(&s, at(28, 9, 5), 0).unwrap().sessions;
     assert_eq!(
         day_before
             .iter()
@@ -172,7 +175,10 @@ fn each_reminder_comes_once_when_its_time_has_come() {
         [1440]
     );
     assert!(
-        take_due_reminders(&s, at(28, 9, 10), 0).unwrap().is_empty(),
+        take_due_reminders(&s, at(28, 9, 10), 0)
+            .unwrap()
+            .sessions
+            .is_empty(),
         "shown once"
     );
     let march = UnixMs(
@@ -180,13 +186,18 @@ fn each_reminder_comes_once_when_its_time_has_come() {
             + 8 * 3_600_000
             + 30 * 60_000,
     );
-    let hour = take_due_reminders(&s, march, 0).unwrap();
+    let hour = take_due_reminders(&s, march, 0).unwrap().sessions;
     assert_eq!(
         hour.iter().map(|r| r.minutes_before).collect::<Vec<_>>(),
         [60]
     );
     let after = UnixMs(march.0 + 3 * 3_600_000);
-    assert!(take_due_reminders(&s, after, 0).unwrap().is_empty());
+    assert!(
+        take_due_reminders(&s, after, 0)
+            .unwrap()
+            .sessions
+            .is_empty()
+    );
     let _ = utc_to_local(after, 0);
 }
 

@@ -1,8 +1,8 @@
-//! Calendar reminders arriving while the app is open: a toast each, and a line in the notification
-//! list. Pure.
+//! Reminders arriving while the app is open, for calendar entries and homework deadlines alike: a
+//! toast each, and a line in the notification list. Pure.
 
 use studyfrog_calendar::homework_reminders::DueHomeworkReminder;
-use studyfrog_calendar::reminders::DueReminder;
+use studyfrog_calendar::reminders::{DueAll, DueReminder};
 use studyfrog_core::civil::format_minute;
 
 use crate::effect::Effect;
@@ -29,6 +29,13 @@ pub fn reminder_text(r: &DueReminder) -> String {
     format!("{} ({}, {date} {at})", r.title, lead_text(r.minutes_before))
 }
 
+/// The words of one homework reminder: "Homework: Essay 2 (in 2 h, 2026-12-02 09:00)".
+pub fn homework_text(r: &DueHomeworkReminder) -> String {
+    let date = studyfrog_core::civil::format_date(r.due.date);
+    let at = format_minute(r.due.minute);
+    format!("{} ({}, {date} {at})", r.title, lead_text(r.lead_min))
+}
+
 /// Count ticks while a vault is open and ask for a calendar check on the first and every
 /// [`CHECK_EVERY`]th one.
 pub fn tick(state: State) -> (State, Vec<Effect>) {
@@ -43,35 +50,21 @@ pub fn tick(state: State) -> (State, Vec<Effect>) {
     (
         state,
         if due_now {
-            vec![Effect::CheckReminders, Effect::CheckHomeworkReminders]
+            vec![Effect::CheckReminders]
         } else {
             Vec::new()
         },
     )
 }
 
-/// Show what came due. A failure is shown too, so a broken calendar does not fail silently.
-pub fn arrived(state: State, result: Result<Vec<DueReminder>, String>) -> (State, Vec<Effect>) {
+/// Show what came due: a toast and a notification each. A failure is shown too, so a broken
+/// calendar does not fail silently.
+pub fn arrived(state: State, result: Result<DueAll, String>) -> (State, Vec<Effect>) {
     match result {
-        Ok(list) if list.is_empty() => (state, Vec::new()),
-        Ok(list) => {
-            let mut state = state;
-            for r in &list {
-                state.toasts.push(Toast {
-                    title: "Reminder".to_owned(),
-                    detail: reminder_text(r),
-                    action: ToastAction::OpenCalendar,
-                    expires_ms: None,
-                });
-            }
-            let mut effects = Vec::new();
-            for r in &list {
-                let text = format!("Reminder: {}", reminder_text(r));
-                let target = Some(NotifyTarget::Screen(Screen::Calendar));
-                let (next, more) = crate::notify::push(state, (NoticeKind::Info, text), target);
-                state = next;
-                effects.extend(more);
-            }
+        Ok(all) => {
+            let (state, mut effects) = show_sessions(state, &all.sessions);
+            let (state, more) = show_homework(state, &all.homework);
+            effects.extend(more);
             (state, effects)
         }
         Err(e) => {
@@ -84,47 +77,44 @@ pub fn arrived(state: State, result: Result<Vec<DueReminder>, String>) -> (State
     }
 }
 
-/// The words of one homework reminder: "Homework: Essay 2 (in 2 h, 2026-12-02 09:00)".
-pub fn homework_text(r: &DueHomeworkReminder) -> String {
-    let date = studyfrog_core::civil::format_date(r.due.date);
-    let at = format_minute(r.due.minute);
-    format!("{} ({}, {date} {at})", r.title, lead_text(r.lead_min))
+fn show_sessions(state: State, list: &[DueReminder]) -> (State, Vec<Effect>) {
+    let mut state = state;
+    for r in list {
+        state.toasts.push(Toast {
+            title: "Reminder".to_owned(),
+            detail: reminder_text(r),
+            action: ToastAction::OpenCalendar,
+            expires_ms: None,
+        });
+    }
+    let mut effects = Vec::new();
+    for r in list {
+        let text = format!("Reminder: {}", reminder_text(r));
+        let target = Some(NotifyTarget::Screen(Screen::Calendar));
+        let (next, more) = crate::notify::push(state, (NoticeKind::Info, text), target);
+        state = next;
+        effects.extend(more);
+    }
+    (state, effects)
 }
 
-/// Show homework deadlines that came due: a toast and a notification each, like calendar
-/// reminders. A failure is shown too.
-pub fn homework_arrived(
-    state: State,
-    result: Result<Vec<DueHomeworkReminder>, String>,
-) -> (State, Vec<Effect>) {
-    match result {
-        Ok(list) if list.is_empty() => (state, Vec::new()),
-        Ok(list) => {
-            let mut state = state;
-            for r in &list {
-                state.toasts.push(Toast {
-                    title: "Homework due".to_owned(),
-                    detail: homework_text(r),
-                    action: ToastAction::OpenCalendar,
-                    expires_ms: None,
-                });
-            }
-            let mut effects = Vec::new();
-            for r in &list {
-                let text = format!("Homework: {}", homework_text(r));
-                let target = Some(NotifyTarget::Screen(Screen::Calendar));
-                let (next, more) = crate::notify::push(state, (NoticeKind::Info, text), target);
-                state = next;
-                effects.extend(more);
-            }
-            (state, effects)
-        }
-        Err(e) => {
-            let notice = Some(Notice {
-                kind: NoticeKind::Error,
-                text: format!("Checking homework reminders failed: {e}"),
-            });
-            (State { notice, ..state }, Vec::new())
-        }
+fn show_homework(state: State, list: &[DueHomeworkReminder]) -> (State, Vec<Effect>) {
+    let mut state = state;
+    for r in list {
+        state.toasts.push(Toast {
+            title: "Homework due".to_owned(),
+            detail: homework_text(r),
+            action: ToastAction::OpenCalendar,
+            expires_ms: None,
+        });
     }
+    let mut effects = Vec::new();
+    for r in list {
+        let text = format!("Homework: {}", homework_text(r));
+        let target = Some(NotifyTarget::Screen(Screen::Calendar));
+        let (next, more) = crate::notify::push(state, (NoticeKind::Info, text), target);
+        state = next;
+        effects.extend(more);
+    }
+    (state, effects)
 }

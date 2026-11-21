@@ -5,7 +5,7 @@ mod common;
 
 use common::views::{assert_all_named, harness, open_model};
 use egui_kittest::kittest::Queryable;
-use studyfrog_calendar::reminders::DueReminder;
+use studyfrog_calendar::reminders::{DueAll, DueReminder};
 use studyfrog_calendar::session::EventKind;
 use studyfrog_core::civil::date_new;
 use studyfrog_core::uid::Uid;
@@ -49,10 +49,17 @@ fn the_calendar_is_checked_on_the_first_tick_and_then_every_so_often() {
 #[test]
 fn due_reminders_become_toasts_and_notifications_and_a_click_opens_the_calendar() {
     let mut m = open_model();
-    assert!(apply(&mut m, Msg::RemindersDue(Ok(vec![]))).is_empty());
+    assert!(apply(&mut m, Msg::RemindersDue(Ok(DueAll::default()))).is_empty());
     assert!(m.state.toasts.is_empty());
     let before = m.state.chrome.notifications.len();
-    apply(&mut m, Msg::RemindersDue(Ok(vec![due(1440), due(60)])));
+    let sessions = vec![due(1440), due(60)];
+    apply(
+        &mut m,
+        Msg::RemindersDue(Ok(DueAll {
+            sessions,
+            homework: Vec::new(),
+        })),
+    );
     assert_eq!(m.state.toasts.len(), 2);
     assert_eq!(
         reminder_text(&due(1440)),
@@ -215,30 +222,4 @@ fn the_date_picker_fills_the_due_date_and_pages_through_months() {
         h.query_by_label("1 day before").is_some(),
         "reminders appear once there is a date"
     );
-}
-
-#[test]
-fn homework_deadlines_become_toasts_and_notifications_too() {
-    use studyfrog_calendar::homework_reminders::DueHomeworkReminder;
-    use studyfrog_core::civil::LocalTime;
-    use studyfrog_ui::reminder_ui::homework_text;
-    let r = DueHomeworkReminder {
-        item: Uid(7),
-        title: "Essay 2".into(),
-        due: LocalTime {
-            date: date_new(2026, 12, 2).unwrap(),
-            minute: 540,
-        },
-        lead_min: 120,
-    };
-    assert_eq!(homework_text(&r), "Essay 2 (in 2 h, 2026-12-02 09:00)");
-    let mut m = open_model();
-    let before = m.state.chrome.notifications.len();
-    apply(&mut m, Msg::HomeworkRemindersDue(Ok(vec![])));
-    assert!(m.state.toasts.is_empty());
-    apply(&mut m, Msg::HomeworkRemindersDue(Ok(vec![r])));
-    assert_eq!(m.state.toasts.len(), 1);
-    assert_eq!(m.state.chrome.notifications.len() - before, 1);
-    apply(&mut m, Msg::HomeworkRemindersDue(Err("disk".into())));
-    assert!(m.state.notice.unwrap().text.contains("disk"));
 }

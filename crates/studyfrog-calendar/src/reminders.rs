@@ -3,6 +3,8 @@
 use studyfrog_core::civil::{Date, LocalTime, add_days, date_to_days};
 use studyfrog_core::uid::Uid;
 
+use crate::homework::HomeworkItem;
+use crate::homework_reminders::{DueHomeworkReminder, FiredHomework, due_homework_reminders};
 use crate::recurrence::occurrences_all;
 use crate::session::Session;
 
@@ -60,4 +62,27 @@ pub fn due_reminders(sessions: &[Session], now: LocalTime, fired: &[Fired]) -> V
         }
     }
     out
+}
+
+/// Everything due at once: calendar reminders and homework deadline reminders.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct DueAll {
+    /// Calendar entries whose reminder is due.
+    pub sessions: Vec<DueReminder>,
+    /// Homework deadlines whose lead time has begun.
+    pub homework: Vec<DueHomeworkReminder>,
+}
+
+/// Every reminder due now, calendar and homework alike, each minus what has already been shown.
+pub fn due_all(
+    sessions: &[Session],
+    items: &[HomeworkItem],
+    now: LocalTime,
+    fired: &[Fired],
+    fired_homework: &[FiredHomework],
+) -> DueAll {
+    DueAll {
+        sessions: due_reminders(sessions, now, fired),
+        homework: due_homework_reminders(items, now, fired_homework),
+    }
 }

@@ -3,6 +3,7 @@
 
 use studyfrog_calendar::homework::{HomeworkItem, HomeworkPriority, HomeworkStatus};
 use studyfrog_calendar::homework_reminders::{HOMEWORK_LEAD_MIN, due_homework_reminders};
+use studyfrog_calendar::reminders::due_all;
 use studyfrog_core::civil::{Date, LocalTime};
 use studyfrog_core::uid::Uid;
 
@@ -76,4 +77,23 @@ fn completed_and_past_items_never_remind() {
     assert!(due_homework_reminders(&done, at(12, 17, 50), &[]).is_empty());
     let past = [due(2, at(12, 18, 0), HomeworkStatus::NotStarted)];
     assert!(due_homework_reminders(&past, at(12, 18, 0), &[]).is_empty());
+}
+
+#[test]
+fn due_all_reports_homework_alongside_calendar_reminders() {
+    let items = [due(1, at(12, 18, 0), HomeworkStatus::NotStarted)];
+    let all = due_all(&[], &items, at(11, 18, 30), &[], &[]);
+    assert!(all.sessions.is_empty());
+    assert_eq!(all.homework.len(), 1);
+    assert_eq!(all.homework[0].lead_min, 24 * 60);
+    let fired = [(Uid(1), 24 * 60)];
+    assert!(
+        due_all(&[], &items, at(11, 18, 30), &[], &fired)
+            .homework
+            .is_empty()
+    );
+    assert_eq!(
+        due_all(&[], &items, at(9, 9, 0), &[], &[]),
+        Default::default()
+    );
 }

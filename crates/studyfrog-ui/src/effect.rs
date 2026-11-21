@@ -30,14 +30,12 @@ pub enum Effect {
     OpenVault(String),
     /// Check the open vault for changed files.
     PollVault,
-    /// Look for calendar reminders that have come due.
+    /// Look for calendar and homework reminders that have come due.
     CheckReminders,
     /// Work of the homework screen (save, advance, tick a step).
     Homework(crate::homework_msg::HomeworkEffect),
     /// Read the homework items for the calendar's deadline markers.
     LoadHomework,
-    /// Look for homework deadline reminders that have come due.
-    CheckHomeworkReminders,
     /// Persist the per-user app settings.
     SaveAppSettings(AppSettings),
     /// List the items of a stack (or the inbox).

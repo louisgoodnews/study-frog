@@ -99,12 +99,8 @@ pub enum Msg {
         studyfrog_core::uid::Uid,
         Result<Box<studyfrog_service::fam_curve::ItemCurve>, String>,
     ),
-    /// Reminders that came due (each is reported once).
-    RemindersDue(Result<Vec<studyfrog_calendar::reminders::DueReminder>, String>),
-    /// Homework reminders that came due (each is reported once).
-    HomeworkRemindersDue(
-        Result<Vec<studyfrog_calendar::homework_reminders::DueHomeworkReminder>, String>,
-    ),
+    /// Calendar and homework reminders that came due (each is reported once).
+    RemindersDue(Result<studyfrog_calendar::reminders::DueAll, String>),
     /// The app settings were saved (or not).
     AppSettingsSaved(Result<(), String>),
     /// A stack (or the inbox) was chosen in the browser.
