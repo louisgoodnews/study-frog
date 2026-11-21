@@ -6,6 +6,7 @@ use studyfrog_core::civil::{Date, utc_to_local};
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_service::create::{IdSource, fresh_id_source};
+use studyfrog_service::homework::take_due_homework_reminders;
 use studyfrog_service::kanban::{apply_board_op, board_or_default};
 use studyfrog_service::planning::{
     cancel_occurrence, delete_session_checked, list_sessions, new_session_id, save_session_checked,
@@ -36,6 +37,17 @@ pub fn reminders(w: &Worker, now_ns: i64) -> Msg {
         None => Ok(Vec::new()),
     };
     Msg::RemindersDue(result)
+}
+
+/// Homework deadline reminders that came due; each is marked shown, so it is returned once.
+pub fn homework_reminders(w: &Worker, now_ns: i64) -> Msg {
+    let now = UnixMs(now_ns / 1_000_000);
+    let result = match &w.session {
+        Some(session) => take_due_homework_reminders(session, now, local_offset_minutes(now))
+            .map_err(|e| e.to_string()),
+        None => Ok(Vec::new()),
+    };
+    Msg::HomeworkRemindersDue(result)
 }
 
 fn today(now_ns: i64) -> Date {

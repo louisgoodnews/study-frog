@@ -166,7 +166,7 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 **Milestone 14.1: UX ergonomics and operational planning**
 - [ ] [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework planner
   - [x] [STORY-0165](docs/issues/stories/STORY-0165-homework-domain-model-and-vault-persistence.md) Homework model, storage and TOML form
-  - [ ] [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Lead-time reminders (engine and persistence done; the app's notification flow and the calendar markers are open)
+  - [ ] [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Lead-time reminders (engine, persistence and the app's toasts and notifications are done; the calendar markers and urgency colours are open)
   - [ ] [STORY-0167](docs/issues/stories/STORY-0167-homework-management-and-planner-ui.md) Planner screen
 - [ ] EPIC-057 UI/UX streamlining and Universal Import Hub: STORY-0168, STORY-0169, STORY-0170
 

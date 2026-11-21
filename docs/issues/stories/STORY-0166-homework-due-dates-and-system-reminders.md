@@ -34,7 +34,7 @@ Reuse the existing `due_reminders` calculation and `LocalTime` abstractions from
 EPIC-056
 
 ## Implementation so far (2026-11-21)
-`studyfrog-calendar::homework_reminders` (lead times 24 h, 2 h and 15 min; the most specific begun lead is shown once) and `studyfrog-service::homework::take_due_homework_reminders` (shown reminders persist in `homework_fired`). Tests: `studyfrog-calendar/tests/homework_reminders.rs`, `studyfrog-store/tests/homework_fired.rs`. Still to do: show these reminders in the app's notification flow.
+`studyfrog-calendar::homework_reminders` (lead times 24 h, 2 h and 15 min; the most specific begun lead is shown once) and `studyfrog-service::homework::take_due_homework_reminders` (shown reminders persist in `homework_fired`). Tests: `studyfrog-calendar/tests/homework_reminders.rs`, `studyfrog-store/tests/homework_fired.rs`. Shown in the app: each tick checks homework alongside calendar reminders (`Effect::CheckHomeworkReminders`), with a toast and a notification line (`reminder_ui::homework_arrived`; tests in `studyfrog-ui/tests/reminders.rs`). Still to do: the homework markers and urgency colours in the daily and weekly calendar views, and folding the lead-time check into `due_reminders` itself.
 
 ## Open Questions
 None.

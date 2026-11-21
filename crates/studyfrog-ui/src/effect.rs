@@ -32,6 +32,8 @@ pub enum Effect {
     PollVault,
     /// Look for calendar reminders that have come due.
     CheckReminders,
+    /// Look for homework deadline reminders that have come due.
+    CheckHomeworkReminders,
     /// Persist the per-user app settings.
     SaveAppSettings(AppSettings),
     /// List the items of a stack (or the inbox).

@@ -20,6 +20,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - **Memory Mode summaries (`crates/studyfrog-rehearsal`)**: time-attack options, the danger level as the countdown runs out, and the victory summary with speed, bonus and personal best (STORY-0175, EPIC-059).
 - **Case-study model (`crates/studyfrog-rehearsal`)**: vignette, decision, options, expected choices and rubric, with validation (STORY-0179, EPIC-061).
 - **Rubric evaluator (`crates/studyfrog-agent`)**: parses the local model's JSON, recomputes the score (40 % choice, 60 % rubric), and falls back to a keyword check when no model runs (STORY-0180, EPIC-061).
+- **Homework reminders in the app (`crates/studyfrog-ui`)**: homework deadlines are checked on the same schedule as calendar reminders and shown as a toast and a notification line (STORY-0166, EPIC-056).
 - **German grade scale (`crates/studyfrog-rehearsal`)**: percentage and points summation, the eleven-band scale from 1.0 to 5.0, and a pass mark that forces a fail below it (STORY-0187, EPIC-063).
 
 ## [0.9.0] - 2026-11-16

@@ -216,3 +216,29 @@ fn the_date_picker_fills_the_due_date_and_pages_through_months() {
         "reminders appear once there is a date"
     );
 }
+
+#[test]
+fn homework_deadlines_become_toasts_and_notifications_too() {
+    use studyfrog_calendar::homework_reminders::DueHomeworkReminder;
+    use studyfrog_core::civil::LocalTime;
+    use studyfrog_ui::reminder_ui::homework_text;
+    let r = DueHomeworkReminder {
+        item: Uid(7),
+        title: "Essay 2".into(),
+        due: LocalTime {
+            date: date_new(2026, 12, 2).unwrap(),
+            minute: 540,
+        },
+        lead_min: 120,
+    };
+    assert_eq!(homework_text(&r), "Essay 2 (in 2 h, 2026-12-02 09:00)");
+    let mut m = open_model();
+    let before = m.state.chrome.notifications.len();
+    apply(&mut m, Msg::HomeworkRemindersDue(Ok(vec![])));
+    assert!(m.state.toasts.is_empty());
+    apply(&mut m, Msg::HomeworkRemindersDue(Ok(vec![r])));
+    assert_eq!(m.state.toasts.len(), 1);
+    assert_eq!(m.state.chrome.notifications.len() - before, 1);
+    apply(&mut m, Msg::HomeworkRemindersDue(Err("disk".into())));
+    assert!(m.state.notice.unwrap().text.contains("disk"));
+}

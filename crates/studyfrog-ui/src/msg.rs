@@ -101,6 +101,10 @@ pub enum Msg {
     ),
     /// Reminders that came due (each is reported once).
     RemindersDue(Result<Vec<studyfrog_calendar::reminders::DueReminder>, String>),
+    /// Homework reminders that came due (each is reported once).
+    HomeworkRemindersDue(
+        Result<Vec<studyfrog_calendar::homework_reminders::DueHomeworkReminder>, String>,
+    ),
     /// The app settings were saved (or not).
     AppSettingsSaved(Result<(), String>),
     /// A stack (or the inbox) was chosen in the browser.
