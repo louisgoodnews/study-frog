@@ -83,6 +83,8 @@ fn typing_marks_the_document_changed_updates_the_preview_and_saves_by_itself() {
 fn revert_is_disabled_until_there_is_something_to_revert() {
     let mut h = harness(editing());
     h.run_steps(2);
+    h.get_by_label("More actions").click();
+    h.run_steps(2);
     h.get_by_label("Revert").click();
     h.run_steps(2);
     assert!(

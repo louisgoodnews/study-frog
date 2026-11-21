@@ -123,10 +123,13 @@ fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.separator();
         search(view, ui, out);
         ui.separator();
-        copy_button(view, ui);
-        if ui.button("Arrange pages ...").clicked() {
-            msg(out, PdfMsg::Arrange(ArrangeMsg::Start));
-        }
+        ui.menu_button("More…", |ui| {
+            copy_button(view, ui);
+            if ui.button("Arrange pages ...").clicked() {
+                msg(out, PdfMsg::Arrange(ArrangeMsg::Start));
+                ui.close();
+            }
+        });
         ui.separator();
         side_buttons(view, ui, out);
     });

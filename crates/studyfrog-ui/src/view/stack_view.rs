@@ -47,9 +47,6 @@ fn breadcrumb(stacks: &[StackRow], stack: &StackRow, ui: &mut egui::Ui, out: &mu
 
 fn actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal_wrapped(|ui| {
-        if let Some(pick) = status_menu(ui, stack.status, None) {
-            send(out, StackViewMsg::SetStatus(stack.uid, pick));
-        }
         if ui.button("New item").clicked() {
             out.push(Msg::Modal(ModalMsg::OpenCreate));
         }
@@ -63,6 +60,9 @@ fn actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg
 /// The rarely used actions of a stack, out of the way in a menu.
 fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.menu_button("More actions", |ui| {
+        if let Some(pick) = status_menu(ui, stack.status, None) {
+            send(out, StackViewMsg::SetStatus(stack.uid, pick));
+        }
         if ui.button("Details").clicked() {
             out.push(Msg::OpenItem(stack.uid));
             ui.close();

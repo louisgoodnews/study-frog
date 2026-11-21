@@ -24,8 +24,8 @@ pub struct Rhythm {
 pub fn density_scale(d: Density) -> f32 {
     match d {
         Density::Compact => 0.75,
-        Density::Comfortable => 1.0,
-        Density::Spacious => 1.25,
+        Density::Comfortable => 1.25,
+        Density::Spacious => 1.5,
     }
 }
 

@@ -45,7 +45,7 @@ fn the_tokens_obey_the_rule_of_halves_at_every_density() {
             "{d:?}"
         );
     }
-    assert_eq!(rhythm(Density::Comfortable).section, 24.0);
+    assert_eq!(rhythm(Density::Comfortable).section, 30.0);
 }
 
 #[test]
@@ -99,6 +99,8 @@ fn the_settings_page_keeps_siblings_closer_than_padding_and_padding_closer_than_
         Msg::SettingsTab(SettingsTabMsg::Select(SettingsTab::Appearance)),
     );
     let mut h = harness(m);
+    // The app's own look (spacing from the density), not egui's defaults.
+    apply_look(&h.ctx, &Appearance::default());
     h.set_size(egui::vec2(1400.0, 1000.0));
     h.run();
     let rect = |label: &str| h.get_by_label(label).rect();

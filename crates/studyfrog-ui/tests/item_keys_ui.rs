@@ -137,6 +137,8 @@ fn the_library_offers_assign_keys_and_asks_first() {
     );
     let mut h = harness(m);
     h.run_steps(2);
+    h.get_by_label("More…").click();
+    h.run_steps(2);
     h.get_by_label("Assign keys…").click();
     h.run_steps(2);
     let fx = h.state().1.clone();

@@ -61,9 +61,20 @@ fn status(e: &Editor, dirty: bool, ui: &mut egui::Ui) {
 }
 
 /// The item's key as a badge with a button that copies it, so it can be pasted into notes and links.
+/// The item's key, if it has one.
+fn key_of(e: &Editor) -> Option<String> {
+    studyfrog_md::extra::extra_value(&e.doc, studyfrog_core::item_key::KEY_FIELD)
+}
+
+/// The item's key as a pill, for the header.
+fn key_pill(e: &Editor, ui: &mut egui::Ui) {
+    if let Some(key) = key_of(e) {
+        crate::view::kit::pill(ui, &key, palette_of(ui).accent);
+    }
+}
+
 pub(crate) fn key_badge(e: &Editor, ui: &mut egui::Ui) {
-    let field = studyfrog_core::item_key::KEY_FIELD;
-    let Some(key) = studyfrog_md::extra::extra_value(&e.doc, field) else {
+    let Some(key) = key_of(e) else {
         return;
     };
     crate::view::kit::pill(ui, &key, palette_of(ui).accent);
@@ -81,7 +92,7 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if ui.button("Back").clicked() {
             out.push(Msg::CloseEditor);
         }
-        key_badge(e, ui);
+        key_pill(e, ui);
         ui.label(RichText::new(&e.path).color(palette_of(ui).text_weak));
         status(e, dirty, ui);
         if let Some(source) = studyfrog_md::extra::extra_value(&e.doc, "source") {
@@ -90,6 +101,20 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         crate::view::extract_panel::button(e, ui, out);
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
             ui.menu_button("More actions", |ui| {
+                if let Some(key) = key_of(e)
+                    && ui.button("Copy key").clicked()
+                {
+                    ui.ctx().copy_text(key);
+                    ui.close();
+                }
+                if ui.add_enabled(dirty, egui::Button::new("Revert")).clicked() {
+                    out.push(Msg::RevertClicked);
+                    ui.close();
+                }
+                if ui.button("Reload from disk").clicked() {
+                    out.push(Msg::ReloadClicked);
+                    ui.close();
+                }
                 if ui.button("Export to PDF…").clicked() {
                     out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Export(
                         crate::pdf_export_types::PdfExportMsg::Open(
@@ -107,12 +132,6 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             });
             if e.conflict && ui.button("Keep mine").clicked() {
                 out.push(Msg::KeepMineClicked);
-            }
-            if ui.add_enabled(dirty, egui::Button::new("Revert")).clicked() {
-                out.push(Msg::RevertClicked);
-            }
-            if ui.button("Reload from disk").clicked() {
-                out.push(Msg::ReloadClicked);
             }
         });
     });
