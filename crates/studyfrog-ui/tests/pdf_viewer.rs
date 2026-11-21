@@ -193,22 +193,57 @@ fn the_viewer_screen_shows_its_controls_and_asks_for_the_page_picture() {
     );
     let mut h = harness(model);
     h.run_steps(3);
-    for label in [
-        "Back to library",
-        "Previous",
-        "Next",
-        "Fit width",
-        "Outline",
-        "Pages",
-        "Hide",
-    ] {
+    for label in ["Back to library", "Previous", "Next"] {
         assert!(h.query_by_label(label).is_some(), "{label}");
     }
-    assert!(h.query_by_label("Find in this PDF").is_some());
+    h.get_by_label("Panels…").click();
+    h.run_steps(2);
+    for label in ["Outline", "Pages", "Hide"] {
+        assert!(h.query_by_label(label).is_some(), "{label}");
+    }
+    h.key_press(eframe::egui::Key::Escape);
+    h.run_steps(2);
+    h.get_by_label("More…").click();
+    h.run_steps(2);
+    assert!(
+        h.query_by_label("Fit width").is_some(),
+        "the fit presets are in More"
+    );
+    assert!(h.query_by_label("Find in this PDF (Ctrl+F or /)").is_some());
     let asked = h
         .state()
         .1
         .iter()
         .any(|e| matches!(e, Effect::Pdf(PdfEffect::Render { .. })));
     assert!(asked, "the first frame asks for the page picture");
+}
+
+#[test]
+fn ctrl_f_in_the_viewer_focuses_find_in_this_pdf_and_slash_does_too() {
+    use common::views::harness;
+    use eframe::egui;
+    let (_d, mut model, mut worker) = open_with_pdf("find-shortcut");
+    send(
+        &mut model,
+        &mut worker,
+        PdfMsg::Open("bio/three.pdf".into(), 0),
+    );
+    let mut h = harness(model);
+    h.run_steps(3);
+    assert!(
+        h.ctx.memory(|m| m.focused()).is_none(),
+        "nothing has the keyboard yet"
+    );
+    h.key_press_modifiers(egui::Modifiers::COMMAND, egui::Key::F);
+    h.run_steps(2);
+    assert!(
+        h.ctx.memory(|m| m.focused()).is_some(),
+        "Ctrl+F focuses the find field"
+    );
+    h.ctx
+        .memory_mut(|m| m.surrender_focus(m.focused().unwrap()));
+    h.run_steps(2);
+    h.key_press(egui::Key::Slash);
+    h.run_steps(2);
+    assert!(h.ctx.memory(|m| m.focused()).is_some(), "/ focuses it too");
 }

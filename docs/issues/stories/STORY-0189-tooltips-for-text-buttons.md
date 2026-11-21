@@ -33,5 +33,12 @@ Tooltips must not hide the control they describe, must follow the theme's contra
 ## Dependencies
 EPIC-057, STORY-0169 (tooltip helpers)
 
+## Implementation (2026-11-21)
+`studyfrog-ui/tests/text_button_tooltips.rs` scans every source file for button calls (`.button(`, `.menu_button(`, `primary_button(`, `quiet_button(`, `Button::new(`, `.small_button(`). A call is explained when its statement gives it `on_hover_text` or a `view::tips` text. The count of unexplained calls is a ratchet: `BASELINE` is 415 and may only go down. A test checks that the scanner itself finds a plain button.
+
+Decided: the guard scans the source rather than keeping a list of labels (owner's choice). Limits: a button whose hover text is set on a later statement is counted as unexplained, and labels built at run time are judged by their call site, not their text.
+
+Still open: the 415 buttons. Lower `BASELINE` as each one is explained, starting with the navigation, header bars, action trays and dialogs.
+
 ## Open Questions
-- Should the guard test use a checked-in list of labels, or scan the source for button calls? A scan is more thorough but breaks on labels built at run time.
+None. The two questions were decided; see the implementation notes above.

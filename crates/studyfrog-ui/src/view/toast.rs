@@ -1,4 +1,5 @@
-//! In-app notifications that can be clicked, shown at the top right under the bar.
+//! In-app notifications that can be clicked, shown at the bottom right, above the status bar, so they
+//! do not cover the controls at the top.
 
 use eframe::egui::{self, Align2, Button, Order, vec2};
 
@@ -14,7 +15,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     egui::Area::new(egui::Id::unique("toasts"))
         .order(Order::Foreground)
-        .anchor(Align2::RIGHT_TOP, vec2(-16.0, 52.0))
+        .anchor(Align2::RIGHT_BOTTOM, vec2(-16.0, -44.0))
         .show(ui.ctx(), |ui| {
             for (i, toast) in state.toasts.iter().enumerate() {
                 egui::Frame::popup(ui.style()).show(ui, |ui| {

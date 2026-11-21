@@ -99,6 +99,6 @@ fn the_page_is_an_image_with_a_name_and_its_text_is_there_for_screen_readers() {
         "the page picture is named"
     );
     assert!(h.query_by_label("Text of this page").is_some());
-    assert!(h.query_by_label("Find in this PDF").is_some());
+    assert!(h.query_by_label("Find in this PDF (Ctrl+F or /)").is_some());
     assert!(h.query_by_label("Page number").is_some());
 }

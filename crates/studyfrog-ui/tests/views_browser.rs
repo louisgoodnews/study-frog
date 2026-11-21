@@ -61,8 +61,9 @@ fn the_title_filter_narrows_the_list_as_you_type() {
     let mut h = harness(stack_open());
     h.run();
     assert!(h.query_by_label("2 of 2 items").is_some() && h.query_by_label("Bonjour").is_some());
-    h.get_by_label("Search titles").focus();
-    h.get_by_label("Search titles").type_text("revoir");
+    h.get_by_label("Search titles (Ctrl+F or /)").focus();
+    h.get_by_label("Search titles (Ctrl+F or /)")
+        .type_text("revoir");
     h.run();
     assert!(h.query_by_label("1 of 2 items").is_some());
     assert!(h.query_by_label("Bonjour").is_none() && h.query_by_label("Au revoir").is_some());

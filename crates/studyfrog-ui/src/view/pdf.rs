@@ -46,25 +46,42 @@ fn zoom_controls(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if ui.button("+").on_hover_text("Zoom in").clicked() {
         msg(out, PdfMsg::ZoomIn);
     }
+}
+
+/// The fit presets, in the overflow menu.
+fn fit_presets(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let fit = view.zoom == Zoom::FitWidth;
     if ui.add(egui::Button::selectable(fit, "Fit width")).clicked() {
         msg(out, PdfMsg::SetZoom(Zoom::FitWidth));
+        ui.close();
     }
     let page = view.zoom == Zoom::FitPage;
     if ui.add(egui::Button::selectable(page, "Fit page")).clicked() {
         msg(out, PdfMsg::SetZoom(Zoom::FitPage));
+        ui.close();
     }
 }
 
 fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let mut text = view.query.clone();
-    let field = ui.add(
-        TextEdit::singleline(&mut text)
-            .hint_text("Find in this PDF")
-            .desired_width(160.0),
-    );
-    field
-        .widget_info(|| egui::WidgetInfo::labeled(egui::Role::TextInput, true, "Find in this PDF"));
+    let field = ui
+        .add(
+            TextEdit::singleline(&mut text)
+                .hint_text(crate::view::search_focus::PDF_FIND)
+                .desired_width(160.0),
+        )
+        .on_hover_text(crate::view::tips::with_key(
+            "Finds the text in this PDF.",
+            "Ctrl+F or /",
+        ));
+    crate::view::search_focus::focus_field(ui.ctx(), &field, view.query.chars().count());
+    field.widget_info(|| {
+        egui::WidgetInfo::labeled(
+            egui::Role::TextInput,
+            true,
+            crate::view::search_focus::named(crate::view::search_focus::PDF_FIND),
+        )
+    });
     if text != view.query {
         msg(out, PdfMsg::Query(text));
     }
@@ -93,6 +110,7 @@ fn side_buttons(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .clicked()
         {
             msg(out, PdfMsg::ShowSide(side));
+            ui.close();
         }
     }
 }
@@ -124,6 +142,7 @@ fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         search(view, ui, out);
         ui.separator();
         ui.menu_button("More…", |ui| {
+            fit_presets(view, ui, out);
             copy_button(view, ui);
             if ui.button("Arrange pages ...").clicked() {
                 msg(out, PdfMsg::Arrange(ArrangeMsg::Start));
@@ -131,7 +150,7 @@ fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         });
         ui.separator();
-        side_buttons(view, ui, out);
+        ui.menu_button("Panels…", |ui| side_buttons(view, ui, out));
     });
 }
 

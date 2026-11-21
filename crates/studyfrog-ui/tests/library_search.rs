@@ -140,7 +140,7 @@ fn the_bar_is_on_screen_in_both_modes_and_named_for_assistive_technology() {
     for name in [
         "Standard",
         "Query",
-        "Search titles",
+        "Search titles (Ctrl+F or /)",
         "Type",
         "Status",
         "Priority",
@@ -152,12 +152,27 @@ fn the_bar_is_on_screen_in_both_modes_and_named_for_assistive_technology() {
     h.run_steps(3);
     assert!(h.state().0.state.library.search.mode == SearchMode::Query);
     assert!(
-        h.query_by_label("Query text").is_some() && h.query_by_label("Search titles").is_none()
+        h.query_by_label("Query text (Ctrl+F or /)").is_some()
+            && h.query_by_label("Search titles (Ctrl+F or /)").is_none()
     );
     send(&mut h.state_mut().0, SearchMsg::Query("status = ".into()));
     h.run_steps(3);
     assert!(
         h.query_by_label_contains("Column ").is_some(),
         "the error is shown under the box"
+    );
+}
+
+#[test]
+fn ctrl_f_in_the_library_focuses_the_search_titles_field() {
+    use eframe::egui;
+    let mut h = harness(model());
+    h.run_steps(3);
+    assert!(h.ctx.memory(|m| m.focused()).is_none());
+    h.key_press_modifiers(egui::Modifiers::COMMAND, egui::Key::F);
+    h.run_steps(2);
+    assert!(
+        h.ctx.memory(|m| m.focused()).is_some(),
+        "Ctrl+F focuses the search field"
     );
 }

@@ -53,6 +53,9 @@ const GROUPS: &[Group] = &[
 ];
 
 /// The screen list on the left, shown while a vault is open and the sidebar is not folded away.
+/// Room kept clear at the bottom of the sidebar for the floating menu button (points).
+const BURGER_ROOM: f32 = 56.0;
+
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if state.vault.is_none() || state.chrome.sidebar_hidden {
         return;
@@ -61,8 +64,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .resizable(false)
         .exact_size(150.0)
         .show(ui, |ui| {
+            // The list stops above the floating menu button, which sits over the bottom corner.
             egui::ScrollArea::vertical()
                 .auto_shrink([false, false])
+                .max_height((ui.available_height() - BURGER_ROOM).max(0.0))
                 .show(ui, |ui| groups(state, ui, out));
         });
 }

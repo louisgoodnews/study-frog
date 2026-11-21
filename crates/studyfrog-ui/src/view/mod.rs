@@ -119,6 +119,7 @@ pub(crate) mod run_comments;
 mod run_diary_prompt;
 mod run_slow;
 mod run_timer;
+pub mod search_focus;
 mod session_form;
 mod settings;
 mod settings_appearance;

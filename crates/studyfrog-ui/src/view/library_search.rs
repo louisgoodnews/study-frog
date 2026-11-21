@@ -57,12 +57,21 @@ fn choice<T: Copy + PartialEq>(
 /// A single-line field of the given width with a name for screen readers; the new text when it changed.
 fn field(ui: &mut egui::Ui, (name, hint): (&str, &str), text: &str, width: f32) -> Option<String> {
     let mut edited = text.to_owned();
-    let r = ui.add(
-        egui::TextEdit::singleline(&mut edited)
-            .hint_text(hint)
-            .desired_width(width),
-    );
-    r.widget_info(|| egui::WidgetInfo::labeled(egui::Role::TextInput, true, name));
+    let r = ui
+        .add(
+            egui::TextEdit::singleline(&mut edited)
+                .hint_text(hint)
+                .desired_width(width),
+        )
+        .on_hover_text(crate::view::tips::with_key(hint, "Ctrl+F or /"));
+    crate::view::search_focus::focus_field(ui.ctx(), &r, text.chars().count());
+    r.widget_info(|| {
+        egui::WidgetInfo::labeled(
+            egui::Role::TextInput,
+            true,
+            crate::view::search_focus::named(name),
+        )
+    });
     (edited != text).then_some(edited)
 }
 

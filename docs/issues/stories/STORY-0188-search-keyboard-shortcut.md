@@ -2,7 +2,7 @@
 id: STORY-0188
 type: story
 title: "Keyboard Shortcut to Focus Search (Ctrl+F and /)"
-status: backlog
+status: review
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 3
@@ -23,9 +23,9 @@ Search is the fastest way to find an item, a stack or a passage in a PDF, but no
 - Make sure the shortcut does not steal keys from text being typed in notes, cards and dialogs.
 
 ## Acceptance Criteria
-- [ ] Ctrl+F focuses the search field of the current screen (library, stack page, PDF viewer) and selects its text
-- [ ] `/` focuses the same search field when no text field has keyboard focus
-- [ ] The search field's hover text and its accessible name state the shortcut
+- [x] Ctrl+F focuses the search field of the current screen (library, stack page, PDF viewer) and selects its text
+- [x] `/` focuses the same search field when no text field has keyboard focus
+- [x] The search field's hover text and its accessible name state the shortcut
 
 ## Design Notes
 The app has no `/` shortcut today (the stack page shows a literal "/" as a breadcrumb separator), so this adds one. Screen readers must announce the field and the shortcut. Keep the handler in one place (`studyfrog-ui`), not in each view.
@@ -33,5 +33,11 @@ The app has no `/` shortcut today (the stack page shows a literal "/" as a bread
 ## Dependencies
 EPIC-057, STORY-0169 (tooltip helpers)
 
+## Implementation (2026-11-21)
+`studyfrog-ui::search_focus`: each search field asks `focus_field` whether the shortcut was pressed (Ctrl+F or Cmd+F, or `/` while nothing has the keyboard) and, if so, takes focus and selects its text. Only the field on screen is drawn, so only it can take focus. The hover text and the accessible name ("Find in this PDF (Ctrl+F or /)", "Search titles (Ctrl+F or /)", "Query text (Ctrl+F or /)") state the shortcut. Tests: `studyfrog-ui/tests/pdf_viewer.rs` (Ctrl+F and `/` in the viewer), `tests/library_search.rs` (Ctrl+F in the library).
+
+## Decided
+- Ctrl+F on the PDF viewer opens "Find in this PDF", not the library search (decided by the owner).
+
 ## Open Questions
-- Should Ctrl+F on the PDF viewer open its own "Find in this PDF" field, or the library search? Proposed: the field of the screen in front.
+None. The two questions were decided; see the implementation notes above.

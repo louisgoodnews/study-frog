@@ -41,7 +41,9 @@ fn page(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .show(ui, |ui| main_column(e, ui, out));
         });
         ui.allocate_ui_with_layout(egui::vec2(side, height), down, |ui| {
-            egui::ScrollArea::vertical()
+            // Both directions: the detail rows are wider than the column at narrow windows, and they must
+            // stay inside the window.
+            egui::ScrollArea::both()
                 .id_salt("side")
                 .show(ui, |ui| item_details::details(state, e, ui, out));
         });
