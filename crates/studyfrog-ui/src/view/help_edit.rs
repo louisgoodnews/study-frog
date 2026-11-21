@@ -37,11 +37,16 @@ pub fn editor(edit: &PageEdit, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         };
         if ui
             .add_enabled(!edit.saving, egui::Button::new(label))
+            .on_hover_text("Saves this help page.")
             .clicked()
         {
             send(out, HelpMsg::Save);
         }
-        if ui.button("Cancel").clicked() {
+        if ui
+            .button("Cancel")
+            .on_hover_text("Closes this without making the change.")
+            .clicked()
+        {
             send(out, HelpMsg::Cancel);
         }
     });

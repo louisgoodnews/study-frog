@@ -62,17 +62,26 @@ pub(super) fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             kit::card(ui, |ui| {
                 ui.horizontal(|ui| {
                     avatar_badge(ui, name, pal.surface_hover, pal.text);
-                    let switch_btn =
-                        egui::Button::new(RichText::new(format!("Switch to {name}")).strong())
-                            .min_size(egui::vec2(120.0, 24.0));
-                    if ui.add(switch_btn).clicked() {
+
+                    if ui
+                        .add(
+                            egui::Button::new(RichText::new(format!("Switch to {name}")).strong())
+                                .min_size(egui::vec2(120.0, 24.0)),
+                        )
+                        .on_hover_text("Switches to this profile.")
+                        .clicked()
+                    {
                         send(out, ProfileMsg::Switch(name.clone()));
                     }
 
                     if *name != DEFAULT_PROFILE {
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                             if p.confirm_delete.as_deref() == Some(name.as_str()) {
-                                if ui.small_button("Keep").clicked() {
+                                if ui
+                                    .small_button("Keep")
+                                    .on_hover_text("Keeps this as it is.")
+                                    .clicked()
+                                {
                                     send(out, ProfileMsg::CancelDelete);
                                 }
                                 if ui
@@ -80,11 +89,16 @@ pub(super) fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                                         RichText::new(format!("Really delete {name}"))
                                             .color(pal.danger),
                                     )
+                                    .on_hover_text("Deletes this profile for good.")
                                     .clicked()
                                 {
                                     send(out, ProfileMsg::ConfirmDelete);
                                 }
-                            } else if ui.small_button(format!("Delete {name}")).clicked() {
+                            } else if ui
+                                .small_button(format!("Delete {name}"))
+                                .on_hover_text("Deletes this after you confirm.")
+                                .clicked()
+                            {
                                 send(out, ProfileMsg::AskDelete(name.clone()));
                             }
                         });
@@ -120,6 +134,7 @@ pub(super) fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .fill(pal.accent)
                     .min_size(egui::vec2(ui.available_width(), 26.0)),
             )
+            .on_hover_text("Makes a new profile with its own settings.")
             .clicked()
         {
             send(out, ProfileMsg::Create);

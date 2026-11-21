@@ -96,11 +96,16 @@ fn server_card(state: &State, s: &McpServer, ui: &mut egui::Ui, out: &mut Vec<Ms
             let can = !state.agent.busy;
             if ui
                 .add_enabled(can, egui::Button::new(format!("Discover {}", s.name)))
+                .on_hover_text("Looks for more items like this.")
                 .clicked()
             {
                 send(out, McpMsg::Discover(s.name.clone()));
             }
-            if ui.small_button(format!("Remove {}", s.name)).clicked() {
+            if ui
+                .small_button(format!("Remove {}", s.name))
+                .on_hover_text("Removes this from the list; the item itself is kept.")
+                .clicked()
+            {
                 send(out, McpMsg::RemoveServer(s.name.clone()));
             }
         });
@@ -128,7 +133,10 @@ pub fn servers(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if let Some(t) = text_field(ui, "Program or address", &m.form.line, hint, 1) {
             send(out, McpMsg::FormLine(t));
         }
-        if kit::quiet_button(ui, "Add tool server").clicked() {
+        if kit::quiet_button(ui, "Add tool server")
+            .on_hover_text("Adds a tool server the assistant can use.")
+            .clicked()
+        {
             send(out, McpMsg::AddServer);
         }
     });
@@ -149,10 +157,17 @@ pub fn approval(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let args = serde_json::to_string_pretty(&p.call.arguments).unwrap_or_default();
         ui.label(RichText::new(args).monospace());
         ui.horizontal(|ui| {
-            if kit::primary_button(ui, "Allow this call").clicked() {
+            if kit::primary_button(ui, "Allow this call")
+                .on_hover_text("Lets this call run once.")
+                .clicked()
+            {
                 send(out, McpMsg::Approve);
             }
-            if ui.button("Do not allow").clicked() {
+            if ui
+                .button("Do not allow")
+                .on_hover_text("Refuses this request.")
+                .clicked()
+            {
                 send(out, McpMsg::Deny);
             }
         });

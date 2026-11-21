@@ -97,7 +97,7 @@ pub fn draw(plan: &UnmarkPlan, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                 let confirm = ui.button(
                     RichText::new("Make normal folder").color(p.warning),
-                );
+                ).on_hover_text("Turns this stack back into a normal folder.");
                 confirm.widget_info(|| {
                     WidgetInfo::labeled(
                         Role::Button,
@@ -109,7 +109,7 @@ pub fn draw(plan: &UnmarkPlan, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     send(out, ModalMsg::ConfirmUnmark(plan.folder.clone()));
                 }
 
-                let cancel = ui.button("Cancel");
+                let cancel = ui.button("Cancel").on_hover_text("Closes this without making the change.");
                 cancel.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Cancel"));
                 if cancel.clicked() {
                     send(out, ModalMsg::Close);

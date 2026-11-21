@@ -192,7 +192,12 @@ fn parent_stack_row(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<
         .map_or_else(|| "None (standalone)".to_owned(), |s| s.title.clone());
     ui.label("Parent stack");
     let r = ui.menu_button(&current, |ui| {
-        if stack.parent.is_some() && ui.button("None (standalone)").clicked() {
+        if stack.parent.is_some()
+            && ui
+                .button("None (standalone)")
+                .on_hover_text("Keeps this item without a stack.")
+                .clicked()
+        {
             out.push(Msg::Library(crate::library_ui::LibraryMsg::Stack(
                 crate::stack_view_ui::StackViewMsg::MoveStack(stack.folder.clone(), String::new()),
             )));
@@ -205,7 +210,11 @@ fn parent_stack_row(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<
             {
                 continue;
             }
-            if ui.button(&s.title).clicked() {
+            if ui
+                .button(&s.title)
+                .on_hover_text("Moves this item under this stack.")
+                .clicked()
+            {
                 out.push(Msg::Library(crate::library_ui::LibraryMsg::Stack(
                     crate::stack_view_ui::StackViewMsg::MoveStack(
                         stack.folder.clone(),

@@ -42,7 +42,7 @@ pub fn notice(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg
         ui.weak(format!(
             "That one took {factor:.1} times as long as your usual answer in this run. A short break can help."
         ));
-        if ui.small_button("Don't show this").clicked() {
+        if ui.small_button("Don't show this").on_hover_text("Stops this message from showing again.").clicked() {
             out.push(Msg::SettingsTab(SettingsTabMsg::SlowAnswerNotice(false)));
         }
     });

@@ -100,7 +100,11 @@ fn stack_list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         out.push(Msg::Library(LibraryMsg::Overview(true)));
     }
     ui.separator();
-    if ui.button("New stack…").clicked() {
+    if ui
+        .button("New stack…")
+        .on_hover_text("Makes a new stack and puts the items in it.")
+        .clicked()
+    {
         out.push(Msg::Modal(ModalMsg::OpenCreateStack));
     }
 }

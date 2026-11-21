@@ -87,24 +87,38 @@ fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         match step {
             SetupStep::What => {}
             SetupStep::How => {
-                if ui.button("Back").clicked() {
+                if ui
+                    .button("Back")
+                    .on_hover_text("Goes back to the previous step.")
+                    .clicked()
+                {
                     go(out, SetupStep::What);
                 }
             }
             SetupStep::Review => {
-                if ui.button("Back").clicked() {
+                if ui
+                    .button("Back")
+                    .on_hover_text("Goes back to the previous step.")
+                    .clicked()
+                {
                     go(out, SetupStep::How);
                 }
             }
         }
         match step {
             SetupStep::What => {
-                if kit::primary_button(ui, "Next: configure").clicked() {
+                if kit::primary_button(ui, "Next: configure")
+                    .on_hover_text("Goes on to the configuration step.")
+                    .clicked()
+                {
                     go(out, SetupStep::How);
                 }
             }
             SetupStep::How => {
-                if kit::primary_button(ui, "Next: review").clicked() {
+                if kit::primary_button(ui, "Next: review")
+                    .on_hover_text("Goes on to the review step.")
+                    .clicked()
+                {
                     go(out, SetupStep::Review);
                 }
             }
@@ -118,15 +132,17 @@ fn start_button(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let any = matches!(state.rehearse.preview, Preview::Count(n) if n > 0);
     let ready = any && !state.rehearse.starting;
     let label = "Start rehearsal";
-    let response = ui.add_enabled(
-        ready,
-        egui::Button::new(
-            RichText::new(label)
-                .strong()
-                .color(palette_of(ui).on_accent),
+    let response = ui
+        .add_enabled(
+            ready,
+            egui::Button::new(
+                RichText::new(label)
+                    .strong()
+                    .color(palette_of(ui).on_accent),
+            )
+            .fill(palette_of(ui).accent),
         )
-        .fill(palette_of(ui).accent),
-    );
+        .on_hover_text("Starts the run with these settings.");
     if response.clicked() {
         out.push(Msg::StartRunClicked);
     }

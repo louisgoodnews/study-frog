@@ -100,7 +100,11 @@ fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     };
                     ui.label(RichText::new(key).color(weak));
                 }
-                if ui.small_button(format!("Remove {}", p.name)).clicked() {
+                if ui
+                    .small_button(format!("Remove {}", p.name))
+                    .on_hover_text("Removes this from the list; the item itself is kept.")
+                    .clicked()
+                {
                     send(out, AgentMsg::RemoveConnection(p.name.clone()));
                 }
             });
@@ -172,7 +176,10 @@ fn new_connection(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             send(out, AgentMsg::Form(FormEdit::Key(key)));
         }
         ui.add_space(4.0);
-        if kit::primary_button(ui, "Add connection").clicked() {
+        if kit::primary_button(ui, "Add connection")
+            .on_hover_text("Adds a connection to a service.")
+            .clicked()
+        {
             send(out, AgentMsg::AddConnection);
         }
     });

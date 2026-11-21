@@ -55,7 +55,9 @@ fn draw_indents(depth: usize, ui: &mut egui::Ui) {
 
 fn draw_chevron(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let icon = if row.expanded { "v" } else { ">" };
-    let btn = ui.small_button(icon);
+    let btn = ui
+        .small_button(icon)
+        .on_hover_text("Opens or closes this folder.");
     btn.clone().widget_info(|| {
         WidgetInfo::labeled(Role::Button, true, format!("Toggle {}", row.display_name))
     });

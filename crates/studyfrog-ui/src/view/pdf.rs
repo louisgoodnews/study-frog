@@ -1,5 +1,7 @@
 //! The PDF screen: a toolbar, a side panel (outline or page thumbnails) and the page.
 
+mod toolbar_nav;
+use self::toolbar_nav::{fit_presets, navigation, zoom_controls};
 use eframe::egui::{self, Panel, RichText, TextEdit};
 
 use crate::msg::Msg;
@@ -12,54 +14,6 @@ use crate::view::{pdf_arrange, pdf_notes, pdf_page, pdf_side};
 
 fn msg(out: &mut Vec<Msg>, m: PdfMsg) {
     out.push(Msg::Pdf(m));
-}
-
-fn navigation(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let pages = view.info.as_ref().map_or(0, |i| i.page_count);
-    if ui.button("Previous").clicked() {
-        msg(out, PdfMsg::Previous);
-    }
-    let mut shown = view.page + 1;
-    let drag = egui::DragValue::new(&mut shown)
-        .range(1..=pages.max(1))
-        .speed(0.2);
-    let label = ui.add(drag);
-    label.widget_info(|| egui::WidgetInfo::labeled(egui::Role::SpinButton, true, "Page number"));
-    if shown != view.page + 1 {
-        msg(out, PdfMsg::GoTo(shown - 1));
-    }
-    ui.label(format!("of {pages}"));
-    if ui.button("Next").clicked() {
-        msg(out, PdfMsg::Next);
-    }
-}
-
-fn zoom_controls(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    if ui.button("-").on_hover_text("Zoom out").clicked() {
-        msg(out, PdfMsg::ZoomOut);
-    }
-    let name = match view.zoom {
-        Zoom::FitWidth | Zoom::FitPage => "Fit".to_owned(),
-        Zoom::Percent(p) => format!("{p} %"),
-    };
-    ui.label(name);
-    if ui.button("+").on_hover_text("Zoom in").clicked() {
-        msg(out, PdfMsg::ZoomIn);
-    }
-}
-
-/// The fit presets, in the overflow menu.
-fn fit_presets(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let fit = view.zoom == Zoom::FitWidth;
-    if ui.add(egui::Button::selectable(fit, "Fit width")).clicked() {
-        msg(out, PdfMsg::SetZoom(Zoom::FitWidth));
-        ui.close();
-    }
-    let page = view.zoom == Zoom::FitPage;
-    if ui.add(egui::Button::selectable(page, "Fit page")).clicked() {
-        msg(out, PdfMsg::SetZoom(Zoom::FitPage));
-        ui.close();
-    }
 }
 
 fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
@@ -88,10 +42,18 @@ fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if view.query.trim().is_empty() {
         return;
     }
-    if ui.button("Previous hit").clicked() {
+    if ui
+        .button("Previous hit")
+        .on_hover_text("Goes to the previous match.")
+        .clicked()
+    {
         msg(out, PdfMsg::PreviousHit);
     }
-    if ui.button("Next hit").clicked() {
+    if ui
+        .button("Next hit")
+        .on_hover_text("Goes to the next match.")
+        .clicked()
+    {
         msg(out, PdfMsg::NextHit);
     }
     ui.weak(format!("{} pages", view.found.len()));
@@ -122,7 +84,9 @@ fn copy_button(view: &PdfView, ui: &mut egui::Ui) {
         .map(|t| t.words.as_slice())
         .unwrap_or(&[]);
     let text = selected_text(words, &view.selection);
-    let button = ui.add_enabled(!text.is_empty(), egui::Button::new("Copy selection"));
+    let button = ui
+        .add_enabled(!text.is_empty(), egui::Button::new("Copy selection"))
+        .on_hover_text("Copies the selected text.");
     if button.clicked() {
         ui.ctx().copy_text(text);
     }
@@ -130,7 +94,11 @@ fn copy_button(view: &PdfView, ui: &mut egui::Ui) {
 
 fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal_wrapped(|ui| {
-        if ui.button("Back to library").clicked() {
+        if ui
+            .button("Back to library")
+            .on_hover_text("Goes back to the library.")
+            .clicked()
+        {
             msg(out, PdfMsg::Close);
         }
         ui.label(RichText::new(crate::pdf_names::label(&view.path, &view.title)).strong());
@@ -144,13 +112,21 @@ fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.menu_button("More…", |ui| {
             fit_presets(view, ui, out);
             copy_button(view, ui);
-            if ui.button("Arrange pages ...").clicked() {
+            if ui
+                .button("Arrange pages ...")
+                .on_hover_text("Opens the page arranger to reorder or remove pages.")
+                .clicked()
+            {
                 msg(out, PdfMsg::Arrange(ArrangeMsg::Start));
                 ui.close();
             }
-        });
+        })
+        .response
+        .on_hover_text("Shows more options.");
         ui.separator();
-        ui.menu_button("Panels…", |ui| side_buttons(view, ui, out));
+        ui.menu_button("Panels…", |ui| side_buttons(view, ui, out))
+            .response
+            .on_hover_text("Shows or hides the side panels: outline, pages, notes and extracts.");
     });
 }
 
@@ -207,11 +183,15 @@ fn link_question(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     };
     ui.horizontal_wrapped(|ui| {
         ui.label(format!("This PDF links to {url}. Open it in your browser?"));
-        if ui.button("Open").clicked() {
+        if ui.button("Open").on_hover_text("Opens this.").clicked() {
             ui.ctx().open_url(egui::OpenUrl::new_tab(url));
             out.push(Msg::Pdf(PdfMsg::Link(LinkMsg::Approve)));
         }
-        if ui.button("Do not open").clicked() {
+        if ui
+            .button("Do not open")
+            .on_hover_text("Closes without opening the file.")
+            .clicked()
+        {
             out.push(Msg::Pdf(PdfMsg::Link(LinkMsg::Dismiss)));
         }
     });

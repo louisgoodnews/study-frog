@@ -143,6 +143,7 @@ pub fn preview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 
     ui.add_space(6.0);
+
     let can_import = !t.busy && create + dup > 0;
     let import_btn = egui::Button::new(
         RichText::new("Import")
@@ -153,7 +154,11 @@ pub fn preview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     .fill(palette_of(ui).accent)
     .min_size(vec2(130.0, 32.0));
 
-    if ui.add_enabled(can_import, import_btn).clicked() {
+    if ui
+        .add_enabled(can_import, import_btn)
+        .on_hover_text("Imports the items shown, into the destination you chose.")
+        .clicked()
+    {
         send(out, TransferMsg::Import);
     }
 }

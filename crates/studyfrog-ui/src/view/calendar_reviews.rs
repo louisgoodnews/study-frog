@@ -117,12 +117,19 @@ pub fn day_chips(
         }
         r.context_menu(|ui| {
             if let Some(stack_uid) = e.stack
-                && ui.button("Rehearse stack").clicked()
+                && ui
+                    .button("Rehearse stack")
+                    .on_hover_text("Starts a rehearsal of this stack.")
+                    .clicked()
             {
                 out.push(Msg::Plan(PlanMsg::Rehearse(stack_uid)));
                 ui.close();
             }
-            if ui.button("Move to another day…").clicked() {
+            if ui
+                .button("Move to another day…")
+                .on_hover_text("Moves these reviews to another day you choose.")
+                .clicked()
+            {
                 out.push(Msg::Plan(PlanMsg::Select(day)));
                 send(out, ReviewMsg::OpenMove(e.stack, e.day));
                 ui.close();
@@ -156,14 +163,25 @@ fn entry_card(state: &State, e: &PlanEntry, ui: &mut egui::Ui, out: &mut Vec<Msg
         ui.label(line(state, e));
         ui.horizontal_wrapped(|ui| {
             if let Some(stack_uid) = e.stack
-                && ui.button(format!("Rehearse {title}")).clicked()
+                && ui
+                    .button(format!("Rehearse {title}"))
+                    .on_hover_text("Starts a rehearsal of this item.")
+                    .clicked()
             {
                 out.push(Msg::Plan(PlanMsg::Rehearse(stack_uid)));
             }
-            if ui.button(format!("Open {title}")).clicked() {
+            if ui
+                .button(format!("Open {title}"))
+                .on_hover_text("Opens this item.")
+                .clicked()
+            {
                 send(out, ReviewMsg::OpenStack(e.stack));
             }
-            if ui.button(format!("Move {title} reviews…")).clicked() {
+            if ui
+                .button(format!("Move {title} reviews…"))
+                .on_hover_text("Moves the reviews of this item to another day.")
+                .clicked()
+            {
                 send(out, ReviewMsg::OpenMove(e.stack, e.day));
             }
         });
@@ -180,10 +198,18 @@ fn entry_card(state: &State, e: &PlanEntry, ui: &mut egui::Ui, out: &mut Vec<Msg
             send(out, ReviewMsg::MoveText(text));
         }
         ui.horizontal(|ui| {
-            if ui.button("Move").clicked() {
+            if ui
+                .button("Move")
+                .on_hover_text("Moves this to another place.")
+                .clicked()
+            {
                 send(out, ReviewMsg::Confirm);
             }
-            if ui.button("Cancel move").clicked() {
+            if ui
+                .button("Cancel move")
+                .on_hover_text("Cancels the move.")
+                .clicked()
+            {
                 send(out, ReviewMsg::Cancel);
             }
         });
@@ -199,7 +225,12 @@ pub fn side_section(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &
     {
         send(out, ReviewMsg::Show(on));
     }
-    if state.planner.undo.is_some() && ui.button("Undo last move").clicked() {
+    if state.planner.undo.is_some()
+        && ui
+            .button("Undo last move")
+            .on_hover_text("Moves the reviews back to where they were.")
+            .clicked()
+    {
         send(out, ReviewMsg::Undo);
     }
     if !on {

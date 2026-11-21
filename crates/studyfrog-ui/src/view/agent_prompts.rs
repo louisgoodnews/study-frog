@@ -64,7 +64,11 @@ fn entry(p: &Prompt, view: &PromptsView, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
             {
                 ui.ctx().copy_text(p.text.clone());
             }
-            if ui.button("Save as .md").clicked() {
+            if ui
+                .button("Save as .md")
+                .on_hover_text("Saves this as a Markdown file.")
+                .clicked()
+            {
                 send(out, PromptsMsg::Save(id));
             }
             if ui
@@ -97,7 +101,11 @@ fn shown(source: &PromptSource, view: &PromptsView) -> Prompt {
 /// What the Assistant's Prompts tab shows now that the prompts have a screen of their own.
 pub fn moved_link(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.label("The prompts have their own screen now: copy, save or run them there.");
-    if ui.button("Open Prompts").clicked() {
+    if ui
+        .button("Open Prompts")
+        .on_hover_text("Opens the prompts screen.")
+        .clicked()
+    {
         out.push(Msg::Navigate(crate::state::Screen::Prompts));
     }
 }
@@ -116,7 +124,11 @@ pub fn prompts_tab(state: &crate::state::State, ui: &mut egui::Ui, out: &mut Vec
     ) {
         send(out, PromptsMsg::Query(query));
     }
-    if ui.button("Save all prompts to a folder…").clicked() {
+    if ui
+        .button("Save all prompts to a folder…")
+        .on_hover_text("Saves every prompt as a file in a folder you choose.")
+        .clicked()
+    {
         send(out, PromptsMsg::SaveAll);
     }
     ui.add_space(6.0);

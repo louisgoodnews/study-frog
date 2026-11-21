@@ -36,10 +36,18 @@ fn rename_row(state: &State, row: &PdfRow, ui: &mut egui::Ui, out: &mut Vec<Msg>
         let label = ui.label("New file name");
         ui.add(TextEdit::singleline(&mut text).desired_width(260.0))
             .labelled_by(label.id);
-        if ui.button("Rename").clicked() {
+        if ui
+            .button("Rename")
+            .on_hover_text("Renames this to a new name you type.")
+            .clicked()
+        {
             send(out, LibraryMsg::DoRename);
         }
-        if ui.button("Cancel").clicked() {
+        if ui
+            .button("Cancel")
+            .on_hover_text("Closes this without making the change.")
+            .clicked()
+        {
             send(out, LibraryMsg::CancelRename);
         }
     });
@@ -58,7 +66,11 @@ fn row(state: &State, row: &PdfRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if let Some(title) = informative_title(&row.path, &row.title) {
             ui.weak(title);
         }
-        if ui.small_button("Rename").clicked() {
+        if ui
+            .small_button("Rename")
+            .on_hover_text("Renames this to a new name you type.")
+            .clicked()
+        {
             send(out, LibraryMsg::StartRename(row.path.clone()));
         }
     });
@@ -70,7 +82,11 @@ pub fn stack_section(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut V
     ui.separator();
     ui.horizontal(|ui| {
         ui.strong("PDF files");
-        if ui.button("Add PDF ...").clicked() {
+        if ui
+            .button("Add PDF ...")
+            .on_hover_text("Adds a PDF file to this stack.")
+            .clicked()
+        {
             send(out, LibraryMsg::AddTo(folder.to_owned()));
         }
     });

@@ -97,7 +97,9 @@ fn custom_scales_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     ui.strong(&scale.name);
                     ui.label(format!("({}..={}): {}", scale.min, scale.max, scale.prompt));
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                        let del = ui.button("Remove");
+                        let del = ui
+                            .button("Remove")
+                            .on_hover_text("Removes this from the list; the item itself is kept.");
                         del.widget_info(|| {
                             WidgetInfo::labeled(
                                 Role::Button,
@@ -165,7 +167,9 @@ fn add_custom_scale_form(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.add_space(6.0);
     let can_add = !draft.id.trim().is_empty() && !draft.name.trim().is_empty();
     ui.add_enabled_ui(can_add, |ui| {
-        let add_btn = ui.button("+ Add scale");
+        let add_btn = ui
+            .button("+ Add scale")
+            .on_hover_text("Adds a rating scale.");
         add_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Add custom scale"));
         if add_btn.clicked() {
             diary_msg(out, DiaryMsg::AddCustomScale(draft));

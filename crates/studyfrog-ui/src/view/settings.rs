@@ -103,7 +103,11 @@ fn transfer(_: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ("Export…", crate::transfer_ui::Tab::Export),
             ("Import…", crate::transfer_ui::Tab::Import),
         ] {
-            if ui.button(label).clicked() {
+            if ui
+                .button(label)
+                .on_hover_text("Opens the transfer dialog on this tab.")
+                .clicked()
+            {
                 let open = crate::transfer_ui::TransferMsg::Open(tab, None);
                 out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
             }

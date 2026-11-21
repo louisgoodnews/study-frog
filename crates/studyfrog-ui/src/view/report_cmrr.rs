@@ -93,6 +93,7 @@ pub fn draw(
     let label = format!("Apply recommended retention {best:.2} to {name}");
     if ui
         .add_enabled((best - current).abs() >= 0.005, egui::Button::new(label))
+        .on_hover_text("Sets the retention target to the recommended value.")
         .clicked()
     {
         let permille = (best * 1000.0).round() as u16;

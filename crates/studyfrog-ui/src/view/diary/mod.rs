@@ -55,7 +55,8 @@ fn header_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
 
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            let new_btn = crate::view::kit::primary_button(ui, "+ New entry");
+            let new_btn = crate::view::kit::primary_button(ui, "+ New entry")
+                .on_hover_text("Starts a new entry.");
             new_btn
                 .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Create new diary entry"));
             if new_btn.clicked() {

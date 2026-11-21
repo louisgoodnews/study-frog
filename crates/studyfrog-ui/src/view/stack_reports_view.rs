@@ -50,7 +50,11 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         .collect();
     crate::view::reports_leeches::lists(&leeches, &pairs, ui, out);
     ui.add_space(8.0);
-    if ui.button("Open all reports").clicked() {
+    if ui
+        .button("Open all reports")
+        .on_hover_text("Opens every report.")
+        .clicked()
+    {
         out.push(Msg::Navigate(Screen::Reports));
     }
 }

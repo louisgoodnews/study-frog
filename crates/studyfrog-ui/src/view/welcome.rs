@@ -25,10 +25,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.spinner();
             ui.label("Opening and indexing the vault…");
         });
-    } else if ui.button("Open or create a vault…").clicked() {
+    } else if ui.button("Open or create a vault…").on_hover_text("Opens a vault, or creates one in a new folder.").clicked() {
         out.push(Msg::Modal(ModalMsg::OpenVault));
     }
-    if !state.opening && ui.button("Restore from a backup…").clicked() {
+    if !state.opening && ui.button("Restore from a backup…").on_hover_text("Restores the vault from a backup file you choose.").clicked() {
         out.push(Msg::Backup(BackupMsg::Choose));
     }
     if let Some(c) = &state.backup.chosen {
@@ -44,7 +44,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.strong("Recent vaults");
         for path in &state.app.recent {
             if ui
-                .add_enabled(!state.opening, egui::Button::new(path.as_str()))
+                .add_enabled(!state.opening, egui::Button::new(path.as_str())).on_hover_text("Opens this recent vault.")
                 .clicked()
             {
                 out.push(Msg::OpenRecent(path.clone()));

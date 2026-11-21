@@ -42,7 +42,7 @@ pub(super) fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             _ => None,
         };
         ui.menu_button("More…", |ui| {
-            if ui.button("Import…").clicked() {
+            if ui.button("Import…").on_hover_text("Opens the import dialog: pick a file or folder and see what it holds before importing.").clicked() {
                 let open = crate::transfer_ui::TransferMsg::Open(
                     crate::transfer_ui::Tab::Import,
                     scope.clone(),
@@ -50,7 +50,7 @@ pub(super) fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
                 ui.close();
             }
-            if ui.button("Export…").clicked() {
+            if ui.button("Export…").on_hover_text("Opens the export dialog: choose a format and where to write the file.").clicked() {
                 let open = crate::transfer_ui::TransferMsg::Open(
                     crate::transfer_ui::Tab::Export,
                     scope.clone(),
@@ -58,12 +58,12 @@ pub(super) fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
                 ui.close();
             }
-            if can_add_from_extension(state) && ui.button("Add from extension…").clicked() {
+            if can_add_from_extension(state) && ui.button("Add from extension…").on_hover_text("Adds cards from a card type or importer that an extension provides.").clicked() {
                 out.push(Msg::Modal(crate::modal::ModalMsg::OpenImport));
                 ui.close();
             }
             crate::view::library_keys::button(state, ui, out);
-        });
+        }).response.on_hover_text("Shows more options.");
     });
     crate::view::library_keys::confirm_bar(state, ui, out);
     crate::view::library_bulk::bar(state, ui, out);
@@ -124,10 +124,18 @@ pub(super) fn due_row(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             None => ("No due date".to_owned(), "Set due date"),
         };
         ui.label(RichText::new(text).color(weak));
-        if ui.small_button(button).clicked() {
+        if ui
+            .small_button(button)
+            .on_hover_text("Shows or sets the deadline of this stack.")
+            .clicked()
+        {
             out.push(Msg::Plan(PlanMsg::StackDeadline(stack.uid)));
         }
-        if ui.small_button("Edit stack").clicked() {
+        if ui
+            .small_button("Edit stack")
+            .on_hover_text("Opens the stack's settings to change them.")
+            .clicked()
+        {
             out.push(Msg::OpenItem(stack.uid));
         }
     });
@@ -150,7 +158,11 @@ pub(super) fn child_stacks(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>)
     ui.horizontal_wrapped(|ui| {
         ui.weak("Stacks inside:");
         for c in children {
-            if ui.button(&c.title).clicked() {
+            if ui
+                .button(&c.title)
+                .on_hover_text("Opens this sub-stack.")
+                .clicked()
+            {
                 out.push(Msg::Select(Selection::Stack(c.folder.clone())));
             }
         }

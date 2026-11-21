@@ -41,11 +41,16 @@ pub fn staged(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                         !under_review,
                         egui::Button::new(format!("Review \"{}\"", p.summary)),
                     )
+                    .on_hover_text("Reviews this proposed change: approve it or leave it out.")
                     .clicked()
                 {
                     send(out, McpMsg::Review(p.id.clone()));
                 }
-                if ui.button(format!("Discard \"{}\"", p.summary)).clicked() {
+                if ui
+                    .button(format!("Discard \"{}\"", p.summary))
+                    .on_hover_text("Throws away this.")
+                    .clicked()
+                {
                     send(out, McpMsg::Discard(p.id.clone()));
                 }
             });
@@ -57,7 +62,11 @@ pub fn staged(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     for (id, label, _) in &m.undo {
         ui.horizontal(|ui| {
             ui.label(label);
-            if ui.small_button(format!("Undo: {label}")).clicked() {
+            if ui
+                .small_button(format!("Undo: {label}"))
+                .on_hover_text("Undoes this change.")
+                .clicked()
+            {
                 send(out, McpMsg::Undo(id.clone()));
             }
         });

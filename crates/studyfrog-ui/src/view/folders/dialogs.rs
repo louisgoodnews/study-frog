@@ -39,7 +39,7 @@ fn draw_new_folder(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
 
             ui.horizontal(|ui| {
-                let create_btn = ui.button("Create");
+                let create_btn = ui.button("Create").on_hover_text("Creates it.");
                 create_btn
                     .clone()
                     .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Create folder"));
@@ -47,7 +47,9 @@ fn draw_new_folder(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     out.push(Msg::Folders(FoldersMsg::CommitNewFolder));
                 }
 
-                let cancel_btn = ui.button("Cancel");
+                let cancel_btn = ui
+                    .button("Cancel")
+                    .on_hover_text("Closes this without making the change.");
                 cancel_btn.clone().widget_info(|| {
                     WidgetInfo::labeled(Role::Button, true, "Cancel folder creation")
                 });
@@ -73,7 +75,9 @@ fn draw_confirm_move(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.label(msg);
 
             ui.horizontal(|ui| {
-                let confirm_btn = ui.button("Confirm Move");
+                let confirm_btn = ui
+                    .button("Confirm Move")
+                    .on_hover_text("Moves the reviews as shown.");
                 confirm_btn
                     .clone()
                     .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Confirm move"));
@@ -81,7 +85,9 @@ fn draw_confirm_move(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     out.push(Msg::Folders(FoldersMsg::ConfirmMove));
                 }
 
-                let cancel_btn = ui.button("Cancel");
+                let cancel_btn = ui
+                    .button("Cancel")
+                    .on_hover_text("Closes this without making the change.");
                 cancel_btn
                     .clone()
                     .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Cancel move"));
@@ -107,7 +113,9 @@ fn draw_confirm_delete(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.label(msg);
 
             ui.horizontal(|ui| {
-                let delete_btn = ui.button("Delete");
+                let delete_btn = ui
+                    .button("Delete")
+                    .on_hover_text("Deletes the selected item after you confirm.");
                 delete_btn
                     .clone()
                     .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Confirm delete"));
@@ -115,7 +123,9 @@ fn draw_confirm_delete(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     out.push(Msg::Folders(FoldersMsg::ConfirmDelete));
                 }
 
-                let cancel_btn = ui.button("Cancel");
+                let cancel_btn = ui
+                    .button("Cancel")
+                    .on_hover_text("Closes this without making the change.");
                 cancel_btn
                     .clone()
                     .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Cancel delete"));
@@ -167,7 +177,9 @@ fn draw_move_picker(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
 
             ui.horizontal(|ui| {
-                let move_btn = ui.button("Move");
+                let move_btn = ui
+                    .button("Move")
+                    .on_hover_text("Moves this to another place.");
                 move_btn
                     .clone()
                     .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Move entry"));
@@ -175,7 +187,9 @@ fn draw_move_picker(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     out.push(Msg::Folders(FoldersMsg::CommitMove));
                 }
 
-                let cancel_btn = ui.button("Cancel");
+                let cancel_btn = ui
+                    .button("Cancel")
+                    .on_hover_text("Closes this without making the change.");
                 cancel_btn.clone().widget_info(|| {
                     WidgetInfo::labeled(Role::Button, true, "Cancel move destination")
                 });

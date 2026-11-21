@@ -37,10 +37,17 @@ pub fn confirm_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             "Give the {n} stacks and items without a key their key (STACK_1, FLASHCARD_1, NOTE_1, \
              QUESTION_1, ...)? A `key:` line is added to each file; Undo takes it back."
         ));
-        if kit::primary_button(ui, "Assign keys").clicked() {
+        if kit::primary_button(ui, "Assign keys")
+            .on_hover_text("Gives every item without a key a key.")
+            .clicked()
+        {
             send(out, BulkMsg::AssignKeys);
         }
-        if ui.button("Cancel").clicked() {
+        if ui
+            .button("Cancel")
+            .on_hover_text("Closes this without making the change.")
+            .clicked()
+        {
             send(out, BulkMsg::AskAssignKeys(false));
         }
     });

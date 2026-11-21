@@ -97,13 +97,17 @@ fn draw_header(canvas: &CanvasState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.label(format!("{n} nodes · {e} edges · {f} frames"));
 
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if ui.button("Reset View").clicked() {
+            if ui
+                .button("Reset View")
+                .on_hover_text("Puts the view back the way it was at the start.")
+                .clicked()
+            {
                 out.push(Msg::Canvas(CanvasMsg::ResetView));
             }
-            if ui.button("－").clicked() {
+            if ui.button("－").on_hover_text("Zooms out.").clicked() {
                 out.push(Msg::Canvas(CanvasMsg::Zoom(0.8)));
             }
-            if ui.button("＋").clicked() {
+            if ui.button("＋").on_hover_text("Zooms in.").clicked() {
                 out.push(Msg::Canvas(CanvasMsg::Zoom(1.25)));
             }
             ui.label(format!("{:.0}%", canvas.transform.zoom * 100.0));

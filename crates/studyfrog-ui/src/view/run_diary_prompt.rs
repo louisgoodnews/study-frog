@@ -72,7 +72,7 @@ fn draw_saved_card(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .strong(),
             );
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                let btn = ui.button("Dismiss");
+                let btn = ui.button("Dismiss").on_hover_text("Hides this message.");
                 btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Dismiss"));
                 if btn.clicked() {
                     out.push(Msg::Diary(DiaryMsg::PromptSkip));
@@ -133,7 +133,7 @@ fn draw_scale_row(
             if let Some((lbl, _)) = scale_level_label(info.id, lvl) {
                 ui.label(RichText::new(format!("— {lbl}")).color(p.accent).strong());
             }
-            let clr = ui.button("Clear");
+            let clr = ui.button("Clear").on_hover_text("Clears the entry.");
             clr.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Clear rating"));
             if clr.clicked() {
                 out.push(Msg::Diary(DiaryMsg::PromptRating(info.id.to_owned(), None)));
@@ -167,19 +167,24 @@ fn draw_reflection_input(
 
 fn draw_actions(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
-        let save_btn = kit::primary_button(ui, "Save entry (Enter)");
+        let save_btn = kit::primary_button(ui, "Save entry (Enter)")
+            .on_hover_text("Saves this diary entry (Enter).");
         save_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Save entry (Enter)"));
         if save_btn.clicked() {
             out.push(Msg::Diary(DiaryMsg::PromptSubmit));
         }
         ui.add_space(8.0);
-        let more_btn = ui.button("More details...");
+        let more_btn = ui
+            .button("More details...")
+            .on_hover_text("Shows more details.");
         more_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "More details..."));
         if more_btn.clicked() {
             out.push(Msg::Diary(DiaryMsg::PromptExpand));
         }
         ui.add_space(8.0);
-        let skip_btn = ui.button("Skip (Esc)");
+        let skip_btn = ui
+            .button("Skip (Esc)")
+            .on_hover_text("Ends this step without saving (Esc).");
         skip_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Skip (Esc)"));
         if skip_btn.clicked() {
             out.push(Msg::Diary(DiaryMsg::PromptSkip));

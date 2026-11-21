@@ -91,7 +91,11 @@ pub(crate) fn key_badge(e: &Editor, ui: &mut egui::Ui) {
 fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let dirty = is_dirty(e);
     ui.horizontal(|ui| {
-        if ui.button("Back").clicked() {
+        if ui
+            .button("Back")
+            .on_hover_text("Goes back to the previous step.")
+            .clicked()
+        {
             out.push(Msg::CloseEditor);
         }
         key_pill(e, ui);
@@ -104,20 +108,35 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
             ui.menu_button("More actions", |ui| {
                 if let Some(key) = key_of(e)
-                    && ui.button("Copy key").clicked()
+                    && ui
+                        .button("Copy key")
+                        .on_hover_text("Copies the item's key to the clipboard.")
+                        .clicked()
                 {
                     ui.ctx().copy_text(key);
                     ui.close();
                 }
-                if ui.add_enabled(dirty, egui::Button::new("Revert")).clicked() {
+                if ui
+                    .add_enabled(dirty, egui::Button::new("Revert"))
+                    .on_hover_text("Discards the unsaved changes and returns to the saved text.")
+                    .clicked()
+                {
                     out.push(Msg::RevertClicked);
                     ui.close();
                 }
-                if ui.button("Reload from disk").clicked() {
+                if ui
+                    .button("Reload from disk")
+                    .on_hover_text("Replaces the text with the file as it is on disk.")
+                    .clicked()
+                {
                     out.push(Msg::ReloadClicked);
                     ui.close();
                 }
-                if ui.button("Export to PDF…").clicked() {
+                if ui
+                    .button("Export to PDF…")
+                    .on_hover_text("Writes this as a PDF file you choose.")
+                    .clicked()
+                {
                     out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Export(
                         crate::pdf_export_types::PdfExportMsg::Open(
                             studyfrog_service::pdf_export::ExportTarget::SingleItem(e.uid),
@@ -126,13 +145,23 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     ui.close();
                 }
                 if !matches!(e.doc, studyfrog_md::doc::Doc::Stack(_))
-                    && ui.button("Delete item…").clicked()
+                    && ui
+                        .button("Delete item…")
+                        .on_hover_text("Deletes this item after you confirm.")
+                        .clicked()
                 {
                     out.push(Msg::Edit(EditAction::AskDelete(true)));
                     ui.close();
                 }
-            });
-            if e.conflict && ui.button("Keep mine").clicked() {
+            })
+            .response
+            .on_hover_text("Shows the less common actions.");
+            if e.conflict
+                && ui
+                    .button("Keep mine")
+                    .on_hover_text("Keeps your version and drops the one on disk.")
+                    .clicked()
+            {
                 out.push(Msg::KeepMineClicked);
             }
         });

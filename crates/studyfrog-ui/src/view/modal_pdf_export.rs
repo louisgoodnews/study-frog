@@ -135,7 +135,9 @@ fn destination_row(form: &PdfExportState, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         if let Some(t) = text_field(ui, "Destination file (.pdf)", &text, "", 1) {
             send(out, PdfExportMsg::EditDestination(t));
         }
-        let b = ui.button("Browse…");
+        let b = ui
+            .button("Browse…")
+            .on_hover_text("Opens a dialog to pick a file or folder.");
         b.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Browse for destination file"));
         if b.clicked() {
             send(out, PdfExportMsg::BrowseDestination);
@@ -145,7 +147,9 @@ fn destination_row(form: &PdfExportState, ui: &mut egui::Ui, out: &mut Vec<Msg>)
 
 fn bottom_actions(form: &PdfExportState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
-        let cancel = ui.button("Cancel");
+        let cancel = ui
+            .button("Cancel")
+            .on_hover_text("Closes this without making the change.");
         cancel.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Cancel PDF export"));
         if cancel.clicked() {
             out.push(Msg::Modal(ModalMsg::Close));
@@ -158,7 +162,9 @@ fn bottom_actions(form: &PdfExportState, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
             } else {
                 "Export PDF"
             };
-            let submit = ui.add_enabled(can_export, egui::Button::new(label));
+            let submit = ui
+                .add_enabled(can_export, egui::Button::new(label))
+                .on_hover_text("Exports the PDF with these settings.");
             submit.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Export PDF"));
             if (submit.clicked() || (ui.input(|i| i.key_pressed(Key::Enter)) && can_export))
                 && !form.busy

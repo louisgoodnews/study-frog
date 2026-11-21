@@ -1,6 +1,8 @@
 //! The Appearance tab of the settings: theme, size, density, colours, motion, start-up and the window. Every change is
 //! stored, saved and shown at once; the sample at the end shows what the choices make of the interface.
 
+mod sections;
+pub(super) use self::sections::{defaults_section, sample_section};
 use eframe::egui::{self, Color32, RichText, Role, Sense, Stroke, WidgetInfo, vec2};
 use studyfrog_core::appearance::{
     ACCENT_LIST, Accent, Density, StartScreen, TEXT_SIZES, ThemeChoice, ZOOMS, accent_name,
@@ -82,13 +84,25 @@ pub(super) fn size_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>)
             if let Some(z) = percent_box(ui, "Interface size", &ZOOMS, a.zoom) {
                 send(out, AppearanceMsg::Zoom(z));
             }
-            if ui.button("Smaller").clicked() {
+            if ui
+                .button("Smaller")
+                .on_hover_text("Makes the text smaller.")
+                .clicked()
+            {
                 send(out, AppearanceMsg::ZoomStep(-1));
             }
-            if ui.button("Larger").clicked() {
+            if ui
+                .button("Larger")
+                .on_hover_text("Makes the text larger.")
+                .clicked()
+            {
                 send(out, AppearanceMsg::ZoomStep(1));
             }
-            if ui.button("100 %").clicked() {
+            if ui
+                .button("100 %")
+                .on_hover_text("Sets the zoom to 100 percent.")
+                .clicked()
+            {
                 send(out, AppearanceMsg::ZoomReset);
             }
         });
@@ -201,33 +215,4 @@ pub(super) fn startup_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Ms
             "Some desktops do not tell the place of a window; then only its size is remembered.",
         );
     });
-}
-
-pub(super) fn sample_section(_: &State, ui: &mut egui::Ui, _: &mut Vec<Msg>) {
-    kit::group(ui, "Sample", |ui| {
-        let p = palette_of(ui);
-        ui.label(
-            RichText::new("A heading")
-                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                .strong(),
-        );
-        ui.label("Body text with a link:");
-        ui.hyperlink_to("a link", "https://example.org");
-        ui.horizontal(|ui| {
-            let _ = ui.button("A button");
-            let _ = kit::primary_button(ui, "The main action");
-            kit::pill(ui, "a status", p.success);
-            kit::pill(ui, "a warning", p.warning);
-            kit::pill(ui, "an error", p.danger);
-        });
-        kit::progress_with_text(ui, 0.4, "40 % of the sample", "Sample progress");
-        ui.weak("Weak text for hints.");
-    });
-}
-
-pub(super) fn defaults_section(_: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.add_space(6.0);
-    if ui.button("Restore the default appearance").clicked() {
-        send(out, AppearanceMsg::Defaults);
-    }
 }

@@ -79,6 +79,7 @@ fn suggestion(
             row.title,
             rating_name(s.rating)
         ))
+        .on_hover_text("Changes the rating of this item.")
         .clicked()
     {
         out.push(Msg::ApplySuggestion {

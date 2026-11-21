@@ -104,7 +104,10 @@ fn periods(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 fn item_history(e: &Explorer, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Scope::Item(uid) = &e.scope else { return };
     ui.add_space(8.0);
-    if kit::primary_button(ui, "Open the item").clicked() {
+    if kit::primary_button(ui, "Open the item")
+        .on_hover_text("Opens this item.")
+        .clicked()
+    {
         out.push(Msg::OpenItem(*uid));
     }
     kit::section(ui, "Every review");

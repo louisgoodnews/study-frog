@@ -17,7 +17,9 @@ fn send(out: &mut Vec<Msg>, m: NotifyMsg) {
 
 /// A button named for assistive technology with the notification it acts on, such as "Delete: Saved.".
 fn action(ui: &mut egui::Ui, (label, text): (&str, &str)) -> bool {
-    let r = ui.small_button(label);
+    let r = ui
+        .small_button(label)
+        .on_hover_text("Acts on this notification.");
     r.widget_info(|| WidgetInfo::labeled(Role::Button, true, format!("{label}: {text}")));
     r.clicked()
 }
@@ -37,10 +39,18 @@ fn filter_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
     });
     ui.horizontal(|ui| {
-        if ui.small_button("Mark all read").clicked() {
+        if ui
+            .small_button("Mark all read")
+            .on_hover_text("Marks every notification as read.")
+            .clicked()
+        {
             send(out, NotifyMsg::MarkAll(true));
         }
-        if ui.small_button("Clear all").clicked() {
+        if ui
+            .small_button("Clear all")
+            .on_hover_text("Clears everything.")
+            .clicked()
+        {
             send(out, NotifyMsg::Clear);
         }
     });

@@ -59,6 +59,7 @@ pub fn pill(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let pad = 2.0 * ui.spacing().button_padding.x;
         let text = RichText::new(label).color(palette_of(ui).accent);
         ui.add(egui::Button::new(text).min_size(egui::vec2(widest + pad, 0.0)))
+            .on_hover_text("Starts the focus timer with this length.")
     };
     egui::Popup::menu(&r)
         .close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside)
@@ -76,13 +77,26 @@ fn controls(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         } else {
             (FocusMsg::Start, "Resume the timer")
         };
-        if kit::primary_button(ui, word).clicked() {
+        if kit::primary_button(ui, word)
+            .on_hover_text("Starts or resumes the focus timer.")
+            .clicked()
+        {
             out.push(msg(go));
         }
-        if f.phase != Phase::Work && ui.button("Skip the break").clicked() {
+        if f.phase != Phase::Work
+            && ui
+                .button("Skip the break")
+                .on_hover_text("Skips the break and goes on with the run.")
+                .clicked()
+        {
             out.push(msg(FocusMsg::SkipBreak));
         }
-        if !ft::is_idle(f) && ui.button("Reset the timer").clicked() {
+        if !ft::is_idle(f)
+            && ui
+                .button("Reset the timer")
+                .on_hover_text("Sets the timer back to zero.")
+                .clicked()
+        {
             out.push(msg(FocusMsg::Reset));
         }
     });
@@ -179,13 +193,24 @@ pub fn done_card(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                         .strong(),
                 );
                 ui.horizontal_wrapped(|ui| {
-                    if kit::primary_button(ui, &format!("Start break ({brk} min)")).clicked() {
+                    if kit::primary_button(ui, &format!("Start break ({brk} min)"))
+                        .on_hover_text("Starts the break.")
+                        .clicked()
+                    {
                         out.push(msg(FocusMsg::StartBreak));
                     }
-                    if ui.button("Log in Diary…").clicked() {
+                    if ui
+                        .button("Log in Diary…")
+                        .on_hover_text("Writes this study session into the diary.")
+                        .clicked()
+                    {
                         out.push(msg(FocusMsg::LogDiary));
                     }
-                    if ui.button("Dismiss the focus card").clicked() {
+                    if ui
+                        .button("Dismiss the focus card")
+                        .on_hover_text("Hides the focus card.")
+                        .clicked()
+                    {
                         out.push(msg(FocusMsg::Dismiss));
                     }
                 });

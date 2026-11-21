@@ -60,6 +60,7 @@ pub fn wiki(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         if ui
             .add_enabled(!a.busy, egui::Button::new("Ask the assistant"))
+            .on_hover_text("Asks the assistant about this.")
             .clicked()
         {
             send(out, AgentMsg::PrepareWiki);
@@ -113,10 +114,17 @@ fn pending(state: &State, p: &Pending, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         });
         ui.horizontal(|ui| {
-            if kit::primary_button(ui, "Send").clicked() {
+            if kit::primary_button(ui, "Send")
+                .on_hover_text("Sends the message to the assistant.")
+                .clicked()
+            {
                 send(out, AgentMsg::SendWiki);
             }
-            if ui.button("Cancel").clicked() {
+            if ui
+                .button("Cancel")
+                .on_hover_text("Closes this without making the change.")
+                .clicked()
+            {
                 send(out, AgentMsg::Discard);
             }
         });
@@ -154,10 +162,17 @@ fn review(r: &crate::agent_types::Reviewing, ui: &mut egui::Ui, out: &mut Vec<Ms
         });
     }
     ui.horizontal(|ui| {
-        if kit::primary_button(ui, "Apply accepted changes").clicked() {
+        if kit::primary_button(ui, "Apply accepted changes")
+            .on_hover_text("Applies the changes you accepted.")
+            .clicked()
+        {
             send(out, AgentMsg::ApplyProposal);
         }
-        if ui.button("Discard proposal").clicked() {
+        if ui
+            .button("Discard proposal")
+            .on_hover_text("Throws away the proposed changes.")
+            .clicked()
+        {
             send(out, AgentMsg::Discard);
         }
     });
@@ -171,7 +186,7 @@ fn pdf_scope(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         let pages = if first == last { format!("page {}", first + 1) } else { format!("pages {} to {}", first + 1, last + 1) };
         ui.label(format!("Also reading {path}, {pages}. The cards and questions it proposes keep a link to the page."));
-        if ui.small_button("Stop reading it").clicked() {
+        if ui.small_button("Stop reading it").on_hover_text("Stops reading the text aloud.").clicked() {
             send(out, AgentMsg::ClearPdfPages);
         }
     });

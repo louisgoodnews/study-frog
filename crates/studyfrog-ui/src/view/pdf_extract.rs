@@ -60,6 +60,7 @@ fn form(view: &PdfView, stacks: &[StackRow], ui: &mut egui::Ui, out: &mut Vec<Ms
     }
     if ui
         .add_enabled(!view.extract.busy, egui::Button::new("Make note"))
+        .on_hover_text("Makes a note from this text.")
         .clicked()
     {
         send(out, ExtractMsg::Make);
@@ -89,7 +90,11 @@ fn pictures(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.separator();
     ui.strong("Pictures");
     ui.horizontal_wrapped(|ui| {
-        if ui.button("Save the pictures of this page").clicked() {
+        if ui
+            .button("Save the pictures of this page")
+            .on_hover_text("Saves the pictures on this page to files.")
+            .clicked()
+        {
             send(out, ExtractMsg::SavePictures);
         }
         let snap = egui::Button::selectable(view.extract.snapshot_mode, "Snapshot of a region");
@@ -110,11 +115,16 @@ fn pictures(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             );
             if ui
                 .small_button(format!("Occlusion card from {p}"))
+                .on_hover_text("Makes a picture-mask card from this part of the page.")
                 .clicked()
             {
                 out.push(Msg::Recall(make));
             }
-            if ui.small_button("Copy Markdown").clicked() {
+            if ui
+                .small_button("Copy Markdown")
+                .on_hover_text("Copies this as Markdown text.")
+                .clicked()
+            {
                 let name = p.rsplit('/').next().unwrap_or(p);
                 ui.ctx().copy_text(format!(
                     "![{}]({p})",
@@ -145,6 +155,7 @@ fn draft(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ] {
                 if ui
                     .add_enabled(!view.selection.is_empty(), egui::Button::new(label))
+                    .on_hover_text("Makes a card of this kind from the selection.")
                     .clicked()
                 {
                     out.push(Msg::Pdf(PdfMsg::Draft(DraftMsg::Start(kind, None))));
@@ -189,11 +200,16 @@ fn draft(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         if ui
             .add_enabled(!d.busy, egui::Button::new("Make it"))
+            .on_hover_text("Makes it.")
             .clicked()
         {
             out.push(Msg::Pdf(PdfMsg::Draft(DraftMsg::Create)));
         }
-        if ui.button("Cancel").clicked() {
+        if ui
+            .button("Cancel")
+            .on_hover_text("Closes this without making the change.")
+            .clicked()
+        {
             out.push(Msg::Pdf(PdfMsg::Draft(DraftMsg::Cancel)));
         }
     });

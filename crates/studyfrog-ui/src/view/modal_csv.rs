@@ -161,7 +161,11 @@ fn problems(info: &CsvInfo, can_fix: bool, ui: &mut egui::Ui, out: &mut Vec<Msg>
                 ));
             }
         });
-    if ui.button("Copy the problems for the AI").clicked() {
+    if ui
+        .button("Copy the problems for the AI")
+        .on_hover_text("Copies the problems found, to paste into the assistant.")
+        .clicked()
+    {
         ui.ctx().copy_text(ai_message(CSV_LAYOUT, &info.problems));
     }
     if can_fix

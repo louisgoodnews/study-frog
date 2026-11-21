@@ -112,7 +112,7 @@ fn render_choices(
             .min_size(Vec2::new(ui.available_width(), 36.0));
 
         if !state.is_revealed {
-            if ui.add(btn).clicked() {
+            if ui.add(btn).on_hover_text("Chooses this answer.").clicked() {
                 mcq_select_choice(state, idx);
             }
         } else {
@@ -136,7 +136,11 @@ fn render_actions(
             let btn = egui::Button::new(RichText::new("Submit answer").color(col).strong())
                 .fill(fill)
                 .min_size(Vec2::new(140.0, 36.0));
-            if ui.add_enabled(ready, btn).clicked() {
+            if ui
+                .add_enabled(ready, btn)
+                .on_hover_text("Submits your answer to this question.")
+                .clicked()
+            {
                 mcq_submit_or_next(state);
             }
             if !ready {
@@ -155,7 +159,11 @@ fn render_actions(
             let btn = egui::Button::new(RichText::new("Next question").color(p.on_accent).strong())
                 .fill(p.accent)
                 .min_size(Vec2::new(140.0, 36.0));
-            if ui.add(btn).clicked() {
+            if ui
+                .add(btn)
+                .on_hover_text("Goes to the next question.")
+                .clicked()
+            {
                 mcq_submit_or_next(state);
             }
         });
@@ -193,7 +201,11 @@ fn render_report(ui: &mut egui::Ui, state: &mut McqState, p: &Palette) {
             let btn = egui::Button::new(RichText::new("Restart Exam").color(p.on_accent).strong())
                 .fill(p.accent)
                 .min_size(Vec2::new(140.0, 36.0));
-            if ui.add(btn).clicked() {
+            if ui
+                .add(btn)
+                .on_hover_text("Starts the exam again from the beginning.")
+                .clicked()
+            {
                 *state = new_mcq_state();
             }
         } else {

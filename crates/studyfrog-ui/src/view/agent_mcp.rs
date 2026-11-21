@@ -25,7 +25,11 @@ pub fn snippet(state: &State, ui: &mut egui::Ui) {
         )
         .color(palette_of(ui).text_weak),
     );
-    if ui.button("Copy MCP server config").clicked() {
+    if ui
+        .button("Copy MCP server config")
+        .on_hover_text("Copies the configuration for this server.")
+        .clicked()
+    {
         ui.ctx()
             .copy_text(mcp_config_snippet(&program(), &vault.root));
     }

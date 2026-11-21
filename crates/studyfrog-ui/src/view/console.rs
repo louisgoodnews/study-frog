@@ -69,18 +69,18 @@ fn studio_tab_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             if ui.selectable_label(is_selected, label).clicked() {
                 out.push(Msg::Console(ConsoleMsg::StudioSelectTab(i)));
             }
-            if ui.small_button("×").clicked() {
+            if ui.small_button("×").on_hover_text("Closes this.").clicked() {
                 out.push(Msg::Console(ConsoleMsg::StudioCloseTab(i)));
             }
         }
-        if ui.button("+ Tab").clicked() {
+        if ui.button("+ Tab").on_hover_text("Opens a new tab.").clicked() {
             out.push(Msg::Console(ConsoleMsg::StudioNewTab));
         }
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if kit::primary_button(ui, "Run FrogScript").clicked() {
+            if kit::primary_button(ui, "Run FrogScript").on_hover_text("Runs the script in the active tab.").clicked() {
                 out.push(Msg::Console(ConsoleMsg::StudioRunScript));
             }
-            if kit::quiet_button(ui, "Save").clicked() {
+            if kit::quiet_button(ui, "Save").on_hover_text("Saves your changes.").clicked() {
                 out.push(Msg::Console(ConsoleMsg::StudioSaveScript(None)));
             }
             let open = state.console.studio.wiki.open;
@@ -156,7 +156,10 @@ fn output_filter_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if kit::quiet_button(ui, "Clear Output").clicked() {
+            if kit::quiet_button(ui, "Clear Output")
+                .on_hover_text("Clears the output of the script.")
+                .clicked()
+            {
                 out.push(Msg::Console(ConsoleMsg::Clear));
             }
         });
@@ -170,7 +173,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         ui.heading("Console");
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if kit::primary_button(ui, "Run Command").clicked() {
+            if kit::primary_button(ui, "Run Command")
+                .on_hover_text("Runs the command you typed.")
+                .clicked()
+            {
                 out.push(Msg::Console(ConsoleMsg::Submit));
             }
             let label = if expanded {
@@ -178,7 +184,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             } else {
                 "ScriptStudio Editor"
             };
-            if ui.button(label).clicked() {
+            if ui
+                .button(label)
+                .on_hover_text("Shows or hides the ScriptStudio editor.")
+                .clicked()
+            {
                 out.push(Msg::Console(ConsoleMsg::StudioToggleExpanded));
             }
         });

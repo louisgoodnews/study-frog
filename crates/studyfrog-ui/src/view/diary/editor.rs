@@ -27,7 +27,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         };
         ui.heading(title);
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            let cancel_btn = ui.button("Cancel");
+            let cancel_btn = ui
+                .button("Cancel")
+                .on_hover_text("Closes this without making the change.");
             cancel_btn.widget_info(|| {
                 WidgetInfo::labeled(Role::Button, true, "Cancel editing diary entry")
             });
@@ -35,7 +37,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 diary_msg(out, DiaryMsg::CloseEditor);
             }
 
-            let save_btn = crate::view::kit::primary_button(ui, "Save entry");
+            let save_btn = crate::view::kit::primary_button(ui, "Save entry")
+                .on_hover_text("Saves this diary entry.");
             save_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Save diary entry"));
             if save_btn.clicked() {
                 diary_msg(out, DiaryMsg::SaveDraft);
@@ -140,13 +143,16 @@ fn body_section(draft: &DiaryEditDraft, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn bottom_actions(draft: &DiaryEditDraft, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
-        let save_btn = crate::view::kit::primary_button(ui, "Save entry");
+        let save_btn = crate::view::kit::primary_button(ui, "Save entry")
+            .on_hover_text("Saves this diary entry.");
         save_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Save diary entry"));
         if save_btn.clicked() {
             diary_msg(out, DiaryMsg::SaveDraft);
         }
 
-        let cancel_btn = ui.button("Cancel");
+        let cancel_btn = ui
+            .button("Cancel")
+            .on_hover_text("Closes this without making the change.");
         cancel_btn
             .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Cancel editing diary entry"));
         if cancel_btn.clicked() {
@@ -155,7 +161,9 @@ fn bottom_actions(draft: &DiaryEditDraft, ui: &mut egui::Ui, out: &mut Vec<Msg>)
 
         if let Some(uid) = draft.uid {
             ui.add_space(16.0);
-            let open_btn = ui.button("Open in Markdown editor");
+            let open_btn = ui
+                .button("Open in Markdown editor")
+                .on_hover_text("Opens this in the Markdown editor.");
             open_btn.widget_info(|| {
                 WidgetInfo::labeled(Role::Button, true, "Open in full Markdown editor")
             });
@@ -163,7 +171,9 @@ fn bottom_actions(draft: &DiaryEditDraft, ui: &mut egui::Ui, out: &mut Vec<Msg>)
                 out.push(Msg::OpenItem(uid));
             }
 
-            let del_btn = ui.button("Delete entry");
+            let del_btn = ui
+                .button("Delete entry")
+                .on_hover_text("Deletes this diary entry after you confirm.");
             del_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Delete diary entry"));
             if del_btn.clicked() {
                 diary_msg(out, DiaryMsg::DeleteEntry(uid));

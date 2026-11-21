@@ -28,24 +28,40 @@ pub fn reading_speed(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         TestPhase::Reading(_) => {
             ui.group(|ui| ui.label(TEXT));
             ui.label("Read at your normal pace, then press the button.");
-            if ui.button("I have finished reading").clicked() {
+            if ui
+                .button("I have finished reading")
+                .on_hover_text("Marks this text as read.")
+                .clicked()
+            {
                 test_msg(out, ReadingTestMsg::Finish);
             }
         }
         TestPhase::Result(Some(wpm)) => {
             ui.label(format!("You read {wpm} words per minute."));
             ui.horizontal(|ui| {
-                if ui.button("Use this speed").clicked() {
+                if ui
+                    .button("Use this speed")
+                    .on_hover_text("Keeps the speed you measured.")
+                    .clicked()
+                {
                     test_msg(out, ReadingTestMsg::Save);
                 }
-                if ui.button("Discard").clicked() {
+                if ui
+                    .button("Discard")
+                    .on_hover_text("Throws away the changes and closes.")
+                    .clicked()
+                {
                     test_msg(out, ReadingTestMsg::Discard);
                 }
             });
         }
         TestPhase::Result(None) => {
             ui.label("That was too fast or too slow to be a reading test. Please try again.");
-            if ui.button("Try again").clicked() {
+            if ui
+                .button("Try again")
+                .on_hover_text("Runs the check again.")
+                .clicked()
+            {
                 test_msg(out, ReadingTestMsg::Start);
             }
         }
@@ -54,10 +70,19 @@ pub fn reading_speed(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn idle(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
-        if ui.button("Measure my reading speed").clicked() {
+        if ui
+            .button("Measure my reading speed")
+            .on_hover_text("Measures how fast you read, to set the timing.")
+            .clicked()
+        {
             test_msg(out, ReadingTestMsg::Start);
         }
-        if state.app.reading_wpm.is_some() && ui.button("Use the default speed").clicked() {
+        if state.app.reading_wpm.is_some()
+            && ui
+                .button("Use the default speed")
+                .on_hover_text("Uses the usual reading speed instead.")
+                .clicked()
+        {
             test_msg(out, ReadingTestMsg::Reset);
         }
     });

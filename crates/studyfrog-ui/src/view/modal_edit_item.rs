@@ -81,7 +81,11 @@ fn header(f: &EditCardModal, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             if icon_button(ui, Glyph::Close, "Close", false).clicked() {
                 send(out, RehearsalEditMsg::Close);
             }
-            if ui.small_button("Open in full editor ↗").clicked() {
+            if ui
+                .small_button("Open in full editor ↗")
+                .on_hover_text("Opens this in the full editor.")
+                .clicked()
+            {
                 let uid = f.uid;
                 send(out, RehearsalEditMsg::Close);
                 out.push(Msg::OpenItem(uid));
@@ -97,12 +101,18 @@ fn footer(f: &EditCardModal, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             let can_save = !f.busy && !f.title.trim().is_empty();
             let label = if f.busy { "Saving…" } else { "Save changes" };
             if ui
-                .add_enabled(can_save, |ui: &mut egui::Ui| kit::primary_button(ui, label))
+                .add_enabled(can_save, |ui: &mut egui::Ui| {
+                    kit::primary_button(ui, label).on_hover_text("Saves the changes to this item.")
+                })
                 .clicked()
             {
                 send(out, RehearsalEditMsg::Save);
             }
-            if ui.button("Cancel").clicked() {
+            if ui
+                .button("Cancel")
+                .on_hover_text("Closes this without making the change.")
+                .clicked()
+            {
                 send(out, RehearsalEditMsg::Close);
             }
         });

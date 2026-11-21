@@ -45,13 +45,25 @@ fn leech_row(r: &LeechRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
         ui.weak(facts(r));
         ui.horizontal_wrapped(|ui| {
-            if ui.button(format!("Edit or split {}", r.title)).clicked() {
+            if ui
+                .button(format!("Edit or split {}", r.title))
+                .on_hover_text("Opens this for editing, or splits it.")
+                .clicked()
+            {
                 out.push(Msg::OpenItem(r.uid));
             }
-            if ui.button(format!("Pause {}", r.title)).clicked() {
+            if ui
+                .button(format!("Pause {}", r.title))
+                .on_hover_text("Pauses this.")
+                .clicked()
+            {
                 out.push(Msg::Explorer(ExplorerMsg::Pause(r.uid)));
             }
-            if ui.button(format!("Drill {}", r.title)).clicked() {
+            if ui
+                .button(format!("Drill {}", r.title))
+                .on_hover_text("Starts a drill on this item.")
+                .clicked()
+            {
                 out.push(Msg::Explorer(ExplorerMsg::Drill(vec![r.uid])));
             }
         });
@@ -86,6 +98,7 @@ fn pair_row(p: &PairRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.horizontal_wrapped(|ui| {
             if ui
                 .button(format!("Drill {} and {} together", p.a.1, p.b.1))
+                .on_hover_text("Drills these two items together.")
                 .clicked()
             {
                 out.push(Msg::Explorer(ExplorerMsg::Drill(vec![p.a.0, p.b.0])));
@@ -93,6 +106,7 @@ fn pair_row(p: &PairRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             let open = crate::contrast::ContrastMsg::Open(vec![p.a.0, p.b.0]);
             if ui
                 .button(format!("Compare {} and {} side by side", p.a.1, p.b.1))
+                .on_hover_text("Shows these two items next to each other.")
                 .clicked()
             {
                 out.push(crate::contrast::msg(open));

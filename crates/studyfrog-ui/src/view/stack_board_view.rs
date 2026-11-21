@@ -39,12 +39,18 @@ fn card(
         }
         ui.menu_button(format!("Move {title}"), |ui| {
             for s in STATUSES.iter().filter(|s| **s != status) {
-                if ui.button(status_label(*s)).clicked() {
+                if ui
+                    .button(status_label(*s))
+                    .on_hover_text("Moves this item to this status.")
+                    .clicked()
+                {
                     move_to(out, uid, *s);
                     ui.close();
                 }
             }
-        });
+        })
+        .response
+        .on_hover_text("Moves this item.");
     });
     ui.separator();
 }

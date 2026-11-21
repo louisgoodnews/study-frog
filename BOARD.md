@@ -489,7 +489,7 @@
 | [STORY-0186](docs/issues/stories/STORY-0186-lecture-slide-driven-exam-generator.md) Lecture Slide and Script-Driven Exam Generation Engine via Local SLM (5) | backlog | 0/0 |
 | [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Mock Exam Grading Report, German University Grade Scale (1.0 - 5.0), and Chapter Analytics (3) | in_progress | 0/0 |
 | [STORY-0188](docs/issues/stories/STORY-0188-search-keyboard-shortcut.md) Keyboard Shortcut to Focus Search (Ctrl+F and /) (3) | review | 0/0 |
-| [STORY-0189](docs/issues/stories/STORY-0189-tooltips-for-text-buttons.md) Hover Explanations for Text Buttons Across the App (5) | backlog | 0/0 |
+| [STORY-0189](docs/issues/stories/STORY-0189-tooltips-for-text-buttons.md) Hover Explanations for Text Buttons Across the App (5) | review | 0/0 |
 | [STORY-0190](docs/issues/stories/STORY-0190-homework-commands-in-the-control-protocol.md) Homework commands in the control protocol (2) | review | 0/0 |
 | [STORY-0191](docs/issues/stories/STORY-0191-import-destinations-and-pdf-cards-in-the-control-protocol.md) Import destinations and PDF cards in the control protocol (3) | backlog | 0/0 |
 | [STORY-0192](docs/issues/stories/STORY-0192-search-and-tooltips-in-the-control-protocol.md) Search and tooltips in the control protocol (2) | backlog | 0/0 |

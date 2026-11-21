@@ -35,7 +35,10 @@ pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>)
                         .strong(),
                 );
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if kit::primary_button(ui, "Back to setup").clicked() {
+                    if kit::primary_button(ui, "Back to setup")
+                        .on_hover_text("Goes back to the setup of the run.")
+                        .clicked()
+                    {
                         out.push(Msg::LeaveRun);
                     }
                 });

@@ -33,15 +33,18 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         send(out, BackupMsg::IncludeKeys(keys));
     }
     ui.horizontal(|ui| {
-        let start = ui.add_enabled(
-            !b.busy && state.vault.is_some(),
-            egui::Button::new("Back up now…"),
-        );
+        let start = ui
+            .add_enabled(
+                !b.busy && state.vault.is_some(),
+                egui::Button::new("Back up now…"),
+            )
+            .on_hover_text("Makes a backup of the vault now.");
         if start.clicked() {
             send(out, BackupMsg::Start);
         }
         if ui
             .add_enabled(!b.busy, egui::Button::new("Restore from a backup…"))
+            .on_hover_text("Restores the vault from a backup file you choose.")
             .clicked()
         {
             send(out, BackupMsg::Choose);
@@ -91,10 +94,17 @@ pub(super) fn chosen(state: &State, c: &Chosen, ui: &mut egui::Ui, out: &mut Vec
             }
         }
         ui.horizontal(|ui| {
-            if kit::primary_button(ui, "Restore into a new folder…").clicked() {
+            if kit::primary_button(ui, "Restore into a new folder…")
+                .on_hover_text("Restores the backup into a new folder you choose.")
+                .clicked()
+            {
                 send(out, BackupMsg::Restore);
             }
-            if ui.button("Cancel restore").clicked() {
+            if ui
+                .button("Cancel restore")
+                .on_hover_text("Cancels the restore.")
+                .clicked()
+            {
                 send(out, BackupMsg::Dismiss);
             }
         });

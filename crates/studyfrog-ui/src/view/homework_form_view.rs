@@ -146,10 +146,16 @@ pub fn draw(state: &State, form: &HomeworkForm, ui: &mut egui::Ui, out: &mut Vec
             ui.label(RichText::new(e).italics());
         }
         ui.horizontal(|ui| {
-            if kit::primary_button(ui, "Save").clicked() {
+            if kit::primary_button(ui, "Save")
+                .on_hover_text("Saves your changes.")
+                .clicked()
+            {
                 out.push(Msg::Homework(HomeworkMsg::Save));
             }
-            if kit::quiet_button(ui, "Cancel").clicked() {
+            if kit::quiet_button(ui, "Cancel")
+                .on_hover_text("Closes this without making the change.")
+                .clicked()
+            {
                 out.push(Msg::Homework(HomeworkMsg::Close));
             }
         });

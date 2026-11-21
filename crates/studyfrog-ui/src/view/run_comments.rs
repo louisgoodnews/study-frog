@@ -28,7 +28,11 @@ pub fn draw(_state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
             ui.label(RichText::new("Card Comments").strong());
             kit::pill(ui, &format!("{}", comments.len()), pal.accent);
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                if ui.small_button("Close (C)").clicked() {
+                if ui
+                    .small_button("Close (C)")
+                    .on_hover_text("Closes this (C).")
+                    .clicked()
+                {
                     out.push(Msg::RehearsalEdit(RehearsalEditMsg::ToggleComments));
                 }
             });
@@ -94,6 +98,7 @@ fn new_comment_box(
         let enter_pressed = resp.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
         let add_clicked = ui
             .add_enabled(can_submit, egui::Button::new("Add"))
+            .on_hover_text("Adds a new entry.")
             .clicked();
 
         if can_submit && (enter_pressed || add_clicked) {

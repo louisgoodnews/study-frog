@@ -35,7 +35,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.set_width(ui.available_width());
             ui.label(RichText::new("No diary entries match the filter.").color(p.text_weak));
             ui.add_space(8.0);
-            let clear_btn = ui.button("Clear filters");
+            let clear_btn = ui
+                .button("Clear filters")
+                .on_hover_text("Removes every filter.");
             clear_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Clear filters"));
             if clear_btn.clicked() {
                 diary_msg(out, DiaryMsg::SetSearch(String::new()));
@@ -66,7 +68,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                             crate::view::kit::pill(ui, s, p.text_weak);
                         }
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                            let open_btn = ui.button("Open in Editor");
+                            let open_btn = ui
+                                .button("Open in Editor")
+                                .on_hover_text("Opens this in the Markdown editor.");
                             open_btn.widget_info(|| {
                                 WidgetInfo::labeled(
                                     Role::Button,
@@ -78,7 +82,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                                 out.push(Msg::OpenItem(entry.uid));
                             }
 
-                            let edit_btn = ui.button("Edit");
+                            let edit_btn =
+                                ui.button("Edit").on_hover_text("Opens this for editing.");
                             edit_btn.widget_info(|| {
                                 WidgetInfo::labeled(
                                     Role::Button,

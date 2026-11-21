@@ -67,7 +67,11 @@ fn new_comment_input(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .desired_width(180.0),
         );
         let valid = !draft.trim().is_empty();
-        if ui.add_enabled(valid, egui::Button::new("Add")).clicked() {
+        if ui
+            .add_enabled(valid, egui::Button::new("Add"))
+            .on_hover_text("Adds a new entry.")
+            .clicked()
+        {
             let now = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .map(|d| d.as_millis() as i64)

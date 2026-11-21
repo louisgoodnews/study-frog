@@ -163,13 +163,20 @@ fn footer(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
             let label = if f.busy { "Creating…" } else { "Create" };
             if ui
-                .add_enabled_ui(!f.busy, |ui| kit::primary_button(ui, label))
+                .add_enabled_ui(!f.busy, |ui| {
+                    kit::primary_button(ui, label)
+                        .on_hover_text("Creates the item with what you entered.")
+                })
                 .inner
                 .clicked()
             {
                 send(out, ModalMsg::Submit);
             }
-            if ui.button("Cancel").clicked() {
+            if ui
+                .button("Cancel")
+                .on_hover_text("Closes this without making the change.")
+                .clicked()
+            {
                 send(out, ModalMsg::Close);
             }
             let mut another = f.another;
@@ -188,10 +195,18 @@ fn discard_question(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.set_width(ui.available_width());
         ui.colored_label(warning, "Discard what you wrote? It will be lost.");
         ui.horizontal(|ui| {
-            if ui.button("Keep editing").clicked() {
+            if ui
+                .button("Keep editing")
+                .on_hover_text("Goes back to editing without discarding.")
+                .clicked()
+            {
                 send(out, ModalMsg::KeepEditing);
             }
-            if ui.button("Discard").clicked() {
+            if ui
+                .button("Discard")
+                .on_hover_text("Throws away the changes and closes.")
+                .clicked()
+            {
                 send(out, ModalMsg::Discard);
             }
         });

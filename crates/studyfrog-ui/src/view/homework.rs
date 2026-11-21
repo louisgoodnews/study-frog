@@ -98,10 +98,16 @@ fn row(state: &State, item: &HomeworkItem, now: LocalTime, ui: &mut egui::Ui, ou
             }
         }
         ui.horizontal(|ui| {
-            if kit::primary_button(ui, advance_label(item.status)).clicked() {
+            if kit::primary_button(ui, advance_label(item.status))
+                .on_hover_text("Moves this item to its next status.")
+                .clicked()
+            {
                 send(out, HomeworkMsg::Advance(item.id));
             }
-            if kit::quiet_button(ui, "Edit").clicked() {
+            if kit::quiet_button(ui, "Edit")
+                .on_hover_text("Opens this for editing.")
+                .clicked()
+            {
                 send(out, HomeworkMsg::EditItem(item.id));
             }
         });
@@ -127,7 +133,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 send(out, HomeworkMsg::Tab(tab));
             }
         }
-        if kit::primary_button(ui, "+ New homework").clicked() {
+        if kit::primary_button(ui, "+ New homework")
+            .on_hover_text("Starts a new homework item.")
+            .clicked()
+        {
             send(out, HomeworkMsg::New);
         }
     });

@@ -17,7 +17,11 @@ pub fn jump_button(source: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) -> bool 
     let label = format!("📖 Jump to PDF (p. {})", anchor.page);
     let btn = egui::Button::new(egui::RichText::new(label).color(p.accent).strong())
         .stroke(egui::Stroke::new(1.0, p.accent));
-    if ui.add(btn).clicked() {
+    if ui
+        .add(btn)
+        .on_hover_text("Shows the source of this card in the PDF beside it.")
+        .clicked()
+    {
         out.push(Msg::Pdf(PdfMsg::OpenCrop(anchor)));
     }
     true
@@ -34,7 +38,11 @@ pub fn source_link(source: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     let label = page.map_or("Source".to_owned(), |p| format!("Source, page {}", p + 1));
-    if ui.small_button(label).clicked() {
+    if ui
+        .small_button(label)
+        .on_hover_text("Opens the source of this card in the PDF.")
+        .clicked()
+    {
         out.push(Msg::Pdf(PdfMsg::Open(path.to_owned(), page.unwrap_or(0))));
     }
 }
@@ -99,7 +107,11 @@ fn draw_embedded_pdf_pane(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
             ui.visuals().error_fg_color,
             format!("Unable to load PDF: {err}"),
         );
-        if ui.button("Close split").clicked() {
+        if ui
+            .button("Close split")
+            .on_hover_text("Closes the split view.")
+            .clicked()
+        {
             out.push(Msg::Pdf(PdfMsg::CloseSplit));
         }
         return;

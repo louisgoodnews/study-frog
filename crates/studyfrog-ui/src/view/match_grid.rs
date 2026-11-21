@@ -34,10 +34,14 @@ fn draw_hud(session: &MatchModeSession, ui: &mut egui::Ui, out: &mut Vec<Msg>, p
         );
 
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if ui.button("Exit").clicked() {
+            if ui.button("Exit").on_hover_text("Quits the app.").clicked() {
                 out.push(Msg::Match(MatchMsg::Leave));
             }
-            if ui.button("Restart").clicked() {
+            if ui
+                .button("Restart")
+                .on_hover_text("Starts again.")
+                .clicked()
+            {
                 out.push(Msg::Match(MatchMsg::Restart));
             }
             let streak_color = if session.streak > 1 {
@@ -180,10 +184,18 @@ fn draw_victory_screen(
         ui.add_space(20.0);
         ui.horizontal(|ui| {
             ui.add_space(ui.available_width() * 0.3);
-            if ui.button("Play Again").clicked() {
+            if ui
+                .button("Play Again")
+                .on_hover_text("Starts the game again.")
+                .clicked()
+            {
                 out.push(Msg::Match(MatchMsg::Restart));
             }
-            if ui.button("Done").clicked() {
+            if ui
+                .button("Done")
+                .on_hover_text("Closes this when you have finished.")
+                .clicked()
+            {
                 out.push(Msg::Match(MatchMsg::Leave));
             }
         });

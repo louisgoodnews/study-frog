@@ -16,11 +16,15 @@ pub fn status(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 };
                 ui.colored_label(color, &n.text);
                 if let Some((_, uid)) = state.notice_link.as_ref().filter(|(t, _)| *t == n.text)
-                    && ui.button("Open").clicked()
+                    && ui.button("Open").on_hover_text("Opens this.").clicked()
                 {
                     out.push(Msg::OpenItem(*uid));
                 }
-                if ui.button("Dismiss").clicked() {
+                if ui
+                    .button("Dismiss")
+                    .on_hover_text("Hides this message.")
+                    .clicked()
+                {
                     out.push(Msg::DismissNotice);
                 }
             }

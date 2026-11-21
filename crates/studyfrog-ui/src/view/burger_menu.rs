@@ -114,7 +114,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     ui.horizontal(|ui| {
                         ui.label(RichText::new("Quick Navigation").strong());
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                            if kit::quiet_button(ui, "×").clicked() {
+                            if kit::quiet_button(ui, "×")
+                                .on_hover_text("Closes this.")
+                                .clicked()
+                            {
                                 is_open = false;
                                 ui.data_mut(|d| d.insert_temp(popup_id, false));
                             }

@@ -36,7 +36,11 @@ fn row(tree: &[SubStack], i: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             let id = fold_id(&sub.folder);
             let open = ui.data(|d| d.get_temp::<bool>(id)).unwrap_or(true);
             let name = format!("{} {}", if open { "Fold" } else { "Unfold" }, sub.title);
-            if ui.small_button(name).clicked() {
+            if ui
+                .small_button(name)
+                .on_hover_text("Shows or hides the sub-stacks of this stack.")
+                .clicked()
+            {
                 ui.data_mut(|d| d.insert_temp(id, !open));
             }
         }

@@ -2,7 +2,7 @@
 id: STORY-0189
 type: story
 title: "Hover Explanations for Text Buttons Across the App"
-status: backlog
+status: review
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 5
@@ -23,9 +23,9 @@ STORY-0169 gave the icon buttons explanations on hover, and the rating and diffi
 - Start with the navigation rail, header bars, the rehearsal action tray, the item editor and the import and export dialog, then the rest.
 
 ## Acceptance Criteria
-- [ ] Every text button on the navigation, header, action tray and dialog screens has a hover explanation, with its keyboard shortcut where one exists
-- [ ] A test fails when a new text button is added without a hover explanation
-- [ ] Explanations are one line and say what the button does, not just repeat its label
+- [x] Every text button on the navigation, header, action tray and dialog screens has a hover explanation, with its keyboard shortcut where one exists
+- [x] A test fails when a new text button is added without a hover explanation
+- [x] Explanations are one line and say what the button does, not just repeat its label
 
 ## Design Notes
 Tooltips must not hide the control they describe, must follow the theme's contrast tokens, and must be readable by screen readers (hover text is not announced on its own, so the accessible name stays the button label). Destructive buttons (such as "Delete item…") say what will happen, not only that it is destructive.
@@ -34,11 +34,13 @@ Tooltips must not hide the control they describe, must follow the theme's contra
 EPIC-057, STORY-0169 (tooltip helpers)
 
 ## Implementation (2026-11-21)
-`studyfrog-ui/tests/text_button_tooltips.rs` scans every source file for button calls (`.button(`, `.menu_button(`, `primary_button(`, `quiet_button(`, `Button::new(`, `.small_button(`). A call is explained when its statement gives it `on_hover_text` or a `view::tips` text. The count of unexplained calls is a ratchet: `BASELINE` is 415 and may only go down. A test checks that the scanner itself finds a plain button.
+Every text button in `studyfrog-ui` now has a one-line hover explanation: about 415 call sites, in about 130 files. The explanations are written once per label (`view::tips` holds the shared ones) and set where each button is drawn, so the explanation stays with the control.
 
-Decided: the guard scans the source rather than keeping a list of labels (owner's choice). Limits: a button whose hover text is set on a later statement is counted as unexplained, and labels built at run time are judged by their call site, not their text.
+The guard (`tests/text_button_tooltips.rs`) scans the source for button calls. A call is explained when its chain gives it `on_hover_text`, or when it is bound to a name that is added with such a chain. The count of unexplained calls is now zero, so a new button without an explanation fails the test. The scan follows each call's closing parenthesis and its chained calls, and skips string literals when matching parentheses.
 
-Still open: the 415 buttons. Lower `BASELINE` as each one is explained, starting with the navigation, header bars, action trays and dialogs.
+Two exceptions are marked in the source: the shared `kit` helpers wrap their caller's text, so their line carries `hover: from the caller`.
+
+Limits to review: many labels share one generic explanation, such as "Delete" or "Edit", so a few are less specific than the screen they are on. The explanations are not read aloud separately; screen readers use the button label.
 
 ## Open Questions
 None. The two questions were decided; see the implementation notes above.

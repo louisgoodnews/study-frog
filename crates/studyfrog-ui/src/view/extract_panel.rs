@@ -77,7 +77,10 @@ fn summary(panel: &ExtractPanel, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     ui.add_space(4.0);
     let ready = new + upd > 0 && !panel.busy;
-    let sync = ui.add_enabled_ui(ready, |ui| kit::primary_button(ui, "Sync cards"));
+    let sync = ui.add_enabled_ui(ready, |ui| {
+        kit::primary_button(ui, "Sync cards")
+            .on_hover_text("Makes the cards in this note match what the note says.")
+    });
     if sync.inner.clicked() {
         out.push(msg(RecallMsg::ExtractSync));
     }
@@ -93,7 +96,11 @@ pub fn panel(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.set_width(ui.available_width());
         ui.horizontal(|ui| {
             ui.label(RichText::new("Extract / Sync cards").strong());
-            if ui.small_button("Close the extraction").clicked() {
+            if ui
+                .small_button("Close the extraction")
+                .on_hover_text("Closes the extraction panel.")
+                .clicked()
+            {
                 out.push(msg(RecallMsg::ExtractClose));
             }
         });
@@ -106,7 +113,12 @@ pub fn panel(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if let Some((c, u)) = panel.done {
             ui.label(format!("Done: {c} created, {u} updated."));
             let undo = crate::library_bulk::BulkMsg::Undo;
-            if state.library.undo.is_some() && ui.button("Undo the sync").clicked() {
+            if state.library.undo.is_some()
+                && ui
+                    .button("Undo the sync")
+                    .on_hover_text("Undoes the last sync of the cards in this note.")
+                    .clicked()
+            {
                 out.push(Msg::Library(crate::library_ui::LibraryMsg::Bulk(undo)));
             }
         }

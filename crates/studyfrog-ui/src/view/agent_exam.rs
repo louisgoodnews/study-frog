@@ -31,6 +31,7 @@ pub fn exam(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         if ui
             .add_enabled(!a.busy, egui::Button::new("Start exam"))
+            .on_hover_text("Starts the exam now.")
             .clicked()
         {
             send(out, AgentMsg::StartExam);
@@ -55,6 +56,7 @@ pub fn exam(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         if ui
             .add_enabled(!a.busy, egui::Button::new("Send answer"))
+            .on_hover_text("Sends your answer.")
             .clicked()
         {
             send(out, AgentMsg::ExamSend);
@@ -78,7 +80,12 @@ pub fn exam(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     RichText::new("Recording counts these as reviews and updates your schedule.")
                         .color(weak),
                 );
-                if kit::primary_button(ui, "Record as reviews").clicked() {
+                if kit::primary_button(ui, "Record as reviews")
+                    .on_hover_text(
+                        "Records these answers as reviews, so they count for scheduling.",
+                    )
+                    .clicked()
+                {
                     send(out, AgentMsg::RecordExam);
                 }
                 ui.label("")

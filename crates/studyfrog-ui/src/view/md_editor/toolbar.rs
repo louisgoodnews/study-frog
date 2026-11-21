@@ -60,7 +60,7 @@ pub(super) fn toolbar(
         }
         ui.separator();
         for (cmd, label, tip) in TOOLS {
-            let r = ui.small_button(label);
+            let r = ui.small_button(label).on_hover_text(tip);
             r.widget_info(|| WidgetInfo::labeled(Role::Button, true, format!("{tip} in {name}")));
             if r.on_hover_text(tip).clicked() {
                 edited = Some(apply_cmd(text, selection(ui, text_id, text), cmd));
@@ -69,7 +69,9 @@ pub(super) fn toolbar(
         ui.menu_button("Colour", |ui| {
             for hue in HUES {
                 let label = hue_name(hue);
-                let r = ui.button(label);
+                let r = ui
+                    .button(label)
+                    .on_hover_text("Colours the selected text with this colour.");
                 r.widget_info(|| {
                     let what = format!("Text colour {label} in {name}");
                     WidgetInfo::labeled(Role::Button, true, what)
@@ -83,18 +85,23 @@ pub(super) fn toolbar(
         })
         .response
         .on_hover_text("Colour the selected text");
-        let macros = ui.menu_button("{ }", |ui| {
-            ui.weak("Type one; it turns into Markdown at the closing brace.");
-            for m in crate::md_macros::MACROS {
-                ui.label(format!("{}: {}", m.usage, m.help));
-            }
-        });
-        macros
+        let macros = ui
+            .menu_button("{ }", |ui| {
+                ui.weak("Type one; it turns into Markdown at the closing brace.");
+                for m in crate::md_macros::MACROS {
+                    ui.label(format!("{}: {}", m.usage, m.help));
+                }
+            })
             .response
+            .on_hover_text(
+                "Macros you can type: the name, then the closing brace, turns into Markdown.",
+            );
+        macros
             .widget_info(|| WidgetInfo::labeled(Role::Button, true, format!("Macros for {name}")));
-        macros.response.on_hover_text("Macros you can type");
         if let Some(target) = image {
-            let r = ui.small_button("Picture");
+            let r = ui
+                .small_button("Picture")
+                .on_hover_text("Adds a picture here.");
             r.widget_info(|| {
                 WidgetInfo::labeled(Role::Button, true, format!("Add a picture to {name}"))
             });

@@ -45,6 +45,7 @@ fn card_types(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.add_space(6.0);
     if ui
         .add(egui::Button::new("Add cards").min_size(vec2(110.0, 32.0)))
+        .on_hover_text("Makes cards from the text.")
         .clicked()
     {
         out.push(Msg::AddCardClicked);
@@ -73,6 +74,7 @@ fn from_file(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         if ui
             .add(egui::Button::new("Browse…").min_size(vec2(100.0, 32.0)))
+            .on_hover_text("Opens a dialog to pick a file or folder.")
             .clicked()
         {
             out.push(Msg::BrowseImportClicked);
@@ -80,6 +82,7 @@ fn from_file(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.add_space(6.0);
         if ui
             .add(egui::Button::new("Import cards").min_size(vec2(110.0, 32.0)))
+            .on_hover_text("Imports the cards from the file.")
             .clicked()
         {
             out.push(Msg::ImportClicked);

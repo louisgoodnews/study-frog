@@ -94,7 +94,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 ui.label(RichText::new(head).strong());
                 ui.label(RichText::new(text).color(weak));
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if ui.small_button(format!("Change {head}")).clicked() {
+                    if ui
+                        .small_button(format!("Change {head}"))
+                        .on_hover_text("Changes this.")
+                        .clicked()
+                    {
                         out.push(Msg::SetupStep(back));
                     }
                 });

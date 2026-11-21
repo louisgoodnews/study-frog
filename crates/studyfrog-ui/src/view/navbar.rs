@@ -146,7 +146,7 @@ fn search_cluster(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f
     }
     menus::search_results(state, ui, field.rect, out);
     // The view below owns the one accent-filled action; Create stays findable by its accent label.
-    let create = kit::quiet_button(ui, "+ Create");
+    let create = kit::quiet_button(ui, "+ Create").on_hover_text("Creates a new item.");
     if create.clicked() {
         out.push(Msg::Modal(ModalMsg::OpenCreate));
     }

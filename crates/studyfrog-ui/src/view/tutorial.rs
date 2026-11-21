@@ -58,13 +58,27 @@ pub fn panel(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 fn buttons(done: bool, last: bool, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         let next = if last { "Finish" } else { "Next step" };
-        if done && ui.button(next).clicked() {
+        if done
+            && ui
+                .button(next)
+                .on_hover_text("Goes on to the next step of the tour.")
+                .clicked()
+        {
             send(out, TutorialMsg::Next);
         }
-        if !done && ui.button("Show me where").clicked() {
+        if !done
+            && ui
+                .button("Show me where")
+                .on_hover_text("Shows where in the document this comes from.")
+                .clicked()
+        {
             send(out, TutorialMsg::Show);
         }
-        if ui.button("End tutorial").clicked() {
+        if ui
+            .button("End tutorial")
+            .on_hover_text("Ends the tutorial; it can be started again from Help.")
+            .clicked()
+        {
             send(out, TutorialMsg::Stop);
         }
     });

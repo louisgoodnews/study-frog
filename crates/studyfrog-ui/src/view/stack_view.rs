@@ -1,5 +1,7 @@
 //! The page of a stack: breadcrumb, title, status and actions on top, then its tabs.
 
+mod more;
+use self::more::more_actions;
 use eframe::egui::{self, Key, RichText};
 use studyfrog_store::overview::StackRow;
 
@@ -47,104 +49,20 @@ fn breadcrumb(stacks: &[StackRow], stack: &StackRow, ui: &mut egui::Ui, out: &mu
 
 fn actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal_wrapped(|ui| {
-        if ui.button("New item").clicked() {
+        if ui
+            .button("New item")
+            .on_hover_text("Starts a new item in this stack.")
+            .clicked()
+        {
             out.push(Msg::Modal(ModalMsg::OpenCreate));
         }
-        if kit::primary_button(ui, "Start rehearsal").clicked() {
+        if kit::primary_button(ui, "Start rehearsal")
+            .on_hover_text("Starts a rehearsal with the current settings.")
+            .clicked()
+        {
             out.push(Msg::Home(HomeMsg::RehearseStack(stack.folder.clone())));
         }
         more_actions(state, stack, ui, out);
-    });
-}
-
-/// The rarely used actions of a stack, out of the way in a menu.
-fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.menu_button("More actions", |ui| {
-        if let Some(pick) = status_menu(ui, stack.status, None) {
-            send(out, StackViewMsg::SetStatus(stack.uid, pick));
-        }
-        if ui.button("Details").clicked() {
-            out.push(Msg::OpenItem(stack.uid));
-            ui.close();
-        }
-        if ui.button("Select all items (bulk edit)").clicked() {
-            send(out, StackViewMsg::Select(StackTab::List));
-            out.push(Msg::Library(LibraryMsg::Bulk(
-                crate::library_bulk::BulkMsg::SelectAll(true),
-            )));
-            ui.close();
-        }
-        if ui.button("Import…").clicked() {
-            let open = crate::transfer_ui::TransferMsg::Open(
-                crate::transfer_ui::Tab::Import,
-                Some(stack.folder.clone()),
-            );
-            out.push(Msg::Library(LibraryMsg::Transfer(open)));
-            ui.close();
-        }
-        if ui.button("Export…").clicked() {
-            let open = crate::transfer_ui::TransferMsg::Open(
-                crate::transfer_ui::Tab::Export,
-                Some(stack.folder.clone()),
-            );
-            out.push(Msg::Library(LibraryMsg::Transfer(open)));
-            ui.close();
-        }
-        let ext = &state.extensions;
-        if !(ext.card_types.is_empty() && ext.importers.is_empty())
-            && ui.button("Add from extension…").clicked()
-        {
-            out.push(Msg::Modal(ModalMsg::OpenImport));
-            ui.close();
-        }
-        if ui.button("Export to PDF…").clicked() {
-            out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Export(
-                crate::pdf_export_types::PdfExportMsg::Open(
-                    studyfrog_service::pdf_export::ExportTarget::Stack(stack.folder.clone()),
-                ),
-            )));
-            ui.close();
-        }
-        if ui.button("Make normal folder…").clicked() {
-            out.push(Msg::Modal(ModalMsg::AskUnmark(stack.folder.clone())));
-            ui.close();
-        }
-        move_stack_menu(state, stack, ui, out);
-    });
-}
-
-fn move_stack_menu(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let Some(vault) = &state.vault else { return };
-    let targets: Vec<_> = vault
-        .overview
-        .stacks
-        .iter()
-        .filter(|s| {
-            s.folder != stack.folder
-                && !studyfrog_service::folder_ops::is_subpath_or_equal(&stack.folder, &s.folder)
-                && Some(s.folder.as_str()) != stack.parent.as_deref()
-        })
-        .collect();
-    if stack.parent.is_none() && targets.is_empty() {
-        return;
-    }
-    ui.menu_button("Move stack…", |ui| {
-        if stack.parent.is_some() && ui.button("Make standalone (top-level)").clicked() {
-            send(
-                out,
-                StackViewMsg::MoveStack(stack.folder.clone(), String::new()),
-            );
-            ui.close();
-        }
-        for s in targets {
-            if ui.button(format!("Move under {}", s.title)).clicked() {
-                send(
-                    out,
-                    StackViewMsg::MoveStack(stack.folder.clone(), s.folder.clone()),
-                );
-                ui.close();
-            }
-        }
     });
 }
 
@@ -178,12 +96,18 @@ fn tab_bar(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if shown.len() < TABS.len() {
             ui.menu_button("More", |ui| {
                 for (tab, _, label) in TABS.iter().filter(|(t, _, _)| !shown.contains(t)) {
-                    if ui.button(*label).clicked() {
+                    if ui
+                        .button(*label)
+                        .on_hover_text("Shows this tab of the stack.")
+                        .clicked()
+                    {
                         send(out, StackViewMsg::Select(*tab));
                         ui.close();
                     }
                 }
-            });
+            })
+            .response
+            .on_hover_text("Shows more options.");
         }
     });
     if ui.ctx().egui_wants_keyboard_input() {

@@ -32,7 +32,7 @@ pub fn primary_button(ui: &mut egui::Ui, text: &str) -> egui::Response {
     let p = palette_of(ui);
     crate::theme_space::note_primary(ui.ctx());
     ui.add(
-        Button::new(RichText::new(text).color(p.on_accent).strong())
+        Button::new(RichText::new(text).color(p.on_accent).strong()) // hover: from the caller
             .fill(p.accent)
             .min_size(vec2(
                 0.0,
@@ -45,7 +45,7 @@ pub fn primary_button(ui: &mut egui::Ui, text: &str) -> egui::Response {
 /// accent. It does not count as the view's one accent-filled primary action.
 pub fn quiet_button(ui: &mut egui::Ui, text: &str) -> egui::Response {
     let p = palette_of(ui);
-    ui.add(Button::new(RichText::new(text).color(p.accent).strong()))
+    ui.add(Button::new(RichText::new(text).color(p.accent).strong())) // hover: from the caller
 }
 
 /// A big number with a caption under it.

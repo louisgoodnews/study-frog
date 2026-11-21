@@ -28,7 +28,11 @@ fn format_entry(ui: &mut egui::Ui, i: usize, out: &mut Vec<Msg>) {
             )
             .wrap(),
         );
-        if ui.button(format!("Save example ({})", ex.file)).clicked() {
+        if ui
+            .button(format!("Save example ({})", ex.file))
+            .on_hover_text("Saves the example file to a folder you choose.")
+            .clicked()
+        {
             out.push(Msg::Library(LibraryMsg::Transfer(
                 TransferMsg::SaveExample(i),
             )));
@@ -52,7 +56,11 @@ fn prompt_buttons(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.ctx()
                 .copy_text(studyfrog_service::prompts::prompt_of(p).text);
         }
-        if ui.button("More prompts…").clicked() {
+        if ui
+            .button("More prompts…")
+            .on_hover_text("Shows more prompts.")
+            .clicked()
+        {
             out.push(Msg::Agent(AgentMsg::Tab(AgentTab::Prompts)));
             out.push(Msg::Modal(ModalMsg::Close));
             out.push(Msg::Navigate(Screen::Agent));

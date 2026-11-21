@@ -17,7 +17,7 @@ pub fn draw_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let new_note = ui.button("New note");
+    let new_note = ui.button("New note").on_hover_text("Starts a new note.");
     new_note
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "New note"));
@@ -27,7 +27,7 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.close();
     }
 
-    let new_folder = ui.button("New folder");
+    let new_folder = ui.button("New folder").on_hover_text("Makes a new folder.");
     new_folder
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "New folder"));
@@ -40,7 +40,9 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.separator();
 
     if row.is_stack {
-        let unmark = ui.button("Convert to normal folder");
+        let unmark = ui
+            .button("Convert to normal folder")
+            .on_hover_text("Turns this stack back into a normal folder.");
         unmark
             .clone()
             .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Convert to normal folder"));
@@ -49,7 +51,9 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.close();
         }
     } else {
-        let mark = ui.button("Mark as stack folder");
+        let mark = ui
+            .button("Mark as stack folder")
+            .on_hover_text("Makes this folder a stack.");
         mark.clone()
             .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Mark as stack folder"));
         if mark.clicked() {
@@ -58,7 +62,9 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
     }
 
-    let show_items = ui.button("Show in Items");
+    let show_items = ui
+        .button("Show in Items")
+        .on_hover_text("Shows this in the item list.");
     show_items
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Show in Items"));
@@ -70,7 +76,9 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
     ui.separator();
 
-    let rename = ui.button("Rename");
+    let rename = ui
+        .button("Rename")
+        .on_hover_text("Renames this to a new name you type.");
     rename
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Rename folder"));
@@ -79,7 +87,9 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.close();
     }
 
-    let move_to = ui.button("Move to…");
+    let move_to = ui
+        .button("Move to…")
+        .on_hover_text("Moves this to a stack or folder you choose.");
     move_to
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Move folder to"));
@@ -88,7 +98,9 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.close();
     }
 
-    let delete = ui.button("Delete");
+    let delete = ui
+        .button("Delete")
+        .on_hover_text("Deletes the selected item after you confirm.");
     delete
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Delete folder"));
@@ -99,7 +111,7 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 fn draw_file_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let open = ui.button("Open");
+    let open = ui.button("Open").on_hover_text("Opens this.");
     open.clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Open file"));
     if open.clicked() {
@@ -107,7 +119,9 @@ fn draw_file_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.close();
     }
 
-    let rename = ui.button("Rename");
+    let rename = ui
+        .button("Rename")
+        .on_hover_text("Renames this to a new name you type.");
     rename
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Rename file"));
@@ -116,7 +130,9 @@ fn draw_file_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.close();
     }
 
-    let move_to = ui.button("Move to…");
+    let move_to = ui
+        .button("Move to…")
+        .on_hover_text("Moves this to a stack or folder you choose.");
     move_to
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Move file to"));
@@ -125,7 +141,9 @@ fn draw_file_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.close();
     }
 
-    let delete = ui.button("Delete");
+    let delete = ui
+        .button("Delete")
+        .on_hover_text("Deletes the selected item after you confirm.");
     delete
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Delete file"));

@@ -40,11 +40,16 @@ fn pickers(run: &PromptRun, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         send(out, PromptRunMsg::Path(text));
     }
     ui.horizontal(|ui| {
-        if ui.button("Choose file…").clicked() {
+        if ui
+            .button("Choose file…")
+            .on_hover_text("Opens a dialog to pick a file.")
+            .clicked()
+        {
             send(out, PromptRunMsg::Browse);
         }
         if ui
             .add_enabled(!run.busy, egui::Button::new("Show what will be sent"))
+            .on_hover_text("Shows the text that would be sent before you send it.")
             .clicked()
         {
             send(out, PromptRunMsg::Prepare);
@@ -93,10 +98,18 @@ fn review(
                 });
         });
     ui.horizontal(|ui| {
-        if ui.button("Send").clicked() {
+        if ui
+            .button("Send")
+            .on_hover_text("Sends the message to the assistant.")
+            .clicked()
+        {
             send(out, PromptRunMsg::Send);
         }
-        if ui.button("Don't send").clicked() {
+        if ui
+            .button("Don't send")
+            .on_hover_text("Keeps the message here without sending it.")
+            .clicked()
+        {
             send(out, PromptRunMsg::Cancel);
         }
     });
@@ -118,7 +131,11 @@ fn answer(text: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             );
         });
     ui.horizontal(|ui| {
-        if ui.button("Copy the answer").clicked() {
+        if ui
+            .button("Copy the answer")
+            .on_hover_text("Copies the answer to the clipboard.")
+            .clicked()
+        {
             ui.ctx().copy_text(text.to_owned());
         }
         if ui

@@ -32,11 +32,17 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     ui.horizontal(|ui| {
         if ui
             .add_enabled(dirty && !g.saving, egui::Button::new("Save goals"))
+            .on_hover_text("Saves the goals of this stack.")
             .clicked()
         {
             send(out, StackViewMsg::GoalsSave);
         }
-        if dirty && ui.button("Discard changes").clicked() {
+        if dirty
+            && ui
+                .button("Discard changes")
+                .on_hover_text("Throws away the unsaved changes.")
+                .clicked()
+        {
             send(out, StackViewMsg::GoalsEdited(g.saved.clone()));
         }
         if dirty {

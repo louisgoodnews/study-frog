@@ -35,7 +35,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let selected = state.diary.selected_date;
 
     ui.horizontal(|ui| {
-        let prev = ui.button("<");
+        let prev = ui
+            .button("<")
+            .on_hover_text("Goes to the month before this one.");
         prev.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Previous month"));
         if prev.clicked() {
             diary_msg(out, DiaryMsg::StepMonth(-1));
@@ -45,7 +47,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let month_label = format!("{} {}", MONTH_NAMES[m_idx], selected.year);
         ui.heading(month_label);
 
-        let next = ui.button(">");
+        let next = ui
+            .button(">")
+            .on_hover_text("Goes to the month after this one.");
         next.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Next month"));
         if next.clicked() {
             diary_msg(out, DiaryMsg::StepMonth(1));
@@ -93,16 +97,18 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     day_entries.len()
                 );
 
-                let btn = if is_selected {
-                    egui::Button::new(rich).fill(p.accent)
-                } else if !day_entries.is_empty() {
-                    egui::Button::new(rich).fill(p.surface)
-                } else {
-                    egui::Button::new(rich)
-                }
-                .min_size(vec2(col.available_width(), 28.0));
-
-                let resp = col.add(btn);
+                let resp = col
+                    .add(
+                        if is_selected {
+                            egui::Button::new(rich).fill(p.accent)
+                        } else if !day_entries.is_empty() {
+                            egui::Button::new(rich).fill(p.surface)
+                        } else {
+                            egui::Button::new(rich)
+                        }
+                        .min_size(vec2(col.available_width(), 28.0)),
+                    )
+                    .on_hover_text("Opens this day, to read or write its diary entry.");
                 resp.widget_info(|| WidgetInfo::labeled(Role::Button, true, &a11y_name));
                 if resp.clicked() {
                     diary_msg(out, DiaryMsg::SelectDate(cell_date));
@@ -123,7 +129,8 @@ fn day_entries_pane(state: &State, date: Date, ui: &mut egui::Ui, out: &mut Vec<
     ui.horizontal(|ui| {
         ui.heading(format!("Entries for {}", format_date(date)));
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            let new_btn = crate::view::kit::primary_button(ui, "+ Write entry for this day");
+            let new_btn = crate::view::kit::primary_button(ui, "+ Write entry for this day")
+                .on_hover_text("Starts a diary entry for this day.");
             new_btn.widget_info(|| {
                 WidgetInfo::labeled(
                     Role::Button,
@@ -158,7 +165,9 @@ fn day_entries_pane(state: &State, date: Date, ui: &mut egui::Ui, out: &mut Vec<
                     crate::view::kit::pill(ui, s, p.text_weak);
                 }
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    let open_btn = ui.button("Open in Editor");
+                    let open_btn = ui
+                        .button("Open in Editor")
+                        .on_hover_text("Opens this in the Markdown editor.");
                     open_btn.widget_info(|| {
                         WidgetInfo::labeled(
                             Role::Button,
@@ -170,7 +179,7 @@ fn day_entries_pane(state: &State, date: Date, ui: &mut egui::Ui, out: &mut Vec<
                         out.push(Msg::OpenItem(entry.uid));
                     }
 
-                    let edit_btn = ui.button("Edit");
+                    let edit_btn = ui.button("Edit").on_hover_text("Opens this for editing.");
                     edit_btn.widget_info(|| {
                         WidgetInfo::labeled(Role::Button, true, format!("Edit {}", entry.title))
                     });

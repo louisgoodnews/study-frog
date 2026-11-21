@@ -47,6 +47,7 @@ pub fn bar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let can = !view.selection.is_empty();
         if ui
             .add_enabled(can, egui::Button::new("Highlight selection"))
+            .on_hover_text("Highlights the selected text.")
             .clicked()
         {
             send(out, MarkMsg::Highlight);
@@ -87,7 +88,11 @@ fn entry(view: &PdfView, at: usize, mark: &PdfMark, ui: &mut egui::Ui, out: &mut
             if mark.kind == MarkKind::Highlight {
                 for (kind, label) in [(DraftKind::Card, "Card"), (DraftKind::Question, "Question")]
                 {
-                    if ui.small_button(label).clicked() {
+                    if ui
+                        .small_button(label)
+                        .on_hover_text("Starts a new draft of this kind from the selected text.")
+                        .clicked()
+                    {
                         out.push(Msg::Pdf(PdfMsg::Draft(DraftMsg::Start(
                             kind,
                             Some(mark.id),
@@ -95,7 +100,11 @@ fn entry(view: &PdfView, at: usize, mark: &PdfMark, ui: &mut egui::Ui, out: &mut
                     }
                 }
             }
-            if ui.small_button("Delete").clicked() {
+            if ui
+                .small_button("Delete")
+                .on_hover_text("Deletes the selected item after you confirm.")
+                .clicked()
+            {
                 send(out, MarkMsg::Delete(mark.id));
             }
         });

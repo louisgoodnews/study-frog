@@ -53,7 +53,11 @@ pub fn month(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec
                 .strong(),
         );
         ui.add_space(12.0);
-        if ui.button("Previous month").clicked() {
+        if ui
+            .button("Previous month")
+            .on_hover_text("Goes to the month before this one.")
+            .clicked()
+        {
             plan(out, PlanMsg::Month(-1));
         }
         ui.strong(format!(
@@ -61,10 +65,14 @@ pub fn month(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec
             MONTHS[usize::from(p.month.1) - 1],
             p.month.0
         ));
-        if ui.button("Next month").clicked() {
+        if ui
+            .button("Next month")
+            .on_hover_text("Goes to the month after this one.")
+            .clicked()
+        {
             plan(out, PlanMsg::Month(1));
         }
-        if ui.button("Today").clicked() {
+        if ui.button("Today").on_hover_text("Goes to today.").clicked() {
             plan(out, PlanMsg::Today);
         }
     });

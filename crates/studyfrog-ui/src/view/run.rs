@@ -186,15 +186,27 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
             } else {
                 "Stop (Esc)"
             };
-            if ui.button(stop).clicked() {
+            if ui
+                .button(stop)
+                .on_hover_text("Ends the run now and keeps what you answered.")
+                .clicked()
+            {
                 act(out, Action::Abort);
             }
-            if s.run.state == RunState::Running && ui.button("Pause (P)").clicked() {
+            if s.run.state == RunState::Running
+                && ui
+                    .button("Pause (P)")
+                    .on_hover_text("Pauses the timer and hides the question (P).")
+                    .clicked()
+            {
                 act(out, Action::Pause);
             }
             if s.run.mode != RunMode::Exam
                 && let Some(uid) = studyfrog_rehearsal::session::current_item(s)
-                && ui.button("Edit (Ctrl+E)").clicked()
+                && ui
+                    .button("Edit (Ctrl+E)")
+                    .on_hover_text("Opens this for editing (Ctrl+E).")
+                    .clicked()
             {
                 out.push(Msg::RehearsalEdit(
                     crate::rehearsal_edit::RehearsalEditMsg::Open(uid),

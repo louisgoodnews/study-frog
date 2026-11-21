@@ -99,10 +99,17 @@ fn hero(h: &HomeSummary, items: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             kit::stat(ui, &items.to_string(), "Items in your vault");
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                 if h.ready_today > 0 {
-                    if kit::primary_button(ui, "Start today's rehearsal").clicked() {
+                    if kit::primary_button(ui, "Start today's rehearsal")
+                        .on_hover_text("Starts a rehearsal of what is due today.")
+                        .clicked()
+                    {
                         out.push(Msg::Home(HomeMsg::StartToday));
                     }
-                } else if ui.button("Practice something else").clicked() {
+                } else if ui
+                    .button("Practice something else")
+                    .on_hover_text("Starts a different drill.")
+                    .clicked()
+                {
                     out.push(Msg::Navigate(Screen::Rehearse));
                 }
             });
@@ -177,7 +184,7 @@ fn stacks_waiting(h: &HomeSummary, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     }
                 });
                 let name = format!("Rehearse {}", s.title);
-                let button = ui.button("Rehearse");
+                let button = ui.button("Rehearse").on_hover_text("Starts a rehearsal.");
                 button.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, &name));
                 if button.clicked() {
                     out.push(Msg::Home(HomeMsg::RehearseStack(s.folder.clone())));

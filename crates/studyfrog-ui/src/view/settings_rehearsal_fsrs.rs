@@ -31,7 +31,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
     let mut metrics: Option<FsrsOptimizationMetrics> = ui.data(|d| d.get_temp(id));
 
     let btn = egui::Button::new("Optimize FSRS Parameters");
-    if ui.add(btn).clicked()
+    if ui
+        .add(btn)
+        .on_hover_text("Fits the scheduling parameters to your reviews.")
+        .clicked()
         && let Some(vault) = &state.vault
     {
         let db_path = Path::new(&vault.root)

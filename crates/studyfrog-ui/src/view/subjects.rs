@@ -57,7 +57,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     for t in &s.book.teachers {
         ui.horizontal(|ui| {
             ui.label(t);
-            if ui.small_button(format!("Remove teacher {t}")).clicked() {
+            if ui
+                .small_button(format!("Remove teacher {t}"))
+                .on_hover_text("Removes this teacher from the timetable entry.")
+                .clicked()
+            {
                 send(out, SubjectsMsg::RemoveTeacher(t.clone()));
             }
         });
@@ -68,7 +72,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if let Some(e) = &s.teacher_error {
         ui.colored_label(ui.visuals().error_fg_color, e);
     }
-    if ui.button("Add teacher").clicked() {
+    if ui
+        .button("Add teacher")
+        .on_hover_text("Adds a teacher to the timetable entry.")
+        .clicked()
+    {
         send(out, SubjectsMsg::AddTeacher);
     }
     ui.add_space(8.0);
@@ -83,6 +91,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
             if ui
                 .small_button(format!("Remove subject {}", sub.name))
+                .on_hover_text("Removes this subject from the stack.")
                 .clicked()
             {
                 send(out, SubjectsMsg::RemoveSubject(sub.name.clone()));
@@ -104,7 +113,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ) {
             send(out, SubjectsMsg::SubjectTeacher(new));
         }
-        if ui.button("Add subject").clicked() {
+        if ui
+            .button("Add subject")
+            .on_hover_text("Adds a subject to the stack.")
+            .clicked()
+        {
             send(out, SubjectsMsg::AddSubject);
         }
     });

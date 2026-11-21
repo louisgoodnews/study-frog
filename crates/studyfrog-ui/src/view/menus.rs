@@ -82,7 +82,11 @@ fn profile(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.add_space(4.0);
     let close_btn = egui::Button::new(egui::RichText::new("Close vault").color(p.danger).strong())
         .min_size(egui::vec2(ui.available_width(), 26.0));
-    if ui.add(close_btn).clicked() {
+    if ui
+        .add(close_btn)
+        .on_hover_text("Closes the vault.")
+        .clicked()
+    {
         out.push(Msg::CloseVault);
         close(out);
     }
@@ -102,7 +106,10 @@ pub fn search_results(state: &State, ui: &mut egui::Ui, field: Rect, out: &mut V
         |ui| {
             let stack = crate::item_look::stack_by_key(state, query);
             if let Some(s) = stack
-                && ui.button(format!("stack · {}", s.title)).clicked()
+                && ui
+                    .button(format!("stack · {}", s.title))
+                    .on_hover_text("Opens this stack.")
+                    .clicked()
             {
                 out.push(Msg::OpenItem(s.uid));
                 out.push(Msg::Chrome(ChromeMsg::SearchClear));
@@ -114,6 +121,7 @@ pub fn search_results(state: &State, ui: &mut egui::Ui, field: Rect, out: &mut V
             for item in &state.chrome.results {
                 if ui
                     .button(format!("{} · {}", item_kind_name(item.kind), item.title))
+                    .on_hover_text("Opens this item.")
                     .clicked()
                 {
                     out.push(Msg::OpenItem(item.uid));
@@ -136,7 +144,11 @@ fn pdf_hits(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             Some(p) => format!("PDF · {name} · page {p}\n{}", hit.snippet),
             None => format!("PDF · {name}"),
         };
-        if ui.button(label).clicked() {
+        if ui
+            .button(label)
+            .on_hover_text("Opens this PDF at the matching page.")
+            .clicked()
+        {
             let page = hit.page.map_or(0, |p| p - 1);
             out.push(Msg::Pdf(PdfMsg::Open(hit.path.clone(), page)));
             out.push(Msg::Chrome(ChromeMsg::SearchClear));

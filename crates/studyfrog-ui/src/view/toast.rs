@@ -22,7 +22,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     ui.horizontal(|ui| {
                         let text = format!("{}\n{}", toast.title, toast.detail);
                         let card = Button::new(text).min_size(vec2(300.0, 54.0)).wrap();
-                        if ui.add(card).clicked() {
+                        if ui
+                            .add(card)
+                            .on_hover_text("Opens the notification it describes.")
+                            .clicked()
+                        {
                             out.push(Msg::Modal(ModalMsg::ToastClicked(i)));
                         }
                         if icon_button(ui, Glyph::Close, "Dismiss notification", false).clicked() {

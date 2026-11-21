@@ -77,7 +77,11 @@ fn column(
                 } else {
                     (format!("Move {name} to Up next"), true)
                 };
-                if ui.small_button(label).clicked() {
+                if ui
+                    .small_button(label)
+                    .on_hover_text("Moves this item in the study queue.")
+                    .clicked()
+                {
                     move_to(out, item.uid, target);
                 }
             });

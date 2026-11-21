@@ -47,13 +47,21 @@ pub fn draw_scoped(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &m
         }
         if p.view_mode != crate::calendar_mode::CalendarViewMode::Month {
             ui.add_space(12.0);
-            if ui.button("<").clicked() {
+            if ui
+                .button("<")
+                .on_hover_text("Goes to the period before this one.")
+                .clicked()
+            {
                 plan(out, PlanMsg::ShiftPeriod(-1));
             }
-            if ui.button("Today").clicked() {
+            if ui.button("Today").on_hover_text("Goes to today.").clicked() {
                 plan(out, PlanMsg::Today);
             }
-            if ui.button(">").clicked() {
+            if ui
+                .button(">")
+                .on_hover_text("Goes to the period after this one.")
+                .clicked()
+            {
                 plan(out, PlanMsg::ShiftPeriod(1));
             }
         }
@@ -134,7 +142,10 @@ fn side(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>
         }
     }
     ui.add_space(8.0);
-    if kit::primary_button(ui, "Add to calendar").clicked() {
+    if kit::primary_button(ui, "Add to calendar")
+        .on_hover_text("Adds this to the calendar.")
+        .clicked()
+    {
         plan(out, PlanMsg::New);
     }
     ui.add_space(14.0);
@@ -204,19 +215,31 @@ fn occurrence_row(
             if s.kind == EventKind::Study
                 && ui
                     .button(format!("Start rehearsal for {}", s.title))
+                    .on_hover_text("Starts a rehearsal of this stack now.")
                     .clicked()
             {
                 plan(out, PlanMsg::Rehearse(s.id));
             }
-            if ui.small_button(format!("Edit {}", s.title)).clicked() {
+            if ui
+                .small_button(format!("Edit {}", s.title))
+                .on_hover_text("Opens this for editing.")
+                .clicked()
+            {
                 plan(out, PlanMsg::Edit(s.id));
             }
             if s.repeat != Repeat::Never
-                && ui.small_button(format!("Skip {} today", s.title)).clicked()
+                && ui
+                    .small_button(format!("Skip {} today", s.title))
+                    .on_hover_text("Skips this occurrence of the session.")
+                    .clicked()
             {
                 plan(out, PlanMsg::Skip(s.id, o.date));
             }
-            if ui.small_button(format!("Delete {}", s.title)).clicked() {
+            if ui
+                .small_button(format!("Delete {}", s.title))
+                .on_hover_text("Deletes this after you confirm.")
+                .clicked()
+            {
                 plan(out, PlanMsg::Delete(s.id));
             }
         });

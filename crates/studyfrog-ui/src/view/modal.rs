@@ -81,15 +81,24 @@ fn vault(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.add_space(6.0);
         ui.horizontal(|ui| {
             let browse_btn = egui::Button::new("Choose folder…").min_size(egui::vec2(120.0, 28.0));
-            if ui.add_enabled(!state.opening, browse_btn).clicked() {
+            if ui
+                .add_enabled(!state.opening, browse_btn)
+                .on_hover_text("Opens a dialog to pick a folder for the vault.")
+                .clicked()
+            {
                 out.push(Msg::BrowseVaultClicked);
             }
 
-            let open_btn =
-                egui::Button::new(RichText::new("Open vault").color(p.on_accent).strong())
-                    .fill(p.accent)
-                    .min_size(egui::vec2(100.0, 28.0));
-            if ui.add_enabled(!state.opening, open_btn).clicked() {
+            if ui
+                .add_enabled(
+                    !state.opening,
+                    egui::Button::new(RichText::new("Open vault").color(p.on_accent).strong())
+                        .fill(p.accent)
+                        .min_size(egui::vec2(100.0, 28.0)),
+                )
+                .on_hover_text("Opens the vault in the folder you typed.")
+                .clicked()
+            {
                 out.push(Msg::OpenVaultClicked);
             }
 
@@ -110,8 +119,15 @@ fn vault(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.add_space(4.0);
             for path in &state.app.recent {
                 let width = ui.available_width();
-                let btn = egui::Button::new(path.as_str()).min_size(egui::vec2(width, 26.0));
-                if ui.add_enabled(!state.opening, btn).clicked() {
+
+                if ui
+                    .add_enabled(
+                        !state.opening,
+                        egui::Button::new(path.as_str()).min_size(egui::vec2(width, 26.0)),
+                    )
+                    .on_hover_text("Opens this recent vault.")
+                    .clicked()
+                {
                     out.push(Msg::OpenRecent(path.clone()));
                 }
             }
@@ -135,11 +151,19 @@ fn delete_item_dialog(title: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.add_space(12.0);
     ui.horizontal(|ui| {
         let del = egui::Button::new(RichText::new("Delete").color(ui.visuals().error_fg_color));
-        if ui.add(del).clicked() {
+        if ui
+            .add(del)
+            .on_hover_text("Deletes it for good, after you confirm.")
+            .clicked()
+        {
             send(out, ModalMsg::Close);
             out.push(Msg::Edit(crate::msg::EditAction::ConfirmDelete));
         }
-        if ui.button("Cancel").clicked() {
+        if ui
+            .button("Cancel")
+            .on_hover_text("Closes this without making the change.")
+            .clicked()
+        {
             send(out, ModalMsg::Close);
         }
     });

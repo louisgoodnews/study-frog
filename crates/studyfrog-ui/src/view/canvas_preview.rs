@@ -42,12 +42,15 @@ pub fn draw_preview(ctx: &egui::Context, preview: &CardPreviewState, out: &mut V
             ui.separator();
             ui.horizontal(|ui| {
                 if let Some(uid) = parse_ulid(&preview.item_id)
-                    && ui.button("Open in Editor").clicked()
+                    && ui
+                        .button("Open in Editor")
+                        .on_hover_text("Opens this in the Markdown editor.")
+                        .clicked()
                 {
                     out.push(Msg::OpenItem(uid));
                     out.push(Msg::Canvas(CanvasMsg::ClosePreview));
                 }
-                if ui.button("Close").clicked() {
+                if ui.button("Close").on_hover_text("Closes this.").clicked() {
                     out.push(Msg::Canvas(CanvasMsg::ClosePreview));
                 }
             });

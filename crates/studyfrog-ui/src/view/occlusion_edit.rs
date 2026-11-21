@@ -59,7 +59,11 @@ pub fn section(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 set(out, Some(Occlusion { mode, ..o.clone() }));
             }
         }
-        if ui.button("Stop using occlusion").clicked() {
+        if ui
+            .button("Stop using occlusion")
+            .on_hover_text("Stops using the picture mask for this card.")
+            .clicked()
+        {
             set(out, None);
         }
     });
@@ -139,7 +143,11 @@ fn selected_row(o: &Occlusion, id: Id, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if ui.add(edit).labelled_by(label.id).changed() {
             set(out, Some(relabel(o, i, &text)));
         }
-        if ui.button(format!("Delete mask {}", i + 1)).clicked() {
+        if ui
+            .button(format!("Delete mask {}", i + 1))
+            .on_hover_text("Deletes this picture mask.")
+            .clicked()
+        {
             ui.data_mut(|d| d.remove::<usize>(id.with("selected")));
             set(out, Some(remove(o, i)));
         }

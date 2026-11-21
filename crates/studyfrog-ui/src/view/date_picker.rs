@@ -54,7 +54,11 @@ pub fn date_field(ui: &mut egui::Ui, label: &str, value: &str, today: Date) -> O
     } else {
         "Pick date"
     };
-    if ui.small_button(toggle).clicked() {
+    if ui
+        .small_button(toggle)
+        .on_hover_text("Opens the calendar to pick a day.")
+        .clicked()
+    {
         ui.data_mut(|d| d.insert_temp(id, !open));
     }
     if !open {
@@ -81,11 +85,19 @@ fn month_grid(
 ) -> Option<Date> {
     let pal = palette_of(ui);
     ui.horizontal(|ui| {
-        if ui.small_button("Earlier month").clicked() {
+        if ui
+            .small_button("Earlier month")
+            .on_hover_text("Goes to an earlier month.")
+            .clicked()
+        {
             ui.data_mut(|d| d.insert_temp(month_id, shifted(month, -1)));
         }
         ui.strong(format!("{} {}", MONTHS[usize::from(month.1) - 1], month.0));
-        if ui.small_button("Later month").clicked() {
+        if ui
+            .small_button("Later month")
+            .on_hover_text("Goes to a later month.")
+            .clicked()
+        {
             ui.data_mut(|d| d.insert_temp(month_id, shifted(month, 1)));
         }
     });
@@ -108,7 +120,7 @@ fn month_grid(
                 } else if day == today {
                     button = button.stroke(egui::Stroke::new(1.0, pal.accent));
                 }
-                let response = ui.add(button);
+                let response = ui.add(button).on_hover_text("Picks this day.");
                 response.widget_info(|| WidgetInfo::labeled(Role::Button, true, format_date(day)));
                 if response.clicked() {
                     picked = Some(day);

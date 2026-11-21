@@ -25,6 +25,7 @@ fn actions(a: &Arrange, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ] {
             if ui
                 .add_enabled(some && !a.busy, egui::Button::new(label))
+                .on_hover_text("Arranges the pages this way.")
                 .clicked()
             {
                 send(out, msg);
@@ -33,14 +34,23 @@ fn actions(a: &Arrange, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.separator();
         if ui
             .add_enabled(!a.undo.is_empty(), egui::Button::new("Undo"))
+            .on_hover_text("Undoes the last change.")
             .clicked()
         {
             send(out, ArrangeMsg::Undo);
         }
-        if ui.button("Start over").clicked() {
+        if ui
+            .button("Start over")
+            .on_hover_text("Starts again from the beginning.")
+            .clicked()
+        {
             send(out, ArrangeMsg::Reset);
         }
-        if ui.button("Add a PDF ...").clicked() {
+        if ui
+            .button("Add a PDF ...")
+            .on_hover_text("Adds a PDF file here.")
+            .clicked()
+        {
             send(out, ArrangeMsg::AddFile);
         }
     });
@@ -155,11 +165,16 @@ fn form(a: &Arrange, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         if ui
             .add_enabled(!a.busy, egui::Button::new("Save as new file"))
+            .on_hover_text("Saves the changes as a new file, keeping the old one.")
             .clicked()
         {
             send(out, ArrangeMsg::Save);
         }
-        if ui.button("Cancel").clicked() {
+        if ui
+            .button("Cancel")
+            .on_hover_text("Closes this without making the change.")
+            .clicked()
+        {
             send(out, ArrangeMsg::Cancel);
         }
     });
@@ -176,6 +191,7 @@ fn form(a: &Arrange, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             !a.busy && !a.ranges.trim().is_empty(),
             egui::Button::new("Split into files"),
         )
+        .on_hover_text("Splits this note into one file per section.")
         .clicked()
     {
         send(out, ArrangeMsg::Split);

@@ -1,5 +1,7 @@
 //! The inside of the rehearsal card: the prompt, the answer, the marks and the rating buttons.
 
+mod parts;
+use self::parts::{mark_row, reveal_controls, source_link};
 use eframe::egui::{self, Button, Color32, FontId, Key, RichText, Stroke, TextStyle, vec2};
 use studyfrog_core::event::Difficulty;
 use studyfrog_core::review::Rating;
@@ -38,7 +40,10 @@ pub(crate) fn paused(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.heading("Paused");
     ui.label("The timer is stopped and the question is hidden.");
     ui.add_space(8.0);
-    if kit::primary_button(ui, "Resume (P)").clicked() {
+    if kit::primary_button(ui, "Resume (P)")
+        .on_hover_text("Starts the timer again (P).")
+        .clicked()
+    {
         act(out, Action::Resume);
     }
 }
@@ -168,81 +173,5 @@ fn is_item_typed(run: &RunView) -> bool {
             studyfrog_rehearsal::typed_sample::is_typed_sample(run.session.run.plan.seed, uid, pct)
         }
         None => true,
-    }
-}
-
-fn reveal_controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let answering = is_item_typed(run);
-    if answering {
-        if let Some(text) = text_field(ui, "Your answer", &run.answer, "type your answer", 3) {
-            out.push(Msg::AnswerEdited(text));
-        }
-        let ready = !run.answer.trim().is_empty();
-        if ui
-            .add_enabled_ui(ready, |ui| kit::primary_button(ui, "Submit answer"))
-            .inner
-            .clicked()
-        {
-            act(out, Action::SubmitAnswer(run.answer.clone()));
-        }
-        ui.add_space(4.0);
-    }
-    ui.horizontal(|ui| {
-        let label = if answering {
-            "Show answer without answering (Space)"
-        } else {
-            "Show answer (Space)"
-        };
-        let show = if answering {
-            ui.button(label)
-        } else {
-            kit::primary_button(ui, label)
-        };
-        if show
-            .on_hover_text(crate::view::tips::show_answer())
-            .clicked()
-        {
-            act(out, Action::Flip);
-        }
-        if ui
-            .button("Skip (S)")
-            .on_hover_text(crate::view::tips::skip())
-            .clicked()
-        {
-            act(out, Action::Skip);
-        }
-    });
-}
-
-/// How hard does this item feel? The chosen mark is highlighted; the last one pressed counts.
-fn mark_row(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let chosen = crate::review::current_mark(run);
-    ui.horizontal(|ui| {
-        ui.weak("This item is:");
-        for (difficulty, label, _) in MARKS {
-            if ui
-                .selectable_label(chosen == Some(difficulty), label)
-                .on_hover_text(crate::view::tips::mark(difficulty))
-                .clicked()
-            {
-                act(out, Action::Mark(difficulty));
-            }
-        }
-        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if let Some(uid) = current_item(&run.session)
-                && ui.small_button("Edit").clicked()
-            {
-                out.push(Msg::RehearsalEdit(
-                    crate::rehearsal_edit::RehearsalEditMsg::Open(uid),
-                ));
-            }
-        });
-    });
-}
-
-/// A contextual PDF jump button or source link.
-fn source_link(content: &ItemContent, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    if let Some(source) = &content.source {
-        crate::view::pdf_split::source_link(source, ui, out);
     }
 }

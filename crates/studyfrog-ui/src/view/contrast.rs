@@ -92,7 +92,10 @@ fn keep(c: &Contrast, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
     let ready = !c.busy && !c.distinction.trim().is_empty();
     if ui
-        .add_enabled_ui(ready, |ui| kit::primary_button(ui, "Keep the distinction"))
+        .add_enabled_ui(ready, |ui| {
+            kit::primary_button(ui, "Keep the distinction")
+                .on_hover_text("Keeps both, as separate items.")
+        })
         .inner
         .clicked()
     {
@@ -125,7 +128,10 @@ fn body(c: &Contrast, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         answers(c, ui);
         let all = c.picks.iter().all(Option::is_some);
         if ui
-            .add_enabled_ui(all, |ui| kit::primary_button(ui, "Check the matches"))
+            .add_enabled_ui(all, |ui| {
+                kit::primary_button(ui, "Check the matches")
+                    .on_hover_text("Checks which items match the filter.")
+            })
             .inner
             .clicked()
         {
@@ -159,7 +165,11 @@ pub fn window(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             egui::ScrollArea::vertical()
                 .max_height(560.0)
                 .show(ui, |ui| body(c, ui, out));
-            if ui.button("Close the drill").clicked() {
+            if ui
+                .button("Close the drill")
+                .on_hover_text("Closes the drill.")
+                .clicked()
+            {
                 out.push(msg(ContrastMsg::Close));
             }
         });

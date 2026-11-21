@@ -30,7 +30,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .color(weak),
             );
             ui.add_space(4.0);
-            if ui.button("Go to Connections…").clicked() {
+            if ui
+                .button("Go to Connections…")
+                .on_hover_text("Opens the assistant's connections.")
+                .clicked()
+            {
                 send(out, AgentMsg::Tab(AgentTab::Connections));
             }
         });
@@ -42,7 +46,12 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.horizontal(|ui| {
             ui.label(RichText::new(format!("Chatting with {}", p.name)).strong());
             kit::pill(ui, &p.model, weak);
-            if !a.chat_messages.is_empty() && ui.small_button("Clear chat").clicked() {
+            if !a.chat_messages.is_empty()
+                && ui
+                    .small_button("Clear chat")
+                    .on_hover_text("Removes the messages from the chat.")
+                    .clicked()
+            {
                 send(out, AgentMsg::ChatClear);
             }
         });
@@ -110,6 +119,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let enter = ui.input(|i| i.key_pressed(Key::Enter));
         let send_clicked = ui
             .add_enabled(can_send, egui::Button::new("Send"))
+            .on_hover_text("Sends the message to the assistant.")
             .clicked();
         if can_send && (send_clicked || (resp.lost_focus() && enter)) {
             send(out, AgentMsg::ChatSend);

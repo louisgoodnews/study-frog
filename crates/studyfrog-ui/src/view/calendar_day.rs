@@ -38,7 +38,10 @@ pub fn draw(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<
                 .strong(),
         );
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if kit::primary_button(ui, "+ Add session").clicked() {
+            if kit::primary_button(ui, "+ Add session")
+                .on_hover_text("Adds a study session to the calendar.")
+                .clicked()
+            {
                 out.push(Msg::Plan(PlanMsg::New));
             }
         });
@@ -172,17 +175,31 @@ fn draw_day_card(
             if s.kind == EventKind::Study
                 && ui
                     .button(format!("Start rehearsal for {}", s.title))
+                    .on_hover_text("Starts a rehearsal of this stack now.")
                     .clicked()
             {
                 out.push(Msg::Plan(PlanMsg::Rehearse(s.id)));
             }
-            if ui.small_button("Edit").clicked() {
+            if ui
+                .small_button("Edit")
+                .on_hover_text("Opens this for editing.")
+                .clicked()
+            {
                 out.push(Msg::Plan(PlanMsg::Edit(s.id)));
             }
-            if s.repeat != Repeat::Never && ui.small_button("Skip today").clicked() {
+            if s.repeat != Repeat::Never
+                && ui
+                    .small_button("Skip today")
+                    .on_hover_text("Skips this item for today.")
+                    .clicked()
+            {
                 out.push(Msg::Plan(PlanMsg::Skip(s.id, o.date)));
             }
-            if ui.small_button("Delete").clicked() {
+            if ui
+                .small_button("Delete")
+                .on_hover_text("Deletes the selected item after you confirm.")
+                .clicked()
+            {
                 out.push(Msg::Plan(PlanMsg::Delete(s.id)));
             }
         });

@@ -30,7 +30,9 @@ pub fn controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.add_space(4.0);
     ui.horizontal(|ui| {
         let submit = ui
-            .add_enabled_ui(ready, |ui| kit::primary_button(ui, SUBMIT))
+            .add_enabled_ui(ready, |ui| {
+                kit::primary_button(ui, SUBMIT).on_hover_text("Submits your answer.")
+            })
             .inner;
         if submit.clicked() {
             out.push(Msg::RunAction(Action::SubmitAnswer(run.answer.clone())));

@@ -60,11 +60,11 @@ pub(super) fn window_buttons(ctx: &Context, f: &CreateForm, ui: &mut egui::Ui, o
         } else {
             "Enlarge the dialog"
         };
-        if ui.button(name).clicked() {
+        if ui.button(name).on_hover_text("Makes the dialog wider, or back to its normal width.").clicked() {
             set_width(ctx, f.kind, if wide { NORMAL } else { widest(ctx) });
         }
         ui.menu_button("More", |ui| {
-            if ui.button("Import…").clicked() {
+            if ui.button("Import…").on_hover_text("Opens the import dialog: pick a file or folder and see what it holds before importing.").clicked() {
                 let open = crate::transfer_ui::TransferMsg::Open(
                     crate::transfer_ui::Tab::Import,
                     f.parent.clone(),
@@ -72,14 +72,14 @@ pub(super) fn window_buttons(ctx: &Context, f: &CreateForm, ui: &mut egui::Ui, o
                 out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
                 ui.close();
             }
-            if ui.button("Add PDF ...").clicked() {
+            if ui.button("Add PDF ...").on_hover_text("Adds a PDF file to this stack.").clicked() {
                 let folder = f.parent.clone().unwrap_or_default();
                 let add = crate::pdf_library_types::LibraryMsg::AddTo(folder);
                 out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Library(add)));
                 out.push(Msg::Modal(ModalMsg::Close));
                 ui.close();
             }
-        });
+        }).response.on_hover_text("Shows more options.");
     });
 }
 

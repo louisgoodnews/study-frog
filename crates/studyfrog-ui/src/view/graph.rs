@@ -39,7 +39,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let (n, m) = (g.graph.nodes.len(), g.graph.edges.len());
     ui.horizontal(|ui| {
         ui.label(format!("{n} items, {m} links"));
-        if ui.button("Re-run layout").clicked() {
+        if ui
+            .button("Re-run layout")
+            .on_hover_text("Lays out the page again.")
+            .clicked()
+        {
             out.push(Msg::GraphRestart);
         }
         ui.weak("Drag to pan, scroll to zoom, click an item to open it.");

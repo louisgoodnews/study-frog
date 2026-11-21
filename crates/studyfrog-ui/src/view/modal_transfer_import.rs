@@ -81,6 +81,7 @@ pub fn import_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         if ui
             .add(egui::Button::new("Choose file…").min_size(vec2(110.0, 28.0)))
+            .on_hover_text("Opens a dialog to pick a file.")
             .clicked()
         {
             send(out, TransferMsg::Browse(true, false));
@@ -88,6 +89,7 @@ pub fn import_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.add_space(4.0);
         if ui
             .add(egui::Button::new("Choose folder…").min_size(vec2(120.0, 28.0)))
+            .on_hover_text("Opens a dialog to pick a folder.")
             .clicked()
         {
             send(out, TransferMsg::Browse(true, true));
@@ -95,6 +97,7 @@ pub fn import_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.add_space(8.0);
         destination_menu(state, ui, out);
         ui.add_space(8.0);
+
         let can_preview = !t.busy && !t.path.trim().is_empty();
         let preview_btn = egui::Button::new(
             RichText::new("Preview")
@@ -104,7 +107,11 @@ pub fn import_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .fill(palette_of(ui).surface_hover)
         .min_size(vec2(90.0, 28.0));
 
-        if ui.add_enabled(can_preview, preview_btn).clicked() {
+        if ui
+            .add_enabled(can_preview, preview_btn)
+            .on_hover_text("Shows what the import would do, without writing anything.")
+            .clicked()
+        {
             send(out, TransferMsg::Preview);
         }
     });

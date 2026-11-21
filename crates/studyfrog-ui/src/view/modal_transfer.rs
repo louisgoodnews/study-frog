@@ -81,6 +81,7 @@ fn mode_question(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.horizontal(|ui| {
             if ui
                 .add(egui::Button::new("Export").min_size(vec2(100.0, 32.0)))
+                .on_hover_text("Writes the data to a file you choose.")
                 .clicked()
             {
                 send(out, TransferMsg::Export);
@@ -88,6 +89,7 @@ fn mode_question(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.add_space(6.0);
             if ui
                 .add(egui::Button::new("Back").min_size(vec2(80.0, 32.0)))
+                .on_hover_text("Goes back to the previous step.")
                 .clicked()
             {
                 send(out, TransferMsg::BackToExport);
@@ -146,6 +148,7 @@ fn export_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.horizontal(|ui| {
             if ui
                 .add(egui::Button::new("Choose folder…").min_size(vec2(120.0, 32.0)))
+                .on_hover_text("Opens a dialog to pick a folder.")
                 .clicked()
             {
                 send(out, TransferMsg::Browse(false, true));
@@ -156,6 +159,9 @@ fn export_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     !t.busy,
                     egui::Button::new("Export…").min_size(vec2(100.0, 32.0)),
                 )
+                .on_hover_text(
+                    "Opens the export dialog: choose a format and where to write the file.",
+                )
                 .clicked()
             {
                 send(out, TransferMsg::AskMode);
@@ -163,6 +169,7 @@ fn export_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.add_space(6.0);
             if ui
                 .add(egui::Button::new("Export to PDF…").min_size(vec2(120.0, 32.0)))
+                .on_hover_text("Writes this as a PDF file you choose.")
                 .clicked()
             {
                 let target = studyfrog_service::pdf_export::ExportTarget::Stack(
@@ -191,7 +198,11 @@ pub fn transfer(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if ui.button("Cancel").clicked() {
+            if ui
+                .button("Cancel")
+                .on_hover_text("Closes this without making the change.")
+                .clicked()
+            {
                 out.push(Msg::Modal(ModalMsg::Close));
             }
         });

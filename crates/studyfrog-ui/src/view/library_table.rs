@@ -41,7 +41,9 @@ fn heading(state: &State, ui: &mut egui::Ui, c: Column, out: &mut Vec<Msg>) {
         ui.label(RichText::new(label).strong());
         return;
     }
-    let r = ui.add(egui::Button::new(RichText::new(label).strong()).frame(false));
+    let r = ui
+        .add(egui::Button::new(RichText::new(label).strong()).frame(false))
+        .on_hover_text("Sorts the list by this column.");
     let state_word = match arrow(&state.library.sort, c) {
         " ^" => ", sorted ascending",
         " v" => ", sorted descending",
@@ -70,7 +72,9 @@ pub fn column_menu(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 send(out, LibraryMsg::ToggleColumn(c));
             }
         }
-    });
+    })
+    .response
+    .on_hover_text("Shows or hides the columns of the list.");
 }
 
 fn tick(ui: &mut egui::Ui, on: bool, name: String) -> Option<bool> {

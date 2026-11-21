@@ -85,7 +85,9 @@ pub fn card(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 ui.label(RichText::new(&title).strong());
                 kit::pill(ui, "referenced", p.border);
                 let remove_label = format!("Remove from {title}");
-                let r = ui.small_button("Remove");
+                let r = ui
+                    .small_button("Remove")
+                    .on_hover_text("Removes this from the list; the item itself is kept.");
                 r.widget_info(|| WidgetInfo::labeled(Role::Button, true, remove_label.clone()));
                 if r.clicked() {
                     out.push(Msg::Edit(EditAction::RemoveReference(id.clone())));
@@ -123,12 +125,16 @@ fn add_menu(
     ui.menu_button("Add to stack…", |ui| {
         for s in available {
             let label = format!("Add to stack {}", s.title);
-            let r = ui.button(&s.title);
+            let r = ui
+                .button(&s.title)
+                .on_hover_text("Adds this item to this stack.");
             r.widget_info(|| WidgetInfo::labeled(Role::Button, true, label.clone()));
             if r.clicked() {
                 out.push(Msg::Edit(EditAction::AddReference(format_ulid(s.uid))));
                 ui.close();
             }
         }
-    });
+    })
+    .response
+    .on_hover_text("Adds this to a stack you choose.");
 }

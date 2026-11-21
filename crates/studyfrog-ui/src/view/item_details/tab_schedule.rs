@@ -93,14 +93,24 @@ fn edit_section(
     }
 
     ui.horizontal(|ui| {
-        if dl.is_none() && ui.button("Set due in 1 week").clicked() {
+        if dl.is_none()
+            && ui
+                .button("Set due in 1 week")
+                .on_hover_text("Sets the due date to one week from today.")
+                .clicked()
+        {
             out.push(Msg::Plan(PlanMsg::SetStackDueDate {
                 stack: e.uid,
                 date: Some(add_days(today, 7)),
                 reminders: vec![1440],
             }));
         }
-        if dl.is_some() && ui.button("Clear due date").clicked() {
+        if dl.is_some()
+            && ui
+                .button("Clear due date")
+                .on_hover_text("Removes the due date.")
+                .clicked()
+        {
             out.push(Msg::Plan(PlanMsg::SetStackDueDate {
                 stack: e.uid,
                 date: None,

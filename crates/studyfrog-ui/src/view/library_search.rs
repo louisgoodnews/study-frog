@@ -122,7 +122,11 @@ fn query_help(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     ui.horizontal_wrapped(|ui| {
         for (n, c) in complete(&lib.search.query).iter().enumerate() {
-            if ui.small_button(format!("Insert {}", c.text)).clicked() {
+            if ui
+                .small_button(format!("Insert {}", c.text))
+                .on_hover_text("Puts this into the text at the cursor.")
+                .clicked()
+            {
                 send(out, SearchMsg::Complete(n));
             }
         }

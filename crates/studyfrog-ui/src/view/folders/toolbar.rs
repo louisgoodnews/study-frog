@@ -18,7 +18,7 @@ fn sort_label(sort: SortOrder) -> &'static str {
 /// Draw the Folders toolbar.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
-        let note_btn = ui.button("+ Note");
+        let note_btn = ui.button("+ Note").on_hover_text("Starts a new note.");
         note_btn
             .clone()
             .widget_info(|| WidgetInfo::labeled(Role::Button, true, "New note"));
@@ -26,7 +26,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             out.push(Msg::Folders(FoldersMsg::StartNewNote));
         }
 
-        let folder_btn = ui.button("+ Folder");
+        let folder_btn = ui.button("+ Folder").on_hover_text("Makes a new folder.");
         folder_btn
             .clone()
             .widget_info(|| WidgetInfo::labeled(Role::Button, true, "New folder"));
@@ -59,7 +59,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
         ui.separator();
 
-        let expand_btn = ui.button("Expand");
+        let expand_btn = ui.button("Expand").on_hover_text("Shows the hidden part.");
         expand_btn
             .clone()
             .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Expand all"));
@@ -67,7 +67,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             out.push(Msg::Folders(FoldersMsg::ExpandAll));
         }
 
-        let collapse_btn = ui.button("Collapse");
+        let collapse_btn = ui.button("Collapse").on_hover_text("Hides the detail.");
         collapse_btn
             .clone()
             .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Collapse all"));

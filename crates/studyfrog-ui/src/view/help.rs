@@ -93,7 +93,11 @@ fn tree(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if state.vault.is_none() {
         ui.weak("Open a vault to keep your own pages.");
     } else {
-        if ui.button("+ New page").clicked() {
+        if ui
+            .button("+ New page")
+            .on_hover_text("Adds a new page.")
+            .clicked()
+        {
             send(out, HelpMsg::New);
         }
         if ui
@@ -120,7 +124,11 @@ fn hits(hits: &[Hit], query: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let button = egui::Button::new(text)
             .min_size(egui::vec2(width, 0.0))
             .wrap();
-        if ui.add(button).clicked() {
+        if ui
+            .add(button)
+            .on_hover_text("Opens this help page.")
+            .clicked()
+        {
             send(out, HelpMsg::Open(h.page.clone()));
         }
     }
@@ -128,13 +136,19 @@ fn hits(hits: &[Hit], query: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn top_row(state: &State, help: &HelpState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal_wrapped(|ui| {
-        if !help.back.is_empty() && ui.button("Previous page").clicked() {
+        if !help.back.is_empty()
+            && ui
+                .button("Previous page")
+                .on_hover_text("Goes to the page before this one.")
+                .clicked()
+        {
             send(out, HelpMsg::Back);
         }
         let from = help.came_from.filter(|s| *s != Screen::Help);
         if let Some(from) = from
             && ui
                 .button(format!("Back to {}", screen_name(from)))
+                .on_hover_text("Goes back to this.")
                 .clicked()
         {
             send(out, HelpMsg::Leave);
@@ -158,20 +172,36 @@ fn top_row(state: &State, help: &HelpState, ui: &mut egui::Ui, out: &mut Vec<Msg
 }
 
 fn user_actions(help: &HelpState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    if ui.button("Edit").clicked() {
+    if ui
+        .button("Edit")
+        .on_hover_text("Opens this for editing.")
+        .clicked()
+    {
         send(out, HelpMsg::Edit);
     }
     if !help.ask_delete {
-        if ui.button("Delete").clicked() {
+        if ui
+            .button("Delete")
+            .on_hover_text("Deletes the selected item after you confirm.")
+            .clicked()
+        {
             send(out, HelpMsg::AskDelete(true));
         }
         return;
     }
     ui.label("Delete this page for good?");
-    if ui.button("Delete page").clicked() {
+    if ui
+        .button("Delete page")
+        .on_hover_text("Deletes this page.")
+        .clicked()
+    {
         send(out, HelpMsg::Delete);
     }
-    if ui.button("Keep it").clicked() {
+    if ui
+        .button("Keep it")
+        .on_hover_text("Keeps it as it is.")
+        .clicked()
+    {
         send(out, HelpMsg::AskDelete(false));
     }
 }

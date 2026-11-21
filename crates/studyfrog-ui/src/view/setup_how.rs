@@ -50,7 +50,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let form = &state.rehearse.form;
     ui.horizontal_wrapped(|ui| {
         for (preset, label) in PRESETS {
-            if ui.button(label).clicked() {
+            if ui
+                .button(label)
+                .on_hover_text("Uses this preset for the run.")
+                .clicked()
+            {
                 edit(out, SetupEdit::Preset(preset));
             }
         }
@@ -69,7 +73,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 edit(out, SetupEdit::Mode(mode));
             }
         }
-        if ui.button("Match Mode Drill").clicked() {
+        if ui
+            .button("Match Mode Drill")
+            .on_hover_text("Starts a match drill.")
+            .clicked()
+        {
             out.push(Msg::Match(crate::match_ui::MatchMsg::StartFromVault));
         }
     });

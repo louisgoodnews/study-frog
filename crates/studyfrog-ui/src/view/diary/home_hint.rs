@@ -26,14 +26,15 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.horizontal(|ui| {
             ui.label(RichText::new("No diary entry yet today").color(p.text_weak));
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                let dismiss_btn = ui.button("Dismiss");
+                let dismiss_btn = ui.button("Dismiss").on_hover_text("Hides this message.");
                 dismiss_btn
                     .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Dismiss diary hint"));
                 if dismiss_btn.clicked() {
                     out.push(Msg::Diary(DiaryMsg::DismissHomeHint));
                 }
 
-                let write_btn = crate::view::kit::quiet_button(ui, "Write entry");
+                let write_btn = crate::view::kit::quiet_button(ui, "Write entry")
+                    .on_hover_text("Starts a diary entry for this day.");
                 write_btn.widget_info(|| {
                     WidgetInfo::labeled(Role::Button, true, "Write diary entry for today")
                 });

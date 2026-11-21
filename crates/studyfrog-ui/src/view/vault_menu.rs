@@ -108,6 +108,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             egui::Button::new(RichText::new("Choose folder…").color(p.accent))
                 .min_size(egui::vec2(width, 28.0)),
         )
+        .on_hover_text("Opens a dialog to pick a folder.")
         .clicked()
     {
         out.push(Msg::BrowseVaultClicked);

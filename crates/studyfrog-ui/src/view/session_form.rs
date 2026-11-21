@@ -57,10 +57,18 @@ pub fn draw(state: &State, f: &SessionForm, ui: &mut egui::Ui, out: &mut Vec<Msg
         ui.colored_label(ui.visuals().error_fg_color, e);
     }
     ui.horizontal(|ui| {
-        if ui.button("Save entry").clicked() {
+        if ui
+            .button("Save entry")
+            .on_hover_text("Saves this diary entry.")
+            .clicked()
+        {
             out.push(Msg::Plan(PlanMsg::Save));
         }
-        if ui.button("Cancel").clicked() {
+        if ui
+            .button("Cancel")
+            .on_hover_text("Closes this without making the change.")
+            .clicked()
+        {
             out.push(Msg::Plan(PlanMsg::CloseForm));
         }
     });
