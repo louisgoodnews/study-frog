@@ -64,7 +64,7 @@ pub(super) fn window_buttons(ctx: &Context, f: &CreateForm, ui: &mut egui::Ui, o
             set_width(ctx, f.kind, if wide { NORMAL } else { widest(ctx) });
         }
         ui.menu_button("More", |ui| {
-            if ui.button("Import or export…").clicked() {
+            if ui.button("Import…").clicked() {
                 let open = crate::transfer_ui::TransferMsg::Open(
                     crate::transfer_ui::Tab::Import,
                     f.parent.clone(),

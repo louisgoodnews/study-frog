@@ -130,7 +130,7 @@ fn the_import_dialog_offers_card_types_and_files_only_when_extensions_exist() {
     );
     h.get_by_label("More actions").click();
     h.run();
-    h.get_by_label("Import…").click();
+    h.get_by_label("Add from extension…").click();
     h.run();
     assert_all_named(&h, "import dialog");
     for text in [
@@ -159,7 +159,7 @@ fn the_import_dialog_offers_card_types_and_files_only_when_extensions_exist() {
     let mut h = harness(plain);
     h.run();
     assert!(
-        h.query_by_label("Import…").is_none(),
-        "without extensions there is nothing to import with"
+        h.query_by_label("Add from extension…").is_none(),
+        "without extensions there is nothing to add from"
     );
 }

@@ -5,7 +5,6 @@ use eframe::egui::{self, RichText, vec2};
 use crate::modal::ModalMsg;
 use crate::msg::{DraftField, Msg};
 use crate::state::{Selection, State};
-use crate::theme::palette_of;
 use crate::view::icons::{Glyph, icon_button};
 use crate::view::kit;
 use crate::view::widgets::text_field;
@@ -131,28 +130,5 @@ pub fn import(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 });
                 ui.add_space(8.0);
             }
-            kit::card(ui, |ui| {
-                ui.label(RichText::new("From Obsidian, Anki or Markdown folder").size(crate::typo::size(ui, crate::typo::Tier::Heading)).strong());
-                ui.add_space(4.0);
-                ui.label(RichText::new("Import complete hierarchies of notes, flashcards, questions and stacks.").color(palette_of(ui).text_weak));
-                ui.add_space(8.0);
-                let btn = egui::Button::new(
-                    RichText::new("Import notes, stacks and questions…")
-                        .strong()
-                        .color(palette_of(ui).on_accent),
-                )
-                .fill(palette_of(ui).accent)
-                .min_size(vec2(220.0, 34.0));
-
-                if ui.add(btn).clicked() {
-                    let scope = match &state.browser.selection {
-                        Selection::Stack(folder) => Some(folder.clone()),
-                        _ => None,
-                    };
-                    out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(
-                        crate::transfer_ui::TransferMsg::Open(crate::transfer_ui::Tab::Import, scope),
-                    )));
-                }
-            });
         });
 }

@@ -204,3 +204,30 @@ pub fn read_source(path: &Path) -> Result<(Bundle, &'static str), String> {
         .map(|b| (b, adapter.name))
         .map_err(|e| format!("{name}: {e}. {} expects: {}", adapter.name, adapter.layout))
 }
+
+/// What the import dialog says about a chosen path before anything is read: which importer it looks
+/// like, or that none reads it yet (PDF documents, for one). Pure: the caller says whether it is a
+/// folder.
+pub fn describe_input(path: &str, is_dir: bool) -> String {
+    let path = path.trim();
+    if path.is_empty() {
+        return String::new();
+    }
+    if is_dir {
+        return "Looks like an Obsidian vault folder.".to_owned();
+    }
+    let name = path.rsplit(['/', '\\']).next().unwrap_or(path);
+    match adapter_for(name) {
+        Some(a) => format!("Looks like {}.", a.name),
+        None => {
+            let known: Vec<&str> = ADAPTERS
+                .iter()
+                .flat_map(|a| a.extensions.iter().copied())
+                .collect();
+            format!(
+                "{name} is not a file an importer reads yet. Supported: {}, or an Obsidian vault folder.",
+                known.join(", ")
+            )
+        }
+    }
+}

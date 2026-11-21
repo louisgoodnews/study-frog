@@ -23,6 +23,11 @@ pub fn import_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if let Some(text) = text_field(ui, "File or folder to import", &t.path, "/path/to/file", 1) {
         send(out, TransferMsg::Path(text));
     }
+    if !t.path.trim().is_empty() {
+        let is_dir = std::path::Path::new(t.path.trim()).is_dir();
+        let described = studyfrog_service::xfer_adapters::describe_input(&t.path, is_dir);
+        ui.weak(described);
+    }
 
     ui.add_space(4.0);
     ui.horizontal(|ui| {

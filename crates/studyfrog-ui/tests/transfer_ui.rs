@@ -41,7 +41,7 @@ fn the_dialog_opens_from_the_stack_page_the_create_dialog_and_settings() {
     h.run_steps(4);
     h.get_by_label("More actions").click();
     h.run_steps(4);
-    h.get_by_label("Import or export…").click();
+    h.get_by_label("Export…").click();
     h.run_steps(4);
     assert!(matches!(h.state().0.state.modal, Some(Modal::Transfer)));
     let s = &h.state().0.state.transfer;
@@ -54,7 +54,7 @@ fn the_dialog_opens_from_the_stack_page_the_create_dialog_and_settings() {
     h.run_steps(8);
     h.get_by_label("More").click();
     h.run_steps(4);
-    h.get_by_label("Import or export…").click();
+    h.get_by_label("Import…").click();
     h.run_steps(4);
     assert!(matches!(h.state().0.state.modal, Some(Modal::Transfer)));
     assert_eq!(h.state().0.state.transfer.tab, Tab::Import);

@@ -22,8 +22,9 @@ fn heading(state: &State) -> String {
     }
 }
 
-/// Whether an extension offers a way to import, and a stack is open to import into.
-fn can_import(state: &State) -> bool {
+/// Whether an extension offers a way to add cards from a file or type, and a stack is open to add
+/// them to.
+fn can_add_from_extension(state: &State) -> bool {
     let ext = &state.extensions;
     matches!(state.browser.selection, Selection::Stack(_))
         && !(ext.card_types.is_empty() && ext.importers.is_empty())
@@ -36,17 +37,24 @@ pub(super) fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.label(crate::view::library_table::count_line(state));
         crate::view::library_table::column_menu(state, ui, out);
         crate::view::library_bulk::filters_menu(state, ui, out);
-        if can_import(state) && ui.button("Import…").clicked() {
-            out.push(Msg::Modal(crate::modal::ModalMsg::OpenImport));
+        let scope = match &state.browser.selection {
+            Selection::Stack(folder) => Some(folder.clone()),
+            _ => None,
+        };
+        if ui.button("Import…").clicked() {
+            let open = crate::transfer_ui::TransferMsg::Open(
+                crate::transfer_ui::Tab::Import,
+                scope.clone(),
+            );
+            out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
         }
-        if ui.button("Import or export…").clicked() {
-            let scope = match &state.browser.selection {
-                Selection::Stack(folder) => Some(folder.clone()),
-                _ => None,
-            };
-            out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(
-                crate::transfer_ui::TransferMsg::Open(crate::transfer_ui::Tab::Import, scope),
-            )));
+        if ui.button("Export…").clicked() {
+            let open =
+                crate::transfer_ui::TransferMsg::Open(crate::transfer_ui::Tab::Export, scope);
+            out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
+        }
+        if can_add_from_extension(state) && ui.button("Add from extension…").clicked() {
+            out.push(Msg::Modal(crate::modal::ModalMsg::OpenImport));
         }
         crate::view::library_keys::button(state, ui, out);
     });
