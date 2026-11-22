@@ -65,9 +65,17 @@ pub fn draw(ui: &mut egui::Ui, cs: &CaseUi, out: &mut Vec<Msg>) {
         }
         close(ui, out);
     });
+    if cs.pending {
+        ui.add_space(8.0);
+        ui.label("The local model is checking the justification…");
+    }
+    if let Some(note) = &cs.note {
+        let pal = palette_of(ui);
+        ui.colored_label(pal.warning, note);
+    }
     if let Some(report) = &cs.report {
         ui.add_space(12.0);
-        report_view(ui, report, &case.rubric_criteria);
+        report_view(ui, report, &case.rubric_criteria, cs.checked_by_model);
     }
 }
 
@@ -106,7 +114,7 @@ fn verdict(report: &EvalReport, pal: &crate::theme::Palette) -> (&'static str, C
     }
 }
 
-fn report_view(ui: &mut egui::Ui, report: &EvalReport, rubric: &[String]) {
+fn report_view(ui: &mut egui::Ui, report: &EvalReport, rubric: &[String], by_model: bool) {
     let pal = palette_of(ui);
     let (status, color) = verdict(report, &pal);
     ui.horizontal_wrapped(|ui| {
@@ -118,6 +126,12 @@ fn report_view(ui: &mut egui::Ui, report: &EvalReport, rubric: &[String]) {
             kit::pill(ui, "Choice: not the expected one", pal.danger);
         }
     });
+    let source = if by_model {
+        "Checked by the local model."
+    } else {
+        "Checked by word overlap, without a model."
+    };
+    ui.label(egui::RichText::new(source).color(pal.text_weak));
     for (criterion, result) in rubric.iter().zip(&report.criteria) {
         ui.add_space(4.0);
         ui.horizontal_wrapped(|ui| {
@@ -131,5 +145,9 @@ fn report_view(ui: &mut egui::Ui, report: &EvalReport, rubric: &[String]) {
         if !result.feedback.is_empty() {
             ui.label(egui::RichText::new(&result.feedback).color(pal.text_weak));
         }
+    }
+    if let Some(caveats) = report.caveats.as_deref().filter(|c| !c.trim().is_empty()) {
+        ui.add_space(8.0);
+        ui.label(egui::RichText::new(caveats).color(pal.text_weak));
     }
 }

@@ -214,4 +214,6 @@ pub enum ChatPurpose {
     Exam,
     /// A standard prompt run with an attached file.
     Prompt,
+    /// The local model's check of a case-study justification.
+    Case,
 }

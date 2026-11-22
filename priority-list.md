@@ -187,6 +187,8 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
   - [x] STORY-0179 Case-study model and vault storage (built: model, validation, question files with the case fields)
   - [ ] STORY-0180 Rubric evaluator (done; the prompt template open)
   - [x] STORY-0181 Case-study rehearsal UI (built: vignette, choice and justification, evaluation pills; not yet inside a rehearsal run)
+  - [x] STORY-0200 Local-model scoring of justifications and the rubric prompt template (built; small local models unmeasured)
+  - [ ] STORY-0199 Case studies in the rehearsal run queue
 - [ ] EPIC-062 Psychometric formula engine
   - [x] STORY-0182 Formulas, seeded generator, precision tests
   - [x] STORY-0183 Step trace and diagnosis

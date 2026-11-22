@@ -136,9 +136,6 @@ fn click_toast(state: State, i: usize) -> (State, Vec<Effect>) {
         ToastAction::OpenVaultDialog => state.modal = Some(Modal::Vault),
         ToastAction::Dismiss => {}
         ToastAction::OpenCalendar => return crate::nav::navigate(state, Screen::Calendar),
-        ToastAction::StartTutorial => {
-            return crate::tutorial::update(state, crate::tutorial::TutorialMsg::Start);
-        }
         ToastAction::UndoMark(snap) => {
             return (
                 state,
@@ -179,6 +176,13 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             Vec::new(),
         ),
         ModalMsg::Close => crate::modal_discard::close(state),
+        ModalMsg::TourStart => {
+            let (state, mut fx) = crate::tutorial::answered(state);
+            let (state, more) = crate::tutorial::update(state, crate::tutorial::TutorialMsg::Start);
+            fx.extend(more);
+            (state, fx)
+        }
+        ModalMsg::TourDecline => crate::tutorial::answered(state),
         ModalMsg::KeepEditing => crate::modal_discard::keep_editing(state),
         ModalMsg::Discard => crate::modal_discard::discard(state),
         ModalMsg::SetKind(kind) => with_form(state, |f| CreateForm {

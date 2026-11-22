@@ -5,7 +5,6 @@ use studyfrog_core::event::EventKind;
 use studyfrog_core::uid::Uid;
 
 use crate::effect::Effect;
-use crate::modal_types::{Toast, ToastAction};
 use crate::state::{Screen, State};
 
 /// What a step waits for.
@@ -193,20 +192,16 @@ pub fn sync(state: State) -> State {
     state
 }
 
-/// Offer the first-run tutorial once, when a vault opens and it was never offered; the caller saves the
+/// Whether the tour card shows on Home: a vault is open and the user has not started or declined the tour.
+pub fn offered(state: &State) -> bool {
+    state.vault.is_some() && !state.app.tutorial_offered
+}
+
+/// The user answered the offer (started or declined it): it is not offered again. The caller saves the
 /// app settings that remember it.
-pub fn offer(state: State) -> State {
-    if state.vault.is_none() || state.app.tutorial_offered {
-        return state;
-    }
+pub fn answered(state: State) -> (State, Vec<Effect>) {
     let mut state = state;
     state.app.tutorial_offered = true;
-    state.toasts.push(Toast {
-        title: "New here? Take the first steps".to_owned(),
-        detail: "A short tour: a stack, a card, a rehearsal and the calendar. Dismiss it to skip; it stays in Help.".to_owned(),
-        action: ToastAction::StartTutorial,
-        // The offer leaves the screen after a while; the tour stays in Help.
-        expires_ms: Some(state.wall_ms + 20_000),
-    });
-    state
+    let save = Effect::SaveAppSettings(state.app.clone());
+    (state, vec![save])
 }

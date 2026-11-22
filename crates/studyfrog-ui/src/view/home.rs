@@ -57,6 +57,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .size(crate::typo::size(ui, crate::typo::Tier::Heading))
                     .strong(),
             );
+            if crate::tutorial::offered(state) {
+                tour_card(ui, out);
+            }
             let stacks = vault.overview.stacks.len();
             ui.label(RichText::new(format!("{stacks} stacks")).color(palette_of(ui).text_weak));
             ui.add_space(8.0);
@@ -192,4 +195,35 @@ fn stacks_waiting(h: &HomeSummary, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 ui.end_row();
             }
         });
+}
+
+/// The first-run tour offer: it stays until the user starts it or says not now.
+fn tour_card(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let pal = palette_of(ui);
+    egui::Frame::new()
+        .fill(pal.surface)
+        .stroke(egui::Stroke::new(1.0, pal.border))
+        .corner_radius(10)
+        .inner_margin(14)
+        .show(ui, |ui| {
+            ui.label(RichText::new("New here? Take the first steps").strong());
+            ui.label(
+                "A short tour: a stack, a card, a rehearsal and the calendar. It stays in Help.",
+            );
+            ui.horizontal(|ui| {
+                if kit::primary_button(ui, "Start the tour")
+                    .on_hover_text("Starts the first-run tour, one step at a time.")
+                    .clicked()
+                {
+                    out.push(Msg::Modal(crate::modal_types::ModalMsg::TourStart));
+                }
+                if kit::quiet_button(ui, "Not now")
+                    .on_hover_text("Hides this card. The tour stays in Help.")
+                    .clicked()
+                {
+                    out.push(Msg::Modal(crate::modal_types::ModalMsg::TourDecline));
+                }
+            });
+        });
+    ui.add_space(12.0);
 }

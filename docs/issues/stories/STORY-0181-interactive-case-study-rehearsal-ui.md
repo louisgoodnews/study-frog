@@ -35,7 +35,7 @@ Implement the interactive case-study view in `crates/studyfrog-ui`:
 ## Implementation (2026-11-21)
 Reached from the rehearse setup's What step: "Case study" opens the valid cases of the stack that is open (`setup::case`, pure state and update; `view::case_view`). Each case shows its vignette in a framed block, its decision with the options as checkboxes, and a multi-line justification. "Check my answer" scores the choice (`choice_is_correct`) and the justification against the rubric (`rubric_eval::fallback_evaluate`). The result shows a status pill (Solid decision, Partial match, Alternative procedure recommended, Needs more justification), the score, a choice pill, and a Met or Missing pill per criterion with its feedback.
 
-Open or changed against the description: the view is a practice screen of its own, not a step inside a rehearsal run, so cases are not yet mixed into a run's queue. The scoring uses the keyword fallback only: the local model's JSON path exists (`parse_model_report`), but the view does not call a model yet, and the STORY-0180 prompt template is still open.
+Open: the view is a practice screen of its own, not a step inside a rehearsal run; cases in a run's queue are STORY-0199. A local model checks the justification when one is selected (STORY-0200).
 
 Tests: `studyfrog-ui/tests/case_study_ui.rs` (opening, scoring, next, view text). A screenshot (`--screen case-demo`) shows the layout and the pills.
 

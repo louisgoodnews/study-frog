@@ -1,10 +1,13 @@
 //! Case-study rehearsal on the rehearse screen (STORY-0181): the case on screen, the choice and the
-//! justification, and the evaluation. The rules are in `studyfrog-rehearsal::case_study`, the scoring
-//! in `studyfrog-agent::rubric_eval`. Pure: no egui, no I/O.
+//! justification, and the evaluation. The keyword check runs at once; a local model, when one is
+//! selected, checks the justification too and replaces that result when it answers. The rules are in
+//! `studyfrog-rehearsal::case_study`, the scoring in `studyfrog-agent::rubric_eval`. Pure.
 
-use studyfrog_agent::rubric_eval::{EvalReport, fallback_evaluate};
+use studyfrog_agent::rubric_eval::EvalReport;
 use studyfrog_core::uid::Uid;
-use studyfrog_rehearsal::case_study::{CaseStudyItem, choice_is_correct};
+use studyfrog_rehearsal::case_study::CaseStudyItem;
+
+mod check;
 
 use crate::effect::Effect;
 use crate::state::{Selection, State};
@@ -22,6 +25,8 @@ pub enum CaseMsg {
     Rationale(String),
     /// Check the answer.
     Submit,
+    /// The local model answered (its reply text, or why there was none).
+    ModelReplied(Result<String, String>),
     /// The next case.
     Next,
     /// Close the case-study view.
@@ -41,6 +46,12 @@ pub struct CaseUi {
     pub rationale: String,
     /// The evaluation of the answer, once it is checked.
     pub report: Option<EvalReport>,
+    /// The local model is checking the justification.
+    pub pending: bool,
+    /// The report came from the local model (otherwise from the keyword check).
+    pub checked_by_model: bool,
+    /// Why the local model did not check it, when it was asked and could not.
+    pub note: Option<String>,
     /// The cases are being read.
     pub loading: bool,
     /// Why there is nothing to show.
@@ -60,7 +71,11 @@ pub fn update(state: State, msg: CaseMsg) -> (State, Vec<Effect>) {
             }),
             Vec::new(),
         ),
-        CaseMsg::Submit => (map(state, submit), Vec::new()),
+        CaseMsg::Submit => check::submit(state),
+        CaseMsg::ModelReplied(result) => (
+            map(state, |cs| check::model_replied(cs, result)),
+            Vec::new(),
+        ),
         CaseMsg::Next => (map(state, next), Vec::new()),
         CaseMsg::Close => (with_case(state, None), Vec::new()),
     }
@@ -79,7 +94,7 @@ pub fn picked_names(cs: &CaseUi) -> Vec<String> {
         .collect()
 }
 
-fn with_case(state: State, case: Option<CaseUi>) -> State {
+pub(super) fn with_case(state: State, case: Option<CaseUi>) -> State {
     State {
         rehearse: crate::setup::Rehearse {
             case_study: case,
@@ -153,20 +168,6 @@ fn pick(cs: CaseUi, i: usize, on: bool) -> CaseUi {
     cs
 }
 
-/// Score the answer: whether the ticked options are the expected choices, and the justification
-/// against the rubric.
-fn submit(cs: CaseUi) -> CaseUi {
-    let Some((_, case)) = cs.cases.get(cs.current) else {
-        return cs;
-    };
-    let valid = choice_is_correct(case, &picked_names(&cs));
-    let report = fallback_evaluate(&cs.rationale, valid, &case.rubric_criteria);
-    CaseUi {
-        report: Some(report),
-        ..cs
-    }
-}
-
 fn next(cs: CaseUi) -> CaseUi {
     if cs.cases.is_empty() {
         return cs;
@@ -177,6 +178,9 @@ fn next(cs: CaseUi) -> CaseUi {
         picked: vec![false; options_of(&cs.cases, current)],
         rationale: String::new(),
         report: None,
+        checked_by_model: false,
+        note: None,
+        pending: false,
         ..cs
     }
 }

@@ -84,7 +84,7 @@ pub(crate) fn vault_opened(
     match result {
         Ok(info) => {
             let app = with_opened_vault(&state.app, &info.root);
-            let state = crate::tutorial::offer(State {
+            let state = State {
                 screen: Screen::Home,
                 home: None,
                 reminder_ticks: 0,
@@ -95,7 +95,7 @@ pub(crate) fn vault_opened(
                 opening: false,
                 notice: None,
                 ..state
-            });
+            };
             let (state, go) = crate::appearance_ui::go_start(state);
             let mut effects = vec![
                 Effect::SaveAppSettings(state.app.clone()),

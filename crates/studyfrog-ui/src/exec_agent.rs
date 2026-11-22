@@ -116,6 +116,7 @@ pub fn chat(
     match purpose {
         ChatPurpose::Chat => agent(AgentMsg::ChatReplied(reply)),
         ChatPurpose::Exam => agent(AgentMsg::ExamReplied(reply)),
+        ChatPurpose::Case => Msg::Case(crate::setup::case::CaseMsg::ModelReplied(reply)),
         ChatPurpose::Prompt => Msg::Prompts(crate::prompts_ui::PromptsMsg::Run(
             crate::prompt_run::PromptRunMsg::Replied(reply),
         )),

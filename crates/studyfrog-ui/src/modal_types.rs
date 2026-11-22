@@ -110,8 +110,6 @@ pub enum ToastAction {
     OpenVaultDialog,
     /// Open the calendar.
     OpenCalendar,
-    /// Start the first-run tutorial.
-    StartTutorial,
     /// Nothing: a click only dismisses it.
     Dismiss,
     /// Undo a mark or unmark operation.
@@ -144,6 +142,10 @@ pub enum ModalMsg {
     OpenVault,
     /// Open the import dialog for the open stack.
     OpenImport,
+    /// Start the first-run tour from its card on Home.
+    TourStart,
+    /// Hide the tour card on Home; the tour stays in Help.
+    TourDecline,
     /// Close the open dialog (a Create dialog with something written asks first).
     Close,
     /// Answer the question before closing with 'Keep editing'.

@@ -129,3 +129,88 @@ fn open_model_with(state: State) -> studyfrog_ui::model::Model {
     m.state.rehearse = state.rehearse;
     m
 }
+
+fn provider(url: &str) -> studyfrog_agent::provider::Provider {
+    studyfrog_agent::provider::Provider {
+        name: "p".to_owned(),
+        protocol: studyfrog_agent::provider::Protocol::Ollama,
+        base_url: url.to_owned(),
+        model: "m".to_owned(),
+        allowed: false,
+    }
+}
+
+fn with_provider(url: &str) -> State {
+    let mut state = with_case(loaded(vec![case("Short screen")]));
+    state.agent.connections.providers = vec![provider(url)];
+    state.agent.selected = Some("p".to_owned());
+    state
+}
+
+#[test]
+fn a_local_model_is_asked_to_check_the_justification() {
+    let state = send(
+        with_provider("http://localhost:11434"),
+        CaseMsg::Pick(0, true),
+    );
+    let (state, effects) = update(state, CaseMsg::Submit);
+    assert!(
+        view(&state).report.as_ref().is_some_and(|r| !r.from_model),
+        "the keyword check shows at once"
+    );
+    assert!(view(&state).pending);
+    assert!(
+        matches!(
+            effects.as_slice(),
+            [Effect::AgentChat {
+                purpose: studyfrog_ui::agent_types::ChatPurpose::Case,
+                ..
+            }]
+        ),
+        "{effects:?}"
+    );
+    let reply = r#"{"choice_valid": true, "criteria_results": [{"criterion_text": "addresses scoring speed", "met": true, "feedback": "Quoted."}, {"criterion_text": "cites criterion validity", "met": false, "feedback": "Missing."}], "caveats": "Check the norms."}"#;
+    let state = send(state, CaseMsg::ModelReplied(Ok(reply.to_owned())));
+    assert!(view(&state).checked_by_model);
+    assert!(
+        view(&state)
+            .report
+            .as_ref()
+            .is_some_and(|r| r.from_model && r.choice_valid)
+    );
+    assert!(!view(&state).pending);
+}
+
+#[test]
+fn an_unreadable_model_reply_keeps_the_keyword_check_and_says_why() {
+    let state = send(
+        with_provider("http://localhost:11434"),
+        CaseMsg::Pick(0, true),
+    );
+    let (state, _) = update(state, CaseMsg::Submit);
+    let state = send(state, CaseMsg::ModelReplied(Ok("I cannot say.".to_owned())));
+    assert!(!view(&state).checked_by_model);
+    assert!(
+        view(&state)
+            .note
+            .as_deref()
+            .is_some_and(|n| n.contains("could not check"))
+    );
+    assert!(view(&state).report.as_ref().is_some_and(|r| !r.from_model));
+}
+
+#[test]
+fn a_remote_model_is_not_sent_the_students_text() {
+    let state = send(
+        with_provider("https://api.example.com"),
+        CaseMsg::Pick(0, true),
+    );
+    let (state, effects) = update(state, CaseMsg::Submit);
+    assert!(effects.is_empty(), "{effects:?}");
+    assert!(
+        view(&state)
+            .note
+            .as_deref()
+            .is_some_and(|n| n.contains("Only a local model"))
+    );
+}

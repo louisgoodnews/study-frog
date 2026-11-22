@@ -7,7 +7,7 @@ use common::views::{info, stack};
 use studyfrog_core::uid::Uid;
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::help_types::HelpMsg;
-use studyfrog_ui::modal::{ModalMsg, ToastAction};
+use studyfrog_ui::modal::ModalMsg;
 use studyfrog_ui::model::{Model, apply};
 use studyfrog_ui::msg::Msg;
 use studyfrog_ui::state::Screen;
@@ -18,29 +18,26 @@ fn tutorial(m: &mut Model, t: TutorialMsg) -> Vec<Effect> {
 }
 
 #[test]
-fn the_tutorial_is_offered_once_after_the_first_vault_opens() {
+fn the_tour_is_offered_on_home_until_the_user_answers() {
     let mut m = Model::default();
-    let fx = apply(&mut m, Msg::VaultOpened(Ok(info())));
+    apply(&mut m, Msg::VaultOpened(Ok(info())));
+    assert!(!m.state.app.tutorial_offered);
+    assert!(studyfrog_ui::tutorial::offered(&m.state), "the card shows");
+    assert!(
+        m.state.toasts.is_empty(),
+        "no floating toast over the screen"
+    );
+    let fx = apply(&mut m, Msg::Modal(ModalMsg::TourDecline));
     assert!(m.state.app.tutorial_offered);
-    let offers = |m: &Model| {
-        m.state
-            .toasts
-            .iter()
-            .filter(|t| t.action == ToastAction::StartTutorial)
-            .count()
-    };
-    assert_eq!(offers(&m), 1);
     assert!(
         fx.iter()
             .any(|e| matches!(e, Effect::SaveAppSettings(a) if a.tutorial_offered)),
         "remembered across restarts"
     );
-    apply(&mut m, Msg::Modal(ModalMsg::ToastDismissed(0)));
-    let fx = apply(&mut m, Msg::VaultOpened(Ok(info())));
-    assert_eq!(offers(&m), 0, "skipped stays skipped");
+    apply(&mut m, Msg::VaultOpened(Ok(info())));
     assert!(
-        fx.iter()
-            .all(|e| !matches!(e, Effect::SaveAppSettings(a) if !a.tutorial_offered))
+        !studyfrog_ui::tutorial::offered(&m.state),
+        "declined stays declined"
     );
 }
 
@@ -48,7 +45,7 @@ fn the_tutorial_is_offered_once_after_the_first_vault_opens() {
 fn each_step_opens_its_screen_and_is_done_when_the_user_did_it() {
     let mut m = Model::default();
     apply(&mut m, Msg::VaultOpened(Ok(info())));
-    apply(&mut m, Msg::Modal(ModalMsg::ToastClicked(0)));
+    apply(&mut m, Msg::Modal(ModalMsg::TourStart));
     let t = m.state.help.tutorial.clone().unwrap();
     assert_eq!((t.step, t.done), (0, false));
     assert_eq!(m.state.screen, FIRST_STEPS[0].screen);

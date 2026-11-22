@@ -41,7 +41,7 @@ Keep all prompt construction and response parsing in pure functions without inhe
 EPIC-061, STORY-0179
 
 ## Implementation (2026-11-21)
-`studyfrog-agent::rubric_eval`: parsing the model's JSON (matched to the rubric by text), a recomputed overall score (40 % choice, 60 % rubric), and the deterministic keyword fallback when no model runs. Tests: `tests/rubric_eval.rs`. Open: the dual-pass prompt template and the caveats field.
+`studyfrog-agent::rubric_eval`: parsing the model's JSON (matched to the rubric by text), a recomputed overall score (40 % choice, 60 % rubric), and the deterministic keyword fallback when no model runs. Tests: `tests/rubric_eval.rs`. The dual-stage prompt template and the caveats field are done in STORY-0200, and the case view calls the local model.
 
 ## Open Questions
 None.
