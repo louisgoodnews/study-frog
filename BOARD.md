@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (22) | Ready (0) | In progress (0/3) | Review (35) | Blocked (3) | Done (525) |
+| Backlog (33) | Ready (0) | In progress (0/3) | Review (31) | Blocked (3) | Done (529) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0020](docs/issues/bugs/BUG-0020-scriptstudio-reference-panel-layout.md) ScriptStudio reference panel is squeezed and its topics are not shown (3) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [BUG-0021](docs/issues/bugs/BUG-0021-narrow-window-header-and-run-strip-overlap.md) At the 640 by 420 minimum, the window header and the rehearsal top strip overlap and the hint line is cut off (2) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -19,23 +19,23 @@
 | [BUG-0030](docs/issues/bugs/BUG-0030-cognitive-profile-charts-missing-curve-and-accuracy.md) The Cognitive profile shows a velocity number, not a curve, and no semantic accuracy trend (2) |  |  |  |  | [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |
 | [BUG-0031](docs/issues/bugs/BUG-0031-semantic-scores-not-recorded.md) Telemetry rows are saved without a semantic deviation score (2) |  |  |  |  | [BUG-0012](docs/issues/bugs/BUG-0012-rehearsal-card-text-wrapping-and-unquoted-csv-comma-truncation.md) Rehearsal card text wrapping and unquoted CSV comma truncation (2) |
 | [BUG-0032](docs/issues/bugs/BUG-0032-reports-tab-row-clipped-at-960.md) At 960 by 640 the Reports tab row is cut off at the right edge (2) |  |  |  |  | [BUG-0013](docs/issues/bugs/BUG-0013-rehearsal-result-view-scrollability-review-stretch-and-suggested-rating.md) Rehearsal result view scrollability, stretched review area, and suggested rating visibility (2) |
-| [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  |  |  | [BUG-0014](docs/issues/bugs/BUG-0014-csv-import-fails-on-unquoted-multiline-fields.md) CSV importer fails on unquoted multiline fields in AI-generated CSV files (2) |
-| [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [BUG-0015](docs/issues/bugs/BUG-0015-csv-escaped-newlines-and-card-title-truncation.md) Escaped newline sequences in imported cards and 60-character card title truncation (2) |
-| [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  |  |  | [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority (5) |
-| [TASK-0284](docs/issues/tasks/TASK-0284-scripted-screens-on-a-10k-vault-for-the-frame-time-run.md) Scripted visit of the rehearsal card, reports and console on a 10k-note vault (2) |  |  |  |  | [BUG-0017](docs/issues/bugs/BUG-0017-markdown-viewer-bold-text-visibility.md) Boldness of words in markdown viewer not visible (2) |
-| [TASK-0285](docs/issues/tasks/TASK-0285-dhat-allocation-counts-for-the-render-loops.md) dhat allocation counts for the rehearsal card, reports and console loops (2) |  |  |  |  | [BUG-0018](docs/issues/bugs/BUG-0018-code-block-indentation-preservation.md) Code block indentations not visible in markdown viewer (2) |
-| [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  |  |  | [BUG-0019](docs/issues/bugs/BUG-0019-notes-stack-membership-optional.md) Notes being in stacks should be optional not required (3) |
-|  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-|  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-|  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-|  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
-|  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
-|  |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
-|  |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
-|  |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
-|  |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
-|  |  |  |  |  | [TASK-0010](docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
-|  |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
+| [BUG-0033](docs/issues/bugs/BUG-0033-script-stderr-shown-as-stdout-and-stderr-filter-empty.md) Script stderr is shown in the stdout stream and the Stderr / Errors filter stays empty (3) |  |  |  |  | [BUG-0014](docs/issues/bugs/BUG-0014-csv-import-fails-on-unquoted-multiline-fields.md) CSV importer fails on unquoted multiline fields in AI-generated CSV files (2) |
+| [BUG-0034](docs/issues/bugs/BUG-0034-reminder-and-count-wording-1-days-1-pages-and-lead-phrase.md) Singular counts read '1 days' and '1 pages', and reminders say 'in 2 h' for an item due in 1 h (1) |  |  |  |  | [BUG-0015](docs/issues/bugs/BUG-0015-csv-escaped-newlines-and-card-title-truncation.md) Escaped newline sequences in imported cards and 60-character card title truncation (2) |
+| [BUG-0035](docs/issues/bugs/BUG-0035-week-view-last-day-column-clipped-at-window-edge.md) Week view runs past the window edge, so Sunday's column and its deadline dot are cut off (2) |  |  |  |  | [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority (5) |
+| [BUG-0036](docs/issues/bugs/BUG-0036-toast-covers-day-view-add-session-button.md) Reminder toasts cover the Day view's '+ Add session' button (1) |  |  |  |  | [BUG-0017](docs/issues/bugs/BUG-0017-markdown-viewer-bold-text-visibility.md) Boldness of words in markdown viewer not visible (2) |
+| [BUG-0037](docs/issues/bugs/BUG-0037-csv-import-into-stack-nests-rows-under-that-stack.md) CSV import into a chosen stack creates a nested stack 'statistik/statistik' instead of using it (2) |  |  |  |  | [BUG-0018](docs/issues/bugs/BUG-0018-code-block-indentation-preservation.md) Code block indentations not visible in markdown viewer (2) |
+| [BUG-0038](docs/issues/bugs/BUG-0038-keyword-grading-gives-zero-to-correct-answers-with-generic-rubric.md) Mock exam keyword grading scores correct answers 0 because the rubric points are generic text (3) |  |  |  |  | [BUG-0019](docs/issues/bugs/BUG-0019-notes-stack-membership-optional.md) Notes being in stacks should be optional not required (3) |
+| [BUG-0039](docs/issues/bugs/BUG-0039-pdf-exam-and-list-labelled-untitled.md) Mock exam from a PDF is labelled 'untitled' and both PDFs in the list read 'untitled' (1) |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+| [BUG-0040](docs/issues/bugs/BUG-0040-mock-exam-uses-open-stack-not-ticked-stack.md) Mock exam draws from the open stack, not the stack ticked in the rehearse setup's What step (2) |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+| [BUG-0041](docs/issues/bugs/BUG-0041-rehearsal-save-fails-unique-run-event-seq.md) Rehearsal shows 'Could not save your progress' (UNIQUE constraint on run_event run_uid, seq) (3) |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+| [BUG-0042](docs/issues/bugs/BUG-0042-run-by-hand-reported-under-job-name.md) A script run by hand from the job editor is reported under the name of the job that uses that file (1) |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+| [BUG-0043](docs/issues/bugs/BUG-0043-homework-planner-timetable-and-subject-filter-missing.md) Homework planner shows no timetable and has no subject filter (3) |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
+| [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
+| [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
+| [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
+| [TASK-0284](docs/issues/tasks/TASK-0284-scripted-screens-on-a-10k-vault-for-the-frame-time-run.md) Scripted visit of the rehearsal card, reports and console on a 10k-note vault (2) |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
+| [TASK-0285](docs/issues/tasks/TASK-0285-dhat-allocation-counts-for-the-render-loops.md) dhat allocation counts for the rehearsal card, reports and console loops (2) |  |  |  |  | [TASK-0010](docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
+| [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
 |  |  |  |  |  | [TASK-0012](docs/issues/tasks/TASK-0012-id-newtypes-and-arena-indices.md) Id newtypes and arena indices (3) |
 |  |  |  |  |  | [TASK-0013](docs/issues/tasks/TASK-0013-stack-note-card-question-structs.md) Stack, Note, Card, Question structs (3) |
 |  |  |  |  |  | [TASK-0014](docs/issues/tasks/TASK-0014-review-and-rating-types.md) Review and Rating types (2) |
@@ -453,8 +453,8 @@
 | [STORY-0147](docs/issues/stories/STORY-0147-research-floating-burger-navigation-menu.md) Research and prototype floating burger navigation menu (3) | done | 0/0 |
 | [STORY-0148](docs/issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) Console expansion to full scriptrunner environment with internal API (5) | done | 0/0 |
 | [STORY-0149](docs/issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md) Rename ScriptRunner across application and documentation to avoid trademark conflicts (2) | done | 0/0 |
-| [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and domain-specific language (DSL) research (5) | review | 0/0 |
-| [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers (5) | review | 0/0 |
+| [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and domain-specific language (DSL) research (5) | done | 0/0 |
+| [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers (5) | done | 0/0 |
 | [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging for user scripts (3) | review | 0/0 |
 | [STORY-0153](docs/issues/stories/STORY-0153-frogcanvas-data-model-and-serialization.md) FrogCanvas Data Model and Spatial Serialization (5) | done | 2/2 |
 | [STORY-0154](docs/issues/stories/STORY-0154-frogcanvas-interactive-ui-and-rendering.md) FrogCanvas Interactive UI and Rendering (5) | done | 2/2 |
@@ -469,10 +469,10 @@
 | [STORY-0163](docs/issues/stories/STORY-0163-model-catalog-and-streaming-generation.md) GGUF Model Catalog, Downloader, and Streaming Generation (5) | done | 2/2 |
 | [STORY-0164](docs/issues/stories/STORY-0164-on-device-rag-and-cpu-prompt-budgeting.md) On-Device Vault RAG Pipeline and CPU Prompt Budgeting (5) | done | 2/2 |
 | [STORY-0165](docs/issues/stories/STORY-0165-homework-domain-model-and-vault-persistence.md) Homework Data Model, Lifecycle, and Vault Persistence (5) | done | 0/0 |
-| [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Homework Due Date Reminders and Calendar Integration (5) | review | 0/0 |
+| [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Homework Due Date Reminders and Calendar Integration (5) | done | 0/0 |
 | [STORY-0167](docs/issues/stories/STORY-0167-homework-management-and-planner-ui.md) Interactive Homework Planner Screen and Creation Dialog (5) | done | 0/0 |
 | [STORY-0168](docs/issues/stories/STORY-0168-unified-universal-import-hub.md) Unified Universal Import Entry Point and Redundant Button Consolidation (3) | review | 0/0 |
-| [STORY-0169](docs/issues/stories/STORY-0169-contextual-tooltips-and-hover-hints.md) Contextual Tooltips, Hover Hints, and Keyboard Shortcut Badges (3) | review | 0/0 |
+| [STORY-0169](docs/issues/stories/STORY-0169-contextual-tooltips-and-hover-hints.md) Contextual Tooltips, Hover Hints, and Keyboard Shortcut Badges (3) | done | 0/0 |
 | [STORY-0170](docs/issues/stories/STORY-0170-navigation-and-menu-decluttering.md) Menu De-Cluttering, Visual Spacing, and Progressive Disclosure (5) | review | 0/0 |
 | [STORY-0171](docs/issues/stories/STORY-0171-in-gui-frogscript-wiki-browser.md) In-App FrogScript Wiki and Standard Library Reference Browser (5) | review | 0/0 |
 | [STORY-0172](docs/issues/stories/STORY-0172-runnable-script-cookbook-and-live-templates.md) Interactive FrogScript Cookbook and 1-Click Code Templates (3) | review | 0/0 |
@@ -562,15 +562,15 @@
 | [EPIC-046](docs/issues/epics/EPIC-046-markdown-viewer-list-syntax-enhancements.md) Markdown viewer list syntax enhancements | done | 1/1 |
 | [EPIC-047](docs/issues/epics/EPIC-047-brand-mascot-icon-and-consolidated-navigation-ux.md) Brand mascot icon and consolidated navigation UX | done | 2/2 |
 | [EPIC-048](docs/issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md) Scriptrunner environment and internal application automation API | done | 1/1 |
-| [EPIC-049](docs/issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md) Expanded scripting environment, DSL, job scheduling, and execution logging | backlog | 1/4 |
+| [EPIC-049](docs/issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md) Expanded scripting environment, DSL, job scheduling, and execution logging | backlog | 3/4 |
 | [EPIC-050](docs/issues/epics/EPIC-050-frogcanvas-2d-spatial-concept-board.md) FrogCanvas: 2D Spatial Mind-Map and Concept Board | done | 2/2 |
 | [EPIC-051](docs/issues/epics/EPIC-051-pdf-precision-area-cropping-and-split-navigation.md) PDF Precision Area Cropping and 1-Click Split Navigation | done | 2/2 |
 | [EPIC-052](docs/issues/epics/EPIC-052-continuous-priority-queue-and-anti-paralysis-slicing.md) Continuous Priority Queue and Anti-Paralysis Slicing | done | 1/1 |
 | [EPIC-053](docs/issues/epics/EPIC-053-gamified-multi-modal-recall-match-mode-and-distractors.md) Gamified and Multi-Modal Active Recall | done | 2/2 |
 | [EPIC-054](docs/issues/epics/EPIC-054-fsrs-auto-tuning-and-inline-card-capture.md) FSRS Auto-Tuning and Inline Card Capture | done | 2/2 |
 | [EPIC-055](docs/issues/epics/EPIC-055-offline-local-slm-internal-assistant.md) Offline Local SLM Internal Assistant | done | 3/3 |
-| [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration | review | 2/3 |
-| [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | review | 0/5 |
+| [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration | review | 3/4 |
+| [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | review | 1/5 |
 | [EPIC-058](docs/issues/epics/EPIC-058-in-gui-frogscript-wiki-and-reference.md) In-GUI FrogScript Wiki and Interactive Documentation | review | 0/2 |
 | [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time | review | 3/9 |
 | [EPIC-060](docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | review | 1/6 |

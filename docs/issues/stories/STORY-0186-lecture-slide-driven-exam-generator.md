@@ -69,3 +69,10 @@ Not done or not verified:
 
 ## Open Questions
 None.
+
+## Implementation (2026-11-22, audit)
+
+Audit (2026-11-22): no local model is installed, so the model stages are NOT CHECKABLE; the template path and the no-model message were checked.
+Criterion 1 MET for definitions: the PDF "Vorlesung.pdf" gave "Explain the following in your own words: Gueltigkeit" and the notes gave "Normierung legt Bezugsnormen fest..." (/tmp/claude-0/audit/g5/0186-pdf-exam.png, /tmp/claude-0/audit/g5/0186-mock-notes3.png). Formulas were not seen in an exam: the one formula note was made after the exam was generated.
+Criterion 2 NOT CHECKABLE for the SLM stages (no model). The template path gives sample answers and rubric points (/tmp/claude-0/audit/g5/0187-keys.png). The no-model note is shown (/tmp/claude-0/audit/g5/0186-pdf-list.png). Rubric text is generic and the keyword grading is wrong for correct answers (BUG-0038).
+Criterion 3 NOT CHECKABLE: the hallucination and out-of-syllabus filter applies to model output; with no model it does not run. Defects: BUG-0039 (PDF exam titled "untitled"), BUG-0040 (mock exam uses the open stack, not the ticked one), BUG-0041 (save error in rehearsal, intermittent).

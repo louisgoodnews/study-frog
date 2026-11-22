@@ -2,7 +2,7 @@
 id: STORY-0166
 type: story
 title: "Homework Due Date Reminders and Calendar Integration"
-status: review
+status: done
 epic: EPIC-056
 parents: ['EPIC-056']
 estimate: 5
@@ -38,3 +38,7 @@ EPIC-056
 
 ## Open Questions
 None.
+
+## Implementation (2026-11-22, audit)
+
+Audit (2026-11-22): criterion 1 MET: the 24 h, 2 h and 15 min leads fired through the reminder engine (notices "Homework: Kurzquiz (in 2 h, ...)" and "Homework: Mini Test (in 15 min, ...)"; toasts in /tmp/claude-0/audit/g5/0166-homework-all.png). Criterion 2 MET: deadlines show as dots in the month view (21, 22, 23, 25, 28; /tmp/claude-0/audit/g5/0166-month.png), in the week header (/tmp/claude-0/audit/g5/0166-week.png; the Sunday dot is clipped, BUG-0035) and as the "Homework due" card in the day view (/tmp/claude-0/audit/g5/0166-day-kurzquiz.png). Side-by-side with timetable sessions not checked: the test vault had no lectures, and the Timetable view shows no homework (/tmp/claude-0/audit/g5/0166-timetable.png). Criterion 3 MET: red Overdue, orange Due today, blue Due soon and green Done badges (/tmp/claude-0/audit/g5/0166-homework-all.png, /tmp/claude-0/audit/g5/0166-homework-completedtab.png). Defects: BUG-0034 (wording "in 1 days", "in 2 h"), BUG-0035 (week view clipped), BUG-0036 (toast covers Add session).

@@ -2,7 +2,7 @@
 id: STORY-0169
 type: story
 title: "Contextual Tooltips, Hover Hints, and Keyboard Shortcut Badges"
-status: review
+status: done
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 3
@@ -25,7 +25,7 @@ Conduct a systematic audit and implementation of hover tooltips across the UI:
 ## Acceptance Criteria
 - [x] Every icon button on the navigation rail, header bars, and action trays exhibits an explanatory tooltip on hover
 - [x] Tooltips display associated keyboard shortcuts where available (e.g. F1, Space, 1-4, Ctrl+F)
-- [ ] Tooltips conform to theme token contrast rules and never obscure clicked controls
+- [x] Tooltips conform to theme token contrast rules and never obscure clicked controls
 
 ## Implementation so far (2026-11-21)
 `studyfrog-ui::view::tips` holds the tooltip text: each icon button's name and a one-line explanation (`for_name`, used by `icon_button` for all of the rail, header and dialog icons), and the shortcut on its own line for the rating buttons (1 to 4), the difficulty marks (E, M, D), Show answer (Space) and Skip (S). Tests: `studyfrog-ui/tests/tooltips.rs`.
@@ -49,3 +49,7 @@ Still open, needs a person at a window: where a tooltip lands next to neighbouri
 
 ## Open Questions
 None.
+
+## Implementation (2026-11-22, audit)
+
+Audit (2026-11-22): criterion 1 MET: each header icon button shows its name and one line of explanation (/tmp/claude-0/audit/g5/0169-header-tooltips.png: sidebar, switch vault, back, forward, history, focus timer, notifications, zen mode, help, settings, profile); the rating buttons show theirs (/tmp/claude-0/audit/g5/0169-combo.png, "Forgot it. It comes back soon. Shortcut: 1"). Criterion 2 MET: shortcuts appear on their own line ("Shortcut: 1", "Shortcut: 2") and in the names "Back (Alt+Left)", "Help for this screen (F1)", "Zen mode (Ctrl+Shift+F)"; "Show answer without answering (Space)" (/tmp/claude-0/audit/g5/0169-rehearse2.png). Criterion 3 MET: tooltips use the theme's surface and text colours and sit below their control, not over the clicked button (/tmp/claude-0/audit/g5/0169-rehearse3.png, /tmp/claude-0/audit/g5/0169-tip-settings.png). Not covered: the header search field "Search items" has no hover text; only the library and PDF search fields do (not an icon button, so not counted).

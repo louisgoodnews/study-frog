@@ -49,3 +49,7 @@ Not done: the criterion is checked by tests and by reading the dialog text. Whet
 
 ## Open Questions
 None.
+
+## Implementation (2026-11-22, audit)
+
+Audit (2026-11-22): criterion 1 MET: one Import... entry in the items toolbar's More... menu and in the stack page's More actions; no separate card, stack, note or question import buttons (/tmp/claude-0/audit/g5/0168-more-menu.png, /tmp/claude-0/audit/g5/0168-items.png). The entry is under an overflow menu, not top level. Criterion 2 MET for CSV, Markdown, JSON and PDF: "Looks like CSV or TSV cards" (/tmp/claude-0/audit/g5/0168-import-dialog.png), "Looks like Markdown cards (one per ## heading) or one note" (/tmp/claude-0/audit/g5/0168-import-md.png), "Looks like StudyFrog export (JSON)" (/tmp/claude-0/audit/g5/0168-import-json.png), "Looks like PDF document (one card per page)" (/tmp/claude-0/audit/g5/0168-dest-menu.png); a two-line-per-page PDF gave two cards. Anki (.apkg) NOT CHECKABLE: no sample package in the test vault. Criterion 3 MET: the Import into menu offers As the file says, Vault root (no stack), each stack and New stack... (/tmp/claude-0/audit/g5/0168-dest-menu.png). A CSV imported into a chosen stack nested its rows under it, and the menu then listed two look-alike stacks (BUG-0037). Status left at review: the Anki path is not exercised and BUG-0037 is open.

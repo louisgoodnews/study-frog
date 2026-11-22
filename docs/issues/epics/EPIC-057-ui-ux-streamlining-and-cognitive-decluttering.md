@@ -23,8 +23,8 @@ Conduct a comprehensive user experience refinement focused on simplicity, clarit
 4. **Lightweight Persona Alignment**: Rebalance information hierarchy so the app feels approachable and focused for daily study while keeping advanced features effortlessly discoverable.
 
 ## Acceptance Criteria
-- [ ] Unified single Import action replaces fragmented card, stack, note, and question buttons
-- [ ] Systematic contextual tooltips and hover hints across all navigation icons, buttons, and tools
+- [x] Unified single Import action replaces fragmented card, stack, note, and question buttons
+- [x] Systematic contextual tooltips and hover hints across all navigation icons, buttons, and tools
 - [ ] De-cluttered menu bars with progressive disclosure, reducing cognitive overload for new learners
 - [ ] Lightweight, modern visual rhythm maintaining deep power features under intuitive secondary disclosures
 
@@ -36,3 +36,7 @@ None.
 
 ## Open Questions
 None.
+
+## Implementation (2026-11-22, audit)
+
+Audit (2026-11-22): criterion 1 MET: one Import... entry (items toolbar More..., stack page More actions); no separate import buttons seen (/tmp/claude-0/audit/g5/0168-more-menu.png). Criterion 2 MET: all header icon buttons, the rehearsal rating buttons and the Show answer button have tooltips with shortcuts (/tmp/claude-0/audit/g5/0169-header-tooltips.png, 0169-combo.png). Criterion 3 NOT MET: the stack page, item list and item editor are decluttered, but the PDF viewer's header still shows ten controls (/tmp/claude-0/audit/g5/0170-pdf.png); see STORY-0170. Left unticked. Criterion 4 NOT CHECKABLE: whether the look is lightweight is a judgement; the spacing and type scale are checked in STORY-0170 (/tmp/claude-0/audit/g5/0170-editor.png).

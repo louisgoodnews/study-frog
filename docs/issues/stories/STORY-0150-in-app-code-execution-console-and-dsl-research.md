@@ -2,7 +2,7 @@
 id: STORY-0150
 type: story
 title: "In-app code execution console and domain-specific language (DSL) research"
-status: review
+status: done
 epic: EPIC-049
 parents: [EPIC-049]
 estimate: 5
@@ -26,7 +26,7 @@ Expand console capabilities and author research on DSL integration:
 3. Provide an interactive evaluation engine allowing code execution directly within the desktop UI.
 
 ## Acceptance Criteria
-- [ ] The in-app scripting console provides an interactive code execution environment with instant evaluation of user scripts
+- [x] The in-app scripting console provides an interactive code execution environment with instant evaluation of user scripts
 - [x] Research document evaluates the feasibility, trade-offs, ergonomics, and security boundaries of embedding a lightweight scripting DSL versus standard Python
 - [x] The console supports interactive command and script execution with error highlighting and contextual autocompletion
 
@@ -44,3 +44,7 @@ Checked in the running window (virtual display, control socket and mouse): Tab a
 
 ## Open Questions
 - Whether a custom DSL should compile down to StudyFrog control protocol JSON-RPC commands or run as native in-process AST evaluations.
+
+## Implementation (2026-11-22, audit)
+
+Audit (2026-11-22): criterion 1 MET: ScriptStudio runs a FrogScript pipeline and streams its result and script events (/tmp/claude-0/audit/g5/0150-studio-run.png). Criterion 2 (research document) kept: docs/research/scripting-dsl-evaluation.md is present; its content was not re-read in this audit. Criterion 3 (error highlighting and autocompletion) kept, and seen again: "fro" offers "from" and Tab accepts (/tmp/claude-0/audit/g5/0150-studio-complete.png); a parse error is underlined on its line with its message (/tmp/claude-0/audit/g5/0150-studio-error.png). The Console's control-command line has no completion; completion is in ScriptStudio.

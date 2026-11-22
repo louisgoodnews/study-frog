@@ -23,7 +23,7 @@ De-clutter screens and menus across the entire application:
 - Ensure the primary action on every screen stands out cleanly without competing visual noise.
 
 ## Acceptance Criteria
-- [x] Header bars reduce visible primary buttons to at most 3 core actions, collapsing secondary tools into an overflow menu
+- [ ] Header bars reduce visible primary buttons to at most 3 core actions, collapsing secondary tools into an overflow menu
 - [x] Increased margin and row spacing across lists, forms, and dialogs preventing cramped visual density
 - [x] Clear typographic hierarchy establishing an airy, modern, distraction-free aesthetic
 
@@ -53,3 +53,8 @@ Criteria 2 and 3 (spacing, typography): the density scale and the typography tes
 
 ## Open Questions
 None.
+
+## Implementation (2026-11-22, audit)
+
+Audit (2026-11-22): criterion 1 NOT MET for the PDF viewer, so unticked by this audit. The stack page (New item, Start rehearsal, Memory game, More actions) and the item editor (Back, key, More actions; /tmp/claude-0/audit/g5/0170-editor.png) meet it. The PDF viewer header shows Back to library, Previous, the page number, Next, -, Fit, +, the find field, Previous hit, Next hit, More... and Panels...: ten controls (/tmp/claude-0/audit/g5/0170-pdf.png). The author's own note leaves this to the owner.
+Criterion 2 MET: spacing is scaled by density (Spacious factor 1.5, from `ctl appearance`), and the item editor and lists show the wider gaps (/tmp/claude-0/audit/g5/0170-editor.png, /tmp/claude-0/audit/g5/0168-allitems.png). Criterion 3 MET: four visible type levels (page title, section heading, field labels, body) in the same screens. The item editor's details column scrolls sideways at 1280 px as the author noted.

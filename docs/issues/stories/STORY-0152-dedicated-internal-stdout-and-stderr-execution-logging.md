@@ -25,7 +25,7 @@ Implement dedicated stdout and stderr capture and display:
 
 ## Acceptance Criteria
 - [ ] The application captures stdout and stderr from user scripts into dedicated, distinct internal streams
-- [x] The script execution UI displays stdout and stderr with distinct visual styling (e.g. standard text vs. error highlights) and timestamps
+- [ ] The script execution UI displays stdout and stderr with distinct visual styling (e.g. standard text vs. error highlights) and timestamps
 - [ ] Internal execution logs can be filtered, cleared, and exported for troubleshooting user-authored scripts
 
 ## Design Notes
@@ -42,3 +42,9 @@ Checked in the running window: entries show their time, the stream filters and t
 
 ## Open Questions
 - Maximum buffer size for script output streams before rolling truncation (default: 10,000 lines or 2 MB).
+
+## Implementation (2026-11-22, audit)
+
+Audit (2026-11-22): criterion 1 NOT MET: script stderr is shown in the stdout stream; the Stderr / Errors filter shows "No entries for selected filter" for a job that writes to stderr (/tmp/claude-0/audit/g5/0151-filter-stderr.png; the line appears under Stdout in /tmp/claude-0/audit/g5/0151-filter-stdout.png). BUG-0033.
+Criterion 2 NOT MET; unticked by this audit, which contradicts the earlier window check: the stderr line is drawn in the same green as the stdout line (/tmp/claude-0/audit/g5/0151-console-run.png; the pixel colours of both lines match). Timestamps are present (elapsed seconds). FrogScript errors are red (/tmp/claude-0/audit/g5/0150-studio-error.png), so only script stderr is affected. BUG-0033.
+Criterion 3 NOT MET: the All, Stdout and Events filters, the output search and Clear Output work (/tmp/claude-0/audit/g5/0152-cleared.png). Export log wrote /tmp/claude-0/audit/g5/vault/logs/script_runs.log, and the status bar confirmed the path. But the Stderr filter is empty for script stderr and the export does not label streams (BUG-0033).
