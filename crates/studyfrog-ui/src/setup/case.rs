@@ -32,6 +32,8 @@ pub enum CaseMsg {
     RunPick(usize, bool),
     /// Check the answer of the case in a run.
     RunCheck,
+    /// The case's score was stored, or why not.
+    Recorded(Result<(), String>),
     /// The next case.
     Next,
     /// Close the case-study view.
@@ -83,7 +85,8 @@ pub fn update(state: State, msg: CaseMsg) -> (State, Vec<Effect>) {
         ),
         CaseMsg::Next => (map(state, next), Vec::new()),
         CaseMsg::RunPick(i, on) => (run::pick(state, i, on), Vec::new()),
-        CaseMsg::RunCheck => (run::check(state), Vec::new()),
+        CaseMsg::RunCheck => run::check(state),
+        CaseMsg::Recorded(result) => (recorded(state, result), Vec::new()),
         CaseMsg::Close => (with_case(state, None), Vec::new()),
     }
 }
@@ -173,6 +176,20 @@ fn pick(cs: CaseUi, i: usize, on: bool) -> CaseUi {
         *slot = on;
     }
     cs
+}
+
+/// Say when a case's score could not be stored; a stored score needs no word.
+fn recorded(state: State, result: Result<(), String>) -> State {
+    match result {
+        Ok(()) => state,
+        Err(e) => State {
+            notice: Some(crate::state::Notice {
+                kind: crate::state::NoticeKind::Error,
+                text: format!("The case's score was not saved: {e}"),
+            }),
+            ..state
+        },
+    }
 }
 
 fn next(cs: CaseUi) -> CaseUi {

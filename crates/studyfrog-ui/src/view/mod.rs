@@ -69,6 +69,7 @@ mod math_view;
 mod md_editor;
 mod memory;
 mod menus;
+mod mock_exam_view;
 mod modal;
 mod modal_create;
 mod modal_csv;
@@ -161,11 +162,10 @@ pub(crate) mod widgets;
 pub(crate) mod window_frame;
 mod zen;
 
-use eframe::egui;
-
 use crate::appearance_ui::AppearanceMsg;
 use crate::msg::Msg;
 use crate::state::{Screen, State};
+use eframe::egui;
 /// Draw the whole window for `state`.
 pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     let mut out = Vec::new();

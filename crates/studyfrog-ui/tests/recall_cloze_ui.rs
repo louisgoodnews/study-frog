@@ -61,7 +61,7 @@ fn a_typed_answer_is_compared_with_the_gap() {
     let fx = act(&mut m, 1.0, Action::SubmitAnswer("sun".into()));
     assert!(fx.iter().any(|e| matches!(
         e,
-        Effect::ScoreAnswer { item: Uid(1), answer, .. }
+        Effect::Answer(studyfrog_ui::run_state::AnswerEffect::Score { item: Uid(1), answer, .. })
             if *answer == ("sun".to_owned(), Some("sun".to_owned()))
     )));
 }

@@ -34,12 +34,14 @@ fn submitting_an_answer_asks_for_a_comparison_and_the_result_is_kept_until_ratin
     let mut m = running_model(RunMode::Answer);
     let effects = apply(&mut m, Msg::RunAction(Action::SubmitAnswer("Paris".into())));
     assert!(
-        effects.contains(&Effect::ScoreAnswer {
-            run: Uid(100),
-            item: Uid(1),
-            answer: ("Paris".into(), None),
-            words_only: false,
-        }),
+        effects.contains(&Effect::Answer(
+            studyfrog_ui::run_state::AnswerEffect::Score {
+                run: Uid(100),
+                item: Uid(1),
+                answer: ("Paris".into(), None),
+                words_only: false,
+            }
+        )),
         "{effects:?}"
     );
     apply(
@@ -124,12 +126,12 @@ fn the_executor_scores_against_a_real_card_offline() {
     assert!(matches!(open[0], Msg::VaultOpened(Ok(_))));
     let msgs = execute(
         &mut worker,
-        Effect::ScoreAnswer {
+        Effect::Answer(studyfrog_ui::run_state::AnswerEffect::Score {
             run: Uid(500),
             item: Uid(10),
             answer: ("a".into(), None),
             words_only: false,
-        },
+        }),
         NOW_NS,
     );
     let Msg::AnswerScored(uid, Ok(s)) = &msgs[0] else {
@@ -141,12 +143,12 @@ fn the_executor_scores_against_a_real_card_offline() {
     );
     let none = execute(
         &mut worker,
-        Effect::ScoreAnswer {
+        Effect::Answer(studyfrog_ui::run_state::AnswerEffect::Score {
             run: Uid(500),
             item: Uid(12),
             answer: ("a".into(), None),
             words_only: false,
-        },
+        }),
         NOW_NS,
     );
     assert!(matches!(&none[0], Msg::AnswerScored(_, Err(e)) if e.contains("cards and questions")));
@@ -162,11 +164,13 @@ fn the_comparison_is_stored_with_its_run_and_word_matching_can_be_forced() {
         Effect::OpenVault(vault.path.display().to_string()),
         NOW_NS,
     );
-    let ask = |words_only| Effect::ScoreAnswer {
-        run: Uid(500),
-        item: Uid(10),
-        answer: ("a".into(), None),
-        words_only,
+    let ask = |words_only| {
+        Effect::Answer(studyfrog_ui::run_state::AnswerEffect::Score {
+            run: Uid(500),
+            item: Uid(10),
+            answer: ("a".into(), None),
+            words_only,
+        })
     };
     execute(&mut worker, ask(false), NOW_NS);
     let msgs = execute(&mut worker, ask(true), NOW_NS);

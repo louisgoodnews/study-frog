@@ -40,9 +40,11 @@ Four stages, each in the crate that owns it (the layering allows agent to depend
 
 Offline (no `ask`), the exam is made from the notes' own definitions and formulas; its answers are the notes' lines, and the templates say so.
 
-Open: nothing calls the model yet from the app (the pipeline takes the model as a closure, so an effect can supply it); the exam is not saved to the vault or shown in the Altklausur lab. The notes-to-exam path is tested with fake models; no PDF fixture exists in the repository, so the PDF route is compiled but not run on a real file. Small local models are unmeasured, as for STORY-0200.
+Wired into the app: "Mock exam" on the rehearse setup's What step makes an exam of ten questions from the notes of the stack that is open (`setup::mock_exam`, `exec::mock`, `view::mock_exam_view`). The local model writes the questions when one is selected and may see the notes (a remote one only when the user allowed it); otherwise templates make it. "Save as note" writes the exam, with its reference answers, into the stack as a note (`exam_save::save_exam`). The view says when the notes supply fewer questions than asked.
 
-Tests: inline in `studyfrog-rehearsal` (curriculum, curriculum_build), `studyfrog-agent` (exam_gen), `studyfrog-service` (exam_gen: offline, invented question rejected, failed chunk noted).
+Open: the exam is shown in a view of its own, not in the Altklausur lab (no lab screen exists yet). Small local models are unmeasured, as for STORY-0200. The PDF route is tested on a real PDF (exported from a note, then read back).
+
+Tests: `studyfrog-rehearsal` (curriculum; `tests/curriculum_build.rs`), `studyfrog-agent` (exam_gen), `studyfrog-service` (`tests/exam_gen_pdf.rs`: a note exported to a real PDF, read back and made into an exam; `tests/exam_save.rs`), `studyfrog-ui/tests/mock_exam_ui.rs`. A screenshot (`--screen mock-demo`) shows an exam made offline.
 
 ## Design Notes
 Ensure generation handles large documents cleanly through staged prompting without token overflow. Implement fallback generation templates when offline.

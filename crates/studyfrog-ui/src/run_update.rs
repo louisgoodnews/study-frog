@@ -108,14 +108,16 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
         || (crate::exam_ui::is_exam(&run) && matches!(action, Action::SubmitAnswer(_)));
     let mut effects = Vec::new();
     let submitted = match &action {
-        Action::SubmitAnswer(text) => current_item(&run.session).map(|item| Effect::ScoreAnswer {
-            run: run.session.run.uid,
-            item,
-            answer: (
-                text.clone(),
-                run.content.get(&item).and_then(|c| c.expected.clone()),
-            ),
-            words_only: state.app.answer_engine == AnswerEngine::Words,
+        Action::SubmitAnswer(text) => current_item(&run.session).map(|item| {
+            Effect::Answer(crate::run_state::AnswerEffect::Score {
+                run: run.session.run.uid,
+                item,
+                answer: (
+                    text.clone(),
+                    run.content.get(&item).and_then(|c| c.expected.clone()),
+                ),
+                words_only: state.app.answer_engine == AnswerEngine::Words,
+            })
         }),
         _ => None,
     };

@@ -81,3 +81,29 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
     });
 }
+
+/// The timing of a memory game: open-ended, or a countdown of each option in seconds.
+pub(super) fn timing_choice(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    use studyfrog_rehearsal::memory_summary::{MemoryTimer, TIME_ATTACK_OPTIONS_SEC};
+    let current = state.rehearse.memory_timer;
+    let options = std::iter::once((MemoryTimer::Stopwatch, "Stopwatch".to_owned())).chain(
+        TIME_ATTACK_OPTIONS_SEC
+            .iter()
+            .map(|s| (MemoryTimer::TimeAttack(*s), format!("{s} s"))),
+    );
+    for (option, label) in options {
+        let hint = match option {
+            MemoryTimer::Stopwatch => {
+                "Memory game without a limit: the fastest clear wins.".to_owned()
+            }
+            MemoryTimer::TimeAttack(s) => format!("Memory game against a {s}-second countdown."),
+        };
+        if ui
+            .selectable_label(current == option, label)
+            .on_hover_text(hint)
+            .clicked()
+        {
+            out.push(Msg::Memory(crate::setup::memory::MemoryMsg::Mode(option)));
+        }
+    }
+}

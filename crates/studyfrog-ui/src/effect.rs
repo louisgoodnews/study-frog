@@ -54,6 +54,8 @@ pub enum Effect {
     MemoryDeck(Option<String>),
     /// Read the case studies of a stack (the inbox when `None`).
     LoadCases(Option<String>),
+    /// Make or save a mock exam from the notes of a folder.
+    MockExam(crate::setup::mock_exam::MockExamEffect),
     /// Write the calibrated-start switch into the vault's `studyfrog.toml`.
     SetCalibratedStart(bool),
     /// Count the items a run built from this plan would contain.
@@ -81,17 +83,8 @@ pub enum Effect {
         /// What the step produced.
         out: StepOutput,
     },
-    /// Compare a typed answer with the item's reference.
-    ScoreAnswer {
-        /// The run the answer belongs to.
-        run: Uid,
-        /// The item answered.
-        item: Uid,
-        /// What the user typed, and the words to compare it with when not the whole back (a cloze gap).
-        answer: (String, Option<String>),
-        /// Compare by word matching only, whatever is installed.
-        words_only: bool,
-    },
+    /// Work on a typed or case answer: score it, or record a case check's score.
+    Answer(crate::run_state::AnswerEffect),
     /// Replace the rating of an item's latest review and rebuild its schedule.
     Rerate {
         /// The item.

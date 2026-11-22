@@ -9,7 +9,8 @@ use studyfrog_rehearsal::session::current_item;
 use studyfrog_service::compare::Scored;
 use studyfrog_slm::score::{Score, verdict_for};
 
-use crate::run_state::RunView;
+use crate::effect::Effect;
+use crate::run_state::{AnswerEffect, RunView};
 use crate::state::State;
 
 /// The engine label of a case check: the rubric check, not a model.
@@ -44,8 +45,9 @@ pub fn pick(state: State, i: usize, on: bool) -> State {
 }
 
 /// Check the answer against the case's expected choice and rubric, and suggest a rating.
-pub fn check(state: State) -> State {
-    with_run(state, |run| {
+pub fn check(state: State) -> (State, Vec<Effect>) {
+    let mut effects = Vec::new();
+    let state = with_run(state, |run| {
         let Some(uid) = current_item(&run.session) else {
             return run;
         };
@@ -70,6 +72,11 @@ pub fn check(state: State) -> State {
             rating: suggested_rating(&report),
             engine: ENGINE.to_owned(),
         };
+        effects.push(Effect::Answer(AnswerEffect::Record {
+            run: run.session.run.uid,
+            item: uid,
+            scored: Box::new(scored.clone()),
+        }));
         RunView {
             scored: Some(scored),
             case_run: CaseRun {
@@ -78,7 +85,8 @@ pub fn check(state: State) -> State {
             },
             ..run
         }
-    })
+    });
+    (state, effects)
 }
 
 /// The rating the check suggests: by the overall score, at most Hard when the choice is wrong, and Again

@@ -226,6 +226,6 @@ fn a_typed_answer_is_compared_with_the_label() {
     let mut m = occluded_run(&root, RunMode::Answer);
     let fx = act(&mut m, 1.0, Action::SubmitAnswer("hippocampus".into()));
     assert!(fx.iter().any(|e| matches!(e,
-        studyfrog_ui::effect::Effect::ScoreAnswer { answer, .. }
+        studyfrog_ui::effect::Effect::Answer(studyfrog_ui::run_state::AnswerEffect::Score { answer, .. })
             if answer.1.as_deref() == Some("Hippocampus"))));
 }

@@ -175,6 +175,7 @@ pub fn memory_setup(model: &mut Model, name: &str) -> Option<Vec<crate::effect::
         "memory-won" => memory_won(model),
         "case-demo" => case_demo(model),
         "math-demo" => math_demo(model),
+        "mock-demo" => mock_demo(model),
         _ => return None,
     }
     Some(Vec::new())
@@ -227,4 +228,18 @@ pub fn math_demo(model: &mut Model) {
     };
     model.state.screen = Screen::Rehearse;
     model.state.rehearse.math = Some(drill);
+}
+
+/// A mock exam made offline from a short note, shown with its answers hidden.
+pub fn mock_demo(model: &mut Model) {
+    let notes = "# Reliabilität\nReliabilität: consistency of measurement over repeated testing occasions.\n\nThe reliability coefficient compares true score variance with observed score variance.\n\n# Normierung\nStandard scores place a result against the norm group mean and standard deviation.\n";
+    let chunks = studyfrog_rehearsal::curriculum::chunk_markdown(notes);
+    let g = studyfrog_service::exam_gen::generate(&chunks, 6, "Mock exam: bio", None);
+    model.state.screen = Screen::Rehearse;
+    model.state.rehearse.mock = Some(crate::setup::mock_exam::MockExamUi {
+        folder: Some("bio".to_owned()),
+        title: "Mock exam: bio".to_owned(),
+        result: Some(Box::new(g)),
+        ..Default::default()
+    });
 }

@@ -85,3 +85,30 @@ pub fn engine_ms(now: f64, started_time: f64, floor: u32) -> u32 {
     let ms = ((now - started_time) * 1000.0).max(0.0);
     (ms.min(f64::from(u32::MAX)) as u32).max(floor)
 }
+
+/// Work on an answer in a run: the typed answer is scored, a case check's score is recorded like a
+/// typed answer's.
+#[derive(Debug, Clone, PartialEq)]
+pub enum AnswerEffect {
+    /// Compare a typed answer with the item's reference. `answer` is what was typed, and the words to
+    /// compare it with when not the whole back (a cloze gap); `words_only` compares by words only.
+    Score {
+        /// The run the answer belongs to.
+        run: studyfrog_core::uid::Uid,
+        /// The item answered.
+        item: studyfrog_core::uid::Uid,
+        /// What was typed, and the reference words.
+        answer: (String, Option<String>),
+        /// Compare by word matching only, whatever is installed.
+        words_only: bool,
+    },
+    /// Store a case check's score for the item, as a typed answer's score is stored.
+    Record {
+        /// The run.
+        run: studyfrog_core::uid::Uid,
+        /// The item.
+        item: studyfrog_core::uid::Uid,
+        /// The score and the rating it suggests.
+        scored: Box<studyfrog_service::compare::Scored>,
+    },
+}

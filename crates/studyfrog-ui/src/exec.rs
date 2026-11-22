@@ -57,6 +57,8 @@ pub struct Worker {
 
 pub use crate::exec_worker::{worker_new, worker_with_host};
 
+mod mock;
+
 /// Perform one effect and report what happened. `now_ns` is the current Unix time in nanoseconds.
 pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
     let msg = match effect {
@@ -88,6 +90,10 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::Folders(e) => return crate::exec_folders::execute(w, e, now_ns),
         Effect::Notifications(op) => return crate::exec_items::notifications(w, op, now_ns),
         Effect::LoadStatusCounts(selection) => crate::exec_items::counts(w, &selection),
+        Effect::Answer(crate::run_state::AnswerEffect::Record { run, item, scored }) => {
+            crate::exec_run::record_case(w, run, item, &scored, now_ns)
+        }
+        Effect::MockExam(e) => mock::run(w, e, now_ns),
         Effect::LoadCases(folder) => crate::exec_library::load_cases(w, folder),
         Effect::SetCalibratedStart(on) => crate::exec_library::set_calibrated_start(w, on),
         Effect::MemoryDeck(folder) => crate::exec_items::memory_deck(w, folder),
@@ -171,12 +177,12 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::Rerate { item, expected, to } => exec_run::rerate(w, item, expected, to),
         Effect::LoadItem(uid) => exec_run::load_item(w, uid),
         Effect::Exam(e) => crate::exec_exam::execute(w, e, now_ns),
-        Effect::ScoreAnswer {
+        Effect::Answer(crate::run_state::AnswerEffect::Score {
             run,
             item,
             answer,
             words_only,
-        } => exec_run::score(w, (run, item), &answer, words_only, now_ns),
+        }) => exec_run::score(w, (run, item), &answer, words_only, now_ns),
         Effect::RecordStep { ctx, out } => exec_run::record(w, &ctx, &out, now_ns),
         Effect::CreateCard {
             folder,

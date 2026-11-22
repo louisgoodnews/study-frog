@@ -106,7 +106,7 @@ pub const COMMANDS: &[Row] = &[
     ),
     (
         "rehearse answer <text>",
-        "AnswerEdited, RunAction(SubmitAnswer) -> Effect::ScoreAnswer",
+        "AnswerEdited, RunAction(SubmitAnswer) -> Effect::Answer(AnswerEffect::Score)",
         "write",
     ),
     (

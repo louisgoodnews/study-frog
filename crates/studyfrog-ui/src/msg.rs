@@ -10,12 +10,8 @@ use crate::reading_test::ReadingTestMsg;
 use crate::run_state::{ItemContent, Scored};
 use crate::setup::SetupEdit;
 use crate::state::{ItemRow, Screen, Selection, VaultInfo};
-use studyfrog_core::{
-    review::Rating,
-    run::Run,
-    settings::{AnswerEngine, AppSettings},
-    uid::Uid,
-};
+#[rustfmt::skip]
+use studyfrog_core::{review::Rating, run::Run, settings::{AnswerEngine, AppSettings}, uid::Uid};
 use studyfrog_rehearsal::input::Action;
 use studyfrog_service::achievements::AchievementReport;
 use studyfrog_service::document::{LoadedDoc, Saved};
@@ -120,6 +116,8 @@ pub enum Msg {
     Case(crate::setup::case::CaseMsg),
     /// A message of the math drill.
     Math(crate::setup::math::MathMsg),
+    /// A message of the mock exam.
+    MockExam(crate::setup::mock_exam::MockExamMsg),
     /// A scheduling switch of the vault.
     Srs(crate::app_settings_ui::SrsMsg),
     /// A message of the memory game.

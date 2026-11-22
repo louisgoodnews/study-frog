@@ -21,6 +21,10 @@ fn go(out: &mut Vec<Msg>, step: SetupStep) {
 
 /// The whole screen: the steps scroll, the Back and Next buttons stay in view.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if let Some(m) = &state.rehearse.mock {
+        scrolled(ui, |ui| super::mock_exam_view::draw(ui, m, out));
+        return;
+    }
     if let Some(math) = &state.rehearse.math {
         scrolled(ui, |ui| super::math_view::draw(ui, math, out));
         return;
@@ -80,7 +84,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                             ui.label(
                                 RichText::new("Memory game timing").color(palette_of(ui).text_weak),
                             );
-                            timing_choice(state, ui, out);
+                            super::setup_what::timing_choice(state, ui, out);
                         });
                         ui.add_space(8.0);
                         setup_what::draw(state, ui, out);
@@ -141,6 +145,12 @@ fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         match step {
             SetupStep::What => {
+                if kit::quiet_button(ui, "Mock exam")
+                    .on_hover_text("Makes an exam of about ten questions from the notes of the stack you have open.")
+                    .clicked()
+                {
+                    out.push(Msg::MockExam(crate::setup::mock_exam::MockExamMsg::Open));
+                }
                 if kit::quiet_button(ui, "Math drill")
                     .on_hover_text("Opens a math drill: a standard-error problem with working rows, a keypad and the full solution.")
                     .clicked()
@@ -217,30 +227,4 @@ fn count_hint(preview: &Preview, ui: &mut egui::Ui) {
             format!("Could not count: {reason}"),
         ),
     };
-}
-
-/// The timing of a memory game: open-ended, or a countdown of each option in seconds.
-fn timing_choice(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    use studyfrog_rehearsal::memory_summary::{MemoryTimer, TIME_ATTACK_OPTIONS_SEC};
-    let current = state.rehearse.memory_timer;
-    let options = std::iter::once((MemoryTimer::Stopwatch, "Stopwatch".to_owned())).chain(
-        TIME_ATTACK_OPTIONS_SEC
-            .iter()
-            .map(|s| (MemoryTimer::TimeAttack(*s), format!("{s} s"))),
-    );
-    for (option, label) in options {
-        let hint = match option {
-            MemoryTimer::Stopwatch => {
-                "Memory game without a limit: the fastest clear wins.".to_owned()
-            }
-            MemoryTimer::TimeAttack(s) => format!("Memory game against a {s}-second countdown."),
-        };
-        if ui
-            .selectable_label(current == option, label)
-            .on_hover_text(hint)
-            .clicked()
-        {
-            out.push(Msg::Memory(crate::setup::memory::MemoryMsg::Mode(option)));
-        }
-    }
 }

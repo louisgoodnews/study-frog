@@ -203,3 +203,19 @@ pub fn explorer(
     };
     Msg::Explorer(crate::explorer_ui::ExplorerMsg::Loaded(result))
 }
+
+/// Store a case check's score for its item, the way a typed answer's score is stored.
+pub fn record_case(
+    w: &mut Worker,
+    run: Uid,
+    item: Uid,
+    scored: &studyfrog_service::compare::Scored,
+    now_ns: i64,
+) -> Msg {
+    let done = match w.session.as_ref() {
+        None => Err("no vault is open".to_owned()),
+        Some(s) => record_answer_score(s, run, item, scored, UnixMs(millis(now_ns)))
+            .map_err(|e| e.to_string()),
+    };
+    Msg::Case(crate::setup::case::CaseMsg::Recorded(done))
+}

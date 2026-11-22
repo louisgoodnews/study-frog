@@ -11,6 +11,7 @@ pub mod math;
 pub mod memory;
 pub mod memory_deck;
 pub mod memory_layout;
+pub mod mock_exam;
 
 pub use crate::setup_form::{
     Preset, SetupEdit, SetupForm, apply_edit, form_for_preset, plan_from_form,
@@ -63,6 +64,8 @@ pub struct Rehearse {
     pub case_study: Option<case::CaseUi>,
     /// The math drill, when it is open.
     pub math: Option<math::MathDrill>,
+    /// The mock exam from the notes, when it is open.
+    pub mock: Option<mock_exam::MockExamUi>,
     /// The timing chosen for the next memory game.
     pub memory_timer: studyfrog_rehearsal::memory_summary::MemoryTimer,
 }
