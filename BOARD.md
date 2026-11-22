@@ -576,7 +576,7 @@
 | [EPIC-060](docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | review | 1/3 |
 | [EPIC-061](docs/issues/epics/EPIC-061-case-study-and-diagnostic-decision-matrix.md) Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification | review | 0/5 |
 | [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | review | 2/3 |
-| [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | backlog | 1/3 |
+| [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | review | 1/3 |
 | [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | review | 1/5 |
 | [EPIC-065](docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | backlog | 1/3 |
 | [EPIC-066](docs/issues/epics/EPIC-066-learn-mode-research-platform.md) Learn-mode research platform: visual node-based technique editor | done | 1/1 |

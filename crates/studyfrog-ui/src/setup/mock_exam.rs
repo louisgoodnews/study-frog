@@ -1,17 +1,19 @@
-//! The mock exam from a folder's notes (STORY-0186): asking for it, showing what was made, and saving it
-//! as a note. The generation is in `studyfrog-service::exam_gen`. Pure: no egui, no I/O.
+//! The mock exam from a folder's notes or a lecture PDF (STORY-0186), and its grading (STORY-0187): asking
+//! for it, showing what was made, grading the answers, and saving it as a note. The generation is in
+//! `studyfrog-service::exam_gen`. Pure: no egui, no I/O.
 
 use studyfrog_agent::provider::Provider;
 use studyfrog_rehearsal::curriculum_build::AnswerKey;
 use studyfrog_rehearsal::mock_exam::MockExam;
 use studyfrog_service::exam_gen::Generated;
 
+mod finish;
 pub mod grading;
+mod open;
 mod save;
 
-use crate::agent_conn::selected_provider;
 use crate::effect::Effect;
-use crate::state::{Selection, State};
+use crate::state::State;
 
 /// Questions asked for an exam from the notes.
 pub const EXAM_QUESTIONS: usize = 10;
@@ -21,6 +23,12 @@ pub const EXAM_QUESTIONS: usize = 10;
 pub enum MockExamMsg {
     /// Make an exam from the stack that is open.
     Open,
+    /// List the lecture PDFs of the vault, to make an exam from one of them.
+    OpenSlides,
+    /// The lecture PDFs listed (or why they could not be).
+    Slides(Result<Vec<SlideChoice>, String>),
+    /// Make the exam from the lecture PDF at this vault path.
+    FromSlide(String),
     /// The exam was made (or why it was not).
     Generated(Result<Box<Generated>, String>),
     /// Save the exam as a note.
@@ -35,23 +43,56 @@ pub enum MockExamMsg {
     Answer(usize, String),
     /// Grade the answers written so far.
     Finish,
+    /// The answers were graded by the local model (the keyword check is done at once when no model is used).
+    Graded(Vec<grading::Graded>),
     /// Close the exam view.
     Close,
+}
+
+/// A lecture PDF of the vault that an exam can be made from.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SlideChoice {
+    /// Vault-relative path.
+    pub path: String,
+    /// Its title.
+    pub title: String,
+}
+
+/// Where an exam's text comes from.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ExamSource {
+    /// The notes of a folder (the inbox when `None`).
+    Notes(Option<String>),
+    /// The text of a lecture PDF, by its vault path.
+    Slide(String),
 }
 
 /// Work for the executor.
 #[derive(Debug, Clone, PartialEq)]
 pub enum MockExamEffect {
-    /// Make the exam from the notes of a folder (the inbox when `None`), with the model when one is given.
+    /// Make the exam from a source, with the model when one is given.
     Generate {
-        /// The folder whose notes are read.
-        folder: Option<String>,
+        /// Where the text comes from.
+        source: ExamSource,
         /// Questions asked for.
         total: usize,
         /// The exam's title.
         title: String,
-        /// The model that writes the questions, if one may see the notes.
+        /// The model that writes the questions, if one may see the text.
         provider: Option<Provider>,
+    },
+    /// List the lecture PDFs of the vault.
+    ListSlides,
+    /// Grade the answers with the local model; a question the model cannot grade falls back to the keyword check.
+    Grade {
+        /// The exam.
+        exam: Box<MockExam>,
+        /// Its reference answers and rubrics.
+        keys: Vec<AnswerKey>,
+        /// The answers written, one per question.
+        answers: Vec<String>,
+        /// The local model that judges the answers.
+        provider: Provider,
     },
     /// Save the exam as a note in its folder.
     Save {
@@ -73,12 +114,18 @@ pub struct MockExamUi {
     pub folder: Option<String>,
     /// The exam's title.
     pub title: String,
-    /// The exam is being written.
+    /// The exam is being written, or the PDFs are being listed.
     pub loading: bool,
+    /// The answers are being graded by the local model.
+    pub judging: bool,
     /// The exam, once made.
     pub result: Option<Box<Generated>>,
     /// Why there is no exam.
     pub error: Option<String>,
+    /// What the student should know about how the exam was made (for example, that no model is selected).
+    pub note: Option<String>,
+    /// The lecture PDFs to choose from, when the student is choosing one.
+    pub slides: Option<Vec<SlideChoice>>,
     /// The reference answers are shown.
     pub show_answers: bool,
     /// The vault path of the saved note.
@@ -94,7 +141,10 @@ pub struct MockExamUi {
 /// Handle a mock-exam message.
 pub fn update(state: State, msg: MockExamMsg) -> (State, Vec<Effect>) {
     match msg {
-        MockExamMsg::Open => open(state),
+        MockExamMsg::Open => open::open(state),
+        MockExamMsg::OpenSlides => open::open_slides(state),
+        MockExamMsg::Slides(result) => (open::slides_listed(state, result), Vec::new()),
+        MockExamMsg::FromSlide(path) => open::from_slide(state, path),
         MockExamMsg::Generated(result) => {
             let ui = map_ui(&state, |ui| match result {
                 Ok(g) => {
@@ -103,6 +153,7 @@ pub fn update(state: State, msg: MockExamMsg) -> (State, Vec<Effect>) {
                         loading: false,
                         result: Some(g),
                         error: None,
+                        slides: None,
                         answers,
                         ..ui
                     }
@@ -135,17 +186,12 @@ pub fn update(state: State, msg: MockExamMsg) -> (State, Vec<Effect>) {
             });
             (with_ui(state, ui), Vec::new())
         }
-        MockExamMsg::Finish => {
-            let ui = map_ui(&state, |ui| match &ui.result {
-                Some(g) => {
-                    let graded = grading::grade(&g.exam, &g.keys, &ui.answers);
-                    MockExamUi {
-                        started: false,
-                        graded: Some(graded),
-                        ..ui
-                    }
-                }
-                None => ui,
+        MockExamMsg::Finish => finish::finish(state),
+        MockExamMsg::Graded(graded) => {
+            let ui = map_ui(&state, |ui| MockExamUi {
+                judging: false,
+                graded: Some(graded),
+                ..ui
             });
             (with_ui(state, ui), Vec::new())
         }
@@ -172,37 +218,4 @@ fn with_ui(state: State, ui: Option<MockExamUi>) -> State {
 
 fn map_ui(state: &State, f: impl FnOnce(MockExamUi) -> MockExamUi) -> Option<MockExamUi> {
     state.rehearse.mock.clone().map(f)
-}
-
-fn open(state: State) -> (State, Vec<Effect>) {
-    let folder = match &state.browser.selection {
-        Selection::Stack(f) => Some(f.clone()),
-        Selection::Inbox => None,
-        Selection::Nothing => {
-            let ui = MockExamUi {
-                error: Some("Open a stack first, then make its exam.".to_owned()),
-                ..MockExamUi::default()
-            };
-            return (with_ui(state, Some(ui)), Vec::new());
-        }
-    };
-    let title = match &folder {
-        Some(f) => format!("Mock exam: {f}"),
-        None => "Mock exam: inbox".to_owned(),
-    };
-    // A model sees the notes only when it is local, or when the user allowed it.
-    let provider = selected_provider(&state.agent).filter(studyfrog_agent::provider::may_send);
-    let ui = MockExamUi {
-        folder: folder.clone(),
-        title: title.clone(),
-        loading: true,
-        ..MockExamUi::default()
-    };
-    let effect = Effect::MockExam(MockExamEffect::Generate {
-        folder,
-        total: EXAM_QUESTIONS,
-        title,
-        provider,
-    });
-    (with_ui(state, Some(ui)), vec![effect])
 }

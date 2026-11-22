@@ -47,9 +47,26 @@ EPIC-063, STORY-0185, STORY-0186
 ## Implementation (2026-11-22)
 The exam can now be written and graded in the app (`setup::mock_exam`, `setup::mock_exam::grading`, `view::mock_exam_view`, `view::mock_exam_view::result`). "Start the exam" shows one answer box per question; "Finish and grade" checks each answer against its question's rubric (the keyword check, `rubric_eval::fallback_evaluate`): a question's points are its points times the share of rubric points the answer makes. The result shows the total and percentage, the grade and pass or fail (pass mark 50 %), the points by topic, and for each question the student's answer, the model answer and the rubric points made.
 
-Open: the answers are graded by the keyword check only. Grading with the local model (as in STORY-0200) is not wired into the exam yet, and the results are not kept after the view closes.
+Open: the results are not kept after the view closes. (Model grading: see the notes below.)
 
 Tests: `studyfrog-ui/tests/mock_exam_ui.rs` (a full answer earns all points, an unwritten exam none), and `setup/mock_exam/grading.rs` (grading, breakdown). A screenshot (`--screen mock-graded`) shows the result.
+
+## Implementation notes (2026-11-22, model grading)
+
+Built:
+- Model grading of written answers (`studyfrog-agent::exam_grade`): the local model judges each rubric point from the student's answer alone, in JSON, matched to the rubric by text. Points it does not mention count as not met.
+- Fallback: with no local model selected, the keyword check grades at once (no model call). If the model cannot be reached or its reply cannot be read, the keyword check grades that answer, and the reason is shown under the question.
+- Only a local model grades (as in the case-study check): a remote model is not sent the student's answers.
+- The worker grades in one call per exam (`exec::mock`, `MockExamEffect::Grade`); "Finish and grade" shows "Grading your answers with the local model" while it runs.
+- The result says who graded: all by the model, all by word overlap, or how many of each. Each question shows whether the model or the keyword check made the call.
+- Summation: points are summed, not averaged by percentage (test: 1 of 3 and 10 of 10 is 84.6 %, grade 2.0). The pass mark is a parameter of `exam_result` and applies to the whole exam; the exam view uses 50 %. It is not yet a setting in the UI.
+
+Tests: `studyfrog-agent/tests/exam_grade.rs` (model judgements, prompt contents, no model, failed call, unreadable reply, skipped rubric point, empty rubric); `studyfrog-ui/src/setup/mock_exam/grading.rs` (keyword grading with no model; model grading with a fake model); `studyfrog-ui/tests/mock_exam_model_ui.rs` (Finish with no model grades at once; with a local model it asks for grading, then shows the result); `studyfrog-rehearsal/tests/grade.rs` (summation by points, configured pass mark).
+
+Not done or not verified:
+- A real local model was not run: this container has none. Model grading is tested with a fake model only. How well a real model judges rubric points is unmeasured.
+- A person at a window should check the result view's layout, the grading line and the per-question reasons.
+- The results are still not kept after the view closes.
 
 ## Open Questions
 None.

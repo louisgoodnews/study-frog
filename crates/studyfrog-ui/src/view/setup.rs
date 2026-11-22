@@ -151,6 +151,12 @@ fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 {
                     out.push(Msg::MockExam(crate::setup::mock_exam::MockExamMsg::Open));
                 }
+                if kit::quiet_button(ui, "Mock exam from a PDF")
+                    .on_hover_text("Makes an exam of about ten questions from the text of a lecture PDF in the vault (its slides), after you choose the PDF.")
+                    .clicked()
+                {
+                    out.push(Msg::MockExam(crate::setup::mock_exam::MockExamMsg::OpenSlides));
+                }
                 if kit::quiet_button(ui, "Learn modes")
                     .on_hover_text("Builds or edits a learn mode: a graph of steps that a practice-only run follows.")
                     .clicked()

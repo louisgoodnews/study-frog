@@ -2,7 +2,7 @@
 id: EPIC-063
 type: epic
 title: "Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale"
-status: backlog
+status: review
 parents: []
 labels: [m14, rehearse, agent, ui]
 acceptance_criteria:

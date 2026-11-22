@@ -68,3 +68,19 @@ fn an_empty_exam_grades_as_a_fail() {
     assert_eq!(r.percent, None);
     assert_eq!(grade_label(r.grade), "5.0");
 }
+
+#[test]
+fn questions_are_summed_by_their_points_not_averaged_by_their_percentages() {
+    // 1 of 3 points and 10 of 10 points: 11 of 13 is 84.6 % (grade 2.0). Averaging the two shares
+    // would give 66.7 % (grade 3.0).
+    let r = exam_result(&[1, 10], &[3, 10], 50.0);
+    assert_eq!(grade_label(r.grade), "2.0");
+    assert!((r.percent.unwrap() - 84.615).abs() < 0.01);
+}
+
+#[test]
+fn a_configured_pass_mark_applies_to_the_whole_exam() {
+    // 21 of 30 points is 70 %: grade 2.7 with a pass mark of 60, a fail (5.0) with 75.
+    assert_eq!(grade_label(exam_result(&[21], &[30], 60.0).grade), "2.7");
+    assert_eq!(grade_label(exam_result(&[21], &[30], 75.0).grade), "5.0");
+}

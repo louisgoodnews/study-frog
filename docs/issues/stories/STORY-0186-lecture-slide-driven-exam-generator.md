@@ -52,5 +52,20 @@ Ensure generation handles large documents cleanly through staged prompting witho
 ## Dependencies
 EPIC-063, STORY-0185
 
+## Implementation notes (2026-11-22, slides and the no-model message)
+
+Built:
+- Lecture slides in the app: "Mock exam from a PDF" on the rehearse setup's What step lists the readable PDFs of the vault (the index is brought up to date first). Choosing one reads its text (`studyfrog-service::exam_save::slide_chunks`, which refuses paths outside the vault and files that are not PDFs) and makes the exam with the same generator as the notes path.
+- A clear message when no model is selected: the exam view says the questions come from templates and how to select a local model. When the selected model is remote and not allowed to see the text, it says so. (The check is whether a local model is selected; the app does not test that the local runtime is running. A selected local model that fails leaves the templates to write the questions; the preview counts the questions from the model and from templates.)
+- The local model is asked per chunk, as before; its questions are checked against the notes (hallucination filter) and the balance is kept.
+
+Tests: `studyfrog-service/tests/exam_gen_pdf.rs` (a slide PDF in the vault is listed after indexing, read, made into a valid exam offline, and paths outside the vault are refused); `studyfrog-ui/tests/mock_exam_model_ui.rs` (no-model and remote notes, a local model is used, a PDF is listed and then made into an exam, a failed listing says why).
+
+Not done or not verified:
+- A real local model was not run: this container has none. The model path is tested with a fake model (`exam_gen` tests). Question quality and how small models do are unmeasured.
+- The Altklausur lab screen does not exist; the exam is shown in the rehearse setup's mock-exam view.
+- Slides as images (scanned PDFs with no text) give no questions; OCR is not part of this story.
+- A person at a window should check the PDF list, the exam view and the notes.
+
 ## Open Questions
 None.

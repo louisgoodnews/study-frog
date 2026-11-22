@@ -6,6 +6,7 @@
 pub mod assistant_backend;
 pub mod exam;
 pub mod exam_gen;
+pub mod exam_grade;
 pub mod mcp_client;
 pub mod mcp_client_cfg;
 pub mod mcp_client_chat;

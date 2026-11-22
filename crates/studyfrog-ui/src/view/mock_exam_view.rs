@@ -1,12 +1,12 @@
-//! The mock exam view (STORY-0186, STORY-0187): the exam made from the notes, the answers written, the
-//! grading, and saving the exam as a note.
+//! The mock exam view (STORY-0186, STORY-0187): the lecture PDFs to choose from, the exam made from the notes
+//! or a PDF, the answers written, the grading, and saving the exam as a note.
 
 mod result;
 
 use eframe::egui::{self, RichText, TextEdit};
 
 use crate::msg::Msg;
-use crate::setup::mock_exam::{MockExamMsg, MockExamUi};
+use crate::setup::mock_exam::{MockExamMsg, MockExamUi, SlideChoice};
 use crate::theme::palette_of;
 use crate::view::kit;
 
@@ -15,7 +15,13 @@ pub fn draw(ui: &mut egui::Ui, m: &MockExamUi, out: &mut Vec<Msg>) {
     let pal = palette_of(ui);
     ui.label(RichText::new(&m.title).strong());
     if m.loading {
-        ui.label("Writing the exam from your notes. This can take a while with a local model.");
+        ui.label("Writing the exam. This can take a while with a local model.");
+    }
+    if m.judging {
+        ui.label("Grading your answers with the local model. This can take a while.");
+    }
+    if let Some(note) = &m.note {
+        ui.weak(note);
     }
     if let Some(error) = &m.error {
         ui.colored_label(pal.danger, error);
@@ -28,12 +34,36 @@ pub fn draw(ui: &mut egui::Ui, m: &MockExamUi, out: &mut Vec<Msg>) {
         } else {
             preview(ui, g, m, out);
         }
+    } else if let Some(slides) = &m.slides {
+        choose_slides(ui, slides, out);
     }
     if kit::quiet_button(ui, "Close exam")
         .on_hover_text("Closes the exam and returns to the setup.")
         .clicked()
     {
         out.push(Msg::MockExam(MockExamMsg::Close));
+    }
+}
+
+/// The lecture PDFs of the vault: one button makes an exam from each.
+fn choose_slides(ui: &mut egui::Ui, slides: &[SlideChoice], out: &mut Vec<Msg>) {
+    if slides.is_empty() {
+        ui.weak(
+            "No readable PDF is in the vault. Add the lecture slides as PDF files, then try again.",
+        );
+        return;
+    }
+    ui.label("Choose the lecture PDF to make the exam from.");
+    for slide in slides {
+        if kit::quiet_button(ui, &slide.title)
+            .on_hover_text(format!(
+                "Makes an exam of about ten questions from the text of {}.",
+                slide.path
+            ))
+            .clicked()
+        {
+            out.push(Msg::MockExam(MockExamMsg::FromSlide(slide.path.clone())));
+        }
     }
 }
 

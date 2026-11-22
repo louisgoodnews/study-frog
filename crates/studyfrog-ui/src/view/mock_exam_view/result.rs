@@ -2,10 +2,22 @@
 //! student's answer, the model answer, and the rubric points made.
 
 use eframe::egui::{self, RichText};
+use studyfrog_agent::rubric_eval::KEYWORD_CAVEAT;
 use studyfrog_rehearsal::grade::{grade_label, is_passing};
 
 use crate::setup::mock_exam::grading::{Graded, breakdown, total};
 use crate::theme::palette_of;
+
+/// Who graded the answers, in one line.
+pub fn engine_line(graded: &[Graded]) -> String {
+    let model = graded.iter().filter(|g| g.from_model).count();
+    match (model, graded.len()) {
+        (_, 0) => String::new(),
+        (n, all) if n == all => "Graded by the local model.".to_owned(),
+        (0, _) => "Graded by word overlap: no local model is selected, so a correct answer in other words can be marked missing.".to_owned(),
+        (n, all) => format!("{n} of {all} answers graded by the local model; the rest by word overlap."),
+    }
+}
 
 /// Draw the result of a graded exam.
 pub fn draw(ui: &mut egui::Ui, graded: &[Graded]) {
@@ -29,6 +41,7 @@ pub fn draw(ui: &mut egui::Ui, graded: &[Graded]) {
         .strong(),
     );
     ui.colored_label(color, verdict);
+    ui.weak(engine_line(graded));
     ui.add_space(8.0);
     ui.label(RichText::new("By topic").strong());
     for (topic, earned, possible) in breakdown(graded) {
@@ -71,6 +84,9 @@ pub fn draw(ui: &mut egui::Ui, graded: &[Graded]) {
             }
         ));
         ui.label(format!("Model answer: {}", g.sample_answer));
+        if let Some(caveat) = g.caveat.as_deref().filter(|c| *c != KEYWORD_CAVEAT) {
+            ui.weak(caveat);
+        }
         for (point, met) in &g.points_made {
             ui.horizontal_wrapped(|ui| {
                 let (word, c) = if *met {

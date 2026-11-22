@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Mock exam from a lecture PDF (`crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0186)**: "Mock exam from a PDF" on the rehearse setup lists the vault's PDFs; the chosen PDF's text (its slides) makes the exam with the same generator as the notes, and paths outside the vault or non-PDF files are refused.
+- **Mock exam says when no model is selected (`crates/studyfrog-ui`, STORY-0186)**: the exam view explains that the questions come from templates and how to select a local model; a remote model that may not see the notes is named as such.
+- **Mock exam answers graded by the local model (`crates/studyfrog-agent`, `crates/studyfrog-ui`, STORY-0187)**: with a local model selected, "Finish and grade" asks it to judge each rubric point; without one, or when its reply cannot be read, the keyword check grades that answer and the reason is shown. The result says who graded.
 - **Tooltip delay is a named setting and a click hides the tooltip (`crates/studyfrog-ui`, STORY-0169)**: `view::tips::DELAY_SECS` (0.5 s) is applied by the theme; a test checks that a click hides the tooltip of the control clicked.
 - **Markdown card decks import (`crates/studyfrog-service`, STORY-0168)**: a `.md` file is detected by the import dialog and read as cards, one per `## ` heading (the heading is the front, the text below it the back), or as one note when it has no such heading. Headings inside code fences do not count.
 - **Learn-mode research platform complete (EPIC-066, STORY-0198)**: a learn mode is drawn, edited, saved, run as practice only, and reported on its own in the app; the window check is recorded in STORY-0198.

@@ -4,7 +4,9 @@
 use studyfrog_service::exam_gen::generate;
 
 use studyfrog_ui::effect::Effect;
-use studyfrog_ui::setup::mock_exam::{EXAM_QUESTIONS, MockExamEffect, MockExamMsg, update};
+use studyfrog_ui::setup::mock_exam::{
+    EXAM_QUESTIONS, ExamSource, MockExamEffect, MockExamMsg, update,
+};
 use studyfrog_ui::state::{Selection, State};
 
 fn notes() -> &'static str {
@@ -20,7 +22,7 @@ fn opening_a_stack_asks_for_an_exam_of_its_notes() {
     assert!(
         matches!(
             effects.as_slice(),
-            [Effect::MockExam(MockExamEffect::Generate { folder: Some(f), total, provider: None, .. })]
+            [Effect::MockExam(MockExamEffect::Generate { source: ExamSource::Notes(Some(f)), total, provider: None, .. })]
                 if f == "bio" && *total == EXAM_QUESTIONS
         ),
         "{effects:?}"
