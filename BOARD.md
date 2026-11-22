@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (6) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (294) |
+| Backlog (6) | Ready (0) | In progress (1/3) | Review (1) | Blocked (0) | Done (294) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |

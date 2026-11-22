@@ -53,5 +53,5 @@ and must name the blocker under Dependencies.
 ## Board and changelog
 - [`BOARD.md`](../../BOARD.md) is **generated** from the `status:` of every issue
   (`scripts/board.sh`). Change the status in the issue file, regenerate, commit both together.
-  `scripts/check.sh` fails if the board is stale. WIP limit: 3 items `in_progress`.
+  `scripts/check.sh` fails if the board is stale. WIP limit: 3 work items `in_progress` across all kinds (epics, stories, tasks, subtasks and bugs together).
 - [`CHANGELOG.md`](../../CHANGELOG.md) gets an entry for every visible change.

@@ -27,6 +27,14 @@ fn is_card(issue: &Issue) -> bool {
     matches!(issue.front.kind.as_str(), "task" | "subtask" | "bug")
 }
 
+/// Every kind of work item counts toward the WIP limit: stories and epics as well as the cards.
+fn counts_toward_wip(issue: &Issue) -> bool {
+    matches!(
+        issue.front.kind.as_str(),
+        "epic" | "story" | "task" | "subtask" | "bug"
+    )
+}
+
 fn in_column<'a>(issues: &'a [Issue], status: &str, pick: fn(&Issue) -> bool) -> Vec<&'a Issue> {
     let mut found: Vec<&Issue> = issues
         .iter()
@@ -43,9 +51,12 @@ fn cell(issue: &Issue) -> String {
     format!("[{}]({}) {title}{points}", f.id, issue.path.display())
 }
 
-fn heading(status: &str, label: &str, count: usize) -> String {
+fn heading(status: &str, label: &str, count: usize, issues: &[Issue]) -> String {
     match status {
-        "in_progress" => format!("{label} ({count}/{WIP_LIMIT})"),
+        "in_progress" => {
+            let active = in_column(issues, status, counts_toward_wip).len();
+            format!("{label} ({active}/{WIP_LIMIT})")
+        }
         _ => format!("{label} ({count})"),
     }
 }
@@ -59,7 +70,7 @@ fn card_table(issues: &[Issue]) -> String {
     let titles: Vec<String> = COLUMNS
         .iter()
         .zip(&cols)
-        .map(|((status, label), col)| heading(status, label, col.len()))
+        .map(|((status, label), col)| heading(status, label, col.len(), issues))
         .collect();
     let mut out = format!(
         "| {} |\n|{}\n",
@@ -117,7 +128,7 @@ pub fn render(issues: &[Issue]) -> String {
 
 /// Errors for WIP-limit violations.
 pub fn wip_errors(issues: &[Issue]) -> Vec<String> {
-    let active = in_column(issues, "in_progress", is_card).len();
+    let active = in_column(issues, "in_progress", counts_toward_wip).len();
     if active > WIP_LIMIT {
         vec![format!(
             "board: {active} items in_progress exceeds WIP limit {WIP_LIMIT}"
