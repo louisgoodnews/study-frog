@@ -90,7 +90,11 @@ pub fn record_step(
         if let (EventKind::ItemRated(rating), Some(item)) = (&e.kind, e.item) {
             // A custom run's graph decides whether the item comes back; a built-in run requeues on Again.
             let back = crate::learn_run::record_rating(&tx, ctx.run, item, *rating, now)?;
-            if back.unwrap_or(*rating == Rating::Again) {
+            let back_in_run = match back {
+                None => *rating == Rating::Again,
+                Some(b) => b != studyfrog_rehearsal::learn_path::Back::Out,
+            };
+            if back_in_run {
                 let run_id = format_ulid(ctx.run);
                 let item_id = format_ulid(item);
                 let pos: i64 = tx

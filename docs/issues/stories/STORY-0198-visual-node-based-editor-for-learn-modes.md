@@ -56,6 +56,12 @@ Node types for the first version (decided): start, present, recall, rate, schedu
 - The custom report is opt-in per mode: "Show report" in the editor reads the runs of the saved mode (`studyfrog-store` `learn_report::mode_report`): runs and finished runs, items reached, entries per step, ratings given, branches taken. Nothing is read until the button is pressed.
 - Built-in reports are unchanged: their queries already exclude custom runs (`BUILTIN_RUNS`). Tested in `tests/learn_report_store.rs` (a built-in run is not counted under the mode) and `tests/learn_editor.rs` (the request is made only for a saved mode).
 
+## Implementation (part 5, the queue order)
+- A custom run's returning item goes back into the queue after a number of other items, by its rating: Again after 2, Hard after 4, Good after 6, Easy after 8 (`learn_path::gap`). These are the first version's defaults, chosen here, not specified by the story; they are a single function to change.
+- Built-in runs keep their order: an Again goes to the end of the queue, as before.
+- The live queue is authoritative. The stored `run_queue` rows still record a returning item at the end, not at its place: nothing reads them for a run in progress (runs are not resumed from disk), so they are a known difference, to fix if resume is added.
+- Tests: `tests/learn_queue.rs` (an Again item comes back after two others: 1,2,3,1,4,5), `learn_run_service` (the stored placement is the same rule).
+
 ## Still open (part 2)
 - The canvas (drawn nodes and wires) is not built; the form editor above is the first version.
 - The opt-in custom report screen (the store function `custom_mode_totals` exists).

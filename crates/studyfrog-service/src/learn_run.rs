@@ -13,7 +13,7 @@ use studyfrog_core::uid::Uid;
 use studyfrog_md::ulid::format_ulid;
 use studyfrog_rehearsal::learn_graph::{LearnGraph, NodeKind, check, reason};
 use studyfrog_rehearsal::learn_interp::{End, Visit, walk};
-use studyfrog_rehearsal::learn_path::rating_word;
+use studyfrog_rehearsal::learn_path::{Back, gap, rating_word};
 use studyfrog_store::error::StoreError;
 use studyfrog_store::learn::{
     StepRow, insert_learn_run, insert_learn_step, item_path, learn_run_of, next_learn_seq,
@@ -82,7 +82,7 @@ pub fn record_rating(
     item: Uid,
     rating: Rating,
     now: UnixMs,
-) -> Result<Option<bool>, StoreError> {
+) -> Result<Option<Back>, StoreError> {
     let run_id = format_ulid(run);
     let Some((_, text)) = learn_run_of(conn, &run_id)? else {
         return Ok(None);
@@ -108,7 +108,7 @@ pub fn record_rating(
             append(conn, &graph, &run_id, &item_id, &first.visits, now)?;
             match first.end {
                 End::AtRate(node) => node,
-                _ => return Ok(Some(false)),
+                _ => return Ok(Some(Back::Out)),
             }
         }
     };
@@ -116,8 +116,11 @@ pub fn record_rating(
     set_last_rating(conn, &run_id, &item_id, word)?;
     let next = walk(&graph, &at, word, &mut counts, VISIT_CAP);
     append(conn, &graph, &run_id, &item_id, &next.visits, now)?;
-    // The same rule as the live queue (`learn_path::rate`): back in the run only when the walk ends at a rate node.
-    Ok(Some(matches!(next.end, End::AtRate(_))))
+    // The same rule as the live queue (`learn_path::rate`): back after `gap` items when the walk ends at a rate node.
+    Ok(Some(match next.end {
+        End::AtRate(_) => Back::After(gap(rating)),
+        _ => Back::Out,
+    }))
 }
 
 fn append(

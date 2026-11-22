@@ -47,9 +47,31 @@ pub fn rating_word(r: Rating) -> &'static str {
     }
 }
 
-/// Walk `item` through the graph for its rating. Returns true when the walk ends at a rate node, so the item is
-/// shown again in this run; false when the graph sends it out (a stop, a loop at its cap, or no way on).
-pub fn rate(path: &mut LearnPath, item: Uid, rating: Rating) -> bool {
+/// Where a rated item goes in the run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Back {
+    /// Out of the run.
+    Out,
+    /// To the end of the queue (the built-in rule for Again).
+    End,
+    /// Back after this many other items (a custom mode's order).
+    After(usize),
+}
+
+/// How many other items a custom run shows before an item comes back, by its rating: a poor rating returns sooner.
+/// These are the defaults of this first version; the mode's graph decides whether an item comes back at all.
+pub fn gap(rating: Rating) -> usize {
+    match rating {
+        Rating::Again => 2,
+        Rating::Hard => 4,
+        Rating::Good => 6,
+        Rating::Easy => 8,
+    }
+}
+
+/// Walk `item` through the graph for its rating. The item comes back after `gap(rating)` other items when the walk
+/// ends at a rate node; it leaves the run when the graph sends it out (a stop, a loop at its cap, or no way on).
+pub fn rate(path: &mut LearnPath, item: Uid, rating: Rating) -> Back {
     let Some(start) = path
         .graph
         .nodes
@@ -57,7 +79,7 @@ pub fn rate(path: &mut LearnPath, item: Uid, rating: Rating) -> bool {
         .find(|n| n.kind == NodeKind::Start)
         .map(|n| n.id.clone())
     else {
-        return false;
+        return Back::Out;
     };
     let graph = &path.graph;
     let state = path.items.entry(item).or_default();
@@ -65,7 +87,7 @@ pub fn rate(path: &mut LearnPath, item: Uid, rating: Rating) -> bool {
         // The item's first rating: walk from the start to the rate node it waits at.
         match walk(graph, &start, "", &mut state.counts, VISIT_CAP).end {
             End::AtRate(node) => state.at = Some(node),
-            _ => return false,
+            _ => return Back::Out,
         }
     }
     let at = state.at.clone().unwrap_or_default();
@@ -80,11 +102,11 @@ pub fn rate(path: &mut LearnPath, item: Uid, rating: Rating) -> bool {
     {
         End::AtRate(node) => {
             state.at = Some(node);
-            true
+            Back::After(gap(rating))
         }
         _ => {
             state.at = None;
-            false
+            Back::Out
         }
     }
 }

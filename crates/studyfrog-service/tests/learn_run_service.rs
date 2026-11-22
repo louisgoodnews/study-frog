@@ -11,6 +11,7 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_md::ulid::format_ulid;
 use studyfrog_rehearsal::learn_graph::{Edge, LearnGraph, Node, NodeKind};
+use studyfrog_rehearsal::learn_path::Back;
 use studyfrog_service::create::IdSource;
 use studyfrog_service::day::DayWindow;
 use studyfrog_service::learn_mode_store::save;
@@ -103,8 +104,8 @@ fn a_custom_run_walks_its_graph_and_writes_no_review() {
     let back = record_rating(&session.conn, run.uid, Uid(77), Rating::Again, now()).unwrap();
     assert_eq!(
         back,
-        Some(true),
-        "Again loops back: the item is shown again in this run"
+        Some(Back::After(2)),
+        "Again loops back: it comes back after two other items"
     );
     let path = item_path(&session.conn, &run_id, &item).unwrap();
     let nodes: Vec<&str> = path.iter().map(|p| p.0.as_str()).collect();
@@ -116,7 +117,7 @@ fn a_custom_run_walks_its_graph_and_writes_no_review() {
     );
 
     let out = record_rating(&session.conn, run.uid, Uid(77), Rating::Good, now()).unwrap();
-    assert_eq!(out, Some(false), "Good takes the item out of the run");
+    assert_eq!(out, Some(Back::Out), "Good takes the item out of the run");
 
     let reviews: i64 = session
         .conn

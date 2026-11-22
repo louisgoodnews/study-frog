@@ -94,3 +94,12 @@ fn without_a_graph_the_built_in_rule_still_requeues_on_again() {
         "built-in Again requeues"
     );
 }
+
+#[test]
+fn an_item_rated_again_comes_back_after_two_others_not_at_the_end() {
+    let mut s = session(RunMode::Flip, plan_sequential(), &[1, 2, 3, 4, 5]);
+    s.learn = Some(new_path(looping()));
+    // Item 1 is rated Again: its gap is two items, so it is shown again after items 2 and 3.
+    let items = shown(&mut s, &[Again, Good, Good, Good, Good, Good]);
+    assert_eq!(items, vec![1, 2, 3, 1, 4, 5]);
+}

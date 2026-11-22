@@ -173,12 +173,20 @@ fn rate(s: &mut Session, t: u32, item: Option<Uid>, rating: Rating, out: &mut St
     out.events
         .push(event(s, t, item, EventKind::ItemRated(rating)));
     if let Some(uid) = item {
+        use crate::learn_path::Back;
         let back = match s.learn.as_mut() {
             Some(path) => crate::learn_path::rate(path, uid, rating),
-            None => rating == Rating::Again && s.run.plan.requeue_again,
+            None if rating == Rating::Again && s.run.plan.requeue_again => Back::End,
+            None => Back::Out,
         };
-        if back {
-            requeue(s, uid);
+        match back {
+            Back::Out => {}
+            Back::End => requeue(s, uid),
+            // The item goes in after the next `k` items (the one after the current item is at cursor + 1).
+            Back::After(k) => {
+                let at = (s.cursor + 1 + k).min(s.queue.len());
+                requeue_at(s, uid, at);
+            }
         }
     }
     s.cursor += 1;
@@ -187,9 +195,15 @@ fn rate(s: &mut Session, t: u32, item: Option<Uid>, rating: Rating, out: &mut St
 
 /// Put `uid` at the end of the queue.
 fn requeue(s: &mut Session, uid: Uid) {
+    let at = s.queue.len();
+    requeue_at(s, uid, at);
+}
+
+/// Put `uid` into the queue at `at` (at most the queue's length).
+fn requeue_at(s: &mut Session, uid: Uid, at: usize) {
     let count = s.requeues.entry(uid).or_insert(0);
     *count = count.saturating_add(1);
-    s.queue.push(uid);
+    s.queue.insert(at, uid);
 }
 
 fn pause(s: &mut Session, t: u32, out: &mut StepOutput) {
