@@ -83,3 +83,11 @@ Criterion 3 MET: the review lists each question with the student's answer, the m
 - Model grading NOT CHECKABLE (no model installed). Typed answers could not be entered in this environment, so a correct answer in other words was not checked.
 - The model answer for question 1 shows the card's question text followed by its answer ("Was ist der Mittelwert? Summe durch Anzahl"), not a reference answer. Not filed here; see BUG-0038 for the keyword check.
 - Ticks are left as set.
+
+Review (2026-11-22): checked in the running app (no local model), `/tmp/claude-0/review-e/`.
+- Criterion 1 (summation, percentage, configurable pass mark): NOT MET. The sums and percentage are shown ("0 / 14 points · 0 % · Grade 5.0 (Nicht bestanden)", `/tmp/claude-0/review-e/10-result.png`), but the pass mark is fixed at 50 % in the view and no setting exists in the app. A non-zero percentage could not be reached: the keyword check gave 0 for every answer, including answers with the reference meaning (BUG-0038). The summation rule (11 of 13 = 84.6 %, grade 2.0) is covered by `tests/grade.rs` only. Left unticked.
+- Criterion 2 (bands 1.0 to 5.0): MET by the code and the tests, with the screen showing the fail band. `grade.rs` bands run 95, 90, 85, 80, 75, 70, 65, 60, 55, 50 % to 1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0 and below the pass mark 5.0. The worked examples check out by hand: 82 % gives 2.0 (Gut) and 11 of 13 (84.6 %) gives 2.0. On screen: 0 % gives 5.0 (`/tmp/claude-0/review-e/10-result.png`). Tick left as set.
+- Criterion 3 (review screen): MET. Each question shows the student's answer, the model answer and the rubric points, marked Missing (`/tmp/claude-0/review-e/10-result.png`, `11-result-scroll.png`, `16-bottom.png`). The reference lines for card questions repeat the question (BUG-0052). Tick left as set.
+- Layout at 960x640: the exam view fits (`/tmp/claude-0/review-e/21-960-preview.png`, `22-960-started.png`).
+- Status stays review: criterion 1 is open.
+

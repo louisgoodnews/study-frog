@@ -2,7 +2,7 @@
 id: STORY-0184
 type: story
 title: "Interactive Math Drill View with Formula Rendering, Scratchpad, and Step Reveal"
-status: review
+status: done
 epic: EPIC-062
 parents: ['EPIC-062']
 estimate: 3
@@ -39,6 +39,8 @@ The view uses ASCII symbols (`sqrt`, `-`, `*`, `Del`): the bundled font has no g
 Open: the engine's trace covers the standard error of measurement only; other formulas of STORY-0182 have no trace yet. The drill is a practice view of its own, not an item kind in a run.
 
 Tests: `studyfrog-ui/tests/math_drill.rs` (opening by seed, correct working, a forgotten root named at its row, the keypad, the solution toggle, the screen text). A screenshot (`--screen math-demo`) shows the mistaken row outlined and the feedback.
+
+Review (2026-11-22): all three criteria MET in the running app (`/tmp/claude-0/review-d`, the drill from rehearse setup "Math drill"). (1) Problem text, formula line and given badges "s_x = 13.3", "r_xx = 0.93" (`/tmp/claude-0/review-d/14-math.png`, and at 960x640 `21-math-960.png`). (2) Three working rows, the answer row, and the keypad that types into the row last selected, with the 0 to 9, ".", "-", "Del" and "C" keys (`/tmp/claude-0/review-d/15-math-typed.png`). (3) "Show full solution" lists the values 0.070, 0.265 and 3.519, which match 13.3 * sqrt(0.07) = 3.5188 (`/tmp/claude-0/review-d/19-solution.png`). A wrong row gets a red outline and its message (`17-math-forgot-root.png`). Linked defect BUG-0051 (the praise text when a step is wrong) does not gate these criteria. Status set to done.
 
 ## Design Notes
 Use `palette_of(ui)` theme tokens. Ensure line count remains $\le 250$ LOC per file (Invariant P6).

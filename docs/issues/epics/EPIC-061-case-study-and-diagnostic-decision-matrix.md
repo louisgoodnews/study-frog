@@ -45,3 +45,9 @@ None.
 
 - Criterion 4 remains unticked: NOT MET in part. Stacks and scheduling work. In an exam run the case shows only its vignette, with no decision prompt or options (BUG-0022 reproduced, `/tmp/claude-0/verifyA/24-exam-run-case.png`).
 - Status stays review.
+
+Review (2026-11-22): criterion 4 re-checked in the running app (`/tmp/claude-0/review-d`, vault with stack `diag`: the case "Klinik-Screening" and three plain questions). Criteria 1 to 3 were not re-run in this round; they stay as ticked above.
+- Stacks: MET. The case is in the stack's rehearse set (`rehearse setup` shows "4 items" for the stack) and in the library (`library.rows`, key QUESTION_1, kind question) (`/tmp/claude-0/review-d/09-library.png`).
+- Spaced repetition: MET. A spaced run (`--preset spaced --mode answer`, effect `update_schedule`) rated the case "hard" after the answer "Short screen". The vault index now holds a `review` row for the case (rating 3) and a `mem_state` row with a due date about 2 days later (`/tmp/claude-0/review-d/11-spaced-after.png`). Checked with a copy of `.studyfrog/index.sqlite`.
+- Exam runs: NOT MET. The exam run shows the vignette and "Your answer" only, with no decision prompt or options (BUG-0022 still open, `/tmp/claude-0/review-d/05-exam-case.png`). An exam run is also practice_only in the schedule (correct by design: "an exam never changes your review schedule").
+- Criterion 4 stays unticked; the epic stays in review.

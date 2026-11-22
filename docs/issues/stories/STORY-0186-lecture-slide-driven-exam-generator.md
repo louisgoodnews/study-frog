@@ -27,7 +27,7 @@ Develop the automated exam generation pipeline in `studyfrog-agent`:
 - Parse and validate the output into a structured `MockExam` instance ready for execution.
 
 ## Acceptance Criteria
-- [x] Curriculum chunking engine extracting core themes, definitions, and formulas from lecture PDFs or Markdown notes
+- [ ] Curriculum chunking engine extracting core themes, definitions, and formulas from lecture PDFs or Markdown notes
 - [x] Multi-stage SLM generation pipeline producing balanced exam question papers with sample answers and scoring rubrics
 - [x] Validation filter rejecting hallucinated or out-of-syllabus items
 
@@ -80,3 +80,12 @@ Criterion 3 NOT CHECKABLE: the hallucination and out-of-syllabus filter applies 
 ## Verification (2026-11-22)
 
 No local model is installed, so the model stages are NOT CHECKABLE (criteria 1 to 3 as they apply to model output). The no-model path ran: the note "No model is selected, so the questions come from templates" and 4 questions from the notes, 0 from a model (`/tmp/claude-0/verifyA/20-mock-preview.png`). The hallucination and out-of-syllabus filter applies to model output and did not run. Ticks are left as set.
+
+Review (2026-11-22): the rehearse setup's "Mock exam from a PDF" and "Mock exam" were run in the running app (no local model; the binary of the current head; `/tmp/claude-0/review-e/`).
+- Criterion 1 (chunking): definitions MET for the PDF route (`/tmp/claude-0/review-e/03-pdf-exam.png`, the question "Explain the following in your own words: Gueltigkeit" from Vorlesung.pdf). Formulas NOT MET as seen: the note "Formel" with "Standardfehler = s / Wurzel(n) = 2 / 2 = 1" gave no calculation question (`/tmp/claude-0/review-e/20-mock-stat.png`; BUG-0053). Ticked earlier; unticked by this review.
+- Criterion 2 (SLM pipeline with sample answers and rubrics): NOT CHECKABLE for model quality and for the model stages (no model installed). The no-model note is shown (`/tmp/claude-0/review-e/03-pdf-exam.png`: "No model is selected, so the questions come from templates"); the template path gives reference answers and rubric lines (`/tmp/claude-0/review-e/10-result.png`). The reference for card questions repeats the card question (BUG-0052). Tick left as set.
+- Criterion 3 (validation filter): NOT CHECKABLE: the filter applies to model output, which did not run. Tick left as set.
+- PDF path defects: BUG-0039 still open ("Mock exam: untitled"; both PDFs listed as "untitled", `/tmp/claude-0/review-e/02-pdf-list.png`, `03-pdf-exam.png`).
+- BUG-0040 (ticked stack): fixed (`/tmp/claude-0/review-e/19-mock-pair.png`: Pair ticked, Statistik open, title "Mock exam: pair").
+- Status stays review: criterion 1 is open (formulas) and criteria 2 and 3 cannot be checked here, and the PDF path still shows "untitled".
+

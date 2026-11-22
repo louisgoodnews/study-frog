@@ -36,3 +36,5 @@ Keep all functions free (P1) and files within the limit (P6). Reuse `mock_timer:
 
 ## Open Questions
 - Whether the exam should also run in the Altklausur lab screen, which does not exist yet (STORY-0186 notes).
+
+Review (2026-11-22): still open. The started exam shows no countdown at 1280x800 or 960x640, answers stay editable until "Finish and grade" and no answer is locked (`/tmp/claude-0/review-e/08-started.png`, `22-960-started.png`). Status stays backlog.

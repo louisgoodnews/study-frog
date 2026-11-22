@@ -32,3 +32,5 @@ Pass the PDF's file name to the list and the exam title, the same way the PDF li
 
 ## Open Questions
 - None.
+
+Review (2026-11-22): still open. Both PDFs are listed as "untitled" and the exam reads "Mock exam: untitled" (`/tmp/claude-0/review-e/02-pdf-list.png`, `03-pdf-exam.png`). Status stays backlog.

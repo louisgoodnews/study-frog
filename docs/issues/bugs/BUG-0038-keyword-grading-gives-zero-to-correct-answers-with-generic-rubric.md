@@ -36,3 +36,5 @@ For template questions, build the rubric points from the note's own content (the
 
 ## Open Questions
 - None.
+
+Review (2026-11-22): still open in the running app. The answer "Gueltigkeit bedeutet, dass der Test misst, was er soll." (the reference meaning in other words) gets 0 of 2 with the rubric "gives the meaning, not just the term" shown as Missing; the same answer typed as "Gueltigkeit: misst, was er soll." also gets 0; "Mittlerer Wert der sortierten Reihe" gets 0 of 4 on "names one key point of the topic" (`/tmp/claude-0/review-e/10-result.png`, `13-result2.png`). No line says "not checked by word overlap". Status stays backlog.

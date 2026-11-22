@@ -52,3 +52,12 @@ Criterion 4 MET: the result view shows total points, percentage, grade and word,
 - Criterion 3 NOT CHECKABLE: the mix follows the notes. This run gave case scenarios and one calculation, with no recall section (`/tmp/claude-0/verifyA/20-mock-preview.png`); the earlier audit run had recall (`/tmp/claude-0/audit/g5/0186-mock-notes3.png`). A model-driven mix cannot be checked.
 - Criterion 4 not re-checked (already ticked). The no-model keyword grading ran: 0 of 16 points, "Graded by word overlap" note (`/tmp/claude-0/verifyA/23-exam-graded.png`). Typed answers could not be entered in this environment, so grading of real answers was not checked.
 - Status stays review.
+
+Review (2026-11-22): checked in the running app (no local model), `/tmp/claude-0/review-e/`.
+- Criterion 1 (configurable points, duration, strict test rules): NOT MET. The exam view shows the points per question and a total of "42 minutes" (3 minutes a point, `/tmp/claude-0/review-e/07-notes-exam.png`), but no countdown, no warning and no automatic submission, and answers stay editable until "Finish and grade" (`/tmp/claude-0/review-e/08-started.png`, `21-960-preview.png`; BUG-0045 still open). No setting for points or duration in the UI. Left unticked.
+- Criterion 2 (exam generation from slides and notes by the local SLM): NOT CHECKABLE for model quality; the no-model path is shown (`/tmp/claude-0/review-e/03-pdf-exam.png`).
+- Criterion 3 (multi-format mix: recall, case, calculation): NOT CHECKABLE for the model mix. The template mix in the app is recall and case questions; no calculation part appeared with a formula note (`/tmp/claude-0/review-e/20-mock-stat.png`; BUG-0053). Not ticked.
+- Criterion 4 (grading report and German scale): MET (`/tmp/claude-0/review-e/10-result.png`, `11-result-scroll.png`; the band table is checked in STORY-0187). Tick left as set.
+- Children: STORY-0186 and STORY-0187 stay in review; BUG-0038, BUG-0039, BUG-0045 stay in backlog; BUG-0040 is done (verified, `/tmp/claude-0/review-e/19-mock-pair.png`). New: BUG-0052, BUG-0053.
+- Status stays review.
+

@@ -35,3 +35,6 @@ Build the mock exam from the stacks ticked in the What step, as the setup says, 
 
 ## Open Questions
 - None.
+
+Review (2026-11-22): verified fixed in the running app. With Pair ticked and Statistik open in the library, Mock exam gives "Mock exam: pair" with the Pair note's question (`/tmp/claude-0/review-e/19-mock-pair.png`); with Statistik ticked it gives "Mock exam: statistik" (`/tmp/claude-0/review-e/07-notes-exam.png`). Both criteria MET. Status stays done.
+

@@ -49,3 +49,5 @@ None.
 ## Verification (2026-11-22)
 
 Reproduced. Case "Klinik-Screening" (decision "Which instrument should the clinic use?", options Short screen | Full interview | Self-report scale) in the Diagnostik stack, run as an exam (`rehearse setup --preset all --stack diagnostik --mode exam`). The item shows only the vignette and a "Your answer" box; the decision prompt and the options are missing (`/tmp/claude-0/verifyA/24-exam-run-case.png`). Left in the backlog. The answer-mode comparison was not retaken in this round.
+
+Review (2026-11-22): still NOT FIXED. Current binary, vault `/tmp/claude-0/review-d/vault`, stack `diag`, exam (`rehearse setup --preset all --stack diag --mode exam`, then `rehearse type x` and `rehearse submit` to item 4 of 4). The state reports `prompt` = the vignette only, and the screen shows the vignette with "Your answer" and "Submit and lock answer" only, with no decision prompt and no options (`/tmp/claude-0/review-d/05-exam-case.png`). The same case in answer mode shows the decision, the three options and the justification box (`/tmp/claude-0/review-d/06-answer-case.png`). Status stays backlog.
