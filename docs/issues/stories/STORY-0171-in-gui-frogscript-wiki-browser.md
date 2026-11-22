@@ -49,6 +49,8 @@ Not done: the epic's "Help" (F1) entry point is not built. This story's criteria
 
 Needs a person at a window: the look of the new category heading and the panel's layout with six categories, in light and dark themes.
 
+Review (2026-11-22): criteria 1 to 3 NOT MET in the running app. The panel opens with its heading and search box (`/tmp/claude-0/review-c/shots/13-reference.png`), but no categorized topics, topic coverage or search results are visible at 1280x800 or 1600x900 (`13-reference.png`, `/tmp/claude-0/review-c/shots/14-reference-1600.png`, `/tmp/claude-0/review-c/shots/15-reference-search.png`). Blocked by BUG-0020. Status stays review.
+
 ## Window check (2026-11-22, EPIC-058)
 The panel opens from ScriptStudio's "Reference" button and from the Help screen's "FrogScript reference" button, and its heading and search box show in the window. The topics do not: beside the editor the list is blank, even after scrolling, and the editor text is squeezed, at 1280x800 and at 1600x900 (BUG-0020). The three criteria above name what the panel shows, so they are unticked here. The data and the search are covered by `studyfrog-script/tests/wiki.rs` and `studyfrog-ui/tests/studio_reference.rs`, but that is not a window check. Screenshots: `/tmp/claude-0/epic58/03-help-to-reference.png`, `05-console-reference-button.png`, `07-console-reference-settled.png`.
 

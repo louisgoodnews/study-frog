@@ -35,5 +35,7 @@ Reproduced in the running app (`/tmp/claude-0/verifyB`). A spaced rehearsal (`--
 - The only writer of `review_telemetry` sets `semantic_score: None` (`crates/studyfrog-service/src/rehearse.rs`, `rate_item_in`), so the score is never copied from `answer_score`.
 No model is needed for this: the built-in word matcher produced the score. Status stays backlog.
 
+Review (2026-11-22): NOT FIXED. Criterion 1: the typed answer for item 01M82N31YN67WE67F8SMTF1TV9 (Alpha 1) has an `answer_score` of 1.0 (correct), but its `review_telemetry` row (id 4) has semantic_score NULL and no marker (DB `/tmp/claude-0/review-c/vault/.studyfrog/index.sqlite`). `crates/studyfrog-service/src/rehearse.rs` line 155 still writes `semantic_score: None`. Criterion 2: no accuracy trend is shown (`/tmp/claude-0/review-c/shots/03-cognitive-bottom.png`). Stays backlog.
+
 ## Open Questions
 - None.

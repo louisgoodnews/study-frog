@@ -81,6 +81,9 @@ Exam runs (added with STORY-0129, 2026-11-08): `rehearse setup --mode exam`, `re
 
 Open (why criterion 2 is still not ticked): no AccessKit or widget tree, only the semantic snapshot; calendar, board, diary, reports, achievements, settings, assistant, PDF and folder operations are reachable by `nav` and visible only as the screen name (their contents and actions are not in the protocol); no stack delete, stack settings are read-only; screenshots only from a window (headless has no renderer); no arbitrary `Msg` passthrough (messages are not serialisable). The answer comparison headless uses the host's runtime as the window does.
 
+## Verification
+Review (2026-11-22): criterion 1 MET: `studyfrog ctl` attached to the window answered state, nav, query, homework and appearance; `studyfrog --control-stdio --vault <v>` answered state, nav, logs, help over piped JSON lines, and refused `item delete` with "destructive commands are switched off (start with --control-allow-destructive)". Criterion 2 NOT MET: the `state` snapshot, screenshots and import/export rows exist, but there is no widget/AccessKit tree and calendar, board, diary, reports and settings contents are not drivable (the story's own open list); no stack delete. Criterion 3 MET: `ctl logs --follow` streamed a notice and a control warning live; refused requests appear as `source: control` warnings.
+
 ## Dependencies
 EPIC-038, STORY-0122.
 

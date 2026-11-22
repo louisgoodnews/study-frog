@@ -33,8 +33,13 @@ None.
 - Opening the calendar now also loads the homework (for the markers and the answer).
 - Limit: the reminder test uses a sample vault that may have no due reminders, so the no-marking rule is only partly exercised; the homework urgency and the view changes are not yet checked in the running app.
 
+Review (2026-11-22): all three criteria MET on the running window. Criterion 1: `calendar view week`, `timetable`, `month` and `day` each changed the screen (`cal-week.png`, `cal-timetable.png`, `cal-dec.png`, `cal-day.png`); `calendar period 2026-12-15` moved the month to December 2026 with the 15th selected (`cal-dec.png`). Criterion 2: a homework item due 2026-11-22 23:30 ("Soon test") was listed by `reminders due` on two consecutive calls (`{"lead_min":120,"title":"Soon test"}`), so the read does not mark it shown. Limit: the calendar-session half of the reminder was not exercised; no control command creates a calendar session, so `sessions` stayed empty. Criterion 3: `calendar homework 2026-11-25` answered `[{"due":"2026-11-25 17:00","title":"Essay","urgency":"Completed"}]`; `calendar view bogus` answers with the choices.
+
 ## Dependencies
 EPIC-064, and the features named above.
 
 ## Open Questions
 None.
+
+
+Note (2026-11-22): moved back to review. The calendar-session reminder half is not checkable through the control protocol (no command creates a session), so the done move rested on the homework reminder evidence alone.

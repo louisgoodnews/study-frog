@@ -21,11 +21,14 @@ EPIC-038 built the control protocol for the features of its time. The features a
 
 ## Acceptance Criteria
 - [ ] Every feature shipped in the v1.0 milestones can be driven through the control protocol, with a help row and a test per command family
-- [ ] Each new feature family has its own story under this epic, and the epic is continuous: stories are added as features land
+- [x] Each new feature family has its own story under this epic, and the epic is continuous: stories are added as features land
 - [ ] Read commands answer with the data they read; write commands are refused with the reason when the app refuses them
 
 ## Design Notes
 A command family is done when its commands parse, plan, answer and appear in `help`, and its tests pass. Coverage is measured against the stories of the other epics, not against the code.
+
+## Verification
+Review (2026-11-22): criterion 1 NOT MET: homework, appearance, calendar and search/tooltips are driven and have help rows, but the features of the v1.0 milestones include board, diary, reports, achievements, graph, assistant and match, which are reachable only by `nav` (STORY-0124's open list). Criterion 2 MET: stories STORY-0190 to STORY-0194 (and STORY-0191, import destinations and PDF cards) exist under this epic; continuity is ongoing. Criterion 3 NOT MET: write refusals answer with the reason (homework new, tick, create question, theme, density) and reads answer with data (homework list, calendar homework, reminders due), but `homework tab` and `calendar view`/`period` answer with the whole state, which has no homework tab or planner view field, so the read's data is not in the answer (`ctl state` has no `homework` or `planner` key).
 
 ## Dependencies
 Extends EPIC-038 (the protocol itself).

@@ -30,6 +30,8 @@ Criterion 1 is met. The Help screen's page tree has a "FrogScript reference" but
 
 Criteria 2 and 3 are not ticked. The data is in the code and tested (`studyfrog-script` wiki and cookbook, the lifecycle-event drift test), but in the running app the panel does not show its topics or cookbook buttons: the reference beside the editor is squeezed, the topic list is blank, and the output pane goes out of the window at 1280x800 and 1600x900 (`/tmp/claude-0/epic58/05-console-reference-button.png`, `06-console-reference-1600.png`, `07-console-reference-settled.png`). The same happens from the Console's own "Reference" button, so it predates the Help link. Filed as BUG-0020. The categories, the Lifecycle Events entry and the "Insert into editor" and "Run in console" buttons have not been seen in a window.
 
+Review (2026-11-22): criterion 1 stays ticked: the reference panel opens from ScriptStudio's "Reference" button (`/tmp/claude-0/review-c/shots/13-reference.png`); the Help entry was not re-checked. Criterion 2 NOT MET: the panel's topic list is not visible at 1280x800 (`13-reference.png`) or 1600x900 (`/tmp/claude-0/review-c/shots/14-reference-1600.png`); typing "for" in its search box shows no results (`/tmp/claude-0/review-c/shots/15-reference-search.png`). Criterion 3 NOT MET: no cookbook buttons are visible at either size (BUG-0020 open). Status stays review.
+
 ## Design Notes
 Store reference topics in clean static data structures or embedded markdown resources within `crates/studyfrog-script` and render via `studyfrog-ui`'s markdown widget. Adhere to Invariants P1 and P6.
 

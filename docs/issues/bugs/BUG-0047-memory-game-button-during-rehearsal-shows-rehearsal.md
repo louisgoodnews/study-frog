@@ -30,5 +30,9 @@ A Memory game start should either take over the screen with a new board or refus
 - STORY-0175
 - BUG-0024
 
+## Verification (2026-11-22)
+
+Review (2026-11-22): NOT FIXED. With an ordinary rehearsal open (4/6, front4), Memory game on the Memo stack page shows the rehearsal instead of a board (`/tmp/claude-0/review-c/shots/17-memory-during-run.png`). Both criteria fail. Stays backlog.
+
 ## Open Questions
 - None.

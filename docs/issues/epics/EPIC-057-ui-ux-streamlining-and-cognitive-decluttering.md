@@ -24,7 +24,7 @@ Conduct a comprehensive user experience refinement focused on simplicity, clarit
 
 ## Acceptance Criteria
 - [x] Unified single Import action replaces fragmented card, stack, note, and question buttons
-- [x] Systematic contextual tooltips and hover hints across all navigation icons, buttons, and tools
+- [ ] Systematic contextual tooltips and hover hints across all navigation icons, buttons, and tools
 - [ ] De-cluttered menu bars with progressive disclosure, reducing cognitive overload for new learners
 - [ ] Lightweight, modern visual rhythm maintaining deep power features under intuitive secondary disclosures
 
@@ -46,3 +46,7 @@ Audit (2026-11-22): criterion 1 MET: one Import... entry (items toolbar More...,
 - Criterion 3 stays unticked: NOT MET while the PDF viewer header shows ten buttons (STORY-0170 criterion 1; `/tmp/claude-0/verifyA/16-pdf-1280-empty.png`).
 - Criterion 4 NOT CHECKABLE: "lightweight, modern visual rhythm" is a judgement; no check made here.
 - Criteria 1 and 2 were not re-checked in this round. Status stays review.
+
+## Review (2026-11-22)
+
+Review (2026-11-22): criterion 1 stays MET: one Import entry replaces the duplicate import buttons. Criterion 2 unticked: the navigation rail's text items (Home, Calendar, Homework, Board and the rest) show no hover text after 3.5 s (/tmp/claude-0/review-a/hover-home-long.png, /tmp/claude-0/review-a/hover-calendar.png), and the help tooltip registry lists none of them. The top bar icons and "+ Create" do have explanations (/tmp/claude-0/review-a/hover-create.png). Criterion 3 NOT MET (PDF viewer header, STORY-0170). Criterion 4 NOT CHECKABLE: "lightweight, modern visual rhythm" is a judgement. Status stays review.

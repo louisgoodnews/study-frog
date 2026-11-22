@@ -2,7 +2,7 @@
 id: STORY-0188
 type: story
 title: "Keyboard Shortcut to Focus Search (Ctrl+F and /)"
-status: review
+status: done
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 3
@@ -41,3 +41,7 @@ EPIC-057, STORY-0169 (tooltip helpers)
 
 ## Open Questions
 None. The two questions were decided; see the implementation notes above.
+
+## Review (2026-11-22)
+
+Review (2026-11-22): criterion 1 MET: Ctrl+F focuses the library's "Search titles" field (state focused_field "Search titles", /tmp/claude-0/review-a/kb-ctrlf2.png) and, in the PDF viewer, opens "Find in this PDF" with its text selected (/tmp/claude-0/review-a/hover-pdf-find.png shows "lecture" highlighted). Selection in the library field could not be shown, because typed text does not reach that field in this environment; the same helper does the selecting. Criterion 2 MET: "/" focuses "Search titles" with nothing focused (/tmp/claude-0/review-a/kb-slash-lib.png). Criterion 3 MET: the hover text reads "Search titles, Shortcut: Ctrl+F or /" and "Finds the text in this PDF, Shortcut: Ctrl+F or /" (/tmp/claude-0/review-a/hover-lib-search.png, /tmp/claude-0/review-a/hover-pdf-find.png). The accessible name was not inspected. Status set to done.

@@ -2,7 +2,7 @@
 id: STORY-0193
 type: story
 title: "Appearance and density in the control protocol"
-status: review
+status: done
 epic: EPIC-064
 parents: ['EPIC-064']
 estimate: 2
@@ -31,6 +31,8 @@ Tests: `studyfrog-ui/tests/control_appearance.rs`.
 
 ## Design Notes
 None.
+
+Review (2026-11-22): all three criteria MET. `ctl "appearance theme dark"` changed only the theme; `density spacious` answered spacing 1.5, `density compact` 0.75; `text 120` answered text_percent 125 (the snapped step); `accent teal` changed only the accent. The change is saved in `home/config/app.toml` (`[appearance] text_size = 125, density = "compact", accent = "teal"`). Screenshots `/tmp/claude-0/review-b/density-spacious.png` and `density-compact.png` show the wider and tighter spacing and the teal accent. Errors: `density huge` -> "unknown density huge (compact, comfortable, spacious)"; `theme purple` -> "unknown theme purple (system, dark, light)"; `text 300` -> "text size must be between 70 and 200 percent".
 
 ## Dependencies
 EPIC-064, and the features named above.

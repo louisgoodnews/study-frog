@@ -68,3 +68,7 @@ Criterion 1 (at most 3 core actions per header): NOT MET for the PDF viewer. Lef
 - Owner's choice (not decided here): the story's Description asks to consolidate low-frequency buttons in crowded headers such as the PDF viewer, but gives no number. The criterion says at most 3 core actions. The author's note keeps navigation, zoom, search and Panels visible because the viewer's tests rely on them. Either move those into More and update the tests, or change the criterion or its number.
 - Criteria 2 and 3 were not re-checked in this round; their ticks stand.
 - Status stays review.
+
+## Review (2026-11-22)
+
+Review (2026-11-22): criterion 1 NOT MET, confirmed. At 1280 px the PDF viewer header shows ten controls: Back to library, Previous, Next, -, Fit, +, Previous hit, Next hit, More..., Panels..., plus the page and find fields (/tmp/claude-0/review-a/pdf-try.png). The owner decides the count. Criteria 2 and 3 were not re-checked here; their ticks stand. Status stays review.

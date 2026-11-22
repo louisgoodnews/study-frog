@@ -33,5 +33,9 @@ Record dwell as the time the question and answer were on screen, from the run's 
 - STORY-0176
 - EPIC-060
 
+## Verification (2026-11-22)
+
+Review (2026-11-22): NOT FIXED. Criterion 1: all six rows have dwell_ms equal to latency_ms (35/35, 33/33, 34/34, 70/70, 79/79, 57/57; DB `/tmp/claude-0/review-c/vault/.studyfrog/index.sqlite`), and `rehearse.rs` lines 153-154 set both from `t.answer_ms`. Criterion 2: text_complexity is 252 on every row, the `expected_ms` reading-time estimate (`rehearse.rs` line 156). Stays backlog.
+
 ## Open Questions
 - Should practice (non-scheduling) runs write telemetry rows with the effect marked, or none?

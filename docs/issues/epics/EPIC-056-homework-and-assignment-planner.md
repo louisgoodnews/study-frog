@@ -46,3 +46,7 @@ Audit (2026-11-22): criterion 1 MET: the homework list (`ctl homework list`) hol
 - Criterion 3 MET: the week view shows the lecture block "Statistik-Vorlesung" (Mon 09:00) and homework deadline markers on Tue 24 and Wed 25 in the same view (`/tmp/claude-0/verifyA/11-week.png`). Ticked. Caveat: the Calendar Timetable view lists no stored lectures after a restart (BUG-0044, `/tmp/claude-0/verifyA/10-timetable-restart.png`).
 - Criterion 4 NOT MET: the Homework screen has urgency tabs (All, Active, Due today, Overdue, Completed) and no subject filter, and no timetable beside the items (`/tmp/claude-0/verifyA/03-homework.png`). BUG-0043 reproduced. Left unticked.
 - Status stays review.
+
+## Review (2026-11-22)
+
+Review (2026-11-22): criterion 1 MET: the homework items hold title, course, due date and time, estimate, priority, status and checklist steps (/tmp/claude-0/review-a/hw-1280.png). Criterion 2 MET from the earlier audit (reminder notices); not re-run here. Criterion 3 MET: after a restart the week view of the week of 23 November shows the lecture "Statistik-Vorlesung" (Mon 09:00) and the due markers on Mon 23 and Thu 26 (/tmp/claude-0/review-a/week-next.png). The Timetable view still lists no lectures (BUG-0044, /tmp/claude-0/review-a/tt-restart.png). Criterion 4 NOT MET: the Homework screen has urgency tabs and Start, Edit and checklist controls, but no subject filter and no timetable (/tmp/claude-0/review-a/hw-1280.png). Status stays review; criterion 4 is open (BUG-0043).

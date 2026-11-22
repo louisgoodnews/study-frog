@@ -29,7 +29,7 @@ Deliver a full-featured CLI Control Protocol and `~/.local/` application directo
 ## Acceptance Criteria
 - [ ] AI agents can interactively operate a running or headless StudyFrog instance via a structured CLI control protocol with full access to all application features, screens, and actions
 - [ ] The control protocol exposes live UI state trees, semantic screen snapshots, and real-time console and application logs
-- [ ] StudyFrog stores application files, configurations, runtime control endpoints, and structured console logs in a standardized ~/.local/ directory hierarchy
+- [x] StudyFrog stores application files, configurations, runtime control endpoints, and structured console logs in a standardized ~/.local/ directory hierarchy
 
 ## Design Notes
 Child stories:
@@ -42,6 +42,9 @@ Architecture guardrails:
 
 ## Progress (2026-11-08)
 Both stories are in review: STORY-0122 (application home and logs) and STORY-0124 (the control protocol: `studyfrog --control-stdio`, `run/control.sock` served by the window and by headless instances, `studyfrog ctl`, `logs --follow`). Not yet: full coverage of every screen's actions (see STORY-0124's Progress), no AccessKit tree.
+
+## Verification
+Review (2026-11-22): criterion 1 NOT MET: calendar, board, diary, reports, achievements, settings, assistant and the folder operations are reached by `nav` and show only the screen name; no AccessKit tree; no stack delete (see STORY-0124). Criterion 2 NOT MET: `ctl state` is a semantic snapshot, but there is no live UI widget/state tree; live logs are MET (`ctl logs --follow` streamed a notice and a control warning as they happened). Criterion 3 MET: with no `STUDYFROG_HOME`, a headless run under a fake `HOME` created `~/.local/share/studyfrog/run/` and `config/app.toml` (`appearance density` write); with `STUDYFROG_HOME` set, `config/`, `logs/studyfrog.log`, `logs/console.jsonl` and `run/control.sock`/`control.json` were written.
 
 ## Dependencies
 EPIC-008 (UI Shell), EPIC-028 (Extensibility), and EPIC-037 (MCP).

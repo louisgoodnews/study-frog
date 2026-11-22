@@ -50,5 +50,7 @@ Checked in the running app (`/tmp/claude-0/verifyB`), a vault with 7 answered re
 - Criterion 4, Cognitive profile in Reports: MET (ticked). The tab opens from Reports (`/tmp/claude-0/verifyB/r02-cognitive.png`, `/tmp/claude-0/verifyB/r03-cognitive-bottom.png`).
 The epic stays in review. Open: BUG-0030, BUG-0031, BUG-0048.
 
+Review (2026-11-22): criterion 1 stays unticked, NOT MET: `review_telemetry` rows have dwell_ms equal to latency_ms and semantic_score NULL, including the row for a typed answer whose `answer_score` is 1.0 (BUG-0031, BUG-0048; DB `/tmp/claude-0/review-c/vault/.studyfrog/index.sqlite`). Criterion 2 NOT CHECKABLE: velocity is shown (`/tmp/claude-0/review-c/shots/02-cognitive.png`), but no screen shows per-item difficulty. Criterion 3 NOT CHECKABLE in the app (see STORY-0177). Criterion 4 stays ticked: the Cognitive profile tab opens from Reports (`02-cognitive.png`). Status stays review.
+
 ## Open Questions
 None.

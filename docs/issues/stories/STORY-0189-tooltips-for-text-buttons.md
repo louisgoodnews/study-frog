@@ -23,7 +23,7 @@ STORY-0169 gave the icon buttons explanations on hover, and the rating and diffi
 - Start with the navigation rail, header bars, the rehearsal action tray, the item editor and the import and export dialog, then the rest.
 
 ## Acceptance Criteria
-- [x] Every text button on the navigation, header, action tray and dialog screens has a hover explanation, with its keyboard shortcut where one exists
+- [ ] Every text button on the navigation, header, action tray and dialog screens has a hover explanation, with its keyboard shortcut where one exists
 - [x] A test fails when a new text button is added without a hover explanation
 - [x] Explanations are one line and say what the button does, not just repeat its label
 
@@ -44,3 +44,7 @@ Review: the explanations that were reused were checked against their buttons. Wh
 
 ## Open Questions
 None. The two questions were decided; see the implementation notes above.
+
+## Review (2026-11-22)
+
+Review (2026-11-22): criterion 1 unticked: the navigation rail's text items (Home, Calendar, Homework, Board) show no hover text (/tmp/claude-0/review-a/hover-home-long.png, /tmp/claude-0/review-a/hover-calendar.png). The rail is named in this story's Description. Header and action buttons do have explanations ("+ Create": "Creates a new item.", /tmp/claude-0/review-a/hover-create.png; the PDF find field, /tmp/claude-0/review-a/hover-pdf-find.png). Criterion 2 (guard test): the test is present (`crates/studyfrog-ui/tests/text_button_tooltips.rs`); not run here, since cargo is not allowed in this review. Criterion 3 MET on the sampled explanations, each one line. Status stays review.

@@ -53,3 +53,7 @@ In **review** because STORY-0114 is in review (its reading measure is kept at 60
 StudyFrog's font, not the 620 to 680 px it names; the owner should accept or ask for the pixel width). STORY-0113,
 STORY-0115 and STORY-0116 are done. Criterion 2 is not ticked for the same reason; criteria 1 and 3 are met (see the
 stories). Spec `docs/specs/ui-colour-and-type.md`.
+
+## Review (2026-11-22)
+
+Review (2026-11-22): criterion 2 stays unticked. Its line-length bound is stated in characters (55 to 75 cpl); the Help page measured about 60 to 70 cpl (/tmp/claude-0/review-a/help-1280.png), but note preview and rehearsal were not checked here, and the pixel question sits with STORY-0114. Criteria 1 and 3 were not re-checked here. Status stays review.

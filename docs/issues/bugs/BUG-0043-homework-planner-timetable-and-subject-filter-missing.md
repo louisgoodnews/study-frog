@@ -37,3 +37,7 @@ Reuse the calendar's timetable data; the subject is the homework item's stack, a
 Reproduced in the running app (head build copy, display :92). Both criteria are NOT MET, so the bug stays open (status backlog).
 - Criterion 1 (timetable beside the due items): NOT MET. The Homework screen shows the two homework cards, the tabs and no timetable: `/tmp/claude-0/verifyA/03-homework.png`. The Calendar Timetable view listed no lectures after a restart, although a lecture was stored; this is BUG-0044. The week view shows the lecture and the deadline markers together (`/tmp/claude-0/verifyA/11-week.png`), but that is not the planner.
 - Criterion 2 (subject filter kept across tabs): NOT MET. The Homework screen has no subject control (`/tmp/claude-0/verifyA/03-homework.png`).
+
+## Review (2026-11-22)
+
+Review (2026-11-22): still reproduced in the running app (head copy, display :81). Criterion 1 NOT MET: the Homework screen shows the cards, the tabs and no timetable (/tmp/claude-0/review-a/hw-1280.png). Criterion 2 NOT MET: no subject control on that screen (/tmp/claude-0/review-a/hw-1280.png). Status stays backlog.

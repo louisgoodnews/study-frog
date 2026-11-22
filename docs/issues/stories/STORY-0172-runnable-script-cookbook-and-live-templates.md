@@ -41,6 +41,8 @@ Re-checked against the criteria: ten recipes, "Insert into editor" on every reci
 
 Needs a person at a window: that the recipe buttons read well in the panel and that the console output appears where expected after "Run in console".
 
+Review (2026-11-22): criteria 1 to 3 NOT MET as seen in the window. No recipe, "Insert into editor" or "Run in console" button is visible at 1280x800 or 1600x900 (`/tmp/claude-0/review-c/shots/13-reference.png`, `/tmp/claude-0/review-c/shots/14-reference-1600.png`). Blocked by BUG-0020. Status stays review.
+
 ## Window check (2026-11-22, EPIC-058)
 The cookbook is at the foot of the reference panel, which the window does not show (BUG-0020): the recipes, "Insert into editor" and "Run in console" are not visible at 1280x800 or 1600x900, so no click was made on them. The three criteria are unticked until they are seen in a window. The ten recipes and the buttons are covered by `studyfrog-script/tests/cookbook.rs` and `studyfrog-ui/tests/studio_reference.rs`. Screenshots of the panel: `/tmp/claude-0/epic58/07-console-reference-settled.png`.
 

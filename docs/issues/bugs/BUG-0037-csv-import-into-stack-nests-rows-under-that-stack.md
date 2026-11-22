@@ -21,8 +21,8 @@ Decide how the chosen destination and the file's stack column combine (the desti
 
 ## Acceptance Criteria
 - [ ] Importing a CSV whose stack column names the chosen stack puts its cards in that stack, with no new nested stack
-- [ ] Importing the same file with 'As the file says' keeps the stack column's own stack
-- [ ] The Import into menu never lists two stacks that look the same
+- [x] Importing the same file with 'As the file says' keeps the stack column's own stack
+- [x] The Import into menu never lists two stacks that look the same
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-service/src/xfer_plan.rs` (`destination`), `crates/studyfrog-service/src/xfer_csv*.rs`, `crates/studyfrog-ui/src/` (transfer destination menu). See `docs/specs/interchange.md`.
@@ -34,3 +34,7 @@ Decide how the chosen destination and the file's stack column combine (the desti
 
 ## Open Questions
 - Which rule the owner wants when the destination and the file's stack differ.
+
+## Review (2026-11-22)
+
+Review (2026-11-22): criterion 1 NOT MET: `ctl import cards.csv --stack statistik` created vault/statistik/statistik again with two cards; the sidebar shows Statistik with a nested statistik (/tmp/claude-0/review-a/import-dialog2.png). Criterion 2 MET: the same file imported with "As the file says" went into vault/statistik, the stack the file names, with no nested stack. Criterion 3 MET for the menu as it now stands: the Import into menu lists Vault root, Biologie, neues-thema and Statistik, with no look-alike pair (/tmp/claude-0/review-a/import-dest.png); nested stacks are not listed there. Status stays backlog (criterion 1 open).

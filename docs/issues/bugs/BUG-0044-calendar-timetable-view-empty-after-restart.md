@@ -35,3 +35,7 @@ Keep the loading in pure free functions and within the file-size limit (P6). Reu
 
 ## Open Questions
 - None.
+
+## Review (2026-11-22)
+
+Review (2026-11-22): still reproduced. After the app restarts and the vault reopens, the Calendar Timetable view lists no lectures on any weekday (/tmp/claude-0/review-a/tt-restart.png), while the week view shows the same lecture on Monday 09:00 (/tmp/claude-0/review-a/week-next.png). Both criteria NOT MET. The lecture was added as a row in the vault index, because the Add lecture form takes no typed text in this environment. Status stays backlog.

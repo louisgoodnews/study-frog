@@ -52,5 +52,7 @@ Checked in the running app (`/tmp/claude-0/verifyB`, 1280x800, Memo stack with s
 - Time-attack and stopwatch: unchanged from the earlier audit (see STORY-0175).
 - Entry point from stacks and sessions: NOT MET for sessions. The stack page and Rehearse setup start a game (`/tmp/claude-0/verifyB/m03-board.png`). The Calendar's "Sessions on <date>" panel offers no Memory game: a planned-review row offers only "Rehearse Memo" and "Open Memo" (`/tmp/claude-0/verifyB/c02-session.png`), and `view/calendar.rs` `occurrence_row` offers only "Start rehearsal for <title>". Filed as BUG-0046. Also, the stack page's Memory game button shows an open rehearsal instead of starting a board (`/tmp/claude-0/verifyB/m08-memory-during-run.png`, BUG-0047). This criterion stays unticked, so the epic stays in review.
 
+Review (2026-11-22): criteria 1 to 3 stay ticked (not re-checked here). Criterion 4 stays unticked: BUG-0046 still reproduces, the Calendar session row for 2026-11-24 offers "Start rehearsal for Memo session", "Edit" and "Delete" and no Memory game (`/tmp/claude-0/review-c/shots/22-session-row.png`); the planned-review rows offer only Rehearse, Open and Move (`/tmp/claude-0/review-c/shots/19-cal24.png`). BUG-0047 still reproduces: with an ordinary rehearsal open (4/6), Memory game on the Memo stack page shows that rehearsal, not a board (`/tmp/claude-0/review-c/shots/17-memory-during-run.png`). Status stays review.
+
 ## Open Questions
 None.

@@ -34,5 +34,9 @@ Add a Memory game start to the Calendar's session rows and to the planned-review
 - EPIC-059 (last criterion)
 - STORY-0175
 
+## Verification (2026-11-22)
+
+Review (2026-11-22): NOT FIXED. Criterion 1: the session row offers no Memory game start (`/tmp/claude-0/review-c/shots/22-session-row.png`). Criterion 2: the planned-review rows offer no Memory game start (`/tmp/claude-0/review-c/shots/19-cal24.png`). Stays backlog.
+
 ## Open Questions
 - None.

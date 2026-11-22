@@ -44,5 +44,7 @@ Reproduced in the running app (`/tmp/claude-0/verifyB`). Script `/tmp/claude-0/v
 - Export log wrote `/tmp/claude-0/verifyB/vault/logs/script_runs.log` with both lines as plain text and no stream label (criterion 3 not met).
 Status stays backlog.
 
+Review (2026-11-22): NOT FIXED. The stderr line is under Stdout (`/tmp/claude-0/review-c/shots/10-filter-stdout.png`), the Stderr / Errors filter is empty (`/tmp/claude-0/review-c/shots/11-filter-stderr.png`), and both lines are the same green (`/tmp/claude-0/review-c/shots/09-run-all.png`). Stays backlog.
+
 ## Open Questions
 - None.

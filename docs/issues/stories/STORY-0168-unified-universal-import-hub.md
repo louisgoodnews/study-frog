@@ -23,7 +23,7 @@ Consolidate all import workflows into a single unified entry point:
 - Automatically detect the file type (CSV/TSV tables, Markdown card decks, Anki `.apkg`, or PDF documents) and present clear options for target stack or vault location.
 
 ## Acceptance Criteria
-- [x] Single top-level Import button in the UI replaces separate card, stack, note, and question buttons
+- [ ] Single top-level Import button in the UI replaces separate card, stack, note, and question buttons
 - [x] Importer wizard auto-detects input file format (CSV, TSV, Markdown, Anki, PDF, JSON)
 - [x] Clear target destination picker (existing stack, new stack, or unstacked vault notes)
 
@@ -53,3 +53,7 @@ None.
 ## Implementation (2026-11-22, audit)
 
 Audit (2026-11-22): criterion 1 MET: one Import... entry in the items toolbar's More... menu and in the stack page's More actions; no separate card, stack, note or question import buttons (/tmp/claude-0/audit/g5/0168-more-menu.png, /tmp/claude-0/audit/g5/0168-items.png). The entry is under an overflow menu, not top level. Criterion 2 MET for CSV, Markdown, JSON and PDF: "Looks like CSV or TSV cards" (/tmp/claude-0/audit/g5/0168-import-dialog.png), "Looks like Markdown cards (one per ## heading) or one note" (/tmp/claude-0/audit/g5/0168-import-md.png), "Looks like StudyFrog export (JSON)" (/tmp/claude-0/audit/g5/0168-import-json.png), "Looks like PDF document (one card per page)" (/tmp/claude-0/audit/g5/0168-dest-menu.png); a two-line-per-page PDF gave two cards. Anki (.apkg) NOT CHECKABLE: no sample package in the test vault. Criterion 3 MET: the Import into menu offers As the file says, Vault root (no stack), each stack and New stack... (/tmp/claude-0/audit/g5/0168-dest-menu.png). A CSV imported into a chosen stack nested its rows under it, and the menu then listed two look-alike stacks (BUG-0037). Status left at review: the Anki path is not exercised and BUG-0037 is open.
+
+## Review (2026-11-22)
+
+Review (2026-11-22): criterion 1 unticked. As written it asks for a top-level Import button. The app has none: the single Import is an entry in an overflow menu (items toolbar More..., stack page More actions; /tmp/claude-0/review-a/items-more2.png, /tmp/claude-0/review-a/stack-more.png). The duplicate buttons are gone. Whether an overflow entry counts is the owner's call. Criterion 2 MET: a minimal Anki package with no format chosen was detected and imported as two cards in a Physik stack (ctl import, notice "Imported: 2 created"; /tmp/claude-0/review-a/physik.apkg); the earlier audit saw the CSV, Markdown, JSON and PDF hints. The "Looks like Anki" hint text was not seen on screen. Criterion 3 MET: the Import into menu lists As the file says, Vault root (no stack) and the stacks (/tmp/claude-0/review-a/import-dest.png). Status stays review (criterion 1 open). BUG-0037 (nested stack) is still open.

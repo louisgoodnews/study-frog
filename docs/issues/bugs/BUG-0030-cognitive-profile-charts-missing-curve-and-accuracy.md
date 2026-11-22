@@ -37,5 +37,7 @@ Reproduced in the running app (`/tmp/claude-0/verifyB`, 1280x800), vault with 7 
 - Latency: a scatter of answer time against word count, no distribution (`/tmp/claude-0/verifyB/r02-cognitive.png`). Criterion 3 not met.
 Status stays backlog.
 
+Review (2026-11-22): NOT FIXED. Criterion 1: velocity is still one line of text (`/tmp/claude-0/review-c/shots/02-cognitive.png`). Criterion 2: no semantic accuracy trend and no note that one is not shown (`/tmp/claude-0/review-c/shots/03-cognitive-bottom.png`). Criterion 3: the latency view is still a scatter against word count (`02-cognitive.png`). Stays backlog.
+
 ## Open Questions
 - None.

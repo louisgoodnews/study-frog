@@ -43,6 +43,8 @@ Telemetry is now recorded on every timed rating (STORY-0176). The profile still 
 
 Tests: `studyfrog-service/tests/cognitive_report.rs` (empty history, calibration, weekly shares, velocity, the 500-point cap) and `studyfrog-ui/tests/reports_cognitive_ui.rs` (charts and calibration shown; the empty-state message). Checked with a screenshot of a fixture vault (light and dark). The screenshot showed clipped axis labels and a zigzag weekly line; both are fixed: the weekly line is now the cumulative share of passing answers.
 
+Review (2026-11-22): criterion 1 MET: the Cognitive profile tab is on Reports (`/tmp/claude-0/review-c/shots/02-cognitive.png`). Criterion 2 stays unticked, NOT MET: velocity is one line of text, not a curve; the latency chart is a scatter against word count, not a distribution; the weekly chart is a cumulative share of passing answers; no semantic accuracy trend is shown or marked as unavailable (`02-cognitive.png`, `/tmp/claude-0/review-c/shots/03-cognitive-bottom.png`; BUG-0030, BUG-0031). Criterion 3 MET: the calibration shows "Rated Easy 0%" against "Answered in time 100%" with a note that the user may be under-rating recall (`02-cognitive.png`). Status stays review.
+
 ## Design Notes
 Strictly follow `palette_of(ui)` colors without hardcoded RGB values. Adhere to visual rhythm rules of halves and Invariant P6 ($\le 250$ LOC).
 

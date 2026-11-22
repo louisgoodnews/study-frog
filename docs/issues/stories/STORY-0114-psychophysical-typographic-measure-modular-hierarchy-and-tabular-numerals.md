@@ -65,3 +65,7 @@ characters-per-line goal in StudyFrog's font, so the owner should decide.
   without them would need a monospace fallback); the item seconds, run position, run clock and focus timer reserve
   the width of their widest form; Library's numeric columns are right-aligned.
 - Also: the run answer is body text in the text colour (APCA body target) instead of the accent at 21 pt.
+
+## Review (2026-11-22)
+
+Review (2026-11-22): criterion 1 NOT MET as written. The Help column is about 450 px wide at 100% text (x 600 to 1050 px at 1280 px wide), with about 60 to 70 characters per line (/tmp/claude-0/review-a/help-1280.png). The character range is met; the 620 to 680 px range is not. The owner accepts the character measure or asks for the pixel one. Criteria 2 and 3 were not re-checked here; their ticks stand. Status stays review.
