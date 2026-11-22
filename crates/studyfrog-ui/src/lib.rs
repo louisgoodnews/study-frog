@@ -1,6 +1,5 @@
 //! GUI layer. Thin: renders state and dispatches to domain crates.
 //! Pure core (`state`, `msg`, `effect`, `update`) knows nothing of egui.
-
 pub mod achievements;
 pub mod agent_chat;
 pub mod agent_conn;
@@ -75,6 +74,7 @@ pub mod exec_help;
 pub mod exec_homework;
 pub mod exec_import;
 pub mod exec_items;
+pub mod exec_learn;
 pub mod exec_library;
 pub mod exec_log;
 pub mod exec_mark;
@@ -115,6 +115,7 @@ pub mod import_ui;
 pub mod item_look;
 pub mod kanban;
 pub mod kanban_msg;
+pub mod learn_editor;
 pub mod library_bulk;
 pub mod library_columns;
 pub mod library_search;
@@ -246,5 +247,4 @@ pub mod view_time;
 pub mod window_watch;
 pub mod worker_log;
 pub mod zen;
-
 pub use app::{RunOptions, run, run_with};

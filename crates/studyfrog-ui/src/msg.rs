@@ -118,6 +118,8 @@ pub enum Msg {
     Math(crate::setup::math::MathMsg),
     /// A message of the mock exam.
     MockExam(crate::setup::mock_exam::MockExamMsg),
+    /// The learn-mode editor (STORY-0198).
+    Learn(crate::learn_editor::LearnMsg),
     /// A scheduling switch of the vault.
     Srs(crate::app_settings_ui::SrsMsg),
     /// A message of the memory game.

@@ -30,6 +30,8 @@ pub enum Modal {
     EditItem(Box<crate::rehearsal_edit::EditCardModal>),
     /// Confirm deleting an item from the editor.
     DeleteItem(studyfrog_core::uid::Uid, String),
+    /// The learn-mode editor (STORY-0198).
+    LearnEditor(Box<crate::learn_editor::LearnEditor>),
 }
 
 /// The priority and difficulty the user chose; `None` leaves the default.

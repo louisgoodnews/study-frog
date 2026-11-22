@@ -58,6 +58,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Case(m) => crate::setup::case::update(state, m),
         Msg::Math(m) => crate::setup::math::update(state, m),
         Msg::MockExam(m) => crate::setup::mock_exam::update(state, m),
+        Msg::Learn(m) => crate::learn_editor::update(state, m),
         Msg::Tick => {
             let (state, _) = crate::setup::memory::tick(state);
             let (state, polled) = crate::poll_ui::tick(state);

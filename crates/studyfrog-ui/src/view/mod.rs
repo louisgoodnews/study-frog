@@ -1,5 +1,4 @@
 //! Views: plain functions from `&State` to the messages the user's input produced.
-
 mod achievements;
 mod agent;
 mod agent_chat;
@@ -58,6 +57,7 @@ pub mod item_stacks;
 mod items;
 pub(crate) mod kit;
 mod kit_card;
+pub mod learn_editor;
 mod library;
 pub mod library_bulk;
 pub mod library_keys;

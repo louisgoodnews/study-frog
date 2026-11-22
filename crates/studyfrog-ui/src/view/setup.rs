@@ -151,6 +151,12 @@ fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 {
                     out.push(Msg::MockExam(crate::setup::mock_exam::MockExamMsg::Open));
                 }
+                if kit::quiet_button(ui, "Learn modes")
+                    .on_hover_text("Builds or edits a learn mode: a graph of steps that a practice-only run follows.")
+                    .clicked()
+                {
+                    out.push(Msg::Learn(crate::learn_editor::LearnMsg::Open));
+                }
                 if kit::quiet_button(ui, "Math drill")
                     .on_hover_text("Opens a math drill: a standard-error problem with working rows, a keypad and the full solution.")
                     .clicked()

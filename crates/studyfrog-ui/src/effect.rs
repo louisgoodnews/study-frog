@@ -58,6 +58,8 @@ pub enum Effect {
     LoadCases(Option<String>),
     /// Make or save a mock exam from the notes of a folder.
     MockExam(crate::setup::mock_exam::MockExamEffect),
+    /// Read or save learn modes for the editor (STORY-0198).
+    Learn(crate::learn_editor::LearnEffect),
     /// Write the calibrated-start switch into the vault's `studyfrog.toml`.
     SetCalibratedStart(bool),
     /// Count the items a run built from this plan would contain.

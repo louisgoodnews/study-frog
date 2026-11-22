@@ -40,11 +40,16 @@ Node types for the first version (decided): start, present, recall, rate, schedu
 - Built-in readers (recent runs, run starts, the finished count) leave custom runs out (`store::learn::BUILTIN_RUNS`), tested.
 - Changed behaviour, stated: in v1 the graph decides the recorded path and the branches; the run's queue order is still the built-in engine's. A custom run therefore records what the graph would do with each rating.
 
+## Implementation (part 2, form editor)
+- A form-based editor (not a canvas): "Learn modes" on the Rehearse setup opens a dialog that lists the stored modes, opens one, names it, adds and removes nodes (kind and label; ids are generated), adds and removes wires (from, to, condition or plain), shows the reasons it cannot be saved, and saves. Save is refused while there are reasons; the check runs after every edit.
+- Pure state and update in `learn_editor.rs` (tests in `tests/learn_editor.rs`); the file work is effects in `exec_learn.rs`; the form in `view/learn_editor.rs`; a screenshot demo `--screenshot learn-editor`.
+
 ## Still open (part 2)
 - Start a custom run from the app (a control command and a Rehearse setup entry).
-- The editor: a form to list, add, connect, delete and check nodes, then save. Not built; the canvas is a later choice.
+- The canvas (drawn nodes and wires) is not built; the form editor above is the first version.
 - The opt-in custom report screen (the store function `custom_mode_totals` exists).
-- Acceptance criterion 1 ("drawn in the app") is therefore not met yet; the story stays in progress.
+- Acceptance criterion 1 ("drawn in the app") is met by the form editor only, not as a canvas.
+- Starting a custom run from the app is still open: the backend exists (`learn_run::start`), no screen calls it yet.
 
 ## Dependencies
 EPIC-066, and the features named above.

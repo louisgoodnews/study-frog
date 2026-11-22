@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Learn-mode editor (`crates/studyfrog-ui`, STORY-0198)**: "Learn modes" on the Rehearse setup opens a form to list, name, build, check and save a learn mode (nodes, wires, branch conditions); a mode that cannot run is not saved, and the reasons are listed.
 - **Custom learn-mode runs (`crates/studyfrog-store`, `crates/studyfrog-service`, `crates/studyfrog-rehearsal`, STORY-0198, part 2 backend)**: a checked learn mode runs practice-only (no reviews, no schedule change); each rating walks its graph and the path is stored with a snapshot of the mode; built-in history and counts leave custom runs out. The app's start, the editor and the custom report are still to come.
 - **Learn-mode graphs and their storage (`crates/studyfrog-rehearsal`, `crates/studyfrog-service`, STORY-0198, part 1)**: a learn mode is a graph of start, present, recall, rate, schedule, log, branch and stop nodes; a graph that cannot run is refused with the reasons (no start, a loop without a stop, an unknown node, and others); valid graphs are saved as TOML in the vault's `learn_modes` folder. The canvas editor and running a custom mode are still to come.
 - **Previous rating on the rating buttons (`crates/studyfrog-ui`, STORY-0196)**: the button of the item's previous rating shows "Last time: Difficult / Medium / Easy" in red, orange or green; an item with no previous rating shows nothing.

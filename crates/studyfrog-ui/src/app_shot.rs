@@ -60,7 +60,7 @@ fn screen_named(name: &str) -> Option<Screen> {
         "graph" => Screen::Graph,
         "canvas" => Screen::Canvas,
         "match" => Screen::Match,
-        "run" | "run-answer" | "run-long" => Screen::Rehearse,
+        "run" | "run-answer" | "run-long" | "learn-editor" => Screen::Rehearse,
         _ => return None,
     })
 }
@@ -68,6 +68,10 @@ fn screen_named(name: &str) -> Option<Screen> {
 fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
     if name == "run-long" {
         return crate::app_shot_recall::mock::long_run(model);
+    }
+    if name == "learn-editor" {
+        crate::app_shot_recall::mock::learn_editor_demo(model);
+        return Vec::new();
     }
     if let Some(fx) = crate::app_shot_recall::memory_setup(model, name) {
         return fx;

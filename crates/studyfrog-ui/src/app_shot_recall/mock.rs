@@ -77,3 +77,55 @@ pub fn long_run(model: &mut Model) -> Vec<Effect> {
     let _ = apply(model, Msg::RunAction(Action::Flip));
     Vec::new()
 }
+
+/// The learn-mode editor with a mode open and one point left to fix (`--screenshot learn-editor`).
+pub fn learn_editor_demo(model: &mut Model) {
+    use studyfrog_rehearsal::learn_graph::{Edge, LearnGraph, Node, NodeKind};
+    let node = |id: &str, kind, label: &str| Node {
+        id: id.into(),
+        kind,
+        label: label.into(),
+    };
+    let graph = LearnGraph {
+        name: "Interleave two decks".into(),
+        nodes: vec![
+            node("n1", NodeKind::Start, "start"),
+            node("n2", NodeKind::Present, "show a card from deck A or B"),
+            node("n3", NodeKind::Rate, "rate"),
+            node("n4", NodeKind::Branch, "pick the next deck"),
+            node("n5", NodeKind::Stop, "end"),
+        ],
+        edges: vec![
+            Edge {
+                from: "n1".into(),
+                to: "n2".into(),
+                when: None,
+            },
+            Edge {
+                from: "n2".into(),
+                to: "n3".into(),
+                when: None,
+            },
+            Edge {
+                from: "n3".into(),
+                to: "n4".into(),
+                when: None,
+            },
+            Edge {
+                from: "n4".into(),
+                to: "n2".into(),
+                when: Some("again".into()),
+            },
+        ],
+    };
+    let mut e = crate::learn_editor::new_editor();
+    e.modes = vec![
+        "interleave-two-decks.toml".into(),
+        "spacing-test.toml".into(),
+    ];
+    e.file = Some("interleave-two-decks.toml".into());
+    e.graph = graph;
+    e.reasons = vec!["the branch n4 needs a default way on".into()];
+    model.state.screen = Screen::Rehearse;
+    model.state.modal = Some(crate::modal::Modal::LearnEditor(Box::new(e)));
+}
