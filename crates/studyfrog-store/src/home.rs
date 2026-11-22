@@ -25,11 +25,11 @@ pub struct RunRow {
 
 /// The runs started most recently, newest first.
 pub fn recent_runs(conn: &Connection, limit: usize) -> Result<Vec<RunRow>, StoreError> {
-    let sql = "SELECT r.uid, r.mode, r.state, r.started_at_ms,
+    let sql = format!("SELECT r.uid, r.mode, r.state, r.started_at_ms,
                       (SELECT COUNT(*) FROM run_event e WHERE e.run_uid = r.uid AND e.kind = 'item_rated'),
                       (SELECT COUNT(*) FROM run_event e WHERE e.run_uid = r.uid AND e.kind = 'item_skipped')
-               FROM run r WHERE r.started_at_ms IS NOT NULL ORDER BY r.started_at_ms DESC LIMIT ?1";
-    let mut stmt = conn.prepare(sql).map_err(sql_err)?;
+               FROM run r WHERE r.started_at_ms IS NOT NULL AND r.{} ORDER BY r.started_at_ms DESC LIMIT ?1", crate::learn::BUILTIN_RUNS);
+    let mut stmt = conn.prepare(&sql).map_err(sql_err)?;
     let rows = stmt
         .query_map([limit as i64], |r| {
             Ok((

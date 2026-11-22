@@ -113,7 +113,10 @@ pub fn load_run_starts(
     conn: &Connection,
 ) -> Result<std::collections::HashMap<Uid, i64>, StoreError> {
     let mut stmt = conn
-        .prepare("SELECT uid, started_at_ms FROM run WHERE started_at_ms IS NOT NULL")
+        .prepare(&format!(
+            "SELECT uid, started_at_ms FROM run WHERE started_at_ms IS NOT NULL AND {}",
+            crate::learn::BUILTIN_RUNS
+        ))
         .map_err(sql_err)?;
     let rows = stmt
         .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?)))

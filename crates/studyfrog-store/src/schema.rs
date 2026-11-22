@@ -10,6 +10,7 @@ use crate::schema_keys::V24;
 use crate::schema_later::{
     V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19,
 };
+use crate::schema_learn::V31;
 use crate::schema_memory::{V21, V22};
 use crate::schema_refs::V20;
 use crate::schema_telemetry::V30;
@@ -62,6 +63,11 @@ pub const MIGRATIONS: &[Migration] = &[
         version: 30,
         name: "cognitive interaction telemetry",
         sql: V30,
+    },
+    Migration {
+        version: 31,
+        name: "custom learn-mode runs and their steps",
+        sql: V31,
     },
 ];
 

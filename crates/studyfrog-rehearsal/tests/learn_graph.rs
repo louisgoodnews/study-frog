@@ -73,7 +73,7 @@ fn a_branch_with_two_ways_on_runs() {
             wire("start", "rate"),
             wire("rate", "pick"),
             when("pick", "again", "again"),
-            when("pick", "good", "good"),
+            when("pick", "good", "default"),
             wire("again", "end"),
             wire("good", "end"),
         ],
@@ -97,7 +97,7 @@ fn a_loop_that_a_branch_can_leave_runs() {
             wire("show", "rate"),
             wire("rate", "pick"),
             when("pick", "show", "again"),
-            when("pick", "next", "good"),
+            when("pick", "next", "default"),
             wire("next", "end"),
         ],
     );
@@ -218,4 +218,27 @@ fn two_nodes_with_one_id_are_refused() {
         vec![],
     );
     assert!(check(&g).contains(&Refusal::DuplicateNode("a".into())));
+}
+
+#[test]
+fn an_unknown_condition_and_a_branch_without_default_are_refused() {
+    let g = graph(
+        vec![
+            node("start", NodeKind::Start),
+            node("pick", NodeKind::Branch),
+            node("a", NodeKind::Stop),
+            node("b", NodeKind::Stop),
+        ],
+        vec![
+            wire("start", "pick"),
+            when("pick", "a", "maybe"),
+            when("pick", "b", "again"),
+        ],
+    );
+    let refusals = check(&g);
+    assert!(refusals.contains(&Refusal::UnknownCondition {
+        from: "pick".into(),
+        when: "maybe".into()
+    }));
+    assert!(refusals.contains(&Refusal::BranchNeedsDefault("pick".into())));
 }

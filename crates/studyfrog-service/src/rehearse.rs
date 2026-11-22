@@ -103,6 +103,7 @@ pub fn record_step(
                     rusqlite::params![run_id, pos, item_id],
                 );
             }
+            crate::learn_run::record_rating(&tx, ctx.run, item, *rating, now)?;
             if ctx.effect == ScheduleEffect::UpdateSchedule {
                 let stacks = rated_stacks(&tx, ctx.run, item)?;
                 rate_item_in(&tx, (item, &stacks), (*rating, ctx.timing), now, vault)?;

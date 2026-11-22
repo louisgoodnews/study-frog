@@ -91,7 +91,10 @@ pub fn load_mastered(conn: &Connection) -> Result<Vec<StackedItem>, StoreError> 
 /// Runs that finished.
 pub fn count_finished_runs(conn: &Connection) -> Result<u32, StoreError> {
     conn.query_row(
-        "SELECT COUNT(*) FROM run WHERE state = 'finished'",
+        &format!(
+            "SELECT COUNT(*) FROM run WHERE state = 'finished' AND {}",
+            crate::learn::BUILTIN_RUNS
+        ),
         [],
         |r| r.get(0),
     )

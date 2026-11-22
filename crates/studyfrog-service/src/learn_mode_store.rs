@@ -13,6 +13,8 @@ pub const FOLDER: &str = "learn_modes";
 #[derive(Serialize, Deserialize)]
 struct Doc {
     name: String,
+    #[serde(default = "first_version")]
+    version: u32,
     #[serde(default)]
     node: Vec<NodeDoc>,
     #[serde(default)]
@@ -35,7 +37,12 @@ struct EdgeDoc {
     when: Option<String>,
 }
 
-fn kind_name(k: NodeKind) -> &'static str {
+fn first_version() -> u32 {
+    1
+}
+
+/// The name a node kind is written under in the file.
+pub fn kind_name(k: NodeKind) -> &'static str {
     match k {
         NodeKind::Start => "start",
         NodeKind::Present => "present",
@@ -64,8 +71,13 @@ fn kind_of(word: &str) -> Result<NodeKind, String> {
 
 /// The file's text for `g`.
 pub fn to_toml(g: &LearnGraph) -> Result<String, String> {
+    to_toml_at(g, 1)
+}
+
+fn to_toml_at(g: &LearnGraph, version: u32) -> Result<String, String> {
     let doc = Doc {
         name: g.name.clone(),
+        version,
         node: g
             .nodes
             .iter()
@@ -140,7 +152,8 @@ pub fn save(root: &Path, g: &LearnGraph) -> Result<PathBuf, String> {
     let dir = root.join(FOLDER);
     fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let path = dir.join(file_name(&g.name));
-    fs::write(&path, to_toml(g)?).map_err(|e| e.to_string())?;
+    let version = stored_version(root, &file_name(&g.name)) + 1;
+    fs::write(&path, to_toml_at(g, version)?).map_err(|e| e.to_string())?;
     Ok(path)
 }
 
@@ -162,4 +175,28 @@ pub fn list(root: &Path) -> Vec<String> {
         .collect();
     names.sort();
     names
+}
+
+/// The version a stored mode has been saved as (1 for the first save; 1 when the file is missing or old).
+pub fn stored_version(root: &Path, file: &str) -> u32 {
+    fs::read_to_string(root.join(FOLDER).join(file))
+        .ok()
+        .and_then(|t| toml::from_str::<Doc>(&t).ok())
+        .map_or(0, |d| d.version)
+}
+
+/// A stable 64-bit FNV-1a hash of a stored mode's text, as 16 hex digits. Unlike `DefaultHasher`, it does not
+/// change between Rust releases, so a run's graph can be matched to its file later.
+pub fn graph_hash(text: &str) -> String {
+    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    for b in text.bytes() {
+        h ^= u64::from(b);
+        h = h.wrapping_mul(0x0000_0100_0000_01b3);
+    }
+    format!("{h:016x}")
+}
+
+/// The stored text of a mode file, exactly as saved (the snapshot a run keeps).
+pub fn read_text(root: &Path, file: &str) -> Result<String, String> {
+    fs::read_to_string(root.join(FOLDER).join(file)).map_err(|e| e.to_string())
 }

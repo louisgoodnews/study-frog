@@ -64,7 +64,7 @@ fn interleave() -> LearnGraph {
             Edge {
                 from: "pick".into(),
                 to: "next".into(),
-                when: Some("good".into()),
+                when: Some("default".into()),
             },
             Edge {
                 from: "next".into(),

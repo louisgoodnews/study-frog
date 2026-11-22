@@ -4,6 +4,8 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
+pub use crate::learn_refusal::{Refusal, reason};
+
 /// What a node does in a run: one pure step the engine can test.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NodeKind {
@@ -58,56 +60,30 @@ pub struct LearnGraph {
     pub edges: Vec<Edge>,
 }
 
-/// Why a graph cannot run. A graph with no reasons runs.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Refusal {
-    /// There is no start node.
-    NoStart,
-    /// More than one start node (their ids).
-    SeveralStarts(Vec<String>),
-    /// Two nodes share this id.
-    DuplicateNode(String),
-    /// A wire names a node that is not in the graph.
-    UnknownNode {
-        /// The wire's start.
-        from: String,
-        /// The wire's end.
-        to: String,
-        /// The id that is not a node.
-        node: String,
-    },
-    /// The node cannot be reached from the start.
-    Unreachable(String),
-    /// The node is not a stop, but has no way on.
-    DeadEnd(String),
-    /// A stop node has a way on.
-    StopHasExit(String),
-    /// A branch has fewer than two ways on.
-    BranchNeedsTwoWays(String),
-    /// A loop (these node ids) has no stop node and no branch that can leave it.
-    LoopWithoutStop(Vec<String>),
-}
+/// The conditions a branch wire may carry: the four ratings, and `default` for any other.
+pub const CONDITIONS: [&str; 5] = ["again", "hard", "good", "easy", "default"];
 
-/// The sentence the learner or researcher reads for a refusal.
-pub fn reason(r: &Refusal) -> String {
-    match r {
-        Refusal::NoStart => "the graph has no start node".to_owned(),
-        Refusal::SeveralStarts(ids) => {
-            format!("the graph has more than one start node: {}", ids.join(", "))
+/// The condition rules: every wire's condition is a known word, and every branch has a default way on.
+fn conditions(g: &LearnGraph) -> Vec<Refusal> {
+    let mut out = Vec::new();
+    for e in &g.edges {
+        if let Some(w) = e.when.as_deref().filter(|w| !CONDITIONS.contains(w)) {
+            out.push(Refusal::UnknownCondition {
+                from: e.from.clone(),
+                when: w.to_owned(),
+            });
         }
-        Refusal::DuplicateNode(id) => format!("two nodes share the id {id}"),
-        Refusal::UnknownNode { from, to, node } => {
-            format!("the wire {from} -> {to} names {node}, which is not a node")
-        }
-        Refusal::Unreachable(id) => format!("{id} cannot be reached from the start"),
-        Refusal::DeadEnd(id) => format!("{id} has no way on, and it is not a stop"),
-        Refusal::StopHasExit(id) => format!("the stop {id} has a way on"),
-        Refusal::BranchNeedsTwoWays(id) => format!("the branch {id} needs at least two ways on"),
-        Refusal::LoopWithoutStop(ids) => format!(
-            "the loop {} has no stop and no branch that can leave it",
-            ids.join(" -> ")
-        ),
     }
+    for n in g.nodes.iter().filter(|n| n.kind == NodeKind::Branch) {
+        let has_default = g
+            .edges
+            .iter()
+            .any(|e| e.from == n.id && e.when.as_deref() == Some("default"));
+        if !has_default {
+            out.push(Refusal::BranchNeedsDefault(n.id.clone()));
+        }
+    }
+    out
 }
 
 /// Every reason the graph cannot run, in a stable order; empty when it can.
@@ -141,6 +117,7 @@ pub fn check(g: &LearnGraph) -> Vec<Refusal> {
             }
         }
     }
+    out.extend(conditions(g));
     let adj = adjacency(g);
     for n in &g.nodes {
         let ways = adj.get(n.id.as_str()).map_or(0, Vec::len);
