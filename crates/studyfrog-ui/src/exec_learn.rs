@@ -16,7 +16,9 @@ use crate::msg::Msg;
 pub fn run(w: &mut Worker, effect: LearnEffect, now_ns: i64) -> Msg {
     let Some(session) = &w.session else {
         return match effect {
-            LearnEffect::Start(_) => Msg::RunReady(Err("no vault is open".to_owned())),
+            LearnEffect::Start(_) => {
+                Msg::Learn(LearnMsg::Started(Err("no vault is open".to_owned())))
+            }
             _ => Msg::Learn(LearnMsg::Listed(Err("no vault is open".to_owned()))),
         };
     };
@@ -43,8 +45,12 @@ pub fn run(w: &mut Worker, effect: LearnEffect, now_ns: i64) -> Msg {
                         ids,
                     )
                     .map_err(|e| e.to_string())
+                })
+                .and_then(|run| {
+                    let graph = read_text(root, &file).and_then(|text| from_toml(&text))?;
+                    Ok((run, graph))
                 });
-            Msg::RunReady(started)
+            Msg::Learn(LearnMsg::Started(started))
         }
         LearnEffect::Save(graph) => {
             let saved = save(root, &graph).map(|path| {

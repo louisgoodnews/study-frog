@@ -5,6 +5,7 @@ use studyfrog_core::run::{Run, RunState};
 use studyfrog_core::settings::AnswerEngine;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::{Action, Input};
+use studyfrog_rehearsal::learn_graph::LearnGraph;
 use studyfrog_rehearsal::reading::{expected_ms, item_records, word_count};
 use studyfrog_rehearsal::session::{ItemPhase, current_item, session_new};
 use studyfrog_rehearsal::step::step;
@@ -16,7 +17,7 @@ use crate::run_state::{ItemContent, LOOKAHEAD, RunView, engine_ms, run_view_new}
 use crate::setup::{Rehearse, plan_from_form, refresh_preview};
 use crate::state::{Notice, NoticeKind, State};
 
-fn error(state: State, text: impl Into<String>) -> (State, Vec<Effect>) {
+pub(crate) fn error(state: State, text: impl Into<String>) -> (State, Vec<Effect>) {
     let notice = Some(Notice {
         kind: NoticeKind::Error,
         text: text.into(),
@@ -81,18 +82,23 @@ fn run_ready(state: State, result: Result<Run, String>) -> (State, Vec<Effect>) 
     let mut state = state;
     state.rehearse.starting = false;
     match result {
-        Ok(run) => {
-            let mut view = run_view_new(session_new(run), state.now);
-            view.reading = studyfrog_rehearsal::reading::reading_params(
-                state.app.reading_wpm,
-                &state.app.reading,
-            );
-            state.rehearse.run = Some(view);
-            state.chrome.zen = None; // a new run follows the Zen setting again
-            act(state, Action::Start)
-        }
+        Ok(run) => begin_run(state, run, None),
         Err(e) => error(state, format!("Could not start the run: {e}")),
     }
+}
+
+/// Show a new run and start it. A custom learn-mode run carries its graph, which decides its queue.
+pub(crate) fn begin_run(state: State, run: Run, learn: Option<LearnGraph>) -> (State, Vec<Effect>) {
+    let mut state = state;
+    state.rehearse.starting = false;
+    let mut session = session_new(run);
+    session.learn = learn.map(studyfrog_rehearsal::learn_path::new_path);
+    let mut view = run_view_new(session, state.now);
+    view.reading =
+        studyfrog_rehearsal::reading::reading_params(state.app.reading_wpm, &state.app.reading);
+    state.rehearse.run = Some(view);
+    state.chrome.zen = None; // a new run follows the Zen setting again
+    act(state, Action::Start)
 }
 
 /// Feed one action to the engine. Actions the engine refuses (a rating before the answer is

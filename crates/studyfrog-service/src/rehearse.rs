@@ -88,7 +88,9 @@ pub fn record_step(
     set_run_state(&tx, ctx.run, ctx.state, started)?;
     for e in &out.events {
         if let (EventKind::ItemRated(rating), Some(item)) = (&e.kind, e.item) {
-            if *rating == Rating::Again {
+            // A custom run's graph decides whether the item comes back; a built-in run requeues on Again.
+            let back = crate::learn_run::record_rating(&tx, ctx.run, item, *rating, now)?;
+            if back.unwrap_or(*rating == Rating::Again) {
                 let run_id = format_ulid(ctx.run);
                 let item_id = format_ulid(item);
                 let pos: i64 = tx
@@ -103,7 +105,6 @@ pub fn record_step(
                     rusqlite::params![run_id, pos, item_id],
                 );
             }
-            crate::learn_run::record_rating(&tx, ctx.run, item, *rating, now)?;
             if ctx.effect == ScheduleEffect::UpdateSchedule {
                 let stacks = rated_stacks(&tx, ctx.run, item)?;
                 rate_item_in(&tx, (item, &stacks), (*rating, ctx.timing), now, vault)?;

@@ -26,7 +26,7 @@ fn fresh_id(g: &LearnGraph) -> String {
 
 pub(crate) fn apply(e: &mut LearnEditor, msg: LearnMsg) -> Vec<LearnEffect> {
     match msg {
-        LearnMsg::Open | LearnMsg::Start => {}
+        LearnMsg::Open | LearnMsg::Start | LearnMsg::Started(_) => {}
         LearnMsg::Listed(Ok(names)) => e.modes = names,
         LearnMsg::Listed(Err(why)) => e.notice = Some(format!("Could not list the modes: {why}")),
         LearnMsg::Pick(file) => return vec![LearnEffect::Load(file)],

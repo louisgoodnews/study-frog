@@ -13,6 +13,7 @@ use studyfrog_core::uid::Uid;
 use studyfrog_md::ulid::format_ulid;
 use studyfrog_rehearsal::learn_graph::{LearnGraph, NodeKind, check, reason};
 use studyfrog_rehearsal::learn_interp::{End, Visit, walk};
+use studyfrog_rehearsal::learn_path::rating_word;
 use studyfrog_store::error::StoreError;
 use studyfrog_store::learn::{
     StepRow, insert_learn_run, insert_learn_step, item_path, learn_run_of, next_learn_seq,
@@ -81,10 +82,10 @@ pub fn record_rating(
     item: Uid,
     rating: Rating,
     now: UnixMs,
-) -> Result<(), StoreError> {
+) -> Result<Option<bool>, StoreError> {
     let run_id = format_ulid(run);
     let Some((_, text)) = learn_run_of(conn, &run_id)? else {
-        return Ok(());
+        return Ok(None);
     };
     let graph = store::from_toml(&text).map_err(StoreError::Corrupt)?;
     let item_id = format_ulid(item);
@@ -107,14 +108,16 @@ pub fn record_rating(
             append(conn, &graph, &run_id, &item_id, &first.visits, now)?;
             match first.end {
                 End::AtRate(node) => node,
-                _ => return Ok(()),
+                _ => return Ok(Some(false)),
             }
         }
     };
     let word = rating_word(rating);
     set_last_rating(conn, &run_id, &item_id, word)?;
     let next = walk(&graph, &at, word, &mut counts, VISIT_CAP);
-    append(conn, &graph, &run_id, &item_id, &next.visits, now)
+    append(conn, &graph, &run_id, &item_id, &next.visits, now)?;
+    // The same rule as the live queue (`learn_path::rate`): back in the run only when the walk ends at a rate node.
+    Ok(Some(matches!(next.end, End::AtRate(_))))
 }
 
 fn append(
@@ -144,14 +147,4 @@ fn append(
         insert_learn_step(conn, &row)?;
     }
     Ok(())
-}
-
-/// The condition word a rating stands for on a branch wire.
-pub fn rating_word(r: Rating) -> &'static str {
-    match r {
-        Rating::Again => "again",
-        Rating::Hard => "hard",
-        Rating::Good => "good",
-        Rating::Easy => "easy",
-    }
 }

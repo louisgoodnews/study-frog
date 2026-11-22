@@ -43,6 +43,8 @@ pub struct Session {
     pub next_seq: u32,
     /// How many times each item has been requeued in this run.
     pub requeues: HashMap<Uid, u8>,
+    /// The graph a custom run follows; `None` for a built-in run, whose requeue is the plan's rule.
+    pub learn: Option<crate::learn_path::LearnPath>,
 }
 
 /// A fresh session over `run.queue`, not yet started.
@@ -61,6 +63,7 @@ pub fn session_new(run: Run) -> Session {
         last_t_ms: 0,
         next_seq: 0,
         requeues: HashMap::new(),
+        learn: None,
     }
 }
 

@@ -12,6 +12,7 @@ pub mod grade;
 pub mod input;
 pub mod learn_graph;
 pub mod learn_interp;
+pub mod learn_path;
 pub mod learn_refusal;
 pub mod match_mode;
 pub mod memory;

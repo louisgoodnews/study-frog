@@ -100,7 +100,12 @@ fn a_custom_run_walks_its_graph_and_writes_no_review() {
     .unwrap();
     let run_id = format_ulid(run.uid);
     let item = format_ulid(Uid(77));
-    record_rating(&session.conn, run.uid, Uid(77), Rating::Again, now()).unwrap();
+    let back = record_rating(&session.conn, run.uid, Uid(77), Rating::Again, now()).unwrap();
+    assert_eq!(
+        back,
+        Some(true),
+        "Again loops back: the item is shown again in this run"
+    );
     let path = item_path(&session.conn, &run_id, &item).unwrap();
     let nodes: Vec<&str> = path.iter().map(|p| p.0.as_str()).collect();
     assert_eq!(nodes, ["show", "rate", "pick", "show", "rate"], "{nodes:?}");
@@ -109,6 +114,9 @@ fn a_custom_run_walks_its_graph_and_writes_no_review() {
         Some("again"),
         "the rating is on the rate node it left"
     );
+
+    let out = record_rating(&session.conn, run.uid, Uid(77), Rating::Good, now()).unwrap();
+    assert_eq!(out, Some(false), "Good takes the item out of the run");
 
     let reviews: i64 = session
         .conn

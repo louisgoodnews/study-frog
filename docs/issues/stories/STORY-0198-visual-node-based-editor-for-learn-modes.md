@@ -44,6 +44,14 @@ Node types for the first version (decided): start, present, recall, rate, schedu
 - A form-based editor (not a canvas): "Learn modes" on the Rehearse setup opens a dialog that lists the stored modes, opens one, names it, adds and removes nodes (kind and label; ids are generated), adds and removes wires (from, to, condition or plain), shows the reasons it cannot be saved, and saves. Save is refused while there are reasons; the check runs after every edit.
 - Pure state and update in `learn_editor.rs` (tests in `tests/learn_editor.rs`); the file work is effects in `exec_learn.rs`; the form in `view/learn_editor.rs`; a screenshot demo `--screenshot learn-editor`.
 
+## Implementation (part 3, the queue)
+- `studyfrog-rehearsal` `learn_path`: a custom run's graph decides whether a rated item comes back in the run. Each item keeps its place (the rate node it waits at) and its node counts; a rating walks the graph (`learn_interp::walk`), and the item is shown again only when the walk ends at a rate node. A stop, a loop at its cap, or no way on takes it out of the run.
+- The session carries the path (`Session.learn`); the engine's `rate` asks it when there is one, and keeps the built-in rule (Again, if the plan requeues) otherwise.
+- The service stores the same decision: `learn_run::record_rating` returns it, and `record_step` requeues the stored queue on it (for built-in runs, on Again as before).
+- The custom start hands the graph to `begin_run`, so the live session gets the path.
+- Tests: `tests/learn_queue.rs` (engine: Again loops back, Good out, built-in unchanged), `learn_run_service` (the stored decision), `learn_run_app` (the start carries the graph).
+- Not yet: a resumed run (the app does not resume runs from disk, so the live path is always complete); a custom run's queue order (the built-in order still picks the next item; only the requeue follows the graph).
+
 ## Still open (part 2)
 - The canvas (drawn nodes and wires) is not built; the form editor above is the first version.
 - The opt-in custom report screen (the store function `custom_mode_totals` exists).

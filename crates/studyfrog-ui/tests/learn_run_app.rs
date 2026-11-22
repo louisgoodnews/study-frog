@@ -10,8 +10,7 @@ use studyfrog_rehearsal::learn_graph::{Edge, LearnGraph, Node, NodeKind};
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::exec::{execute, worker_with_host};
 use studyfrog_ui::host::Host;
-use studyfrog_ui::learn_editor::LearnEffect;
-use studyfrog_ui::learn_editor::LearnMsg;
+use studyfrog_ui::learn_editor::{LearnEffect, LearnMsg};
 use studyfrog_ui::msg::Msg;
 
 fn mode() -> LearnGraph {
@@ -65,11 +64,15 @@ fn a_saved_mode_starts_as_a_practice_only_run() {
 
     let started = execute(&mut w, Effect::Learn(LearnEffect::Start(file)), NOW_NS);
     match &started[..] {
-        [Msg::RunReady(Ok(run))] => {
+        [Msg::Learn(LearnMsg::Started(Ok((run, graph))))] => {
             assert_eq!(
                 run.plan.effect,
                 ScheduleEffect::PracticeOnly,
                 "a custom run never changes the schedule"
+            );
+            assert_eq!(
+                graph.name, "Quick check",
+                "the run carries the mode it follows"
             );
         }
         other => panic!("the run did not start: {other:?}"),
@@ -90,5 +93,8 @@ fn starting_a_mode_that_is_not_saved_is_refused() {
         Effect::Learn(LearnEffect::Start("missing.toml".into())),
         NOW_NS,
     );
-    assert!(matches!(&out[..], [Msg::RunReady(Err(_))]), "{out:?}");
+    assert!(
+        matches!(&out[..], [Msg::Learn(LearnMsg::Started(Err(_)))]),
+        "{out:?}"
+    );
 }

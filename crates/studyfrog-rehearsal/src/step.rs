@@ -172,8 +172,14 @@ fn skip(s: &mut Session, t: u32, item: Option<Uid>, out: &mut StepOutput) {
 fn rate(s: &mut Session, t: u32, item: Option<Uid>, rating: Rating, out: &mut StepOutput) {
     out.events
         .push(event(s, t, item, EventKind::ItemRated(rating)));
-    if let Some(uid) = item.filter(|_| rating == Rating::Again && s.run.plan.requeue_again) {
-        requeue(s, uid);
+    if let Some(uid) = item {
+        let back = match s.learn.as_mut() {
+            Some(path) => crate::learn_path::rate(path, uid, rating),
+            None => rating == Rating::Again && s.run.plan.requeue_again,
+        };
+        if back {
+            requeue(s, uid);
+        }
     }
     s.cursor += 1;
     show_next(s, t, out);

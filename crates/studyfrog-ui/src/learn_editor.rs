@@ -82,7 +82,7 @@ pub enum LearnEffect {
 }
 
 /// What happened in the editor.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum LearnMsg {
     /// The editor was opened from the setup screen.
     Open,
@@ -120,6 +120,8 @@ pub enum LearnMsg {
     Saved(Result<String, String>),
     /// "Start a run" was pressed: run the saved copy of the open mode.
     Start,
+    /// The run of a learn mode was made, with its graph (or why not).
+    Started(Result<(studyfrog_core::run::Run, LearnGraph), String>),
 }
 
 /// Start the open mode: only a saved mode with no reasons can run. The dialog closes; the run view takes over.
@@ -153,6 +155,16 @@ pub fn update(state: State, msg: LearnMsg) -> (State, Vec<Effect>) {
     }
     if msg == LearnMsg::Start {
         return start(state);
+    }
+    if let LearnMsg::Started(result) = msg {
+        return match result {
+            Ok((run, graph)) => crate::run_update::begin_run(state, run, Some(graph)),
+            Err(why) => {
+                let mut state = state;
+                state.rehearse.starting = false;
+                crate::run_update::error(state, format!("Could not start the run: {why}"))
+            }
+        };
     }
     let mut state = state;
     let asked = match state.modal.as_mut() {
