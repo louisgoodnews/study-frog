@@ -65,6 +65,7 @@ fn apply_with(ctx: &egui::Context, a: &Appearance, motion_back: bool) {
             s.spacing.button_padding = button;
             s.spacing.interact_size.y = height;
             s.spacing.indent = 18.0;
+            s.interaction.tooltip_delay = crate::view::tips::DELAY_SECS;
             // A floating scroll bar reserves its own width, so content never runs under it.
             s.spacing.scroll.floating_allocated_width = 12.0;
             s.spacing.scroll.bar_outer_margin = 4.0;

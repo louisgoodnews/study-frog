@@ -3,6 +3,10 @@
 
 use studyfrog_core::event::Difficulty;
 
+/// How long the pointer rests on a control before its tooltip shows, in seconds. egui hides a tooltip as soon as
+/// the pointer moves on, or the control is clicked, so a tooltip never stays over the control being worked with.
+pub const DELAY_SECS: f32 = 0.5;
+
 /// What each icon button does, by the name the button is given. A name that already states its
 /// shortcut, such as "Back (Alt+Left)", keeps it in the tooltip.
 const EXPLAIN: &[(&str, &str)] = &[

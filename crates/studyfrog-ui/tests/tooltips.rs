@@ -85,3 +85,32 @@ fn hovering_a_text_button_shows_its_explanation() {
         "the explanation shows while the pointer rests on the button"
     );
 }
+
+#[test]
+fn the_theme_sets_the_tooltip_delay() {
+    use common::views::{harness, open_model};
+    let h = harness(open_model());
+    let delay = h.ctx.global_style().interaction.tooltip_delay;
+    assert!((delay - tips::DELAY_SECS).abs() < f32::EPSILON, "{delay}");
+}
+
+#[test]
+fn a_click_hides_the_tooltip_so_it_never_stays_over_the_control() {
+    use common::views::{harness, open_model};
+    use egui_kittest::kittest::Queryable;
+    use studyfrog_ui::model::apply;
+    use studyfrog_ui::msg::Msg;
+    use studyfrog_ui::state::Screen;
+    const EXPLAIN: &str = "Shows or hides the columns of the list.";
+    let mut m = open_model();
+    apply(&mut m, Msg::Navigate(Screen::Library));
+    let mut h = harness(m);
+    h.run_steps(3);
+    h.get_by_label("Columns").hover();
+    h.run_steps(5);
+    assert!(h.query_by_label(EXPLAIN).is_some(), "shown while resting");
+    // The click also opens the columns menu, which hides tooltips too; the check is what the user sees.
+    h.get_by_label("Columns").click();
+    h.run_steps(5);
+    assert!(h.query_by_label(EXPLAIN).is_none(), "gone after the click");
+}
