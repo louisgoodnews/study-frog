@@ -42,3 +42,7 @@ EPIC-063
 
 ## Open Questions
 None.
+
+## Verification (2026-11-22)
+
+The exam screen has no countdown, so the Description's "strict timer controls" with warnings and auto-submit are not in the app. The alerts and expiry exist only in `studyfrog-rehearsal::mock_timer` and are not wired into the UI (BUG-0045; `/tmp/claude-0/verifyA/21-exam-started.png`). The three criteria as written are domain-level and their ticks are left as set. Status done is unchanged; the lead should decide whether the in-app timer reopens this story.

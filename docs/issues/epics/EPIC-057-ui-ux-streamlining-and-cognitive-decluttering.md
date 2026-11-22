@@ -40,3 +40,9 @@ None.
 ## Implementation (2026-11-22, audit)
 
 Audit (2026-11-22): criterion 1 MET: one Import... entry (items toolbar More..., stack page More actions); no separate import buttons seen (/tmp/claude-0/audit/g5/0168-more-menu.png). Criterion 2 MET: all header icon buttons, the rehearsal rating buttons and the Show answer button have tooltips with shortcuts (/tmp/claude-0/audit/g5/0169-header-tooltips.png, 0169-combo.png). Criterion 3 NOT MET: the stack page, item list and item editor are decluttered, but the PDF viewer's header still shows ten controls (/tmp/claude-0/audit/g5/0170-pdf.png); see STORY-0170. Left unticked. Criterion 4 NOT CHECKABLE: whether the look is lightweight is a judgement; the spacing and type scale are checked in STORY-0170 (/tmp/claude-0/audit/g5/0170-editor.png).
+
+## Verification (2026-11-22)
+
+- Criterion 3 stays unticked: NOT MET while the PDF viewer header shows ten buttons (STORY-0170 criterion 1; `/tmp/claude-0/verifyA/16-pdf-1280-empty.png`).
+- Criterion 4 NOT CHECKABLE: "lightweight, modern visual rhythm" is a judgement; no check made here.
+- Criteria 1 and 2 were not re-checked in this round. Status stays review.

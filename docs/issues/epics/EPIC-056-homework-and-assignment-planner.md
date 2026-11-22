@@ -25,7 +25,7 @@ Deliver an end-to-end Homework & Assignment Management subsystem within StudyFro
 ## Acceptance Criteria
 - [x] Dedicated homework domain model supporting title, subject/course, due date/time, estimated effort, priority, and completion status
 - [x] Proactive notification and reminder triggers alerting students before due dates (e.g. 24h, 2h, 15m lead times)
-- [ ] Integration with timetable lectures and calendar views displaying upcoming assignment deadlines
+- [x] Integration with timetable lectures and calendar views displaying upcoming assignment deadlines
 - [ ] Dedicated Homework planner UI with filtering by subject, urgency status (overdue, due today, upcoming), and completion toggles
 
 ## Design Notes
@@ -40,3 +40,9 @@ None.
 ## Implementation (2026-11-22, audit)
 
 Audit (2026-11-22): criterion 1 MET: the homework list (`ctl homework list`) holds title, course (stack), due date and time, estimate, priority, status and checklist steps; the course chip "Statistik" shows on a card (/tmp/claude-0/audit/g5/0166-homework-mini.png). Criterion 2 MET: 24 h (Lektuere Kapitel 4, due in 11 h), 2 h (Kurzquiz) and 15 min (Mini Test, due in 18 min when the 2 h lead had already shown) leads each fired once (notices; /tmp/claude-0/audit/g5/0166-homework-all.png). Criterion 3 NOT MET as written: the calendar views show deadlines (/tmp/claude-0/audit/g5/0166-month.png, 0166-day-kurzquiz.png), but the Timetable view shows no homework (/tmp/claude-0/audit/g5/0166-timetable.png) and no lectures were available to check the correlation; left open. Criterion 4 NOT MET: the planner has urgency tabs (All, Active, Due today, Overdue, Completed) and Start, Reopen and checklist ticks (/tmp/claude-0/audit/g5/0166-homework-all.png, 0166-homework-completedtab.png), but no subject filter (/tmp/claude-0/audit/g5/0166-homework-all.png shows none).
+
+## Verification (2026-11-22)
+
+- Criterion 3 MET: the week view shows the lecture block "Statistik-Vorlesung" (Mon 09:00) and homework deadline markers on Tue 24 and Wed 25 in the same view (`/tmp/claude-0/verifyA/11-week.png`). Ticked. Caveat: the Calendar Timetable view lists no stored lectures after a restart (BUG-0044, `/tmp/claude-0/verifyA/10-timetable-restart.png`).
+- Criterion 4 NOT MET: the Homework screen has urgency tabs (All, Active, Due today, Overdue, Completed) and no subject filter, and no timetable beside the items (`/tmp/claude-0/verifyA/03-homework.png`). BUG-0043 reproduced. Left unticked.
+- Status stays review.

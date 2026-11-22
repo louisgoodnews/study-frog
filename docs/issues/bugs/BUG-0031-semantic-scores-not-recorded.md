@@ -28,5 +28,12 @@ Record the semantic deviation for each review that has one (the SLM answer path)
 ## Dependencies
 - EPIC-060 (criterion 1), BUG-0030
 
+## Verification (2026-11-22)
+Reproduced in the running app (`/tmp/claude-0/verifyB`). A spaced rehearsal (`--preset spaced`, which is the only preset that updates the schedule and so writes telemetry) with typed answers:
+- `answer_score` holds the typed answer's score: value 1.0, verdict `correct`, engine "word matching (built in)" (row 1 in `/tmp/claude-0/verifyB/vault/.studyfrog/index.sqlite`).
+- The matching `review_telemetry` row (id 7) has `latency_ms` 199, `dwell_ms` 199, `semantic_score` NULL and no marker that no score was computed. The same NULL holds for all six flip-mode rows (ids 1 to 6).
+- The only writer of `review_telemetry` sets `semantic_score: None` (`crates/studyfrog-service/src/rehearse.rs`, `rate_item_in`), so the score is never copied from `answer_score`.
+No model is needed for this: the built-in word matcher produced the score. Status stays backlog.
+
 ## Open Questions
 - None.

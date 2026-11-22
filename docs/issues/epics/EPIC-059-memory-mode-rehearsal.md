@@ -26,7 +26,7 @@ Implement a complete Memory Mode rehearsal feature:
 
 ## Acceptance Criteria
 - [x] Memory rehearsal game engine pairing flashcard fronts and backs as face-down tiles
-- [ ] Interactive grid UI rendering face-down cards with flip transitions, match confirmations, and mismatch reset delays
+- [x] Interactive grid UI rendering face-down cards with flip transitions, match confirmations, and mismatch reset delays
 - [x] Time-attack countdown and stopwatch modes challenging users to reunite all pairs against the clock
 - [ ] Rehearsal entry point from stacks and sessions with score tracking, streaks, and personal best records
 
@@ -43,6 +43,14 @@ Audited in the running app (display :91). Verdicts per criterion:
 - Time-attack and stopwatch: MET. Stopwatch win at 4:56 (`/tmp/claude-0/audit/g1/17-victory.png`); 60 s timeout (`/tmp/claude-0/audit/g1/14-timeout.png`). Ticked; the countdown readout is missing (BUG-0025).
 - Entry point, score, streaks, personal best: stack page and rehearse entry MET; streak and best time MET (`app.toml` `[[memory_best]]`). The "sessions" entry point was not checked. Left unticked.
 Open: BUG-0024 to BUG-0029. The epic stays in review.
+
+## Verification (2026-11-22)
+Checked in the running app (`/tmp/claude-0/verifyB`, 1280x800, Memo stack with six cards):
+- Grid flip transition: MET. A screen recording at 30 fps (`/tmp/claude-0/verifyB/flip1.mp4`) and the frame sheet `/tmp/claude-0/verifyB/m04-flip-sheet.png` show the tile narrowing to a sliver over about 0.25 s, then widening to its face ("back4"). `FLIP_SECS` is 0.2 s (`setup/memory_flip.rs`).
+- Match confirmation: MET. Pair back4 and front4 turned green, pairs left went 6 to 5, streak 1 (`/tmp/claude-0/verifyB/m06-match.png`).
+- Mismatch reset: MET. Both faces stayed up with a red outline (`/tmp/claude-0/verifyB/pair_1_2.png`), then turned back down with moves 2 (`/tmp/claude-0/verifyB/m05-after-two.png`). `MISMATCH_MS` is 900.
+- Time-attack and stopwatch: unchanged from the earlier audit (see STORY-0175).
+- Entry point from stacks and sessions: NOT MET for sessions. The stack page and Rehearse setup start a game (`/tmp/claude-0/verifyB/m03-board.png`). The Calendar's "Sessions on <date>" panel offers no Memory game: a planned-review row offers only "Rehearse Memo" and "Open Memo" (`/tmp/claude-0/verifyB/c02-session.png`), and `view/calendar.rs` `occurrence_row` offers only "Start rehearsal for <title>". Filed as BUG-0046. Also, the stack page's Memory game button shows an open rehearsal instead of starting a board (`/tmp/claude-0/verifyB/m08-memory-during-run.png`, BUG-0047). This criterion stays unticked, so the epic stays in review.
 
 ## Open Questions
 None.

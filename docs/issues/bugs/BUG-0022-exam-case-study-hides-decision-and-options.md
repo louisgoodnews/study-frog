@@ -45,3 +45,7 @@ None.
 ## Open Questions
 
 - Whether a case study in an exam is graded from the choice and justification, or from the typed text alone, is not decided here.
+
+## Verification (2026-11-22)
+
+Reproduced. Case "Klinik-Screening" (decision "Which instrument should the clinic use?", options Short screen | Full interview | Self-report scale) in the Diagnostik stack, run as an exam (`rehearse setup --preset all --stack diagnostik --mode exam`). The item shows only the vignette and a "Your answer" box; the decision prompt and the options are missing (`/tmp/claude-0/verifyA/24-exam-run-case.png`). Left in the backlog. The answer-mode comparison was not retaken in this round.

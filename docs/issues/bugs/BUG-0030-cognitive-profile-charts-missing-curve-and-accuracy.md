@@ -30,5 +30,12 @@ Show the velocity as a curve over the review history, add a latency distribution
 ## Dependencies
 - STORY-0178 (criterion 2), EPIC-060
 
+## Verification (2026-11-22)
+Reproduced in the running app (`/tmp/claude-0/verifyB`, 1280x800), vault with 7 answered reviews. Reports > Cognitive profile:
+- Velocity: one line of text, "543.44 passing answers per minute of answering" (`/tmp/claude-0/verifyB/r02-cognitive.png`). No curve. Criterion 1 not met.
+- No semantic accuracy trend, and no line on the tab saying one is not shown until scores exist (`/tmp/claude-0/verifyB/r02-cognitive.png`, `/tmp/claude-0/verifyB/r03-cognitive-bottom.png`; `view/reports_cognitive.rs` has no semantic text). Criterion 2 not met.
+- Latency: a scatter of answer time against word count, no distribution (`/tmp/claude-0/verifyB/r02-cognitive.png`). Criterion 3 not met.
+Status stays backlog.
+
 ## Open Questions
 - None.

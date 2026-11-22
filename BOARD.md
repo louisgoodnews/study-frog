@@ -4,588 +4,588 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (25) | Ready (0) | In progress (0/3) | Review (31) | Blocked (3) | Done (537) |
+| Backlog (30) | Ready (0) | In progress (0/3) | Review (31) | Blocked (3) | Done (537) |
 | --- | --- | --- | --- | --- | --- |
-| [BUG-0020](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0020-scriptstudio-reference-panel-layout.md) ScriptStudio reference panel is squeezed and its topics are not shown (3) |  |  | [TASK-0278](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [BUG-0021](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0021-narrow-window-header-and-run-strip-overlap.md) At the 640 by 420 minimum, the window header and the rehearsal top strip overlap and the hint line is cut off (2) |  |  |  |  | [BUG-0002](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
-| [BUG-0022](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0022-exam-case-study-hides-decision-and-options.md) In an exam run, a case study shows only its vignette, without its decision prompt or options (2) |  |  |  |  | [BUG-0003](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
-| [BUG-0030](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0030-cognitive-profile-charts-missing-curve-and-accuracy.md) The Cognitive profile shows a velocity number, not a curve, and no semantic accuracy trend (2) |  |  |  |  | [BUG-0004](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
-| [BUG-0031](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0031-semantic-scores-not-recorded.md) Telemetry rows are saved without a semantic deviation score (2) |  |  |  |  | [BUG-0005](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
-| [BUG-0032](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0032-reports-tab-row-clipped-at-960.md) At 960 by 640 the Reports tab row is cut off at the right edge (2) |  |  |  |  | [BUG-0006](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
-| [BUG-0033](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0033-script-stderr-shown-as-stdout-and-stderr-filter-empty.md) Script stderr is shown in the stdout stream and the Stderr / Errors filter stays empty (3) |  |  |  |  | [BUG-0007](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
-| [BUG-0034](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0034-reminder-and-count-wording-1-days-1-pages-and-lead-phrase.md) Singular counts read '1 days' and '1 pages', and reminders say 'in 2 h' for an item due in 1 h (1) |  |  |  |  | [BUG-0008](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
-| [BUG-0035](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0035-week-view-last-day-column-clipped-at-window-edge.md) Week view runs past the window edge, so Sunday's column and its deadline dot are cut off (2) |  |  |  |  | [BUG-0009](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
-| [BUG-0036](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0036-toast-covers-day-view-add-session-button.md) Reminder toasts cover the Day view's '+ Add session' button (1) |  |  |  |  | [BUG-0010](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |
-| [BUG-0037](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0037-csv-import-into-stack-nests-rows-under-that-stack.md) CSV import into a chosen stack creates a nested stack 'statistik/statistik' instead of using it (2) |  |  |  |  | [BUG-0011](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |
-| [BUG-0038](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0038-keyword-grading-gives-zero-to-correct-answers-with-generic-rubric.md) Mock exam keyword grading scores correct answers 0 because the rubric points are generic text (3) |  |  |  |  | [BUG-0012](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0012-rehearsal-card-text-wrapping-and-unquoted-csv-comma-truncation.md) Rehearsal card text wrapping and unquoted CSV comma truncation (2) |
-| [BUG-0039](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0039-pdf-exam-and-list-labelled-untitled.md) Mock exam from a PDF is labelled 'untitled' and both PDFs in the list read 'untitled' (1) |  |  |  |  | [BUG-0013](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0013-rehearsal-result-view-scrollability-review-stretch-and-suggested-rating.md) Rehearsal result view scrollability, stretched review area, and suggested rating visibility (2) |
-| [BUG-0041](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0041-rehearsal-save-fails-unique-run-event-seq.md) Rehearsal shows 'Could not save your progress' (UNIQUE constraint on run_event run_uid, seq) (3) |  |  |  |  | [BUG-0014](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0014-csv-import-fails-on-unquoted-multiline-fields.md) CSV importer fails on unquoted multiline fields in AI-generated CSV files (2) |
-| [BUG-0042](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0042-run-by-hand-reported-under-job-name.md) A script run by hand from the job editor is reported under the name of the job that uses that file (1) |  |  |  |  | [BUG-0015](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0015-csv-escaped-newlines-and-card-title-truncation.md) Escaped newline sequences in imported cards and 60-character card title truncation (2) |
-| [BUG-0043](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0043-homework-planner-timetable-and-subject-filter-missing.md) Homework planner shows no timetable and has no subject filter (3) |  |  |  |  | [BUG-0016](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority (5) |
-| [TASK-0279](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  |  |  | [BUG-0017](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0017-markdown-viewer-bold-text-visibility.md) Boldness of words in markdown viewer not visible (2) |
-| [TASK-0282](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [BUG-0018](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0018-code-block-indentation-preservation.md) Code block indentations not visible in markdown viewer (2) |
-| [TASK-0283](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  |  |  | [BUG-0019](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0019-notes-stack-membership-optional.md) Notes being in stacks should be optional not required (3) |
-| [TASK-0284](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0284-scripted-screens-on-a-10k-vault-for-the-frame-time-run.md) Scripted visit of the rehearsal card, reports and console on a 10k-note vault (2) |  |  |  |  | [BUG-0023](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0023-case-study-button-ignores-ticked-stack.md) The rehearse setup's Case study button ignores the ticked stack and says to open a stack first (2) |
-| [TASK-0285](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0285-dhat-allocation-counts-for-the-render-loops.md) dhat allocation counts for the rehearsal card, reports and console loops (2) |  |  |  |  | [BUG-0024](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0024-memory-game-setup-ignores-ticked-stacks.md) The Memory game button in the rehearse setup ignores the stacks ticked in the What step (2) |
-| [TASK-0286](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  |  |  | [BUG-0025](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0025-memory-time-attack-hud-shows-elapsed.md) In Memory time attack the HUD shows the time used, not the time left, and reads past the limit (2) |
-|  |  |  |  |  | [BUG-0026](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0026-memory-timeout-does-not-reveal-cards.md) The Memory timeout message says the cards are shown, but the unmatched cards stay face down (1) |
-|  |  |  |  |  | [BUG-0027](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0027-memory-hud-clock-runs-after-win.md) The Memory HUD keeps counting after the game is won (1) |
-|  |  |  |  |  | [BUG-0028](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0028-memory-finished-grid-clipped-at-960.md) At 960 by 640 the Memory board under the win message runs past the bottom of the window (2) |
-|  |  |  |  |  | [BUG-0029](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0029-rehearse-setup-footer-item-count-clipped.md) In the rehearse setup footer the item count is cut off at the right edge at 1280 by 800 (1) |
-|  |  |  |  |  | [BUG-0040](/tmp/claude-0/fix1/commitboard/docs/issues/bugs/BUG-0040-mock-exam-uses-open-stack-not-ticked-stack.md) Mock exam draws from the open stack, not the stack ticked in the rehearse setup's What step (2) |
-|  |  |  |  |  | [TASK-0001](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
-|  |  |  |  |  | [TASK-0002](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
-|  |  |  |  |  | [TASK-0003](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
-|  |  |  |  |  | [TASK-0004](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
-|  |  |  |  |  | [TASK-0005](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
-|  |  |  |  |  | [TASK-0006](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
-|  |  |  |  |  | [TASK-0007](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
-|  |  |  |  |  | [TASK-0008](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
-|  |  |  |  |  | [TASK-0009](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
-|  |  |  |  |  | [TASK-0010](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
-|  |  |  |  |  | [TASK-0011](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
-|  |  |  |  |  | [TASK-0012](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0012-id-newtypes-and-arena-indices.md) Id newtypes and arena indices (3) |
-|  |  |  |  |  | [TASK-0013](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0013-stack-note-card-question-structs.md) Stack, Note, Card, Question structs (3) |
-|  |  |  |  |  | [TASK-0014](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0014-review-and-rating-types.md) Review and Rating types (2) |
-|  |  |  |  |  | [TASK-0015](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0015-run-and-event-types.md) Run and event types (3) |
-|  |  |  |  |  | [TASK-0016](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) |
-|  |  |  |  |  | [TASK-0017](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0017-fsrs-property-and-golden-tests.md) FSRS property and golden tests (3) |
-|  |  |  |  |  | [TASK-0018](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0018-sm-2-functions.md) SM-2 functions (3) |
-|  |  |  |  |  | [TASK-0019](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0019-srs-criterion-benchmark.md) SRS criterion benchmark (2) |
-|  |  |  |  |  | [TASK-0020](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0020-schema-structs-and-validation.md) Schema structs and validation (3) |
-|  |  |  |  |  | [TASK-0021](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0021-fence-splitter-and-serde-saphyr-parsing.md) Fence splitter and serde-saphyr parsing (3) |
-|  |  |  |  |  | [TASK-0022](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0022-round-trip-property-test.md) Round-trip property test (3) |
-|  |  |  |  |  | [TASK-0023](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0023-wikilink-extraction.md) Wikilink extraction (3) |
-|  |  |  |  |  | [TASK-0024](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0024-card-and-question-section-split.md) Card and question section split (2) |
-|  |  |  |  |  | [TASK-0025](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0025-initial-schema.md) Initial schema (3) |
-|  |  |  |  |  | [TASK-0026](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0026-migration-runner.md) Migration runner (2) |
-|  |  |  |  |  | [TASK-0027](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0027-vault-scanner.md) Vault scanner (5) |
-|  |  |  |  |  | [TASK-0028](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0028-incremental-reindex.md) Incremental reindex (5) |
-|  |  |  |  |  | [TASK-0029](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0029-file-watcher.md) File watcher (3) |
-|  |  |  |  |  | [TASK-0030](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0030-run-input-types-and-transition-errors.md) Run input types and transition errors (2) |
-|  |  |  |  |  | [TASK-0031](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0031-transition-functions.md) Transition functions (5) |
-|  |  |  |  |  | [TASK-0032](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0032-injected-monotonic-clock.md) Injected monotonic clock (3) |
-|  |  |  |  |  | [TASK-0033](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0033-persist-run-events.md) Persist run events (3) |
-|  |  |  |  |  | [TASK-0034](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0034-spaced-due-first-queue-with-daily-budgets.md) Spaced (due-first) queue with daily budgets (3) |
-|  |  |  |  |  | [TASK-0035](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0035-rehearsal-benchmark.md) Rehearsal benchmark (2) |
-|  |  |  |  |  | [TASK-0036](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0036-eframe-window-and-navigation.md) eframe window and navigation (3) |
-|  |  |  |  |  | [TASK-0037](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0037-elm-style-update-loop-and-effects.md) Elm-style update loop and effects (5) |
-|  |  |  |  |  | [TASK-0038](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0038-stack-browser.md) Stack browser (3) |
-|  |  |  |  |  | [TASK-0039](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) |
-|  |  |  |  |  | [TASK-0040](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0040-editor-widget.md) Editor widget (5) |
-|  |  |  |  |  | [TASK-0041](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0041-preview-renderer.md) Preview renderer (3) |
-|  |  |  |  |  | [TASK-0042](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0042-force-directed-layout-soa.md) Force-directed layout (SoA) (5) |
-|  |  |  |  |  | [TASK-0043](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0043-graph-render-benchmark.md) Graph render benchmark (3) |
-|  |  |  |  |  | [TASK-0044](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0044-session-model-and-recurrence.md) Session model and recurrence (5) |
-|  |  |  |  |  | [TASK-0045](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0045-calendar-view.md) Calendar view (5) |
-|  |  |  |  |  | [TASK-0046](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0046-columns-and-wip-limits.md) Columns and WIP limits (3) |
-|  |  |  |  |  | [TASK-0047](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0047-move-and-push-semantics.md) Move and push semantics (5) |
-|  |  |  |  |  | [TASK-0048](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0048-board-view-with-drag-and-drop.md) Board view with drag and drop (5) |
-|  |  |  |  |  | [TASK-0049](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0049-slm-runtime-trait.md) SlmRuntime trait (2) |
-|  |  |  |  |  | [TASK-0050](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0050-candle-embedder-and-spike.md) Candle embedder and spike (8) |
-|  |  |  |  |  | [TASK-0051](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0051-model-management.md) Model management (3) |
-|  |  |  |  |  | [TASK-0052](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0052-score-functions.md) Score functions (3) |
-|  |  |  |  |  | [TASK-0053](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0053-scoring-property-tests.md) Scoring property tests (2) |
-|  |  |  |  |  | [TASK-0054](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0054-answer-input-in-rehearsal.md) Answer input in rehearsal (3) |
-|  |  |  |  |  | [TASK-0055](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0055-slm-benchmark.md) SLM benchmark (1) |
-|  |  |  |  |  | [TASK-0056](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0056-rule-data-model.md) Rule data model (3) |
-|  |  |  |  |  | [TASK-0057](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0057-achievement-evaluator.md) Evaluator and unlock memory (5) |
-|  |  |  |  |  | [TASK-0058](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0058-achievements-screen.md) Achievements screen and announcements (3) |
-|  |  |  |  |  | [TASK-0059](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0059-retention-curves.md) Retention curves (2) |
-|  |  |  |  |  | [TASK-0060](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0060-latency-distributions.md) Latency distributions (3) |
-|  |  |  |  |  | [TASK-0061](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0061-review-load-forecast.md) Review-load forecast and backtest (5) |
-|  |  |  |  |  | [TASK-0062](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0062-report-screens.md) Report screens and benchmark (3) |
-|  |  |  |  |  | [TASK-0063](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0063-define-extension-points.md) Define extension points (3) |
-|  |  |  |  |  | [TASK-0064](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0064-registry-as-plain-data.md) Registry as plain data (2) |
-|  |  |  |  |  | [TASK-0065](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0065-example-extension-crate.md) Example card type and importer (5) |
-|  |  |  |  |  | [TASK-0066](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0066-profiling-pass.md) Profiling pass (3) |
-|  |  |  |  |  | [TASK-0067](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |
-|  |  |  |  |  | [TASK-0068](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0068-run-plan-types-in-core.md) Run plan types in core (3) |
-|  |  |  |  |  | [TASK-0069](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0069-practice-orders.md) Practice orders (5) |
-|  |  |  |  |  | [TASK-0070](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0070-queue-filters.md) Queue filters (3) |
-|  |  |  |  |  | [TASK-0071](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0071-requeue-on-again-and-schedule-effect.md) Requeue on Again and schedule effect (3) |
-|  |  |  |  |  | [TASK-0072](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0072-persist-run-plan-schema-v2.md) Persist run plan (schema v2) (2) |
-|  |  |  |  |  | [TASK-0073](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0073-run-setup-screen-plan-picker.md) Run setup screen (plan picker) (3) |
-|  |  |  |  |  | [TASK-0074](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0074-persist-the-run-filter.md) Persist the run filter (2) |
-|  |  |  |  |  | [TASK-0075](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0075-stack-settings-in-the-index.md) Stack settings in the index (5) |
-|  |  |  |  |  | [TASK-0076](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0076-sm-2-in-the-service.md) SM-2 in the service (5) |
-|  |  |  |  |  | [TASK-0077](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0077-per-stack-daily-budgets.md) Per-stack daily budgets (5) |
-|  |  |  |  |  | [TASK-0078](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0078-local-time-zone-and-local-day-windows.md) Local time zone and local-day windows (3) |
-|  |  |  |  |  | [TASK-0079](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0079-persist-sessions.md) Persist sessions (3) |
-|  |  |  |  |  | [TASK-0080](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0080-persist-the-board.md) Persist the board (3) |
-|  |  |  |  |  | [TASK-0081](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0081-difficulty-marks.md) Difficulty marks during a run (3) |
-|  |  |  |  |  | [TASK-0082](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0082-reading-speed-suggestion.md) Reading-speed rating suggestion (3) |
-|  |  |  |  |  | [TASK-0083](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0083-post-run-review.md) Post-run review and applying a suggestion (5) |
-|  |  |  |  |  | [TASK-0084](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0084-reading-speed-test.md) Reading-speed test (3) |
-|  |  |  |  |  | [TASK-0085](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0085-slow-reads-suggest-difficulty.md) Slow reads suggest difficulty (3) |
-|  |  |  |  |  | [TASK-0086](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0086-calibrate-answer-runtimes.md) Calibrate the answer runtimes (3) |
-|  |  |  |  |  | [TASK-0087](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0087-store-answer-scores.md) Store answer scores with the run (3) |
-|  |  |  |  |  | [TASK-0088](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0088-force-word-matching.md) Setting to compare answers by word matching only (3) |
-|  |  |  |  |  | [TASK-0089](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0089-marks-suggest-ratings.md) The user marks suggest ratings (3) |
-|  |  |  |  |  | [TASK-0090](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0090-reading-thresholds-in-settings.md) Reading thresholds in app.toml (3) |
-|  |  |  |  |  | [TASK-0091](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0091-shuffle-switch.md) Shuffling is a switch of its own (3) |
-|  |  |  |  |  | [TASK-0092](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0092-folder-dialog.md) Native folder dialog for the vault (3) |
-|  |  |  |  |  | [TASK-0093](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0093-top-bar-and-sidebar-layout.md) Top bar, sidebar and menus (5) |
-|  |  |  |  |  | [TASK-0094](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0094-global-search.md) Global search (3) |
-|  |  |  |  |  | [TASK-0095](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0095-notification-list.md) Notification list (2) |
-|  |  |  |  |  | [TASK-0096](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0096-nested-stacks-and-item-creation.md) Nested stacks and one creation use case (5) |
-|  |  |  |  |  | [TASK-0097](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0097-create-dialog.md) Create dialog (5) |
-|  |  |  |  |  | [TASK-0098](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0098-first-launch-toast.md) A clickable notification on first launch (3) |
-|  |  |  |  |  | [TASK-0099](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0099-stack-tree-in-the-ui.md) Stack tree in the library and in run setup (3) |
-|  |  |  |  |  | [TASK-0100](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0100-theme-and-shared-widgets.md) Theme and shared widgets (3) |
-|  |  |  |  |  | [TASK-0101](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0101-home-page.md) Home page (5) |
-|  |  |  |  |  | [TASK-0102](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0102-library-cards-and-item-rows.md) Library cards and item rows (3) |
-|  |  |  |  |  | [TASK-0103](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0103-rehearsal-card-layout-and-progress-bar.md) Rehearsal card layout and progress bar (3) |
-|  |  |  |  |  | [TASK-0104](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0104-ux-evidence-and-design-rules.md) UX evidence and design rules (2) |
-|  |  |  |  |  | [TASK-0105](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0105-calendar-entry-kinds-and-reminders.md) Calendar entry kinds and reminders (5) |
-|  |  |  |  |  | [TASK-0106](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0106-stack-due-date-and-new-items-on-the-board.md) Stack due date and new items on the board (3) |
-|  |  |  |  |  | [TASK-0107](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0107-three-step-rehearsal-setup.md) Three-step rehearsal setup (3) |
-|  |  |  |  |  | [TASK-0108](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0108-home-and-calendar-fill-the-window.md) Home and calendar fill the window (3) |
-|  |  |  |  |  | [TASK-0109](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0109-spike-and-adr-0010-to-choose-the-pdf-library.md) Spike and ADR 0010 to choose the PDF library (5) |
-|  |  |  |  |  | [TASK-0110](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0110-the-studyfrog-pdf-crate-with-documents-pages-text-and-pictures-as-data.md) The studyfrog-pdf crate with documents, pages, text and pictures as data (5) |
-|  |  |  |  |  | [TASK-0111](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0111-index-pdfs-in-the-vault-and-make-them-searchable.md) Index PDFs in the vault and make them searchable (5) |
-|  |  |  |  |  | [TASK-0112](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0112-pdf-viewer-screen.md) PDF viewer screen (8) |
-|  |  |  |  |  | [TASK-0113](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0113-safety-limits-for-hostile-or-broken-pdfs.md) Safety limits for hostile or broken PDFs (3) |
-|  |  |  |  |  | [TASK-0114](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0114-annotations-as-highlights-and-notes-in-a-sidecar-file.md) Annotations as highlights and notes in a sidecar file (5) |
-|  |  |  |  |  | [TASK-0115](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0115-page-operations-to-rotate-delete-reorder-merge-and-split-into-a-new-pdf.md) Page operations to rotate, delete, reorder, merge and split into a new PDF (5) |
-|  |  |  |  |  | [TASK-0116](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0116-export-an-annotated-copy-and-edit-document-properties.md) Export an annotated copy and edit document properties (3) |
-|  |  |  |  |  | [TASK-0117](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0117-extract-text-into-markdown-notes-with-a-link-back-to-the-page.md) Extract text into Markdown notes with a link back to the page (5) |
-|  |  |  |  |  | [TASK-0118](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0118-detect-scanned-pages-and-say-so.md) Detect scanned pages and say so (2) |
-|  |  |  |  |  | [TASK-0119](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0119-extract-pictures-and-page-snapshots-into-the-vault.md) Extract pictures and page snapshots into the vault (3) |
-|  |  |  |  |  | [TASK-0120](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0120-cards-and-questions-from-highlighted-passages-with-the-assistant-s-help.md) Cards and questions from highlighted passages, with the assistant's help (5) |
-|  |  |  |  |  | [TASK-0121](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0121-add-link-and-organise-pdfs.md) Add, link and organise PDFs (3) |
-|  |  |  |  |  | [TASK-0122](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0122-documentation-tests-accessibility-and-release-notes-for-pdf-support.md) Documentation, tests, accessibility and release notes for PDF support (3) |
-|  |  |  |  |  | [TASK-0123](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0123-follow-links-inside-a-pdf-after-the-user-agrees.md) Follow links inside a PDF after the user agrees (3) |
-|  |  |  |  |  | [TASK-0124](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0124-release-0-2-0.md) Release 0.2.0 (2) |
-|  |  |  |  |  | [TASK-0125](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0125-publish-a-tar-gz-and-its-checksum-with-every-release.md) Publish a tar.gz and its checksum with every release (1) |
-|  |  |  |  |  | [TASK-0126](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0126-notification-records-with-ids-read-state-and-persistence.md) Notification records with ids, read state and persistence (3) |
-|  |  |  |  |  | [TASK-0127](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0127-notification-center-panel.md) Notification center panel (5) |
-|  |  |  |  |  | [TASK-0128](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0128-vault-name-next-to-the-studyfrog-name-in-the-bar.md) Vault name next to the StudyFrog name in the bar (2) |
-|  |  |  |  |  | [TASK-0129](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0129-specify-the-library-redesign-and-the-query-syntax.md) Specify the library redesign and the query syntax (3) |
-|  |  |  |  |  | [TASK-0130](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0130-search-query-parser-and-evaluator.md) Search query parser and evaluator (5) |
-|  |  |  |  |  | [TASK-0131](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0131-item-list-with-columns-and-sorting.md) Item list with columns and sorting (5) |
-|  |  |  |  |  | [TASK-0132](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0132-search-bar-with-standard-and-query-modes.md) Search bar with Standard and Query modes (3) |
-|  |  |  |  |  | [TASK-0133](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0133-saved-filters-and-bulk-actions.md) Saved filters and bulk actions (3) |
-|  |  |  |  |  | [TASK-0134](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0134-move-card-creation-and-import-out-of-the-page.md) Move card creation and import out of the page (2) |
-|  |  |  |  |  | [TASK-0135](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0135-specify-the-familiarity-value.md) Specify the familiarity value (3) |
-|  |  |  |  |  | [TASK-0136](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0136-record-how-long-items-are-viewed-and-acted-on.md) Record how long items are viewed and acted on (3) |
-|  |  |  |  |  | [TASK-0137](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0137-familiarity-as-a-pure-function-with-benchmarks.md) Familiarity as a pure function with benchmarks (5) |
-|  |  |  |  |  | [TASK-0138](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0138-per-item-familiarity-in-the-reports.md) Per-item familiarity in the reports (3) |
-|  |  |  |  |  | [TASK-0139](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0139-needs-attention-card-and-least-familiar-run-order.md) Needs-attention card and least-familiar run order (3) |
-|  |  |  |  |  | [TASK-0140](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0140-familiarity-in-queue-selection-and-the-calendar-planner.md) Familiarity in queue selection and the calendar planner (3) |
-|  |  |  |  |  | [TASK-0141](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0141-familiarity-scales-the-scheduler-s-interval.md) Familiarity scales the scheduler's interval (5) |
-|  |  |  |  |  | [TASK-0142](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0142-settings-tab-bar-and-domain-grouping.md) Settings tab bar and domain grouping (3) |
-|  |  |  |  |  | [TASK-0143](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0143-specify-the-statuses-their-names-and-their-transitions.md) Specify the statuses, their names and their transitions (2) |
-|  |  |  |  |  | [TASK-0144](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0144-status-field-in-the-data-model-and-markdown-schema.md) Status field in the data model and Markdown schema (3) |
-|  |  |  |  |  | [TASK-0145](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0145-change-and-show-statuses-in-the-ui.md) Change and show statuses in the UI (3) |
-|  |  |  |  |  | [TASK-0146](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0146-plan-the-next-reviews-as-calendar-entries.md) Plan the next reviews as calendar entries (3) |
-|  |  |  |  |  | [TASK-0147](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0147-move-an-entry-to-another-day.md) Move an entry to another day (3) |
-|  |  |  |  |  | [TASK-0148](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0148-calendar-entries-with-drag-and-drop.md) Calendar entries with drag and drop (3) |
-|  |  |  |  |  | [TASK-0149](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0149-specify-the-stack-view-redesign.md) Specify the stack view redesign (2) |
-|  |  |  |  |  | [TASK-0150](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0150-stack-page-shell-with-header-and-tabs.md) Stack page shell with header and tabs (3) |
-|  |  |  |  |  | [TASK-0151](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0151-summary-tab.md) Summary tab (5) |
-|  |  |  |  |  | [TASK-0152](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0152-list-and-backlog-tabs.md) List and Backlog tabs (3) |
-|  |  |  |  |  | [TASK-0153](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0153-sub-stacks-tab.md) Sub-stacks tab (2) |
-|  |  |  |  |  | [TASK-0154](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0154-goals-tab.md) Goals tab (2) |
-|  |  |  |  |  | [TASK-0155](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0155-roadmap-tab.md) Roadmap tab (5) |
-|  |  |  |  |  | [TASK-0156](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0156-board-calendar-and-reports-tabs-scoped-to-the-stack.md) Board, Calendar and Reports tabs scoped to the stack (3) |
-|  |  |  |  |  | [TASK-0157](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0157-specify-the-interchange-formats.md) Specify the interchange formats (3) |
-|  |  |  |  |  | [TASK-0158](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0158-export-a-library-or-stack.md) Export a library or stack (3) |
-|  |  |  |  |  | [TASK-0159](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0159-import-with-preview-and-duplicate-handling.md) Import with preview and duplicate handling (5) |
-|  |  |  |  |  | [TASK-0160](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0160-import-and-export-screens.md) Import and export screens (3) |
-|  |  |  |  |  | [TASK-0161](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0161-plan-the-help-content.md) Plan the help content (2) |
-|  |  |  |  |  | [TASK-0162](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0162-help-viewer-with-navigation-and-search.md) Help viewer with navigation and search (5) |
-|  |  |  |  |  | [TASK-0163](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0163-user-added-and-user-edited-help-pages.md) User-added and user-edited help pages (5) |
-|  |  |  |  |  | [TASK-0164](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0164-assistant-proposals-for-user-help-pages.md) Assistant proposals for user help pages (3) |
-|  |  |  |  |  | [TASK-0165](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0165-write-the-vision-getting-started-and-faq-pages.md) Write the vision, getting started and FAQ pages (3) |
-|  |  |  |  |  | [TASK-0166](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0166-guided-tutorials.md) Guided tutorials (3) |
-|  |  |  |  |  | [TASK-0167](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0167-anki-importer.md) Anki importer (5) |
-|  |  |  |  |  | [TASK-0168](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0168-obsidian-vault-importer.md) Obsidian vault importer (3) |
-|  |  |  |  |  | [TASK-0169](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0169-document-how-to-write-a-format-adapter.md) Document how to write a format adapter (2) |
-|  |  |  |  |  | [TASK-0170](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |
-|  |  |  |  |  | [TASK-0171](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |
-|  |  |  |  |  | [TASK-0172](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |
-|  |  |  |  |  | [TASK-0173](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |
-|  |  |  |  |  | [TASK-0174](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0174-self-assessment-against-measured-results.md) Self-assessment against measured results (3) |
-|  |  |  |  |  | [TASK-0179](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0179-specify-the-rehearsal-modes.md) Specify the rehearsal modes (2) |
-|  |  |  |  |  | [TASK-0180](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0180-countdown-and-count-up-in-the-run-state-machine.md) Countdown and count up in the run state machine (5) |
-|  |  |  |  |  | [TASK-0181](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0181-mode-and-timer-in-run-setup-and-on-the-rehearsal-screen.md) Mode and timer in run setup and on the rehearsal screen (3) |
-|  |  |  |  |  | [TASK-0182](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0182-mode-and-time-in-the-review-and-the-reports.md) Mode and time in the review and the reports (2) |
-|  |  |  |  |  | [TASK-0183](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0183-research-a-model-that-combines-familiarity-with-fsrs.md) Research a model that combines familiarity with FSRS (5) |
-|  |  |  |  |  | [TASK-0184](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0184-replay-familiarity-against-the-user-s-review-history-for-a-verdict.md) Replay familiarity against the user's review history for a verdict (3) |
-|  |  |  |  |  | [TASK-0185](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0185-new-items-default-to-difficult-and-medium-priority.md) New items default to the highest difficulty and medium priority (1) |
-|  |  |  |  |  | [TASK-0186](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0186-create-dialog-laid-out-like-jira.md) Create dialog laid out like Jira's (3) |
-|  |  |  |  |  | [TASK-0187](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0187-markdown-editors-in-the-create-dialog-that-grow-by-dragging.md) Markdown editors in the create dialog that grow by dragging (3) |
-|  |  |  |  |  | [TASK-0188](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0188-ask-before-discarding-a-filled-create-dialog.md) Ask before discarding a filled Create dialog (2) |
-|  |  |  |  |  | [TASK-0189](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0189-in-ui-exit-button.md) In-UI exit button (2) |
-|  |  |  |  |  | [TASK-0190](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0190-readable-window-buttons.md) Readable window buttons (3) |
-|  |  |  |  |  | [TASK-0191](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0191-suggest-importing-found-anki-and-obsidian-files.md) Suggest importing found Anki and Obsidian files (5) |
-|  |  |  |  |  | [TASK-0192](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0192-plan-to-make-the-ui-calmer.md) Plan to make the UI calmer (3) |
-|  |  |  |  |  | [TASK-0193](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0193-space-between-content-and-scroll-bars.md) Space between content and scroll bars (1) |
-|  |  |  |  |  | [TASK-0194](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0194-rehearsal-progress-bar-against-open-items.md) Rehearsal progress bar against the open items (3) |
-|  |  |  |  |  | [TASK-0195](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0195-calm-the-remaining-screens.md) Calm the remaining screens (5) |
-|  |  |  |  |  | [TASK-0196](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0196-navigation-history.md) Navigation history (5) |
-|  |  |  |  |  | [TASK-0197](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0197-tables-and-more-markdown-in-the-editor-and-the-preview.md) Tables and more Markdown in the editor and the preview (5) |
-|  |  |  |  |  | [TASK-0198](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0198-text-macros-that-expand-into-markdown.md) Text macros that expand into Markdown (5) |
-|  |  |  |  |  | [TASK-0199](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0199-open-the-new-item-from-the-notification-that-says-it-was-created.md) Open the new item from the notification that says it was created (3) |
-|  |  |  |  |  | [TASK-0200](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0200-auto-save-in-the-editor-and-no-save-button.md) Auto-save in the editor and no Save button (5) |
-|  |  |  |  |  | [TASK-0201](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0201-item-saved-toast.md) Item saved toast when leaving the editor (2) |
-|  |  |  |  |  | [TASK-0202](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0202-specify-the-folders-and-items-views.md) Specify the folders and items views (3) |
-|  |  |  |  |  | [TASK-0203](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0203-folder-operations-in-the-service-create-rename-move-delete.md) Folder operations in the service (create, rename, move, delete) (5) |
-|  |  |  |  |  | [TASK-0204](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0204-folders-view-and-items-view-in-the-application.md) Folders view and Items view in the application (8) |
-|  |  |  |  |  | [TASK-0205](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0205-write-the-standard-prompts.md) Write the standard prompts (5) |
-|  |  |  |  |  | [TASK-0206](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0206-prompts-screen-copy-and-export.md) Prompts screen with copy and export (3) |
-|  |  |  |  |  | [TASK-0207](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0207-run-a-prompt-with-the-connected-assistant-and-an-attached-file.md) Run a prompt with the connected assistant and an attached file (5) |
-|  |  |  |  |  | [TASK-0208](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0208-csv-import-with-column-mapping.md) CSV import with column mapping (5) |
-|  |  |  |  |  | [TASK-0209](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0209-tell-the-user-which-layouts-and-formats-the-importers-read.md) Tell the user which layouts and formats the importers read (3) |
-|  |  |  |  |  | [TASK-0210](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0210-decide-the-stack-folder-and-reference-rules-adr-and-spec.md) Decide the stack folder and reference rules (ADR and spec) (3) |
-|  |  |  |  |  | [TASK-0211](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0211-the-referenced-by-field-in-the-file-format-the-index-and-the-vault-che.md) The referenced_by field in the file format, the index and the vault checks (5) |
-|  |  |  |  |  | [TASK-0212](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0212-services-follow-the-membership.md) Services follow the membership (8) |
-|  |  |  |  |  | [TASK-0213](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0213-references-in-the-interface.md) References in the interface (5) |
-|  |  |  |  |  | [TASK-0214](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0214-code-blocks-with-language-highlighting.md) Code blocks with language highlighting (5) |
-|  |  |  |  |  | [TASK-0215](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0215-underline-and-text-colour.md) Underline and text colour (3) |
-|  |  |  |  |  | [TASK-0216](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0216-automatic-table-of-contents.md) Automatic table of contents (3) |
-|  |  |  |  |  | [TASK-0217](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0217-mark-a-folder-as-a-stack-or-as-a-normal-folder.md) Mark a folder as a stack or as a normal folder (3) |
-|  |  |  |  |  | [TASK-0218](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0218-schedules-due-dates-and-reviews-per-stack.md) Schedules, due dates and reviews per stack (8) |
-|  |  |  |  |  | [TASK-0219](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0219-familiarity-and-difficulty-per-stack-averaged-on-the-item.md) Familiarity and difficulty per stack, averaged on the item (5) |
-|  |  |  |  |  | [TASK-0220](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0220-export-formats-toml-and-ron-next-to-json.md) Export formats TOML and RON next to JSON (3) |
-|  |  |  |  |  | [TASK-0221](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0221-specify-the-appearance-and-ui-settings.md) Specify the appearance and UI settings (2) |
-|  |  |  |  |  | [TASK-0222](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0222-choose-the-theme-dark-light-or-follow-the-system.md) Choose the theme (dark, light or follow the system) (3) |
-|  |  |  |  |  | [TASK-0223](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0223-appearance-tab-in-settings.md) Appearance tab in Settings (3) |
-|  |  |  |  |  | [TASK-0224](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0224-interface-size-and-density.md) Interface size and density (5) |
-|  |  |  |  |  | [TASK-0225](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0225-accent-colour-high-contrast-and-reduced-motion.md) Accent colour, high contrast and reduced motion (5) |
-|  |  |  |  |  | [TASK-0226](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0226-make-every-screen-right-in-both-themes.md) Make every screen right in both themes (5) |
-|  |  |  |  |  | [TASK-0227](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0227-start-up-and-window-settings.md) Start-up and window settings (3) |
-|  |  |  |  |  | [TASK-0228](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0228-specify-the-markdown-to-pdf-export.md) Specify the Markdown to PDF export and choose the writer (ADR) (3) |
-|  |  |  |  |  | [TASK-0229](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0229-markdown-layout-and-pdf-writer.md) Markdown layout and PDF writer (8) |
-|  |  |  |  |  | [TASK-0230](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0230-export-use-cases-for-pdf.md) Export use cases for PDF in the service (5) |
-|  |  |  |  |  | [TASK-0231](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0231-export-to-pdf-in-the-application.md) Export to PDF in the application (5) |
-|  |  |  |  |  | [TASK-0232](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0232-pdf-export-documentation-tests-and-release-notes.md) Documentation, help and release notes for the PDF export (2) |
-|  |  |  |  |  | [TASK-0233](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Move prompt library to standalone left sidebar navigation (2) |
-|  |  |  |  |  | [TASK-0234](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0234-exam-mode-grade-scale-and-result-records.md) Exam mode, grade scale and exam result records (3) |
-|  |  |  |  |  | [TASK-0235](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0235-exam-rules-in-the-rehearsal-engine.md) Exam rules in the rehearsal engine (2) |
-|  |  |  |  |  | [TASK-0236](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0236-score-exam-answers-against-fixtures.md) Score exam answers against fixtures (2) |
-|  |  |  |  |  | [TASK-0237](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0237-grade-store-and-list-exam-results.md) Grade, store and list exam results (3) |
-|  |  |  |  |  | [TASK-0238](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0238-exam-option-in-setup-and-the-locked-run-screen.md) Exam option in the setup and the locked run screen (3) |
-|  |  |  |  |  | [TASK-0239](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0239-exam-result-screen-and-review.md) Exam result screen and review (3) |
-|  |  |  |  |  | [TASK-0240](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0240-exam-results-in-reports-diary-and-screenshots.md) Exam results in the Runs report, the diary prompt and screenshots (2) |
-|  |  |  |  |  | [TASK-0241](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0241-help-page-for-the-exam-mode.md) Help page for the exam mode (1) |
-|  |  |  |  |  | [TASK-0242](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0242-exam-runs-in-the-control-protocol.md) Exam runs in the control protocol (2) |
-|  |  |  |  |  | [TASK-0243](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0243-detect-lifecycle-events-from-messages-and-state.md) Detect lifecycle events from messages and state (3) |
-|  |  |  |  |  | [TASK-0244](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0244-event-bus-and-the-subscribe-command.md) Event bus and the subscribe command (3) |
-|  |  |  |  |  | [TASK-0245](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0245-the-studyfrog-python-package.md) The studyfrog Python package (3) |
-|  |  |  |  |  | [TASK-0246](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0246-python-tests-against-the-real-binary.md) Python tests against the real binary (2) |
-|  |  |  |  |  | [TASK-0247](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0247-scripts-toml-cron-and-trigger-matching.md) scripts.toml, cron and trigger matching (3) |
-|  |  |  |  |  | [TASK-0248](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0248-child-processes-with-timeout-logging-and-scoped-sockets.md) Child processes with timeout, logging and scoped sockets (3) |
-|  |  |  |  |  | [TASK-0249](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0249-the-runner-in-every-instance-and-the-script-commands.md) The runner in every instance and the script commands (5) |
-|  |  |  |  |  | [TASK-0250](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0250-console-screen.md) Console screen (5) |
-|  |  |  |  |  | [TASK-0251](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0251-scripting-help-page-spec-and-examples.md) Scripting help page, spec and examples (2) |
-|  |  |  |  |  | [TASK-0252](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0252-plugin-modding-in-extending-md.md) Plugin modding in EXTENDING.md (1) |
-|  |  |  |  |  | [TASK-0253](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0253-canvas-data-model-and-toml-serializer.md) Canvas data model and TOML serializer in core and graph (3) |
-|  |  |  |  |  | [TASK-0254](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0254-spatial-quadtree-indexing-and-viewport-culling.md) Spatial quadtree indexing and viewport culling (3) |
-|  |  |  |  |  | [TASK-0255](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0255-interactive-canvas-view-pan-zoom-and-dragging.md) Interactive canvas view with pan, zoom and node dragging (5) |
-|  |  |  |  |  | [TASK-0256](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0256-edge-rendering-and-canvas-card-previews.md) Edge rendering, connection anchors, and card previews on canvas (3) |
-|  |  |  |  |  | [TASK-0257](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0257-pdf-crop-selection-tool-and-coordinate-schema.md) PDF rectangular crop selection tool and coordinate frontmatter schema (3) |
-|  |  |  |  |  | [TASK-0258](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0258-pdf-excerpt-rasterization-caching.md) PDF excerpt caching and rasterization pipeline (3) |
-|  |  |  |  |  | [TASK-0259](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0259-split-screen-pdf-navigation-button.md) Split-screen PDF navigation button on rehearsal cards and notes (3) |
-|  |  |  |  |  | [TASK-0260](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0260-synchronized-pdf-page-scroll-and-highlight.md) Synchronized PDF page scrolling and coordinate highlight overlay (3) |
-|  |  |  |  |  | [TASK-0261](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0261-effective-priority-scoring-function.md) Effective priority scoring function combining priority, retention, and familiarity (2) |
-|  |  |  |  |  | [TASK-0262](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0262-priority-queue-ordering-and-budget-slicing.md) Priority-based queue ordering and session budget slicing (3) |
-|  |  |  |  |  | [TASK-0263](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0263-match-mode-state-machine-and-mechanics.md) Match mode state machine, tile pairing mechanics, and monotonic timer (3) |
-|  |  |  |  |  | [TASK-0264](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0264-match-mode-grid-ui-and-animations.md) Match mode grid UI with visual selection and feedback animations (3) |
-|  |  |  |  |  | [TASK-0265](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0265-semantic-distractor-extraction-via-embeddings.md) Semantic distractor extraction via MiniLM embeddings nearest neighbors (3) |
-|  |  |  |  |  | [TASK-0266](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0266-distractor-exam-view-and-automated-grading.md) Distractor exam view and automated grading (3) |
-|  |  |  |  |  | [TASK-0267](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0267-adam-optimizer-for-fsrs-parameters.md) Adam gradient descent optimizer for 21 FSRS parameters on SQLite reviews (5) |
-|  |  |  |  |  | [TASK-0268](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0268-fsrs-optimizer-ui-and-metrics.md) FSRS parameter evaluation metrics and settings UI integration (3) |
-|  |  |  |  |  | [TASK-0269](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0269-inline-delimiter-scanner-in-markdown.md) Inline delimiter scanner for Term :: Definition in markdown documents (3) |
-|  |  |  |  |  | [TASK-0270](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0270-virtual-item-indexing-for-inline-cards.md) Virtual item indexing and lifecycle sync for inline cards (3) |
-|  |  |  |  |  | [TASK-0271](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0271-sidecar-child-process-spawning-and-watchdog.md) Sidecar child process spawning, loopback port binding, and stdin watchdog (5) |
-|  |  |  |  |  | [TASK-0272](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0272-five-minute-idle-auto-shutdown-supervisor.md) Five-minute idle auto-shutdown and memory reclamation supervisor (3) |
-|  |  |  |  |  | [TASK-0273](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0273-gguf-model-catalog-and-resumable-downloader.md) GGUF model catalog and range-resuming downloader (3) |
-|  |  |  |  |  | [TASK-0274](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0274-sse-streaming-parser-and-chat-streaming-ui.md) Server-Sent Events streaming parser and chat UI streaming renderer (3) |
-|  |  |  |  |  | [TASK-0275](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0275-sqlite-vault-embeddings-and-vector-search.md) SQLite vault embeddings table and vector similarity search (3) |
-|  |  |  |  |  | [TASK-0276](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0276-prompt-budgeting-and-vault-context-assembly.md) 1024-token prompt budgeting and vault context assembly (3) |
-|  |  |  |  |  | [TASK-0277](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0277-machine-identity-and-hygiene-report-for-a-benchmark-run.md) Machine identity and hygiene report for a benchmark run (1) |
-|  |  |  |  |  | [TASK-0280](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0280-pure-regression-rule-with-bootstrap-interval-and-unit-tests.md) Pure regression rule with a bootstrap interval, and its unit tests (3) |
-|  |  |  |  |  | [TASK-0281](/tmp/claude-0/fix1/commitboard/docs/issues/tasks/TASK-0281-bench-compare-command-and-wrapper-script.md) bench-compare command, wrapper script, and the repo-lint tests in the gate (1) |
+| [BUG-0020](docs/issues/bugs/BUG-0020-scriptstudio-reference-panel-layout.md) ScriptStudio reference panel is squeezed and its topics are not shown (3) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [BUG-0021](docs/issues/bugs/BUG-0021-narrow-window-header-and-run-strip-overlap.md) At the 640 by 420 minimum, the window header and the rehearsal top strip overlap and the hint line is cut off (2) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+| [BUG-0022](docs/issues/bugs/BUG-0022-exam-case-study-hides-decision-and-options.md) In an exam run, a case study shows only its vignette, without its decision prompt or options (2) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+| [BUG-0030](docs/issues/bugs/BUG-0030-cognitive-profile-charts-missing-curve-and-accuracy.md) The Cognitive profile shows a velocity number, not a curve, and no semantic accuracy trend (2) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
+| [BUG-0031](docs/issues/bugs/BUG-0031-semantic-scores-not-recorded.md) Telemetry rows are saved without a semantic deviation score (2) |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
+| [BUG-0032](docs/issues/bugs/BUG-0032-reports-tab-row-clipped-at-960.md) At 960 by 640 the Reports tab row is cut off at the right edge (2) |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
+| [BUG-0033](docs/issues/bugs/BUG-0033-script-stderr-shown-as-stdout-and-stderr-filter-empty.md) Script stderr is shown in the stdout stream and the Stderr / Errors filter stays empty (3) |  |  |  |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
+| [BUG-0034](docs/issues/bugs/BUG-0034-reminder-and-count-wording-1-days-1-pages-and-lead-phrase.md) Singular counts read '1 days' and '1 pages', and reminders say 'in 2 h' for an item due in 1 h (1) |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
+| [BUG-0035](docs/issues/bugs/BUG-0035-week-view-last-day-column-clipped-at-window-edge.md) Week view runs past the window edge, so Sunday's column and its deadline dot are cut off (2) |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
+| [BUG-0036](docs/issues/bugs/BUG-0036-toast-covers-day-view-add-session-button.md) Reminder toasts cover the Day view's '+ Add session' button (1) |  |  |  |  | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |
+| [BUG-0037](docs/issues/bugs/BUG-0037-csv-import-into-stack-nests-rows-under-that-stack.md) CSV import into a chosen stack creates a nested stack 'statistik/statistik' instead of using it (2) |  |  |  |  | [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |
+| [BUG-0038](docs/issues/bugs/BUG-0038-keyword-grading-gives-zero-to-correct-answers-with-generic-rubric.md) Mock exam keyword grading scores correct answers 0 because the rubric points are generic text (3) |  |  |  |  | [BUG-0012](docs/issues/bugs/BUG-0012-rehearsal-card-text-wrapping-and-unquoted-csv-comma-truncation.md) Rehearsal card text wrapping and unquoted CSV comma truncation (2) |
+| [BUG-0039](docs/issues/bugs/BUG-0039-pdf-exam-and-list-labelled-untitled.md) Mock exam from a PDF is labelled 'untitled' and both PDFs in the list read 'untitled' (1) |  |  |  |  | [BUG-0013](docs/issues/bugs/BUG-0013-rehearsal-result-view-scrollability-review-stretch-and-suggested-rating.md) Rehearsal result view scrollability, stretched review area, and suggested rating visibility (2) |
+| [BUG-0041](docs/issues/bugs/BUG-0041-rehearsal-save-fails-unique-run-event-seq.md) Rehearsal shows 'Could not save your progress' (UNIQUE constraint on run_event run_uid, seq) (3) |  |  |  |  | [BUG-0014](docs/issues/bugs/BUG-0014-csv-import-fails-on-unquoted-multiline-fields.md) CSV importer fails on unquoted multiline fields in AI-generated CSV files (2) |
+| [BUG-0042](docs/issues/bugs/BUG-0042-run-by-hand-reported-under-job-name.md) A script run by hand from the job editor is reported under the name of the job that uses that file (1) |  |  |  |  | [BUG-0015](docs/issues/bugs/BUG-0015-csv-escaped-newlines-and-card-title-truncation.md) Escaped newline sequences in imported cards and 60-character card title truncation (2) |
+| [BUG-0043](docs/issues/bugs/BUG-0043-homework-planner-timetable-and-subject-filter-missing.md) Homework planner shows no timetable and has no subject filter (3) |  |  |  |  | [BUG-0016](docs/issues/bugs/BUG-0016-metacognitive-calibration-accuracy-baseline-and-default-item-difficulty-priority.md) Metacognitive calibration measured accuracy baseline calculation and default item difficulty and priority (5) |
+| [BUG-0044](docs/issues/bugs/BUG-0044-calendar-timetable-view-empty-after-restart.md) Calendar Timetable view lists no lectures after the app restarts, though the lecture is stored and shown in the week view (1) |  |  |  |  | [BUG-0017](docs/issues/bugs/BUG-0017-markdown-viewer-bold-text-visibility.md) Boldness of words in markdown viewer not visible (2) |
+| [BUG-0045](docs/issues/bugs/BUG-0045-mock-exam-has-no-countdown-or-locked-answers.md) Mock exam view has no countdown timer, no auto-submit and no locked answers (3) |  |  |  |  | [BUG-0018](docs/issues/bugs/BUG-0018-code-block-indentation-preservation.md) Code block indentations not visible in markdown viewer (2) |
+| [BUG-0046](docs/issues/bugs/BUG-0046-memory-game-missing-from-calendar-sessions.md) The Calendar's session and planned-review rows offer no Memory game entry point (2) |  |  |  |  | [BUG-0019](docs/issues/bugs/BUG-0019-notes-stack-membership-optional.md) Notes being in stacks should be optional not required (3) |
+| [BUG-0047](docs/issues/bugs/BUG-0047-memory-game-button-during-rehearsal-shows-rehearsal.md) Memory game on a stack page shows the open rehearsal instead of starting a memory board (2) |  |  |  |  | [BUG-0023](docs/issues/bugs/BUG-0023-case-study-button-ignores-ticked-stack.md) The rehearse setup's Case study button ignores the ticked stack and says to open a stack first (2) |
+| [BUG-0048](docs/issues/bugs/BUG-0048-telemetry-dwell-repeats-latency-and-complexity-is-time.md) review_telemetry stores dwell_ms equal to latency_ms, and text_complexity holds a reading-time estimate (2) |  |  |  |  | [BUG-0024](docs/issues/bugs/BUG-0024-memory-game-setup-ignores-ticked-stacks.md) The Memory game button in the rehearse setup ignores the stacks ticked in the What step (2) |
+| [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  |  |  | [BUG-0025](docs/issues/bugs/BUG-0025-memory-time-attack-hud-shows-elapsed.md) In Memory time attack the HUD shows the time used, not the time left, and reads past the limit (2) |
+| [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [BUG-0026](docs/issues/bugs/BUG-0026-memory-timeout-does-not-reveal-cards.md) The Memory timeout message says the cards are shown, but the unmatched cards stay face down (1) |
+| [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  |  |  | [BUG-0027](docs/issues/bugs/BUG-0027-memory-hud-clock-runs-after-win.md) The Memory HUD keeps counting after the game is won (1) |
+| [TASK-0284](docs/issues/tasks/TASK-0284-scripted-screens-on-a-10k-vault-for-the-frame-time-run.md) Scripted visit of the rehearsal card, reports and console on a 10k-note vault (2) |  |  |  |  | [BUG-0028](docs/issues/bugs/BUG-0028-memory-finished-grid-clipped-at-960.md) At 960 by 640 the Memory board under the win message runs past the bottom of the window (2) |
+| [TASK-0285](docs/issues/tasks/TASK-0285-dhat-allocation-counts-for-the-render-loops.md) dhat allocation counts for the rehearsal card, reports and console loops (2) |  |  |  |  | [BUG-0029](docs/issues/bugs/BUG-0029-rehearse-setup-footer-item-count-clipped.md) In the rehearse setup footer the item count is cut off at the right edge at 1280 by 800 (1) |
+| [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  |  |  | [BUG-0040](docs/issues/bugs/BUG-0040-mock-exam-uses-open-stack-not-ticked-stack.md) Mock exam draws from the open stack, not the stack ticked in the rehearse setup's What step (2) |
+|  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
+|  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
+|  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
+|  |  |  |  |  | [TASK-0004](docs/issues/tasks/TASK-0004-scripts-check-sh.md) scripts/check.sh (2) |
+|  |  |  |  |  | [TASK-0005](docs/issues/tasks/TASK-0005-scripts-linecount-sh.md) scripts/linecount.sh (1) |
+|  |  |  |  |  | [TASK-0006](docs/issues/tasks/TASK-0006-impl-block-scan-for-p1.md) impl-block scan for P1 (2) |
+|  |  |  |  |  | [TASK-0007](docs/issues/tasks/TASK-0007-vision-architecture-principles-glossary.md) Vision, architecture, principles, glossary (3) |
+|  |  |  |  |  | [TASK-0008](docs/issues/tasks/TASK-0008-adrs-0001-0005.md) ADRs 0001-0005 (3) |
+|  |  |  |  |  | [TASK-0009](docs/issues/tasks/TASK-0009-roadmap-and-phase-files.md) Roadmap and phase files (3) |
+|  |  |  |  |  | [TASK-0010](docs/issues/tasks/TASK-0010-issue-format-and-readme.md) Issue format and README (2) |
+|  |  |  |  |  | [TASK-0011](docs/issues/tasks/TASK-0011-specs-research-contributing-guides.md) Specs, research, contributing guides (3) |
+|  |  |  |  |  | [TASK-0012](docs/issues/tasks/TASK-0012-id-newtypes-and-arena-indices.md) Id newtypes and arena indices (3) |
+|  |  |  |  |  | [TASK-0013](docs/issues/tasks/TASK-0013-stack-note-card-question-structs.md) Stack, Note, Card, Question structs (3) |
+|  |  |  |  |  | [TASK-0014](docs/issues/tasks/TASK-0014-review-and-rating-types.md) Review and Rating types (2) |
+|  |  |  |  |  | [TASK-0015](docs/issues/tasks/TASK-0015-run-and-event-types.md) Run and event types (3) |
+|  |  |  |  |  | [TASK-0016](docs/issues/tasks/TASK-0016-fsrs-pure-functions.md) FSRS pure functions (5) |
+|  |  |  |  |  | [TASK-0017](docs/issues/tasks/TASK-0017-fsrs-property-and-golden-tests.md) FSRS property and golden tests (3) |
+|  |  |  |  |  | [TASK-0018](docs/issues/tasks/TASK-0018-sm-2-functions.md) SM-2 functions (3) |
+|  |  |  |  |  | [TASK-0019](docs/issues/tasks/TASK-0019-srs-criterion-benchmark.md) SRS criterion benchmark (2) |
+|  |  |  |  |  | [TASK-0020](docs/issues/tasks/TASK-0020-schema-structs-and-validation.md) Schema structs and validation (3) |
+|  |  |  |  |  | [TASK-0021](docs/issues/tasks/TASK-0021-fence-splitter-and-serde-saphyr-parsing.md) Fence splitter and serde-saphyr parsing (3) |
+|  |  |  |  |  | [TASK-0022](docs/issues/tasks/TASK-0022-round-trip-property-test.md) Round-trip property test (3) |
+|  |  |  |  |  | [TASK-0023](docs/issues/tasks/TASK-0023-wikilink-extraction.md) Wikilink extraction (3) |
+|  |  |  |  |  | [TASK-0024](docs/issues/tasks/TASK-0024-card-and-question-section-split.md) Card and question section split (2) |
+|  |  |  |  |  | [TASK-0025](docs/issues/tasks/TASK-0025-initial-schema.md) Initial schema (3) |
+|  |  |  |  |  | [TASK-0026](docs/issues/tasks/TASK-0026-migration-runner.md) Migration runner (2) |
+|  |  |  |  |  | [TASK-0027](docs/issues/tasks/TASK-0027-vault-scanner.md) Vault scanner (5) |
+|  |  |  |  |  | [TASK-0028](docs/issues/tasks/TASK-0028-incremental-reindex.md) Incremental reindex (5) |
+|  |  |  |  |  | [TASK-0029](docs/issues/tasks/TASK-0029-file-watcher.md) File watcher (3) |
+|  |  |  |  |  | [TASK-0030](docs/issues/tasks/TASK-0030-run-input-types-and-transition-errors.md) Run input types and transition errors (2) |
+|  |  |  |  |  | [TASK-0031](docs/issues/tasks/TASK-0031-transition-functions.md) Transition functions (5) |
+|  |  |  |  |  | [TASK-0032](docs/issues/tasks/TASK-0032-injected-monotonic-clock.md) Injected monotonic clock (3) |
+|  |  |  |  |  | [TASK-0033](docs/issues/tasks/TASK-0033-persist-run-events.md) Persist run events (3) |
+|  |  |  |  |  | [TASK-0034](docs/issues/tasks/TASK-0034-spaced-due-first-queue-with-daily-budgets.md) Spaced (due-first) queue with daily budgets (3) |
+|  |  |  |  |  | [TASK-0035](docs/issues/tasks/TASK-0035-rehearsal-benchmark.md) Rehearsal benchmark (2) |
+|  |  |  |  |  | [TASK-0036](docs/issues/tasks/TASK-0036-eframe-window-and-navigation.md) eframe window and navigation (3) |
+|  |  |  |  |  | [TASK-0037](docs/issues/tasks/TASK-0037-elm-style-update-loop-and-effects.md) Elm-style update loop and effects (5) |
+|  |  |  |  |  | [TASK-0038](docs/issues/tasks/TASK-0038-stack-browser.md) Stack browser (3) |
+|  |  |  |  |  | [TASK-0039](docs/issues/tasks/TASK-0039-rehearsal-screen.md) Rehearsal screen (5) |
+|  |  |  |  |  | [TASK-0040](docs/issues/tasks/TASK-0040-editor-widget.md) Editor widget (5) |
+|  |  |  |  |  | [TASK-0041](docs/issues/tasks/TASK-0041-preview-renderer.md) Preview renderer (3) |
+|  |  |  |  |  | [TASK-0042](docs/issues/tasks/TASK-0042-force-directed-layout-soa.md) Force-directed layout (SoA) (5) |
+|  |  |  |  |  | [TASK-0043](docs/issues/tasks/TASK-0043-graph-render-benchmark.md) Graph render benchmark (3) |
+|  |  |  |  |  | [TASK-0044](docs/issues/tasks/TASK-0044-session-model-and-recurrence.md) Session model and recurrence (5) |
+|  |  |  |  |  | [TASK-0045](docs/issues/tasks/TASK-0045-calendar-view.md) Calendar view (5) |
+|  |  |  |  |  | [TASK-0046](docs/issues/tasks/TASK-0046-columns-and-wip-limits.md) Columns and WIP limits (3) |
+|  |  |  |  |  | [TASK-0047](docs/issues/tasks/TASK-0047-move-and-push-semantics.md) Move and push semantics (5) |
+|  |  |  |  |  | [TASK-0048](docs/issues/tasks/TASK-0048-board-view-with-drag-and-drop.md) Board view with drag and drop (5) |
+|  |  |  |  |  | [TASK-0049](docs/issues/tasks/TASK-0049-slm-runtime-trait.md) SlmRuntime trait (2) |
+|  |  |  |  |  | [TASK-0050](docs/issues/tasks/TASK-0050-candle-embedder-and-spike.md) Candle embedder and spike (8) |
+|  |  |  |  |  | [TASK-0051](docs/issues/tasks/TASK-0051-model-management.md) Model management (3) |
+|  |  |  |  |  | [TASK-0052](docs/issues/tasks/TASK-0052-score-functions.md) Score functions (3) |
+|  |  |  |  |  | [TASK-0053](docs/issues/tasks/TASK-0053-scoring-property-tests.md) Scoring property tests (2) |
+|  |  |  |  |  | [TASK-0054](docs/issues/tasks/TASK-0054-answer-input-in-rehearsal.md) Answer input in rehearsal (3) |
+|  |  |  |  |  | [TASK-0055](docs/issues/tasks/TASK-0055-slm-benchmark.md) SLM benchmark (1) |
+|  |  |  |  |  | [TASK-0056](docs/issues/tasks/TASK-0056-rule-data-model.md) Rule data model (3) |
+|  |  |  |  |  | [TASK-0057](docs/issues/tasks/TASK-0057-achievement-evaluator.md) Evaluator and unlock memory (5) |
+|  |  |  |  |  | [TASK-0058](docs/issues/tasks/TASK-0058-achievements-screen.md) Achievements screen and announcements (3) |
+|  |  |  |  |  | [TASK-0059](docs/issues/tasks/TASK-0059-retention-curves.md) Retention curves (2) |
+|  |  |  |  |  | [TASK-0060](docs/issues/tasks/TASK-0060-latency-distributions.md) Latency distributions (3) |
+|  |  |  |  |  | [TASK-0061](docs/issues/tasks/TASK-0061-review-load-forecast.md) Review-load forecast and backtest (5) |
+|  |  |  |  |  | [TASK-0062](docs/issues/tasks/TASK-0062-report-screens.md) Report screens and benchmark (3) |
+|  |  |  |  |  | [TASK-0063](docs/issues/tasks/TASK-0063-define-extension-points.md) Define extension points (3) |
+|  |  |  |  |  | [TASK-0064](docs/issues/tasks/TASK-0064-registry-as-plain-data.md) Registry as plain data (2) |
+|  |  |  |  |  | [TASK-0065](docs/issues/tasks/TASK-0065-example-extension-crate.md) Example card type and importer (5) |
+|  |  |  |  |  | [TASK-0066](docs/issues/tasks/TASK-0066-profiling-pass.md) Profiling pass (3) |
+|  |  |  |  |  | [TASK-0067](docs/issues/tasks/TASK-0067-linux-packaging.md) Linux packaging (AppImage) (5) |
+|  |  |  |  |  | [TASK-0068](docs/issues/tasks/TASK-0068-run-plan-types-in-core.md) Run plan types in core (3) |
+|  |  |  |  |  | [TASK-0069](docs/issues/tasks/TASK-0069-practice-orders.md) Practice orders (5) |
+|  |  |  |  |  | [TASK-0070](docs/issues/tasks/TASK-0070-queue-filters.md) Queue filters (3) |
+|  |  |  |  |  | [TASK-0071](docs/issues/tasks/TASK-0071-requeue-on-again-and-schedule-effect.md) Requeue on Again and schedule effect (3) |
+|  |  |  |  |  | [TASK-0072](docs/issues/tasks/TASK-0072-persist-run-plan-schema-v2.md) Persist run plan (schema v2) (2) |
+|  |  |  |  |  | [TASK-0073](docs/issues/tasks/TASK-0073-run-setup-screen-plan-picker.md) Run setup screen (plan picker) (3) |
+|  |  |  |  |  | [TASK-0074](docs/issues/tasks/TASK-0074-persist-the-run-filter.md) Persist the run filter (2) |
+|  |  |  |  |  | [TASK-0075](docs/issues/tasks/TASK-0075-stack-settings-in-the-index.md) Stack settings in the index (5) |
+|  |  |  |  |  | [TASK-0076](docs/issues/tasks/TASK-0076-sm-2-in-the-service.md) SM-2 in the service (5) |
+|  |  |  |  |  | [TASK-0077](docs/issues/tasks/TASK-0077-per-stack-daily-budgets.md) Per-stack daily budgets (5) |
+|  |  |  |  |  | [TASK-0078](docs/issues/tasks/TASK-0078-local-time-zone-and-local-day-windows.md) Local time zone and local-day windows (3) |
+|  |  |  |  |  | [TASK-0079](docs/issues/tasks/TASK-0079-persist-sessions.md) Persist sessions (3) |
+|  |  |  |  |  | [TASK-0080](docs/issues/tasks/TASK-0080-persist-the-board.md) Persist the board (3) |
+|  |  |  |  |  | [TASK-0081](docs/issues/tasks/TASK-0081-difficulty-marks.md) Difficulty marks during a run (3) |
+|  |  |  |  |  | [TASK-0082](docs/issues/tasks/TASK-0082-reading-speed-suggestion.md) Reading-speed rating suggestion (3) |
+|  |  |  |  |  | [TASK-0083](docs/issues/tasks/TASK-0083-post-run-review.md) Post-run review and applying a suggestion (5) |
+|  |  |  |  |  | [TASK-0084](docs/issues/tasks/TASK-0084-reading-speed-test.md) Reading-speed test (3) |
+|  |  |  |  |  | [TASK-0085](docs/issues/tasks/TASK-0085-slow-reads-suggest-difficulty.md) Slow reads suggest difficulty (3) |
+|  |  |  |  |  | [TASK-0086](docs/issues/tasks/TASK-0086-calibrate-answer-runtimes.md) Calibrate the answer runtimes (3) |
+|  |  |  |  |  | [TASK-0087](docs/issues/tasks/TASK-0087-store-answer-scores.md) Store answer scores with the run (3) |
+|  |  |  |  |  | [TASK-0088](docs/issues/tasks/TASK-0088-force-word-matching.md) Setting to compare answers by word matching only (3) |
+|  |  |  |  |  | [TASK-0089](docs/issues/tasks/TASK-0089-marks-suggest-ratings.md) The user marks suggest ratings (3) |
+|  |  |  |  |  | [TASK-0090](docs/issues/tasks/TASK-0090-reading-thresholds-in-settings.md) Reading thresholds in app.toml (3) |
+|  |  |  |  |  | [TASK-0091](docs/issues/tasks/TASK-0091-shuffle-switch.md) Shuffling is a switch of its own (3) |
+|  |  |  |  |  | [TASK-0092](docs/issues/tasks/TASK-0092-folder-dialog.md) Native folder dialog for the vault (3) |
+|  |  |  |  |  | [TASK-0093](docs/issues/tasks/TASK-0093-top-bar-and-sidebar-layout.md) Top bar, sidebar and menus (5) |
+|  |  |  |  |  | [TASK-0094](docs/issues/tasks/TASK-0094-global-search.md) Global search (3) |
+|  |  |  |  |  | [TASK-0095](docs/issues/tasks/TASK-0095-notification-list.md) Notification list (2) |
+|  |  |  |  |  | [TASK-0096](docs/issues/tasks/TASK-0096-nested-stacks-and-item-creation.md) Nested stacks and one creation use case (5) |
+|  |  |  |  |  | [TASK-0097](docs/issues/tasks/TASK-0097-create-dialog.md) Create dialog (5) |
+|  |  |  |  |  | [TASK-0098](docs/issues/tasks/TASK-0098-first-launch-toast.md) A clickable notification on first launch (3) |
+|  |  |  |  |  | [TASK-0099](docs/issues/tasks/TASK-0099-stack-tree-in-the-ui.md) Stack tree in the library and in run setup (3) |
+|  |  |  |  |  | [TASK-0100](docs/issues/tasks/TASK-0100-theme-and-shared-widgets.md) Theme and shared widgets (3) |
+|  |  |  |  |  | [TASK-0101](docs/issues/tasks/TASK-0101-home-page.md) Home page (5) |
+|  |  |  |  |  | [TASK-0102](docs/issues/tasks/TASK-0102-library-cards-and-item-rows.md) Library cards and item rows (3) |
+|  |  |  |  |  | [TASK-0103](docs/issues/tasks/TASK-0103-rehearsal-card-layout-and-progress-bar.md) Rehearsal card layout and progress bar (3) |
+|  |  |  |  |  | [TASK-0104](docs/issues/tasks/TASK-0104-ux-evidence-and-design-rules.md) UX evidence and design rules (2) |
+|  |  |  |  |  | [TASK-0105](docs/issues/tasks/TASK-0105-calendar-entry-kinds-and-reminders.md) Calendar entry kinds and reminders (5) |
+|  |  |  |  |  | [TASK-0106](docs/issues/tasks/TASK-0106-stack-due-date-and-new-items-on-the-board.md) Stack due date and new items on the board (3) |
+|  |  |  |  |  | [TASK-0107](docs/issues/tasks/TASK-0107-three-step-rehearsal-setup.md) Three-step rehearsal setup (3) |
+|  |  |  |  |  | [TASK-0108](docs/issues/tasks/TASK-0108-home-and-calendar-fill-the-window.md) Home and calendar fill the window (3) |
+|  |  |  |  |  | [TASK-0109](docs/issues/tasks/TASK-0109-spike-and-adr-0010-to-choose-the-pdf-library.md) Spike and ADR 0010 to choose the PDF library (5) |
+|  |  |  |  |  | [TASK-0110](docs/issues/tasks/TASK-0110-the-studyfrog-pdf-crate-with-documents-pages-text-and-pictures-as-data.md) The studyfrog-pdf crate with documents, pages, text and pictures as data (5) |
+|  |  |  |  |  | [TASK-0111](docs/issues/tasks/TASK-0111-index-pdfs-in-the-vault-and-make-them-searchable.md) Index PDFs in the vault and make them searchable (5) |
+|  |  |  |  |  | [TASK-0112](docs/issues/tasks/TASK-0112-pdf-viewer-screen.md) PDF viewer screen (8) |
+|  |  |  |  |  | [TASK-0113](docs/issues/tasks/TASK-0113-safety-limits-for-hostile-or-broken-pdfs.md) Safety limits for hostile or broken PDFs (3) |
+|  |  |  |  |  | [TASK-0114](docs/issues/tasks/TASK-0114-annotations-as-highlights-and-notes-in-a-sidecar-file.md) Annotations as highlights and notes in a sidecar file (5) |
+|  |  |  |  |  | [TASK-0115](docs/issues/tasks/TASK-0115-page-operations-to-rotate-delete-reorder-merge-and-split-into-a-new-pdf.md) Page operations to rotate, delete, reorder, merge and split into a new PDF (5) |
+|  |  |  |  |  | [TASK-0116](docs/issues/tasks/TASK-0116-export-an-annotated-copy-and-edit-document-properties.md) Export an annotated copy and edit document properties (3) |
+|  |  |  |  |  | [TASK-0117](docs/issues/tasks/TASK-0117-extract-text-into-markdown-notes-with-a-link-back-to-the-page.md) Extract text into Markdown notes with a link back to the page (5) |
+|  |  |  |  |  | [TASK-0118](docs/issues/tasks/TASK-0118-detect-scanned-pages-and-say-so.md) Detect scanned pages and say so (2) |
+|  |  |  |  |  | [TASK-0119](docs/issues/tasks/TASK-0119-extract-pictures-and-page-snapshots-into-the-vault.md) Extract pictures and page snapshots into the vault (3) |
+|  |  |  |  |  | [TASK-0120](docs/issues/tasks/TASK-0120-cards-and-questions-from-highlighted-passages-with-the-assistant-s-help.md) Cards and questions from highlighted passages, with the assistant's help (5) |
+|  |  |  |  |  | [TASK-0121](docs/issues/tasks/TASK-0121-add-link-and-organise-pdfs.md) Add, link and organise PDFs (3) |
+|  |  |  |  |  | [TASK-0122](docs/issues/tasks/TASK-0122-documentation-tests-accessibility-and-release-notes-for-pdf-support.md) Documentation, tests, accessibility and release notes for PDF support (3) |
+|  |  |  |  |  | [TASK-0123](docs/issues/tasks/TASK-0123-follow-links-inside-a-pdf-after-the-user-agrees.md) Follow links inside a PDF after the user agrees (3) |
+|  |  |  |  |  | [TASK-0124](docs/issues/tasks/TASK-0124-release-0-2-0.md) Release 0.2.0 (2) |
+|  |  |  |  |  | [TASK-0125](docs/issues/tasks/TASK-0125-publish-a-tar-gz-and-its-checksum-with-every-release.md) Publish a tar.gz and its checksum with every release (1) |
+|  |  |  |  |  | [TASK-0126](docs/issues/tasks/TASK-0126-notification-records-with-ids-read-state-and-persistence.md) Notification records with ids, read state and persistence (3) |
+|  |  |  |  |  | [TASK-0127](docs/issues/tasks/TASK-0127-notification-center-panel.md) Notification center panel (5) |
+|  |  |  |  |  | [TASK-0128](docs/issues/tasks/TASK-0128-vault-name-next-to-the-studyfrog-name-in-the-bar.md) Vault name next to the StudyFrog name in the bar (2) |
+|  |  |  |  |  | [TASK-0129](docs/issues/tasks/TASK-0129-specify-the-library-redesign-and-the-query-syntax.md) Specify the library redesign and the query syntax (3) |
+|  |  |  |  |  | [TASK-0130](docs/issues/tasks/TASK-0130-search-query-parser-and-evaluator.md) Search query parser and evaluator (5) |
+|  |  |  |  |  | [TASK-0131](docs/issues/tasks/TASK-0131-item-list-with-columns-and-sorting.md) Item list with columns and sorting (5) |
+|  |  |  |  |  | [TASK-0132](docs/issues/tasks/TASK-0132-search-bar-with-standard-and-query-modes.md) Search bar with Standard and Query modes (3) |
+|  |  |  |  |  | [TASK-0133](docs/issues/tasks/TASK-0133-saved-filters-and-bulk-actions.md) Saved filters and bulk actions (3) |
+|  |  |  |  |  | [TASK-0134](docs/issues/tasks/TASK-0134-move-card-creation-and-import-out-of-the-page.md) Move card creation and import out of the page (2) |
+|  |  |  |  |  | [TASK-0135](docs/issues/tasks/TASK-0135-specify-the-familiarity-value.md) Specify the familiarity value (3) |
+|  |  |  |  |  | [TASK-0136](docs/issues/tasks/TASK-0136-record-how-long-items-are-viewed-and-acted-on.md) Record how long items are viewed and acted on (3) |
+|  |  |  |  |  | [TASK-0137](docs/issues/tasks/TASK-0137-familiarity-as-a-pure-function-with-benchmarks.md) Familiarity as a pure function with benchmarks (5) |
+|  |  |  |  |  | [TASK-0138](docs/issues/tasks/TASK-0138-per-item-familiarity-in-the-reports.md) Per-item familiarity in the reports (3) |
+|  |  |  |  |  | [TASK-0139](docs/issues/tasks/TASK-0139-needs-attention-card-and-least-familiar-run-order.md) Needs-attention card and least-familiar run order (3) |
+|  |  |  |  |  | [TASK-0140](docs/issues/tasks/TASK-0140-familiarity-in-queue-selection-and-the-calendar-planner.md) Familiarity in queue selection and the calendar planner (3) |
+|  |  |  |  |  | [TASK-0141](docs/issues/tasks/TASK-0141-familiarity-scales-the-scheduler-s-interval.md) Familiarity scales the scheduler's interval (5) |
+|  |  |  |  |  | [TASK-0142](docs/issues/tasks/TASK-0142-settings-tab-bar-and-domain-grouping.md) Settings tab bar and domain grouping (3) |
+|  |  |  |  |  | [TASK-0143](docs/issues/tasks/TASK-0143-specify-the-statuses-their-names-and-their-transitions.md) Specify the statuses, their names and their transitions (2) |
+|  |  |  |  |  | [TASK-0144](docs/issues/tasks/TASK-0144-status-field-in-the-data-model-and-markdown-schema.md) Status field in the data model and Markdown schema (3) |
+|  |  |  |  |  | [TASK-0145](docs/issues/tasks/TASK-0145-change-and-show-statuses-in-the-ui.md) Change and show statuses in the UI (3) |
+|  |  |  |  |  | [TASK-0146](docs/issues/tasks/TASK-0146-plan-the-next-reviews-as-calendar-entries.md) Plan the next reviews as calendar entries (3) |
+|  |  |  |  |  | [TASK-0147](docs/issues/tasks/TASK-0147-move-an-entry-to-another-day.md) Move an entry to another day (3) |
+|  |  |  |  |  | [TASK-0148](docs/issues/tasks/TASK-0148-calendar-entries-with-drag-and-drop.md) Calendar entries with drag and drop (3) |
+|  |  |  |  |  | [TASK-0149](docs/issues/tasks/TASK-0149-specify-the-stack-view-redesign.md) Specify the stack view redesign (2) |
+|  |  |  |  |  | [TASK-0150](docs/issues/tasks/TASK-0150-stack-page-shell-with-header-and-tabs.md) Stack page shell with header and tabs (3) |
+|  |  |  |  |  | [TASK-0151](docs/issues/tasks/TASK-0151-summary-tab.md) Summary tab (5) |
+|  |  |  |  |  | [TASK-0152](docs/issues/tasks/TASK-0152-list-and-backlog-tabs.md) List and Backlog tabs (3) |
+|  |  |  |  |  | [TASK-0153](docs/issues/tasks/TASK-0153-sub-stacks-tab.md) Sub-stacks tab (2) |
+|  |  |  |  |  | [TASK-0154](docs/issues/tasks/TASK-0154-goals-tab.md) Goals tab (2) |
+|  |  |  |  |  | [TASK-0155](docs/issues/tasks/TASK-0155-roadmap-tab.md) Roadmap tab (5) |
+|  |  |  |  |  | [TASK-0156](docs/issues/tasks/TASK-0156-board-calendar-and-reports-tabs-scoped-to-the-stack.md) Board, Calendar and Reports tabs scoped to the stack (3) |
+|  |  |  |  |  | [TASK-0157](docs/issues/tasks/TASK-0157-specify-the-interchange-formats.md) Specify the interchange formats (3) |
+|  |  |  |  |  | [TASK-0158](docs/issues/tasks/TASK-0158-export-a-library-or-stack.md) Export a library or stack (3) |
+|  |  |  |  |  | [TASK-0159](docs/issues/tasks/TASK-0159-import-with-preview-and-duplicate-handling.md) Import with preview and duplicate handling (5) |
+|  |  |  |  |  | [TASK-0160](docs/issues/tasks/TASK-0160-import-and-export-screens.md) Import and export screens (3) |
+|  |  |  |  |  | [TASK-0161](docs/issues/tasks/TASK-0161-plan-the-help-content.md) Plan the help content (2) |
+|  |  |  |  |  | [TASK-0162](docs/issues/tasks/TASK-0162-help-viewer-with-navigation-and-search.md) Help viewer with navigation and search (5) |
+|  |  |  |  |  | [TASK-0163](docs/issues/tasks/TASK-0163-user-added-and-user-edited-help-pages.md) User-added and user-edited help pages (5) |
+|  |  |  |  |  | [TASK-0164](docs/issues/tasks/TASK-0164-assistant-proposals-for-user-help-pages.md) Assistant proposals for user help pages (3) |
+|  |  |  |  |  | [TASK-0165](docs/issues/tasks/TASK-0165-write-the-vision-getting-started-and-faq-pages.md) Write the vision, getting started and FAQ pages (3) |
+|  |  |  |  |  | [TASK-0166](docs/issues/tasks/TASK-0166-guided-tutorials.md) Guided tutorials (3) |
+|  |  |  |  |  | [TASK-0167](docs/issues/tasks/TASK-0167-anki-importer.md) Anki importer (5) |
+|  |  |  |  |  | [TASK-0168](docs/issues/tasks/TASK-0168-obsidian-vault-importer.md) Obsidian vault importer (3) |
+|  |  |  |  |  | [TASK-0169](docs/issues/tasks/TASK-0169-document-how-to-write-a-format-adapter.md) Document how to write a format adapter (2) |
+|  |  |  |  |  | [TASK-0170](docs/issues/tasks/TASK-0170-specify-the-diary.md) Specify the diary (2) |
+|  |  |  |  |  | [TASK-0171](docs/issues/tasks/TASK-0171-diary-entries-in-the-data-model-markdown-and-index.md) Diary entries in the data model, Markdown and index (3) |
+|  |  |  |  |  | [TASK-0172](docs/issues/tasks/TASK-0172-diary-screen.md) Diary screen (5) |
+|  |  |  |  |  | [TASK-0173](docs/issues/tasks/TASK-0173-prompt-for-an-entry-after-a-rehearsal.md) Prompt for an entry after a rehearsal (2) |
+|  |  |  |  |  | [TASK-0174](docs/issues/tasks/TASK-0174-self-assessment-against-measured-results.md) Self-assessment against measured results (3) |
+|  |  |  |  |  | [TASK-0179](docs/issues/tasks/TASK-0179-specify-the-rehearsal-modes.md) Specify the rehearsal modes (2) |
+|  |  |  |  |  | [TASK-0180](docs/issues/tasks/TASK-0180-countdown-and-count-up-in-the-run-state-machine.md) Countdown and count up in the run state machine (5) |
+|  |  |  |  |  | [TASK-0181](docs/issues/tasks/TASK-0181-mode-and-timer-in-run-setup-and-on-the-rehearsal-screen.md) Mode and timer in run setup and on the rehearsal screen (3) |
+|  |  |  |  |  | [TASK-0182](docs/issues/tasks/TASK-0182-mode-and-time-in-the-review-and-the-reports.md) Mode and time in the review and the reports (2) |
+|  |  |  |  |  | [TASK-0183](docs/issues/tasks/TASK-0183-research-a-model-that-combines-familiarity-with-fsrs.md) Research a model that combines familiarity with FSRS (5) |
+|  |  |  |  |  | [TASK-0184](docs/issues/tasks/TASK-0184-replay-familiarity-against-the-user-s-review-history-for-a-verdict.md) Replay familiarity against the user's review history for a verdict (3) |
+|  |  |  |  |  | [TASK-0185](docs/issues/tasks/TASK-0185-new-items-default-to-difficult-and-medium-priority.md) New items default to the highest difficulty and medium priority (1) |
+|  |  |  |  |  | [TASK-0186](docs/issues/tasks/TASK-0186-create-dialog-laid-out-like-jira.md) Create dialog laid out like Jira's (3) |
+|  |  |  |  |  | [TASK-0187](docs/issues/tasks/TASK-0187-markdown-editors-in-the-create-dialog-that-grow-by-dragging.md) Markdown editors in the create dialog that grow by dragging (3) |
+|  |  |  |  |  | [TASK-0188](docs/issues/tasks/TASK-0188-ask-before-discarding-a-filled-create-dialog.md) Ask before discarding a filled Create dialog (2) |
+|  |  |  |  |  | [TASK-0189](docs/issues/tasks/TASK-0189-in-ui-exit-button.md) In-UI exit button (2) |
+|  |  |  |  |  | [TASK-0190](docs/issues/tasks/TASK-0190-readable-window-buttons.md) Readable window buttons (3) |
+|  |  |  |  |  | [TASK-0191](docs/issues/tasks/TASK-0191-suggest-importing-found-anki-and-obsidian-files.md) Suggest importing found Anki and Obsidian files (5) |
+|  |  |  |  |  | [TASK-0192](docs/issues/tasks/TASK-0192-plan-to-make-the-ui-calmer.md) Plan to make the UI calmer (3) |
+|  |  |  |  |  | [TASK-0193](docs/issues/tasks/TASK-0193-space-between-content-and-scroll-bars.md) Space between content and scroll bars (1) |
+|  |  |  |  |  | [TASK-0194](docs/issues/tasks/TASK-0194-rehearsal-progress-bar-against-open-items.md) Rehearsal progress bar against the open items (3) |
+|  |  |  |  |  | [TASK-0195](docs/issues/tasks/TASK-0195-calm-the-remaining-screens.md) Calm the remaining screens (5) |
+|  |  |  |  |  | [TASK-0196](docs/issues/tasks/TASK-0196-navigation-history.md) Navigation history (5) |
+|  |  |  |  |  | [TASK-0197](docs/issues/tasks/TASK-0197-tables-and-more-markdown-in-the-editor-and-the-preview.md) Tables and more Markdown in the editor and the preview (5) |
+|  |  |  |  |  | [TASK-0198](docs/issues/tasks/TASK-0198-text-macros-that-expand-into-markdown.md) Text macros that expand into Markdown (5) |
+|  |  |  |  |  | [TASK-0199](docs/issues/tasks/TASK-0199-open-the-new-item-from-the-notification-that-says-it-was-created.md) Open the new item from the notification that says it was created (3) |
+|  |  |  |  |  | [TASK-0200](docs/issues/tasks/TASK-0200-auto-save-in-the-editor-and-no-save-button.md) Auto-save in the editor and no Save button (5) |
+|  |  |  |  |  | [TASK-0201](docs/issues/tasks/TASK-0201-item-saved-toast.md) Item saved toast when leaving the editor (2) |
+|  |  |  |  |  | [TASK-0202](docs/issues/tasks/TASK-0202-specify-the-folders-and-items-views.md) Specify the folders and items views (3) |
+|  |  |  |  |  | [TASK-0203](docs/issues/tasks/TASK-0203-folder-operations-in-the-service-create-rename-move-delete.md) Folder operations in the service (create, rename, move, delete) (5) |
+|  |  |  |  |  | [TASK-0204](docs/issues/tasks/TASK-0204-folders-view-and-items-view-in-the-application.md) Folders view and Items view in the application (8) |
+|  |  |  |  |  | [TASK-0205](docs/issues/tasks/TASK-0205-write-the-standard-prompts.md) Write the standard prompts (5) |
+|  |  |  |  |  | [TASK-0206](docs/issues/tasks/TASK-0206-prompts-screen-copy-and-export.md) Prompts screen with copy and export (3) |
+|  |  |  |  |  | [TASK-0207](docs/issues/tasks/TASK-0207-run-a-prompt-with-the-connected-assistant-and-an-attached-file.md) Run a prompt with the connected assistant and an attached file (5) |
+|  |  |  |  |  | [TASK-0208](docs/issues/tasks/TASK-0208-csv-import-with-column-mapping.md) CSV import with column mapping (5) |
+|  |  |  |  |  | [TASK-0209](docs/issues/tasks/TASK-0209-tell-the-user-which-layouts-and-formats-the-importers-read.md) Tell the user which layouts and formats the importers read (3) |
+|  |  |  |  |  | [TASK-0210](docs/issues/tasks/TASK-0210-decide-the-stack-folder-and-reference-rules-adr-and-spec.md) Decide the stack folder and reference rules (ADR and spec) (3) |
+|  |  |  |  |  | [TASK-0211](docs/issues/tasks/TASK-0211-the-referenced-by-field-in-the-file-format-the-index-and-the-vault-che.md) The referenced_by field in the file format, the index and the vault checks (5) |
+|  |  |  |  |  | [TASK-0212](docs/issues/tasks/TASK-0212-services-follow-the-membership.md) Services follow the membership (8) |
+|  |  |  |  |  | [TASK-0213](docs/issues/tasks/TASK-0213-references-in-the-interface.md) References in the interface (5) |
+|  |  |  |  |  | [TASK-0214](docs/issues/tasks/TASK-0214-code-blocks-with-language-highlighting.md) Code blocks with language highlighting (5) |
+|  |  |  |  |  | [TASK-0215](docs/issues/tasks/TASK-0215-underline-and-text-colour.md) Underline and text colour (3) |
+|  |  |  |  |  | [TASK-0216](docs/issues/tasks/TASK-0216-automatic-table-of-contents.md) Automatic table of contents (3) |
+|  |  |  |  |  | [TASK-0217](docs/issues/tasks/TASK-0217-mark-a-folder-as-a-stack-or-as-a-normal-folder.md) Mark a folder as a stack or as a normal folder (3) |
+|  |  |  |  |  | [TASK-0218](docs/issues/tasks/TASK-0218-schedules-due-dates-and-reviews-per-stack.md) Schedules, due dates and reviews per stack (8) |
+|  |  |  |  |  | [TASK-0219](docs/issues/tasks/TASK-0219-familiarity-and-difficulty-per-stack-averaged-on-the-item.md) Familiarity and difficulty per stack, averaged on the item (5) |
+|  |  |  |  |  | [TASK-0220](docs/issues/tasks/TASK-0220-export-formats-toml-and-ron-next-to-json.md) Export formats TOML and RON next to JSON (3) |
+|  |  |  |  |  | [TASK-0221](docs/issues/tasks/TASK-0221-specify-the-appearance-and-ui-settings.md) Specify the appearance and UI settings (2) |
+|  |  |  |  |  | [TASK-0222](docs/issues/tasks/TASK-0222-choose-the-theme-dark-light-or-follow-the-system.md) Choose the theme (dark, light or follow the system) (3) |
+|  |  |  |  |  | [TASK-0223](docs/issues/tasks/TASK-0223-appearance-tab-in-settings.md) Appearance tab in Settings (3) |
+|  |  |  |  |  | [TASK-0224](docs/issues/tasks/TASK-0224-interface-size-and-density.md) Interface size and density (5) |
+|  |  |  |  |  | [TASK-0225](docs/issues/tasks/TASK-0225-accent-colour-high-contrast-and-reduced-motion.md) Accent colour, high contrast and reduced motion (5) |
+|  |  |  |  |  | [TASK-0226](docs/issues/tasks/TASK-0226-make-every-screen-right-in-both-themes.md) Make every screen right in both themes (5) |
+|  |  |  |  |  | [TASK-0227](docs/issues/tasks/TASK-0227-start-up-and-window-settings.md) Start-up and window settings (3) |
+|  |  |  |  |  | [TASK-0228](docs/issues/tasks/TASK-0228-specify-the-markdown-to-pdf-export.md) Specify the Markdown to PDF export and choose the writer (ADR) (3) |
+|  |  |  |  |  | [TASK-0229](docs/issues/tasks/TASK-0229-markdown-layout-and-pdf-writer.md) Markdown layout and PDF writer (8) |
+|  |  |  |  |  | [TASK-0230](docs/issues/tasks/TASK-0230-export-use-cases-for-pdf.md) Export use cases for PDF in the service (5) |
+|  |  |  |  |  | [TASK-0231](docs/issues/tasks/TASK-0231-export-to-pdf-in-the-application.md) Export to PDF in the application (5) |
+|  |  |  |  |  | [TASK-0232](docs/issues/tasks/TASK-0232-pdf-export-documentation-tests-and-release-notes.md) Documentation, help and release notes for the PDF export (2) |
+|  |  |  |  |  | [TASK-0233](docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Move prompt library to standalone left sidebar navigation (2) |
+|  |  |  |  |  | [TASK-0234](docs/issues/tasks/TASK-0234-exam-mode-grade-scale-and-result-records.md) Exam mode, grade scale and exam result records (3) |
+|  |  |  |  |  | [TASK-0235](docs/issues/tasks/TASK-0235-exam-rules-in-the-rehearsal-engine.md) Exam rules in the rehearsal engine (2) |
+|  |  |  |  |  | [TASK-0236](docs/issues/tasks/TASK-0236-score-exam-answers-against-fixtures.md) Score exam answers against fixtures (2) |
+|  |  |  |  |  | [TASK-0237](docs/issues/tasks/TASK-0237-grade-store-and-list-exam-results.md) Grade, store and list exam results (3) |
+|  |  |  |  |  | [TASK-0238](docs/issues/tasks/TASK-0238-exam-option-in-setup-and-the-locked-run-screen.md) Exam option in the setup and the locked run screen (3) |
+|  |  |  |  |  | [TASK-0239](docs/issues/tasks/TASK-0239-exam-result-screen-and-review.md) Exam result screen and review (3) |
+|  |  |  |  |  | [TASK-0240](docs/issues/tasks/TASK-0240-exam-results-in-reports-diary-and-screenshots.md) Exam results in the Runs report, the diary prompt and screenshots (2) |
+|  |  |  |  |  | [TASK-0241](docs/issues/tasks/TASK-0241-help-page-for-the-exam-mode.md) Help page for the exam mode (1) |
+|  |  |  |  |  | [TASK-0242](docs/issues/tasks/TASK-0242-exam-runs-in-the-control-protocol.md) Exam runs in the control protocol (2) |
+|  |  |  |  |  | [TASK-0243](docs/issues/tasks/TASK-0243-detect-lifecycle-events-from-messages-and-state.md) Detect lifecycle events from messages and state (3) |
+|  |  |  |  |  | [TASK-0244](docs/issues/tasks/TASK-0244-event-bus-and-the-subscribe-command.md) Event bus and the subscribe command (3) |
+|  |  |  |  |  | [TASK-0245](docs/issues/tasks/TASK-0245-the-studyfrog-python-package.md) The studyfrog Python package (3) |
+|  |  |  |  |  | [TASK-0246](docs/issues/tasks/TASK-0246-python-tests-against-the-real-binary.md) Python tests against the real binary (2) |
+|  |  |  |  |  | [TASK-0247](docs/issues/tasks/TASK-0247-scripts-toml-cron-and-trigger-matching.md) scripts.toml, cron and trigger matching (3) |
+|  |  |  |  |  | [TASK-0248](docs/issues/tasks/TASK-0248-child-processes-with-timeout-logging-and-scoped-sockets.md) Child processes with timeout, logging and scoped sockets (3) |
+|  |  |  |  |  | [TASK-0249](docs/issues/tasks/TASK-0249-the-runner-in-every-instance-and-the-script-commands.md) The runner in every instance and the script commands (5) |
+|  |  |  |  |  | [TASK-0250](docs/issues/tasks/TASK-0250-console-screen.md) Console screen (5) |
+|  |  |  |  |  | [TASK-0251](docs/issues/tasks/TASK-0251-scripting-help-page-spec-and-examples.md) Scripting help page, spec and examples (2) |
+|  |  |  |  |  | [TASK-0252](docs/issues/tasks/TASK-0252-plugin-modding-in-extending-md.md) Plugin modding in EXTENDING.md (1) |
+|  |  |  |  |  | [TASK-0253](docs/issues/tasks/TASK-0253-canvas-data-model-and-toml-serializer.md) Canvas data model and TOML serializer in core and graph (3) |
+|  |  |  |  |  | [TASK-0254](docs/issues/tasks/TASK-0254-spatial-quadtree-indexing-and-viewport-culling.md) Spatial quadtree indexing and viewport culling (3) |
+|  |  |  |  |  | [TASK-0255](docs/issues/tasks/TASK-0255-interactive-canvas-view-pan-zoom-and-dragging.md) Interactive canvas view with pan, zoom and node dragging (5) |
+|  |  |  |  |  | [TASK-0256](docs/issues/tasks/TASK-0256-edge-rendering-and-canvas-card-previews.md) Edge rendering, connection anchors, and card previews on canvas (3) |
+|  |  |  |  |  | [TASK-0257](docs/issues/tasks/TASK-0257-pdf-crop-selection-tool-and-coordinate-schema.md) PDF rectangular crop selection tool and coordinate frontmatter schema (3) |
+|  |  |  |  |  | [TASK-0258](docs/issues/tasks/TASK-0258-pdf-excerpt-rasterization-caching.md) PDF excerpt caching and rasterization pipeline (3) |
+|  |  |  |  |  | [TASK-0259](docs/issues/tasks/TASK-0259-split-screen-pdf-navigation-button.md) Split-screen PDF navigation button on rehearsal cards and notes (3) |
+|  |  |  |  |  | [TASK-0260](docs/issues/tasks/TASK-0260-synchronized-pdf-page-scroll-and-highlight.md) Synchronized PDF page scrolling and coordinate highlight overlay (3) |
+|  |  |  |  |  | [TASK-0261](docs/issues/tasks/TASK-0261-effective-priority-scoring-function.md) Effective priority scoring function combining priority, retention, and familiarity (2) |
+|  |  |  |  |  | [TASK-0262](docs/issues/tasks/TASK-0262-priority-queue-ordering-and-budget-slicing.md) Priority-based queue ordering and session budget slicing (3) |
+|  |  |  |  |  | [TASK-0263](docs/issues/tasks/TASK-0263-match-mode-state-machine-and-mechanics.md) Match mode state machine, tile pairing mechanics, and monotonic timer (3) |
+|  |  |  |  |  | [TASK-0264](docs/issues/tasks/TASK-0264-match-mode-grid-ui-and-animations.md) Match mode grid UI with visual selection and feedback animations (3) |
+|  |  |  |  |  | [TASK-0265](docs/issues/tasks/TASK-0265-semantic-distractor-extraction-via-embeddings.md) Semantic distractor extraction via MiniLM embeddings nearest neighbors (3) |
+|  |  |  |  |  | [TASK-0266](docs/issues/tasks/TASK-0266-distractor-exam-view-and-automated-grading.md) Distractor exam view and automated grading (3) |
+|  |  |  |  |  | [TASK-0267](docs/issues/tasks/TASK-0267-adam-optimizer-for-fsrs-parameters.md) Adam gradient descent optimizer for 21 FSRS parameters on SQLite reviews (5) |
+|  |  |  |  |  | [TASK-0268](docs/issues/tasks/TASK-0268-fsrs-optimizer-ui-and-metrics.md) FSRS parameter evaluation metrics and settings UI integration (3) |
+|  |  |  |  |  | [TASK-0269](docs/issues/tasks/TASK-0269-inline-delimiter-scanner-in-markdown.md) Inline delimiter scanner for Term :: Definition in markdown documents (3) |
+|  |  |  |  |  | [TASK-0270](docs/issues/tasks/TASK-0270-virtual-item-indexing-for-inline-cards.md) Virtual item indexing and lifecycle sync for inline cards (3) |
+|  |  |  |  |  | [TASK-0271](docs/issues/tasks/TASK-0271-sidecar-child-process-spawning-and-watchdog.md) Sidecar child process spawning, loopback port binding, and stdin watchdog (5) |
+|  |  |  |  |  | [TASK-0272](docs/issues/tasks/TASK-0272-five-minute-idle-auto-shutdown-supervisor.md) Five-minute idle auto-shutdown and memory reclamation supervisor (3) |
+|  |  |  |  |  | [TASK-0273](docs/issues/tasks/TASK-0273-gguf-model-catalog-and-resumable-downloader.md) GGUF model catalog and range-resuming downloader (3) |
+|  |  |  |  |  | [TASK-0274](docs/issues/tasks/TASK-0274-sse-streaming-parser-and-chat-streaming-ui.md) Server-Sent Events streaming parser and chat UI streaming renderer (3) |
+|  |  |  |  |  | [TASK-0275](docs/issues/tasks/TASK-0275-sqlite-vault-embeddings-and-vector-search.md) SQLite vault embeddings table and vector similarity search (3) |
+|  |  |  |  |  | [TASK-0276](docs/issues/tasks/TASK-0276-prompt-budgeting-and-vault-context-assembly.md) 1024-token prompt budgeting and vault context assembly (3) |
+|  |  |  |  |  | [TASK-0277](docs/issues/tasks/TASK-0277-machine-identity-and-hygiene-report-for-a-benchmark-run.md) Machine identity and hygiene report for a benchmark run (1) |
+|  |  |  |  |  | [TASK-0280](docs/issues/tasks/TASK-0280-pure-regression-rule-with-bootstrap-interval-and-unit-tests.md) Pure regression rule with a bootstrap interval, and its unit tests (3) |
+|  |  |  |  |  | [TASK-0281](docs/issues/tasks/TASK-0281-bench-compare-command-and-wrapper-script.md) bench-compare command, wrapper script, and the repo-lint tests in the gate (1) |
 
 ## Stories
 
 | Item | Status | Done |
 | --- | --- | --- |
-| [STORY-0001](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0001-workspace-skeleton.md) Workspace skeleton (3) | done | 3/3 |
-| [STORY-0002](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0002-guardrail-scripts.md) Guardrail scripts (5) | done | 3/3 |
-| [STORY-0003](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0003-core-docs-and-adrs.md) Core docs and ADRs (5) | done | 2/2 |
-| [STORY-0004](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0004-roadmap-and-issue-tracking.md) Roadmap and issue tracking (5) | done | 3/3 |
-| [STORY-0005](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0005-identity-and-content-types.md) Identity and content types (5) | done | 2/2 |
-| [STORY-0006](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0006-review-and-run-data.md) Review and run data (5) | done | 2/2 |
-| [STORY-0007](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0007-fsrs-implementation.md) FSRS implementation (8) | done | 2/2 |
-| [STORY-0008](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0008-sm-2-baseline.md) SM-2 baseline (5) | done | 2/2 |
-| [STORY-0009](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0009-front-matter-parse-and-render.md) Front-matter parse and render (8) | done | 3/3 |
-| [STORY-0010](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0010-body-parsing.md) Body parsing (5) | done | 2/2 |
-| [STORY-0011](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0011-sqlite-schema-and-migrations.md) SQLite schema and migrations (5) | done | 2/2 |
-| [STORY-0012](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0012-file-layer-and-index-sync.md) File layer and index sync (8) | done | 3/3 |
-| [STORY-0013](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0013-run-state-machine.md) Run state machine (5) | done | 3/3 |
-| [STORY-0014](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0014-latency-capture.md) Latency capture (5) | done | 2/2 |
-| [STORY-0015](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0015-queue-selection.md) Queue selection (5) | done | 2/2 |
-| [STORY-0016](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0016-app-frame.md) App frame (5) | done | 2/2 |
-| [STORY-0017](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0017-stack-browser-run-setup-and-rehearsal-screen.md) Stack browser, run setup and rehearsal screen (8) | done | 3/3 |
-| [STORY-0018](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0018-markdown-editor-and-preview.md) Markdown editor and preview (8) | done | 2/2 |
-| [STORY-0019](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0019-link-graph-view.md) Link graph view (8) | done | 2/2 |
-| [STORY-0020](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0020-session-planning.md) Session planning (8) | done | 4/4 |
-| [STORY-0021](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0021-board-model.md) Board model (5) | done | 3/3 |
-| [STORY-0022](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0022-board-ui.md) Board UI (5) | done | 1/1 |
-| [STORY-0023](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0023-runtime-trait-and-implementation.md) Runtime trait and implementation (8) | done | 3/3 |
-| [STORY-0024](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0024-scoring-contract.md) Scoring contract (5) | done | 2/2 |
-| [STORY-0025](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0025-ui-integration.md) UI integration (5) | done | 2/2 |
-| [STORY-0026](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0026-rule-engine.md) Rule engine (5) | done | 2/2 |
-| [STORY-0027](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0027-achievement-ui.md) Achievement UI (3) | done | 1/1 |
-| [STORY-0028](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0028-retention-and-latency-reports.md) Retention and latency reports (5) | done | 2/2 |
-| [STORY-0029](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0029-forecasting.md) Forecasting (8) | done | 2/2 |
-| [STORY-0030](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0030-extension-traits.md) Extension points (5) | done | 2/2 |
-| [STORY-0031](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0031-example-extension.md) Example extension (5) | done | 1/1 |
-| [STORY-0032](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0032-performance-and-packaging.md) Performance and packaging (5) | done | 2/2 |
-| [STORY-0033](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
-| [STORY-0034](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0034-stack-settings-sm-2-budgets-and-filter-persistence.md) Stack settings, SM-2, budgets and filter persistence (8) | done | 4/4 |
-| [STORY-0035](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 12/12 |
-| [STORY-0036](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0036-top-bar-and-sidebar.md) Top bar and sidebar (8) | done | 3/3 |
-| [STORY-0037](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0037-create-dialog-and-nested-stacks.md) Create dialog, nested stacks and a gentler first launch (8) | done | 4/4 |
-| [STORY-0038](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0038-theme-home-page-library-and-rehearsal-screen.md) Theme, home page, library and rehearsal screen (8) | done | 4/4 |
-| [STORY-0039](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0039-evidence-based-ux-pass-calendar-entries-and-board-tracking.md) Evidence-based UX pass, calendar entries and board tracking (8) | done | 5/5 |
-| [STORY-0040](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0040-run-review-cards-and-markdown-in-rehearsal.md) Run review cards and Markdown in rehearsal (3) | done | 0/0 |
-| [STORY-0041](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0041-no-vault-name-or-path-in-the-bar-status-line-or-notices.md) No vault name or path in the bar, status line or notices (1) | done | 0/0 |
-| [STORY-0042](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0042-item-page-like-an-issue-view.md) Item page like an issue view (8) | done | 0/0 |
-| [STORY-0043](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0043-visual-markdown-editor-and-note-links.md) Visual Markdown editor and note links (8) | done | 0/0 |
-| [STORY-0044](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0044-images-in-notes-cards-and-questions.md) Images in notes, cards and questions (5) | done | 0/0 |
-| [STORY-0045](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0045-subjects-and-teachers.md) Subjects and teachers (5) | done | 0/0 |
-| [STORY-0046](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0046-date-picker.md) Date picker (3) | done | 0/0 |
-| [STORY-0047](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0047-board-for-every-item-drag-and-drop-export.md) Board for every item, drag and drop, export (5) | done | 0/0 |
-| [STORY-0048](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0048-reports-explorer.md) Reports explorer (8) | done | 0/0 |
-| [STORY-0049](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0049-ai-agent-for-the-vault-and-interactive-exams.md) AI agent for the vault and interactive exams (8) | done | 0/0 |
-| [STORY-0050](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0050-backups-and-restores.md) Backups and restores (5) | done | 0/0 |
-| [STORY-0051](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0051-user-profiles.md) User profiles (5) | done | 0/0 |
-| [STORY-0052](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0052-stack-due-dates-that-pass-and-can-change.md) Stack due dates that pass and can change (3) | done | 0/0 |
-| [STORY-0053](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0053-priority-and-difficulty-with-inheritance.md) Priority and difficulty with inheritance (8) | done | 0/0 |
-| [STORY-0054](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0054-pdf-files-in-the-vault-to-view-edit-and-extract.md) PDF files in the vault to view, edit and extract (8) | done | 17/17 |
-| [STORY-0055](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0055-notification-management.md) Notification management (5) | done | 2/2 |
-| [STORY-0056](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0056-current-vault-in-the-top-bar.md) Current vault in the top bar (2) | done | 1/1 |
-| [STORY-0057](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0057-library-redesign.md) Library redesign (8) | done | 6/6 |
-| [STORY-0058](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0058-familiarity-value.md) Familiarity value (8) | done | 3/3 |
-| [STORY-0059](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0059-familiarity-in-reports-on-home-and-in-scheduling.md) Familiarity in reports, on Home and in scheduling (8) | done | 6/6 |
-| [STORY-0060](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0060-settings-in-tabs.md) Settings in tabs (3) | done | 1/1 |
-| [STORY-0061](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0061-statuses-for-stacks-notes-cards-and-questions.md) Statuses for stacks, notes, cards and questions (8) | done | 3/3 |
-| [STORY-0062](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0062-calendar-plans-the-next-reviews-and-lets-the-user-move-them.md) Calendar plans the next reviews and lets the user move them (8) | done | 3/3 |
-| [STORY-0063](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0063-stack-page-with-tabs-and-summary.md) Stack page with tabs and summary (8) | done | 3/3 |
-| [STORY-0064](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0064-stack-sub-views-for-list-backlog-roadmap-board-calendar-and-reports.md) Stack sub-views for list, backlog, roadmap, board, calendar and reports (8) | done | 5/5 |
-| [STORY-0065](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0065-import-and-export-in-json-and-other-formats.md) Import and export in JSON and other formats (8) | done | 4/4 |
-| [STORY-0066](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0066-built-in-wiki-faq-and-tutorials.md) Built-in wiki, FAQ and tutorials (8) | done | 6/6 |
-| [STORY-0067](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0067-importers-for-anki-and-obsidian.md) Importers for Anki and Obsidian (8) | done | 3/3 |
-| [STORY-0068](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | done | 5/5 |
-| [STORY-0070](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0070-rehearsal-modes-for-countdown-and-count-up.md) Rehearsal modes for countdown and count up (8) | done | 4/4 |
-| [STORY-0071](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0071-create-dialog-like-jira.md) Create dialog like Jira (8) | done | 3/3 |
-| [STORY-0072](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0072-safer-simpler-ui-after-first-use.md) Safer and calmer UI after first use (8) | done | 7/7 |
-| [STORY-0073](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0073-calmer-screens.md) A calmer look on every screen (5) | done | 4/4 |
-| [STORY-0074](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0074-markdown-editor-formatting-macros-and-lists.md) Markdown editor, formatting, macros and lists (8) | done | 7/7 |
-| [STORY-0075](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0075-create-and-edit-without-losing-work.md) Create and edit without losing work (8) | done | 3/3 |
-| [STORY-0076](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0076-organize-the-vault-as-folders-and-files.md) Organize the vault as folders and files (8) | done | 3/3 |
-| [STORY-0077](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0077-prompts-for-ai-agents.md) Prompts for AI agents (8) | done | 3/3 |
-| [STORY-0078](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0078-imports-that-explain-themselves.md) Imports that explain themselves (5) | done | 2/2 |
-| [STORY-0079](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0079-stack-folders-and-items-referenced-by-several-stacks.md) Stack folders and items referenced by several stacks (8) | done | 8/8 |
-| [STORY-0080](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0080-dark-light-and-system-theme.md) Dark, light and system theme (8) | done | 3/3 |
-| [STORY-0081](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0081-display-and-window-settings.md) Display and window settings (8) | done | 4/4 |
-| [STORY-0082](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0082-export-notes-to-pdf.md) Export notes to PDF (8) | done | 5/5 |
-| [STORY-0083](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0083-google-gemini-in-models-for-studyfrog.md) Google Gemini in models for StudyFrog (5) | done | 0/0 |
-| [STORY-0084](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0084-deepseek-in-models-for-studyfrog.md) Deepseek in models for StudyFrog (5) | done | 0/0 |
-| [STORY-0085](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0085-performance-optimization-in-studyfrog-pdf-viewer.md) Performance optimization in StudyFrog pdf-viewer (5) | done | 0/0 |
-| [STORY-0086](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0086-expanded-achievement-catalog-and-milestone-tiers.md) Expanded achievement catalog and milestone tiers (3) | done | 0/0 |
-| [STORY-0087](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0087-per-stack-achievement-ui-and-filtering.md) Per-stack achievement UI and filtering (3) | done | 0/0 |
-| [STORY-0088](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0088-multi-level-file-explanation-prompt.md) Multi-level file explanation prompt (3) | done | 0/0 |
-| [STORY-0089](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0089-interactive-file-examination-and-feedback-prompt.md) Interactive file examination and feedback prompt (3) | done | 0/0 |
-| [STORY-0090](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0090-socratic-dialogue-and-active-inquiry-prompt.md) Socratic dialogue and active inquiry prompt (3) | done | 0/0 |
-| [STORY-0091](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0091-concept-mapping-and-prerequisite-analysis-prompt.md) Concept mapping and prerequisite analysis prompt (3) | done | 0/0 |
-| [STORY-0092](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0092-prompt-library-categorization-and-parameterized-execution-ui.md) Prompt library categorization and parameterized execution UI (3) | done | 1/1 |
-| [STORY-0093](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0093-details-view-notebook-overhaul.md) Details view notebook overhaul with tabs and stack due date editing (5) | done | 0/0 |
-| [STORY-0094](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0094-create-menu-due-date-and-priority.md) Create menu due date and priority assignment for stacks and other creatable items (3) | done | 0/0 |
-| [STORY-0095](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0095-note-creation-modal-expansion-and-write-view.md) Note creation modal full-window expansion and default write view (3) | done | 0/0 |
-| [STORY-0096](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0096-item-keys-for-querying.md) Item keys for querying (5) | done | 0/0 |
-| [STORY-0097](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0097-item-colorization-with-color-picker-and-viewer-background-styling.md) Item colorization with color picker and viewer background styling (3) | done | 0/0 |
-| [STORY-0098](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0098-reporting-export-as-csv.md) Reporting export as CSV (3) | done | 0/0 |
-| [STORY-0099](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0099-simplify-vault-switcher-menu.md) Simplify vault switcher menu (3) | done | 0/0 |
-| [STORY-0100](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0100-move-stack-between-parent-and-standalone.md) Move stack between parent stack and standalone after creation (3) | done | 0/0 |
-| [STORY-0101](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0101-delete-item-from-viewer-and-details.md) Delete item from item viewer and editor (3) | done | 0/0 |
-| [STORY-0102](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0102-chronobiological-hour-of-day-and-day-of-week-performance-telemetry.md) Chronobiological hour-of-day and day-of-week performance telemetry (3) | done | 0/0 |
-| [STORY-0103](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0103-within-session-cognitive-fatigue-and-pacing-decay-analysis.md) Within-session cognitive fatigue and pacing decay analysis (3) | done | 0/0 |
-| [STORY-0104](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0104-leech-diagnostics-interference-detection-and-confusion-clusters.md) Leech diagnostics, interference detection, and confusion clusters (5) | done | 0/0 |
-| [STORY-0105](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0105-fsrs-state-simulation-forecasting-study-minute-projection-and-exam-pacer.md) FSRS state-simulation forecasting, study-minute projection, and exam deadline pacer (8) | done | 0/0 |
-| [STORY-0106](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0106-workload-versus-retention-simulator-and-minimum-recommended-retention.md) Workload-versus-retention simulator and minimum recommended retention (CMRR) (5) | done | 0/0 |
-| [STORY-0107](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0107-empirical-forgetting-curves-true-retention-and-stability-tier-survival-analysis.md) Empirical forgetting curves, true retention, and stability-tier survival analysis (3) | done | 0/0 |
-| [STORY-0108](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0108-inline-cloze-deletions-in-flashcards-and-notes.md) Inline cloze deletions in flashcards and notes (5) | done | 0/0 |
-| [STORY-0109](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0109-image-occlusion-cards-for-diagrams-slides-and-pdf-figures.md) Image occlusion cards for diagrams, slides, and PDF figures (8) | done | 0/0 |
-| [STORY-0110](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0110-inline-flashcard-and-question-extraction-from-markdown-notes.md) Inline flashcard and question extraction from Markdown notes (5) | done | 0/0 |
-| [STORY-0111](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0111-contrastive-side-by-side-drill-for-confused-and-interfering-items.md) Contrastive side-by-side drill for confused and interfering items (3) | done | 0/0 |
-| [STORY-0112](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0112-pomodoro-focus-timer-with-automatic-learning-diary-and-session-logging.md) Pomodoro focus timer with automatic learning diary and session logging (3) | done | 0/0 |
-| [STORY-0113](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0113-perceptual-oklch-color-palette-calibration-and-apca-contrast-verification.md) Perceptual OKLCH color palette calibration and WCAG 3 APCA contrast verification (5) | done | 0/0 |
-| [STORY-0114](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0114-psychophysical-typographic-measure-modular-hierarchy-and-tabular-numerals.md) Psychophysical typographic measure, modular hierarchy, and tabular numerals (3) | review | 0/0 |
-| [STORY-0115](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0115-low-entropy-surface-elevation-border-decluttering-and-gestalt-spacing.md) Low-entropy surface elevation, border de-cluttering, and Gestalt proximity spacing (5) | done | 0/0 |
-| [STORY-0116](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0116-distraction-free-zen-focus-mode-and-zero-layout-shift-interaction-polish.md) Distraction-free Zen focus mode and zero-layout-shift interaction polish (3) | done | 0/0 |
-| [STORY-0117](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0117-pure-json-rpc-2-0-mcp-protocol-engine-and-plain-data-registry.md) Pure JSON-RPC 2.0 MCP protocol engine and extensible plain-data capability registry (5) | done | 0/0 |
-| [STORY-0118](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0118-studyfrog-mcp-server-resources-and-read-only-search-and-analytics-tools.md) StudyFrog MCP server resources and read-only search, analytics, and forecast tools (5) | done | 0/0 |
-| [STORY-0119](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0119-annotated-mcp-authoring-tools-human-in-the-loop-staging-and-prompts.md) Annotated MCP authoring tools, human-in-the-loop staging, and parameterized MCP prompts (5) | done | 0/0 |
-| [STORY-0120](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0120-cli-stdio-mcp-server-mode-and-localhost-streamable-http-transport.md) CLI stdio MCP server mode and localhost Streamable HTTP transport (5) | done | 0/0 |
-| [STORY-0121](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0121-built-in-assistant-mcp-client-host-for-external-academic-tool-servers.md) Built-in Assistant MCP client host for external academic tool servers (8) | done | 0/0 |
-| [STORY-0122](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0122-studyfrog-application-files-in-local-with-logs-and-configurations.md) StudyFrog application files in ~/.local/ with logs and configurations (5) | done | 0/0 |
-| [STORY-0123](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0123-colorization-field-for-items-influencing-details-and-rehearsal-background.md) Colorization field for items influencing details and rehearsal view background (3) | done | 0/0 |
-| [STORY-0124](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0124-interactive-cli-control-protocol-and-console-log-streaming-for-ai-agents.md) Interactive CLI control protocol and console log streaming for AI agents (8) | review | 0/0 |
-| [STORY-0125](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0125-specify-the-exam-run-mode-and-its-grade-scale.md) Specify the exam run mode and its grade scale (2) | done | 0/0 |
-| [STORY-0126](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0126-exam-run-data-model-and-engine-rules.md) Exam run data model and strict engine rules (5) | done | 2/2 |
-| [STORY-0127](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0127-exam-scoring-grading-and-result-history.md) Exam scoring, grading and result history (5) | done | 2/2 |
-| [STORY-0128](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0128-exam-mode-in-the-rehearsal-screens.md) Exam mode in the rehearsal screens (8) | done | 3/3 |
-| [STORY-0129](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0129-exam-mode-help-and-control-protocol.md) Exam mode help and control protocol (3) | done | 2/2 |
-| [STORY-0130](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0130-lifecycle-events-in-the-control-protocol.md) Lifecycle events in the control protocol (5) | done | 2/2 |
-| [STORY-0131](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0131-python-client-package-for-the-control-protocol.md) Python client package for the control protocol (5) | done | 2/2 |
-| [STORY-0132](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0132-script-runner-with-scheduled-and-event-bound-jobs.md) Script runner with scheduled and event-bound jobs (8) | done | 3/3 |
-| [STORY-0133](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0133-console-screen-in-the-application.md) Console screen in the application (5) | done | 1/1 |
-| [STORY-0134](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0134-scripting-documentation-examples-and-script-plugins.md) Scripting documentation, examples and script plugins (3) | done | 2/2 |
-| [STORY-0135](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0135-comments-for-items.md) Comments for items (5) | done | 0/0 |
-| [STORY-0136](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0136-make-typed-answers-random-per-selection-during-rehearsal.md) Make typed answers random per selection during rehearsal (3) | done | 0/0 |
-| [STORY-0137](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0137-interactive-parameter-guided-content-generation-prompts.md) Interactive parameter-guided content generation prompts in prompt library (5) | done | 0/0 |
-| [STORY-0138](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0138-overhaul-profile-and-vault-switchers.md) Overhaul of profile and vault switchers (5) | done | 0/0 |
-| [STORY-0139](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0139-overhaul-file-navigator-and-dialogue.md) Overhaul of file navigator and in-app file dialogue (5) | done | 0/0 |
-| [STORY-0140](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0140-rehearsal-and-exam-comments-drawer.md) Expandable comments drawer in rehearsal and exam modes (3) | done | 0/0 |
-| [STORY-0141](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0141-timetable-schedule-planner-for-lectures-and-lessons.md) Timetable schedule planner for lectures and lessons (5) | done | 0/0 |
-| [STORY-0142](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0142-calendar-daily-and-weekly-views.md) Calendar daily and weekly schedule views (5) | done | 0/0 |
-| [STORY-0143](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0143-comprehensive-markdown-macro-library-expansion.md) Comprehensive markdown macro library expansion (3) | done | 0/0 |
-| [STORY-0144](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0144-macro-escaping-syntax-to-disable-expansion.md) Macro escaping syntax to disable expansion (2) | done | 0/0 |
-| [STORY-0145](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0145-markdown-list-parser-support-for-dash-asterisk-numbers-and-alphabetical-markers.md) Markdown list parser support for dash asterisk numbers and alphabetical markers (3) | done | 0/0 |
-| [STORY-0146](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0146-stylized-breviceps-macrops-mascot-icon.md) Stylized Breviceps macrops brand mascot icon (2) | done | 0/0 |
-| [STORY-0147](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0147-research-floating-burger-navigation-menu.md) Research and prototype floating burger navigation menu (3) | done | 0/0 |
-| [STORY-0148](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) Console expansion to full scriptrunner environment with internal API (5) | done | 0/0 |
-| [STORY-0149](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md) Rename ScriptRunner across application and documentation to avoid trademark conflicts (2) | done | 0/0 |
-| [STORY-0150](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and domain-specific language (DSL) research (5) | done | 0/0 |
-| [STORY-0151](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers (5) | done | 0/0 |
-| [STORY-0152](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging for user scripts (3) | review | 0/0 |
-| [STORY-0153](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0153-frogcanvas-data-model-and-serialization.md) FrogCanvas Data Model and Spatial Serialization (5) | done | 2/2 |
-| [STORY-0154](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0154-frogcanvas-interactive-ui-and-rendering.md) FrogCanvas Interactive UI and Rendering (5) | done | 2/2 |
-| [STORY-0155](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0155-pdf-visual-bounding-box-cropping.md) PDF Visual Bounding Box Cropping (5) | done | 2/2 |
-| [STORY-0156](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0156-split-screen-pdf-source-navigation.md) Split-Screen PDF Source Navigation (5) | done | 2/2 |
-| [STORY-0157](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0157-continuous-priority-queue-and-slicing.md) Continuous Priority Queue and Anti-Paralysis Slicing (5) | done | 2/2 |
-| [STORY-0158](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0158-interactive-match-mode-tile-pairing.md) Interactive Match Mode Tile Pairing Drill (5) | done | 2/2 |
-| [STORY-0159](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0159-embedding-distractor-exam-generator.md) Embedding-Powered Distractor Generator for Multiple-Choice Exams (5) | done | 2/2 |
-| [STORY-0160](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0160-fsrs-parameter-optimization-engine.md) Local FSRS-6 Parameter Optimization Engine (5) | done | 2/2 |
-| [STORY-0161](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0161-inline-card-syntax-scanner.md) Markdown Inline Card Syntax Scanner (5) | done | 2/2 |
-| [STORY-0162](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0162-managed-local-sidecar-process.md) Managed Local Background Sidecar Process and Supervisor (5) | done | 2/2 |
-| [STORY-0163](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0163-model-catalog-and-streaming-generation.md) GGUF Model Catalog, Downloader, and Streaming Generation (5) | done | 2/2 |
-| [STORY-0164](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0164-on-device-rag-and-cpu-prompt-budgeting.md) On-Device Vault RAG Pipeline and CPU Prompt Budgeting (5) | done | 2/2 |
-| [STORY-0165](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0165-homework-domain-model-and-vault-persistence.md) Homework Data Model, Lifecycle, and Vault Persistence (5) | done | 0/0 |
-| [STORY-0166](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Homework Due Date Reminders and Calendar Integration (5) | done | 0/0 |
-| [STORY-0167](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0167-homework-management-and-planner-ui.md) Interactive Homework Planner Screen and Creation Dialog (5) | done | 0/0 |
-| [STORY-0168](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0168-unified-universal-import-hub.md) Unified Universal Import Entry Point and Redundant Button Consolidation (3) | review | 0/0 |
-| [STORY-0169](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0169-contextual-tooltips-and-hover-hints.md) Contextual Tooltips, Hover Hints, and Keyboard Shortcut Badges (3) | done | 0/0 |
-| [STORY-0170](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0170-navigation-and-menu-decluttering.md) Menu De-Cluttering, Visual Spacing, and Progressive Disclosure (5) | review | 0/0 |
-| [STORY-0171](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0171-in-gui-frogscript-wiki-browser.md) In-App FrogScript Wiki and Standard Library Reference Browser (5) | review | 0/0 |
-| [STORY-0172](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0172-runnable-script-cookbook-and-live-templates.md) Interactive FrogScript Cookbook and 1-Click Code Templates (3) | review | 0/0 |
-| [STORY-0173](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0173-memory-session-engine-and-pair-mechanics.md) Memory Session Engine, Card Deck Pairing, and Flip-State Transitions (3) | done | 0/0 |
-| [STORY-0174](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0174-memory-mode-interactive-grid-ui-and-animations.md) Memory Mode Interactive Card Grid UI, Card Back Styling, and Audio-Visual Feedback (3) | done | 0/0 |
-| [STORY-0175](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0175-memory-time-attack-records-and-rehearsal-launch.md) Time-Attack Countdown Mode, Session Records, and Rehearsal Launch Entry Points (2) | done | 0/0 |
-| [STORY-0176](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0176-persistent-cognitive-telemetry-and-interaction-metrics.md) Persistent Interaction Telemetry and Cognitive Metrics Schema in SQLite (3) | done | 0/0 |
-| [STORY-0177](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0177-adaptive-cognitive-difficulty-and-learning-velocity-estimator.md) Adaptive Cognitive Difficulty and Learning Velocity Estimation Engine (5) | review | 0/0 |
-| [STORY-0178](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0178-cognitive-profile-dashboard-and-velocity-visualizer.md) Cognitive Profile Dashboard and Learning Velocity Visualization in Reports (3) | review | 0/0 |
-| [STORY-0179](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0179-scenario-diagnostic-case-study-schema-and-model.md) Scenario-Based Diagnostic Case Study Item Schema and Domain Model (3) | done | 0/0 |
-| [STORY-0180](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0180-slm-multi-criteria-semantic-evaluator.md) SLM Multi-Criteria Semantic Evaluator for Decision Choices and Conceptual Rationales (5) | done | 0/0 |
-| [STORY-0181](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0181-interactive-case-study-rehearsal-ui.md) Interactive Case-Study Rehearsal UI and Multi-Step Feedback Display (3) | done | 0/0 |
-| [STORY-0182](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0182-psychometric-formula-engine-and-parameter-generator.md) Psychometric Formula Engine and Dynamic Parameter Generator (3) | done | 0/0 |
-| [STORY-0183](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0183-step-by-step-calculation-validator.md) Step-by-Step Intermediate Calculation Validator and Error Diagnostics (5) | done | 0/0 |
-| [STORY-0184](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0184-math-drill-ui-and-scratchpad.md) Interactive Math Drill View with Formula Rendering, Scratchpad, and Step Reveal (3) | review | 0/0 |
-| [STORY-0185](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock Exam Structure, Weighted Point Allocations, and Strict Timer Controls (3) | done | 0/0 |
-| [STORY-0186](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0186-lecture-slide-driven-exam-generator.md) Lecture Slide and Script-Driven Exam Generation Engine via Local SLM (5) | review | 0/0 |
-| [STORY-0187](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Mock Exam Grading Report, German University Grade Scale (1.0 - 5.0), and Chapter Analytics (3) | review | 0/0 |
-| [STORY-0188](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0188-search-keyboard-shortcut.md) Keyboard Shortcut to Focus Search (Ctrl+F and /) (3) | review | 0/0 |
-| [STORY-0189](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0189-tooltips-for-text-buttons.md) Hover Explanations for Text Buttons Across the App (5) | review | 0/0 |
-| [STORY-0190](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0190-homework-commands-in-the-control-protocol.md) Homework commands in the control protocol (2) | review | 0/0 |
-| [STORY-0191](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0191-import-destinations-and-pdf-cards-in-the-control-protocol.md) Import destinations and PDF cards in the control protocol (3) | done | 0/0 |
-| [STORY-0192](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0192-search-and-tooltips-in-the-control-protocol.md) Search and tooltips in the control protocol (2) | review | 0/0 |
-| [STORY-0193](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0193-appearance-and-density-in-the-control-protocol.md) Appearance and density in the control protocol (2) | review | 0/0 |
-| [STORY-0194](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0194-calendar-reminders-and-homework-markers-in-the-control-protocol.md) Calendar, reminders and homework markers in the control protocol (3) | review | 0/0 |
-| [STORY-0195](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0195-in-rehearsal-view-the-item-takes-more-of-the-screen.md) In rehearsal view, the item takes more of the screen (3) | done | 0/0 |
-| [STORY-0196](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0196-in-rehearsal-view-the-previous-rating-shows-on-the-rating-button-in-its-colour.md) In rehearsal view, the previous rating shows on the rating button in its colour (3) | done | 0/0 |
-| [STORY-0197](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0197-the-item-colour-paints-the-item-in-rehearsal-view.md) The item colour paints the item in rehearsal view (3) | done | 0/0 |
-| [STORY-0198](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0198-visual-node-based-editor-for-learn-modes.md) Visual node-based editor for learn modes (8) | done | 0/0 |
-| [STORY-0199](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0199-case-studies-in-the-rehearsal-run-queue.md) Case studies in the rehearsal run queue (5) | done | 0/0 |
-| [STORY-0200](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0200-local-model-scoring-of-case-study-justifications.md) Local-model scoring of case-study justifications, with the rubric prompt template (3) | done | 0/0 |
-| [STORY-0201](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0201-reference-runs-on-the-owners-machine-with-identity-recorded.md) Reference runs on the owner's machine, with the machine's identity recorded (5) | blocked | 1/3 |
-| [STORY-0202](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0202-regression-rule-compare-two-runs-flag-only-real-large-changes.md) Regression rule: compare two runs and flag only real, large changes (5) | review | 2/3 |
-| [STORY-0203](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines on the owner's machine (2) | blocked | 0/0 |
-| [STORY-0204](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time of the rehearsal card, reports and console measured in the running window (5) | backlog | 0/2 |
-| [STORY-0205](/tmp/claude-0/fix1/commitboard/docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Allocations in the render loops, counted with dhat, and a profile of the slowest screen (3) | backlog | 0/2 |
+| [STORY-0001](docs/issues/stories/STORY-0001-workspace-skeleton.md) Workspace skeleton (3) | done | 3/3 |
+| [STORY-0002](docs/issues/stories/STORY-0002-guardrail-scripts.md) Guardrail scripts (5) | done | 3/3 |
+| [STORY-0003](docs/issues/stories/STORY-0003-core-docs-and-adrs.md) Core docs and ADRs (5) | done | 2/2 |
+| [STORY-0004](docs/issues/stories/STORY-0004-roadmap-and-issue-tracking.md) Roadmap and issue tracking (5) | done | 3/3 |
+| [STORY-0005](docs/issues/stories/STORY-0005-identity-and-content-types.md) Identity and content types (5) | done | 2/2 |
+| [STORY-0006](docs/issues/stories/STORY-0006-review-and-run-data.md) Review and run data (5) | done | 2/2 |
+| [STORY-0007](docs/issues/stories/STORY-0007-fsrs-implementation.md) FSRS implementation (8) | done | 2/2 |
+| [STORY-0008](docs/issues/stories/STORY-0008-sm-2-baseline.md) SM-2 baseline (5) | done | 2/2 |
+| [STORY-0009](docs/issues/stories/STORY-0009-front-matter-parse-and-render.md) Front-matter parse and render (8) | done | 3/3 |
+| [STORY-0010](docs/issues/stories/STORY-0010-body-parsing.md) Body parsing (5) | done | 2/2 |
+| [STORY-0011](docs/issues/stories/STORY-0011-sqlite-schema-and-migrations.md) SQLite schema and migrations (5) | done | 2/2 |
+| [STORY-0012](docs/issues/stories/STORY-0012-file-layer-and-index-sync.md) File layer and index sync (8) | done | 3/3 |
+| [STORY-0013](docs/issues/stories/STORY-0013-run-state-machine.md) Run state machine (5) | done | 3/3 |
+| [STORY-0014](docs/issues/stories/STORY-0014-latency-capture.md) Latency capture (5) | done | 2/2 |
+| [STORY-0015](docs/issues/stories/STORY-0015-queue-selection.md) Queue selection (5) | done | 2/2 |
+| [STORY-0016](docs/issues/stories/STORY-0016-app-frame.md) App frame (5) | done | 2/2 |
+| [STORY-0017](docs/issues/stories/STORY-0017-stack-browser-run-setup-and-rehearsal-screen.md) Stack browser, run setup and rehearsal screen (8) | done | 3/3 |
+| [STORY-0018](docs/issues/stories/STORY-0018-markdown-editor-and-preview.md) Markdown editor and preview (8) | done | 2/2 |
+| [STORY-0019](docs/issues/stories/STORY-0019-link-graph-view.md) Link graph view (8) | done | 2/2 |
+| [STORY-0020](docs/issues/stories/STORY-0020-session-planning.md) Session planning (8) | done | 4/4 |
+| [STORY-0021](docs/issues/stories/STORY-0021-board-model.md) Board model (5) | done | 3/3 |
+| [STORY-0022](docs/issues/stories/STORY-0022-board-ui.md) Board UI (5) | done | 1/1 |
+| [STORY-0023](docs/issues/stories/STORY-0023-runtime-trait-and-implementation.md) Runtime trait and implementation (8) | done | 3/3 |
+| [STORY-0024](docs/issues/stories/STORY-0024-scoring-contract.md) Scoring contract (5) | done | 2/2 |
+| [STORY-0025](docs/issues/stories/STORY-0025-ui-integration.md) UI integration (5) | done | 2/2 |
+| [STORY-0026](docs/issues/stories/STORY-0026-rule-engine.md) Rule engine (5) | done | 2/2 |
+| [STORY-0027](docs/issues/stories/STORY-0027-achievement-ui.md) Achievement UI (3) | done | 1/1 |
+| [STORY-0028](docs/issues/stories/STORY-0028-retention-and-latency-reports.md) Retention and latency reports (5) | done | 2/2 |
+| [STORY-0029](docs/issues/stories/STORY-0029-forecasting.md) Forecasting (8) | done | 2/2 |
+| [STORY-0030](docs/issues/stories/STORY-0030-extension-traits.md) Extension points (5) | done | 2/2 |
+| [STORY-0031](docs/issues/stories/STORY-0031-example-extension.md) Example extension (5) | done | 1/1 |
+| [STORY-0032](docs/issues/stories/STORY-0032-performance-and-packaging.md) Performance and packaging (5) | done | 2/2 |
+| [STORY-0033](docs/issues/stories/STORY-0033-run-plans-orders-and-filters.md) Run plans, orders and filters (5) | done | 4/4 |
+| [STORY-0034](docs/issues/stories/STORY-0034-stack-settings-sm-2-budgets-and-filter-persistence.md) Stack settings, SM-2, budgets and filter persistence (8) | done | 4/4 |
+| [STORY-0035](docs/issues/stories/STORY-0035-marks-reading-speed-and-review.md) Marks, reading speed and the post-run review (8) | done | 12/12 |
+| [STORY-0036](docs/issues/stories/STORY-0036-top-bar-and-sidebar.md) Top bar and sidebar (8) | done | 3/3 |
+| [STORY-0037](docs/issues/stories/STORY-0037-create-dialog-and-nested-stacks.md) Create dialog, nested stacks and a gentler first launch (8) | done | 4/4 |
+| [STORY-0038](docs/issues/stories/STORY-0038-theme-home-page-library-and-rehearsal-screen.md) Theme, home page, library and rehearsal screen (8) | done | 4/4 |
+| [STORY-0039](docs/issues/stories/STORY-0039-evidence-based-ux-pass-calendar-entries-and-board-tracking.md) Evidence-based UX pass, calendar entries and board tracking (8) | done | 5/5 |
+| [STORY-0040](docs/issues/stories/STORY-0040-run-review-cards-and-markdown-in-rehearsal.md) Run review cards and Markdown in rehearsal (3) | done | 0/0 |
+| [STORY-0041](docs/issues/stories/STORY-0041-no-vault-name-or-path-in-the-bar-status-line-or-notices.md) No vault name or path in the bar, status line or notices (1) | done | 0/0 |
+| [STORY-0042](docs/issues/stories/STORY-0042-item-page-like-an-issue-view.md) Item page like an issue view (8) | done | 0/0 |
+| [STORY-0043](docs/issues/stories/STORY-0043-visual-markdown-editor-and-note-links.md) Visual Markdown editor and note links (8) | done | 0/0 |
+| [STORY-0044](docs/issues/stories/STORY-0044-images-in-notes-cards-and-questions.md) Images in notes, cards and questions (5) | done | 0/0 |
+| [STORY-0045](docs/issues/stories/STORY-0045-subjects-and-teachers.md) Subjects and teachers (5) | done | 0/0 |
+| [STORY-0046](docs/issues/stories/STORY-0046-date-picker.md) Date picker (3) | done | 0/0 |
+| [STORY-0047](docs/issues/stories/STORY-0047-board-for-every-item-drag-and-drop-export.md) Board for every item, drag and drop, export (5) | done | 0/0 |
+| [STORY-0048](docs/issues/stories/STORY-0048-reports-explorer.md) Reports explorer (8) | done | 0/0 |
+| [STORY-0049](docs/issues/stories/STORY-0049-ai-agent-for-the-vault-and-interactive-exams.md) AI agent for the vault and interactive exams (8) | done | 0/0 |
+| [STORY-0050](docs/issues/stories/STORY-0050-backups-and-restores.md) Backups and restores (5) | done | 0/0 |
+| [STORY-0051](docs/issues/stories/STORY-0051-user-profiles.md) User profiles (5) | done | 0/0 |
+| [STORY-0052](docs/issues/stories/STORY-0052-stack-due-dates-that-pass-and-can-change.md) Stack due dates that pass and can change (3) | done | 0/0 |
+| [STORY-0053](docs/issues/stories/STORY-0053-priority-and-difficulty-with-inheritance.md) Priority and difficulty with inheritance (8) | done | 0/0 |
+| [STORY-0054](docs/issues/stories/STORY-0054-pdf-files-in-the-vault-to-view-edit-and-extract.md) PDF files in the vault to view, edit and extract (8) | done | 17/17 |
+| [STORY-0055](docs/issues/stories/STORY-0055-notification-management.md) Notification management (5) | done | 2/2 |
+| [STORY-0056](docs/issues/stories/STORY-0056-current-vault-in-the-top-bar.md) Current vault in the top bar (2) | done | 1/1 |
+| [STORY-0057](docs/issues/stories/STORY-0057-library-redesign.md) Library redesign (8) | done | 6/6 |
+| [STORY-0058](docs/issues/stories/STORY-0058-familiarity-value.md) Familiarity value (8) | done | 3/3 |
+| [STORY-0059](docs/issues/stories/STORY-0059-familiarity-in-reports-on-home-and-in-scheduling.md) Familiarity in reports, on Home and in scheduling (8) | done | 6/6 |
+| [STORY-0060](docs/issues/stories/STORY-0060-settings-in-tabs.md) Settings in tabs (3) | done | 1/1 |
+| [STORY-0061](docs/issues/stories/STORY-0061-statuses-for-stacks-notes-cards-and-questions.md) Statuses for stacks, notes, cards and questions (8) | done | 3/3 |
+| [STORY-0062](docs/issues/stories/STORY-0062-calendar-plans-the-next-reviews-and-lets-the-user-move-them.md) Calendar plans the next reviews and lets the user move them (8) | done | 3/3 |
+| [STORY-0063](docs/issues/stories/STORY-0063-stack-page-with-tabs-and-summary.md) Stack page with tabs and summary (8) | done | 3/3 |
+| [STORY-0064](docs/issues/stories/STORY-0064-stack-sub-views-for-list-backlog-roadmap-board-calendar-and-reports.md) Stack sub-views for list, backlog, roadmap, board, calendar and reports (8) | done | 5/5 |
+| [STORY-0065](docs/issues/stories/STORY-0065-import-and-export-in-json-and-other-formats.md) Import and export in JSON and other formats (8) | done | 4/4 |
+| [STORY-0066](docs/issues/stories/STORY-0066-built-in-wiki-faq-and-tutorials.md) Built-in wiki, FAQ and tutorials (8) | done | 6/6 |
+| [STORY-0067](docs/issues/stories/STORY-0067-importers-for-anki-and-obsidian.md) Importers for Anki and Obsidian (8) | done | 3/3 |
+| [STORY-0068](docs/issues/stories/STORY-0068-diary-for-self-reported-progress.md) Diary for self-reported progress (8) | done | 5/5 |
+| [STORY-0070](docs/issues/stories/STORY-0070-rehearsal-modes-for-countdown-and-count-up.md) Rehearsal modes for countdown and count up (8) | done | 4/4 |
+| [STORY-0071](docs/issues/stories/STORY-0071-create-dialog-like-jira.md) Create dialog like Jira (8) | done | 3/3 |
+| [STORY-0072](docs/issues/stories/STORY-0072-safer-simpler-ui-after-first-use.md) Safer and calmer UI after first use (8) | done | 7/7 |
+| [STORY-0073](docs/issues/stories/STORY-0073-calmer-screens.md) A calmer look on every screen (5) | done | 4/4 |
+| [STORY-0074](docs/issues/stories/STORY-0074-markdown-editor-formatting-macros-and-lists.md) Markdown editor, formatting, macros and lists (8) | done | 7/7 |
+| [STORY-0075](docs/issues/stories/STORY-0075-create-and-edit-without-losing-work.md) Create and edit without losing work (8) | done | 3/3 |
+| [STORY-0076](docs/issues/stories/STORY-0076-organize-the-vault-as-folders-and-files.md) Organize the vault as folders and files (8) | done | 3/3 |
+| [STORY-0077](docs/issues/stories/STORY-0077-prompts-for-ai-agents.md) Prompts for AI agents (8) | done | 3/3 |
+| [STORY-0078](docs/issues/stories/STORY-0078-imports-that-explain-themselves.md) Imports that explain themselves (5) | done | 2/2 |
+| [STORY-0079](docs/issues/stories/STORY-0079-stack-folders-and-items-referenced-by-several-stacks.md) Stack folders and items referenced by several stacks (8) | done | 8/8 |
+| [STORY-0080](docs/issues/stories/STORY-0080-dark-light-and-system-theme.md) Dark, light and system theme (8) | done | 3/3 |
+| [STORY-0081](docs/issues/stories/STORY-0081-display-and-window-settings.md) Display and window settings (8) | done | 4/4 |
+| [STORY-0082](docs/issues/stories/STORY-0082-export-notes-to-pdf.md) Export notes to PDF (8) | done | 5/5 |
+| [STORY-0083](docs/issues/stories/STORY-0083-google-gemini-in-models-for-studyfrog.md) Google Gemini in models for StudyFrog (5) | done | 0/0 |
+| [STORY-0084](docs/issues/stories/STORY-0084-deepseek-in-models-for-studyfrog.md) Deepseek in models for StudyFrog (5) | done | 0/0 |
+| [STORY-0085](docs/issues/stories/STORY-0085-performance-optimization-in-studyfrog-pdf-viewer.md) Performance optimization in StudyFrog pdf-viewer (5) | done | 0/0 |
+| [STORY-0086](docs/issues/stories/STORY-0086-expanded-achievement-catalog-and-milestone-tiers.md) Expanded achievement catalog and milestone tiers (3) | done | 0/0 |
+| [STORY-0087](docs/issues/stories/STORY-0087-per-stack-achievement-ui-and-filtering.md) Per-stack achievement UI and filtering (3) | done | 0/0 |
+| [STORY-0088](docs/issues/stories/STORY-0088-multi-level-file-explanation-prompt.md) Multi-level file explanation prompt (3) | done | 0/0 |
+| [STORY-0089](docs/issues/stories/STORY-0089-interactive-file-examination-and-feedback-prompt.md) Interactive file examination and feedback prompt (3) | done | 0/0 |
+| [STORY-0090](docs/issues/stories/STORY-0090-socratic-dialogue-and-active-inquiry-prompt.md) Socratic dialogue and active inquiry prompt (3) | done | 0/0 |
+| [STORY-0091](docs/issues/stories/STORY-0091-concept-mapping-and-prerequisite-analysis-prompt.md) Concept mapping and prerequisite analysis prompt (3) | done | 0/0 |
+| [STORY-0092](docs/issues/stories/STORY-0092-prompt-library-categorization-and-parameterized-execution-ui.md) Prompt library categorization and parameterized execution UI (3) | done | 1/1 |
+| [STORY-0093](docs/issues/stories/STORY-0093-details-view-notebook-overhaul.md) Details view notebook overhaul with tabs and stack due date editing (5) | done | 0/0 |
+| [STORY-0094](docs/issues/stories/STORY-0094-create-menu-due-date-and-priority.md) Create menu due date and priority assignment for stacks and other creatable items (3) | done | 0/0 |
+| [STORY-0095](docs/issues/stories/STORY-0095-note-creation-modal-expansion-and-write-view.md) Note creation modal full-window expansion and default write view (3) | done | 0/0 |
+| [STORY-0096](docs/issues/stories/STORY-0096-item-keys-for-querying.md) Item keys for querying (5) | done | 0/0 |
+| [STORY-0097](docs/issues/stories/STORY-0097-item-colorization-with-color-picker-and-viewer-background-styling.md) Item colorization with color picker and viewer background styling (3) | done | 0/0 |
+| [STORY-0098](docs/issues/stories/STORY-0098-reporting-export-as-csv.md) Reporting export as CSV (3) | done | 0/0 |
+| [STORY-0099](docs/issues/stories/STORY-0099-simplify-vault-switcher-menu.md) Simplify vault switcher menu (3) | done | 0/0 |
+| [STORY-0100](docs/issues/stories/STORY-0100-move-stack-between-parent-and-standalone.md) Move stack between parent stack and standalone after creation (3) | done | 0/0 |
+| [STORY-0101](docs/issues/stories/STORY-0101-delete-item-from-viewer-and-details.md) Delete item from item viewer and editor (3) | done | 0/0 |
+| [STORY-0102](docs/issues/stories/STORY-0102-chronobiological-hour-of-day-and-day-of-week-performance-telemetry.md) Chronobiological hour-of-day and day-of-week performance telemetry (3) | done | 0/0 |
+| [STORY-0103](docs/issues/stories/STORY-0103-within-session-cognitive-fatigue-and-pacing-decay-analysis.md) Within-session cognitive fatigue and pacing decay analysis (3) | done | 0/0 |
+| [STORY-0104](docs/issues/stories/STORY-0104-leech-diagnostics-interference-detection-and-confusion-clusters.md) Leech diagnostics, interference detection, and confusion clusters (5) | done | 0/0 |
+| [STORY-0105](docs/issues/stories/STORY-0105-fsrs-state-simulation-forecasting-study-minute-projection-and-exam-pacer.md) FSRS state-simulation forecasting, study-minute projection, and exam deadline pacer (8) | done | 0/0 |
+| [STORY-0106](docs/issues/stories/STORY-0106-workload-versus-retention-simulator-and-minimum-recommended-retention.md) Workload-versus-retention simulator and minimum recommended retention (CMRR) (5) | done | 0/0 |
+| [STORY-0107](docs/issues/stories/STORY-0107-empirical-forgetting-curves-true-retention-and-stability-tier-survival-analysis.md) Empirical forgetting curves, true retention, and stability-tier survival analysis (3) | done | 0/0 |
+| [STORY-0108](docs/issues/stories/STORY-0108-inline-cloze-deletions-in-flashcards-and-notes.md) Inline cloze deletions in flashcards and notes (5) | done | 0/0 |
+| [STORY-0109](docs/issues/stories/STORY-0109-image-occlusion-cards-for-diagrams-slides-and-pdf-figures.md) Image occlusion cards for diagrams, slides, and PDF figures (8) | done | 0/0 |
+| [STORY-0110](docs/issues/stories/STORY-0110-inline-flashcard-and-question-extraction-from-markdown-notes.md) Inline flashcard and question extraction from Markdown notes (5) | done | 0/0 |
+| [STORY-0111](docs/issues/stories/STORY-0111-contrastive-side-by-side-drill-for-confused-and-interfering-items.md) Contrastive side-by-side drill for confused and interfering items (3) | done | 0/0 |
+| [STORY-0112](docs/issues/stories/STORY-0112-pomodoro-focus-timer-with-automatic-learning-diary-and-session-logging.md) Pomodoro focus timer with automatic learning diary and session logging (3) | done | 0/0 |
+| [STORY-0113](docs/issues/stories/STORY-0113-perceptual-oklch-color-palette-calibration-and-apca-contrast-verification.md) Perceptual OKLCH color palette calibration and WCAG 3 APCA contrast verification (5) | done | 0/0 |
+| [STORY-0114](docs/issues/stories/STORY-0114-psychophysical-typographic-measure-modular-hierarchy-and-tabular-numerals.md) Psychophysical typographic measure, modular hierarchy, and tabular numerals (3) | review | 0/0 |
+| [STORY-0115](docs/issues/stories/STORY-0115-low-entropy-surface-elevation-border-decluttering-and-gestalt-spacing.md) Low-entropy surface elevation, border de-cluttering, and Gestalt proximity spacing (5) | done | 0/0 |
+| [STORY-0116](docs/issues/stories/STORY-0116-distraction-free-zen-focus-mode-and-zero-layout-shift-interaction-polish.md) Distraction-free Zen focus mode and zero-layout-shift interaction polish (3) | done | 0/0 |
+| [STORY-0117](docs/issues/stories/STORY-0117-pure-json-rpc-2-0-mcp-protocol-engine-and-plain-data-registry.md) Pure JSON-RPC 2.0 MCP protocol engine and extensible plain-data capability registry (5) | done | 0/0 |
+| [STORY-0118](docs/issues/stories/STORY-0118-studyfrog-mcp-server-resources-and-read-only-search-and-analytics-tools.md) StudyFrog MCP server resources and read-only search, analytics, and forecast tools (5) | done | 0/0 |
+| [STORY-0119](docs/issues/stories/STORY-0119-annotated-mcp-authoring-tools-human-in-the-loop-staging-and-prompts.md) Annotated MCP authoring tools, human-in-the-loop staging, and parameterized MCP prompts (5) | done | 0/0 |
+| [STORY-0120](docs/issues/stories/STORY-0120-cli-stdio-mcp-server-mode-and-localhost-streamable-http-transport.md) CLI stdio MCP server mode and localhost Streamable HTTP transport (5) | done | 0/0 |
+| [STORY-0121](docs/issues/stories/STORY-0121-built-in-assistant-mcp-client-host-for-external-academic-tool-servers.md) Built-in Assistant MCP client host for external academic tool servers (8) | done | 0/0 |
+| [STORY-0122](docs/issues/stories/STORY-0122-studyfrog-application-files-in-local-with-logs-and-configurations.md) StudyFrog application files in ~/.local/ with logs and configurations (5) | done | 0/0 |
+| [STORY-0123](docs/issues/stories/STORY-0123-colorization-field-for-items-influencing-details-and-rehearsal-background.md) Colorization field for items influencing details and rehearsal view background (3) | done | 0/0 |
+| [STORY-0124](docs/issues/stories/STORY-0124-interactive-cli-control-protocol-and-console-log-streaming-for-ai-agents.md) Interactive CLI control protocol and console log streaming for AI agents (8) | review | 0/0 |
+| [STORY-0125](docs/issues/stories/STORY-0125-specify-the-exam-run-mode-and-its-grade-scale.md) Specify the exam run mode and its grade scale (2) | done | 0/0 |
+| [STORY-0126](docs/issues/stories/STORY-0126-exam-run-data-model-and-engine-rules.md) Exam run data model and strict engine rules (5) | done | 2/2 |
+| [STORY-0127](docs/issues/stories/STORY-0127-exam-scoring-grading-and-result-history.md) Exam scoring, grading and result history (5) | done | 2/2 |
+| [STORY-0128](docs/issues/stories/STORY-0128-exam-mode-in-the-rehearsal-screens.md) Exam mode in the rehearsal screens (8) | done | 3/3 |
+| [STORY-0129](docs/issues/stories/STORY-0129-exam-mode-help-and-control-protocol.md) Exam mode help and control protocol (3) | done | 2/2 |
+| [STORY-0130](docs/issues/stories/STORY-0130-lifecycle-events-in-the-control-protocol.md) Lifecycle events in the control protocol (5) | done | 2/2 |
+| [STORY-0131](docs/issues/stories/STORY-0131-python-client-package-for-the-control-protocol.md) Python client package for the control protocol (5) | done | 2/2 |
+| [STORY-0132](docs/issues/stories/STORY-0132-script-runner-with-scheduled-and-event-bound-jobs.md) Script runner with scheduled and event-bound jobs (8) | done | 3/3 |
+| [STORY-0133](docs/issues/stories/STORY-0133-console-screen-in-the-application.md) Console screen in the application (5) | done | 1/1 |
+| [STORY-0134](docs/issues/stories/STORY-0134-scripting-documentation-examples-and-script-plugins.md) Scripting documentation, examples and script plugins (3) | done | 2/2 |
+| [STORY-0135](docs/issues/stories/STORY-0135-comments-for-items.md) Comments for items (5) | done | 0/0 |
+| [STORY-0136](docs/issues/stories/STORY-0136-make-typed-answers-random-per-selection-during-rehearsal.md) Make typed answers random per selection during rehearsal (3) | done | 0/0 |
+| [STORY-0137](docs/issues/stories/STORY-0137-interactive-parameter-guided-content-generation-prompts.md) Interactive parameter-guided content generation prompts in prompt library (5) | done | 0/0 |
+| [STORY-0138](docs/issues/stories/STORY-0138-overhaul-profile-and-vault-switchers.md) Overhaul of profile and vault switchers (5) | done | 0/0 |
+| [STORY-0139](docs/issues/stories/STORY-0139-overhaul-file-navigator-and-dialogue.md) Overhaul of file navigator and in-app file dialogue (5) | done | 0/0 |
+| [STORY-0140](docs/issues/stories/STORY-0140-rehearsal-and-exam-comments-drawer.md) Expandable comments drawer in rehearsal and exam modes (3) | done | 0/0 |
+| [STORY-0141](docs/issues/stories/STORY-0141-timetable-schedule-planner-for-lectures-and-lessons.md) Timetable schedule planner for lectures and lessons (5) | done | 0/0 |
+| [STORY-0142](docs/issues/stories/STORY-0142-calendar-daily-and-weekly-views.md) Calendar daily and weekly schedule views (5) | done | 0/0 |
+| [STORY-0143](docs/issues/stories/STORY-0143-comprehensive-markdown-macro-library-expansion.md) Comprehensive markdown macro library expansion (3) | done | 0/0 |
+| [STORY-0144](docs/issues/stories/STORY-0144-macro-escaping-syntax-to-disable-expansion.md) Macro escaping syntax to disable expansion (2) | done | 0/0 |
+| [STORY-0145](docs/issues/stories/STORY-0145-markdown-list-parser-support-for-dash-asterisk-numbers-and-alphabetical-markers.md) Markdown list parser support for dash asterisk numbers and alphabetical markers (3) | done | 0/0 |
+| [STORY-0146](docs/issues/stories/STORY-0146-stylized-breviceps-macrops-mascot-icon.md) Stylized Breviceps macrops brand mascot icon (2) | done | 0/0 |
+| [STORY-0147](docs/issues/stories/STORY-0147-research-floating-burger-navigation-menu.md) Research and prototype floating burger navigation menu (3) | done | 0/0 |
+| [STORY-0148](docs/issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) Console expansion to full scriptrunner environment with internal API (5) | done | 0/0 |
+| [STORY-0149](docs/issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md) Rename ScriptRunner across application and documentation to avoid trademark conflicts (2) | done | 0/0 |
+| [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and domain-specific language (DSL) research (5) | done | 0/0 |
+| [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers (5) | done | 0/0 |
+| [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging for user scripts (3) | review | 0/0 |
+| [STORY-0153](docs/issues/stories/STORY-0153-frogcanvas-data-model-and-serialization.md) FrogCanvas Data Model and Spatial Serialization (5) | done | 2/2 |
+| [STORY-0154](docs/issues/stories/STORY-0154-frogcanvas-interactive-ui-and-rendering.md) FrogCanvas Interactive UI and Rendering (5) | done | 2/2 |
+| [STORY-0155](docs/issues/stories/STORY-0155-pdf-visual-bounding-box-cropping.md) PDF Visual Bounding Box Cropping (5) | done | 2/2 |
+| [STORY-0156](docs/issues/stories/STORY-0156-split-screen-pdf-source-navigation.md) Split-Screen PDF Source Navigation (5) | done | 2/2 |
+| [STORY-0157](docs/issues/stories/STORY-0157-continuous-priority-queue-and-slicing.md) Continuous Priority Queue and Anti-Paralysis Slicing (5) | done | 2/2 |
+| [STORY-0158](docs/issues/stories/STORY-0158-interactive-match-mode-tile-pairing.md) Interactive Match Mode Tile Pairing Drill (5) | done | 2/2 |
+| [STORY-0159](docs/issues/stories/STORY-0159-embedding-distractor-exam-generator.md) Embedding-Powered Distractor Generator for Multiple-Choice Exams (5) | done | 2/2 |
+| [STORY-0160](docs/issues/stories/STORY-0160-fsrs-parameter-optimization-engine.md) Local FSRS-6 Parameter Optimization Engine (5) | done | 2/2 |
+| [STORY-0161](docs/issues/stories/STORY-0161-inline-card-syntax-scanner.md) Markdown Inline Card Syntax Scanner (5) | done | 2/2 |
+| [STORY-0162](docs/issues/stories/STORY-0162-managed-local-sidecar-process.md) Managed Local Background Sidecar Process and Supervisor (5) | done | 2/2 |
+| [STORY-0163](docs/issues/stories/STORY-0163-model-catalog-and-streaming-generation.md) GGUF Model Catalog, Downloader, and Streaming Generation (5) | done | 2/2 |
+| [STORY-0164](docs/issues/stories/STORY-0164-on-device-rag-and-cpu-prompt-budgeting.md) On-Device Vault RAG Pipeline and CPU Prompt Budgeting (5) | done | 2/2 |
+| [STORY-0165](docs/issues/stories/STORY-0165-homework-domain-model-and-vault-persistence.md) Homework Data Model, Lifecycle, and Vault Persistence (5) | done | 0/0 |
+| [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Homework Due Date Reminders and Calendar Integration (5) | done | 0/0 |
+| [STORY-0167](docs/issues/stories/STORY-0167-homework-management-and-planner-ui.md) Interactive Homework Planner Screen and Creation Dialog (5) | done | 0/0 |
+| [STORY-0168](docs/issues/stories/STORY-0168-unified-universal-import-hub.md) Unified Universal Import Entry Point and Redundant Button Consolidation (3) | review | 0/0 |
+| [STORY-0169](docs/issues/stories/STORY-0169-contextual-tooltips-and-hover-hints.md) Contextual Tooltips, Hover Hints, and Keyboard Shortcut Badges (3) | done | 0/0 |
+| [STORY-0170](docs/issues/stories/STORY-0170-navigation-and-menu-decluttering.md) Menu De-Cluttering, Visual Spacing, and Progressive Disclosure (5) | review | 0/0 |
+| [STORY-0171](docs/issues/stories/STORY-0171-in-gui-frogscript-wiki-browser.md) In-App FrogScript Wiki and Standard Library Reference Browser (5) | review | 0/0 |
+| [STORY-0172](docs/issues/stories/STORY-0172-runnable-script-cookbook-and-live-templates.md) Interactive FrogScript Cookbook and 1-Click Code Templates (3) | review | 0/0 |
+| [STORY-0173](docs/issues/stories/STORY-0173-memory-session-engine-and-pair-mechanics.md) Memory Session Engine, Card Deck Pairing, and Flip-State Transitions (3) | done | 0/0 |
+| [STORY-0174](docs/issues/stories/STORY-0174-memory-mode-interactive-grid-ui-and-animations.md) Memory Mode Interactive Card Grid UI, Card Back Styling, and Audio-Visual Feedback (3) | done | 0/0 |
+| [STORY-0175](docs/issues/stories/STORY-0175-memory-time-attack-records-and-rehearsal-launch.md) Time-Attack Countdown Mode, Session Records, and Rehearsal Launch Entry Points (2) | done | 0/0 |
+| [STORY-0176](docs/issues/stories/STORY-0176-persistent-cognitive-telemetry-and-interaction-metrics.md) Persistent Interaction Telemetry and Cognitive Metrics Schema in SQLite (3) | done | 0/0 |
+| [STORY-0177](docs/issues/stories/STORY-0177-adaptive-cognitive-difficulty-and-learning-velocity-estimator.md) Adaptive Cognitive Difficulty and Learning Velocity Estimation Engine (5) | review | 0/0 |
+| [STORY-0178](docs/issues/stories/STORY-0178-cognitive-profile-dashboard-and-velocity-visualizer.md) Cognitive Profile Dashboard and Learning Velocity Visualization in Reports (3) | review | 0/0 |
+| [STORY-0179](docs/issues/stories/STORY-0179-scenario-diagnostic-case-study-schema-and-model.md) Scenario-Based Diagnostic Case Study Item Schema and Domain Model (3) | done | 0/0 |
+| [STORY-0180](docs/issues/stories/STORY-0180-slm-multi-criteria-semantic-evaluator.md) SLM Multi-Criteria Semantic Evaluator for Decision Choices and Conceptual Rationales (5) | done | 0/0 |
+| [STORY-0181](docs/issues/stories/STORY-0181-interactive-case-study-rehearsal-ui.md) Interactive Case-Study Rehearsal UI and Multi-Step Feedback Display (3) | done | 0/0 |
+| [STORY-0182](docs/issues/stories/STORY-0182-psychometric-formula-engine-and-parameter-generator.md) Psychometric Formula Engine and Dynamic Parameter Generator (3) | done | 0/0 |
+| [STORY-0183](docs/issues/stories/STORY-0183-step-by-step-calculation-validator.md) Step-by-Step Intermediate Calculation Validator and Error Diagnostics (5) | done | 0/0 |
+| [STORY-0184](docs/issues/stories/STORY-0184-math-drill-ui-and-scratchpad.md) Interactive Math Drill View with Formula Rendering, Scratchpad, and Step Reveal (3) | review | 0/0 |
+| [STORY-0185](docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock Exam Structure, Weighted Point Allocations, and Strict Timer Controls (3) | done | 0/0 |
+| [STORY-0186](docs/issues/stories/STORY-0186-lecture-slide-driven-exam-generator.md) Lecture Slide and Script-Driven Exam Generation Engine via Local SLM (5) | review | 0/0 |
+| [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Mock Exam Grading Report, German University Grade Scale (1.0 - 5.0), and Chapter Analytics (3) | review | 0/0 |
+| [STORY-0188](docs/issues/stories/STORY-0188-search-keyboard-shortcut.md) Keyboard Shortcut to Focus Search (Ctrl+F and /) (3) | review | 0/0 |
+| [STORY-0189](docs/issues/stories/STORY-0189-tooltips-for-text-buttons.md) Hover Explanations for Text Buttons Across the App (5) | review | 0/0 |
+| [STORY-0190](docs/issues/stories/STORY-0190-homework-commands-in-the-control-protocol.md) Homework commands in the control protocol (2) | review | 0/0 |
+| [STORY-0191](docs/issues/stories/STORY-0191-import-destinations-and-pdf-cards-in-the-control-protocol.md) Import destinations and PDF cards in the control protocol (3) | done | 0/0 |
+| [STORY-0192](docs/issues/stories/STORY-0192-search-and-tooltips-in-the-control-protocol.md) Search and tooltips in the control protocol (2) | review | 0/0 |
+| [STORY-0193](docs/issues/stories/STORY-0193-appearance-and-density-in-the-control-protocol.md) Appearance and density in the control protocol (2) | review | 0/0 |
+| [STORY-0194](docs/issues/stories/STORY-0194-calendar-reminders-and-homework-markers-in-the-control-protocol.md) Calendar, reminders and homework markers in the control protocol (3) | review | 0/0 |
+| [STORY-0195](docs/issues/stories/STORY-0195-in-rehearsal-view-the-item-takes-more-of-the-screen.md) In rehearsal view, the item takes more of the screen (3) | done | 0/0 |
+| [STORY-0196](docs/issues/stories/STORY-0196-in-rehearsal-view-the-previous-rating-shows-on-the-rating-button-in-its-colour.md) In rehearsal view, the previous rating shows on the rating button in its colour (3) | done | 0/0 |
+| [STORY-0197](docs/issues/stories/STORY-0197-the-item-colour-paints-the-item-in-rehearsal-view.md) The item colour paints the item in rehearsal view (3) | done | 0/0 |
+| [STORY-0198](docs/issues/stories/STORY-0198-visual-node-based-editor-for-learn-modes.md) Visual node-based editor for learn modes (8) | done | 0/0 |
+| [STORY-0199](docs/issues/stories/STORY-0199-case-studies-in-the-rehearsal-run-queue.md) Case studies in the rehearsal run queue (5) | done | 0/0 |
+| [STORY-0200](docs/issues/stories/STORY-0200-local-model-scoring-of-case-study-justifications.md) Local-model scoring of case-study justifications, with the rubric prompt template (3) | done | 0/0 |
+| [STORY-0201](docs/issues/stories/STORY-0201-reference-runs-on-the-owners-machine-with-identity-recorded.md) Reference runs on the owner's machine, with the machine's identity recorded (5) | blocked | 1/3 |
+| [STORY-0202](docs/issues/stories/STORY-0202-regression-rule-compare-two-runs-flag-only-real-large-changes.md) Regression rule: compare two runs and flag only real, large changes (5) | review | 2/3 |
+| [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines on the owner's machine (2) | blocked | 0/0 |
+| [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time of the rehearsal card, reports and console measured in the running window (5) | backlog | 0/2 |
+| [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Allocations in the render loops, counted with dhat, and a profile of the slowest screen (3) | backlog | 0/2 |
 
 ## Epics
 
 | Item | Status | Done |
 | --- | --- | --- |
-| [EPIC-001](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-001-workspace-and-guardrails.md) Workspace and guardrails | done | 2/2 |
-| [EPIC-002](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-002-documentation-library.md) Documentation library | done | 2/2 |
-| [EPIC-003](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-003-core-domain-types.md) Core domain types | done | 2/2 |
-| [EPIC-004](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-004-srs-scheduling.md) SRS scheduling | done | 2/2 |
-| [EPIC-005](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-005-markdown-and-front-matter.md) Markdown and front-matter | done | 2/2 |
-| [EPIC-006](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-006-storage.md) Storage | done | 2/2 |
-| [EPIC-007](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-007-rehearsal-engine.md) Rehearsal engine | done | 4/4 |
-| [EPIC-008](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-008-ui-shell.md) UI shell | done | 2/2 |
-| [EPIC-009](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-009-editor-and-graph.md) Editor and graph | done | 2/2 |
-| [EPIC-010](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-010-calendar-and-planning.md) Calendar and planning | done | 1/1 |
-| [EPIC-011](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-011-scrum-kanban-board.md) Scrum/kanban board | done | 2/2 |
-| [EPIC-012](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-012-slm-runtime.md) SLM runtime | done | 1/1 |
-| [EPIC-013](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-013-comparison-scoring.md) Comparison scoring | done | 2/2 |
-| [EPIC-014](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-014-achievements.md) Achievements | done | 2/2 |
-| [EPIC-015](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-015-reporting-and-forecasting.md) Reporting and forecasting | done | 2/2 |
-| [EPIC-016](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-016-plugin-boundaries.md) Plugin boundaries | done | 2/2 |
-| [EPIC-017](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-017-release-hardening.md) Release hardening | done | 1/1 |
-| [EPIC-018](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |
-| [EPIC-019](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-019-rehearsal-insights.md) Rehearsal insights | done | 1/1 |
-| [EPIC-020](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 4/4 |
-| [EPIC-021](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-021-knowledge-workspace.md) Knowledge workspace | done | 14/14 |
-| [EPIC-022](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | done | 1/1 |
-| [EPIC-023](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | done | 15/15 |
-| [EPIC-024](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-024-diary-for-0-4-0.md) Diary and a calmer UI for 0.4.0 | done | 2/2 |
-| [EPIC-025](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-025-feedback-fixes-for-0-3-1.md) Feedback fixes for 0.3.1 | done | 1/1 |
-| [EPIC-026](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-026-writing-saving-organizing-and-prompts-for-0-4-0.md) Writing, saving, organizing and prompts for 0.4.0 | done | 7/7 |
-| [EPIC-027](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | done | 2/2 |
-| [EPIC-028](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md) Extensibility, plugin modding, and Python API | done | 8/8 |
-| [EPIC-029](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md) Expanded achievements and per-stack progression | done | 2/2 |
-| [EPIC-030](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-030-prompt-expansion.md) Prompt expansion | done | 5/5 |
-| [EPIC-031](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-031-details-tabs-create-workflow-csv-import.md) Details tabs, create workflow, and CSV import for 0.4.1 | done | 6/6 |
-| [EPIC-032](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md) Item keys, colorization, and reporting export | done | 4/4 |
-| [EPIC-033](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-033-exam-run-mode-with-semantic-comparison-and-grading.md) Exam run mode with mandatory text entry, semantic comparison, and percentage grading | done | 5/5 |
-| [EPIC-034](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md) Behavioral learning analytics, FSRS optimizer, and workload forecasting | done | 6/6 |
-| [EPIC-035](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md) Rich active-recall formats, inline note extraction, and focus workflows | done | 5/5 |
-| [EPIC-036](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md) Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement | review | 3/4 |
-| [EPIC-037](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md) State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry | done | 5/5 |
-| [EPIC-038](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md) CLI control protocol for interactive AI agent application operation | review | 1/2 |
-| [EPIC-039](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md) Universal item linking between stacks, cards, questions, answers, and notes | done | 1/1 |
-| [EPIC-040](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md) Intermittent typed active recall and flexible rehearsal presentation | done | 1/1 |
-| [EPIC-041](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-041-modularity-system-driven-architecture-and-decoupled-background-services.md) Modularity: system-driven application architecture and decoupled background services | done | 0/0 |
-| [EPIC-042](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-042-interactive-ai-content-generation-and-parameter-guided-prompt-workflows.md) Interactive AI content generation and parameter-guided prompt workflows | done | 1/1 |
-| [EPIC-043](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-043-navigation-profile-and-file-management-ux-overhaul.md) Navigation, profile, and file management UX overhaul | done | 3/3 |
-| [EPIC-044](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-044-timetable-schedule-planner-and-daily-weekly-calendar-views.md) Timetable schedule planner and daily/weekly calendar views | done | 2/2 |
-| [EPIC-045](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-045-macro-library-expansion-and-escaping-syntax.md) Macro library expansion and escaping syntax | done | 2/2 |
-| [EPIC-046](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-046-markdown-viewer-list-syntax-enhancements.md) Markdown viewer list syntax enhancements | done | 1/1 |
-| [EPIC-047](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-047-brand-mascot-icon-and-consolidated-navigation-ux.md) Brand mascot icon and consolidated navigation UX | done | 2/2 |
-| [EPIC-048](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md) Scriptrunner environment and internal application automation API | done | 1/1 |
-| [EPIC-049](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md) Expanded scripting environment, DSL, job scheduling, and execution logging | backlog | 3/4 |
-| [EPIC-050](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-050-frogcanvas-2d-spatial-concept-board.md) FrogCanvas: 2D Spatial Mind-Map and Concept Board | done | 2/2 |
-| [EPIC-051](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-051-pdf-precision-area-cropping-and-split-navigation.md) PDF Precision Area Cropping and 1-Click Split Navigation | done | 2/2 |
-| [EPIC-052](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-052-continuous-priority-queue-and-anti-paralysis-slicing.md) Continuous Priority Queue and Anti-Paralysis Slicing | done | 1/1 |
-| [EPIC-053](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-053-gamified-multi-modal-recall-match-mode-and-distractors.md) Gamified and Multi-Modal Active Recall | done | 2/2 |
-| [EPIC-054](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-054-fsrs-auto-tuning-and-inline-card-capture.md) FSRS Auto-Tuning and Inline Card Capture | done | 2/2 |
-| [EPIC-055](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-055-offline-local-slm-internal-assistant.md) Offline Local SLM Internal Assistant | done | 3/3 |
-| [EPIC-056](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration | review | 3/4 |
-| [EPIC-057](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | review | 1/5 |
-| [EPIC-058](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-058-in-gui-frogscript-wiki-and-reference.md) In-GUI FrogScript Wiki and Interactive Documentation | review | 0/2 |
-| [EPIC-059](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time | review | 9/9 |
-| [EPIC-060](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | review | 1/6 |
-| [EPIC-061](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-061-case-study-and-diagnostic-decision-matrix.md) Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification | review | 5/6 |
-| [EPIC-062](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | review | 2/3 |
-| [EPIC-063](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | review | 1/3 |
-| [EPIC-064](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | review | 1/5 |
-| [EPIC-065](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | done | 3/3 |
-| [EPIC-066](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-066-learn-mode-research-platform.md) Learn-mode research platform: visual node-based technique editor | done | 1/1 |
-| [EPIC-067](/tmp/claude-0/fix1/commitboard/docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement | blocked | 0/5 |
+| [EPIC-001](docs/issues/epics/EPIC-001-workspace-and-guardrails.md) Workspace and guardrails | done | 2/2 |
+| [EPIC-002](docs/issues/epics/EPIC-002-documentation-library.md) Documentation library | done | 2/2 |
+| [EPIC-003](docs/issues/epics/EPIC-003-core-domain-types.md) Core domain types | done | 2/2 |
+| [EPIC-004](docs/issues/epics/EPIC-004-srs-scheduling.md) SRS scheduling | done | 2/2 |
+| [EPIC-005](docs/issues/epics/EPIC-005-markdown-and-front-matter.md) Markdown and front-matter | done | 2/2 |
+| [EPIC-006](docs/issues/epics/EPIC-006-storage.md) Storage | done | 2/2 |
+| [EPIC-007](docs/issues/epics/EPIC-007-rehearsal-engine.md) Rehearsal engine | done | 4/4 |
+| [EPIC-008](docs/issues/epics/EPIC-008-ui-shell.md) UI shell | done | 2/2 |
+| [EPIC-009](docs/issues/epics/EPIC-009-editor-and-graph.md) Editor and graph | done | 2/2 |
+| [EPIC-010](docs/issues/epics/EPIC-010-calendar-and-planning.md) Calendar and planning | done | 1/1 |
+| [EPIC-011](docs/issues/epics/EPIC-011-scrum-kanban-board.md) Scrum/kanban board | done | 2/2 |
+| [EPIC-012](docs/issues/epics/EPIC-012-slm-runtime.md) SLM runtime | done | 1/1 |
+| [EPIC-013](docs/issues/epics/EPIC-013-comparison-scoring.md) Comparison scoring | done | 2/2 |
+| [EPIC-014](docs/issues/epics/EPIC-014-achievements.md) Achievements | done | 2/2 |
+| [EPIC-015](docs/issues/epics/EPIC-015-reporting-and-forecasting.md) Reporting and forecasting | done | 2/2 |
+| [EPIC-016](docs/issues/epics/EPIC-016-plugin-boundaries.md) Plugin boundaries | done | 2/2 |
+| [EPIC-017](docs/issues/epics/EPIC-017-release-hardening.md) Release hardening | done | 1/1 |
+| [EPIC-018](docs/issues/epics/EPIC-018-service-layer-completion.md) Service layer completion | done | 1/1 |
+| [EPIC-019](docs/issues/epics/EPIC-019-rehearsal-insights.md) Rehearsal insights | done | 1/1 |
+| [EPIC-020](docs/issues/epics/EPIC-020-ui-rework.md) UI rework | done | 4/4 |
+| [EPIC-021](docs/issues/epics/EPIC-021-knowledge-workspace.md) Knowledge workspace | done | 14/14 |
+| [EPIC-022](docs/issues/epics/EPIC-022-pdf-documents.md) PDF documents | done | 1/1 |
+| [EPIC-023](docs/issues/epics/EPIC-023-usability-and-insight-for-0-3-0.md) Usability and insight for 0.3.0 | done | 15/15 |
+| [EPIC-024](docs/issues/epics/EPIC-024-diary-for-0-4-0.md) Diary and a calmer UI for 0.4.0 | done | 2/2 |
+| [EPIC-025](docs/issues/epics/EPIC-025-feedback-fixes-for-0-3-1.md) Feedback fixes for 0.3.1 | done | 1/1 |
+| [EPIC-026](docs/issues/epics/EPIC-026-writing-saving-organizing-and-prompts-for-0-4-0.md) Writing, saving, organizing and prompts for 0.4.0 | done | 7/7 |
+| [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | done | 2/2 |
+| [EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md) Extensibility, plugin modding, and Python API | done | 8/8 |
+| [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md) Expanded achievements and per-stack progression | done | 2/2 |
+| [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md) Prompt expansion | done | 5/5 |
+| [EPIC-031](docs/issues/epics/EPIC-031-details-tabs-create-workflow-csv-import.md) Details tabs, create workflow, and CSV import for 0.4.1 | done | 6/6 |
+| [EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md) Item keys, colorization, and reporting export | done | 4/4 |
+| [EPIC-033](docs/issues/epics/EPIC-033-exam-run-mode-with-semantic-comparison-and-grading.md) Exam run mode with mandatory text entry, semantic comparison, and percentage grading | done | 5/5 |
+| [EPIC-034](docs/issues/epics/EPIC-034-behavioral-learning-analytics-fsrs-optimizer-and-workload-forecasting.md) Behavioral learning analytics, FSRS optimizer, and workload forecasting | done | 6/6 |
+| [EPIC-035](docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md) Rich active-recall formats, inline note extraction, and focus workflows | done | 5/5 |
+| [EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md) Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement | review | 3/4 |
+| [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md) State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry | done | 5/5 |
+| [EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md) CLI control protocol for interactive AI agent application operation | review | 1/2 |
+| [EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md) Universal item linking between stacks, cards, questions, answers, and notes | done | 1/1 |
+| [EPIC-040](docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md) Intermittent typed active recall and flexible rehearsal presentation | done | 1/1 |
+| [EPIC-041](docs/issues/epics/EPIC-041-modularity-system-driven-architecture-and-decoupled-background-services.md) Modularity: system-driven application architecture and decoupled background services | done | 0/0 |
+| [EPIC-042](docs/issues/epics/EPIC-042-interactive-ai-content-generation-and-parameter-guided-prompt-workflows.md) Interactive AI content generation and parameter-guided prompt workflows | done | 1/1 |
+| [EPIC-043](docs/issues/epics/EPIC-043-navigation-profile-and-file-management-ux-overhaul.md) Navigation, profile, and file management UX overhaul | done | 3/3 |
+| [EPIC-044](docs/issues/epics/EPIC-044-timetable-schedule-planner-and-daily-weekly-calendar-views.md) Timetable schedule planner and daily/weekly calendar views | done | 2/2 |
+| [EPIC-045](docs/issues/epics/EPIC-045-macro-library-expansion-and-escaping-syntax.md) Macro library expansion and escaping syntax | done | 2/2 |
+| [EPIC-046](docs/issues/epics/EPIC-046-markdown-viewer-list-syntax-enhancements.md) Markdown viewer list syntax enhancements | done | 1/1 |
+| [EPIC-047](docs/issues/epics/EPIC-047-brand-mascot-icon-and-consolidated-navigation-ux.md) Brand mascot icon and consolidated navigation UX | done | 2/2 |
+| [EPIC-048](docs/issues/epics/EPIC-048-scriptrunner-environment-and-internal-automation-api.md) Scriptrunner environment and internal application automation API | done | 1/1 |
+| [EPIC-049](docs/issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md) Expanded scripting environment, DSL, job scheduling, and execution logging | backlog | 3/4 |
+| [EPIC-050](docs/issues/epics/EPIC-050-frogcanvas-2d-spatial-concept-board.md) FrogCanvas: 2D Spatial Mind-Map and Concept Board | done | 2/2 |
+| [EPIC-051](docs/issues/epics/EPIC-051-pdf-precision-area-cropping-and-split-navigation.md) PDF Precision Area Cropping and 1-Click Split Navigation | done | 2/2 |
+| [EPIC-052](docs/issues/epics/EPIC-052-continuous-priority-queue-and-anti-paralysis-slicing.md) Continuous Priority Queue and Anti-Paralysis Slicing | done | 1/1 |
+| [EPIC-053](docs/issues/epics/EPIC-053-gamified-multi-modal-recall-match-mode-and-distractors.md) Gamified and Multi-Modal Active Recall | done | 2/2 |
+| [EPIC-054](docs/issues/epics/EPIC-054-fsrs-auto-tuning-and-inline-card-capture.md) FSRS Auto-Tuning and Inline Card Capture | done | 2/2 |
+| [EPIC-055](docs/issues/epics/EPIC-055-offline-local-slm-internal-assistant.md) Offline Local SLM Internal Assistant | done | 3/3 |
+| [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration | review | 3/5 |
+| [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | review | 1/5 |
+| [EPIC-058](docs/issues/epics/EPIC-058-in-gui-frogscript-wiki-and-reference.md) In-GUI FrogScript Wiki and Interactive Documentation | review | 0/2 |
+| [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time | review | 9/11 |
+| [EPIC-060](docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | review | 1/7 |
+| [EPIC-061](docs/issues/epics/EPIC-061-case-study-and-diagnostic-decision-matrix.md) Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification | review | 5/6 |
+| [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | review | 2/3 |
+| [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | review | 1/4 |
+| [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | review | 1/5 |
+| [EPIC-065](docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | done | 3/3 |
+| [EPIC-066](docs/issues/epics/EPIC-066-learn-mode-research-platform.md) Learn-mode research platform: visual node-based technique editor | done | 1/1 |
+| [EPIC-067](docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement | blocked | 0/5 |

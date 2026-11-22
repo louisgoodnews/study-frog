@@ -40,6 +40,13 @@ Implement dedicated stdout and stderr capture and display:
 
 Checked in the running window: entries show their time, the stream filters and the output search work. Fixed in this check: at 960 by 640 the search field was covered by "Export log" (the buttons now flow in a row), and the success marker drew as an empty box (now "+"). Not checked: "Export log" writing the file.
 
+## Verification (2026-11-22)
+Checked in the running app (`/tmp/claude-0/verifyB`). Script `/tmp/claude-0/verifyB/home/scripts/err.sh` prints one line to stdout and one to stderr. Run from Console > Jobs > "Run a script by hand" (`/tmp/claude-0/verifyB/k03-jobs.png`):
+- Criterion 1 (distinct internal streams): NOT MET. The stderr line is in the stdout stream (`/tmp/claude-0/verifyB/k07-filter-stdout.png`). The Stderr / Errors filter says "No entries for selected filter" (`/tmp/claude-0/verifyB/k06-filter-stderr.png`). BUG-0033.
+- Criterion 2 (distinct styling, timestamps): NOT MET. The stderr line is drawn in the same green (115,203,135) as stdout (`/tmp/claude-0/verifyB/k05-console-all.png`, pixel check). Timestamps are present (elapsed seconds). BUG-0033.
+- Criterion 3 (filter, clear, export): NOT MET. Filters and output search work for stdout. The Stderr filter is empty for script stderr. Export log wrote `/tmp/claude-0/verifyB/vault/logs/script_runs.log` with both lines unlabelled. BUG-0033.
+Nothing ticked, status stays review.
+
 ## Open Questions
 - Maximum buffer size for script output streams before rolling truncation (default: 10,000 lines or 2 MB).
 

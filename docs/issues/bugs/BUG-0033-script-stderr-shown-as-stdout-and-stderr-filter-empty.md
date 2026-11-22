@@ -36,5 +36,13 @@ Route a script's standard error into the stderr stream of the console (the strea
 - STORY-0152
 - STORY-0151
 
+## Verification (2026-11-22)
+Reproduced in the running app (`/tmp/claude-0/verifyB`). Script `/tmp/claude-0/verifyB/home/scripts/err.sh` prints `VERIFY-STDOUT-LINE one` to stdout and `VERIFY-STDERR-LINE two` to stderr; run from Console > Jobs > "Run a script by hand":
+- All: both lines shown, both in the same green (115,203,135), checked by pixel histogram (`/tmp/claude-0/verifyB/k05-console-all.png`). Criterion 2 not met.
+- Stdout: the stderr line is under Stdout (`/tmp/claude-0/verifyB/k07-filter-stdout.png`). Criterion 1 not met.
+- Stderr / Errors: "No entries for selected filter" (`/tmp/claude-0/verifyB/k06-filter-stderr.png`).
+- Export log wrote `/tmp/claude-0/verifyB/vault/logs/script_runs.log` with both lines as plain text and no stream label (criterion 3 not met).
+Status stays backlog.
+
 ## Open Questions
 - None.

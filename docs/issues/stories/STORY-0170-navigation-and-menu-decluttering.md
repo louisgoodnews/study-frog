@@ -58,3 +58,13 @@ None.
 
 Audit (2026-11-22): criterion 1 NOT MET for the PDF viewer, so unticked by this audit. The stack page (New item, Start rehearsal, Memory game, More actions) and the item editor (Back, key, More actions; /tmp/claude-0/audit/g5/0170-editor.png) meet it. The PDF viewer header shows Back to library, Previous, the page number, Next, -, Fit, +, the find field, Previous hit, Next hit, More... and Panels...: ten controls (/tmp/claude-0/audit/g5/0170-pdf.png). The author's own note leaves this to the owner.
 Criterion 2 MET: spacing is scaled by density (Spacious factor 1.5, from `ctl appearance`), and the item editor and lists show the wider gaps (/tmp/claude-0/audit/g5/0170-editor.png, /tmp/claude-0/audit/g5/0168-allitems.png). Criterion 3 MET: four visible type levels (page title, section heading, field labels, body) in the same screens. The item editor's details column scrolls sideways at 1280 px as the author noted.
+
+## Verification (2026-11-22)
+
+Criterion 1 (at most 3 core actions per header): NOT MET for the PDF viewer. Left unticked.
+- At 1280x800, with a search term typed (no hits): `/tmp/claude-0/verifyA/16-pdf-1280-empty.png`. Ten buttons: Back to library, Previous, Next, -, Fit, +, Previous hit, Next hit, More..., Panels..., plus the page number field and the find field (12 controls). With a hit the same set shows (`/tmp/claude-0/verifyA/12-pdf-1280.png`).
+- At 960x640: the header wraps to two rows and shows the same items, plus the Mark with row (`/tmp/claude-0/verifyA/14-pdf-960-nohit.png`).
+- The no-search state was not captured: a query cannot be cleared through ctl. Without the hit buttons the count would be 8 buttons and 2 fields.
+- Owner's choice (not decided here): the story's Description asks to consolidate low-frequency buttons in crowded headers such as the PDF viewer, but gives no number. The criterion says at most 3 core actions. The author's note keeps navigation, zoom, search and Panels visible because the viewer's tests rely on them. Either move those into More and update the tests, or change the criterion or its number.
+- Criteria 2 and 3 were not re-checked in this round; their ticks stand.
+- Status stays review.

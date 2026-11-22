@@ -76,3 +76,10 @@ None.
 Audit (2026-11-22): criterion 1 NOT MET for the configurable pass mark: the result view uses a fixed 50 % pass mark and the app has no setting for it (the parameter exists in `studyfrog-rehearsal::grade::exam_result`). Unticked by this audit. Summation and percentage are shown ("0 / 6 points - 0 % - Grade 5.0 (Nicht bestanden)", /tmp/claude-0/audit/g5/0187-result.png); a non-zero percentage was not reached in the app, so the summation is checked by the tests only.
 Criterion 2 MET: the bands in `crates/studyfrog-rehearsal/src/grade.rs` run 95, 90, 85, 80, 75, 70, 65, 60, 55, 50 % to grades 1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0, and below the pass mark 5.0; the app shows 5.0 for 0 % (/tmp/claude-0/audit/g5/0187-result.png). Intermediate bands were read in the code, not on screen.
 Criterion 3 MET: the review lists each question with the student's answer, the model answer and the rubric points, and marks each as Missing (/tmp/claude-0/audit/g5/0187-result.png). The keyword check gives 0 to a correct answer (BUG-0038). Results are not kept after the view closes (open, per the author's note).
+
+## Verification (2026-11-22)
+
+- Keyword grading with no model verified: result "0 / 16 points - 0 % - Grade 5.0 (Nicht bestanden)" with the note "Graded by word overlap: no local model is selected" (`/tmp/claude-0/verifyA/23-exam-graded.png`).
+- Model grading NOT CHECKABLE (no model installed). Typed answers could not be entered in this environment, so a correct answer in other words was not checked.
+- The model answer for question 1 shows the card's question text followed by its answer ("Was ist der Mittelwert? Summe durch Anzahl"), not a reference answer. Not filed here; see BUG-0038 for the keyword check.
+- Ticks are left as set.

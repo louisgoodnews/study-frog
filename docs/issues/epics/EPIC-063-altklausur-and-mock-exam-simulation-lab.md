@@ -44,3 +44,11 @@ Criterion 1 NOT MET: the exam has configurable points only through the 3-minutes
 Criterion 2 NOT CHECKABLE: exam generation from a lecture PDF and notes works offline from templates (/tmp/claude-0/audit/g5/0186-pdf-exam.png, 0186-mock-notes3.png); the local SLM prompting is not run (no model).
 Criterion 3 NOT CHECKABLE: recall and case sections appear (/tmp/claude-0/audit/g5/0186-mock-notes3.png); a calculation section was not generated in the test (the formula note was added after the exam).
 Criterion 4 MET: the result view shows total points, percentage, grade and word, pass or fail, points by topic, and each question's answer, model answer and rubric points (/tmp/claude-0/audit/g5/0187-result.png); the German band table is in `studyfrog-rehearsal::grade`. Defects: BUG-0038, BUG-0039, BUG-0040, BUG-0041.
+
+## Verification (2026-11-22)
+
+- Criterion 1 NOT MET: the exam view has no countdown. The preview says "48 minutes" (`/tmp/claude-0/verifyA/20-mock-preview.png`). The running exam shows an elapsed clock ("0.1 s" in the run view) and no timer, and answers stay editable until "Finish and grade" (`/tmp/claude-0/verifyA/21-exam-started.png`). The timer module `studyfrog-rehearsal::mock_timer` is not used by the UI. Filed BUG-0045. Left unticked.
+- Criterion 2 NOT CHECKABLE: no local model is installed, so the model stage did not run. The template path runs offline, with the no-model note (`/tmp/claude-0/verifyA/20-mock-preview.png`).
+- Criterion 3 NOT CHECKABLE: the mix follows the notes. This run gave case scenarios and one calculation, with no recall section (`/tmp/claude-0/verifyA/20-mock-preview.png`); the earlier audit run had recall (`/tmp/claude-0/audit/g5/0186-mock-notes3.png`). A model-driven mix cannot be checked.
+- Criterion 4 not re-checked (already ticked). The no-model keyword grading ran: 0 of 16 points, "Graded by word overlap" note (`/tmp/claude-0/verifyA/23-exam-graded.png`). Typed answers could not be entered in this environment, so grading of real answers was not checked.
+- Status stays review.

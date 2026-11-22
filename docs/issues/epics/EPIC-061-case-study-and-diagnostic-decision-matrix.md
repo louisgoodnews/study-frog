@@ -40,3 +40,8 @@ Audit (2026-11-22): criteria 1 to 3 MET in the running app (`/tmp/claude-0/audit
 
 ## Open Questions
 None.
+
+## Verification (2026-11-22)
+
+- Criterion 4 remains unticked: NOT MET in part. Stacks and scheduling work. In an exam run the case shows only its vignette, with no decision prompt or options (BUG-0022 reproduced, `/tmp/claude-0/verifyA/24-exam-run-case.png`).
+- Status stays review.

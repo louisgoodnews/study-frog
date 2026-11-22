@@ -42,5 +42,13 @@ Audited in the running app (display :92). Verdicts per criterion:
 - Dashboard integrated into Reports: MET (`/tmp/claude-0/audit/g2/02-cognitive.png`). Ticked.
 Open: BUG-0030, BUG-0031, BUG-0032. The epic stays in review.
 
+## Verification (2026-11-22)
+Checked in the running app (`/tmp/claude-0/verifyB`), a vault with 7 answered reviews (6 spaced flip, 1 spaced typed answer):
+- Criterion 1, telemetry in SQLite (dwell, latency, semantic): NOT MET. Dwell and latency are stored, but dwell equals latency on every row and text_complexity is a reading-time estimate (BUG-0048). `semantic_score` is NULL on every row while `answer_score` holds the typed answer's score (BUG-0031). Evidence: `/tmp/claude-0/verifyB/vault/.studyfrog/index.sqlite`, tables `review_telemetry` and `answer_score`.
+- Criterion 2, adaptive profile engine (difficulty, velocity): NOT CHECKABLE. Velocity is computed and shown as one number (`/tmp/claude-0/verifyB/r02-cognitive.png`). No screen shows item difficulty. BUG-0030 covers the curve.
+- Criterion 3, calibrated priors into FSRS: NOT CHECKABLE in the app. No screen shows the priors or the fitted parameters, and a meaningful check needs many more reviews than this vault has.
+- Criterion 4, Cognitive profile in Reports: MET (ticked). The tab opens from Reports (`/tmp/claude-0/verifyB/r02-cognitive.png`, `/tmp/claude-0/verifyB/r03-cognitive-bottom.png`).
+The epic stays in review. Open: BUG-0030, BUG-0031, BUG-0048.
+
 ## Open Questions
 None.
