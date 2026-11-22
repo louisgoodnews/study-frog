@@ -20,6 +20,8 @@ pub struct WikiView {
 pub enum WikiMsg {
     /// Show or hide the panel.
     Toggle,
+    /// Show the panel, with ScriptStudio expanded to hold it (from the Help screen).
+    Show,
     /// The search text changed.
     Query(String),
     /// A topic was picked from the list, as `Category:name`.
@@ -28,11 +30,14 @@ pub enum WikiMsg {
 
 /// Apply a panel message to the console's state.
 pub fn apply(console: &mut ConsoleState, msg: WikiMsg) {
-    let w = &mut console.studio.wiki;
     match msg {
-        WikiMsg::Toggle => w.open = !w.open,
-        WikiMsg::Query(q) => w.query = q,
-        WikiMsg::Pick(name) => w.topic = Some(name),
+        WikiMsg::Toggle => console.studio.wiki.open = !console.studio.wiki.open,
+        WikiMsg::Show => {
+            console.studio.wiki.open = true;
+            console.studio.expanded = true;
+        }
+        WikiMsg::Query(q) => console.studio.wiki.query = q,
+        WikiMsg::Pick(name) => console.studio.wiki.topic = Some(name),
     }
 }
 

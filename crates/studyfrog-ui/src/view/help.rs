@@ -3,9 +3,11 @@
 use eframe::egui::{self, RichText, ScrollArea, TextEdit};
 use studyfrog_service::help::{Hit, PAGES, PageRef, SECTIONS, title_of, user_title};
 
+use crate::console_ui::ConsoleMsg;
 use crate::help_types::{HelpMsg, HelpState};
 use crate::help_ui::current;
 use crate::msg::Msg;
+use crate::script_studio::wiki_panel::WikiMsg;
 use crate::state::{Screen, State};
 use crate::theme::palette_of;
 use crate::view::kit;
@@ -77,6 +79,18 @@ fn entry(ui: &mut egui::Ui, open: bool, title: &str, page: PageRef, out: &mut Ve
 
 fn tree(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let shown = current(&state.help);
+    kit::caption(ui, "FrogScript");
+    if state.vault.is_none() {
+        ui.weak("Open a vault to use the FrogScript reference.");
+    } else if ui
+        .button("FrogScript reference")
+        .on_hover_text("Opens the reference of FrogScript in ScriptStudio.")
+        .clicked()
+    {
+        out.push(Msg::Console(ConsoleMsg::Wiki(WikiMsg::Show)));
+        out.push(Msg::Navigate(Screen::Console));
+    }
+    ui.add_space(6.0);
     for (section, name) in SECTIONS {
         kit::caption(ui, name);
         for p in PAGES.iter().filter(|p| p.section == section) {

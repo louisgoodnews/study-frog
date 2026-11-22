@@ -23,9 +23,9 @@ Develop the in-GUI Wiki browser:
 - Provide a fast search filter box to instantly locate methods, signatures, and descriptions.
 
 ## Acceptance Criteria
-- [x] Documentation side-panel or modal tab in ScriptStudio displaying categorized topics
-- [x] Topic coverage includes Syntax, Operators, Control Flow, Built-in Functions, and Vault Objects
-- [x] Search filter allowing rapid lookup of functions by keyword or return type
+- [ ] Documentation side-panel or modal tab in ScriptStudio displaying categorized topics
+- [ ] Topic coverage includes Syntax, Operators, Control Flow, Built-in Functions, and Vault Objects
+- [ ] Search filter allowing rapid lookup of functions by keyword or return type
 
 ## Design Notes
 Implement lightweight searchable tree navigation in egui, rendering selected topic documentation via the existing markdown viewer.
@@ -48,6 +48,9 @@ The description also names a Lifecycle Events category, which the first pass did
 Not done: the epic's "Help" (F1) entry point is not built. This story's criteria are about ScriptStudio, so it is left for EPIC-058.
 
 Needs a person at a window: the look of the new category heading and the panel's layout with six categories, in light and dark themes.
+
+## Window check (2026-11-22, EPIC-058)
+The panel opens from ScriptStudio's "Reference" button and from the Help screen's "FrogScript reference" button, and its heading and search box show in the window. The topics do not: beside the editor the list is blank, even after scrolling, and the editor text is squeezed, at 1280x800 and at 1600x900 (BUG-0020). The three criteria above name what the panel shows, so they are unticked here. The data and the search are covered by `studyfrog-script/tests/wiki.rs` and `studyfrog-ui/tests/studio_reference.rs`, but that is not a window check. Screenshots: `/tmp/claude-0/epic58/03-help-to-reference.png`, `05-console-reference-button.png`, `07-console-reference-settled.png`.
 
 ## Open Questions
 None.
