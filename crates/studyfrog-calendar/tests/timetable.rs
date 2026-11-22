@@ -111,3 +111,46 @@ fn timetable_occurrences_expands_across_date_range() {
     );
     assert_eq!(occurrences[1].start_minute, 600);
 }
+
+#[test]
+fn lessons_on_a_day_are_that_weekdays_entries_in_start_order() {
+    use studyfrog_calendar::timetable::{lesson_label, lessons_on};
+    let mut late = entry(0, 13 * 60, 60);
+    late.title = "Ubung".to_owned();
+    let mut early = entry(0, 9 * 60, 90);
+    early.title = "Statistik-Vorlesung".to_owned();
+    let tuesday = entry(1, 8 * 60, 60);
+    let entries = [late, tuesday, early];
+    // 2026-11-23 is a Monday.
+    let monday = Date {
+        year: 2026,
+        month: 11,
+        day: 23,
+    };
+    let titles: Vec<String> = lessons_on(&entries, monday)
+        .into_iter()
+        .map(lesson_label)
+        .collect();
+    assert_eq!(titles, ["09:00 Statistik-Vorlesung", "13:00 Ubung"]);
+    let sunday = Date { day: 29, ..monday };
+    assert!(lessons_on(&entries, sunday).is_empty());
+}
+
+#[test]
+fn lessons_note_names_the_day_and_its_lessons() {
+    use studyfrog_calendar::timetable::lessons_note;
+    let mut lecture = entry(0, 9 * 60, 90);
+    lecture.title = "Statistik-Vorlesung".to_owned();
+    let monday = Date {
+        year: 2026,
+        month: 11,
+        day: 23,
+    };
+    let tuesday = Date { day: 24, ..monday };
+    let entries = [lecture];
+    assert_eq!(
+        lessons_note(&entries, monday),
+        "Monday: 09:00 Statistik-Vorlesung"
+    );
+    assert_eq!(lessons_note(&entries, tuesday), "Tuesday: no lessons");
+}

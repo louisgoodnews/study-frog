@@ -7,9 +7,20 @@ use crate::homework_form::HomeworkEdit;
 use crate::homework_msg::HomeworkMsg;
 use crate::msg::Msg;
 use crate::state::State;
+use studyfrog_core::uid::Uid;
 
 fn edit(e: HomeworkEdit) -> Msg {
     Msg::Homework(HomeworkMsg::Edit(e))
+}
+
+/// The id of the stack in `folder`, which is the subject of an item.
+fn stack_uid(state: &State, folder: &str) -> Result<Uid, String> {
+    state
+        .vault
+        .as_ref()
+        .and_then(|v| v.overview.stacks.iter().find(|s| s.folder == folder))
+        .map(|s| s.uid)
+        .ok_or_else(|| format!("no stack in folder {folder}"))
 }
 
 /// The fields of a new item, in the dialog's order.
@@ -31,13 +42,7 @@ fn fields(state: &State, a: &HomeworkNew) -> Result<Vec<Msg>, String> {
         out.push(edit(HomeworkEdit::Priority(p)));
     }
     if let Some(folder) = &a.stack {
-        let uid = state
-            .vault
-            .as_ref()
-            .and_then(|v| v.overview.stacks.iter().find(|s| s.folder == *folder))
-            .map(|s| s.uid)
-            .ok_or_else(|| format!("no stack in folder {folder}"))?;
-        out.push(edit(HomeworkEdit::Course(Some(uid))));
+        out.push(edit(HomeworkEdit::Course(Some(stack_uid(state, folder)?))));
     }
     if !a.checklist.is_empty() {
         out.push(edit(HomeworkEdit::Checklist(a.checklist.join("\n"))));
@@ -52,6 +57,10 @@ pub fn plan(state: &State, cmd: &HomeworkCmd) -> Result<Plan, String> {
     match cmd {
         HomeworkCmd::List => Ok(Vec::new()),
         HomeworkCmd::Tab(tab) => one(HomeworkMsg::Tab(*tab)),
+        HomeworkCmd::Subject(None) => one(HomeworkMsg::Subject(None)),
+        HomeworkCmd::Subject(Some(folder)) => {
+            one(HomeworkMsg::Subject(Some(stack_uid(state, folder)?)))
+        }
         HomeworkCmd::Advance(id) => one(HomeworkMsg::Advance(*id)),
         HomeworkCmd::Tick(id, n) => one(HomeworkMsg::ToggleStep(*id, n - 1)),
         HomeworkCmd::New(args) => Ok(vec![

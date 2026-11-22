@@ -95,7 +95,10 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
         return Err(format!("{e} (the dialog is still open; `close` closes it)"));
     }
     if let Command::Homework(h) = cmd
-        && !matches!(h, HomeworkCmd::List | HomeworkCmd::Tab(_))
+        && !matches!(
+            h,
+            HomeworkCmd::List | HomeworkCmd::Tab(_) | HomeworkCmd::Subject(_)
+        )
         && let Some(e) = homework::refusal(state)
     {
         return Err(e);

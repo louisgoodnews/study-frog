@@ -2,7 +2,7 @@
 id: EPIC-056
 type: epic
 title: "Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration"
-status: review
+status: done
 parents: []
 labels: [m14, calendar, ui]
 acceptance_criteria:
@@ -26,7 +26,7 @@ Deliver an end-to-end Homework & Assignment Management subsystem within StudyFro
 - [x] Dedicated homework domain model supporting title, subject/course, due date/time, estimated effort, priority, and completion status
 - [x] Proactive notification and reminder triggers alerting students before due dates (e.g. 24h, 2h, 15m lead times)
 - [x] Integration with timetable lectures and calendar views displaying upcoming assignment deadlines
-- [ ] Dedicated Homework planner UI with filtering by subject, urgency status (overdue, due today, upcoming), and completion toggles
+- [x] Dedicated Homework planner UI with filtering by subject, urgency status (overdue, due today, upcoming), and completion toggles
 
 ## Design Notes
 Pure domain models should live in `studyfrog-calendar` or `studyfrog-core`, extending the existing `Date`, `LocalTime`, and `Session` infrastructure without inherent `impl` blocks (Invariant P1). In-vault persistence will follow the standard local-first human-readable format.
@@ -50,3 +50,9 @@ Audit (2026-11-22): criterion 1 MET: the homework list (`ctl homework list`) hol
 ## Review (2026-11-22)
 
 Review (2026-11-22): criterion 1 MET: the homework items hold title, course, due date and time, estimate, priority, status and checklist steps (/tmp/claude-0/review-a/hw-1280.png). Criterion 2 MET from the earlier audit (reminder notices); not re-run here. Criterion 3 MET: after a restart the week view of the week of 23 November shows the lecture "Statistik-Vorlesung" (Mon 09:00) and the due markers on Mon 23 and Thu 26 (/tmp/claude-0/review-a/week-next.png). The Timetable view still lists no lectures (BUG-0044, /tmp/claude-0/review-a/tt-restart.png). Criterion 4 NOT MET: the Homework screen has urgency tabs and Start, Edit and checklist controls, but no subject filter and no timetable (/tmp/claude-0/review-a/hw-1280.png). Status stays review; criterion 4 is open (BUG-0043).
+
+## Fix (2026-11-22, BUG-0043 and BUG-0044)
+
+Criterion 4 MET: the planner has a subject filter (Subject row, `HomeworkUi.subject`, kept across the status tabs), the urgency tabs (Due today, Overdue) and badges (Overdue, Due today, Due soon, Done), and completion toggles (Start, Complete, Reopen, checklist ticks). Caveat for the owner: "upcoming" has no tab of its own; upcoming items show the "Due soon" badge and the Active tab. Evidence: `/tmp/claude-0/homework/k-hw-final-1280-all.png`, `/tmp/claude-0/homework/j-hw-final-960-subject-tab.png`.
+
+Criterion 3 caveat resolved: the Timetable view lists the stored lectures after a restart (BUG-0044, `/tmp/claude-0/homework/h-timetable-after-second-restart-1280.png`). Criterion 1 and 2 were met before this work and are unchanged.

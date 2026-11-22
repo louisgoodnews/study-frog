@@ -218,3 +218,33 @@ fn to_item_trims_the_title_and_checks_the_date_and_time() {
     f.due_time = "18:30".into();
     assert_eq!(to_item(&f, Uid(9)).unwrap().due.minute, 18 * 60 + 30);
 }
+
+#[test]
+fn the_subject_filter_is_kept_when_the_tab_changes() {
+    let (s, _) = send(State::default(), HomeworkMsg::Subject(Some(Uid(5))));
+    assert_eq!(s.planner.homework_ui.subject, Some(Uid(5)));
+    let (s, _) = send(s, HomeworkMsg::Tab(HomeworkTab::Overdue));
+    assert_eq!(s.planner.homework_ui.tab, HomeworkTab::Overdue);
+    assert_eq!(
+        s.planner.homework_ui.subject,
+        Some(Uid(5)),
+        "tab change keeps the subject"
+    );
+    let (s, _) = send(s, HomeworkMsg::Subject(None));
+    assert_eq!(s.planner.homework_ui.subject, None);
+}
+
+#[test]
+fn the_subject_filter_narrows_the_tab_list_to_that_stack() {
+    use studyfrog_calendar::homework_query::{planner_order, tab_filter};
+    let mut mine = item(1, 22);
+    mine.course = Some(Uid(5));
+    let other = item(2, 22);
+    let items = [mine, other];
+    let filter = tab_filter(HomeworkTab::All, Some(Uid(5)));
+    let shown: Vec<Uid> = planner_order(&items, &filter, clock())
+        .iter()
+        .map(|i| i.id)
+        .collect();
+    assert_eq!(shown, [Uid(1)]);
+}

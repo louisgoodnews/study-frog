@@ -146,3 +146,29 @@ fn a_refused_change_answers_with_the_reason() {
         "{line}"
     );
 }
+
+#[test]
+fn a_subject_is_a_stack_folder_or_all_and_reading_it_is_allowed() {
+    assert_eq!(
+        parse_words("homework subject french").unwrap(),
+        Command::Homework(HomeworkCmd::Subject(Some("french".into())))
+    );
+    assert_eq!(
+        parse_words("homework subject all").unwrap(),
+        Command::Homework(HomeworkCmd::Subject(None))
+    );
+    let cmd = Command::Homework(HomeworkCmd::Subject(None));
+    assert_eq!(class_of(&cmd), Class::Read);
+    let plan = plan_for(&State::default(), &cmd).unwrap();
+    assert_eq!(plan, vec![vec![Msg::Homework(HomeworkMsg::Subject(None))]]);
+}
+
+#[test]
+fn an_unknown_subject_folder_is_refused_before_anything_is_done() {
+    let cmd = Command::Homework(HomeworkCmd::Subject(Some("nowhere".into())));
+    assert!(
+        plan_for(&State::default(), &cmd)
+            .unwrap_err()
+            .contains("no stack in folder nowhere")
+    );
+}

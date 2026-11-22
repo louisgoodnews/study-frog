@@ -60,7 +60,7 @@ pub const COMMANDS: &[Row] = &[
         "destructive",
     ),
     (
-        "homework list | homework tab all|active|due-today|overdue|completed",
+        "homework list | homework tab all|active|due-today|overdue|completed | homework subject <stack folder>|all",
         "The homework items as the app last read them (JSON); the tab shown in the homework screen",
         "read",
     ),

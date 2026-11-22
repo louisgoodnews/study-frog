@@ -44,5 +44,9 @@ Not done: reminder lead-time choice in the dialog (lead times are global), and t
 
 Checked in the running window: a homework item is created, edited and deleted through "Delete item", "Delete it" removes it and closes the dialog. Fixed in this check: at 960 by 640 the dialog ran past the window and its Delete row could not be reached; the dialog now scrolls.
 
+## Implementation (2026-11-22, BUG-0043)
+
+The homework screen now has a Subject row (`HomeworkUi.subject`, kept by the status tabs; `homework subject <stack folder>|all` in the control protocol) and lists the week's timetable beside the items, with the lessons on each item's due day (`studyfrog_calendar::timetable::lessons_note`, `view/calendar_timetable.rs::timetable_panel`). Tests: `studyfrog-ui/tests/homework_screen.rs`, `control_homework.rs`, `calendar_timetable.rs`; `studyfrog-calendar/tests/homework_query.rs`, `timetable.rs`. Checked in the running app at 1280 by 800 and 960 by 640 (`/tmp/claude-0/homework/k-hw-final-1280-all.png`, `j-hw-final-960-subject-tab.png`). Timetable reads on the homework screen came with BUG-0044.
+
 ## Open Questions
 None.

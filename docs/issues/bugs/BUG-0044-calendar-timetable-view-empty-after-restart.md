@@ -2,7 +2,7 @@
 id: BUG-0044
 type: bug
 title: "Calendar Timetable view lists no lectures after the app restarts, though the lecture is stored and shown in the week view"
-status: backlog
+status: done
 epic: EPIC-056
 parents: ['EPIC-056']
 estimate: 1
@@ -39,3 +39,15 @@ Keep the loading in pure free functions and within the file-size limit (P6). Reu
 ## Review (2026-11-22)
 
 Review (2026-11-22): still reproduced. After the app restarts and the vault reopens, the Calendar Timetable view lists no lectures on any weekday (/tmp/claude-0/review-a/tt-restart.png), while the week view shows the same lecture on Monday 09:00 (/tmp/claude-0/review-a/week-next.png). Both criteria NOT MET. The lecture was added as a row in the vault index, because the Add lecture form takes no typed text in this environment. Status stays backlog.
+
+## Fix (2026-11-22)
+
+Cause: the Timetable view draws `planner.timetable`. That list was filled only by `PlanMsg::TimetableChanged`, which follows a save. `PlanMsg::TimetableLoaded` was matched in `planner.rs` but never sent. The week view reads the same table through `load_sessions`, which is why it showed the lectures.
+
+Fix: `exec_plan::load_sessions` now answers with the sessions and then `TimetableLoaded`, so opening the calendar loads the stored lectures. The homework load does the same (`exec_homework::load`). Test: `studyfrog-ui/tests/calendar_timetable.rs::stored_lectures_are_listed_after_a_restart`. Before the fix it failed with `left: []`; it passes now.
+
+Verified in the running app (2026-11-22, a copy of the built binary on display :88, vault opened after a restart with three lecture rows stored and no save): the Timetable view lists Monday 09:00 Statistik-Vorlesung, Monday 13:00 Englisch-Seminar and Tuesday 10:00 Statistik-Uebung.
+- Before: `/tmp/claude-0/review-a/tt-restart.png` (no lectures).
+- After, first restart at 960 by 640: `/tmp/claude-0/homework/a-timetable-restart.png`.
+- After, second restart at 1280 by 800: `/tmp/claude-0/homework/h-timetable-after-second-restart-1280.png`.
+- After, final build at 960 by 640: `/tmp/claude-0/homework/i-timetable-final-960.png`.

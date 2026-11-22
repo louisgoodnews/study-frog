@@ -180,3 +180,17 @@ fn countdown_reads_in_minutes_hours_and_days() {
         "done"
     );
 }
+
+#[test]
+fn subjects_list_each_stack_once_and_skip_items_without_one() {
+    use studyfrog_calendar::homework_query::subjects;
+    let when = at(20, 9);
+    let items = [
+        hw(1, when, HomeworkStatus::NotStarted, Some(5)),
+        hw(2, when, HomeworkStatus::NotStarted, None),
+        hw(3, when, HomeworkStatus::NotStarted, Some(2)),
+        hw(4, when, HomeworkStatus::Completed, Some(5)),
+    ];
+    assert_eq!(subjects(&items), [Uid(2), Uid(5)]);
+    assert!(subjects(&[]).is_empty());
+}

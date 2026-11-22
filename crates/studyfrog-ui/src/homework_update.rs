@@ -48,6 +48,7 @@ pub fn update(state: State, msg: HomeworkMsg) -> (State, Vec<Effect>) {
     let ui = state.planner.homework_ui.clone();
     match msg {
         HomeworkMsg::Tab(tab) => (with_ui(state, HomeworkUi { tab, ..ui }), Vec::new()),
+        HomeworkMsg::Subject(subject) => (with_ui(state, HomeworkUi { subject, ..ui }), Vec::new()),
         HomeworkMsg::New => {
             let form = new_form(today_of(&state));
             let ui = HomeworkUi {

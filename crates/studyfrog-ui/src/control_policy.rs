@@ -47,7 +47,9 @@ pub fn class_of(cmd: &Command) -> Class {
         C::Item(ItemCmd::Open(_)) | C::Stack(StackCmd::Open(_) | StackCmd::Settings(_)) => {
             Class::Read
         }
-        C::Homework(HomeworkCmd::List | HomeworkCmd::Tab(_)) => Class::Read,
+        C::Homework(HomeworkCmd::List | HomeworkCmd::Tab(_) | HomeworkCmd::Subject(_)) => {
+            Class::Read
+        }
         C::Homework(_) => Class::Write,
         C::Calendar(CalendarCmd::SessionAdd(_)) => Class::Write,
         C::Appearance(_) => Class::Write,

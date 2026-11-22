@@ -44,6 +44,15 @@ pub fn due_on(items: &[HomeworkItem], day: Date) -> Vec<&HomeworkItem> {
     out
 }
 
+/// The subjects (stacks) the items belong to, each once, lowest id first. Items without a
+/// subject add none.
+pub fn subjects(items: &[HomeworkItem]) -> Vec<Uid> {
+    let mut out: Vec<Uid> = items.iter().filter_map(|i| i.course).collect();
+    out.sort_by_key(|u| u.0);
+    out.dedup();
+    out
+}
+
 /// The most pressing urgency among the items, or `None` when there are none.
 pub fn most_urgent(items: &[&HomeworkItem], now: LocalTime) -> Option<Urgency> {
     items

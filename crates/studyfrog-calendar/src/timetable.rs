@@ -99,3 +99,52 @@ pub fn timetable_occurrences(entries: &[TimetableEntry], from: Date, to: Date) -
     out.sort_by_key(|o| (o.date, o.start_minute, o.session));
     out
 }
+
+/// The lessons on one weekday (0 = Monday), earliest start first.
+pub fn lessons_on_weekday(entries: &[TimetableEntry], day_of_week: u8) -> Vec<&TimetableEntry> {
+    let mut out: Vec<&TimetableEntry> = entries
+        .iter()
+        .filter(|e| e.day_of_week == day_of_week)
+        .collect();
+    out.sort_by_key(|e| e.start_minute);
+    out
+}
+
+/// The lessons that fall on `day`, earliest start first.
+pub fn lessons_on(entries: &[TimetableEntry], day: Date) -> Vec<&TimetableEntry> {
+    lessons_on_weekday(entries, weekday_index(weekday(day)))
+}
+
+/// A lesson as one line for a list: "09:00 Statistik-Vorlesung".
+pub fn lesson_label(entry: &TimetableEntry) -> String {
+    format!(
+        "{:02}:{:02} {}",
+        entry.start_minute / 60,
+        entry.start_minute % 60,
+        entry.title
+    )
+}
+
+/// Which lessons fall on a due date, for a homework row: "Monday: 09:00 Statistik-Vorlesung" or
+/// "Monday: no lessons".
+pub fn lessons_note(entries: &[TimetableEntry], day: Date) -> String {
+    let dow = weekday_index(weekday(day));
+    let names = DAY_NAMES[usize::from(dow)];
+    let lessons = lessons_on_weekday(entries, dow);
+    if lessons.is_empty() {
+        return format!("{names}: no lessons");
+    }
+    let labels: Vec<String> = lessons.into_iter().map(lesson_label).collect();
+    format!("{names}: {}", labels.join(", "))
+}
+
+/// Weekday names, Monday first, indexed like `day_of_week`.
+pub const DAY_NAMES: [&str; 7] = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+];

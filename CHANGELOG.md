@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Homework planner shows the timetable and filters by subject (`crates/studyfrog-ui`, `crates/studyfrog-calendar`, BUG-0043, EPIC-056)**: the list has a Subject row ("All" and one chip per stack the homework belongs to) that the status tab keeps; the week's timetable sits beside the list (above it in a narrow window), and each item names the lessons on its due day. Control: `homework subject <stack folder>|all`. Tests: `studyfrog-calendar/tests/timetable.rs`, `homework_query.rs`, `studyfrog-ui/tests/homework_screen.rs`, `control_homework.rs`, `calendar_timetable.rs`.
 - **`calendar session add` in the control protocol (`crates/studyfrog-ui`, STORY-0194, EPIC-064)**: `calendar session add TITLE --start "YYYY-MM-DD HH:MM" --minutes N` creates a calendar session through the planner's own new-session form and Save, so `reminders due` can report it; the answer is the created session. Test: `studyfrog-ui/tests/control_calendar_session.rs`.
 - **Help links to the FrogScript reference (`crates/studyfrog-ui`, EPIC-058)**: the Help screen's page tree has a "FrogScript reference" button (with a vault open) that opens the reference in ScriptStudio, expanded, with the same panel as the Console's "Reference" button. Test: `studyfrog-ui/tests/help_wiki.rs`.
 
@@ -16,6 +17,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - **Board headings count every work item of each status (`tools/repo-lint`, EPIC-058)**: the per-status counts in the board's headings include every kind of item, not only tasks.
 
 ### Fixed
+- **Calendar Timetable lists the stored lectures after a restart (`crates/studyfrog-ui`, BUG-0044, EPIC-056)**: the lectures are read with the sessions when the calendar opens (and with the homework on the homework screen), so the Timetable view no longer waits for a save; it shows what the week view shows. Test: `studyfrog-ui/tests/calendar_timetable.rs` (`stored_lectures_are_listed_after_a_restart`).
 - **Case study, Memory game and Mock exam use the stack ticked in the rehearse setup (`crates/studyfrog-ui`, BUG-0023, BUG-0024, BUG-0040)**: the three buttons work on the stack ticked in the What step, and fall back to the stack open in the library only when none is ticked; the exam title names its stack and the too-few-cards message names the stack. Test: `studyfrog-ui/tests/memory_mode.rs`, `case_study_ui.rs`, `mock_exam_ui.rs`.
 - **Memory time attack HUD counts down and stops at the limit (`crates/studyfrog-rehearsal`, `crates/studyfrog-ui`, BUG-0025)**: the HUD shows the time left in a 60, 90 or 120 s game, never more than the limit. Test: `studyfrog-rehearsal/tests/memory_summary.rs`.
 - **Memory timeout turns the unmatched cards face up (`crates/studyfrog-rehearsal`, BUG-0026)**: when the time runs out every card not yet matched is shown, so the message matches the board. Test: `studyfrog-rehearsal/tests/memory.rs`.

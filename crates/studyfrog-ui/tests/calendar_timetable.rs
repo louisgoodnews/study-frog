@@ -1,13 +1,20 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 //! Integration tests for calendar views and timetable updates.
 
+mod common;
+
+use common::flow::{opened, send};
+use common::run_to_idle;
 use studyfrog_calendar::timetable::TimetableEntry;
 use studyfrog_core::civil::Date;
 use studyfrog_core::uid::Uid;
+use studyfrog_service::timetable::save_timetable_entry_checked;
 use studyfrog_ui::calendar_mode::CalendarViewMode;
 use studyfrog_ui::effect::Effect;
+use studyfrog_ui::exec::worker_new;
+use studyfrog_ui::model::Model;
 use studyfrog_ui::plan_msg::PlanMsg;
-use studyfrog_ui::state::State;
+use studyfrog_ui::state::{Screen, State};
 use studyfrog_ui::update::update;
 
 #[test]
@@ -117,4 +124,62 @@ fn timetable_form_open_and_save_flow() {
         studyfrog_ui::msg::Msg::Plan(PlanMsg::DeleteTimetable(Uid(10))),
     );
     assert_eq!(fx_del, vec![Effect::DeleteTimetable(Uid(10))]);
+}
+
+fn statistik_lecture() -> TimetableEntry {
+    TimetableEntry {
+        id: Uid(7),
+        title: "Statistik-Vorlesung".to_owned(),
+        day_of_week: 0,
+        start_minute: 9 * 60,
+        duration_min: 90,
+        location: None,
+        instructor: None,
+        stack_uid: None,
+    }
+}
+
+#[test]
+fn stored_lectures_are_listed_after_a_restart() {
+    // BUG-0044: the Timetable view drew `planner.timetable`, which only a save filled.
+    let (vault, _model, _worker) = opened("tt-restart");
+    let path = vault.path.display().to_string();
+    {
+        let (mut session, _) = studyfrog_service::session::open_vault(&path).unwrap();
+        save_timetable_entry_checked(&mut session, statistik_lecture()).unwrap();
+    }
+
+    // Restart: a fresh app on the same vault, then the calendar is opened.
+    let mut model = Model::default();
+    model.state.app.tutorial_offered = true;
+    let mut worker = worker_new(None);
+    run_to_idle(&mut model, &mut worker, vec![Effect::OpenVault(path)]);
+    send(
+        &mut model,
+        &mut worker,
+        studyfrog_ui::msg::Msg::Navigate(Screen::Calendar),
+    );
+
+    assert_eq!(model.state.planner.timetable, vec![statistik_lecture()]);
+}
+
+#[test]
+fn the_homework_screen_gets_the_timetable_beside_its_items() {
+    // BUG-0043: the homework planner lists the lessons beside the due items.
+    let (vault, _model, _worker) = opened("tt-homework");
+    let path = vault.path.display().to_string();
+    {
+        let (mut session, _) = studyfrog_service::session::open_vault(&path).unwrap();
+        save_timetable_entry_checked(&mut session, statistik_lecture()).unwrap();
+    }
+    let mut model = Model::default();
+    model.state.app.tutorial_offered = true;
+    let mut worker = worker_new(None);
+    run_to_idle(&mut model, &mut worker, vec![Effect::OpenVault(path)]);
+    send(
+        &mut model,
+        &mut worker,
+        studyfrog_ui::msg::Msg::Navigate(Screen::Homework),
+    );
+    assert_eq!(model.state.planner.timetable, vec![statistik_lecture()]);
 }

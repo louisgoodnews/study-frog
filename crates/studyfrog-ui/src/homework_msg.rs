@@ -12,6 +12,8 @@ use crate::homework_form::{HomeworkEdit, HomeworkForm};
 pub enum HomeworkMsg {
     /// Show a status tab.
     Tab(HomeworkTab),
+    /// Show only one subject (stack), or every subject with `None`.
+    Subject(Option<Uid>),
     /// Open the dialog for a new item.
     New,
     /// Open the dialog for an existing item.
@@ -45,6 +47,8 @@ pub enum HomeworkMsg {
 pub struct HomeworkUi {
     /// The status tab in front.
     pub tab: HomeworkTab,
+    /// The subject (stack) the list is narrowed to; kept when the tab changes.
+    pub subject: Option<Uid>,
     /// The create or edit dialog, when open.
     pub form: Option<HomeworkForm>,
     /// Why the last action was refused.

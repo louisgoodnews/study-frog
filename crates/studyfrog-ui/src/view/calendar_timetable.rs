@@ -3,7 +3,7 @@
 mod form;
 use self::form::draw_form;
 use eframe::egui::{self, RichText};
-use studyfrog_calendar::timetable::TimetableEntry;
+use studyfrog_calendar::timetable::{DAY_NAMES, TimetableEntry, lesson_label, lessons_on_weekday};
 use studyfrog_core::civil::format_minute;
 use studyfrog_core::uid::Uid;
 
@@ -162,4 +162,25 @@ fn draw_entry_card(state: &State, entry: &TimetableEntry, ui: &mut egui::Ui, out
         });
     });
     ui.add_space(4.0);
+}
+
+/// The weekly timetable, one heading per weekday that has lessons.
+pub(super) fn timetable_panel(state: &State, ui: &mut egui::Ui) {
+    ui.label(RichText::new("Timetable").strong());
+    let entries = &state.planner.timetable;
+    if entries.is_empty() {
+        ui.label("No lectures or lessons yet. Add them in the Calendar's Timetable view.");
+        return;
+    }
+    for (day, name) in DAY_NAMES.iter().enumerate() {
+        let lessons = lessons_on_weekday(entries, day as u8);
+        if lessons.is_empty() {
+            continue;
+        }
+        ui.add_space(4.0);
+        ui.label(RichText::new(*name).strong());
+        for lesson in lessons {
+            ui.label(lesson_label(lesson));
+        }
+    }
 }

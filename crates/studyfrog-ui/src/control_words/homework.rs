@@ -1,6 +1,6 @@
 //! The words of `homework ...`: `homework new "Essay" --due 2026-12-02 --time 09:00 --estimate 90
 //! --priority high --stack french --checklist "Read;Draft"`, `homework advance <ULID>`, `homework tick
-//! <ULID> 2`, `homework tab overdue`, `homework list`.
+//! <ULID> 2`, `homework tab overdue`, `homework subject french|all`, `homework list`.
 
 use studyfrog_calendar::homework::HomeworkPriority;
 use studyfrog_calendar::homework_query::HomeworkTab;
@@ -51,6 +51,10 @@ pub fn parse(words: &[String]) -> Result<HomeworkCmd, String> {
     Ok(match need(&rest, 0, "homework operation")? {
         "list" => HomeworkCmd::List,
         "tab" => HomeworkCmd::Tab(tab_named(need(&rest, 1, "tab")?)?),
+        "subject" => HomeworkCmd::Subject(match need(&rest, 1, "subject")? {
+            "all" => None,
+            folder => Some(folder.to_owned()),
+        }),
         "new" => HomeworkCmd::New(HomeworkNew {
             title: need(&rest, 1, "title")?.to_owned(),
             due_date: flag(&flags, "due").map(str::to_owned),

@@ -5,10 +5,11 @@ use studyfrog_core::civil::{LocalTime, utc_to_local};
 use studyfrog_core::time::UnixMs;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::homework::{
-    advance_homework_status, delete_homework_checked, new_homework_id, save_homework_checked,
-    toggle_homework_step,
+    advance_homework_status, delete_homework_checked, list_homework, new_homework_id,
+    save_homework_checked, toggle_homework_step,
 };
 use studyfrog_service::session::{ServiceError, VaultSession};
+
 use studyfrog_service::timezone::local_offset_minutes;
 
 use crate::exec::Worker;
@@ -75,4 +76,24 @@ pub fn execute(w: &mut Worker, effect: HomeworkEffect, now_ns: i64) -> Msg {
             delete_homework_checked(s, id)
         }))),
     }
+}
+
+/// Read the homework items and the clock, for the calendar's deadline markers and the homework
+/// screen, and the stored timetable beside them.
+pub fn load(w: &crate::exec::Worker, now_ns: i64) -> Vec<crate::msg::Msg> {
+    let now = UnixMs(now_ns / 1_000_000);
+    let clock = utc_to_local(now, local_offset_minutes(now));
+    let (result, timetable) = match &w.session {
+        Some(s) => (
+            list_homework(s)
+                .map(|items| (items, clock))
+                .map_err(|e| e.to_string()),
+            crate::exec_plan::read_timetable(s),
+        ),
+        None => (Ok((Vec::new(), clock)), Ok(Vec::new())),
+    };
+    vec![
+        crate::msg::Msg::Plan(crate::plan_msg::PlanMsg::HomeworkLoaded(result)),
+        crate::msg::Msg::Plan(crate::plan_msg::PlanMsg::TimetableLoaded(timetable)),
+    ]
 }

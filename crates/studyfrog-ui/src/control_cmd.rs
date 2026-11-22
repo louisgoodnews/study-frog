@@ -2,16 +2,15 @@
 //! Parsing is in `control_parse`, the messages each command becomes in `control_plan`.
 
 use std::path::PathBuf;
-use studyfrog_calendar::homework::HomeworkPriority;
-use studyfrog_calendar::homework_query::HomeworkTab;
 use studyfrog_core::event::Difficulty;
 use studyfrog_core::review::Rating;
-use studyfrog_core::uid::Uid;
 use studyfrog_service::create_more::NewKind;
 
 use crate::state::Screen;
 
 pub mod calendar;
+pub mod homework;
+pub use homework::{HomeworkCmd, HomeworkNew};
 /// One request: the caller's id (echoed in the answer) and the command.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Request {
@@ -141,40 +140,6 @@ pub enum StackCmd {
     Move(String, String),
     /// The stack's scheduling settings, and its page.
     Settings(String),
-}
-
-/// What `homework ...` asks for. An item is named by its ULID.
-#[derive(Debug, Clone, PartialEq)]
-pub enum HomeworkCmd {
-    /// The items as the app last read them.
-    List,
-    /// Show a status tab.
-    Tab(HomeworkTab),
-    /// Create an item (the dialog is filled in and saved).
-    New(HomeworkNew),
-    /// Move an item on to its next status.
-    Advance(Uid),
-    /// Tick or untick checklist step number `n` (from 1).
-    Tick(Uid, usize),
-}
-
-/// The fields of a new homework item; what is not given keeps the dialog's default.
-#[derive(Debug, Clone, PartialEq, Default)]
-pub struct HomeworkNew {
-    /// The title.
-    pub title: String,
-    /// The due date, `YYYY-MM-DD`.
-    pub due_date: Option<String>,
-    /// The due time, `HH:MM`.
-    pub due_time: Option<String>,
-    /// Estimated minutes.
-    pub estimate: Option<u32>,
-    /// Priority.
-    pub priority: Option<HomeworkPriority>,
-    /// The stack folder the item belongs to.
-    pub stack: Option<String>,
-    /// The checklist steps, in order.
-    pub checklist: Vec<String>,
 }
 
 /// What `rehearse ...` asks for.

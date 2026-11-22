@@ -2,11 +2,11 @@
 
 use studyfrog_board::ops::BoardOp;
 use studyfrog_calendar::session::Session;
+use studyfrog_calendar::timetable::{TimetableEntry, timetable_to_session};
 use studyfrog_core::civil::{Date, utc_to_local};
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_service::create::{IdSource, fresh_id_source};
-use studyfrog_service::homework::list_homework;
 use studyfrog_service::kanban::{apply_board_op, board_or_default};
 use studyfrog_service::planning::{
     cancel_occurrence, delete_session_checked, list_sessions, new_session_id, save_session_checked,
@@ -67,39 +67,32 @@ fn run_sessions(
     Msg::Plan(PlanMsg::Changed(result))
 }
 
-/// Read the homework items and the clock, for the calendar's deadline markers.
-pub fn load_homework(w: &Worker, now_ns: i64) -> Msg {
-    let now = UnixMs(now_ns / 1_000_000);
-    let clock = utc_to_local(now, local_offset_minutes(now));
-    let result = match &w.session {
-        Some(s) => list_homework(s)
-            .map(|items| (items, clock))
-            .map_err(|e| e.to_string()),
-        None => Ok((Vec::new(), clock)),
-    };
-    Msg::Plan(PlanMsg::HomeworkLoaded(result))
+/// The stored timetable entries, as the Timetable view and the homework screen list them.
+pub fn read_timetable(s: &VaultSession) -> Result<Vec<TimetableEntry>, String> {
+    studyfrog_service::timetable::list_timetable_entries(s).map_err(|e| e.to_string())
 }
 
-/// Read the sessions and today's date.
-pub fn load_sessions(w: &mut Worker, now_ns: i64) -> Msg {
-    let result = match &w.session {
-        Some(s) => match list_sessions(s) {
-            Ok(mut all) => {
-                let d = today(now_ns);
-                if let Ok(tt) = studyfrog_service::timetable::list_timetable_entries(s) {
-                    for entry in &tt {
-                        all.push(studyfrog_calendar::timetable::timetable_to_session(
-                            entry, d,
-                        ));
-                    }
-                }
-                Ok((all, d))
-            }
-            Err(e) => Err(e.to_string()),
-        },
-        None => Err(NO_VAULT.to_owned()),
+/// Read the sessions, today's date and the stored timetable. The timetable reaches the Timetable
+/// view here too, so its lectures show after a restart without a save (BUG-0044).
+pub fn load_sessions(w: &mut Worker, now_ns: i64) -> Vec<Msg> {
+    let Some(s) = &w.session else {
+        return vec![Msg::Plan(PlanMsg::Loaded(Err(NO_VAULT.to_owned())))];
     };
-    Msg::Plan(PlanMsg::Loaded(result))
+    let d = today(now_ns);
+    let timetable = read_timetable(s);
+    let sessions = list_sessions(s).map_err(|e| e.to_string()).map(|mut all| {
+        all.extend(
+            timetable
+                .iter()
+                .flatten()
+                .map(|entry| timetable_to_session(entry, d)),
+        );
+        (all, d)
+    });
+    vec![
+        Msg::Plan(PlanMsg::Loaded(sessions)),
+        Msg::Plan(PlanMsg::TimetableLoaded(timetable)),
+    ]
 }
 
 /// Store a session, giving a new one its id first.
