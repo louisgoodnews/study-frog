@@ -61,7 +61,7 @@ fn screen_named(name: &str) -> Option<Screen> {
         "canvas" => Screen::Canvas,
         "match" => Screen::Match,
         "run" | "run-answer" | "run-long" | "learn-editor" => Screen::Rehearse,
-        "script-jobs" => Screen::Console,
+        "script-jobs" | "studio-code" => Screen::Console,
         _ => return None,
     })
 }
@@ -69,6 +69,10 @@ fn screen_named(name: &str) -> Option<Screen> {
 fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
     if name == "run-long" {
         return crate::app_shot_recall::mock::long_run(model);
+    }
+    if name == "studio-code" {
+        crate::app_shot_recall::mock::studio_code_demo(model);
+        return Vec::new();
     }
     if name == "script-jobs" {
         crate::app_shot_recall::mock::script_jobs_demo(model);

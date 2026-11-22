@@ -3,6 +3,7 @@
 
 use eframe::egui::{self, RichText, TextStyle};
 
+pub mod code;
 pub mod jobs;
 pub mod output;
 
@@ -120,16 +121,7 @@ fn editor_column(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.add_space(4.0);
 
     let mut code = active_tab(studio).map_or("", |t| &t.content).to_string();
-    let edit = egui::TextEdit::multiline(&mut code)
-        .id_salt("scriptstudio-multiline-text")
-        .font(TextStyle::Monospace)
-        .desired_rows(6)
-        .desired_width(f32::INFINITY);
-    let response = ui.add(edit);
-    response.widget_info(|| egui::WidgetInfo::labeled(egui::Role::TextInput, true, "Script text"));
-    if response.changed() {
-        out.push(Msg::Console(ConsoleMsg::StudioEditCode(code)));
-    }
+    code::show(ui, &mut code, out);
 }
 
 /// The Console and ScriptStudio screen.

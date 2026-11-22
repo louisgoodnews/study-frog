@@ -5,6 +5,7 @@
 
 pub mod ast;
 pub mod cookbook;
+pub mod editor;
 pub mod env;
 pub mod error;
 pub mod eval;

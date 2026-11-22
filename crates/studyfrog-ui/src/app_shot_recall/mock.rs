@@ -186,3 +186,15 @@ pub fn script_jobs_demo(model: &mut Model) {
     model.state.screen = Screen::Console;
     model.state.modal = Some(crate::modal::Modal::ScriptJobs(Box::new(e)));
 }
+
+/// ScriptStudio with a FrogScript file open: keywords, a built-in, a comment, a bracket at the cursor and a parse error
+/// (`--screenshot studio-code`).
+pub fn studio_code_demo(model: &mut Model) {
+    // A valid pipeline, a comment, and a call whose bracket is not closed: the error is on line 4.
+    let code = "# FrogScript Study Automation\ncards = from stack * | where type \"card\"  # cards due today\nlog_info(\"Inspecting items\")\nprint(len(cards)\n";
+    crate::script_studio::new_tab(&mut model.state.console.studio, Some("demo.frog"));
+    let idx = model.state.console.studio.active_tab;
+    model.state.console.studio.tabs[idx].content = code.to_owned();
+    model.state.console.studio.expanded = true;
+    model.state.screen = Screen::Console;
+}

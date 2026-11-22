@@ -2,7 +2,7 @@
 id: STORY-0150
 type: story
 title: "In-app code execution console and domain-specific language (DSL) research"
-status: backlog
+status: review
 epic: EPIC-049
 parents: [EPIC-049]
 estimate: 5

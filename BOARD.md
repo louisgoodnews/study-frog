@@ -450,7 +450,7 @@
 | [STORY-0147](docs/issues/stories/STORY-0147-research-floating-burger-navigation-menu.md) Research and prototype floating burger navigation menu (3) | done | 0/0 |
 | [STORY-0148](docs/issues/stories/STORY-0148-console-expansion-to-full-scriptrunner-environment-with-internal-api.md) Console expansion to full scriptrunner environment with internal API (5) | done | 0/0 |
 | [STORY-0149](docs/issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md) Rename ScriptRunner across application and documentation to avoid trademark conflicts (2) | done | 0/0 |
-| [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and domain-specific language (DSL) research (5) | backlog | 0/0 |
+| [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and domain-specific language (DSL) research (5) | review | 0/0 |
 | [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers (5) | review | 0/0 |
 | [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging for user scripts (3) | review | 0/0 |
 | [STORY-0153](docs/issues/stories/STORY-0153-frogcanvas-data-model-and-serialization.md) FrogCanvas Data Model and Spatial Serialization (5) | done | 2/2 |
