@@ -98,7 +98,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         }
         Effect::MockExam(e) => mock::run(w, e, now_ns),
         Effect::Learn(e) => crate::exec_learn::run(w, e, now_ns),
-        Effect::ExportConsole(text) => console::export(w, &text),
+        Effect::Console(e) => console::run(w, e, now_ns),
         Effect::LoadCases(folder) => crate::exec_library::load_cases(w, folder),
         Effect::SetCalibratedStart(on) => crate::exec_library::set_calibrated_start(w, on),
         Effect::MemoryDeck(folder) => crate::exec_items::memory_deck(w, folder),

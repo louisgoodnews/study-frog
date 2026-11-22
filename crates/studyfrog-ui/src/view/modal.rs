@@ -24,6 +24,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             Modal::PdfExport(_) => 620.0,
             Modal::Transfer | Modal::Import => 720.0,
             Modal::LearnEditor(_) => 780.0,
+            Modal::ScriptJobs(_) => 780.0,
             _ => WIDTH,
         });
         match modal {
@@ -39,6 +40,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             Modal::EditItem(form) => super::modal_edit_item::draw(state, form, ui, out),
             Modal::DeleteItem(_uid, title) => delete_item_dialog(title, ui, out),
             Modal::LearnEditor(editor) => super::learn_editor::draw(editor, ui, out),
+            Modal::ScriptJobs(editor) => super::console::jobs::draw(editor, ui, out),
         }
     });
     if response.should_close() {

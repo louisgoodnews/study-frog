@@ -32,6 +32,8 @@ pub enum Modal {
     DeleteItem(studyfrog_core::uid::Uid, String),
     /// The learn-mode editor (STORY-0198).
     LearnEditor(Box<crate::learn_editor::LearnEditor>),
+    /// The scheduled and event-bound jobs (STORY-0151).
+    ScriptJobs(Box<crate::console_ui::jobs::JobsEditor>),
 }
 
 /// The priority and difficulty the user chose; `None` leaves the default.

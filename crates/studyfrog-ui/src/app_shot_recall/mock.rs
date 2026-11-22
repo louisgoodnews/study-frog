@@ -143,3 +143,46 @@ pub fn learn_editor_demo(model: &mut Model) {
     model.state.screen = Screen::Rehearse;
     model.state.modal = Some(crate::modal::Modal::LearnEditor(Box::new(e)));
 }
+
+/// The job editor with three jobs: one on a schedule, one on an event, one switched off (`--screenshot script-jobs`).
+pub fn script_jobs_demo(model: &mut Model) {
+    use studyfrog_service::scripting::config::Access;
+    use studyfrog_service::scripting::jobs::JobRow;
+    let row = |name: &str, schedule: &str, on: &[&str], enabled: bool, next: Option<&str>| JobRow {
+        name: name.into(),
+        script: format!("{name}.py"),
+        args: Vec::new(),
+        schedule: schedule.into(),
+        on: on.iter().map(|s| (*s).to_owned()).collect(),
+        timeout_secs: 60,
+        access: Access::Read,
+        enabled,
+        next_run: next.map(str::to_owned),
+    };
+    let e = crate::console_ui::jobs::JobsEditor {
+        rows: vec![
+            row(
+                "morning-backup",
+                "0 8 * * mon-fri",
+                &[],
+                true,
+                Some("2027-03-01 08:00"),
+            ),
+            row("tag-new-cards", "", &["item_created"], true, None),
+            row("weekly-report", "0 9 * * 1", &[], false, None),
+        ],
+        errors: vec!["job 4: unknown event vault_closing".into()],
+        python: "python3".into(),
+        scripts: vec!["morning-backup.py".into(), "tag-new-cards.py".into()],
+        selected: Some(0),
+        history: vec!["[12:00] script morning-backup finished".into()],
+        adhoc_script: "morning-backup.py".into(),
+        adhoc_args: String::new(),
+        new_name: String::new(),
+        new_script: String::new(),
+        dirty: true,
+        notice: None,
+    };
+    model.state.screen = Screen::Console;
+    model.state.modal = Some(crate::modal::Modal::ScriptJobs(Box::new(e)));
+}

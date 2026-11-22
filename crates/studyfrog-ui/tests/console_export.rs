@@ -52,7 +52,9 @@ fn the_export_writes_the_transcript_to_the_vault_log() {
     );
     let out = execute(
         &mut w,
-        Effect::ExportConsole("[     1.0s] Stdout: hello\n".into()),
+        Effect::Console(studyfrog_ui::console_ui::ConsoleEffect::Export(
+            "[     1.0s] Stdout: hello\n".into(),
+        )),
         NOW_NS,
     );
     let path = match &out[..] {
@@ -69,7 +71,11 @@ fn the_export_writes_the_transcript_to_the_vault_log() {
 #[test]
 fn an_export_without_a_vault_says_so() {
     let mut w = worker_with_host(None, None, Host::default());
-    let out = execute(&mut w, Effect::ExportConsole("x".into()), NOW_NS);
+    let out = execute(
+        &mut w,
+        Effect::Console(studyfrog_ui::console_ui::ConsoleEffect::Export("x".into())),
+        NOW_NS,
+    );
     assert!(
         matches!(&out[..], [Msg::Console(ConsoleMsg::Exported(Err(_)))]),
         "{out:?}"

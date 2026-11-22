@@ -5,4 +5,5 @@ pub mod config;
 pub mod cron;
 pub mod due;
 pub mod exec;
+pub mod jobs;
 pub mod log;

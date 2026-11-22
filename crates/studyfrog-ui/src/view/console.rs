@@ -3,6 +3,7 @@
 
 use eframe::egui::{self, RichText, TextStyle};
 
+pub mod jobs;
 pub mod output;
 
 use crate::console_ui::{ConsoleMsg, Entry, EntryKind};

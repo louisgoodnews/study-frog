@@ -2,11 +2,21 @@
 //! script output and lifecycle events as they arrive. Pure: lines go out through `outbox`, which the
 //! window's glue (`console_link`) sends to its own control protocol, and come back as `Line`.
 
+pub mod jobs;
 pub mod lines;
 
 use crate::console_ui::lines::entry_of;
 use crate::effect::Effect;
 use crate::state::{Notice, NoticeKind, State};
+
+/// What the Console asks the executor to do: write the transcript, or the job editor's reads and writes.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ConsoleEffect {
+    /// Write the transcript to the vault's log file.
+    Export(String),
+    /// The scheduled jobs (STORY-0151).
+    Jobs(jobs::JobsEffect),
+}
 
 /// Entries kept; older ones are dropped.
 pub const MAX_ENTRIES: usize = 500;
@@ -101,6 +111,10 @@ pub enum ConsoleMsg {
     StudioRefreshList,
     /// The output search text changed.
     Search(String),
+    /// "Jobs" was pressed: open the job editor.
+    OpenJobs,
+    /// A message of the job editor.
+    Jobs(jobs::JobsMsg),
     /// Write the transcript to the vault's log file.
     ExportLog,
     /// The transcript was written to this path, or not.
@@ -177,9 +191,11 @@ pub fn update(state: State, m: ConsoleMsg) -> (State, Vec<Effect>) {
             crate::script_studio_exec::apply_studio_msg(&mut state, m);
         }
         ConsoleMsg::Wiki(w) => crate::script_studio::wiki_panel::apply(&mut state.console, w),
+        ConsoleMsg::OpenJobs => return jobs::open(state),
+        ConsoleMsg::Jobs(j) => return jobs::update(state, j),
         ConsoleMsg::ExportLog => {
             let text = crate::console_ui::lines::export_text(&state.console);
-            return (state, vec![Effect::ExportConsole(text)]);
+            return (state, vec![Effect::Console(ConsoleEffect::Export(text))]);
         }
         ConsoleMsg::Exported(Ok(path)) => {
             state.notice = Some(Notice {

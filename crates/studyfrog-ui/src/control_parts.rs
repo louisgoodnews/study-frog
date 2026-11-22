@@ -50,6 +50,7 @@ pub fn modal_json(m: &Modal) -> Value {
             "kind": "edit_item", "item_uid": ulid(f.uid), "title": f.title, "error": f.error, "busy": f.busy,
         }),
         Modal::LearnEditor(_) => json!({"kind": "learn_editor"}),
+        Modal::ScriptJobs(_) => json!({"kind": "script_jobs"}),
         Modal::DeleteItem(uid, title) => json!({
             "kind": "delete_item", "item_uid": ulid(*uid), "title": title,
         }),
