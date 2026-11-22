@@ -41,7 +41,12 @@ The existing benchmarks in the eight crates that have them (`studyfrog-srs`, `st
 ## Decisions
 - **Where and when:** benchmarks run on the owner's local machine, on a schedule. Baselines are per machine and never compared across machines.
 - **Frame time:** measured in the running window, not in the egui test harness.
-- **Regression margin:** open. Research into the statistics and published practice is under way; the margin and the number of repeated runs will be set from it.
+- **Regression rule:** flag a regression only when both hold: (a) the bootstrap 95% confidence interval of the new/baseline ratio of medians excludes 1.0, and (b) the point estimate exceeds an effect-size floor of max(5%, 3 times the baseline's own run-to-run spread). The 5% floor is a judgment, not a published value; published sources support statistical gating with a noise-derived floor but no universal percentage.
+- **Repeats:** at least 5 interleaved process invocations per side (baseline and new alternating), each with criterion's default sample count; 10 if the spread across the 5 exceeds 5%. Interleaving allows a paired comparison.
+- **Baselines:** one per machine. The 2x gap seen between machines is a machine-identity problem that no margin fixes.
+- **Machine hygiene:** performance governor, boost disabled, pinned cores (taskset), SMT off where possible, background load closed (Google Benchmark, "Reducing Variance").
 
 ## Open Questions
-- What regression margin counts as a failure, and how many repeated runs per schedule slot are enough to detect it? (Pending the research.)
+- Measure the i9-11900K's own idle run-to-run spread (10 back-to-back runs). That sets the noise floor in rule (b); until then the 5% floor is provisional.
+- Confirm the noise threshold of the criterion version in use; the sources gave different defaults (1% and 2%).
+- Sources consulted: criterion.rs user guide; Georges et al. (OOPSLA 2007 and 2008) on confidence intervals and paired comparison; Kalibera and Jones (ISMM 2013) on repetitions; Daly et al. (MongoDB, E-divisive change points); Hunter (DataStax, ICPE 2023); Chromium and LLVM regression policies (thresholds of 0.3% to 2%, for competitive benchmarks, not a general default).
