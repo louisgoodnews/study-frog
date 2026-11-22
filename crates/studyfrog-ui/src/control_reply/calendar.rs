@@ -3,9 +3,37 @@
 
 use serde_json::{Value, json};
 use studyfrog_calendar::homework_query::{due_on, urgency};
-use studyfrog_core::civil::{Date, format_date};
+use studyfrog_core::civil::{Date, format_date, format_minute};
 
+use crate::control_cmd::calendar::SessionAdd;
+use crate::control_state::ulid;
 use crate::state::State;
+
+/// The session `add` created: found by its title and start (the latest one when several match), or
+/// the form's error when the save was refused (the form stays open).
+pub fn session_added(state: &State, add: &SessionAdd) -> Result<Value, String> {
+    if let Some(e) = &state.planner.form_error {
+        return Err(format!("{e} (the new-session form is still open)"));
+    }
+    state
+        .planner
+        .sessions
+        .iter()
+        .filter(|s| s.title == add.title && s.start == add.start)
+        .max_by_key(|s| s.id.0)
+        .map(|s| {
+            json!({
+                "session": {
+                    "id": ulid(s.id),
+                    "title": s.title,
+                    "start": format!("{} {}", format_date(s.start.date), format_minute(s.start.minute)),
+                    "minutes": s.duration_min,
+                    "reminders": s.reminders,
+                }
+            })
+        })
+        .ok_or_else(|| "the session was not saved".to_owned())
+}
 
 /// The homework due on `day`, earliest first, with each item's urgency (null until the clock is read).
 pub fn homework_json(state: &State, day: Date) -> Value {

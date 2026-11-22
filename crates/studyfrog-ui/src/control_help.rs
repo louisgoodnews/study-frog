@@ -161,6 +161,11 @@ pub const COMMANDS: &[Row] = &[
         "read",
     ),
     (
+        "calendar session add <title> --start \"YYYY-MM-DD HH:MM\" --minutes N",
+        "Planner: the day and month shown, New, the form's Title, Date, Time and Duration, then Save (the same path as the form); the answer is the created session",
+        "write",
+    ),
+    (
         "reminders due",
         "Effect::PeekReminders: the calendar and homework reminders due now, not marked shown",
         "read",

@@ -110,6 +110,7 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
         )),
         Command::Calendar(CalendarCmd::Homework(day)) => Ok(calendar::homework_json(state, *day)),
         Command::Calendar(CalendarCmd::RemindersDue) => Ok(calendar::reminders_json(state)),
+        Command::Calendar(CalendarCmd::SessionAdd(add)) => calendar::session_added(state, add),
         Command::PdfFind(..) => Ok(with_part(state_json(state), "pdf", pdf::pdf_json(state))),
         Command::Help(None) => Ok(help_json()),
         Command::Help(Some(name)) => tooltip::tooltip_json(name),

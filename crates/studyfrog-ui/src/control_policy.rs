@@ -1,6 +1,7 @@
 //! What the control protocol lets through: each command has a class, and the policy says which
 //! classes may run. Like `McpPolicy`, destructive commands are refused unless switched on.
 
+use crate::control_cmd::calendar::CalendarCmd;
 use crate::control_cmd::{Command, HomeworkCmd, ItemCmd, RehearseCmd, StackCmd};
 
 /// How much a command may change.
@@ -48,6 +49,7 @@ pub fn class_of(cmd: &Command) -> Class {
         }
         C::Homework(HomeworkCmd::List | HomeworkCmd::Tab(_)) => Class::Read,
         C::Homework(_) => Class::Write,
+        C::Calendar(CalendarCmd::SessionAdd(_)) => Class::Write,
         C::Appearance(_) => Class::Write,
         C::PdfFind(Some(_), _) => Class::Write,
         C::Item(_) | C::Stack(_) | C::Import { .. } | C::Export(_) => Class::Write,

@@ -1,6 +1,7 @@
-//! The calendar commands of the control protocol: the view, the period, a day's homework and the reminders due.
+//! The calendar commands of the control protocol: the view, the period, a day's homework, a new
+//! session and the reminders due.
 
-use studyfrog_core::civil::Date;
+use studyfrog_core::civil::{Date, LocalTime};
 
 use crate::calendar_mode::CalendarViewMode;
 
@@ -13,6 +14,19 @@ pub enum CalendarCmd {
     Period(Date),
     /// The homework due on this day, with its urgency.
     Homework(Date),
+    /// Create a calendar session through the planner's form.
+    SessionAdd(SessionAdd),
     /// The calendar and homework reminders due now, without marking them shown.
     RemindersDue,
+}
+
+/// A new calendar session: its title, its start and its length in minutes.
+#[derive(Debug, Clone, PartialEq)]
+pub struct SessionAdd {
+    /// The title.
+    pub title: String,
+    /// The local start: the date and the minute of the day.
+    pub start: LocalTime,
+    /// The length in minutes.
+    pub minutes: u16,
 }

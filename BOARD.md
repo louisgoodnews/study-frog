@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (36) | Ready (0) | In progress (0/3) | Review (28) | Blocked (3) | Done (540) |
+| Backlog (36) | Ready (0) | In progress (0/3) | Review (27) | Blocked (3) | Done (541) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0020](docs/issues/bugs/BUG-0020-scriptstudio-reference-panel-layout.md) ScriptStudio reference panel is squeezed and its topics are not shown (3) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [BUG-0021](docs/issues/bugs/BUG-0021-narrow-window-header-and-run-strip-overlap.md) At the 640 by 420 minimum, the window header and the rehearsal top strip overlap and the hint line is cut off (2) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -505,7 +505,7 @@
 | [STORY-0191](docs/issues/stories/STORY-0191-import-destinations-and-pdf-cards-in-the-control-protocol.md) Import destinations and PDF cards in the control protocol (3) | done | 0/0 |
 | [STORY-0192](docs/issues/stories/STORY-0192-search-and-tooltips-in-the-control-protocol.md) Search and tooltips in the control protocol (2) | review | 0/0 |
 | [STORY-0193](docs/issues/stories/STORY-0193-appearance-and-density-in-the-control-protocol.md) Appearance and density in the control protocol (2) | done | 0/0 |
-| [STORY-0194](docs/issues/stories/STORY-0194-calendar-reminders-and-homework-markers-in-the-control-protocol.md) Calendar, reminders and homework markers in the control protocol (3) | review | 0/0 |
+| [STORY-0194](docs/issues/stories/STORY-0194-calendar-reminders-and-homework-markers-in-the-control-protocol.md) Calendar, reminders and homework markers in the control protocol (3) | done | 0/0 |
 | [STORY-0195](docs/issues/stories/STORY-0195-in-rehearsal-view-the-item-takes-more-of-the-screen.md) In rehearsal view, the item takes more of the screen (3) | done | 0/0 |
 | [STORY-0196](docs/issues/stories/STORY-0196-in-rehearsal-view-the-previous-rating-shows-on-the-rating-button-in-its-colour.md) In rehearsal view, the previous rating shows on the rating button in its colour (3) | done | 0/0 |
 | [STORY-0197](docs/issues/stories/STORY-0197-the-item-colour-paints-the-item-in-rehearsal-view.md) The item colour paints the item in rehearsal view (3) | done | 0/0 |
@@ -586,7 +586,7 @@
 | [EPIC-061](docs/issues/epics/EPIC-061-case-study-and-diagnostic-decision-matrix.md) Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification | review | 5/6 |
 | [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | review | 3/4 |
 | [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | review | 1/6 |
-| [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | review | 3/7 |
+| [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | review | 4/7 |
 | [EPIC-065](docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | done | 3/3 |
 | [EPIC-066](docs/issues/epics/EPIC-066-learn-mode-research-platform.md) Learn-mode research platform: visual node-based technique editor | done | 1/1 |
 | [EPIC-067](docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement | blocked | 0/5 |

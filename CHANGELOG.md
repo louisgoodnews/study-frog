@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **`calendar session add` in the control protocol (`crates/studyfrog-ui`, STORY-0194, EPIC-064)**: `calendar session add TITLE --start "YYYY-MM-DD HH:MM" --minutes N` creates a calendar session through the planner's own new-session form and Save, so `reminders due` can report it; the answer is the created session. Test: `studyfrog-ui/tests/control_calendar_session.rs`.
 - **Help links to the FrogScript reference (`crates/studyfrog-ui`, EPIC-058)**: the Help screen's page tree has a "FrogScript reference" button (with a vault open) that opens the reference in ScriptStudio, expanded, with the same panel as the Console's "Reference" button. Test: `studyfrog-ui/tests/help_wiki.rs`.
 
 ### Changed

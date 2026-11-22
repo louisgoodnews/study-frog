@@ -74,3 +74,62 @@ fn the_calendar_homework_answer_names_the_day() {
     assert_eq!(r["ok"], true, "{r}");
     assert_eq!(r["result"]["day"], "2027-03-01", "{r}");
 }
+
+#[test]
+fn calendar_session_add_creates_the_session_and_reminders_due_reports_it() {
+    use studyfrog_core::civil::{format_date, format_minute, utc_to_local};
+    use studyfrog_core::time::UnixMs;
+    use studyfrog_service::timezone::local_offset_minutes;
+
+    let (vault, logs) = (sample_vault("ctl-cal-add"), temp_dir("ctl-cal-add-logs"));
+    let mut e = engine(&vault.path, &logs.path, policy_default());
+
+    // A start five minutes after the clock, on the local clock (the reminder lead is 15 minutes).
+    let soon = e.model.state.wall_ms + 5 * 60_000;
+    let local = utc_to_local(UnixMs(soon), local_offset_minutes(UnixMs(soon)));
+    let start = format!(
+        "{} {}",
+        format_date(local.date),
+        format_minute(local.minute)
+    );
+
+    let line = format!("calendar session add \"Soon session\" --start \"{start}\" --minutes 30");
+    let made = ask(&mut e, &line);
+    assert_eq!(made["ok"], true, "{made}");
+    assert_eq!(made["result"]["session"]["title"], "Soon session", "{made}");
+    assert_eq!(made["result"]["session"]["start"], start.as_str(), "{made}");
+    assert_eq!(made["result"]["session"]["minutes"], 30, "{made}");
+
+    let due = ask(&mut e, "reminders due");
+    assert_eq!(due["ok"], true, "{due}");
+    let titles: Vec<&Value> = due["result"]["sessions"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|s| &s["title"])
+        .collect();
+    assert!(titles.contains(&&json!("Soon session")), "{due}");
+
+    // Reading does not mark it shown: the next read still lists it.
+    let again = ask(&mut e, "reminders due");
+    assert_eq!(
+        again["result"]["sessions"], due["result"]["sessions"],
+        "{again}"
+    );
+}
+
+#[test]
+fn calendar_session_add_words_need_a_start_and_a_length() {
+    assert!(parse_request("calendar session add \"T\" --minutes 30").is_err());
+    assert!(parse_request("calendar session add \"T\" --start \"2027-03-01 09:00\"").is_err());
+    assert!(
+        parse_request("calendar session add \"T\" --start \"2027-03-01 09:00\" --minutes 0")
+            .is_err()
+    );
+    assert!(parse_request("calendar session edit \"T\"").is_err());
+    let ok = cmd("calendar session add \"Lecture\" --start \"2027-03-01 09:30\" --minutes 90");
+    assert!(
+        matches!(ok, Command::Calendar(CalendarCmd::SessionAdd(_))),
+        "{ok:?}"
+    );
+}
