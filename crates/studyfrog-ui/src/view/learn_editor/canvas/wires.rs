@@ -54,17 +54,28 @@ fn edge_point(center: Pos2, toward: Pos2, half: Vec2) -> Pos2 {
     center + d * tx.min(ty).min(1.0)
 }
 
+/// How far a loop from a step back to itself rises above the step, and how far it reaches to each side of its middle.
+const LOOP_RISE: f32 = 28.0;
+const LOOP_REACH: f32 = 30.0;
+
 /// The points a wire is drawn through, from its start to its arrow's tip. A wire that goes back to a step on the left
-/// runs as an arc above the boxes, so it does not run through the steps between them. Empty for a wire from a step
-/// to itself.
+/// runs as an arc above the boxes, so it does not run through the steps between them. A wire from a step to itself
+/// is a loop that rises from the top of the step and comes back down onto it, so it does not hide behind the box.
 pub fn wire_path(from: Rect, to: Rect) -> Vec<Pos2> {
     let half = NODE * 0.5;
     let (c1, c2) = (from.center(), to.center());
     if c1 == c2 {
-        return Vec::new();
+        let (left, right) = (c1.x - LOOP_REACH, c1.x + LOOP_REACH);
+        let top = from.top() - LOOP_RISE;
+        return vec![
+            Pos2::new(left, from.top()),
+            Pos2::new(left, top),
+            Pos2::new(right, top),
+            Pos2::new(right, from.top()),
+        ];
     }
     if c2.x < c1.x - 1.0 {
-        let top = from.top().min(to.top()) - 28.0;
+        let top = from.top().min(to.top()) - LOOP_RISE;
         return vec![
             Pos2::new(c1.x, from.top()),
             Pos2::new(c1.x, top),

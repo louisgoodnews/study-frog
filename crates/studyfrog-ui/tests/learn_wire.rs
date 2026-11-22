@@ -103,3 +103,20 @@ fn a_wire_back_to_the_left_is_hit_on_its_arc_above_the_steps() {
         "not through the steps"
     );
 }
+
+#[test]
+fn a_wire_from_a_step_to_itself_is_a_loop_above_it() {
+    let a = Rect::from_min_size(Pos2::new(200.0, 100.0), NODE);
+    let path = wire_path(a, a);
+    assert_eq!(path.len(), 4, "the loop has its corners");
+    assert!(
+        path.iter().all(|p| p.y <= a.top()),
+        "it rises above the step"
+    );
+    let top_run = (path[1] + path[2].to_vec2()) * 0.5;
+    assert!(distance_to_path(&path, top_run).unwrap() < 0.5);
+    assert!(
+        distance_to_path(&path, a.center()).unwrap() > 20.0,
+        "it does not run through the step"
+    );
+}

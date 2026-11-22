@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Self-loops on the learn-mode canvas (`crates/studyfrog-ui`, STORY-0198)**: a wire from a step to itself is drawn as a loop above the step, with its arrow back onto it, and can be selected like other wires.
 - **Board WIP limit counts every work item (`tools/repo-lint`)**: epics and stories count toward the three in progress, as tasks, subtasks and bugs already did; the board header and the gate use the same count.
 - **Select and delete a wire on the learn-mode canvas (`crates/studyfrog-ui`, STORY-0198)**: a click on a wire selects it (drawn thicker); "Delete selected" removes the selected wire, or the selected step with its wires. Clicking a step or empty space clears the wire selection.
 - **Window fixes from the review checks (`crates/studyfrog-ui`, STORY-0152, STORY-0150, STORY-0167)**: the console output bar fits a narrow window (its buttons wrap instead of covering the search); the script success marker is ASCII, so it no longer draws as an empty box; ScriptStudio keeps keyboard focus after a Tab completion; the homework dialog scrolls, so its Delete row stays reachable on a short window.
