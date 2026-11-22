@@ -51,12 +51,11 @@ fn cell(issue: &Issue) -> String {
     format!("[{}]({}) {title}{points}", f.id, issue.path.display())
 }
 
-fn heading(status: &str, label: &str, count: usize, issues: &[Issue]) -> String {
+/// A column heading: how many work items of every kind have this status (the columns list only cards).
+fn heading(status: &str, label: &str, issues: &[Issue]) -> String {
+    let count = in_column(issues, status, counts_toward_wip).len();
     match status {
-        "in_progress" => {
-            let active = in_column(issues, status, counts_toward_wip).len();
-            format!("{label} ({active}/{WIP_LIMIT})")
-        }
+        "in_progress" => format!("{label} ({count}/{WIP_LIMIT})"),
         _ => format!("{label} ({count})"),
     }
 }
@@ -70,7 +69,7 @@ fn card_table(issues: &[Issue]) -> String {
     let titles: Vec<String> = COLUMNS
         .iter()
         .zip(&cols)
-        .map(|((status, label), col)| heading(status, label, col.len(), issues))
+        .map(|((status, label), _)| heading(status, label, issues))
         .collect();
     let mut out = format!(
         "| {} |\n|{}\n",
