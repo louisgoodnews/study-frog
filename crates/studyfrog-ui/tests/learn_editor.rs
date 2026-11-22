@@ -109,3 +109,31 @@ fn removing_a_node_takes_its_wires_and_a_branch_needs_a_default() {
     assert!(e.graph.edges.is_empty(), "the wires of n2 went with it");
     assert_eq!(e.graph.nodes.len(), 2);
 }
+
+#[test]
+fn start_needs_a_saved_mode_with_no_reasons_and_then_closes_the_dialog() {
+    let (state, _) = send(State::default(), LearnMsg::Open);
+    let (held, fx) = send(state.clone(), LearnMsg::Start);
+    assert!(fx.is_empty(), "an unsaved mode does not start");
+    assert!(
+        editor(&held)
+            .notice
+            .as_deref()
+            .unwrap()
+            .contains("Save the mode")
+    );
+
+    // A saved mode: the editor has a file name and no reasons.
+    let mut saved = state;
+    if let Some(Modal::LearnEditor(e)) = saved.modal.as_mut() {
+        e.file = Some("quick-check.toml".into());
+        e.reasons.clear();
+    }
+    let (after, fx) = send(saved, LearnMsg::Start);
+    assert!(after.modal.is_none(), "the dialog closes");
+    assert!(after.rehearse.starting);
+    assert_eq!(
+        fx,
+        vec![Effect::Learn(LearnEffect::Start("quick-check.toml".into()))]
+    );
+}

@@ -55,6 +55,18 @@ fn body(e: &LearnEditor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         {
             send(out, LearnMsg::Save);
         }
+        if ui
+            .add_enabled(
+                e.file.is_some() && e.reasons.is_empty(),
+                egui::Button::new("Start a run"),
+            )
+            .on_hover_text(
+                "Runs the saved copy of this mode as a practice-only run: it changes no schedule.",
+            )
+            .clicked()
+        {
+            send(out, LearnMsg::Start);
+        }
         if let Some(n) = &e.notice {
             ui.label(n);
         }

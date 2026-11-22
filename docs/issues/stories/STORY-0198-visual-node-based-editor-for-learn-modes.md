@@ -45,11 +45,10 @@ Node types for the first version (decided): start, present, recall, rate, schedu
 - Pure state and update in `learn_editor.rs` (tests in `tests/learn_editor.rs`); the file work is effects in `exec_learn.rs`; the form in `view/learn_editor.rs`; a screenshot demo `--screenshot learn-editor`.
 
 ## Still open (part 2)
-- Start a custom run from the app (a control command and a Rehearse setup entry).
 - The canvas (drawn nodes and wires) is not built; the form editor above is the first version.
 - The opt-in custom report screen (the store function `custom_mode_totals` exists).
 - Acceptance criterion 1 ("drawn in the app") is met by the form editor only, not as a canvas.
-- Starting a custom run from the app is still open: the backend exists (`learn_run::start`), no screen calls it yet.
+- Starting a custom run from the app: done. "Start a run" in the editor runs the saved copy of the open mode (`exec_learn` calls `learn_run::start`, the run view takes over). Tested in `tests/learn_run_app.rs` and `tests/learn_editor.rs`; not yet tried by hand in a window.
 
 ## Dependencies
 EPIC-066, and the features named above.
