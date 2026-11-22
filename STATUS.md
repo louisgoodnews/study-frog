@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** M15 completed; released 0.9.0. **Date:** 2026-11-16. **Branch:** `main`.
+**Phase:** 1.0.0 prepared (2026-11-22): regression audit, packaging and notes done; not tagged, not published. See `docs/RELEASE_AUDIT_1.0.0.md`. **Branch:** `main`.
 Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
 
 ## What exists

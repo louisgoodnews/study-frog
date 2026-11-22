@@ -7,6 +7,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-22
+
 ### Added
 - **Mock exam from a lecture PDF (`crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0186)**: "Mock exam from a PDF" on the rehearse setup lists the vault's PDFs; the chosen PDF's text (its slides) makes the exam with the same generator as the notes, and paths outside the vault or non-PDF files are refused.
 - **Mock exam says when no model is selected (`crates/studyfrog-ui`, STORY-0186)**: the exam view explains that the questions come from templates and how to select a local model; a remote model that may not see the notes is named as such.
@@ -765,5 +767,6 @@ everything is under `Unreleased` until the first tagged version. Each entry name
   done item with unchecked acceptance criteria.
 - `scripts/linecount.sh` no longer miscounts the `wc` total line on non-English locales.
 
-[Unreleased]: https://github.com/louisgoodnews/study-frog/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/louisgoodnews/study-frog/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/louisgoodnews/study-frog/compare/v0.9.0...v1.0.0
 [0.9.0]: https://github.com/louisgoodnews/study-frog/compare/v0.8.0...v0.9.0
