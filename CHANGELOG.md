@@ -90,6 +90,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ### Fixed
 - **Exam answer marks are ASCII (`crates/studyfrog-ui`, STORY-0128)**: the correct answer is marked "+", a wrong pick "x", the selected choice "(*)" and the others "( )", because the UI font has no ✓, ✗, ● or ○; the streaming assistant cursor and the chat error label are ASCII too.
 - **Learn-mode custom report reads grammatically (`crates/studyfrog-ui`, STORY-0198)**: "1 run" and "1 item reached" use the singular; counts of 2 or more and 0 keep the plural.
+- **Sidecar port test no longer flakes (`crates/studyfrog-agent`, TASK-0271)**: the tests that probe the default port range run one at a time, so a probe in one test cannot bind the port another test is checking.
 - **Faster first ratings in large vaults (`crates/studyfrog-store`, `crates/studyfrog-service`, STORY-0177)**: a new card's first rating no longer reads the whole vault's overview for its deadlines (about 640 ms to about 6 ms at 100,000 cards, debug build). The starting-difficulty lookup is bounded and stays about 5 ms at a million reviews.
 - **Rerating keeps the calibrated start (`crates/studyfrog-service`, STORY-0177)**: replaying a first review uses the calibration in force when it was made, so rerating to the same rating leaves the schedule unchanged.
 

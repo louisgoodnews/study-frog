@@ -15,6 +15,16 @@ use studyfrog_agent::sidecar_types::{
     validate_sidecar_config,
 };
 
+/// Tests that probe the default port range by binding each candidate take this lock, so one test's probe
+/// cannot bind the port another test is checking at the same moment (the flake in TASK-0271's port test).
+static PORT_PROBE_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
+fn port_probe_guard() -> std::sync::MutexGuard<'static, ()> {
+    PORT_PROBE_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner())
+}
+
 #[test]
 fn test_loopback_host_validation() {
     assert!(is_loopback_host("127.0.0.1"));
@@ -26,6 +36,7 @@ fn test_loopback_host_validation() {
 
 #[test]
 fn test_port_range_and_allocation() {
+    let _guard = port_probe_guard();
     let r = new_port_range(18000, 18010).unwrap();
     assert!(port_range_contains(&r, 18000));
     assert!(port_range_contains(&r, 18005));
@@ -121,6 +132,7 @@ fn test_build_sidecar_command() {
 
 #[test]
 fn test_stdin_watchdog_termination() {
+    let _guard = port_probe_guard();
     let mut cfg = new_sidecar_config("cat", "");
     cfg.pass_server_args = false;
 
@@ -141,6 +153,7 @@ fn test_stdin_watchdog_termination() {
 
 #[test]
 fn test_sidecar_process_kill() {
+    let _guard = port_probe_guard();
     let mut cfg = new_sidecar_config("sleep", "");
     cfg.pass_server_args = false;
     cfg.extra_args = vec!["60".to_string()];
