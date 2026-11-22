@@ -12,7 +12,7 @@ use crate::view::preview_rich as rich;
 #[derive(Clone, Copy)]
 pub struct WideProse;
 /// How much wider the rehearsal card's prose is than the reading measure (about 110 characters a line).
-pub const RUN_PROSE_SHARE: f32 = 1.6;
+pub const RUN_PROSE_SHARE: f32 = 1.4;
 
 /// Draw `blocks`; clicking a wikilink pushes [`Msg::OpenLink`].
 pub fn draw_blocks(ui: &mut egui::Ui, blocks: &[Block], out: &mut Vec<Msg>) {

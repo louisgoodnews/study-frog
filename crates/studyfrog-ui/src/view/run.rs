@@ -40,7 +40,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .show(ui, |ui| {
             ui.vertical_centered(|ui| {
                 // The card takes the whole width, so a long item has room (STORY-0195); its prose runs at most
-                // about 1.6 reading measures (see `preview::RUN_PROSE_SHARE`).
+                // about 1.4 reading measures (see `preview::RUN_PROSE_SHARE`).
                 ui.set_max_width(ui.available_width());
                 let p = palette_of(ui);
                 let color = crate::item_look::run_color(run);

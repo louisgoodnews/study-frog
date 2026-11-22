@@ -28,7 +28,7 @@ Check with the screenshot command on the run screen at 1280 by 800 and 1600 by 1
 None.
 
 ## Implementation
-- The rehearsal card takes the whole width (it was the reading measure, about 450 pt, at 1280 by 800). Its prose may run to 1.6 reading measures (`preview::RUN_PROSE_SHARE`, set for the run card through a typed temporary value), which is about 110 characters a line: a readability trade made for this story, to check with you.
+- The rehearsal card takes the whole width (it was the reading measure, about 450 pt, at 1280 by 800). Its prose may run to 1.4 reading measures (`preview::RUN_PROSE_SHARE`, set for the run card through a typed temporary value), which is about 100 characters a line. The owner accepted 100 characters for now (2026-11-22).
 - The item's text scrolls in its own area (`run_card::item_scroll`, height from the window less `ITEM_CHROME`), and the rating buttons sit under it, outside that area.
 - Screenshots (`--screenshot run-long --size WxH --theme T`): 1280 by 800 and 1600 by 1000 in both themes, 1280 by 600, and the 640 by 420 minimum. At 640 by 420 the fixed parts of the card take nearly the whole height: the buttons are visible, the item area is nearly collapsed.
 
