@@ -4,14 +4,14 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (0) | Ready (0) | In progress (0/3) | Review (0) | Blocked (0) | Done (291) |
+| Backlog (6) | Ready (0) | In progress (0/3) | Review (1) | Blocked (0) | Done (294) |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-|  |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
-|  |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
-|  |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
-|  |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
-|  |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
+| [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+| [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+| [TASK-0284](docs/issues/tasks/TASK-0284-scripted-screens-on-a-10k-vault-for-the-frame-time-run.md) Scripted visit of the rehearsal card, reports and console on a 10k-note vault (2) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
+| [TASK-0285](docs/issues/tasks/TASK-0285-dhat-allocation-counts-for-the-render-loops.md) dhat allocation counts for the rehearsal card, reports and console loops (2) |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
+| [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
 |  |  |  |  |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
 |  |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
 |  |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
@@ -297,6 +297,9 @@
 |  |  |  |  |  | [TASK-0274](docs/issues/tasks/TASK-0274-sse-streaming-parser-and-chat-streaming-ui.md) Server-Sent Events streaming parser and chat UI streaming renderer (3) |
 |  |  |  |  |  | [TASK-0275](docs/issues/tasks/TASK-0275-sqlite-vault-embeddings-and-vector-search.md) SQLite vault embeddings table and vector similarity search (3) |
 |  |  |  |  |  | [TASK-0276](docs/issues/tasks/TASK-0276-prompt-budgeting-and-vault-context-assembly.md) 1024-token prompt budgeting and vault context assembly (3) |
+|  |  |  |  |  | [TASK-0277](docs/issues/tasks/TASK-0277-machine-identity-and-hygiene-report-for-a-benchmark-run.md) Machine identity and hygiene report for a benchmark run (1) |
+|  |  |  |  |  | [TASK-0280](docs/issues/tasks/TASK-0280-pure-regression-rule-with-bootstrap-interval-and-unit-tests.md) Pure regression rule with a bootstrap interval, and its unit tests (3) |
+|  |  |  |  |  | [TASK-0281](docs/issues/tasks/TASK-0281-bench-compare-command-and-wrapper-script.md) bench-compare command, wrapper script, and the repo-lint tests in the gate (1) |
 
 ## Stories
 
@@ -501,6 +504,11 @@
 | [STORY-0198](docs/issues/stories/STORY-0198-visual-node-based-editor-for-learn-modes.md) Visual node-based editor for learn modes (8) | in_progress | 0/0 |
 | [STORY-0199](docs/issues/stories/STORY-0199-case-studies-in-the-rehearsal-run-queue.md) Case studies in the rehearsal run queue (5) | review | 0/0 |
 | [STORY-0200](docs/issues/stories/STORY-0200-local-model-scoring-of-case-study-justifications.md) Local-model scoring of case-study justifications, with the rubric prompt template (3) | review | 0/0 |
+| [STORY-0201](docs/issues/stories/STORY-0201-reference-runs-on-the-owners-machine-with-identity-recorded.md) Reference runs on the owner's machine, with the machine's identity recorded (5) | in_progress | 1/3 |
+| [STORY-0202](docs/issues/stories/STORY-0202-regression-rule-compare-two-runs-flag-only-real-large-changes.md) Regression rule: compare two runs and flag only real, large changes (5) | in_progress | 2/3 |
+| [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines on the owner's machine (2) | blocked | 0/0 |
+| [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time of the rehearsal card, reports and console measured in the running window (5) | backlog | 0/2 |
+| [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Allocations in the render loops, counted with dhat, and a profile of the slowest screen (3) | backlog | 0/2 |
 
 ## Epics
 
@@ -572,4 +580,4 @@
 | [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | in_progress | 1/5 |
 | [EPIC-065](docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | backlog | 1/3 |
 | [EPIC-066](docs/issues/epics/EPIC-066-learn-mode-research-platform.md) Learn-mode research platform: visual node-based technique editor | backlog | 0/1 |
-| [EPIC-067](docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement | backlog | 0/0 |
+| [EPIC-067](docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement | in_progress | 0/5 |

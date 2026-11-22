@@ -10,6 +10,7 @@ step "cargo fmt --check";            cargo fmt --all --check
 TOOL=tools/repo-lint/Cargo.toml
 step "repo-lint fmt + clippy";       cargo fmt --manifest-path $TOOL --check
 cargo clippy -q --manifest-path $TOOL -- -D warnings
+step "repo-lint tests";              cargo test -q --manifest-path $TOOL
 step "cargo clippy -D warnings";     cargo clippy --workspace --all-targets -- -D warnings
 step "cargo test";                   cargo test --workspace
 step "line count (max 250)";         scripts/linecount.sh 250

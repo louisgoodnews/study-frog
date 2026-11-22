@@ -1,7 +1,8 @@
 //! `repo-lint impls <root>`, `repo-lint issues <issues-dir>` and
-//! `repo-lint board <issues-dir> <BOARD.md> [--check]`.
+//! `repo-lint board <issues-dir> <BOARD.md> [--check]`, and `repo-lint bench-compare <base.ns> <new.ns>`.
 //! Prints `path:line: message` and exits 1 on any finding.
 
+mod bench_compare;
 mod board;
 mod files;
 mod impls;
@@ -13,6 +14,9 @@ use std::process::ExitCode;
 
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().skip(1).collect();
+    if args.first().map(String::as_str) == Some("bench-compare") {
+        return run_bench_compare(&args[1..]);
+    }
     let lines = match args
         .iter()
         .map(String::as_str)
@@ -76,7 +80,30 @@ fn report(lines: &[String]) -> ExitCode {
     }
 }
 
+/// Exit 0 for no change or an improvement, 1 for a regression, 2 for bad input.
+fn run_bench_compare(args: &[String]) -> ExitCode {
+    let [base, new] = args else {
+        return usage();
+    };
+    match bench_compare::run(Path::new(base), Path::new(new)) {
+        Ok(c) => {
+            println!("{}", bench_compare::format_line(&c));
+            if c.verdict == bench_compare::Verdict::Regression {
+                ExitCode::FAILURE
+            } else {
+                ExitCode::SUCCESS
+            }
+        }
+        Err(e) => {
+            eprintln!("bench-compare: {e}");
+            ExitCode::from(2)
+        }
+    }
+}
+
 fn usage() -> ExitCode {
-    eprintln!("usage: repo-lint impls <root> | issues <dir> | board <dir> <out> [--check]");
+    eprintln!(
+        "usage: repo-lint impls <root> | issues <dir> | board <dir> <out> [--check] | bench-compare <base.ns> <new.ns>"
+    );
     ExitCode::from(2)
 }

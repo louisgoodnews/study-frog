@@ -2,7 +2,7 @@
 id: EPIC-067
 type: epic
 title: "Performance benchmarking and continuous improvement"
-status: backlog
+status: in_progress
 parents: []
 labels: [m14, perf, tooling]
 acceptance_criteria:
