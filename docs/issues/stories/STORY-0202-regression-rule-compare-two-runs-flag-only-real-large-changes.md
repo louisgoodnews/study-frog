@@ -2,7 +2,7 @@
 id: STORY-0202
 type: story
 title: "Regression rule: compare two runs and flag only real, large changes"
-status: in_progress
+status: review
 epic: EPIC-067
 parents: ['EPIC-067']
 estimate: 5

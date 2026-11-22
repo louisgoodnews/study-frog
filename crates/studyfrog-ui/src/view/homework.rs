@@ -142,7 +142,13 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
     ui.add_space(8.0);
     if let Some(form) = &state.planner.homework_ui.form {
-        homework_form_view::draw(state, form, ui, out);
+        // Scrolls when the window is short, so the delete row and the buttons below the fields stay reachable.
+        let height = ui.available_height().min(480.0);
+        egui::ScrollArea::vertical()
+            .id_salt("homework-dialog")
+            .max_height(height)
+            .auto_shrink([false, true])
+            .show(ui, |ui| homework_form_view::draw(state, form, ui, out));
         ui.add_space(8.0);
     }
     let filter = tab_filter(state.planner.homework_ui.tab, None);

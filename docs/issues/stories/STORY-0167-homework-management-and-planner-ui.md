@@ -2,7 +2,7 @@
 id: STORY-0167
 type: story
 title: "Interactive Homework Planner Screen and Creation Dialog"
-status: review
+status: done
 epic: EPIC-056
 parents: ['EPIC-056']
 estimate: 5
@@ -39,6 +39,10 @@ Homework screen in the Plan group of the sidebar and the burger menu (`Screen::H
 Deleting an item asks for confirmation in the dialog first ("Delete item", then "Delete it" or "Keep it"), and the dialog closes once the item is gone.
 
 Not done: reminder lead-time choice in the dialog (lead times are global), and timetable integration beyond the stack course. The screen has not been exercised in the running app.
+
+## Window check (2026-11-22)
+
+Checked in the running window: a homework item is created, edited and deleted through "Delete item", "Delete it" removes it and closes the dialog. Fixed in this check: at 960 by 640 the dialog ran past the window and its Delete row could not be reached; the dialog now scrolls.
 
 ## Open Questions
 None.

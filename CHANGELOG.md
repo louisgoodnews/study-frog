@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Window fixes from the review checks (`crates/studyfrog-ui`, STORY-0152, STORY-0150, STORY-0167)**: the console output bar fits a narrow window (its buttons wrap instead of covering the search); the script success marker is ASCII, so it no longer draws as an empty box; ScriptStudio keeps keyboard focus after a Tab completion; the homework dialog scrolls, so its Delete row stays reachable on a short window.
 - **Memory game card flip and keyboard play (`crates/studyfrog-ui`, STORY-0174)**: a card turns over in 0.2 s (at once with Reduce motion), Tab reaches the cards, Enter or Space turns a face-down card over, the arrow keys move between cards, and the card with keyboard focus has a ring. The mismatch shake stops under Reduce motion.
 - **Memory game launch covered by tests (`crates/studyfrog-ui`, STORY-0175)**: the rehearse setup's and the stack page's "Memory game" buttons are tested to start a game. Due-card selection is still open.
 - **FrogScript reference lists the lifecycle events (`crates/studyfrog-script`, `crates/studyfrog-ui`, STORY-0171)**: the reference panel in ScriptStudio has a "Lifecycle Events" category with one entry for each event a job in `scripts.toml` can start on, with "Add example to the script" and search by name. A test fails if an event has no entry.

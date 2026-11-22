@@ -27,8 +27,8 @@ Expand console capabilities and author research on DSL integration:
 
 ## Acceptance Criteria
 - [ ] The in-app scripting console provides an interactive code execution environment with instant evaluation of user scripts
-- [ ] Research document evaluates the feasibility, trade-offs, ergonomics, and security boundaries of embedding a lightweight scripting DSL versus standard Python
-- [ ] The console supports interactive command and script execution with error highlighting and contextual autocompletion
+- [x] Research document evaluates the feasibility, trade-offs, ergonomics, and security boundaries of embedding a lightweight scripting DSL versus standard Python
+- [x] The console supports interactive command and script execution with error highlighting and contextual autocompletion
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-ui/src/view/console.rs`, `docs/research/`, `crates/studyfrog-service/src/scripting/`.
@@ -37,6 +37,10 @@ Expand console capabilities and author research on DSL integration:
 ## Dependencies
 - EPIC-049 (Expanded scripting environment, DSL, job scheduling, and execution logging).
 - STORY-0149 (Rename ScriptRunner to avoid trademark conflicts).
+
+## Window check (2026-11-22)
+
+Checked in the running window (virtual display, control socket and mouse): Tab accepts the highlighted name, Down moves the highlight, the completion list and its names show under the box, the error line is named, and typing right after Tab keeps the text (a fix made in this check: the text box keeps focus with `lock_focus`, so Tab no longer moves focus away). Not checked: Esc hiding the list, and the bracket tint in a window.
 
 ## Open Questions
 - Whether a custom DSL should compile down to StudyFrog control protocol JSON-RPC commands or run as native in-process AST evaluations.

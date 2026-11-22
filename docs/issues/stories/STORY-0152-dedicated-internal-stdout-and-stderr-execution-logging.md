@@ -25,7 +25,7 @@ Implement dedicated stdout and stderr capture and display:
 
 ## Acceptance Criteria
 - [ ] The application captures stdout and stderr from user scripts into dedicated, distinct internal streams
-- [ ] The script execution UI displays stdout and stderr with distinct visual styling (e.g. standard text vs. error highlights) and timestamps
+- [x] The script execution UI displays stdout and stderr with distinct visual styling (e.g. standard text vs. error highlights) and timestamps
 - [ ] Internal execution logs can be filtered, cleared, and exported for troubleshooting user-authored scripts
 
 ## Design Notes
@@ -35,6 +35,10 @@ Implement dedicated stdout and stderr capture and display:
 ## Dependencies
 - EPIC-049 (Expanded scripting environment, DSL, job scheduling, and execution logging).
 - STORY-0149 (Rename ScriptRunner to avoid trademark conflicts).
+
+## Window check (2026-11-22)
+
+Checked in the running window: entries show their time, the stream filters and the output search work. Fixed in this check: at 960 by 640 the search field was covered by "Export log" (the buttons now flow in a row), and the success marker drew as an empty box (now "+"). Not checked: "Export log" writing the file.
 
 ## Open Questions
 - Maximum buffer size for script output streams before rolling truncation (default: 10,000 lines or 2 MB).

@@ -50,25 +50,23 @@ pub fn bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         {
             out.push(Msg::Console(ConsoleMsg::Search(query)));
         }
-        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if kit::quiet_button(ui, "Clear Output")
-                .on_hover_text("Clears the output of the script.")
-                .clicked()
-            {
-                out.push(Msg::Console(ConsoleMsg::Clear));
-            }
-            if kit::quiet_button(ui, "Jobs")
-                .on_hover_text("The scheduled and event-bound jobs: their next runs, switching them on or off, and running one now.")
-                .clicked()
-            {
-                out.push(Msg::Console(ConsoleMsg::OpenJobs));
-            }
             if kit::quiet_button(ui, "Export log")
-                .on_hover_text("Writes the whole transcript, with the time of each line, to logs/script_runs.log in the vault.")
-                .clicked()
-            {
-                out.push(Msg::Console(ConsoleMsg::ExportLog));
-            }
-        });
+            .on_hover_text("Writes the whole transcript, with the time of each line, to logs/script_runs.log in the vault.")
+            .clicked()
+        {
+            out.push(Msg::Console(ConsoleMsg::ExportLog));
+        }
+        if kit::quiet_button(ui, "Jobs")
+            .on_hover_text("The scheduled and event-bound jobs: their next runs, switching them on or off, and running one now.")
+            .clicked()
+        {
+            out.push(Msg::Console(ConsoleMsg::OpenJobs));
+        }
+        if kit::quiet_button(ui, "Clear Output")
+            .on_hover_text("Clears the output of the script.")
+            .clicked()
+        {
+            out.push(Msg::Console(ConsoleMsg::Clear));
+        }
     });
 }

@@ -23,7 +23,7 @@ fn entry(ui: &mut egui::Ui, e: &Entry) {
         EntryKind::Answer => ("", p.text),
         EntryKind::Error => ("error: ", p.danger),
         EntryKind::Event => ("event ", p.text_weak),
-        EntryKind::Script => ("✓ ", p.success),
+        EntryKind::Script => ("+ ", p.success),
         EntryKind::Stdout => ("stdout: ", p.text),
         EntryKind::Stderr => ("stderr: ", p.danger),
     };

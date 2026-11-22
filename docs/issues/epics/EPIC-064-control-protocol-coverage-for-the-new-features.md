@@ -2,7 +2,7 @@
 id: EPIC-064
 type: epic
 title: "CLI control protocol coverage for the new features"
-status: in_progress
+status: review
 parents: []
 labels: [m14, tooling, ui]
 acceptance_criteria:

@@ -2,7 +2,7 @@
 id: STORY-0201
 type: story
 title: "Reference runs on the owner's machine, with the machine's identity recorded"
-status: in_progress
+status: blocked
 epic: EPIC-067
 parents: ['EPIC-067']
 estimate: 5
@@ -40,6 +40,9 @@ between machines with no code change, so a result without its machine is not com
   A test run there spread 9.8% over 5 runs and was extended to 10 (see TASK-0278).
 
 ## Dependencies
+
+Blocked: The owner's local machine (reference runs); no machine is attached to this session.
+
 TASK-0277, TASK-0278, TASK-0279. The owner's machine for the reference runs (the blocker for the first and last
 acceptance criteria). STORY-0202 uses the output.
 

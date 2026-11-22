@@ -2,7 +2,7 @@
 id: EPIC-056
 type: epic
 title: "Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration"
-status: in_progress
+status: review
 parents: []
 labels: [m14, calendar, ui]
 acceptance_criteria:

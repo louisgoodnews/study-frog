@@ -2,7 +2,7 @@
 id: EPIC-061
 type: epic
 title: "Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification"
-status: in_progress
+status: review
 parents: []
 labels: [m14, rehearse, agent, ui]
 acceptance_criteria:

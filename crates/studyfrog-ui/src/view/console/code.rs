@@ -73,6 +73,7 @@ pub fn show(ui: &mut egui::Ui, code: &mut String, out: &mut Vec<Msg>) {
         .id_salt("scriptstudio-multiline-text")
         .font(TextStyle::Monospace)
         .desired_rows(6)
+        .lock_focus(true)
         .desired_width(f32::INFINITY)
         .layouter(&mut layouter)
         .show(ui);

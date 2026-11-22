@@ -35,5 +35,9 @@ Deliver comprehensive script execution management within StudyFrog:
 - EPIC-049 (Expanded scripting environment, DSL, job scheduling, and execution logging).
 - STORY-0149 (Rename ScriptRunner to avoid trademark conflicts).
 
+## Window check (2026-11-22)
+
+Checked in the running window: the job editor lists jobs from `scripts.toml` with their next run and enabled state, reports a bad file with the TOML error, and "Run now" runs the script; its output reaches the console as "started" and "finished" lines. Not checked: adding a job from the form and saving, and event-bound jobs firing.
+
 ## Open Questions
 - Conflict resolution when multiple event-bound scripts trigger simultaneously on card creation.

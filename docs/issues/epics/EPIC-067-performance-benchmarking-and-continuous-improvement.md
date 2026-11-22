@@ -2,7 +2,7 @@
 id: EPIC-067
 type: epic
 title: "Performance benchmarking and continuous improvement"
-status: in_progress
+status: blocked
 parents: []
 labels: [m14, perf, tooling]
 acceptance_criteria:
@@ -36,6 +36,9 @@ Make performance a routine check instead of an occasional one:
 - Machine variance is handled by comparing a run against the baseline of the same machine only, never across machines.
 
 ## Dependencies
+
+Blocked: The owner's local machine (reference runs and baselines, see STORY-0201 and STORY-0203).
+
 The existing benchmarks in the eight crates that have them (`studyfrog-srs`, `studyfrog-store`, `studyfrog-graph`, `studyfrog-rehearsal`, `studyfrog-report`, `studyfrog-slm`, `studyfrog-pdf`). The owner's local machine, on a schedule (see Decisions).
 
 ## Decisions

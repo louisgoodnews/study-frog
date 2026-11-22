@@ -2,7 +2,7 @@
 id: EPIC-060
 type: epic
 title: "Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling"
-status: in_progress
+status: review
 parents: []
 labels: [m14, report, store, srs]
 acceptance_criteria:

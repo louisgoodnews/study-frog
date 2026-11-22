@@ -77,5 +77,9 @@ Node types for the first version (decided): start, present, recall, rate, schedu
 ## Dependencies
 EPIC-066, and the features named above.
 
+## Window check (2026-11-22)
+
+Checked in the running window: a new mode takes steps by clicking the empty canvas; connect mode draws a wire between two steps with its arrow. Open, confirmed in the window: a wire cannot be selected or deleted (clicking it does nothing), and a step connected to itself draws no loop. Not checked in the window: starting a custom run and the custom report (needs a saved, valid mode).
+
 ## Open Questions
 None.
