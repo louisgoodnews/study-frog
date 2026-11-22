@@ -2,7 +2,7 @@
 id: STORY-0170
 type: story
 title: "Menu De-Cluttering, Visual Spacing, and Progressive Disclosure"
-status: review
+status: in_progress
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 5

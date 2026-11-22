@@ -2,7 +2,7 @@
 id: STORY-0169
 type: story
 title: "Contextual Tooltips, Hover Hints, and Keyboard Shortcut Badges"
-status: review
+status: in_progress
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 3
