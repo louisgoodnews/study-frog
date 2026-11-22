@@ -2,7 +2,7 @@
 id: STORY-0198
 type: story
 title: "Visual node-based editor for learn modes"
-status: in_progress
+status: done
 epic: EPIC-066
 parents: ['EPIC-066']
 estimate: 8
@@ -20,9 +20,9 @@ A learn mode is a sequence of presentation, recall and rating decisions. A resea
 An editor canvas with a palette of node types (present, recall, rate, schedule, log, branch), wires between them, and a check that the graph is valid. A saved graph runs through the rehearsal engine; each node is a pure step the engine can test. Store the graph as data in the vault, not in code. The first version needs linear and branching graphs; a loop needs a stop rule.
 
 ## Acceptance Criteria
-- [ ] a learn mode can be drawn as a graph of nodes and edges in the app, saved in the vault and run
-- [ ] a graph that is not valid (no start, a loop without a stop, an unknown node) is refused with the reason before it can run
-- [ ] a run of a custom mode logs apart from the built-in modes, so the two can be compared
+- [x] a learn mode can be drawn as a graph of nodes and edges in the app, saved in the vault and run
+- [x] a graph that is not valid (no start, a loop without a stop, an unknown node) is refused with the reason before it can run
+- [x] a run of a custom mode logs apart from the built-in modes, so the two can be compared
 
 ## Design Notes
 Node types for the first version (decided): start, present, recall, rate, schedule, log, branch, stop. A branch needs at least two ways on, each with a condition; a loop needs a stop node or a branch that can leave it.
@@ -81,7 +81,7 @@ EPIC-066, and the features named above.
 
 Checked in the running window: a new mode takes steps by clicking the empty canvas; connect mode draws a wire between two steps with its arrow. Open, confirmed in the window: a wire cannot be selected or deleted (clicking it does nothing), and a step connected to itself draws no loop. Not checked in the window: starting a custom run and the custom report (needs a saved, valid mode).
 
-Added and checked in the running window: clicking a wire (not in connect mode) selects it, drawn thicker in the accent colour; "Delete selected" removes the selected wire and leaves its steps, and clicking a step or empty canvas clears the wire selection. Covered by `tests/learn_wire.rs` (selection, delete, connect mode, index shift after a removal, and the wire geometry for straight and arc wires). A step connected to itself is drawn as a loop above it (checked in the running window; `wire_path` tested in `tests/learn_wire.rs`). Still open: the custom run and report have not been checked in the window.
+Added and checked in the running window: clicking a wire (not in connect mode) selects it, drawn thicker in the accent colour; "Delete selected" removes the selected wire and leaves its steps, and clicking a step or empty canvas clears the wire selection. Covered by `tests/learn_wire.rs` (selection, delete, connect mode, index shift after a removal, and the wire geometry for straight and arc wires). A step connected to itself is drawn as a loop above it (checked in the running window; `wire_path` tested in `tests/learn_wire.rs`). The custom run and report were checked in the window (`interleave-check.toml`, a valid mode written into the vault for the check and then opened in the app): the mode lists, draws and reports "Ready to save" for a valid graph and lists the reasons for an invalid one; "Start a run" runs its graph (Again loops the card back into the queue, the run finishes as practice only); the custom report counts the mode's own runs (entries per step, ratings and branches match the run). Noted, not changed: the report says "1 runs" for one run.
 
 ## Open Questions
 None.

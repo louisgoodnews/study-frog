@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Learn-mode research platform complete (EPIC-066, STORY-0198)**: a learn mode is drawn, edited, saved, run as practice only, and reported on its own in the app; the window check is recorded in STORY-0198.
 - **Self-loops on the learn-mode canvas (`crates/studyfrog-ui`, STORY-0198)**: a wire from a step to itself is drawn as a loop above the step, with its arrow back onto it, and can be selected like other wires.
 - **Board WIP limit counts every work item (`tools/repo-lint`)**: epics and stories count toward the three in progress, as tasks, subtasks and bugs already did; the board header and the gate use the same count.
 - **Select and delete a wire on the learn-mode canvas (`crates/studyfrog-ui`, STORY-0198)**: a click on a wire selects it (drawn thicker); "Delete selected" removes the selected wire, or the selected step with its wires. Clicking a step or empty space clears the wire selection.
