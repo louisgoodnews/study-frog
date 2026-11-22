@@ -9,9 +9,8 @@ use studyfrog_store::sessions::{fired_reminders, load_sessions, mark_reminder_fi
 use crate::homework::list_homework;
 use crate::session::{ServiceError, VaultSession};
 
-/// The reminders due at `now`, calendar and homework; each is marked as shown, so the next call does
-/// not return it again.
-pub fn take_due_reminders(
+/// The reminders due at `now`, read without marking them shown (for `reminders due`).
+pub fn due_now(
     session: &VaultSession,
     now: UnixMs,
     offset_minutes: i32,
@@ -22,7 +21,17 @@ pub fn take_due_reminders(
         fired_reminders(&session.conn, add_days(local.date, -2)).map_err(ServiceError::Store)?;
     let items = list_homework(session)?;
     let fired_homework = fired_homework_reminders(&session.conn).map_err(ServiceError::Store)?;
-    let due = due_all(&sessions, &items, local, &fired, &fired_homework);
+    Ok(due_all(&sessions, &items, local, &fired, &fired_homework))
+}
+
+/// The reminders due at `now`, calendar and homework; each is marked as shown, so the next call does
+/// not return it again.
+pub fn take_due_reminders(
+    session: &VaultSession,
+    now: UnixMs,
+    offset_minutes: i32,
+) -> Result<DueAll, ServiceError> {
+    let due = due_now(session, now, offset_minutes)?;
     for d in &due.sessions {
         mark_reminder_fired(&session.conn, d.session, d.date, d.minutes_before)
             .map_err(ServiceError::Store)?;

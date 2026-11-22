@@ -18,6 +18,7 @@ use crate::state::{Screen, Selection, State};
 use crate::transfer_types::Tab;
 use crate::transfer_ui::TransferMsg;
 
+pub mod calendar;
 pub mod files;
 pub mod homework;
 pub mod search;
@@ -235,6 +236,7 @@ pub fn plan_for(state: &State, cmd: &Command) -> Result<Plan, String> {
             new_stack,
         } => files::import(path, stack, *root, new_stack),
         Command::PdfFind(file, text) => files::pdf_find(file, text),
+        Command::Calendar(c) => calendar::plan(state, c),
         Command::Dismiss => one(Msg::DismissNotice),
         Command::CloseModal => Ok(vec![vec![
             Msg::Modal(ModalMsg::Close),

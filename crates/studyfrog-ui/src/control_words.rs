@@ -8,6 +8,7 @@ use crate::control_cmd::{Command, ExportArgs, LogsQuery, RehearseCmd, SetupArgs}
 use crate::control_words_items::{flag, item, need, split_flags, stack};
 
 pub mod appearance;
+pub mod calendar;
 pub mod help;
 pub mod homework;
 pub mod pdf;
@@ -216,6 +217,8 @@ pub fn command_from_words(words: &[String]) -> Result<Command, String> {
     Ok(match first {
         "state" => Command::State,
         "help" | "commands" => help::parse(&words[1..])?,
+        "calendar" => calendar::parse(&words[1..])?,
+        "reminders" => calendar::reminders(&words[1..])?,
         "back" => Command::Back,
         "forward" => Command::Forward,
         "notices" | "notifications" => Command::Notices,

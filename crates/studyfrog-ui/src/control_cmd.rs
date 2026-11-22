@@ -2,7 +2,6 @@
 //! Parsing is in `control_parse`, the messages each command becomes in `control_plan`.
 
 use std::path::PathBuf;
-
 use studyfrog_calendar::homework::HomeworkPriority;
 use studyfrog_calendar::homework_query::HomeworkTab;
 use studyfrog_core::event::Difficulty;
@@ -12,6 +11,7 @@ use studyfrog_service::create_more::NewKind;
 
 use crate::state::Screen;
 
+pub mod calendar;
 /// One request: the caller's id (echoed in the answer) and the command.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Request {
@@ -67,6 +67,8 @@ pub enum Command {
     Appearance(crate::appearance_ui::AppearanceMsg),
     /// Set the PDF viewer's find field: the vault-relative file to open first (if any), and the text.
     PdfFind(Option<String>, String),
+    /// Calendar: the view, the period, a day's homework, and the reminders due.
+    Calendar(calendar::CalendarCmd),
     /// Save a picture of the window.
     Screenshot(PathBuf),
     /// Read (and maybe follow) the console log.

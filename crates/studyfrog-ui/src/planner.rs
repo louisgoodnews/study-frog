@@ -50,6 +50,8 @@ pub struct Planner {
     pub homework: Vec<HomeworkItem>,
     /// The clock the homework was read at, for urgency; `None` until it is read.
     pub homework_now: Option<LocalTime>,
+    /// The reminders due at the last `reminders due`; `None` until one was read.
+    pub due_peek: Option<studyfrog_calendar::reminders::DueAll>,
     /// The homework screen's tab, dialog and last error.
     pub homework_ui: crate::homework_msg::HomeworkUi,
     /// The reviews the schedule planned for the visible grid.
@@ -69,6 +71,7 @@ impl Default for Planner {
         };
         Planner {
             loaded: false,
+            due_peek: None,
             view_mode: CalendarViewMode::Month,
             today: epoch,
             month: (1970, 1),
@@ -127,6 +130,15 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
             },
         ),
         PlanMsg::HomeworkLoaded(Err(e)) => failed(state, e),
+        PlanMsg::PeekDue => (state, vec![Effect::PeekReminders]),
+        PlanMsg::DuePeeked(Ok(due)) => with(
+            state,
+            Planner {
+                due_peek: Some(due),
+                ..p
+            },
+        ),
+        PlanMsg::DuePeeked(Err(e)) => failed(state, e),
         PlanMsg::OpenTimetableForm(entry) => {
             let form = entry
                 .as_ref()

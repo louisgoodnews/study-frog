@@ -69,4 +69,8 @@ pub enum PlanMsg {
     },
     /// The reviews the schedule planned.
     Reviews(crate::planner_reviews::ReviewMsg),
+    /// Read the reminders due now, without marking them shown.
+    PeekDue,
+    /// The reminders due now were read (or not).
+    DuePeeked(Result<studyfrog_calendar::reminders::DueAll, String>),
 }

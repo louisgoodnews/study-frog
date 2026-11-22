@@ -146,6 +146,26 @@ pub const COMMANDS: &[Row] = &[
         "read",
     ),
     (
+        "calendar view <month|week|day|timetable>",
+        "Planner SetViewMode; the calendar screen is opened first",
+        "read",
+    ),
+    (
+        "calendar period <YYYY-MM-DD>",
+        "Planner Month (the month of the date) and Select(date)",
+        "read",
+    ),
+    (
+        "calendar homework <YYYY-MM-DD>",
+        "Planner Select(date); the answer lists the homework due that day with its urgency",
+        "read",
+    ),
+    (
+        "reminders due",
+        "Effect::PeekReminders: the calendar and homework reminders due now, not marked shown",
+        "read",
+    ),
+    (
         "help tooltip <name>",
         "The explanation and shortcut of a control (view::tips); the names are listed on an error",
         "read",

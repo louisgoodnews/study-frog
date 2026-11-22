@@ -81,6 +81,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::OpenVault(path) => open(w, &path),
         Effect::PollVault => exec_doc::poll(w, now_ns),
         Effect::CheckReminders => exec_plan::reminders(w, now_ns),
+        Effect::PeekReminders => exec_plan::peek_reminders(w, now_ns),
         Effect::SaveAppSettings(settings) => save_settings(w, &settings),
         Effect::LoadItems(selection) => crate::exec_items::items(w, &selection),
         Effect::RecordView(v) => return crate::exec_items::record_view(w, v, now_ns),

@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Calendar and reminders in the control protocol (`crates/studyfrog-ui`, `crates/studyfrog-service`, STORY-0194)**: `calendar view`, `calendar period DATE` and `calendar homework DATE` drive the calendar screen, and the homework answer gives each item's urgency; `reminders due` answers the calendar and homework reminders due now without marking them shown.
 - **Search focus and tooltips in the control protocol (`crates/studyfrog-ui`, STORY-0192)**: `search --focus` gives the library or PDF search field the keyboard, and the answer names the field once it has it; `help tooltip NAME` answers a control's explanation and shortcut; the state names the focused field.
 - **Import destinations, PDF cards and PDF find in the control protocol (`crates/studyfrog-ui`, `crates/studyfrog-service`, STORY-0191)**: `import --root` and `import --new-stack NAME` choose the import destination as the dialog does; the import answer lists the pages left out; PDF import is covered by tests (one card per page with text, the others listed); `pdf find TEXT [--file F]` opens the PDF and sets its find field, and the answer lists the pages found.
 - **Writing and grading a mock exam (`crates/studyfrog-ui`, STORY-0187)**: the generated exam can be started and answered question by question; finishing grades each answer against its rubric and shows the grade (German scale, pass at 50 %), the points by topic, and the review of every question.

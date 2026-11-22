@@ -3,6 +3,7 @@
 
 use serde_json::{Value, json};
 
+use crate::control_cmd::calendar::CalendarCmd;
 use crate::control_cmd::{Command, HomeworkCmd, StackCmd};
 use crate::control_help::help_json;
 use crate::control_parts::shown_rows;
@@ -10,6 +11,7 @@ use crate::control_state::{notices_json, state_json, ulid};
 use crate::state::{Notice, NoticeKind, State};
 
 pub mod appearance;
+pub mod calendar;
 pub mod focus;
 pub mod homework;
 pub mod import;
@@ -106,6 +108,8 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
             "import",
             import::import_json(state),
         )),
+        Command::Calendar(CalendarCmd::Homework(day)) => Ok(calendar::homework_json(state, *day)),
+        Command::Calendar(CalendarCmd::RemindersDue) => Ok(calendar::reminders_json(state)),
         Command::PdfFind(..) => Ok(with_part(state_json(state), "pdf", pdf::pdf_json(state))),
         Command::Help(None) => Ok(help_json()),
         Command::Help(Some(name)) => tooltip::tooltip_json(name),

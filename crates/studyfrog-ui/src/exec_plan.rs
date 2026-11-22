@@ -11,7 +11,7 @@ use studyfrog_service::kanban::{apply_board_op, board_or_default};
 use studyfrog_service::planning::{
     cancel_occurrence, delete_session_checked, list_sessions, new_session_id, save_session_checked,
 };
-use studyfrog_service::reminders::take_due_reminders;
+use studyfrog_service::reminders::{due_now, take_due_reminders};
 use studyfrog_service::session::{ServiceError, VaultSession};
 use studyfrog_service::timezone::local_offset_minutes;
 
@@ -24,6 +24,18 @@ const NO_VAULT: &str = "no vault is open";
 
 fn ids(now_ns: i64) -> Result<IdSource, ServiceError> {
     fresh_id_source(u64::try_from(now_ns / 1_000_000).unwrap_or(0))
+}
+
+/// The reminders due now, read without marking them shown.
+pub fn peek_reminders(w: &Worker, now_ns: i64) -> Msg {
+    let now = UnixMs(now_ns / 1_000_000);
+    let result = match &w.session {
+        Some(session) => {
+            due_now(session, now, local_offset_minutes(now)).map_err(|e| e.to_string())
+        }
+        None => Ok(studyfrog_calendar::reminders::DueAll::default()),
+    };
+    Msg::Plan(crate::plan_msg::PlanMsg::DuePeeked(result))
 }
 
 /// Today's date on the user's clock.
