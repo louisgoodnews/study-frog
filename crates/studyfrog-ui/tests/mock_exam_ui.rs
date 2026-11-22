@@ -93,3 +93,60 @@ fn saving_asks_for_the_note_and_the_outcome_is_reported() {
             .is_some_and(|n| n.text.contains("disk full"))
     );
 }
+
+#[test]
+fn writing_the_answers_and_finishing_grades_the_exam() {
+    use studyfrog_ui::setup::mock_exam::grading::total;
+    let g = generate(
+        &studyfrog_rehearsal::curriculum::chunk_markdown(notes()),
+        4,
+        "Klausur",
+        None,
+    );
+    let keys = g.keys.clone();
+    let state = State::default();
+    let (state, _) = update(state, MockExamMsg::Open);
+    let (state, _) = update(state, MockExamMsg::Generated(Ok(Box::new(g))));
+    let (state, _) = update(state, MockExamMsg::Start);
+    assert!(state.rehearse.mock.as_ref().unwrap().started);
+    let mut state = state;
+    for (i, k) in keys.iter().enumerate() {
+        let text = format!("{} {}", k.sample_answer, k.rubric.join(" "));
+        state = update(state, MockExamMsg::Answer(i, text)).0;
+    }
+    let (state, _) = update(state, MockExamMsg::Finish);
+    let graded = state
+        .rehearse
+        .mock
+        .as_ref()
+        .unwrap()
+        .graded
+        .clone()
+        .expect("graded");
+    assert_eq!(total(&graded).earned, total(&graded).possible, "{graded:?}");
+    assert!(!state.rehearse.mock.as_ref().unwrap().started);
+}
+
+#[test]
+fn an_unwritten_exam_earns_nothing() {
+    use studyfrog_ui::setup::mock_exam::grading::total;
+    let g = generate(
+        &studyfrog_rehearsal::curriculum::chunk_markdown(notes()),
+        4,
+        "Klausur",
+        None,
+    );
+    let (state, _) = update(State::default(), MockExamMsg::Open);
+    let (state, _) = update(state, MockExamMsg::Generated(Ok(Box::new(g))));
+    let (state, _) = update(state, MockExamMsg::Finish);
+    let graded = state
+        .rehearse
+        .mock
+        .as_ref()
+        .unwrap()
+        .graded
+        .clone()
+        .unwrap();
+    assert_eq!(total(&graded).earned, 0);
+    assert_eq!(total(&graded).word, "Nicht bestanden");
+}

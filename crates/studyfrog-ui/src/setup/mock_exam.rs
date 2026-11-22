@@ -6,9 +6,12 @@ use studyfrog_rehearsal::curriculum_build::AnswerKey;
 use studyfrog_rehearsal::mock_exam::MockExam;
 use studyfrog_service::exam_gen::Generated;
 
+pub mod grading;
+mod save;
+
 use crate::agent_conn::selected_provider;
 use crate::effect::Effect;
-use crate::state::{Notice, NoticeKind, Selection, State};
+use crate::state::{Selection, State};
 
 /// Questions asked for an exam from the notes.
 pub const EXAM_QUESTIONS: usize = 10;
@@ -26,6 +29,12 @@ pub enum MockExamMsg {
     Saved(Result<String, String>),
     /// Show or hide the reference answers.
     ToggleAnswers,
+    /// Start writing the answers.
+    Start,
+    /// An answer was written: its question's index and the text.
+    Answer(usize, String),
+    /// Grade the answers written so far.
+    Finish,
     /// Close the exam view.
     Close,
 }
@@ -74,6 +83,12 @@ pub struct MockExamUi {
     pub show_answers: bool,
     /// The vault path of the saved note.
     pub saved: Option<String>,
+    /// The student is writing the answers.
+    pub started: bool,
+    /// The answers written, one per question.
+    pub answers: Vec<String>,
+    /// The graded questions, once the exam is finished.
+    pub graded: Option<Vec<grading::Graded>>,
 }
 
 /// Handle a mock-exam message.
@@ -82,12 +97,16 @@ pub fn update(state: State, msg: MockExamMsg) -> (State, Vec<Effect>) {
         MockExamMsg::Open => open(state),
         MockExamMsg::Generated(result) => {
             let ui = map_ui(&state, |ui| match result {
-                Ok(g) => MockExamUi {
-                    loading: false,
-                    result: Some(g),
-                    error: None,
-                    ..ui
-                },
+                Ok(g) => {
+                    let answers = vec![String::new(); g.keys.len()];
+                    MockExamUi {
+                        loading: false,
+                        result: Some(g),
+                        error: None,
+                        answers,
+                        ..ui
+                    }
+                }
                 Err(e) => MockExamUi {
                     loading: false,
                     error: Some(e),
@@ -96,8 +115,40 @@ pub fn update(state: State, msg: MockExamMsg) -> (State, Vec<Effect>) {
             });
             (with_ui(state, ui), Vec::new())
         }
-        MockExamMsg::Save => save(state),
-        MockExamMsg::Saved(result) => saved(state, result),
+        MockExamMsg::Save => save::save(state),
+        MockExamMsg::Saved(result) => save::saved(state, result),
+        MockExamMsg::Start => {
+            let ui = map_ui(&state, |ui| MockExamUi {
+                started: true,
+                graded: None,
+                ..ui
+            });
+            (with_ui(state, ui), Vec::new())
+        }
+        MockExamMsg::Answer(i, text) => {
+            let ui = map_ui(&state, |ui| {
+                let mut answers = ui.answers.clone();
+                if let Some(slot) = answers.get_mut(i) {
+                    *slot = text;
+                }
+                MockExamUi { answers, ..ui }
+            });
+            (with_ui(state, ui), Vec::new())
+        }
+        MockExamMsg::Finish => {
+            let ui = map_ui(&state, |ui| match &ui.result {
+                Some(g) => {
+                    let graded = grading::grade(&g.exam, &g.keys, &ui.answers);
+                    MockExamUi {
+                        started: false,
+                        graded: Some(graded),
+                        ..ui
+                    }
+                }
+                None => ui,
+            });
+            (with_ui(state, ui), Vec::new())
+        }
         MockExamMsg::ToggleAnswers => {
             let ui = map_ui(&state, |ui| MockExamUi {
                 show_answers: !ui.show_answers,
@@ -154,56 +205,4 @@ fn open(state: State) -> (State, Vec<Effect>) {
         provider,
     });
     (with_ui(state, Some(ui)), vec![effect])
-}
-
-fn save(state: State) -> (State, Vec<Effect>) {
-    let Some(ui) = state.rehearse.mock.clone() else {
-        return (state, Vec::new());
-    };
-    let Some(g) = ui.result.as_ref() else {
-        return (state, Vec::new());
-    };
-    let effect = Effect::MockExam(MockExamEffect::Save {
-        folder: ui.folder.clone(),
-        title: ui.title.clone(),
-        exam: Box::new(g.exam.clone()),
-        keys: g.keys.clone(),
-    });
-    (state, vec![effect])
-}
-
-fn saved(state: State, result: Result<String, String>) -> (State, Vec<Effect>) {
-    match result {
-        Ok(path) => {
-            let ui = map_ui(&state, |ui| MockExamUi {
-                saved: Some(path.clone()),
-                ..ui
-            });
-            let state = with_ui(state, ui);
-            let notice = Notice {
-                kind: NoticeKind::Info,
-                text: format!("The exam was saved as a note: {path}"),
-            };
-            (
-                State {
-                    notice: Some(notice),
-                    ..state
-                },
-                Vec::new(),
-            )
-        }
-        Err(e) => {
-            let notice = Notice {
-                kind: NoticeKind::Error,
-                text: format!("The exam could not be saved: {e}"),
-            };
-            (
-                State {
-                    notice: Some(notice),
-                    ..state
-                },
-                Vec::new(),
-            )
-        }
-    }
 }
