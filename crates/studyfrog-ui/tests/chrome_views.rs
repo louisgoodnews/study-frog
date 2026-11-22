@@ -168,7 +168,8 @@ fn the_help_button_opens_help_and_the_profile_menu_closes_the_vault() {
     assert_eq!(h.state().0.state.screen, studyfrog_ui::state::Screen::Help);
     h.get_by_label("Profile and vault").click();
     h.run();
-    assert!(h.query_by_label_contains("StudyFrog 0.").is_some());
+    let title = format!("StudyFrog {}", env!("CARGO_PKG_VERSION"));
+    assert!(h.query_by_label_contains(&title).is_some());
     h.get_by_label("Close vault").click();
     h.run();
     assert!(h.state().0.state.vault.is_none());
