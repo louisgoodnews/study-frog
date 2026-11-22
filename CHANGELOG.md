@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Previous rating on the rating buttons (`crates/studyfrog-ui`, STORY-0196)**: the button of the item's previous rating shows "Last time: Difficult / Medium / Easy" in red, orange or green; an item with no previous rating shows nothing.
 - **Rehearsal item takes more of the screen (`crates/studyfrog-ui`, STORY-0195)**: the card spans the window, the item's text scrolls in its own area, and the rating buttons stay under it; a `--screenshot run-long` demo checks it at 1280 by 800, 1600 by 1000 and the 640 by 420 minimum.
 - **Calendar and reminders in the control protocol (`crates/studyfrog-ui`, `crates/studyfrog-service`, STORY-0194)**: `calendar view`, `calendar period DATE` and `calendar homework DATE` drive the calendar screen, and the homework answer gives each item's urgency; `reminders due` answers the calendar and homework reminders due now without marking them shown.
 - **Search focus and tooltips in the control protocol (`crates/studyfrog-ui`, STORY-0192)**: `search --focus` gives the library or PDF search field the keyboard, and the answer names the field once it has it; `help tooltip NAME` answers a control's explanation and shortcut; the state names the focused field.

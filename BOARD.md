@@ -496,7 +496,7 @@
 | [STORY-0193](docs/issues/stories/STORY-0193-appearance-and-density-in-the-control-protocol.md) Appearance and density in the control protocol (2) | review | 0/0 |
 | [STORY-0194](docs/issues/stories/STORY-0194-calendar-reminders-and-homework-markers-in-the-control-protocol.md) Calendar, reminders and homework markers in the control protocol (3) | review | 0/0 |
 | [STORY-0195](docs/issues/stories/STORY-0195-in-rehearsal-view-the-item-takes-more-of-the-screen.md) In rehearsal view, the item takes more of the screen (3) | review | 0/0 |
-| [STORY-0196](docs/issues/stories/STORY-0196-in-rehearsal-view-the-previous-rating-shows-on-the-rating-button-in-its-colour.md) In rehearsal view, the previous rating shows on the rating button in its colour (3) | backlog | 0/0 |
+| [STORY-0196](docs/issues/stories/STORY-0196-in-rehearsal-view-the-previous-rating-shows-on-the-rating-button-in-its-colour.md) In rehearsal view, the previous rating shows on the rating button in its colour (3) | review | 0/0 |
 | [STORY-0197](docs/issues/stories/STORY-0197-the-item-colour-paints-the-item-in-rehearsal-view.md) The item colour paints the item in rehearsal view (3) | backlog | 0/0 |
 | [STORY-0198](docs/issues/stories/STORY-0198-visual-node-based-editor-for-learn-modes.md) Visual node-based editor for learn modes (8) | backlog | 0/0 |
 | [STORY-0199](docs/issues/stories/STORY-0199-case-studies-in-the-rehearsal-run-queue.md) Case studies in the rehearsal run queue (5) | review | 0/0 |

@@ -149,11 +149,27 @@ fn rating_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = palette_of(ui);
     let colors = [p.danger, p.warning, p.success, p.accent];
     let suggested = run.scored.as_ref().map(|s| s.rating);
+    let previous = current_item(&run.session)
+        .and_then(|uid| run.content.get(&uid))
+        .and_then(|c| c.previous);
     ui.columns(4, |cols| {
         for (i, (rating, label, _)) in RATINGS.into_iter().enumerate() {
             let c = colors[i];
             let strong = suggested == Some(rating);
             let width = cols[i].available_width();
+            match previous {
+                Some(r) if r == rating => {
+                    let (word, mark) = previous_mark(&p, rating);
+                    cols[i].label(
+                        RichText::new(format!("Last time: {word}"))
+                            .color(mark)
+                            .strong(),
+                    );
+                }
+                _ => {
+                    cols[i].add_space(20.0);
+                }
+            }
             let button = Button::new(RichText::new(label).color(c).strong())
                 .fill(tint(c, if strong { 90 } else { 32 }))
                 .stroke(Stroke::new(if strong { 2.0 } else { 1.0 }, c))
@@ -167,6 +183,16 @@ fn rating_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
     });
+}
+
+/// The difficulty word a previous rating stands for, and its colour: difficult in red, medium in orange,
+/// easy (and good) in green. The word is shown with the colour, so colour is not the only cue (STORY-0196).
+fn previous_mark(p: &crate::theme::Palette, rating: Rating) -> (&'static str, Color32) {
+    match rating {
+        Rating::Again => ("Difficult", p.danger),
+        Rating::Hard => ("Medium", p.warning),
+        Rating::Good | Rating::Easy => ("Easy", p.success),
+    }
 }
 
 fn score_line(scored: &crate::run_state::Scored, ui: &mut egui::Ui) {
