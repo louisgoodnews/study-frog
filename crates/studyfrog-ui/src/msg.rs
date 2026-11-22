@@ -1,5 +1,15 @@
 //! Everything that can happen: user input and results of effects.
 
+use crate::chrome::ChromeMsg;
+use crate::home_ui::HomeMsg;
+use crate::import_ui::ImportOutcome;
+use crate::kanban::BoardMsg;
+use crate::modal::ModalMsg;
+use crate::planner::PlanMsg;
+use crate::reading_test::ReadingTestMsg;
+use crate::run_state::{ItemContent, Scored};
+use crate::setup::SetupEdit;
+use crate::state::{ItemRow, Screen, Selection, VaultInfo};
 use studyfrog_core::{
     review::Rating,
     run::Run,
@@ -11,17 +21,6 @@ use studyfrog_service::achievements::AchievementReport;
 use studyfrog_service::document::{LoadedDoc, Saved};
 use studyfrog_service::reports::ReportBundle;
 use studyfrog_store::overview::LinkGraph;
-
-use crate::chrome::ChromeMsg;
-use crate::home_ui::HomeMsg;
-use crate::import_ui::ImportOutcome;
-use crate::kanban::BoardMsg;
-use crate::modal::ModalMsg;
-use crate::planner::PlanMsg;
-use crate::reading_test::ReadingTestMsg;
-use crate::run_state::{ItemContent, Scored};
-use crate::setup::SetupEdit;
-use crate::state::{ItemRow, Screen, Selection, VaultInfo};
 
 /// An event for [`update`](crate::update::update).
 #[derive(Debug, Clone, PartialEq)]
@@ -119,6 +118,8 @@ pub enum Msg {
     Created(Result<VaultInfo, String>),
     /// A message of the case-study view.
     Case(crate::setup::case::CaseMsg),
+    /// A message of the math drill.
+    Math(crate::setup::math::MathMsg),
     /// A scheduling switch of the vault.
     Srs(crate::app_settings_ui::SrsMsg),
     /// A message of the memory game.
@@ -246,5 +247,4 @@ pub enum Msg {
     /// Match Mode tile pairing recall drill (EPIC-053).
     Match(crate::match_ui::MatchMsg),
 }
-
 pub use crate::{edit_form::EditAction, state::DraftField};

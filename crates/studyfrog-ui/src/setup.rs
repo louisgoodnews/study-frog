@@ -7,6 +7,7 @@ use crate::run_state::RunView;
 use crate::state::State;
 
 pub mod case;
+pub mod math;
 pub mod memory;
 pub mod memory_deck;
 pub mod memory_layout;
@@ -60,6 +61,8 @@ pub struct Rehearse {
     pub memory: Option<memory::MemoryUi>,
     /// The case-study view, when it is open.
     pub case_study: Option<case::CaseUi>,
+    /// The math drill, when it is open.
+    pub math: Option<math::MathDrill>,
     /// The timing chosen for the next memory game.
     pub memory_timer: studyfrog_rehearsal::memory_summary::MemoryTimer,
 }

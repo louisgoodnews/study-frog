@@ -484,7 +484,7 @@
 | [STORY-0181](docs/issues/stories/STORY-0181-interactive-case-study-rehearsal-ui.md) Interactive Case-Study Rehearsal UI and Multi-Step Feedback Display (3) | review | 0/0 |
 | [STORY-0182](docs/issues/stories/STORY-0182-psychometric-formula-engine-and-parameter-generator.md) Psychometric Formula Engine and Dynamic Parameter Generator (3) | done | 0/0 |
 | [STORY-0183](docs/issues/stories/STORY-0183-step-by-step-calculation-validator.md) Step-by-Step Intermediate Calculation Validator and Error Diagnostics (5) | done | 0/0 |
-| [STORY-0184](docs/issues/stories/STORY-0184-math-drill-ui-and-scratchpad.md) Interactive Math Drill View with Formula Rendering, Scratchpad, and Step Reveal (3) | backlog | 0/0 |
+| [STORY-0184](docs/issues/stories/STORY-0184-math-drill-ui-and-scratchpad.md) Interactive Math Drill View with Formula Rendering, Scratchpad, and Step Reveal (3) | review | 0/0 |
 | [STORY-0185](docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock Exam Structure, Weighted Point Allocations, and Strict Timer Controls (3) | done | 0/0 |
 | [STORY-0186](docs/issues/stories/STORY-0186-lecture-slide-driven-exam-generator.md) Lecture Slide and Script-Driven Exam Generation Engine via Local SLM (5) | backlog | 0/0 |
 | [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Mock Exam Grading Report, German University Grade Scale (1.0 - 5.0), and Chapter Analytics (3) | in_progress | 0/0 |

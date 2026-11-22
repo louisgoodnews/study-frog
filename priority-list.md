@@ -192,7 +192,7 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 - [ ] EPIC-062 Psychometric formula engine
   - [x] STORY-0182 Formulas, seeded generator, precision tests
   - [x] STORY-0183 Step trace and diagnosis
-  - [ ] STORY-0184 Math drill view
+  - [x] STORY-0184 Math drill view (built for the standard-error formula: working rows, keypad, check, solution)
 - [ ] [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur lab
   - [x] [STORY-0185](docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock exam structure, navigation and timer
   - [ ] STORY-0186 Exam generation from slides via the local SLM

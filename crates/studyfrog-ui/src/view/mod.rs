@@ -65,6 +65,7 @@ mod library_pdfs;
 pub mod library_search;
 pub mod library_table;
 pub mod match_grid;
+mod math_view;
 mod md_editor;
 mod memory;
 mod menus;
@@ -165,7 +166,6 @@ use eframe::egui;
 use crate::appearance_ui::AppearanceMsg;
 use crate::msg::Msg;
 use crate::state::{Screen, State};
-
 /// Draw the whole window for `state`.
 pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     let mut out = Vec::new();

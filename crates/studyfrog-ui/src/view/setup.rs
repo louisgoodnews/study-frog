@@ -21,14 +21,12 @@ fn go(out: &mut Vec<Msg>, step: SetupStep) {
 
 /// The whole screen: the steps scroll, the Back and Next buttons stay in view.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if let Some(math) = &state.rehearse.math {
+        scrolled(ui, |ui| super::math_view::draw(ui, math, out));
+        return;
+    }
     if let Some(cs) = &state.rehearse.case_study {
-        egui::ScrollArea::vertical()
-            .auto_shrink([false, false])
-            .show(ui, |ui| {
-                kit::column(ui, kit::READING_WIDTH, |ui| {
-                    super::case_view::draw(ui, cs, out);
-                });
-            });
+        scrolled(ui, |ui| super::case_view::draw(ui, cs, out));
         return;
     }
     if let Some(memory) = &state.rehearse.memory {
@@ -95,6 +93,13 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
 }
 
+/// A view of the rehearse screen in the reading column, scrolled.
+fn scrolled(ui: &mut egui::Ui, body: impl FnOnce(&mut egui::Ui)) {
+    egui::ScrollArea::vertical()
+        .auto_shrink([false, false])
+        .show(ui, |ui| kit::column(ui, kit::READING_WIDTH, body));
+}
+
 fn step_bar(current: SetupStep, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
         for (step, label, _) in STEPS {
@@ -136,6 +141,12 @@ fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         match step {
             SetupStep::What => {
+                if kit::quiet_button(ui, "Math drill")
+                    .on_hover_text("Opens a math drill: a standard-error problem with working rows, a keypad and the full solution.")
+                    .clicked()
+                {
+                    out.push(Msg::Math(crate::setup::math::MathMsg::Open));
+                }
                 if kit::quiet_button(ui, "Case study")
                     .on_hover_text("Opens the case studies of the stack you have open: a decision, and a justification checked against a rubric.")
                     .clicked()

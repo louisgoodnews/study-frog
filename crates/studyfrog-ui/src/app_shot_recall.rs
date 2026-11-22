@@ -174,6 +174,7 @@ pub fn memory_setup(model: &mut Model, name: &str) -> Option<Vec<crate::effect::
         "memory-demo" => memory_demo(model),
         "memory-won" => memory_won(model),
         "case-demo" => case_demo(model),
+        "math-demo" => math_demo(model),
         _ => return None,
     }
     Some(Vec::new())
@@ -203,4 +204,27 @@ pub fn case_demo(model: &mut Model) {
     ));
     model.state.screen = Screen::Rehearse;
     model.state.rehearse.case_study = Some(cs);
+}
+
+/// A math drill with the first row right and the second one missing its square root, checked.
+pub fn math_demo(model: &mut Model) {
+    use studyfrog_rehearsal::formula_trace::se_trace;
+    let drill = crate::setup::math::new_drill(11);
+    let trace = se_trace(drill.exercise.s_x, drill.exercise.r_xx);
+    let mut drill = drill;
+    drill.steps[0] = format!("{}", trace[0].value);
+    drill.steps[1] = format!("{}", trace[0].value);
+    let drill = crate::setup::math::MathDrill {
+        feedback: Some(crate::setup::math::Feedback {
+            diagnosis: studyfrog_rehearsal::formula_trace::diagnose_se(
+                drill.exercise.s_x,
+                drill.exercise.r_xx,
+                &[trace[0].value, trace[0].value],
+            ),
+            answer_correct: false,
+        }),
+        ..drill
+    };
+    model.state.screen = Screen::Rehearse;
+    model.state.rehearse.math = Some(drill);
 }
