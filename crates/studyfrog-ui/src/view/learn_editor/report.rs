@@ -20,13 +20,23 @@ pub fn section(e: &LearnEditor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
     });
     let Some(r) = &e.report else { return };
-    ui.label(format!(
-        "{} runs ({} finished), {} items reached.",
-        r.runs, r.finished, r.items
-    ));
+    ui.label(summary_line(r.runs, r.finished, r.items));
     list(ui, "Entries per step", &r.visits);
     list(ui, "Ratings given", &r.ratings);
     list(ui, "Branches taken", &r.branches);
+}
+
+/// "N runs (M finished), K items reached." with each noun singular for 1.
+fn summary_line(runs: i64, finished: i64, items: i64) -> String {
+    format!(
+        "{runs} {} ({finished} finished), {items} {} reached.",
+        noun(runs, "run", "runs"),
+        noun(items, "item", "items"),
+    )
+}
+
+fn noun<'a>(n: i64, one: &'a str, many: &'a str) -> &'a str {
+    if n == 1 { one } else { many }
 }
 
 fn list(ui: &mut egui::Ui, title: &str, rows: &[(String, i64)]) {
@@ -40,4 +50,18 @@ fn list(ui: &mut egui::Ui, title: &str, rows: &[(String, i64)]) {
             ui.add_space(8.0);
         }
     });
+}
+
+#[cfg(test)]
+mod tests {
+    use super::summary_line;
+
+    #[test]
+    fn nouns_agree_with_their_counts() {
+        assert_eq!(summary_line(1, 1, 1), "1 run (1 finished), 1 item reached.");
+        assert_eq!(
+            summary_line(2, 0, 0),
+            "2 runs (0 finished), 0 items reached."
+        );
+    }
 }
