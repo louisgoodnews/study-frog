@@ -1,6 +1,7 @@
 //! Learn modes stored in the vault as data (STORY-0198): one TOML file per mode in `learn_modes/`. A graph
 //! that the rules refuse is not saved, and the reasons are returned.
 
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -19,7 +20,13 @@ struct Doc {
     node: Vec<NodeDoc>,
     #[serde(default)]
     edge: Vec<EdgeDoc>,
+    /// Where each node is drawn on the editor's canvas (presentation only; the graph does not depend on it).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    layout: Layout,
 }
+
+/// Where each node is drawn: a node id and its (x, y) on the canvas.
+pub type Layout = BTreeMap<String, [f32; 2]>;
 
 #[derive(Serialize, Deserialize)]
 struct NodeDoc {
@@ -71,13 +78,14 @@ fn kind_of(word: &str) -> Result<NodeKind, String> {
 
 /// The file's text for `g`.
 pub fn to_toml(g: &LearnGraph) -> Result<String, String> {
-    to_toml_at(g, 1)
+    to_toml_at(g, 1, &Layout::new())
 }
 
-fn to_toml_at(g: &LearnGraph, version: u32) -> Result<String, String> {
+fn to_toml_at(g: &LearnGraph, version: u32, layout: &Layout) -> Result<String, String> {
     let doc = Doc {
         name: g.name.clone(),
         version,
+        layout: layout.clone(),
         node: g
             .nodes
             .iter()
@@ -144,6 +152,11 @@ pub fn file_name(name: &str) -> String {
 
 /// Save a valid graph into the vault's `learn_modes` folder; a graph the rules refuse is not saved.
 pub fn save(root: &Path, g: &LearnGraph) -> Result<PathBuf, String> {
+    save_laid_out(root, g, &Layout::new())
+}
+
+/// Save a valid graph with the canvas layout it was drawn with.
+pub fn save_laid_out(root: &Path, g: &LearnGraph, layout: &Layout) -> Result<PathBuf, String> {
     let refusals = check(g);
     if !refusals.is_empty() {
         let why: Vec<String> = refusals.iter().map(reason).collect();
@@ -153,8 +166,16 @@ pub fn save(root: &Path, g: &LearnGraph) -> Result<PathBuf, String> {
     fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let path = dir.join(file_name(&g.name));
     let version = stored_version(root, &file_name(&g.name)) + 1;
-    fs::write(&path, to_toml_at(g, version)?).map_err(|e| e.to_string())?;
+    fs::write(&path, to_toml_at(g, version, layout)?).map_err(|e| e.to_string())?;
     Ok(path)
+}
+
+/// The canvas layout stored with a mode (empty for a mode saved without one).
+pub fn load_layout(root: &Path, file: &str) -> Layout {
+    read_text(root, file)
+        .ok()
+        .and_then(|t| toml::from_str::<Doc>(&t).ok())
+        .map_or_else(Layout::new, |d| d.layout)
 }
 
 /// Read the mode stored under `file` (its file name in `learn_modes`).

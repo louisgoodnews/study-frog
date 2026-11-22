@@ -53,7 +53,7 @@ fn a_saved_mode_starts_as_a_practice_only_run() {
 
     let saved = execute(
         &mut w,
-        Effect::Learn(LearnEffect::Save(Box::new(mode()))),
+        Effect::Learn(LearnEffect::Save(Box::new(mode()), Default::default())),
         NOW_NS,
     );
     let file = match &saved[..] {

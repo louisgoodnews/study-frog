@@ -4,7 +4,7 @@
 use studyfrog_core::plan::plan_spaced;
 use studyfrog_core::time::UnixMs;
 use studyfrog_service::create::fresh_id_source;
-use studyfrog_service::learn_mode_store::{from_toml, list, read_text, save};
+use studyfrog_service::learn_mode_store::{from_toml, list, load_layout, read_text, save_laid_out};
 use studyfrog_service::learn_run;
 use studyfrog_service::timezone::local_day_window;
 
@@ -28,7 +28,10 @@ pub fn run(w: &mut Worker, effect: LearnEffect, now_ns: i64) -> Msg {
         LearnEffect::Load(file) => {
             let loaded = read_text(root, &file)
                 .and_then(|text| from_toml(&text))
-                .map(|graph| (file, graph));
+                .map(|graph| {
+                    let layout = load_layout(root, &file);
+                    (file, graph, layout)
+                });
             Msg::Learn(LearnMsg::Loaded(loaded))
         }
         LearnEffect::Start(file) => {
@@ -58,8 +61,8 @@ pub fn run(w: &mut Worker, effect: LearnEffect, now_ns: i64) -> Msg {
                 Err(e) => Msg::Learn(LearnMsg::Reported(Err(e.to_string()))),
             }
         }
-        LearnEffect::Save(graph) => {
-            let saved = save(root, &graph).map(|path| {
+        LearnEffect::Save(graph, layout) => {
+            let saved = save_laid_out(root, &graph, &layout).map(|path| {
                 path.file_name()
                     .map(|n| n.to_string_lossy().into_owned())
                     .unwrap_or_default()

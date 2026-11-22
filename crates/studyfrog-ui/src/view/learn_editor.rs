@@ -9,6 +9,7 @@ use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::theme::palette_of;
 
+pub mod canvas;
 pub mod report;
 
 fn send(out: &mut Vec<Msg>, m: LearnMsg) {
@@ -44,6 +45,7 @@ fn body(e: &LearnEditor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     stored(e, ui, out);
     ui.separator();
     name_row(e, ui, out);
+    canvas::draw(e, ui, out);
     nodes(e, ui, out);
     wires(e, ui, out);
     ui.separator();

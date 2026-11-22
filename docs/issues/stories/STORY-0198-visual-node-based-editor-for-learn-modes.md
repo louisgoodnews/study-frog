@@ -62,6 +62,12 @@ Node types for the first version (decided): start, present, recall, rate, schedu
 - The live queue is authoritative. The stored `run_queue` rows still record a returning item at the end, not at its place: nothing reads them for a run in progress (runs are not resumed from disk), so they are a known difference, to fix if resume is added.
 - Tests: `tests/learn_queue.rs` (an Again item comes back after two others: 1,2,3,1,4,5), `learn_run_service` (the stored placement is the same rule).
 
+## Implementation (part 6, the canvas)
+- The learn mode is drawn on a canvas in the editor: each step is a box at its place, each wire an arrow (a wire back to a step on the left is an arc above the boxes), a condition written on its wire. Click empty space to add a step of the chosen kind there; drag a step to move it; click a step to select it; "Delete selected" removes it with its wires. "Connect" turns clicks into wires: click one step, then another; the wire takes the condition chosen in the form.
+- Places are saved with the mode in a `[layout]` table of the mode file (presentation only: the graph does not depend on it); a mode saved without one lays out on a grid.
+- The form below the canvas is still there and shows the same graph; the form remains the way to pick a condition, remove a wire, or see each step.
+- Not yet: selecting or deleting a wire on the canvas (use the form), drawing a wire from a step to itself (it is not drawn), and a hand test of dragging in a real window (the canvas was checked in screenshots and by its message tests).
+
 ## Still open (part 2)
 - The canvas (drawn nodes and wires) is not built; the form editor above is the first version.
 - The opt-in custom report screen (the store function `custom_mode_totals` exists).

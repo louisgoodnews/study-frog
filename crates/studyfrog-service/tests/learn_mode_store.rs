@@ -116,3 +116,21 @@ fn the_text_of_a_graph_round_trips() {
     let g = interleave();
     assert_eq!(from_toml(&to_toml(&g).unwrap()).unwrap(), g);
 }
+
+#[test]
+fn the_canvas_layout_is_saved_with_the_mode_and_reads_back() {
+    use studyfrog_service::learn_mode_store::{Layout, load_layout, save_laid_out};
+    let d = temp("layout");
+    let g = interleave();
+    let mut layout = Layout::new();
+    layout.insert("show".into(), [120.5, 40.0]);
+    let path = save_laid_out(&d.0, &g, &layout).unwrap();
+    assert!(path.exists());
+    assert_eq!(load_layout(&d.0, "interleave-two-decks.toml"), layout);
+    // The graph is the same with or without its layout.
+    assert_eq!(load(&d.0, "interleave-two-decks.toml").unwrap(), g);
+    // A mode saved without a layout has none.
+    let d2 = temp("no-layout");
+    save(&d2.0, &g).unwrap();
+    assert!(load_layout(&d2.0, "interleave-two-decks.toml").is_empty());
+}

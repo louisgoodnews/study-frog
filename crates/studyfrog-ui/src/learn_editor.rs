@@ -2,6 +2,7 @@
 //! see why the mode cannot be saved yet, and save it. Pure: the files are read and written by effects.
 
 use studyfrog_rehearsal::learn_graph::{LearnGraph, NodeKind};
+use studyfrog_service::learn_mode_store::Layout;
 
 pub mod edit;
 
@@ -25,7 +26,7 @@ pub const KINDS: [NodeKind; 8] = [
 pub const WHENS: [&str; 5] = ["again", "hard", "good", "easy", "default"];
 
 /// The editor's fields: the stored modes, the open graph and its refusals, and the next node or wire.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct LearnEditor {
     /// The stored modes (file names).
     pub modes: Vec<String>,
@@ -49,6 +50,12 @@ pub struct LearnEditor {
     pub notice: Option<String>,
     /// The custom report of the open mode, once asked for (opt-in; `None` until then).
     pub report: Option<studyfrog_store::learn_report::ModeReport>,
+    /// Where each node is drawn on the canvas (a node without one is placed by its index).
+    pub layout: Layout,
+    /// The node the canvas last selected.
+    pub selected: Option<String>,
+    /// Whether a click on a node starts or ends a wire (canvas connect mode).
+    pub connecting: bool,
 }
 
 /// An empty new mode.
@@ -68,18 +75,21 @@ pub fn new_editor() -> LearnEditor {
         ],
         notice: None,
         report: None,
+        layout: Layout::new(),
+        selected: None,
+        connecting: false,
     }
 }
 
 /// What the editor asks the executor to do.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum LearnEffect {
     /// Read the names of the stored modes.
     List,
     /// Read one stored mode.
     Load(String),
-    /// Save this mode (only when it has no reasons to refuse).
-    Save(Box<LearnGraph>),
+    /// Save this mode with its canvas layout (only when it has no reasons to refuse).
+    Save(Box<LearnGraph>, Layout),
     /// Start a practice-only run of the saved mode with this file name.
     Start(String),
     /// Read the custom report of the mode with this id (its file name without `.toml`).
@@ -95,8 +105,8 @@ pub enum LearnMsg {
     Listed(Result<Vec<String>, String>),
     /// A stored mode was chosen in the list.
     Pick(String),
-    /// A stored mode was read (or not): its file name and graph.
-    Loaded(Result<(String, LearnGraph), String>),
+    /// A stored mode was read (or not): its file name, graph and canvas layout.
+    Loaded(Result<(String, LearnGraph, Layout), String>),
     /// "New mode" was pressed.
     NewMode,
     /// The mode's name was edited.
@@ -129,6 +139,16 @@ pub enum LearnMsg {
     ShowReport,
     /// The custom report was read (or not).
     Reported(Result<studyfrog_store::learn_report::ModeReport, String>),
+    /// A node was clicked on the canvas: selected, or joined to the wire being drawn in connect mode.
+    ClickNode(String),
+    /// A node was dragged on the canvas, by this many points.
+    MoveBy(String, f32, f32),
+    /// Empty canvas was clicked at this point: a step of the chosen kind is added there.
+    PlaceAt(f32, f32),
+    /// "Connect" was pressed: clicks on nodes now draw wires.
+    ToggleConnect,
+    /// "Delete selected" was pressed: the selected node goes, with its wires.
+    DeleteSelected,
     /// The run of a learn mode was made, with its graph (or why not).
     Started(Result<(studyfrog_core::run::Run, LearnGraph), String>),
 }
