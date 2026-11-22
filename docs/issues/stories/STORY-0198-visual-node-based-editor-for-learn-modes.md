@@ -32,6 +32,20 @@ Node types for the first version (decided): start, present, recall, rate, schedu
 - `studyfrog-service` `learn_mode_store`: TOML in `<vault>/learn_modes/<name>.toml`; `save` refuses a graph with reasons and writes nothing; `load`, `list`, `to_toml`, `from_toml`. Tests in `tests/learn_mode_store.rs`.
 - Not yet: the canvas editor (draw, wire, select, delete); running a custom mode through the rehearsal engine (the criteria's "run"); the separate log of a custom run, so the two can be compared. These stay open, so the story is in progress.
 
+## Implementation (part 2, backend)
+- Decisions taken (owner, 2026-11-22): practice-only v1 with no effect on the schedule; a full graph snapshot per run; the custom report opt-in.
+- Migration 31 (`schema_learn.rs`): `learn_run` (mode id, version, FNV-1a hash, the snapshot, `practice_only`) and `learn_step` (path per item). Additive tables; the `run` row is a `flip` run, so no CHECK changes.
+- `studyfrog-rehearsal` `learn_interp::walk`: from a node, one rating at a time, follows the wire (branch by rating, else `default`), stops at a rate node, a stop, or a loop cap (3 visits per node). `learn_refusal` holds the refusal sentences; the check also refuses unknown conditions and a branch with no default.
+- `studyfrog-service` `learn_run::start` runs a checked stored mode practice-only and keeps the snapshot; `record_rating` (called inside `record_step`'s transaction) walks the graph and stores the steps. A test shows the walk and that no `review` row is written.
+- Built-in readers (recent runs, run starts, the finished count) leave custom runs out (`store::learn::BUILTIN_RUNS`), tested.
+- Changed behaviour, stated: in v1 the graph decides the recorded path and the branches; the run's queue order is still the built-in engine's. A custom run therefore records what the graph would do with each rating.
+
+## Still open (part 2)
+- Start a custom run from the app (a control command and a Rehearse setup entry).
+- The editor: a form to list, add, connect, delete and check nodes, then save. Not built; the canvas is a later choice.
+- The opt-in custom report screen (the store function `custom_mode_totals` exists).
+- Acceptance criterion 1 ("drawn in the app") is therefore not met yet; the story stays in progress.
+
 ## Dependencies
 EPIC-066, and the features named above.
 
