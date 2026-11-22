@@ -27,7 +27,7 @@ Complete the user journey for Memory Mode:
 ## Acceptance Criteria
 - [x] Time-attack mode with countdown options (e.g. 60s, 90s, 120s) and timeout defeat condition
 - [x] Victory summary modal detailing elapsed time, move accuracy, speed score, and personal best records
-- [ ] Memory Mode launch action integrated into the Rehearse setup screen and Stack detail view
+- [x] Memory Mode launch action integrated into the Rehearse setup screen and Stack detail view
 
 ## Design Notes
 Store personal bests in application settings or stack rehearsal statistics. Connect navigation messages cleanly through `studyfrog-ui` without breaking existing flow.
@@ -44,6 +44,10 @@ The engine (`studyfrog-rehearsal::memory_summary`) provides the time-attack opti
 - **Entry points:** "Memory game" in the rehearse setup, and beside "Start rehearsal" on the stack page.
 
 Tests: `studyfrog-ui/tests/memory_mode.rs` (timeout, saved best, timing choice, stack start), `tests/memory_summary_ui.rs` (dialog and timeout text on screen) and `studyfrog-config/tests/memory_best_app.rs` (records round-trip through `app.toml`). Screenshots checked the timing row, the board, matched and mismatch cards, and the victory dialog.
+
+## Implementation update (2026-11-22)
+- **Launch checked:** `studyfrog-ui/tests/memory_grid_ui.rs` starts a game from the rehearse setup's "Memory game" button and from the stack page's "Memory game" button (which opens Rehearse with the game). This meets the last criterion.
+- **Not done:** the Description's "automatic selection of due or active cards from the selected stack" is not built. The game reads the first card rows of the stack in folder order (up to 40), not the due or active ones. This changes which cards a game uses, so it is left for a separate change.
 
 ## Open Questions
 None.

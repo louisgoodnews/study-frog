@@ -8,6 +8,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Memory game card flip and keyboard play (`crates/studyfrog-ui`, STORY-0174)**: a card turns over in 0.2 s (at once with Reduce motion), Tab reaches the cards, Enter or Space turns a face-down card over, the arrow keys move between cards, and the card with keyboard focus has a ring. The mismatch shake stops under Reduce motion.
+- **Memory game launch covered by tests (`crates/studyfrog-ui`, STORY-0175)**: the rehearse setup's and the stack page's "Memory game" buttons are tested to start a game. Due-card selection is still open.
 - **FrogScript reference lists the lifecycle events (`crates/studyfrog-script`, `crates/studyfrog-ui`, STORY-0171)**: the reference panel in ScriptStudio has a "Lifecycle Events" category with one entry for each event a job in `scripts.toml` can start on, with "Add example to the script" and search by name. A test fails if an event has no entry.
 - **PDF page delete asks first (`crates/studyfrog-ui`, STORY-0054)**: "Delete page" in the arrange screen asks "Take this page out of the new file? Undo brings it back." with "Delete it" or "Keep it"; Undo still brings a removed page back.
 - **PDF note delete asks first (`crates/studyfrog-ui`, STORY-0054)**: "Delete" on a note in the PDF viewer asks "Delete this note? It cannot be undone." with "Delete it" or "Keep it"; before, the note was deleted at once although its tooltip said it deleted after confirmation.

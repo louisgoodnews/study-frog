@@ -44,5 +44,13 @@ Use `egui` drawing primitives, strictly adhering to `palette_of(ui)` without har
 ## Dependencies
 EPIC-059, STORY-0173
 
+## Implementation update (2026-11-22)
+- **Flip:** a card turns over in 0.2 s. Its width narrows to an edge-on line at the middle of the turn, and the face shows from the middle (`setup/memory_flip.rs` for the pure maths, `view/memory/board.rs` for the animation through egui's `animate_value_with_time`). A card turned back down (after a mismatch) turns the same way.
+- **Reduced motion:** the app sets egui's animation time to zero when "Reduce motion" is on. The flip is then instant and the mismatch shake stops; the danger outline stays.
+- **Keyboard:** each card is a focusable button. Tab reaches the cards, Enter or Space turns a face-down card over, and the arrow keys move between cards (egui's own focus navigation). The card with keyboard focus has a ring (`view/memory/card.rs`).
+- **Names:** "Card N, face down", "Card N: text" or "Card N, matched: text" (unchanged).
+- **Tests:** `studyfrog-ui/tests/memory_flip.rs` (width at each point of the turn, which side shows, reduced motion, clamping) and `tests/memory_grid_ui.rs` (Enter turns a card, the arrow keys move, names, the two launch points).
+- **Not done / needs a person at a window:** the look and feel of the 0.2 s flip, and whether the focus ring reads well, are not checked on a screen. A mouse click also gives a card focus, so the ring can show after a click. The back is still the dot lattice; there is no frog artwork.
+
 ## Open Questions
 None.

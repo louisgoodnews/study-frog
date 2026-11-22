@@ -10,6 +10,7 @@ pub mod case;
 pub mod math;
 pub mod memory;
 pub mod memory_deck;
+pub mod memory_flip;
 pub mod memory_layout;
 pub mod mock_exam;
 

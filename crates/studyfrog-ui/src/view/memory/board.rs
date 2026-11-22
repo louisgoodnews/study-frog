@@ -1,19 +1,19 @@
 //! The memory game's board: the card grid, the HUD line and the end-of-game line. The rules are in
 //! the engine; this only draws the state it is given and reports presses.
 
-use eframe::egui::{self, Color32, Pos2, Rect, Sense, Stroke, StrokeKind, Vec2, WidgetInfo};
+use eframe::egui::{self, Pos2, Rect, Sense, Vec2, WidgetInfo};
 use studyfrog_rehearsal::memory::MemorySession;
-use studyfrog_rehearsal::memory_deck::{FlipState, MemoryTile};
+use studyfrog_rehearsal::memory_deck::FlipState;
 use studyfrog_rehearsal::memory_summary::{DangerLevel, danger_level};
 
+use super::card::{card_label, focus_ring, paint, shaken};
 use crate::msg::Msg;
 use crate::setup::memory::{MemoryMsg, MemoryUi};
+use crate::setup::memory_flip::{flip_secs, settled_progress, shows_face, width_fraction};
 use crate::setup::memory_layout::{GAP, grid_for, grid_height, grid_width};
 use crate::theme::palette_of;
 use crate::view::kit;
 
-/// Corner radius of a card, in points.
-const RADIUS: u8 = 10;
 /// Upper bound on the board's height, so cards stay a sensible size on tall windows.
 const MAX_BOARD_H: f32 = 900.0;
 
@@ -80,7 +80,8 @@ fn hud(ui: &mut egui::Ui, s: &MemorySession, memory: &MemoryUi) {
     });
 }
 
-/// The grid of cards, centred in the space left below the HUD.
+/// The grid of cards, centred in the space left below the HUD. Each card is a button: a mouse click,
+/// or Tab to reach it and Enter or Space to press it, and the arrow keys move between cards.
 fn board(ui: &mut egui::Ui, s: &MemorySession, out: &mut Vec<Msg>) {
     let avail = ui.available_size();
     let height = avail.y.clamp(0.0, MAX_BOARD_H);
@@ -89,6 +90,8 @@ fn board(ui: &mut egui::Ui, s: &MemorySession, out: &mut Vec<Msg>) {
     };
     let (area, _) = ui.allocate_exact_size(Vec2::new(avail.x, grid_height(&grid)), Sense::hover());
     let origin = Pos2::new(area.center().x - grid_width(&grid) / 2.0, area.top());
+    // Animation time is zero under reduced motion: the cards then turn and shake no more.
+    let motion = flip_secs(ui.style().animation_time);
     for (i, tile) in s.tiles.iter().enumerate() {
         let (row, col) = (i / grid.cols, i % grid.cols);
         let at = origin
@@ -97,103 +100,36 @@ fn board(ui: &mut egui::Ui, s: &MemorySession, out: &mut Vec<Msg>) {
                 row as f32 * (grid.tile_h + GAP),
             );
         let base = Rect::from_min_size(at, Vec2::new(grid.tile_w, grid.tile_h));
-        let rect = shaken(base, tile, s.elapsed_ms);
-        let resp = ui.interact(rect, ui.scope_id().with(("memory-card", i)), Sense::click());
-        let label = card_label(i, tile);
-        resp.widget_info(|| WidgetInfo::labeled(egui::Role::Button, true, label.clone()));
+        let rect = shaken(base, tile, s.elapsed_ms, motion > 0.0);
+        let card = ui.scope_id().with(("memory-card", i));
+        let resp = ui.interact(rect, card, Sense::click());
+        resp.widget_info(|| WidgetInfo::labeled(egui::Role::Button, true, card_label(i, tile)));
+        let progress = turn(ui, card, tile.state != FlipState::FaceDown, motion);
+        let turning = Rect::from_center_size(
+            rect.center(),
+            Vec2::new(rect.width() * width_fraction(progress), rect.height()),
+        );
         let hovered = resp.hovered() && tile.state == FlipState::FaceDown;
-        paint(ui, rect, tile, hovered);
+        paint(ui, turning, tile, shows_face(progress), hovered);
+        if resp.has_focus() {
+            focus_ring(ui, turning);
+        }
         if resp.clicked() && tile.state == FlipState::FaceDown {
             out.push(Msg::Memory(MemoryMsg::Flip(i)));
         }
     }
 }
 
-/// A mismatched card jiggles left and right while it is shown.
-fn shaken(base: Rect, tile: &MemoryTile, elapsed_ms: u64) -> Rect {
-    if tile.state != FlipState::MismatchWait {
-        return base;
-    }
-    let dx = if (elapsed_ms / 70).is_multiple_of(2) {
-        -4.0
+/// The card's progress towards its face (0 = back, 1 = face) this frame. Over `motion` seconds it
+/// eases to the state's side; with no motion it is at the side at once.
+fn turn(ui: &egui::Ui, card: egui::Id, face_up: bool, motion: f32) -> f32 {
+    let target = settled_progress(face_up);
+    if motion > 0.0 {
+        ui.ctx()
+            .animate_value_with_time(card.with("flip"), target, motion)
     } else {
-        4.0
-    };
-    base.translate(Vec2::new(dx, 0.0))
-}
-
-fn card_label(i: usize, tile: &MemoryTile) -> String {
-    match tile.state {
-        FlipState::FaceDown => format!("Card {}, face down", i + 1),
-        FlipState::Matched => format!("Card {}, matched: {}", i + 1, tile.text),
-        FlipState::FaceUp | FlipState::MismatchWait => format!("Card {}: {}", i + 1, tile.text),
+        target
     }
-}
-
-/// Paint one card. Face-down cards show a dot lattice; face-up text wraps inside the card.
-fn paint(ui: &mut egui::Ui, rect: Rect, tile: &MemoryTile, hovered: bool) {
-    let pal = palette_of(ui);
-    let painter = ui.painter().clone();
-    match tile.state {
-        FlipState::FaceDown => {
-            painter.rect_filled(rect, RADIUS, pal.surface);
-            dots(&painter, rect, pal.accent.gamma_multiply(0.45));
-            let (width, color) = if hovered {
-                (2.0, pal.accent)
-            } else {
-                (1.0, pal.border)
-            };
-            painter.rect_stroke(rect, RADIUS, Stroke::new(width, color), StrokeKind::Inside);
-        }
-        FlipState::FaceUp | FlipState::MismatchWait => {
-            painter.rect_filled(rect, RADIUS, pal.panel);
-            let edge = if tile.state == FlipState::MismatchWait {
-                pal.danger
-            } else {
-                pal.accent
-            };
-            painter.rect_stroke(rect, RADIUS, Stroke::new(2.0, edge), StrokeKind::Inside);
-            text(ui, rect, &tile.text, pal.text);
-        }
-        FlipState::Matched => {
-            let glow = rect.expand(3.0);
-            painter.rect_stroke(
-                glow,
-                RADIUS + 3,
-                Stroke::new(3.0, pal.success),
-                StrokeKind::Outside,
-            );
-            painter.rect_filled(rect, RADIUS, pal.success.gamma_multiply(0.18));
-            text(ui, rect, &tile.text, pal.text);
-        }
-    }
-}
-
-/// Dots on a lattice inside the card: a quiet pattern for the back.
-fn dots(painter: &egui::Painter, rect: Rect, color: Color32) {
-    const STEP: f32 = 14.0;
-    let inner = rect.shrink(10.0);
-    let mut y = inner.top();
-    let mut row = 0;
-    while y <= inner.bottom() {
-        let offset = if row % 2 == 0 { 0.0 } else { STEP / 2.0 };
-        let mut x = inner.left() + offset;
-        while x <= inner.right() {
-            painter.circle_filled(Pos2::new(x, y), 1.6, color);
-            x += STEP;
-        }
-        y += STEP;
-        row += 1;
-    }
-}
-
-/// Wrapped text, inset from the card's edge and clipped to it.
-fn text(ui: &egui::Ui, rect: Rect, s: &str, color: Color32) {
-    let font = crate::typo::font(ui, crate::typo::Tier::Body);
-    let wrap = (rect.width() - 16.0).max(1.0);
-    let galley = ui.painter().layout(s.to_owned(), font, color, wrap);
-    ui.painter_at(rect)
-        .galley(rect.left_top() + Vec2::splat(8.0), galley, color);
 }
 
 /// Minutes and seconds, e.g. `2:05`.
