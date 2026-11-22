@@ -69,6 +69,7 @@ pub fn update(state: State, msg: HomeworkMsg) -> (State, Vec<Effect>) {
                     let ui = HomeworkUi {
                         form: Some(form),
                         error: None,
+                        confirm_delete: false,
                         ..ui
                     };
                     (with_ui(state, ui), Vec::new())
@@ -82,6 +83,7 @@ pub fn update(state: State, msg: HomeworkMsg) -> (State, Vec<Effect>) {
                 HomeworkUi {
                     form: None,
                     error: None,
+                    confirm_delete: false,
                     ..ui
                 },
             ),
@@ -99,10 +101,52 @@ pub fn update(state: State, msg: HomeworkMsg) -> (State, Vec<Effect>) {
         HomeworkMsg::ToggleStep(id, index) => {
             (state, effect(HomeworkEffect::ToggleStep(id, index)))
         }
+        HomeworkMsg::AskDelete => (
+            with_ui(
+                state,
+                HomeworkUi {
+                    confirm_delete: true,
+                    ..ui
+                },
+            ),
+            Vec::new(),
+        ),
+        HomeworkMsg::KeepItem => (
+            with_ui(
+                state,
+                HomeworkUi {
+                    confirm_delete: false,
+                    ..ui
+                },
+            ),
+            Vec::new(),
+        ),
+        HomeworkMsg::Delete(id) => (state, effect(HomeworkEffect::Delete(id))),
+        HomeworkMsg::Deleted(Ok((items, clock))) => {
+            let ui = HomeworkUi {
+                form: None,
+                error: None,
+                confirm_delete: false,
+                ..ui
+            };
+            (with_ui(with_items(state, items, clock), ui), Vec::new())
+        }
+        HomeworkMsg::Deleted(Err(e)) => (
+            with_ui(
+                state,
+                HomeworkUi {
+                    error: Some(e),
+                    confirm_delete: false,
+                    ..ui
+                },
+            ),
+            Vec::new(),
+        ),
         HomeworkMsg::Saved(Ok((items, clock))) => {
             let ui = HomeworkUi {
                 form: None,
                 error: None,
+                confirm_delete: false,
                 ..ui
             };
             (with_ui(with_items(state, items, clock), ui), Vec::new())

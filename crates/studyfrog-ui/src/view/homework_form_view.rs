@@ -159,5 +159,36 @@ pub fn draw(state: &State, form: &HomeworkForm, ui: &mut egui::Ui, out: &mut Vec
                 out.push(Msg::Homework(HomeworkMsg::Close));
             }
         });
+        if let Some(id) = form.existing {
+            delete_row(state, id, ui, out);
+        }
+    });
+}
+
+/// Delete for an existing item: first a button, then a confirmation that names what goes.
+fn delete_row(state: &State, id: studyfrog_core::uid::Uid, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if !state.planner.homework_ui.confirm_delete {
+        if kit::quiet_button(ui, "Delete item")
+            .on_hover_text("Asks you to confirm before this item is deleted.")
+            .clicked()
+        {
+            out.push(Msg::Homework(HomeworkMsg::AskDelete));
+        }
+        return;
+    }
+    ui.horizontal(|ui| {
+        ui.label(RichText::new("Delete this item? It cannot be undone.").strong());
+        if kit::primary_button(ui, "Delete it")
+            .on_hover_text("Deletes this homework item for good.")
+            .clicked()
+        {
+            out.push(Msg::Homework(HomeworkMsg::Delete(id)));
+        }
+        if kit::quiet_button(ui, "Keep it")
+            .on_hover_text("Keeps this item.")
+            .clicked()
+        {
+            out.push(Msg::Homework(HomeworkMsg::KeepItem));
+        }
     });
 }

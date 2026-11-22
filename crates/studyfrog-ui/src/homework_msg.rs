@@ -26,6 +26,14 @@ pub enum HomeworkMsg {
     Advance(Uid),
     /// Tick or untick a checklist step of an item.
     ToggleStep(Uid, usize),
+    /// Ask for confirmation before the open item is deleted.
+    AskDelete,
+    /// Keep the open item after all.
+    KeepItem,
+    /// Delete the open item, once confirmed.
+    Delete(Uid),
+    /// The delete finished.
+    Deleted(HomeworkResult),
     /// The dialog's save finished.
     Saved(HomeworkResult),
     /// An action other than saving finished.
@@ -41,6 +49,8 @@ pub struct HomeworkUi {
     pub form: Option<HomeworkForm>,
     /// Why the last action was refused.
     pub error: Option<String>,
+    /// The delete confirmation is showing in the dialog.
+    pub confirm_delete: bool,
 }
 
 /// The items read back after a change, with the clock they were read at.
@@ -60,4 +70,6 @@ pub enum HomeworkEffect {
     Advance(Uid),
     /// Tick or untick one checklist step.
     ToggleStep(Uid, usize),
+    /// Delete the item; it is gone from the store once this runs.
+    Delete(Uid),
 }

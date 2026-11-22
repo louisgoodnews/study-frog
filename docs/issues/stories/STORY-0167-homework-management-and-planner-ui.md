@@ -36,7 +36,9 @@ EPIC-056
 ## Implementation (2026-11-21)
 Homework screen in the Plan group of the sidebar and the burger menu (`Screen::Homework`, `view/homework.rs`). Tabs All, Active, Due today, Overdue and Completed (`studyfrog-calendar::homework_query::{HomeworkTab, tab_filter}`). Each row shows urgency, a countdown (`countdown`), the stack as a course badge, priority, estimate, and checklist steps to tick. The dialog (`homework_form.rs`, `view/homework_form_view.rs`) creates and edits items with title, stack, due date and time, an estimate slider, priority, a checklist and notes. Start, Complete and Reopen move an item on through `next_status`. Saves go through `save_homework_checked`; the screen is `homework_update.rs` (pure) with `exec_homework.rs` as the worker side. Tests: `studyfrog-calendar/tests/homework_query.rs`, `studyfrog-ui/tests/homework_screen.rs`.
 
-Not done: deleting an item (left out until it has a confirmation step), reminder lead-time choice in the dialog (lead times are global), and timetable integration beyond the stack course. The screen has not been exercised in the running app.
+Deleting an item asks for confirmation in the dialog first ("Delete item", then "Delete it" or "Keep it"), and the dialog closes once the item is gone.
+
+Not done: reminder lead-time choice in the dialog (lead times are global), and timetable integration beyond the stack course. The screen has not been exercised in the running app.
 
 ## Open Questions
 None.

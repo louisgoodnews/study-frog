@@ -5,7 +5,8 @@ use studyfrog_core::civil::{LocalTime, utc_to_local};
 use studyfrog_core::time::UnixMs;
 use studyfrog_service::create::fresh_id_source;
 use studyfrog_service::homework::{
-    advance_homework_status, new_homework_id, save_homework_checked, toggle_homework_step,
+    advance_homework_status, delete_homework_checked, new_homework_id, save_homework_checked,
+    toggle_homework_step,
 };
 use studyfrog_service::session::{ServiceError, VaultSession};
 use studyfrog_service::timezone::local_offset_minutes;
@@ -70,5 +71,8 @@ pub fn execute(w: &mut Worker, effect: HomeworkEffect, now_ns: i64) -> Msg {
                 toggle_homework_step(s, id, index)
             })))
         }
+        HomeworkEffect::Delete(id) => Msg::Homework(HomeworkMsg::Deleted(run(w, clock, |s| {
+            delete_homework_checked(s, id)
+        }))),
     }
 }
