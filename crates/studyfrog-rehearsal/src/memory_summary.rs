@@ -51,6 +51,17 @@ pub struct VictorySummary {
     pub personal_best: bool,
 }
 
+/// The clock the HUD shows: the time left in a time attack (from the limit down to zero, never more
+/// than the limit), or the time taken on a stopwatch.
+pub fn hud_clock_ms(timer: MemoryTimer, elapsed_ms: u64) -> u64 {
+    match timer {
+        MemoryTimer::Stopwatch => elapsed_ms,
+        MemoryTimer::TimeAttack(limit_sec) => {
+            (u64::from(limit_sec) * 1000).saturating_sub(elapsed_ms)
+        }
+    }
+}
+
 /// Danger level for a countdown at `elapsed_ms`.
 pub fn danger_level(timer: MemoryTimer, elapsed_ms: u64) -> DangerLevel {
     let MemoryTimer::TimeAttack(limit_sec) = timer else {

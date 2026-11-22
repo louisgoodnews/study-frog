@@ -34,13 +34,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     if let Some(memory) = &state.rehearse.memory {
-        egui::ScrollArea::vertical()
-            .auto_shrink([false, false])
-            .show(ui, |ui| {
-                kit::column(ui, kit::READING_WIDTH, |ui| {
-                    super::memory::board::draw(ui, memory, out);
-                });
-            });
+        // Not scrolled: the board sizes its cards to the height left under the HUD and message.
+        kit::column(ui, kit::READING_WIDTH, |ui| {
+            super::memory::board::draw(ui, memory, out);
+        });
         return;
     }
     let step = state.rehearse.step;
@@ -121,7 +118,8 @@ fn step_bar(current: SetupStep, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let step = state.rehearse.step;
-    ui.horizontal(|ui| {
+    // Wraps rather than running past the window edge, so the item count stays in view.
+    ui.horizontal_wrapped(|ui| {
         match step {
             SetupStep::What => {}
             SetupStep::How => {
@@ -146,7 +144,7 @@ fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         match step {
             SetupStep::What => {
                 if kit::quiet_button(ui, "Mock exam")
-                    .on_hover_text("Makes an exam of about ten questions from the notes of the stack you have open.")
+                    .on_hover_text("Makes an exam of about ten questions from the notes of the stack ticked under Stacks, or else the stack you have open.")
                     .clicked()
                 {
                     out.push(Msg::MockExam(crate::setup::mock_exam::MockExamMsg::Open));
@@ -170,13 +168,13 @@ fn navigation(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     out.push(Msg::Math(crate::setup::math::MathMsg::Open));
                 }
                 if kit::quiet_button(ui, "Case study")
-                    .on_hover_text("Opens the case studies of the stack you have open: a decision, and a justification checked against a rubric.")
+                    .on_hover_text("Opens the case studies of the stack ticked under Stacks, or else the stack you have open: a decision, and a justification checked against a rubric.")
                     .clicked()
                 {
                     out.push(Msg::Case(crate::setup::case::CaseMsg::Open));
                 }
                 if kit::quiet_button(ui, "Memory game")
-                    .on_hover_text("Plays a memory game with the cards of the stack you have open, with the timing chosen beside it.")
+                    .on_hover_text("Plays a memory game with the cards of the stack ticked under Stacks, or else the stack you have open, with the timing chosen beside it.")
                     .clicked()
                 {
                     out.push(Msg::Memory(crate::setup::memory::MemoryMsg::Start));

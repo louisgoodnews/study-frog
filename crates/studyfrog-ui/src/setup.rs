@@ -13,6 +13,7 @@ pub mod memory_deck;
 pub mod memory_flip;
 pub mod memory_layout;
 pub mod mock_exam;
+pub mod stack_source;
 
 pub use crate::setup_form::{
     Preset, SetupEdit, SetupForm, apply_edit, form_for_preset, plan_from_form,

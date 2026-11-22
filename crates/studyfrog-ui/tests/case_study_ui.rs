@@ -214,3 +214,26 @@ fn a_remote_model_is_not_sent_the_students_text() {
             .is_some_and(|n| n.contains("Only a local model"))
     );
 }
+
+#[test]
+fn the_case_study_reads_the_stack_ticked_in_the_setup_not_the_open_one() {
+    let mut state = State {
+        vault: Some(common::views::vault_with_stacks(&[(1, "bio"), (2, "diag")])),
+        ..State::default()
+    };
+    state.rehearse.form.stacks = vec![Uid(2)];
+    state.browser.selection = Selection::Stack("bio".to_owned());
+    let (_, effects) = update(state, CaseMsg::Open);
+    assert_eq!(effects, vec![Effect::LoadCases(Some("diag".to_owned()))]);
+}
+
+#[test]
+fn with_nothing_ticked_or_open_the_case_study_says_to_tick_or_open_one() {
+    let (state, effects) = update(State::default(), CaseMsg::Open);
+    assert!(effects.is_empty());
+    let error = view(&state).error.clone().unwrap_or_default();
+    assert!(
+        error.contains("Tick a stack") && error.contains("open one"),
+        "{error}"
+    );
+}

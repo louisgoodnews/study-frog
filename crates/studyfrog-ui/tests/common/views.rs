@@ -160,3 +160,17 @@ pub fn lib_item(n: u128, title: &str) -> studyfrog_service::library_rows::Librar
         },
     }
 }
+
+/// A vault whose stacks have the given uids and folders (one card each), for the rehearse setup's
+/// stack picks.
+pub fn vault_with_stacks(stacks: &[(u128, &str)]) -> studyfrog_ui::state::VaultInfo {
+    let mut info = info();
+    info.overview.stacks = stacks
+        .iter()
+        .map(|(uid, folder)| StackRow {
+            uid: Uid(*uid),
+            ..stack(folder, folder, 1, 1)
+        })
+        .collect();
+    info
+}

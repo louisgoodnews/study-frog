@@ -8,21 +8,25 @@ use crate::effect::Effect;
 use crate::setup::mock_exam::{
     EXAM_QUESTIONS, ExamSource, MockExamEffect, MockExamUi, SlideChoice,
 };
-use crate::state::{Selection, State};
+use crate::setup::stack_source::{StackSource, stack_source};
+use crate::state::State;
 
 /// The note when no model is selected: templates write the questions.
 pub const NO_MODEL: &str = "No model is selected, so the questions come from templates. Install a local model and select it in Agent settings to have it write them from your notes or slides.";
 /// The note when the selected model is remote and may not see the text.
 pub const REMOTE_NOT_ALLOWED: &str = "The selected model is remote and may not see your notes, so the questions come from templates. Allow it in Agent settings, or select a local model.";
 
-/// Make an exam from the stack that is open (or the inbox).
+/// Make an exam from the stack ticked in the What step, or else the stack that is open (or the inbox).
 pub fn open(state: State) -> (State, Vec<Effect>) {
-    let folder = match &state.browser.selection {
-        Selection::Stack(f) => Some(f.clone()),
-        Selection::Inbox => None,
-        Selection::Nothing => {
+    let folder = match stack_source(&state) {
+        StackSource::Stack(f) => Some(f),
+        StackSource::Inbox => None,
+        StackSource::Nothing => {
             let ui = MockExamUi {
-                error: Some("Open a stack first, then make its exam.".to_owned()),
+                error: Some(
+                    "Tick a stack in the What step, or open one in the library, then make its exam."
+                        .to_owned(),
+                ),
                 ..MockExamUi::default()
             };
             return (super::with_ui(state, Some(ui)), Vec::new());

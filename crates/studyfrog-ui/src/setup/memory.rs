@@ -8,6 +8,7 @@ use studyfrog_rehearsal::memory_summary::{MemoryTimer, victory_summary};
 
 use crate::effect::Effect;
 use crate::modal_types::Modal;
+use crate::setup::stack_source::{StackSource, stack_source};
 use crate::state::{Selection, State};
 
 /// The most pairs in one game (a 4 x 4 grid of cards).
@@ -18,10 +19,12 @@ pub const MISMATCH_MS: u64 = 900;
 /// Messages of the memory game.
 #[derive(Debug, Clone, PartialEq)]
 pub enum MemoryMsg {
-    /// Start a game from the open stack, with the chosen timing.
+    /// Start a game from the stack ticked in the What step, or else the open one, with the chosen timing.
     Start,
     /// Start a game from this stack (the stack page's action).
     StartStack(String),
+    /// Play the same stack again (the end of a game).
+    Again,
     /// Choose the timing of the next game.
     Mode(MemoryTimer),
     /// The cards of the stack, as (front, back), or why they could not be read.
@@ -58,14 +61,28 @@ pub struct MemoryUi {
 /// Handle a memory message.
 pub fn update(state: State, msg: MemoryMsg) -> (State, Vec<Effect>) {
     match msg {
-        MemoryMsg::Start => start(state),
-        MemoryMsg::StartStack(folder) => start(State {
-            browser: crate::state::Browser {
-                selection: Selection::Stack(folder),
-                ..state.browser.clone()
-            },
-            ..state
-        }),
+        MemoryMsg::Start => {
+            let source = stack_source(&state);
+            start(state, source)
+        }
+        MemoryMsg::StartStack(folder) => {
+            let state = State {
+                browser: crate::state::Browser {
+                    selection: Selection::Stack(folder.clone()),
+                    ..state.browser.clone()
+                },
+                ..state
+            };
+            start(state, StackSource::Stack(folder))
+        }
+        MemoryMsg::Again => {
+            let source = match state.rehearse.memory.as_ref().map(|m| m.stack.clone()) {
+                Some(stack) if stack.is_empty() => StackSource::Inbox,
+                Some(stack) => StackSource::Stack(stack),
+                None => StackSource::Nothing,
+            };
+            start(state, source)
+        }
         MemoryMsg::Mode(timer) => (with_timer(state, timer), Vec::new()),
         MemoryMsg::Loaded(result) => super::memory_deck::loaded(state, result),
         MemoryMsg::Flip(idx) => flip(state, idx),
@@ -107,14 +124,14 @@ fn with_timer(state: State, timer: MemoryTimer) -> State {
     }
 }
 
-fn start(state: State) -> (State, Vec<Effect>) {
+fn start(state: State, source: StackSource) -> (State, Vec<Effect>) {
     let started_ms = state.wall_ms;
     let timer = state.rehearse.memory_timer;
     let vault = state.app.vault.clone().unwrap_or_default();
-    let folder = match &state.browser.selection {
-        Selection::Stack(f) => Some(f.clone()),
-        Selection::Inbox => Some(String::new()),
-        Selection::Nothing => None,
+    let folder = match source {
+        StackSource::Stack(f) => Some(f),
+        StackSource::Inbox => Some(String::new()),
+        StackSource::Nothing => None,
     };
     let stack = folder.clone().unwrap_or_default();
     let prior_best_ms = memory_best_of(&state.app, &vault, &stack);
@@ -127,7 +144,10 @@ fn start(state: State) -> (State, Vec<Effect>) {
     };
     let Some(folder) = folder else {
         let memory = MemoryUi {
-            error: Some("Open a stack first, then start the memory game.".to_owned()),
+            error: Some(
+                "Tick a stack in the What step, or open one in the library, then start the memory game."
+                    .to_owned(),
+            ),
             ..base
         };
         return (with_memory(state, Some(memory)), Vec::new());

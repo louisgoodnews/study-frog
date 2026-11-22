@@ -122,3 +122,54 @@ fn the_time_limit_ends_the_session_and_time_never_runs_backwards() {
     let back = tick_memory_timer(&s, 10);
     assert_eq!(back.elapsed_ms, 60_000);
 }
+
+#[test]
+fn a_finished_game_keeps_its_time_on_later_ticks() {
+    let mut s = new_memory_session(&cards(2), 2, 9, 1000, None);
+    s = tick_memory_timer(&s, 30_000);
+    for pair in 0..2u32 {
+        let f = index_of(&s.tiles, pair, TileRole::Front);
+        let b = index_of(&s.tiles, pair, TileRole::Back);
+        s = flip_tile(&s, f).unwrap();
+        s = flip_tile(&s, b).unwrap();
+    }
+    let later = tick_memory_timer(&s, 90_000);
+    assert_eq!(later.elapsed_ms, 30_000);
+    assert_eq!(
+        later.outcome,
+        Some(MemoryOutcome::Completed { elapsed_ms: 30_000 })
+    );
+}
+
+#[test]
+fn a_timeout_turns_the_unmatched_cards_face_up() {
+    let mut s = new_memory_session(&cards(4), 4, 3, 1000, Some(60_000));
+    let f = index_of(&s.tiles, 0, TileRole::Front);
+    let b = index_of(&s.tiles, 0, TileRole::Back);
+    s = flip_tile(&s, f).unwrap();
+    s = flip_tile(&s, b).unwrap();
+    let open = s
+        .tiles
+        .iter()
+        .position(|t| t.state == FlipState::FaceDown)
+        .unwrap();
+    s = flip_tile(&s, open).unwrap();
+    let s = tick_memory_timer(&s, 60_000);
+    assert_eq!(s.outcome, Some(MemoryOutcome::TimedOut));
+    let matched = s
+        .tiles
+        .iter()
+        .filter(|t| t.state == FlipState::Matched)
+        .count();
+    let face_up = s
+        .tiles
+        .iter()
+        .filter(|t| t.state == FlipState::FaceUp)
+        .count();
+    assert_eq!(matched, 2);
+    assert_eq!(
+        matched + face_up,
+        s.tiles.len(),
+        "every unmatched card is face up"
+    );
+}

@@ -15,6 +15,12 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - **Board headings count every work item of each status (`tools/repo-lint`, EPIC-058)**: the per-status counts in the board's headings include every kind of item, not only tasks.
 
 ### Fixed
+- **Case study, Memory game and Mock exam use the stack ticked in the rehearse setup (`crates/studyfrog-ui`, BUG-0023, BUG-0024, BUG-0040)**: the three buttons work on the stack ticked in the What step, and fall back to the stack open in the library only when none is ticked; the exam title names its stack and the too-few-cards message names the stack. Test: `studyfrog-ui/tests/memory_mode.rs`, `case_study_ui.rs`, `mock_exam_ui.rs`.
+- **Memory time attack HUD counts down and stops at the limit (`crates/studyfrog-rehearsal`, `crates/studyfrog-ui`, BUG-0025)**: the HUD shows the time left in a 60, 90 or 120 s game, never more than the limit. Test: `studyfrog-rehearsal/tests/memory_summary.rs`.
+- **Memory timeout turns the unmatched cards face up (`crates/studyfrog-rehearsal`, BUG-0026)**: when the time runs out every card not yet matched is shown, so the message matches the board. Test: `studyfrog-rehearsal/tests/memory.rs`.
+- **Memory HUD time stops at the win (`crates/studyfrog-rehearsal`, BUG-0027)**: a finished game keeps its clock, so the HUD and the win message show the same time. Test: `studyfrog-rehearsal/tests/memory.rs`.
+- **Memory board fits the space below its message at 960 by 640 (`crates/studyfrog-ui`, BUG-0028)**: the board is sized to the height left under the HUD, message and Play again rather than in an unbounded scroll area.
+- **Rehearse setup footer wraps so the item count is not cut off (`crates/studyfrog-ui`, BUG-0029)**: at 1280 by 800 the count sits in full beside Next, and at 960 by 640 the Next button is in view.
 - **Rehearsal rating buttons stay level and the hint line stays on screen (`crates/studyfrog-ui`, STORY-0195, EPIC-065)**: a previous rating no longer pushes the Good button down or cuts off the keyboard hints at 1280 by 800; the item area takes the room the rating line needs. Test: `studyfrog-ui/tests/run_previous_mark.rs`.
 
 ## [1.0.0] - 2026-11-22

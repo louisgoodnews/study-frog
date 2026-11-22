@@ -4,7 +4,7 @@
 use eframe::egui::{self, Pos2, Rect, Sense, Vec2, WidgetInfo};
 use studyfrog_rehearsal::memory::MemorySession;
 use studyfrog_rehearsal::memory_deck::FlipState;
-use studyfrog_rehearsal::memory_summary::{DangerLevel, danger_level};
+use studyfrog_rehearsal::memory_summary::{DangerLevel, danger_level, hud_clock_ms};
 
 use super::card::{card_label, focus_ring, paint, shaken};
 use crate::msg::Msg;
@@ -68,7 +68,8 @@ fn hud(ui: &mut egui::Ui, s: &MemorySession, memory: &MemoryUi) {
     };
     let body = crate::typo::Tier::Body;
     ui.horizontal(|ui| {
-        let time = format!("Time {}", clock_text(s.elapsed_ms));
+        let shown = hud_clock_ms(memory.timer, s.elapsed_ms);
+        let time = format!("Time {}", clock_text(shown));
         ui.label(crate::typo::text(ui, time, body).color(time_color));
         let rest = format!(
             "·  Moves {}  ·  Pairs left {}  ·  Streak {}",

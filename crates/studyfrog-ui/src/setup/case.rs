@@ -11,7 +11,8 @@ mod check;
 pub mod run;
 
 use crate::effect::Effect;
-use crate::state::{Selection, State};
+use crate::setup::stack_source::{StackSource, stack_source};
+use crate::state::State;
 
 /// Messages of the case-study view.
 #[derive(Debug, Clone, PartialEq)]
@@ -123,12 +124,15 @@ fn map(state: State, f: impl FnOnce(CaseUi) -> CaseUi) -> State {
 }
 
 fn open(state: State) -> (State, Vec<Effect>) {
-    let folder = match &state.browser.selection {
-        Selection::Stack(f) => Some(f.clone()),
-        Selection::Inbox => None,
-        Selection::Nothing => {
+    let folder = match stack_source(&state) {
+        StackSource::Stack(f) => Some(f),
+        StackSource::Inbox => None,
+        StackSource::Nothing => {
             let cs = CaseUi {
-                error: Some("Open a stack first, then its case studies.".to_owned()),
+                error: Some(
+                    "Tick a stack in the What step, or open one in the library, then its case studies."
+                        .to_owned(),
+                ),
                 ..CaseUi::default()
             };
             return (with_case(state, Some(cs)), Vec::new());

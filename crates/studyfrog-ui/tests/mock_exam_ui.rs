@@ -1,6 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The mock exam from notes (STORY-0186): asking for it, showing it, and saving it.
 
+mod common;
+
+use studyfrog_core::uid::Uid;
 use studyfrog_service::exam_gen::generate;
 
 use studyfrog_ui::effect::Effect;
@@ -151,4 +154,30 @@ fn an_unwritten_exam_earns_nothing() {
         .unwrap();
     assert_eq!(total(&graded).earned, 0);
     assert_eq!(total(&graded).word, "Nicht bestanden");
+}
+
+#[test]
+fn the_exam_is_made_from_the_stack_ticked_in_the_setup_and_names_it() {
+    let mut state = State {
+        vault: Some(common::views::vault_with_stacks(&[(1, "bio"), (2, "diag")])),
+        ..State::default()
+    };
+    state.rehearse.form.stacks = vec![Uid(2)];
+    state.browser.selection = Selection::Stack("bio".to_owned());
+    let (state, effects) = update(state, MockExamMsg::Open);
+    assert!(
+        matches!(
+            effects.as_slice(),
+            [Effect::MockExam(MockExamEffect::Generate { source: ExamSource::Notes(Some(f)), title, .. })]
+                if f == "diag" && title.contains("diag")
+        ),
+        "{effects:?}"
+    );
+    assert!(
+        state
+            .rehearse
+            .mock
+            .as_ref()
+            .is_some_and(|m| m.title.contains("diag"))
+    );
 }

@@ -4,7 +4,7 @@
 use studyfrog_rehearsal::memory::{flip_tile, new_memory_session, tick_memory_timer};
 use studyfrog_rehearsal::memory_deck::TileRole;
 use studyfrog_rehearsal::memory_summary::{
-    DangerLevel, MemoryTimer, danger_level, defeat_message, victory_summary,
+    DangerLevel, MemoryTimer, danger_level, defeat_message, hud_clock_ms, victory_summary,
 };
 
 fn cards(n: usize) -> Vec<(String, String)> {
@@ -91,4 +91,12 @@ fn no_summary_while_playing_or_after_a_timeout() {
     );
     assert!(victory_summary(&timed_out, MemoryTimer::TimeAttack(5), None).is_none());
     assert!(!defeat_message().is_empty());
+}
+
+#[test]
+fn the_hud_clock_counts_down_in_a_time_attack_and_stops_at_zero() {
+    assert_eq!(hud_clock_ms(MemoryTimer::TimeAttack(60), 0), 60_000);
+    assert_eq!(hud_clock_ms(MemoryTimer::TimeAttack(60), 7_000), 53_000);
+    assert_eq!(hud_clock_ms(MemoryTimer::TimeAttack(60), 64_000), 0);
+    assert_eq!(hud_clock_ms(MemoryTimer::Stopwatch, 64_000), 64_000);
 }

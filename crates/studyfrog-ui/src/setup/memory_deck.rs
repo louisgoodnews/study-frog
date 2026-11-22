@@ -28,7 +28,7 @@ pub(super) fn loaded(
             if usable < 2 {
                 MemoryUi {
                     loading: false,
-                    error: Some("This stack needs at least two cards to play.".to_owned()),
+                    error: Some(too_few_cards(&memory.stack)),
                     ..memory
                 }
             } else {
@@ -49,4 +49,13 @@ pub(super) fn loaded(
         }
     };
     (with_memory(state, Some(memory)), Vec::new())
+}
+
+/// The message when a stack has fewer than two usable cards; it names the stack.
+fn too_few_cards(stack: &str) -> String {
+    if stack.is_empty() {
+        "The inbox needs at least two cards to play.".to_owned()
+    } else {
+        format!("The stack {stack} needs at least two cards to play.")
+    }
 }

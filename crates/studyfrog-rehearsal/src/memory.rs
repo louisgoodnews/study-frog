@@ -131,8 +131,12 @@ pub fn flip_tile(s: &MemorySession, idx: usize) -> Result<MemorySession, FlipErr
 }
 
 /// Advance the clock to `now_ms`: hide a mismatch whose delay has passed, and end the session when
-/// the time limit is reached. Time never runs backwards.
+/// the time limit is reached. Time never runs backwards, and a finished session's clock stops: its
+/// time is the time it ended at. A timeout turns the unmatched cards face up.
 pub fn tick_memory_timer(s: &MemorySession, now_ms: u64) -> MemorySession {
+    if s.outcome.is_some() {
+        return s.clone();
+    }
     let mut next = s.clone();
     next.elapsed_ms = now_ms.max(s.elapsed_ms);
     if let Some((a, b)) = s.mismatch
@@ -142,11 +146,21 @@ pub fn tick_memory_timer(s: &MemorySession, now_ms: u64) -> MemorySession {
         next.tiles[b].state = FlipState::FaceDown;
         next.mismatch = None;
     }
-    if next.outcome.is_none()
-        && let Some(limit) = s.limit_ms
+    if let Some(limit) = s.limit_ms
         && next.elapsed_ms >= limit
     {
-        next.outcome = Some(MemoryOutcome::TimedOut);
+        return time_out(next);
     }
     next
+}
+
+/// End the session as timed out: every unmatched card is turned face up so the pairs can be seen.
+fn time_out(mut s: MemorySession) -> MemorySession {
+    for tile in s.tiles.iter_mut().filter(|t| t.state != FlipState::Matched) {
+        tile.state = FlipState::FaceUp;
+    }
+    s.mismatch = None;
+    s.open = None;
+    s.outcome = Some(MemoryOutcome::TimedOut);
+    s
 }

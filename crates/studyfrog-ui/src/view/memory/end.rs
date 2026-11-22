@@ -77,7 +77,7 @@ pub fn summary_dialog(
             .clicked()
         {
             out.push(Msg::Modal(crate::modal_types::ModalMsg::Close));
-            out.push(Msg::Memory(MemoryMsg::Start));
+            out.push(Msg::Memory(MemoryMsg::Again));
         }
         if kit::quiet_button(ui, "Close")
             .on_hover_text("Closes the summary and keeps the finished board.")
@@ -93,6 +93,6 @@ fn play_again(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .on_hover_text("Shuffles the same cards into a new game.")
         .clicked()
     {
-        out.push(Msg::Memory(MemoryMsg::Start));
+        out.push(Msg::Memory(MemoryMsg::Again));
     }
 }
