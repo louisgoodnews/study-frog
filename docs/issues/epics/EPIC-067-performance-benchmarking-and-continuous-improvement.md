@@ -36,9 +36,12 @@ Make performance a routine check instead of an occasional one:
 - Machine variance is handled by comparing a run against the baseline of the same machine only, never across machines.
 
 ## Dependencies
-The existing benchmarks in the eight crates that have them (`studyfrog-srs`, `studyfrog-store`, `studyfrog-graph`, `studyfrog-rehearsal`, `studyfrog-report`, `studyfrog-slm`, `studyfrog-pdf`). A machine to run them on, which is an owner decision (see Open Questions).
+The existing benchmarks in the eight crates that have them (`studyfrog-srs`, `studyfrog-store`, `studyfrog-graph`, `studyfrog-rehearsal`, `studyfrog-report`, `studyfrog-slm`, `studyfrog-pdf`). The owner's local machine, on a schedule (see Decisions).
+
+## Decisions
+- **Where and when:** benchmarks run on the owner's local machine, on a schedule. Baselines are per machine and never compared across machines.
+- **Frame time:** measured in the running window, not in the egui test harness.
+- **Regression margin:** open. Research into the statistics and published practice is under way; the margin and the number of repeated runs will be set from it.
 
 ## Open Questions
-- Which machine or runner is the reference for baselines, and does the owner want the benchmarks to run on a schedule or only on demand?
-- What regression margin should count as a failure (for example 10 percent against the saved baseline), given the noise measured in the 0.3.0 run?
-- Should the screen frame times be measured in the egui test harness or in the running window?
+- What regression margin counts as a failure, and how many repeated runs per schedule slot are enough to detect it? (Pending the research.)
