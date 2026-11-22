@@ -2,6 +2,8 @@
 
 pub mod case_study;
 pub mod clock;
+pub mod curriculum;
+pub mod curriculum_build;
 pub mod distractor;
 pub mod exam;
 pub mod formula_gen;

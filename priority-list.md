@@ -195,7 +195,7 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
   - [x] STORY-0184 Math drill view (built for the standard-error formula: working rows, keypad, check, solution)
 - [ ] [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur lab
   - [x] [STORY-0185](docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock exam structure, navigation and timer
-  - [ ] STORY-0186 Exam generation from slides via the local SLM
+  - [x] STORY-0186 Exam generation from slides via the local SLM (pipeline built; not yet wired into the app or the lab)
   - [ ] [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Grade scale and summation (engine done; result screen and review open)
 
 **Milestone 14.5: release hardening and 1.0.0 launch**

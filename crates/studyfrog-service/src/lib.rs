@@ -33,6 +33,7 @@ pub mod distractor_service;
 pub mod document;
 pub mod drill;
 pub mod exam;
+pub mod exam_gen;
 pub mod expiry;
 pub mod explore;
 mod explore_types;

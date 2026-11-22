@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Mock exam generation from notes (`crates/studyfrog-rehearsal`, `crates/studyfrog-agent`, `crates/studyfrog-service`, STORY-0186)**: the notes are cut into topic chunks; the local model writes questions per chunk (or templates stand in); each question is checked against its topic's notes; the result is balanced to 40/30/30 and assembled into a mock exam with reference answers.
 - **Math drill (`crates/studyfrog-ui`, STORY-0184)**: a standard-error problem with given values, optional working rows and a keypad; the check names the first wrong row and its likely mistake; the full solution is shown on demand.
 - **Case studies in a rehearsal run (`crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0199)**: a case question in a run shows its options and justification, a check against the rubric, and the result under the revealed answer, with the suggested rating filled in. The rating stays the student's; the typed answer and the check are not stored yet.
 - **Local-model scoring of case justifications (`crates/studyfrog-agent`, `crates/studyfrog-ui`, STORY-0200)**: a selected local model checks a case justification against the rubric; a remote one is never sent the text. The keyword check shows at once and is replaced when the model answers; caveats are shown.
