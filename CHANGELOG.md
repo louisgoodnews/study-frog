@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Benchmark run-to-run spread script (`scripts/bench-spread.sh`, EPIC-067)**: runs one criterion benchmark case N times and reports its mean, coefficient of variation and spread, for setting the noise floor of the regression rule on a reference machine.
 - **FrogScript keyboard completion and cursor placement (`crates/studyfrog-script`, `crates/studyfrog-ui`, STORY-0150)**: in ScriptStudio, Tab accepts the highlighted name, Up and Down move the highlight (wrapping), Esc hides the list until the word changes, and the cursor goes to the end of an inserted name.
 - **Custom runs order their returning items (`crates/studyfrog-rehearsal`, `crates/studyfrog-service`, STORY-0198)**: an item a custom mode sends back comes back after 2 (Again), 4 (Hard), 6 (Good) or 8 (Easy) other items, not at the end of the run. Built-in runs are unchanged.
 - **Custom learn-mode report, opt-in (`crates/studyfrog-store`, `crates/studyfrog-ui`, STORY-0198)**: "Show report" in the learn-mode editor reads one mode's custom runs (runs, finished, items, entries per step, ratings, branches); built-in reports never include them.
