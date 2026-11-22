@@ -6,26 +6,30 @@ pub(super) fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, o
         if let Some(pick) = status_menu(ui, stack.status, None) {
             send(out, StackViewMsg::SetStatus(stack.uid, pick));
         }
-        if ui.button("Details").on_hover_text("Shows the details of this item.").clicked() {
+        if ui
+            .button("Details")
+            .on_hover_text("Shows the details of this item.")
+            .clicked()
+        {
             out.push(Msg::OpenItem(stack.uid));
             ui.close();
         }
-        if ui.button("Select all items (bulk edit)").on_hover_text("Selects every item in the list for a bulk edit.").clicked() {
+        if ui
+            .button("Select all items (bulk edit)")
+            .on_hover_text("Selects every item in the list for a bulk edit.")
+            .clicked()
+        {
             send(out, StackViewMsg::Select(StackTab::List));
             out.push(Msg::Library(LibraryMsg::Bulk(
                 crate::library_bulk::BulkMsg::SelectAll(true),
             )));
             ui.close();
         }
-        if ui.button("Import…").on_hover_text("Opens the import dialog: pick a file or folder and see what it holds before importing.").clicked() {
-            let open = crate::transfer_ui::TransferMsg::Open(
-                crate::transfer_ui::Tab::Import,
-                Some(stack.folder.clone()),
-            );
-            out.push(Msg::Library(LibraryMsg::Transfer(open)));
-            ui.close();
-        }
-        if ui.button("Export…").on_hover_text("Opens the export dialog: choose a format and where to write the file.").clicked() {
+        if ui
+            .button("Export…")
+            .on_hover_text("Opens the export dialog: choose a format and where to write the file.")
+            .clicked()
+        {
             let open = crate::transfer_ui::TransferMsg::Open(
                 crate::transfer_ui::Tab::Export,
                 Some(stack.folder.clone()),
@@ -35,12 +39,21 @@ pub(super) fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, o
         }
         let ext = &state.extensions;
         if !(ext.card_types.is_empty() && ext.importers.is_empty())
-            && ui.button("Add from extension…").on_hover_text("Adds cards from a card type or importer that an extension provides.").clicked()
+            && ui
+                .button("Add from extension…")
+                .on_hover_text(
+                    "Adds cards from a card type or importer that an extension provides.",
+                )
+                .clicked()
         {
             out.push(Msg::Modal(ModalMsg::OpenImport));
             ui.close();
         }
-        if ui.button("Export to PDF…").on_hover_text("Writes this as a PDF file you choose.").clicked() {
+        if ui
+            .button("Export to PDF…")
+            .on_hover_text("Writes this as a PDF file you choose.")
+            .clicked()
+        {
             out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Export(
                 crate::pdf_export_types::PdfExportMsg::Open(
                     studyfrog_service::pdf_export::ExportTarget::Stack(stack.folder.clone()),
@@ -48,12 +61,18 @@ pub(super) fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, o
             )));
             ui.close();
         }
-        if ui.button("Make normal folder…").on_hover_text("Turns this stack back into a normal folder.").clicked() {
+        if ui
+            .button("Make normal folder…")
+            .on_hover_text("Turns this stack back into a normal folder.")
+            .clicked()
+        {
             out.push(Msg::Modal(ModalMsg::AskUnmark(stack.folder.clone())));
             ui.close();
         }
         move_stack_menu(state, stack, ui, out);
-    }).response.on_hover_text("Shows the less common actions.");
+    })
+    .response
+    .on_hover_text("Shows the less common actions.");
 }
 
 pub(super) fn move_stack_menu(

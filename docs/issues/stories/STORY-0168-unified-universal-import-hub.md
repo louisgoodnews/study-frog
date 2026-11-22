@@ -2,7 +2,7 @@
 id: STORY-0168
 type: story
 title: "Unified Universal Import Entry Point and Redundant Button Consolidation"
-status: review
+status: done
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 3
@@ -23,7 +23,7 @@ Consolidate all import workflows into a single unified entry point:
 - Automatically detect the file type (CSV/TSV tables, Markdown card decks, Anki `.apkg`, or PDF documents) and present clear options for target stack or vault location.
 
 ## Acceptance Criteria
-- [ ] Single top-level Import button in the UI replaces separate card, stack, note, and question buttons
+- [x] Single top-level Import button in the UI replaces separate card, stack, note, and question buttons
 - [x] Importer wizard auto-detects input file format (CSV, TSV, Markdown, Anki, PDF, JSON)
 - [x] Clear target destination picker (existing stack, new stack, or unstacked vault notes)
 
@@ -57,3 +57,19 @@ Audit (2026-11-22): criterion 1 MET: one Import... entry in the items toolbar's 
 ## Review (2026-11-22)
 
 Review (2026-11-22): criterion 1 unticked. As written it asks for a top-level Import button. The app has none: the single Import is an entry in an overflow menu (items toolbar More..., stack page More actions; /tmp/claude-0/review-a/items-more2.png, /tmp/claude-0/review-a/stack-more.png). The duplicate buttons are gone. Whether an overflow entry counts is the owner's call. Criterion 2 MET: a minimal Anki package with no format chosen was detected and imported as two cards in a Physik stack (ctl import, notice "Imported: 2 created"; /tmp/claude-0/review-a/physik.apkg); the earlier audit saw the CSV, Markdown, JSON and PDF hints. The "Looks like Anki" hint text was not seen on screen. Criterion 3 MET: the Import into menu lists As the file says, Vault root (no stack) and the stacks (/tmp/claude-0/review-a/import-dest.png). Status stays review (criterion 1 open). BUG-0037 (nested stack) is still open.
+
+## Verification (2026-11-22, top-bar button)
+
+Criterion 1 is met now. The top bar has an "Import" button after "+ Create" (`crates/studyfrog-ui/src/view/navbar.rs`). It opens the same transfer dialog on the Import tab (`TransferMsg::Open(Tab::Import, scope)`), scoped to the selected stack when there is one. The Import entries in the items toolbar's More menu and in the stack page's More actions were removed, since they are now the same entry. Export stays in both. The Create dialog's own More menu and Settings > Import and export keep their Import entries: the first is reached only from inside a modal, the second is a settings page. The top bar has no collapse rule, so the button stays visible at both sizes and the search field narrows instead. At 960x640 the search field is about 60 px wide. Recheck that as a real search-width question for the owner.
+
+Checked in the running binary (display :89, a copy of the build, vault `/home/user/study-frog`):
+- 960x640 before the change (default window): /tmp/claude-0/import/a.png
+- 960x640 after the first attempt: the bell was drawn under the button; the search floor was 110 px. Fixed by a 60 px search floor and a 176 px trailing reserve.
+- 960x640 after the fix: /tmp/claude-0/import/c960.png (all controls visible, gap before the bell)
+- 960x640 click on Import: /tmp/claude-0/import/f960-dialog.png (dialog opens on Import)
+- 1280x800: /tmp/claude-0/import/c1280.png (all controls, Import between Create and the zen button)
+- 1280x800 click on Import: /tmp/claude-0/import/d-dialog1280.png (dialog opens on Import)
+
+Tests: `studyfrog-ui/tests/chrome_views.rs`, `the_import_button_in_the_top_bar_opens_the_import_dialog` (the top-bar list now includes "Import").
+
+Criteria 2 and 3 are unchanged and were not re-checked in this pass (see the notes above). Criterion 2 includes the Anki detection from the 2026-11-22 review, which was not repeated here.

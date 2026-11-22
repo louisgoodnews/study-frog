@@ -7,16 +7,20 @@ use eframe::egui::{
 
 use crate::chrome::{ChromeMsg, Menu, unread, vault_label};
 use crate::help_types::HelpMsg;
+use crate::library_ui::LibraryMsg;
 use crate::modal::ModalMsg;
 use crate::msg::Msg;
-use crate::state::{Screen, State};
+use crate::state::{Screen, Selection, State};
 use crate::theme::palette_of;
+use crate::transfer_ui::{Tab, TransferMsg};
 use crate::view::icons::{Glyph, icon_button};
 use crate::view::kit;
 use crate::view::menus;
 
 const HEIGHT: f32 = 40.0;
 const LEFT_WIDTH: f32 = 440.0;
+/// The room the search keeps clear for the Create and Import buttons after it.
+const TRAILING_W: f32 = 176.0;
 
 fn chrome(out: &mut Vec<Msg>, m: ChromeMsg) {
     out.push(Msg::Chrome(m));
@@ -70,8 +74,8 @@ fn left_and_middle(
     section(ui, left_w, &mut |ui| brand_cluster(state, ui, out, anchors));
     section(ui, middle_w, &mut |ui| {
         if state.vault.is_some() {
-            let search_w = (middle_w * 0.8 - 90.0).clamp(110.0, 560.0);
-            ui.add_space(((middle_w - search_w - 90.0) / 2.0).max(0.0));
+            let search_w = (middle_w * 0.8 - TRAILING_W).clamp(60.0, 560.0);
+            ui.add_space(((middle_w - search_w - TRAILING_W) / 2.0).max(0.0));
             search_cluster(state, ui, out, search_w);
         }
     });
@@ -149,6 +153,23 @@ fn search_cluster(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f
     let create = kit::quiet_button(ui, "+ Create").on_hover_text("Creates a new item.");
     if create.clicked() {
         out.push(Msg::Modal(ModalMsg::OpenCreate));
+    }
+    let import = kit::quiet_button(ui, "Import").on_hover_text(
+        "Opens the import dialog: pick a file or folder and see what it holds before importing.",
+    );
+    if import.clicked() {
+        out.push(Msg::Library(LibraryMsg::Transfer(TransferMsg::Open(
+            Tab::Import,
+            import_scope(state),
+        ))));
+    }
+}
+
+/// The stack the browser has selected, if any: the import then starts with that stack as its target.
+fn import_scope(state: &State) -> Option<String> {
+    match &state.browser.selection {
+        Selection::Stack(folder) => Some(folder.clone()),
+        Selection::Nothing | Selection::Inbox => None,
     }
 }
 

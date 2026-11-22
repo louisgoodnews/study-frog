@@ -13,6 +13,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - **Help links to the FrogScript reference (`crates/studyfrog-ui`, EPIC-058)**: the Help screen's page tree has a "FrogScript reference" button (with a vault open) that opens the reference in ScriptStudio, expanded, with the same panel as the Console's "Reference" button. Test: `studyfrog-ui/tests/help_wiki.rs`.
 
 ### Changed
+- **One top-level Import button (`crates/studyfrog-ui`, STORY-0168, EPIC-057)**: the top bar has an "Import" button next to "+ Create" that opens the same transfer dialog on the Import tab, scoped to the selected stack when there is one; the Import entries in the items toolbar's More menu and the stack page's More actions are removed (Export stays there). The bar keeps every control at 960x640; the search field narrows to make room.
 - **Previous rating on the rating button (`crates/studyfrog-ui`, STORY-0196, EPIC-065)**: the rating button of the item's previous rating has a "Last: <word>" line above it in the colour of its difficulty (red Difficult, orange Medium, green Easy); the line is in the body size, and no line shows for an item never rated.
 - **Board headings count every work item of each status (`tools/repo-lint`, EPIC-058)**: the per-status counts in the board's headings include every kind of item, not only tasks.
 
