@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Custom learn-mode report, opt-in (`crates/studyfrog-store`, `crates/studyfrog-ui`, STORY-0198)**: "Show report" in the learn-mode editor reads one mode's custom runs (runs, finished, items, entries per step, ratings, branches); built-in reports never include them.
 - **A custom learn mode decides what comes back (`crates/studyfrog-rehearsal`, `crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0198)**: in a custom run an item is shown again only when its graph sends it back to a rate node; a stop or a loop at its cap takes it out of the run. Built-in runs are unchanged.
 - **Start a custom learn-mode run from the app (`crates/studyfrog-ui`, STORY-0198)**: "Start a run" in the learn-mode editor runs the saved mode as a practice-only run; its steps are logged apart from the built-in modes.
 - **Learn-mode editor (`crates/studyfrog-ui`, STORY-0198)**: "Learn modes" on the Rehearse setup opens a form to list, name, build, check and save a learn mode (nodes, wires, branch conditions); a mode that cannot run is not saved, and the reasons are listed.

@@ -9,6 +9,8 @@ use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::theme::palette_of;
 
+pub mod report;
+
 fn send(out: &mut Vec<Msg>, m: LearnMsg) {
     out.push(Msg::Learn(m));
 }
@@ -17,6 +19,7 @@ fn send(out: &mut Vec<Msg>, m: LearnMsg) {
 pub fn draw(e: &LearnEditor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     // The form is taller than a small window: it scrolls inside the dialog, which stays within the window.
     let max = (ui.ctx().content_rect().height() * 0.85).max(240.0);
+    ui.set_height(max);
     egui::ScrollArea::vertical()
         .max_height(max)
         .auto_shrink([false, true])
@@ -45,6 +48,7 @@ fn body(e: &LearnEditor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     wires(e, ui, out);
     ui.separator();
     points(e, ui);
+    report::section(e, ui, out);
     ui.horizontal(|ui| {
         if ui
             .add_enabled(e.reasons.is_empty(), egui::Button::new("Save mode"))

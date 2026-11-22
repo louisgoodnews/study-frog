@@ -52,6 +52,12 @@ pub fn run(w: &mut Worker, effect: LearnEffect, now_ns: i64) -> Msg {
                 });
             Msg::Learn(LearnMsg::Started(started))
         }
+        LearnEffect::Report(mode) => {
+            match studyfrog_store::learn_report::mode_report(&session.conn, &mode) {
+                Ok(report) => Msg::Learn(LearnMsg::Reported(Ok(report))),
+                Err(e) => Msg::Learn(LearnMsg::Reported(Err(e.to_string()))),
+            }
+        }
         LearnEffect::Save(graph) => {
             let saved = save(root, &graph).map(|path| {
                 path.file_name()

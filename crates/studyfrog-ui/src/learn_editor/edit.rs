@@ -27,12 +27,25 @@ fn fresh_id(g: &LearnGraph) -> String {
 pub(crate) fn apply(e: &mut LearnEditor, msg: LearnMsg) -> Vec<LearnEffect> {
     match msg {
         LearnMsg::Open | LearnMsg::Start | LearnMsg::Started(_) => {}
+        LearnMsg::ShowReport => match e.file.as_deref() {
+            Some(file) => {
+                return vec![LearnEffect::Report(
+                    file.trim_end_matches(".toml").to_owned(),
+                )];
+            }
+            None => e.notice = Some("Save the mode before its report can be read.".to_owned()),
+        },
+        LearnMsg::Reported(Ok(report)) => e.report = Some(report),
+        LearnMsg::Reported(Err(why)) => {
+            e.notice = Some(format!("Could not read the report: {why}"))
+        }
         LearnMsg::Listed(Ok(names)) => e.modes = names,
         LearnMsg::Listed(Err(why)) => e.notice = Some(format!("Could not list the modes: {why}")),
         LearnMsg::Pick(file) => return vec![LearnEffect::Load(file)],
         LearnMsg::Loaded(Ok((file, graph))) => {
             e.file = Some(file);
             e.graph = graph;
+            e.report = None;
             e.notice = None;
             refresh(e);
         }

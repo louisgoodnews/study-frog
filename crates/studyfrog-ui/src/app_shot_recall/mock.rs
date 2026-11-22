@@ -126,6 +126,20 @@ pub fn learn_editor_demo(model: &mut Model) {
     e.file = Some("interleave-two-decks.toml".into());
     e.graph = graph;
     e.reasons = vec!["the branch n4 needs a default way on".into()];
+    e.report = Some(studyfrog_store::learn_report::ModeReport {
+        mode_id: "interleave-two-decks".into(),
+        runs: 4,
+        finished: 3,
+        items: 27,
+        visits: vec![("n2".into(), 61), ("n3".into(), 61), ("n4".into(), 61)],
+        ratings: vec![
+            ("again".into(), 14),
+            ("easy".into(), 12),
+            ("good".into(), 25),
+            ("hard".into(), 10),
+        ],
+        branches: vec![("again".into(), 14), ("default".into(), 47)],
+    });
     model.state.screen = Screen::Rehearse;
     model.state.modal = Some(crate::modal::Modal::LearnEditor(Box::new(e)));
 }

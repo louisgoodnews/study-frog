@@ -137,3 +137,24 @@ fn start_needs_a_saved_mode_with_no_reasons_and_then_closes_the_dialog() {
         vec![Effect::Learn(LearnEffect::Start("quick-check.toml".into()))]
     );
 }
+
+#[test]
+fn the_report_is_read_only_for_a_saved_mode_and_only_when_asked() {
+    let (state, _) = send(State::default(), LearnMsg::Open);
+    let (unsaved, fx) = send(state.clone(), LearnMsg::ShowReport);
+    assert!(
+        fx.is_empty(),
+        "nothing is read for a mode that is not saved"
+    );
+    assert!(editor(&unsaved).report.is_none());
+
+    let mut saved = state;
+    if let Some(Modal::LearnEditor(e)) = saved.modal.as_mut() {
+        e.file = Some("quick-check.toml".into());
+    }
+    let (_, fx) = send(saved, LearnMsg::ShowReport);
+    assert_eq!(
+        fx,
+        vec![Effect::Learn(LearnEffect::Report("quick-check".into()))]
+    );
+}

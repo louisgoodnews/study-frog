@@ -26,6 +26,7 @@ pub mod item_meta;
 mod item_rows;
 pub mod items;
 pub mod learn;
+pub mod learn_report;
 pub mod library;
 pub mod link_graph;
 pub mod migrate;

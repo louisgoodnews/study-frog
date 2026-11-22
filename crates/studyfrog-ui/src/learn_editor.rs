@@ -47,6 +47,8 @@ pub struct LearnEditor {
     pub reasons: Vec<String>,
     /// The last thing that happened, for the form to say.
     pub notice: Option<String>,
+    /// The custom report of the open mode, once asked for (opt-in; `None` until then).
+    pub report: Option<studyfrog_store::learn_report::ModeReport>,
 }
 
 /// An empty new mode.
@@ -65,6 +67,7 @@ pub fn new_editor() -> LearnEditor {
             "the graph has no start node".to_owned(),
         ],
         notice: None,
+        report: None,
     }
 }
 
@@ -79,6 +82,8 @@ pub enum LearnEffect {
     Save(Box<LearnGraph>),
     /// Start a practice-only run of the saved mode with this file name.
     Start(String),
+    /// Read the custom report of the mode with this id (its file name without `.toml`).
+    Report(String),
 }
 
 /// What happened in the editor.
@@ -120,6 +125,10 @@ pub enum LearnMsg {
     Saved(Result<String, String>),
     /// "Start a run" was pressed: run the saved copy of the open mode.
     Start,
+    /// "Show report" was pressed: read the custom report of the open mode.
+    ShowReport,
+    /// The custom report was read (or not).
+    Reported(Result<studyfrog_store::learn_report::ModeReport, String>),
     /// The run of a learn mode was made, with its graph (or why not).
     Started(Result<(studyfrog_core::run::Run, LearnGraph), String>),
 }
