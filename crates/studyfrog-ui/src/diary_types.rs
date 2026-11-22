@@ -104,6 +104,8 @@ pub struct DiaryState {
     pub settings: DiarySettings,
     /// Draft for creating a new custom scale in Settings.
     pub custom_scale_draft: Option<CustomScaleDef>,
+    /// The entry whose delete is waiting for confirmation.
+    pub delete_pending: Option<Uid>,
 }
 
 /// Side effects requested by diary actions.
@@ -155,6 +157,7 @@ pub fn diary_state_default() -> DiaryState {
         hint_dismissed: false,
         settings: diary_settings_default(),
         custom_scale_draft: None,
+        delete_pending: None,
     }
 }
 

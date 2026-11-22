@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Diary entry delete asks first (`crates/studyfrog-ui`)**: "Delete entry" now asks "Delete this entry? It cannot be undone." with "Delete it" or "Keep it"; before, the entry was deleted at once although its tooltip said it deleted after confirmation.
 - **Delete a homework item (`crates/studyfrog-ui`, STORY-0167)**: the edit dialog has "Delete item", which asks for confirmation before the item is removed; the dialog closes once it is gone, and a refused delete keeps it open with the reason.
 - **Benchmark run-to-run spread script (`scripts/bench-spread.sh`, EPIC-067)**: runs one criterion benchmark case N times and reports its mean, coefficient of variation and spread, for setting the noise floor of the regression rule on a reference machine.
 - **FrogScript keyboard completion and cursor placement (`crates/studyfrog-script`, `crates/studyfrog-ui`, STORY-0150)**: in ScriptStudio, Tab accepts the highlighted name, Up and Down move the highlight (wrapping), Esc hides the list until the word changes, and the cursor goes to the end of an inserted name.

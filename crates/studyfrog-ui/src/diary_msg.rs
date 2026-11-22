@@ -42,7 +42,11 @@ pub enum DiaryMsg {
     UpdateDraftContent(String),
     /// Save the active draft.
     SaveDraft,
-    /// Delete an entry by its UID.
+    /// Ask for confirmation before an entry is deleted.
+    AskDeleteEntry(Uid),
+    /// Keep the entry whose delete was asked for.
+    KeepEntry,
+    /// Delete an entry by its UID, once confirmed.
     DeleteEntry(Uid),
     /// Entries loaded from the store.
     EntriesLoaded(Vec<StoredDiaryEntry>),

@@ -51,6 +51,15 @@ pub fn update_diary(mut state: State, msg: DiaryMsg) -> (State, Vec<Effect>) {
         }
         DiaryMsg::CloseEditor => {
             state.diary.active_entry = None;
+            state.diary.delete_pending = None;
+            (state, Vec::new())
+        }
+        DiaryMsg::AskDeleteEntry(uid) => {
+            state.diary.delete_pending = Some(uid);
+            (state, Vec::new())
+        }
+        DiaryMsg::KeepEntry => {
+            state.diary.delete_pending = None;
             (state, Vec::new())
         }
         DiaryMsg::UpdateDraftTitle(t) => {
@@ -111,6 +120,7 @@ pub fn update_diary(mut state: State, msg: DiaryMsg) -> (State, Vec<Effect>) {
             }
         }
         DiaryMsg::DeleteEntry(uid) => {
+            state.diary.delete_pending = None;
             if state
                 .diary
                 .active_entry

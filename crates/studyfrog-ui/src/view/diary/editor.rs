@@ -1,7 +1,8 @@
 //! Entry editor form with ratings, links, minutes, and Markdown reflections.
 
-use eframe::egui::{self, Role, TextEdit, WidgetInfo};
+use eframe::egui::{self, RichText, Role, TextEdit, WidgetInfo};
 use studyfrog_core::civil::format_date;
+use studyfrog_core::uid::Uid;
 
 use super::editor_ratings::ratings_section;
 use crate::diary_msg::DiaryMsg;
@@ -58,7 +59,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.add_space(16.0);
             body_section(draft, ui, out);
             ui.add_space(16.0);
-            bottom_actions(draft, ui, out);
+            bottom_actions(draft, state.diary.delete_pending, ui, out);
         });
 }
 
@@ -141,7 +142,12 @@ fn body_section(draft: &DiaryEditDraft, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-fn bottom_actions(draft: &DiaryEditDraft, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+fn bottom_actions(
+    draft: &DiaryEditDraft,
+    pending: Option<Uid>,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+) {
     ui.horizontal(|ui| {
         let save_btn = crate::view::kit::primary_button(ui, "Save entry")
             .on_hover_text("Saves this diary entry.");
@@ -171,12 +177,29 @@ fn bottom_actions(draft: &DiaryEditDraft, ui: &mut egui::Ui, out: &mut Vec<Msg>)
                 out.push(Msg::OpenItem(uid));
             }
 
-            let del_btn = ui
-                .button("Delete entry")
-                .on_hover_text("Deletes this diary entry after you confirm.");
-            del_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Delete diary entry"));
-            if del_btn.clicked() {
-                diary_msg(out, DiaryMsg::DeleteEntry(uid));
+            if pending == Some(uid) {
+                ui.label(RichText::new("Delete this entry? It cannot be undone.").strong());
+                let yes = crate::view::kit::primary_button(ui, "Delete it")
+                    .on_hover_text("Deletes this diary entry for good.");
+                yes.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Confirm delete"));
+                if yes.clicked() {
+                    diary_msg(out, DiaryMsg::DeleteEntry(uid));
+                }
+                let keep = ui
+                    .button("Keep it")
+                    .on_hover_text("Keeps this diary entry.");
+                if keep.clicked() {
+                    diary_msg(out, DiaryMsg::KeepEntry);
+                }
+            } else {
+                let del_btn = ui
+                    .button("Delete entry")
+                    .on_hover_text("Asks you to confirm before this diary entry is deleted.");
+                del_btn
+                    .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Delete diary entry"));
+                if del_btn.clicked() {
+                    diary_msg(out, DiaryMsg::AskDeleteEntry(uid));
+                }
             }
         }
     });
