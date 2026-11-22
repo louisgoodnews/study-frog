@@ -55,7 +55,14 @@ fn choice<T: Copy + PartialEq>(
 }
 
 /// A single-line field of the given width with a name for screen readers; the new text when it changed.
-fn field(ui: &mut egui::Ui, (name, hint): (&str, &str), text: &str, width: f32) -> Option<String> {
+fn field(
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+    requested: bool,
+    (name, hint): (&str, &str),
+    text: &str,
+    width: f32,
+) -> Option<String> {
     let mut edited = text.to_owned();
     let r = ui
         .add(
@@ -64,7 +71,9 @@ fn field(ui: &mut egui::Ui, (name, hint): (&str, &str), text: &str, width: f32) 
                 .desired_width(width),
         )
         .on_hover_text(crate::view::tips::with_key(hint, "Ctrl+F or /"));
-    crate::view::search_focus::focus_field(ui.ctx(), &r, text.chars().count());
+    if crate::view::search_focus::focus_field(ui.ctx(), &r, text.chars().count(), requested) {
+        crate::view::search_focus::taken(out, name);
+    }
     r.widget_info(|| {
         egui::WidgetInfo::labeled(
             egui::Role::TextInput,
@@ -83,6 +92,8 @@ fn standard(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let width = (ui.available_width() - COMBOS_WIDTH).max(160.0);
     if let Some(text) = field(
         ui,
+        out,
+        state.chrome.search_focus,
         ("Search titles", "Search titles"),
         &state.browser.search,
         width,
@@ -108,7 +119,15 @@ fn standard(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 fn query_field(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let width = ui.available_width();
     let hint = "status = new AND due <= 7d ORDER BY due";
-    if let Some(text) = field(ui, ("Query text", hint), &state.library.search.query, width) {
+    let requested = state.chrome.search_focus;
+    if let Some(text) = field(
+        ui,
+        out,
+        requested,
+        ("Query text", hint),
+        &state.library.search.query,
+        width,
+    ) {
         send(out, SearchMsg::Query(text));
     }
 }

@@ -6,6 +6,9 @@ use eframe::egui::{
     text::{CCursor, CCursorRange},
 };
 
+use crate::chrome::ChromeMsg;
+use crate::msg::Msg;
+
 /// The "Find in this PDF" field's name (its accessible name adds the shortcut, see [`named`]).
 pub const PDF_FIND: &str = "Find in this PDF";
 /// The library's main search field's accessible name.
@@ -31,11 +34,17 @@ pub fn pressed(ctx: &egui::Context) -> bool {
     ctrl_f || (slash && !typing)
 }
 
-/// Give the field the keyboard and select its `len` characters when the shortcut was pressed, so the
-/// next key replaces the text. Call it with the field's response, right after the field is drawn.
-pub fn focus_field(ctx: &egui::Context, response: &egui::Response, len: usize) {
-    if !pressed(ctx) {
-        return;
+/// Give the field the keyboard when the shortcut was pressed or the protocol asked for it (`requested`),
+/// selecting its `len` characters so the next key replaces the text. Call it with the field's response,
+/// right after the field is drawn. Returns whether the field took the keyboard (then [`taken`] names it).
+pub fn focus_field(
+    ctx: &egui::Context,
+    response: &egui::Response,
+    len: usize,
+    requested: bool,
+) -> bool {
+    if !(requested || pressed(ctx)) {
+        return false;
     }
     response.request_focus();
     if let Some(mut st) = TextEdit::load_state(ctx, response.id) {
@@ -43,4 +52,10 @@ pub fn focus_field(ctx: &egui::Context, response: &egui::Response, len: usize) {
             .set_char_range(Some(CCursorRange::two(CCursor::new(0), CCursor::new(len))));
         TextEdit::store_state(ctx, response.id, st);
     }
+    true
+}
+
+/// Report that the field `name` took the keyboard (the answer of `search --focus` names it).
+pub fn taken(out: &mut Vec<Msg>, name: &str) {
+    out.push(Msg::Chrome(ChromeMsg::SearchFocusTaken(name.to_owned())));
 }

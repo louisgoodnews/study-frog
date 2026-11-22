@@ -20,6 +20,7 @@ use crate::transfer_ui::TransferMsg;
 
 pub mod files;
 pub mod homework;
+pub mod search;
 
 /// Phases of messages; background work settles between phases.
 pub type Plan = Vec<Vec<Msg>>;
@@ -219,7 +220,7 @@ pub fn plan_for(state: &State, cmd: &Command) -> Result<Plan, String> {
                 text.clone(),
             ))),
         ]]),
-        Command::Search(text) => one(Msg::Chrome(ChromeMsg::SearchEdited(text.clone()))),
+        Command::Search(text, focus) => search::plan(text, *focus),
         Command::Export(a) => Ok(vec![vec![
             transfer(TransferMsg::Open(Tab::Export, a.stack.clone())),
             transfer(TransferMsg::Format(a.format)),

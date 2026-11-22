@@ -7,6 +7,8 @@ use crate::effect::Effect;
 use crate::pdf_types::PdfEffect;
 use crate::state::{Notice, NoticeKind, State};
 
+pub mod focus;
+
 pub use crate::notify::MAX_NOTIFICATIONS;
 /// Most search results shown.
 pub const MAX_RESULTS: usize = 10;
@@ -51,6 +53,10 @@ pub struct Chrome {
     pub menu: Option<Menu>,
     /// The global search text.
     pub search: String,
+    /// The search field was asked to take the keyboard (`search --focus`) and has not yet.
+    pub search_focus: bool,
+    /// The search field that has the keyboard, once one took it.
+    pub focused: Option<String>,
     /// Items matching the search.
     pub results: Vec<ItemRow>,
     /// PDFs and pages matching the search.
@@ -82,6 +88,10 @@ pub enum ChromeMsg {
     CloseMenu,
     /// The search text changed.
     SearchEdited(String),
+    /// The search field was asked to take the keyboard.
+    SearchFocus,
+    /// A search field took the keyboard: its name.
+    SearchFocusTaken(String),
     /// The search finished: the query it was for, and what it found.
     SearchResults(String, Result<Vec<ItemRow>, String>),
     /// The PDF part of a search finished.
@@ -210,6 +220,7 @@ pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
             with(state, c)
         }
         ChromeMsg::SearchEdited(text) => search_edited(state, text),
+        ChromeMsg::SearchFocus | ChromeMsg::SearchFocusTaken(_) => focus::update(state, msg),
         ChromeMsg::SearchResults(query, result) => search_results(state, query, result),
         ChromeMsg::PdfResults(query, result) => pdf_results(state, query, result),
         ChromeMsg::Notify(m) => crate::notify::update(state, m),

@@ -120,6 +120,8 @@ pub fn state_json(state: &State) -> Value {
         "rehearse": rehearse_json(state),
         "library": library_json(state),
         "search": search_json(state),
+        "focused_field": state.chrome.focused,
+        "search_focus_pending": state.chrome.search_focus,
         "notice": notice,
         "notice_item": state.notice_link.as_ref().map(|(_, uid)| ulid(*uid)),
         "toasts": toasts,

@@ -38,7 +38,7 @@ fn navigation_and_the_simple_commands() {
     assert_eq!(cmd("forward"), Command::Forward);
     for (line, c) in [
         ("state", Command::State),
-        ("help", Command::Help),
+        ("help", Command::Help(None)),
         ("notices", Command::Notices),
     ] {
         assert_eq!(cmd(line), c);
@@ -135,7 +135,7 @@ fn query_and_search_keep_their_text_as_written() {
     );
     assert_eq!(
         parse_words("search  le chat ").unwrap(),
-        Command::Search("le chat".into())
+        Command::Search("le chat".into(), false)
     );
     let j = json!({"id": 3, "cmd": "query", "args": ["type = card", "order by title"]}).to_string();
     assert_eq!(cmd(&j), Command::Query("type = card order by title".into()));

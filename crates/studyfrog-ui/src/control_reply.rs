@@ -10,9 +10,11 @@ use crate::control_state::{notices_json, state_json, ulid};
 use crate::state::{Notice, NoticeKind, State};
 
 pub mod appearance;
+pub mod focus;
 pub mod homework;
 pub mod import;
 pub mod pdf;
+pub mod tooltip;
 
 /// Rows a `query` answers with at most.
 pub const MAX_QUERY_ROWS: usize = 500;
@@ -78,7 +80,7 @@ fn form_error(state: &State) -> Option<String> {
 /// What `cmd` answers once its work is done; `before` is the notice from before it, so an error it
 /// raised makes the answer an error.
 pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Result<Value, String> {
-    let reads_only = matches!(cmd, Command::State | Command::Help | Command::Notices);
+    let reads_only = matches!(cmd, Command::State | Command::Help(_) | Command::Notices);
     if let Some(e) = new_error(state, before).filter(|_| !reads_only) {
         return Err(e);
     }
@@ -105,7 +107,13 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
             import::import_json(state),
         )),
         Command::PdfFind(..) => Ok(with_part(state_json(state), "pdf", pdf::pdf_json(state))),
-        Command::Help => Ok(help_json()),
+        Command::Help(None) => Ok(help_json()),
+        Command::Help(Some(name)) => tooltip::tooltip_json(name),
+        Command::Search(_, true) => Ok(with_part(
+            state_json(state),
+            "focus",
+            focus::focus_json(state),
+        )),
         Command::Notices => Ok(notices_json(state)),
         Command::Query(text) => query_result(state, text),
         Command::Stack(StackCmd::Settings(folder)) => stack_settings(state, folder),

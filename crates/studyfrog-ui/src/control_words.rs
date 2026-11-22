@@ -8,6 +8,7 @@ use crate::control_cmd::{Command, ExportArgs, LogsQuery, RehearseCmd, SetupArgs}
 use crate::control_words_items::{flag, item, need, split_flags, stack};
 
 pub mod appearance;
+pub mod help;
 pub mod homework;
 pub mod pdf;
 use crate::setup::Preset;
@@ -214,7 +215,7 @@ pub fn command_from_words(words: &[String]) -> Result<Command, String> {
     let first = words.first().map(String::as_str).ok_or("empty command")?;
     Ok(match first {
         "state" => Command::State,
-        "help" | "commands" => Command::Help,
+        "help" | "commands" => help::parse(&words[1..])?,
         "back" => Command::Back,
         "forward" => Command::Forward,
         "notices" | "notifications" => Command::Notices,

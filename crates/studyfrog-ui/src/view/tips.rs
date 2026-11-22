@@ -48,6 +48,16 @@ const EXPLAIN: &[(&str, &str)] = &[
     ("Dismiss notification", "Hides this message."),
 ];
 
+/// The explanation of the control called `name` (`None` when no tooltip has that name).
+pub fn explain_of(name: &str) -> Option<&'static str> {
+    EXPLAIN.iter().find(|(n, _)| *n == name).map(|(_, e)| *e)
+}
+
+/// The names of the controls that have a tooltip.
+pub fn names() -> Vec<&'static str> {
+    EXPLAIN.iter().map(|(n, _)| *n).collect()
+}
+
 /// The tooltip of an icon button: its name, and under it what the button does when it is known.
 pub fn for_name(name: &str) -> String {
     match EXPLAIN.iter().find(|(n, _)| *n == name) {

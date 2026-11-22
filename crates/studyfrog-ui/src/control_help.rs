@@ -141,8 +141,13 @@ pub const COMMANDS: &[Row] = &[
         "read",
     ),
     (
-        "search <text>",
-        "Chrome SearchEdited -> Effect::SearchItems, PDF search",
+        "search <text> | search --focus [text]",
+        "Chrome SearchEdited -> Effect::SearchItems, PDF search; --focus gives the search field of the screen the keyboard and the answer names it",
+        "read",
+    ),
+    (
+        "help tooltip <name>",
+        "The explanation and shortcut of a control (view::tips); the names are listed on an error",
         "read",
     ),
     (

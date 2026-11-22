@@ -16,7 +16,7 @@ fn msg(out: &mut Vec<Msg>, m: PdfMsg) {
     out.push(Msg::Pdf(m));
 }
 
-fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool) {
     let mut text = view.query.clone();
     let field = ui
         .add(
@@ -28,7 +28,14 @@ fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             "Finds the text in this PDF.",
             "Ctrl+F or /",
         ));
-    crate::view::search_focus::focus_field(ui.ctx(), &field, view.query.chars().count());
+    if crate::view::search_focus::focus_field(
+        ui.ctx(),
+        &field,
+        view.query.chars().count(),
+        requested,
+    ) {
+        crate::view::search_focus::taken(out, crate::view::search_focus::PDF_FIND);
+    }
     field.widget_info(|| {
         egui::WidgetInfo::labeled(
             egui::Role::TextInput,
@@ -92,7 +99,7 @@ fn copy_button(view: &PdfView, ui: &mut egui::Ui) {
     }
 }
 
-fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool) {
     ui.horizontal_wrapped(|ui| {
         if ui
             .button("Back to library")
@@ -107,7 +114,7 @@ fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.separator();
         zoom_controls(view, ui, out);
         ui.separator();
-        search(view, ui, out);
+        search(view, ui, out, requested);
         ui.separator();
         ui.menu_button("More…", |ui| {
             fit_presets(view, ui, out);
@@ -146,7 +153,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             format!("This PDF cannot be shown: {error}"),
         );
     }
-    toolbar(view, ui, out);
+    toolbar(view, ui, out, state.chrome.search_focus);
     pdf_notes::bar(view, ui, out);
     link_question(view, ui, out);
     ui.separator();

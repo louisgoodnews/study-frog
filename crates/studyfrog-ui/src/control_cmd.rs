@@ -26,8 +26,8 @@ pub struct Request {
 pub enum Command {
     /// A snapshot of the state.
     State,
-    /// The list of commands.
-    Help,
+    /// The list of commands, or (with a name) the tooltip of a control.
+    Help(Option<String>),
     /// Go to a screen.
     Nav(Screen),
     /// Back in the history.
@@ -46,8 +46,8 @@ pub enum Command {
     Rehearse(RehearseCmd),
     /// Run a library query and list the matching items.
     Query(String),
-    /// The top-bar search (items and PDFs).
-    Search(String),
+    /// The top-bar search (items and PDFs); with `--focus` the search field takes the keyboard.
+    Search(String, bool),
     /// Export the library or a stack.
     Export(ExportArgs),
     /// Import a file, into a stack or where the file says.

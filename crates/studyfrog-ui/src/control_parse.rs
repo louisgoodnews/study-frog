@@ -51,7 +51,7 @@ fn split_first(line: &str) -> (&str, &str) {
 pub fn parse_words(line: &str) -> Result<Command, String> {
     match split_first(line) {
         ("query", rest) => Ok(Command::Query(rest.to_owned())),
-        ("search", rest) => Ok(Command::Search(rest.to_owned())),
+        ("search", rest) => Ok(search_cmd(rest)),
         _ => command_from_words(&tokenize(line)?),
     }
 }
@@ -108,4 +108,12 @@ pub fn parse_request(line: &str) -> Result<Request, (Value, String)> {
             cmd,
         })
         .map_err(|e| (Value::Null, e))
+}
+
+/// `search TEXT`, or `search --focus [TEXT]`: the words after `search`, with the focus flag taken off.
+fn search_cmd(rest: &str) -> Command {
+    match rest.trim().strip_prefix("--focus") {
+        Some(text) => Command::Search(text.trim().to_owned(), true),
+        None => Command::Search(rest.to_owned(), false),
+    }
 }
