@@ -16,6 +16,7 @@ pub fn ask_sourced(path: &str) -> Effect {
 
 fn edit(state: State, f: impl FnOnce(ExtractForm) -> ExtractForm) -> (State, Vec<Effect>) {
     let view = state.pdf.clone().map(|v| PdfView {
+        mark_to_delete: None,
         extract: f(v.extract.clone()),
         ..v
     });
@@ -77,6 +78,7 @@ fn made(state: State, result: Made) -> (State, Vec<Effect>) {
                 ..with(
                     state,
                     PdfView {
+                        mark_to_delete: None,
                         extract: ExtractForm {
                             title: String::new(),
                             ..extract
@@ -107,6 +109,7 @@ fn sourced(
             with(
                 state,
                 PdfView {
+                    mark_to_delete: None,
                     sourced: items,
                     ..view
                 },
@@ -172,6 +175,7 @@ fn add_pictures(state: State, mut paths: Vec<String>) -> State {
         paths.retain(|p| !all.contains(p));
         all.extend(paths);
         PdfView {
+            mark_to_delete: None,
             extract: ExtractForm {
                 pictures: all,
                 ..v.extract.clone()

@@ -96,6 +96,8 @@ pub struct PdfView {
     pub side: Side,
     /// Why the file could not be shown.
     pub error: Option<String>,
+    /// The note whose delete is waiting for confirmation.
+    pub mark_to_delete: Option<u32>,
     /// Highlights and notes.
     pub marks: Vec<studyfrog_config::pdf_marks::PdfMark>,
     /// The page each mark is on now, in the order of `marks`.

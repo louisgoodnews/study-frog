@@ -152,6 +152,7 @@ pub fn update(state: State, msg: ArrangeMsg) -> (State, Vec<Effect>) {
             with(
                 state,
                 PdfView {
+                    mark_to_delete: None,
                     arrange: None,
                     ..view
                 },
@@ -178,6 +179,7 @@ pub fn update(state: State, msg: ArrangeMsg) -> (State, Vec<Effect>) {
             finished(
                 state,
                 PdfView {
+                    mark_to_delete: None,
                     arrange: None,
                     ..view
                 },
@@ -188,6 +190,7 @@ pub fn update(state: State, msg: ArrangeMsg) -> (State, Vec<Effect>) {
         ArrangeMsg::Splitted(Ok(names)) => finished(
             state,
             PdfView {
+                mark_to_delete: None,
                 arrange: None,
                 ..view
             },

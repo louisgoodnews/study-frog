@@ -100,12 +100,28 @@ fn entry(view: &PdfView, at: usize, mark: &PdfMark, ui: &mut egui::Ui, out: &mut
                     }
                 }
             }
-            if ui
+            if view.mark_to_delete == Some(mark.id) {
+                ui.label(RichText::new("Delete this note? It cannot be undone.").strong());
+                if ui
+                    .small_button("Delete it")
+                    .on_hover_text("Deletes this note from the PDF for good.")
+                    .clicked()
+                {
+                    send(out, MarkMsg::Delete(mark.id));
+                }
+                if ui
+                    .small_button("Keep it")
+                    .on_hover_text("Keeps this note.")
+                    .clicked()
+                {
+                    send(out, MarkMsg::KeepMark);
+                }
+            } else if ui
                 .small_button("Delete")
-                .on_hover_text("Deletes this note from the PDF after you confirm.")
+                .on_hover_text("Asks you to confirm before this note is deleted.")
                 .clicked()
             {
-                send(out, MarkMsg::Delete(mark.id));
+                send(out, MarkMsg::AskDelete(mark.id));
             }
         });
         match view.marks_now.get(at).copied().flatten() {

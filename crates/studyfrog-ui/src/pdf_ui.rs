@@ -32,6 +32,7 @@ pub fn open(state: State, path: String, page: usize) -> (State, Vec<Effect>) {
         return (state, effects);
     }
     let view = PdfView {
+        mark_to_delete: None,
         title: stem(&path),
         path: path.clone(),
         page,
@@ -71,6 +72,7 @@ fn opened(
                 with(
                     state,
                     PdfView {
+                        mark_to_delete: None,
                         info: Some(*info),
                         title,
                         side,
@@ -90,6 +92,7 @@ fn opened(
             with(
                 state,
                 PdfView {
+                    mark_to_delete: None,
                     error: Some(e),
                     ..view
                 },
@@ -156,6 +159,7 @@ pub fn update(state: State, msg: PdfMsg) -> (State, Vec<Effect>) {
         PdfMsg::ZoomIn | PdfMsg::ZoomOut => {
             let up = msg == PdfMsg::ZoomIn;
             let view = state.pdf.clone().map(|v| PdfView {
+                mark_to_delete: None,
                 zoom: zoom_step(&v, up),
                 ..v
             });
@@ -179,6 +183,7 @@ pub fn update(state: State, msg: PdfMsg) -> (State, Vec<Effect>) {
         PdfMsg::Select(words) => (
             State {
                 pdf: state.pdf.clone().map(|v| PdfView {
+                    mark_to_delete: None,
                     selection: words,
                     ..v
                 }),

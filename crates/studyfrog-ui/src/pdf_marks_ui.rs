@@ -112,6 +112,21 @@ fn edit(state: State, id: u32, note: String) -> (State, Vec<Effect>) {
     changed(state, view)
 }
 
+/// Show or clear the delete confirmation of a mark. Nothing is saved for this.
+fn set_pending(state: State, id: Option<u32>) -> (State, Vec<Effect>) {
+    let Some(mut view) = state.pdf.clone() else {
+        return (state, Vec::new());
+    };
+    view.mark_to_delete = id;
+    (
+        State {
+            pdf: Some(view),
+            ..state
+        },
+        Vec::new(),
+    )
+}
+
 fn delete(state: State, id: u32) -> (State, Vec<Effect>) {
     let Some(mut view) = state.pdf.clone() else {
         return (state, Vec::new());
@@ -119,6 +134,7 @@ fn delete(state: State, id: u32) -> (State, Vec<Effect>) {
     let Some(at) = view.marks.iter().position(|m| m.id == id) else {
         return (state, Vec::new());
     };
+    view.mark_to_delete = None;
     view.marks.remove(at);
     if at < view.marks_now.len() {
         view.marks_now.remove(at);
@@ -152,6 +168,8 @@ pub fn update(state: State, msg: MarkMsg) -> (State, Vec<Effect>) {
         MarkMsg::ToggleNoteMode => toggle_note_mode(state),
         MarkMsg::PlaceNote(x, y) => place_note(state, x, y),
         MarkMsg::EditNote(id, note) => edit(state, id, note),
+        MarkMsg::AskDelete(id) => set_pending(state, Some(id)),
+        MarkMsg::KeepMark => set_pending(state, None),
         MarkMsg::Delete(id) => delete(state, id),
         MarkMsg::Jump(id) => jump(state, id),
     }
@@ -167,6 +185,7 @@ fn recolor(state: State, name: String) -> (State, Vec<Effect>) {
 
 fn toggle_note_mode(state: State) -> (State, Vec<Effect>) {
     let view = state.pdf.clone().map(|v| PdfView {
+        mark_to_delete: None,
         placing_note: !v.placing_note,
         ..v
     });

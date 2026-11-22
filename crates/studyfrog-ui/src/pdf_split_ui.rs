@@ -49,6 +49,7 @@ pub fn open_crop(mut state: State, anchor: PdfCropAnchor) -> (State, Vec<Effect>
     }
     let path = anchor.path.clone();
     let view = PdfView {
+        mark_to_delete: None,
         title: stem(&path),
         path: path.clone(),
         page: target_page,

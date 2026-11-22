@@ -22,7 +22,11 @@ pub enum MarkMsg {
     PlaceNote(f32, f32),
     /// The note text of a mark changed.
     EditNote(u32, String),
-    /// Remove a mark.
+    /// Ask for confirmation before a mark is removed.
+    AskDelete(u32),
+    /// Keep the mark whose removal was asked for.
+    KeepMark,
+    /// Remove a mark, once confirmed.
     Delete(u32),
     /// Go to the page a mark is on.
     Jump(u32),

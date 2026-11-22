@@ -70,6 +70,7 @@ pub(crate) fn text_loaded(
             with(
                 state,
                 PdfView {
+                    mark_to_delete: None,
                     text: Some(text),
                     ..view
                 },
@@ -103,6 +104,7 @@ pub(crate) fn query(state: State, text: String) -> (State, Vec<Effect>) {
         with(
             state,
             PdfView {
+                mark_to_delete: None,
                 query: text,
                 found,
                 ..view
@@ -135,6 +137,7 @@ pub(crate) fn found(
             let state = with(
                 state,
                 PdfView {
+                    mark_to_delete: None,
                     found: pages,
                     ..view
                 },

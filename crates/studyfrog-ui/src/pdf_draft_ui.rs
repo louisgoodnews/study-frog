@@ -57,6 +57,7 @@ fn start(state: State, kind: DraftKind, mark: Option<u32>) -> (State, Vec<Effect
 
 fn edit(state: State, f: impl FnOnce(Draft) -> Draft) -> (State, Vec<Effect>) {
     let view = state.pdf.clone().map(|v| PdfView {
+        mark_to_delete: None,
         draft: v.draft.clone().map(f),
         ..v
     });
@@ -110,6 +111,7 @@ fn made(state: State, result: ItemMade) -> (State, Vec<Effect>) {
                     ..with(
                         state,
                         PdfView {
+                            mark_to_delete: None,
                             draft: None,
                             ..view
                         },

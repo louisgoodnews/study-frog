@@ -65,6 +65,7 @@ fn handle_exported(
                 .to_string();
 
             state.pdf = Some(PdfView {
+                mark_to_delete: None,
                 title: stem,
                 path: dest_str.clone(),
                 page: 0,

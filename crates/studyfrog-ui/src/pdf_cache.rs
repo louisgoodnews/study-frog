@@ -137,6 +137,7 @@ mod tests {
     #[test]
     fn only_pictures_in_the_older_half_count_as_stale() {
         let view = PdfView {
+            mark_to_delete: None,
             pictures: (0..MAX_THUMB_PICTURES)
                 .map(|p| pic(p, THUMB_SCALE_MILLI))
                 .collect(),

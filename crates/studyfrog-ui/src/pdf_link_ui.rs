@@ -19,6 +19,7 @@ pub fn openable(uri: &str) -> bool {
 
 fn pending(state: State, link: Option<String>) -> (State, Vec<Effect>) {
     let view = state.pdf.clone().map(|v| PdfView {
+        mark_to_delete: None,
         pending_link: link,
         ..v
     });
@@ -47,6 +48,7 @@ fn with_pending_cleared(state: State) -> State {
         Some(v) => with(
             state,
             PdfView {
+                mark_to_delete: None,
                 pending_link: None,
                 ..v
             },

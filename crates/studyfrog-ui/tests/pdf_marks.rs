@@ -148,3 +148,20 @@ fn selected_words_make_one_rectangle_per_line() {
     assert_eq!((rects[0].x, rects[0].width), (10.0, 70.0));
     assert!(line_rects(&words, &[]).is_empty());
 }
+
+#[test]
+fn a_note_is_removed_only_after_the_delete_is_confirmed() {
+    let (dir, mut model, mut worker) = viewer("confirm");
+    mark(&mut model, &mut worker, MarkMsg::PlaceNote(10.0, 10.0));
+    mark(&mut model, &mut worker, MarkMsg::AskDelete(1));
+    let view = model.state.pdf.as_ref().unwrap();
+    assert_eq!((view.marks.len(), view.mark_to_delete), (1, Some(1)));
+    mark(&mut model, &mut worker, MarkMsg::KeepMark);
+    let view = model.state.pdf.as_ref().unwrap();
+    assert_eq!((view.marks.len(), view.mark_to_delete), (1, None));
+    mark(&mut model, &mut worker, MarkMsg::AskDelete(1));
+    mark(&mut model, &mut worker, MarkMsg::Delete(1));
+    let view = model.state.pdf.as_ref().unwrap();
+    assert_eq!((view.marks.len(), view.mark_to_delete), (0, None));
+    assert!(!dir.path.join("a.pdf.notes.toml").exists() || on_disk(&dir).is_empty());
+}
