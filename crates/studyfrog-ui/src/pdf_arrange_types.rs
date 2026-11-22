@@ -22,6 +22,8 @@ pub struct Arrange {
     pub include_marks: bool,
     /// Title, author and subject as typed.
     pub props: [String; 3],
+    /// The delete of the chosen page is waiting for confirmation.
+    pub confirm_delete: bool,
     /// Something is being written.
     pub busy: bool,
     /// What happened last, or what is wrong.
@@ -50,7 +52,11 @@ pub enum ArrangeMsg {
     Select(usize),
     /// Turn the chosen page by 90 (clockwise) or -90 degrees.
     Rotate(i32),
-    /// Take the chosen page out.
+    /// Ask for confirmation before the chosen page is taken out.
+    AskDelete,
+    /// Keep the chosen page after all.
+    KeepPage,
+    /// Take the chosen page out, once confirmed (undo brings it back).
     Delete,
     /// Move the chosen page earlier (-1) or later (1).
     Move(i32),

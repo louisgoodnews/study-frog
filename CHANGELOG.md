@@ -8,7 +8,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
-- **PDF note delete asks first (`crates/studyfrog-ui`, STORY-0054)**: "Delete" on a note in the PDF viewer asks "Delete this note? It cannot be undone." with "Delete it" or "Keep it"; before, the note was deleted at once although its tooltip said it deleted after confirmation. Deleting a page in the arrange screen is unchanged: it has an undo.
+- **PDF page delete asks first (`crates/studyfrog-ui`, STORY-0054)**: "Delete page" in the arrange screen asks "Take this page out of the new file? Undo brings it back." with "Delete it" or "Keep it"; Undo still brings a removed page back.
+- **PDF note delete asks first (`crates/studyfrog-ui`, STORY-0054)**: "Delete" on a note in the PDF viewer asks "Delete this note? It cannot be undone." with "Delete it" or "Keep it"; before, the note was deleted at once although its tooltip said it deleted after confirmation.
 - **Diary entry delete asks first (`crates/studyfrog-ui`)**: "Delete entry" now asks "Delete this entry? It cannot be undone." with "Delete it" or "Keep it"; before, the entry was deleted at once although its tooltip said it deleted after confirmation.
 - **Delete a homework item (`crates/studyfrog-ui`, STORY-0167)**: the edit dialog has "Delete item", which asks for confirmation before the item is removed; the dialog closes once it is gone, and a refused delete keeps it open with the reason.
 - **Benchmark run-to-run spread script (`scripts/bench-spread.sh`, EPIC-067)**: runs one criterion benchmark case N times and reports its mean, coefficient of variation and spread, for setting the noise floor of the regression rule on a reference machine.

@@ -36,6 +36,7 @@ fn save(state: State, view: PdfView, a: Arrange) -> (State, Vec<Effect>) {
         props: properties(&a, &view),
     };
     let arrange = Some(Arrange {
+        confirm_delete: false,
         busy: true,
         message: None,
         ..a
@@ -51,6 +52,7 @@ fn split(state: State, view: PdfView, a: Arrange) -> (State, Vec<Effect>) {
     match parse_page_ranges(&a.ranges, count) {
         Ok(ranges) => {
             let arrange = Some(Arrange {
+                confirm_delete: false,
                 busy: true,
                 message: None,
                 ..a
@@ -63,6 +65,7 @@ fn split(state: State, view: PdfView, a: Arrange) -> (State, Vec<Effect>) {
         }
         Err(e) => {
             let arrange = Some(Arrange {
+                confirm_delete: false,
                 message: Some(e),
                 ..a
             });
@@ -78,6 +81,7 @@ fn finished(state: State, view: PdfView, text: Result<String, String>) -> (State
             NoticeKind::Error,
             e.clone(),
             view.arrange.clone().map(|a| Arrange {
+                confirm_delete: false,
                 busy: false,
                 message: Some(e),
                 ..a
@@ -97,10 +101,19 @@ fn finished(state: State, view: PdfView, text: Result<String, String>) -> (State
 fn edit(a: Arrange, msg: &ArrangeMsg, view: &PdfView) -> Option<Arrange> {
     match msg {
         ArrangeMsg::Select(i) => Some(Arrange {
+            confirm_delete: false,
             selected: Some(*i),
             ..a
         }),
         ArrangeMsg::Rotate(by) => rotate(&a, *by),
+        ArrangeMsg::AskDelete => Some(Arrange {
+            confirm_delete: true,
+            ..a
+        }),
+        ArrangeMsg::KeepPage => Some(Arrange {
+            confirm_delete: false,
+            ..a
+        }),
         ArrangeMsg::Delete => delete(&a),
         ArrangeMsg::Move(by) => shift(&a, *by),
         ArrangeMsg::Undo => {
@@ -114,18 +127,22 @@ fn edit(a: Arrange, msg: &ArrangeMsg, view: &PdfView) -> Option<Arrange> {
             })
         }
         ArrangeMsg::Reset => Some(Arrange {
+            confirm_delete: false,
             sources: vec![view.path.clone()],
             ..start_keeping(&a, view)
         }),
         ArrangeMsg::Name(n) => Some(Arrange {
+            confirm_delete: false,
             name: n.clone(),
             ..a
         }),
         ArrangeMsg::Ranges(r) => Some(Arrange {
+            confirm_delete: false,
             ranges: r.clone(),
             ..a
         }),
         ArrangeMsg::IncludeMarks(on) => Some(Arrange {
+            confirm_delete: false,
             include_marks: *on,
             ..a
         }),

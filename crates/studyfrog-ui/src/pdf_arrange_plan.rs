@@ -18,6 +18,7 @@ pub(crate) fn start(view: &PdfView) -> Arrange {
     let info = view.info.as_ref();
     let field = |v: Option<&Option<String>>| v.and_then(Clone::clone).unwrap_or_default();
     Arrange {
+        confirm_delete: false,
         sources: vec![view.path.clone()],
         plan: (0..count)
             .map(|page| PageSpec {
@@ -66,7 +67,10 @@ pub(crate) fn delete(a: &Arrange) -> Option<Arrange> {
     let mut plan = a.plan.clone();
     plan.remove(i);
     let last = plan_last(&plan);
-    Some(change(a, plan, Some(i.min(last))))
+    Some(Arrange {
+        confirm_delete: false,
+        ..change(a, plan, Some(i.min(last)))
+    })
 }
 
 pub(crate) fn plan_last(plan: &[PageSpec]) -> usize {

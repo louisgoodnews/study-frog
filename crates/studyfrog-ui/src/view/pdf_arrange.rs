@@ -21,7 +21,6 @@ fn actions(a: &Arrange, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ("Turn right", ArrangeMsg::Rotate(90)),
             ("Move earlier", ArrangeMsg::Move(-1)),
             ("Move later", ArrangeMsg::Move(1)),
-            ("Delete page", ArrangeMsg::Delete),
         ] {
             if ui
                 .add_enabled(some && !a.busy, egui::Button::new(label))
@@ -30,6 +29,32 @@ fn actions(a: &Arrange, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             {
                 send(out, msg);
             }
+        }
+        if a.confirm_delete {
+            ui.label(
+                egui::RichText::new("Take this page out of the new file? Undo brings it back.")
+                    .strong(),
+            );
+            if ui
+                .add_enabled(!a.busy, egui::Button::new("Delete it"))
+                .on_hover_text("Takes the chosen page out of the new file.")
+                .clicked()
+            {
+                send(out, ArrangeMsg::Delete);
+            }
+            if ui
+                .button("Keep it")
+                .on_hover_text("Keeps the chosen page.")
+                .clicked()
+            {
+                send(out, ArrangeMsg::KeepPage);
+            }
+        } else if ui
+            .add_enabled(some && !a.busy, egui::Button::new("Delete page"))
+            .on_hover_text("Asks you to confirm before the chosen page is taken out.")
+            .clicked()
+        {
+            send(out, ArrangeMsg::AskDelete);
         }
         ui.separator();
         if ui

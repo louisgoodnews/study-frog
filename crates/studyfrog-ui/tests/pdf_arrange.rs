@@ -174,3 +174,36 @@ fn leaving_without_saving_writes_nothing() {
     assert!(model.state.pdf.as_ref().unwrap().arrange.is_none());
     assert!(!dir.path.join("a-edited.pdf").exists());
 }
+
+#[test]
+fn a_page_is_taken_out_only_after_confirmation_and_undo_brings_it_back() {
+    let (_d, mut model, mut worker) = viewer("confirm");
+    arr(&mut model, &mut worker, ArrangeMsg::Select(1));
+    arr(&mut model, &mut worker, ArrangeMsg::AskDelete);
+    let a = model.state.pdf.as_ref().unwrap().arrange.as_ref().unwrap();
+    assert!(a.confirm_delete);
+    assert_eq!(pages(&model).len(), 3, "asking takes nothing out");
+    arr(&mut model, &mut worker, ArrangeMsg::KeepPage);
+    assert!(
+        !model
+            .state
+            .pdf
+            .as_ref()
+            .unwrap()
+            .arrange
+            .as_ref()
+            .unwrap()
+            .confirm_delete
+    );
+    arr(&mut model, &mut worker, ArrangeMsg::AskDelete);
+    arr(&mut model, &mut worker, ArrangeMsg::Delete);
+    assert_eq!(pages(&model), [(0, 0), (2, 0)]);
+    let a = model.state.pdf.as_ref().unwrap().arrange.as_ref().unwrap();
+    assert!(!a.confirm_delete, "the question is answered");
+    arr(&mut model, &mut worker, ArrangeMsg::Undo);
+    assert_eq!(
+        pages(&model),
+        [(0, 0), (1, 0), (2, 0)],
+        "undo keeps working"
+    );
+}
