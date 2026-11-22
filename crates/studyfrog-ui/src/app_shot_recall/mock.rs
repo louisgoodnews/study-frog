@@ -66,7 +66,7 @@ pub fn long_run(model: &mut Model) -> Vec<Effect> {
         answer,
         previous: None,
         source: None,
-        color: None,
+        color: Some("teal".into()),
         expected: None,
         occlusion: None,
         is_note: false,

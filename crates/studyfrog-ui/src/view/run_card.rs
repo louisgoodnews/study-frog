@@ -71,7 +71,7 @@ fn markdown(
 
 /// The room the item's text may take below the top of the window: the header, the hints and the rating
 /// buttons, so the item's area stays in view.
-const ITEM_CHROME: f32 = 330.0;
+const ITEM_CHROME: f32 = 352.0;
 /// The least height of the item's area, however small the window.
 const ITEM_MIN: f32 = 40.0;
 

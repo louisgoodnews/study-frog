@@ -497,7 +497,7 @@
 | [STORY-0194](docs/issues/stories/STORY-0194-calendar-reminders-and-homework-markers-in-the-control-protocol.md) Calendar, reminders and homework markers in the control protocol (3) | review | 0/0 |
 | [STORY-0195](docs/issues/stories/STORY-0195-in-rehearsal-view-the-item-takes-more-of-the-screen.md) In rehearsal view, the item takes more of the screen (3) | review | 0/0 |
 | [STORY-0196](docs/issues/stories/STORY-0196-in-rehearsal-view-the-previous-rating-shows-on-the-rating-button-in-its-colour.md) In rehearsal view, the previous rating shows on the rating button in its colour (3) | review | 0/0 |
-| [STORY-0197](docs/issues/stories/STORY-0197-the-item-colour-paints-the-item-in-rehearsal-view.md) The item colour paints the item in rehearsal view (3) | backlog | 0/0 |
+| [STORY-0197](docs/issues/stories/STORY-0197-the-item-colour-paints-the-item-in-rehearsal-view.md) The item colour paints the item in rehearsal view (3) | done | 0/0 |
 | [STORY-0198](docs/issues/stories/STORY-0198-visual-node-based-editor-for-learn-modes.md) Visual node-based editor for learn modes (8) | backlog | 0/0 |
 | [STORY-0199](docs/issues/stories/STORY-0199-case-studies-in-the-rehearsal-run-queue.md) Case studies in the rehearsal run queue (5) | review | 0/0 |
 | [STORY-0200](docs/issues/stories/STORY-0200-local-model-scoring-of-case-study-justifications.md) Local-model scoring of case-study justifications, with the rubric prompt template (3) | review | 0/0 |
@@ -570,5 +570,5 @@
 | [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | in_progress | 2/3 |
 | [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | backlog | 1/3 |
 | [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | in_progress | 1/5 |
-| [EPIC-065](docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | backlog | 0/3 |
+| [EPIC-065](docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | backlog | 1/3 |
 | [EPIC-066](docs/issues/epics/EPIC-066-learn-mode-research-platform.md) Learn-mode research platform: visual node-based technique editor | backlog | 0/1 |
