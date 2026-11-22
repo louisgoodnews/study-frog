@@ -102,7 +102,7 @@ fn the_adapter_table_picks_a_reader_by_extension_and_refuses_the_unknown() {
         adapter_for("test.ron").unwrap().name,
         "StudyFrog export (RON)"
     );
-    assert_eq!(ADAPTERS.len(), 7);
+    assert_eq!(ADAPTERS.len(), 8);
     let dir = std::env::temp_dir().join(format!("studyfrog-adapters-{}", std::process::id()));
     let _ = fs::remove_dir_all(&dir);
     fs::create_dir_all(&dir).unwrap();

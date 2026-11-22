@@ -2,7 +2,7 @@
 id: STORY-0168
 type: story
 title: "Unified Universal Import Entry Point and Redundant Button Consolidation"
-status: in_progress
+status: review
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 3
@@ -39,6 +39,13 @@ Consolidate UI logic from `modal_transfer_import.rs` and `modal_import.rs` into 
 
 ## Dependencies
 EPIC-057
+
+## Implementation (2026-11-22)
+Built: a Markdown reader (`studyfrog-service::xfer_markdown`, registered as the eighth adapter). A `.md` file is detected by the import dialog ("Looks like Markdown cards…") and read as one card per `## ` heading, or as one note when it has none. Headings inside code fences are text. Tests: `studyfrog-service/tests/xfer_markdown.rs`; the adapter count is checked in `xfer_hostile.rs`.
+
+Correction: the "Still open" note above is out of date for PDF. `xfer_pdf::from_pdf` already reads a PDF as one card per page with text (through `read_source`), and `tests/xfer_pdf.rs` covers it. The second criterion is now met for the six listed formats (CSV, TSV, Markdown, Anki, PDF, JSON) and the others the registry holds (TOML, RON, zip, Obsidian folder).
+
+Not done: the criterion is checked by tests and by reading the dialog text. Whether the Import tab reads well on screen, and whether the single-file Markdown rule (one card per `## `) suits real decks, needs the owner at a window. The `## ` rule is a choice made here; it is not in `docs/specs/interchange.md` before this change.
 
 ## Open Questions
 None.

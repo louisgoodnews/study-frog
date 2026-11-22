@@ -7,6 +7,11 @@ use std::path::Path;
 use crate::xfer_model::Bundle;
 use crate::xfer_zip::{MAX_ENTRY, read_zip};
 
+use crate::xfer_layouts::{
+    ANKI_LAYOUT, CSV_EXAMPLE, JSON_EXAMPLE, JSON_LAYOUT, PDF_LAYOUT, ZIP_LAYOUT,
+};
+pub use crate::xfer_layouts::{CSV_LAYOUT, OBSIDIAN_LAYOUT};
+
 /// A format the app can read.
 #[derive(Debug, Clone, Copy)]
 pub struct Adapter {
@@ -30,24 +35,6 @@ pub struct Example {
     /// Its text.
     pub text: &'static str,
 }
-
-/// The rules for an Obsidian vault folder (it has no file extension, so it is not an [`Adapter`]).
-pub const OBSIDIAN_LAYOUT: &str = "A folder of Markdown files, or a zip of one. Each folder becomes a stack and each .md file a note, with its front matter, wikilinks, tags and pictures. Callouts, dataview blocks, comments, highlights, block references and note embeds stay as plain text.";
-
-const JSON_LAYOUT: &str = "One JSON object with \"format\": \"studyfrog-export\" and \"version\": 1, a \"stacks\" list (folder, title, description) and an \"items\" list. Each item has \"kind\" (note, card or question), \"stack\" (a folder), \"title\", \"text\" (a card's front), \"answer\" (its back) and \"tags\" (a list). The review history is read only when \"scheduling\" is true.";
-
-const ZIP_LAYOUT: &str = "A zip made by StudyFrog's JSON export (export.json and a files folder), or a zip of an Obsidian vault: Markdown files in folders.";
-
-/// What a CSV or TSV file has to look like.
-pub const CSV_LAYOUT: &str = "Text with one card, question or note per row. A first row can name the columns: front (or question, term) and back (or answer, definition) are needed; stack (or deck), kind (card, question or note; empty means card), title and tags (separated by semicolons) are optional. Without a header the first two columns are the front and the back. The delimiter (comma, semicolon, tab or |) and the encoding (UTF-8 or Latin-1) are detected; in the import dialog you can choose which column means what. Cells with the delimiter or line breaks go in double quotes.";
-
-const PDF_LAYOUT: &str = "A PDF document. Each page with text becomes one card: the page's first line is the front, the lines below it the back, and the title is the page number with the file name. Pages without text (scans) are left out.";
-
-const ANKI_LAYOUT: &str = "An Anki package. In Anki choose File, Export, format Anki Deck Package (.apkg), and tick Support older Anki versions; tick Include scheduling information to bring your reviews. Each deck becomes a stack; basic and cloze notes become cards.";
-
-const JSON_EXAMPLE: &str = "{\n  \"format\": \"studyfrog-export\",\n  \"version\": 1,\n  \"exported\": \"2026-01-01T00:00:00Z\",\n  \"scheduling\": false,\n  \"stacks\": [\n    {\"folder\": \"french\", \"title\": \"French\", \"description\": \"\"}\n  ],\n  \"items\": [\n    {\"kind\": \"card\", \"title\": \"\", \"stack\": \"french\", \"text\": \"the cat\", \"answer\": \"le chat\", \"tags\": [\"animals\"]}\n  ]\n}\n";
-
-const CSV_EXAMPLE: &str = "stack,kind,title,front,back,tags\nfrench,card,,the cat,le chat,animals;nouns\nfrench,question,Plural,\"What is the plural of \"\"cheval\"\"?\",chevaux,\n";
 
 fn text(bytes: &[u8]) -> Result<&str, String> {
     std::str::from_utf8(bytes).map_err(|_| "the file is not valid UTF-8 text".to_owned())
@@ -97,7 +84,7 @@ fn zip(bytes: &[u8]) -> Result<Bundle, String> {
 }
 
 /// Every adapter, in the order the file dialog lists them.
-pub const ADAPTERS: [Adapter; 7] = [
+pub const ADAPTERS: [Adapter; 8] = [
     Adapter {
         name: "StudyFrog export (JSON)",
         extensions: &["json"],
@@ -159,6 +146,16 @@ pub const ADAPTERS: [Adapter; 7] = [
         example: None,
         read: crate::xfer_pdf::from_pdf,
     },
+    Adapter {
+        name: "Markdown cards (one per ## heading) or one note",
+        extensions: &["md"],
+        layout: crate::xfer_markdown::MARKDOWN_LAYOUT,
+        example: Some(Example {
+            file: "studyfrog-example.md",
+            text: crate::xfer_markdown::MARKDOWN_EXAMPLE,
+        }),
+        read: crate::xfer_markdown::from_markdown,
+    },
 ];
 
 /// The adapter for a file name.
@@ -203,7 +200,7 @@ pub fn read_source(path: &Path) -> Result<(Bundle, &'static str), String> {
         .file_name()
         .map(|n| n.to_string_lossy().into_owned())
         .unwrap_or_default();
-    let adapter = adapter_for(&name).ok_or_else(|| format!("{name}: no importer reads this kind of file; supported: json, toml, ron, zip, csv, tsv, apkg, pdf or an Obsidian vault folder"))?;
+    let adapter = adapter_for(&name).ok_or_else(|| format!("{name}: no importer reads this kind of file; supported: json, toml, ron, zip, csv, tsv, apkg, pdf, md or an Obsidian vault folder"))?;
     let meta = fs::metadata(path).map_err(|e| format!("{name}: {e}"))?;
     if meta.len() > MAX_ENTRY * 4 {
         return Err(format!("{name} is too large to import"));

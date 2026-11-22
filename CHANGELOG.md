@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Markdown card decks import (`crates/studyfrog-service`, STORY-0168)**: a `.md` file is detected by the import dialog and read as cards, one per `## ` heading (the heading is the front, the text below it the back), or as one note when it has no such heading. Headings inside code fences do not count.
 - **Learn-mode research platform complete (EPIC-066, STORY-0198)**: a learn mode is drawn, edited, saved, run as practice only, and reported on its own in the app; the window check is recorded in STORY-0198.
 - **Self-loops on the learn-mode canvas (`crates/studyfrog-ui`, STORY-0198)**: a wire from a step to itself is drawn as a loop above the step, with its arrow back onto it, and can be selected like other wires.
 - **Board WIP limit counts every work item (`tools/repo-lint`)**: epics and stories count toward the three in progress, as tasks, subtasks and bugs already did; the board header and the gate use the same count.

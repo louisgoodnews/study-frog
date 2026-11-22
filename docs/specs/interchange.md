@@ -35,4 +35,4 @@ The vault layout: one folder per stack with `_stack.md`, one file per item, with
 Importers are records in the extension registry ([EXTENDING](../EXTENDING.md)): a name, the file extensions it reads and a function from bytes to a
 bundle (stacks, items, files, warnings). The first two adapters are **Anki** (`.apkg`: decks to stacks, basic and cloze notes to cards, tags and
 pictures kept, review history imported or left out) and **Obsidian** (a vault folder: folders to stacks, Markdown files to notes with front matter,
-wikilinks, tags and pictures kept; syntax StudyFrog does not support stays as text and is counted in the preview). More formats are added the same way.
+wikilinks, tags and pictures kept; syntax StudyFrog does not support stays as text and is counted in the preview). The Markdown reader takes a single `.md` file: each `## ` heading is a card (heading as front, text below as back), and a file with no such heading is one note (STORY-0168). More formats are added the same way.

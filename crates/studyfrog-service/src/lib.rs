@@ -134,6 +134,8 @@ pub mod xfer_export;
 mod xfer_files;
 pub mod xfer_import;
 pub mod xfer_json;
+pub mod xfer_layouts;
+pub mod xfer_markdown;
 pub mod xfer_model;
 pub mod xfer_obsidian;
 pub mod xfer_obsidian_front;
