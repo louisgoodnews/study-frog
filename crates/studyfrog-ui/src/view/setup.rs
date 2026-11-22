@@ -36,6 +36,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if let Some(memory) = &state.rehearse.memory {
         // Not scrolled: the board sizes its cards to the height left under the HUD and message.
         kit::column(ui, kit::READING_WIDTH, |ui| {
+            if state.rehearse.run.is_some() {
+                ui.weak("A rehearsal run is open. It resumes when you close this game.");
+            }
             super::memory::board::draw(ui, memory, out);
         });
         return;

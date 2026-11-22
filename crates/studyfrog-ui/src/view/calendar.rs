@@ -220,6 +220,8 @@ fn occurrence_row(
             {
                 plan(out, PlanMsg::Rehearse(s.id));
             }
+            let memory = s.stack.filter(|_| s.kind == EventKind::Study);
+            super::memory::entry::offer(ui, memory, &s.title, out);
             if ui
                 .small_button(format!("Edit {}", s.title))
                 .on_hover_text("Opens this for editing.")

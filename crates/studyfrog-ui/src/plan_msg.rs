@@ -56,6 +56,8 @@ pub enum PlanMsg {
     Changed(Result<Vec<Session>, String>),
     /// Rehearse the stack of a session.
     Rehearse(Uid),
+    /// Play a memory game with the cards of this stack.
+    Memory(Uid),
     /// Set or change the due date of a stack.
     StackDeadline(Uid),
     /// Set or clear the due date of a stack directly.

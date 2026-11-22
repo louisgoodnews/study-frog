@@ -2,7 +2,7 @@
 id: BUG-0046
 type: bug
 title: "The Calendar's session and planned-review rows offer no Memory game entry point"
-status: backlog
+status: done
 estimate: 2
 labels: [m14, ui, rehearse]
 epic: EPIC-059
@@ -19,12 +19,14 @@ Found while verifying EPIC-059 (2026-11-22, `/tmp/claude-0/verifyB`). Its last c
 
 No Memory game start is offered on either.
 
+**Fix (2026-11-22).** Each session row (for a Study session with a stack) and each planned-review row for a stack offers a "Memory game for <title>" button beside its other actions. It opens the rehearse screen and starts a memory game with the cards of that stack, using the same route as the stack page's button (`view/memory/entry.rs`, `planner_rehearse::memory`, `PlanMsg::Memory`). Test: `studyfrog-ui/tests/memory_entry.rs` `the_memory_game_is_offered_on_a_session_row` and `the_memory_game_is_offered_on_a_planned_review_row`. Running app: before, the session row had Start rehearsal, Edit and Delete only (`/tmp/claude-0/memory/before-cal-session.png`); after, "Memory game for Study" sits beside Start rehearsal (`/tmp/claude-0/memory/after-cal-session.png`), and it opens the board for stack X (`/tmp/claude-0/memory/after-calendar-memory-board.png`). The planned-review row for X offers "Memory game for X" (`/tmp/claude-0/memory/after-cal-review-row.png`) and opens the board (`/tmp/claude-0/memory/after-review-row-memory-board.png`).
+
 ## Description
 Add a Memory game start to the Calendar's session rows and to the planned-review rows, beside the existing rehearsal start, using the same stack. Alternatively, change EPIC-059's last criterion to say that the stack page and Rehearse setup are the only launch points.
 
 ## Acceptance Criteria
-- [ ] A session row on the Calendar offers a Memory game start beside Start rehearsal, or the epic criterion is changed
-- [ ] A planned-review row for a stack offers a Memory game start, or the same change is made
+- [x] A session row on the Calendar offers a Memory game start beside Start rehearsal, or the epic criterion is changed
+- [x] A planned-review row for a stack offers a Memory game start, or the same change is made
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-ui/src/view/calendar.rs`, `crates/studyfrog-ui/src/view/calendar_reviews.rs`.

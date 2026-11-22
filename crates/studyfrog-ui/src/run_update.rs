@@ -91,6 +91,8 @@ fn run_ready(state: State, result: Result<Run, String>) -> (State, Vec<Effect>) 
 pub(crate) fn begin_run(state: State, run: Run, learn: Option<LearnGraph>) -> (State, Vec<Effect>) {
     let mut state = state;
     state.rehearse.starting = false;
+    // A new run takes the page back from a memory game that was left on screen.
+    state.rehearse.memory = None;
     let mut session = session_new(run);
     session.learn = learn.map(studyfrog_rehearsal::learn_path::new_path);
     let mut view = run_view_new(session, state.now);

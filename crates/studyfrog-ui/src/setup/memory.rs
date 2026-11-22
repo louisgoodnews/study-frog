@@ -104,6 +104,12 @@ pub fn limit_ms(timer: MemoryTimer) -> Option<u64> {
     }
 }
 
+/// Whether the rehearse screen shows the open run. A memory game on screen takes the page over an
+/// open run, which waits underneath and returns when the game is closed.
+pub fn run_on_screen(state: &State) -> bool {
+    state.rehearse.run.is_some() && state.rehearse.memory.is_none()
+}
+
 pub(super) fn with_memory(state: State, memory: Option<MemoryUi>) -> State {
     State {
         rehearse: crate::setup::Rehearse {

@@ -2,7 +2,7 @@
 id: EPIC-059
 type: epic
 title: "Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time"
-status: review
+status: done
 parents: []
 labels: [m14, rehearse, ui]
 acceptance_criteria:
@@ -28,7 +28,7 @@ Implement a complete Memory Mode rehearsal feature:
 - [x] Memory rehearsal game engine pairing flashcard fronts and backs as face-down tiles
 - [x] Interactive grid UI rendering face-down cards with flip transitions, match confirmations, and mismatch reset delays
 - [x] Time-attack countdown and stopwatch modes challenging users to reunite all pairs against the clock
-- [ ] Rehearsal entry point from stacks and sessions with score tracking, streaks, and personal best records
+- [x] Rehearsal entry point from stacks and sessions with score tracking, streaks, and personal best records
 
 ## Design Notes
 Build pure domain logic in `studyfrog-rehearsal::memory_mode` using free functions adhering strictly to Invariant P1 (zero inherent `impl` blocks). Maintain palette color integrity via `palette_of(ui)` for card backs, flipped faces, matched glows, and mismatch alerts. Keep all source files $\le 250$ LOC (Invariant P6).
@@ -51,6 +51,8 @@ Checked in the running app (`/tmp/claude-0/verifyB`, 1280x800, Memo stack with s
 - Mismatch reset: MET. Both faces stayed up with a red outline (`/tmp/claude-0/verifyB/pair_1_2.png`), then turned back down with moves 2 (`/tmp/claude-0/verifyB/m05-after-two.png`). `MISMATCH_MS` is 900.
 - Time-attack and stopwatch: unchanged from the earlier audit (see STORY-0175).
 - Entry point from stacks and sessions: NOT MET for sessions. The stack page and Rehearse setup start a game (`/tmp/claude-0/verifyB/m03-board.png`). The Calendar's "Sessions on <date>" panel offers no Memory game: a planned-review row offers only "Rehearse Memo" and "Open Memo" (`/tmp/claude-0/verifyB/c02-session.png`), and `view/calendar.rs` `occurrence_row` offers only "Start rehearsal for <title>". Filed as BUG-0046. Also, the stack page's Memory game button shows an open rehearsal instead of starting a board (`/tmp/claude-0/verifyB/m08-memory-during-run.png`, BUG-0047). This criterion stays unticked, so the epic stays in review.
+
+Fixed (2026-11-22): the sessions entry point is met. The Calendar session row offers "Memory game for Study" (`/tmp/claude-0/memory/after-cal-session.png`) and opens the board (`/tmp/claude-0/memory/after-calendar-memory-board.png`); the planned-review row offers "Memory game for X" (`/tmp/claude-0/memory/after-cal-review-row.png`) and opens the board (`/tmp/claude-0/memory/after-review-row-memory-board.png`). BUG-0046 and BUG-0047 are done (their fixes are checked in the running app with the screenshots above), and BUG-0024 to BUG-0029 were already done, so all four criteria are ticked and the epic is done.
 
 Review (2026-11-22): criteria 1 to 3 stay ticked (not re-checked here). Criterion 4 stays unticked: BUG-0046 still reproduces, the Calendar session row for 2026-11-24 offers "Start rehearsal for Memo session", "Edit" and "Delete" and no Memory game (`/tmp/claude-0/review-c/shots/22-session-row.png`); the planned-review rows offer only Rehearse, Open and Move (`/tmp/claude-0/review-c/shots/19-cal24.png`). BUG-0047 still reproduces: with an ordinary rehearsal open (4/6), Memory game on the Memo stack page shows that rehearsal, not a board (`/tmp/claude-0/review-c/shots/17-memory-during-run.png`). Status stays review.
 

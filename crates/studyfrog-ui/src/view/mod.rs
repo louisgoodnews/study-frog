@@ -186,7 +186,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
             Screen::Home => home::draw(state, ui, &mut out),
             Screen::Folders => folders::draw(state, ui, &mut out),
             Screen::Library => library::draw(state, ui, &mut out),
-            Screen::Rehearse if state.rehearse.run.is_some() => {
+            Screen::Rehearse if crate::setup::memory::run_on_screen(state) => {
                 if state.split_pdf.active {
                     pdf_split::draw_split_rehearse(state, ui, &mut out);
                 } else {

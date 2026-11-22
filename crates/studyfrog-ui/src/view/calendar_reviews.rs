@@ -170,6 +170,7 @@ fn entry_card(state: &State, e: &PlanEntry, ui: &mut egui::Ui, out: &mut Vec<Msg
             {
                 out.push(Msg::Plan(PlanMsg::Rehearse(stack_uid)));
             }
+            super::memory::entry::offer(ui, e.stack, &title, out);
             if ui
                 .button(format!("Open {title}"))
                 .on_hover_text("Opens the item this review is for.")

@@ -219,6 +219,7 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
         PlanMsg::Skip(id, date) => (state, vec![Effect::CancelOccurrence(id, date)]),
         PlanMsg::Changed(result) => changed(state, result),
         PlanMsg::Rehearse(id) => crate::planner_rehearse::rehearse(state, id),
+        PlanMsg::Memory(stack) => crate::planner_rehearse::memory(state, stack),
         PlanMsg::Reviews(m) => crate::planner_reviews::update(state, m),
     }
 }

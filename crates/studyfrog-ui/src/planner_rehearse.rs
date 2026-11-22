@@ -3,6 +3,7 @@
 use studyfrog_core::uid::Uid;
 
 use crate::effect::Effect;
+use crate::setup::memory::MemoryMsg;
 use crate::setup::{Preset, Rehearse, SetupEdit, apply_edit, form_for_preset, refresh_preview};
 use crate::state::{Screen, State};
 
@@ -45,8 +46,30 @@ pub fn rehearse(state: State, id: Uid) -> (State, Vec<Effect>) {
         rehearse: Rehearse {
             form,
             run: None,
+            memory: None,
             ..state.rehearse.clone()
         },
         ..state
     })
+}
+
+/// Open the rehearse screen and start a memory game with the cards of `stack`, as the stack page does.
+pub fn memory(state: State, stack: Uid) -> (State, Vec<Effect>) {
+    let folder = state.vault.as_ref().and_then(|v| {
+        v.overview
+            .stacks
+            .iter()
+            .find(|s| s.uid == stack)
+            .map(|s| s.folder.clone())
+    });
+    let Some(folder) = folder else {
+        return (state, Vec::new());
+    };
+    let (state, mut effects) = crate::nav::navigate(state, Screen::Rehearse);
+    if state.screen != Screen::Rehearse {
+        return (state, effects);
+    }
+    let (state, more) = crate::setup::memory::update(state, MemoryMsg::StartStack(folder));
+    effects.extend(more);
+    (state, effects)
 }

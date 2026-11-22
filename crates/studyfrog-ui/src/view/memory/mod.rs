@@ -3,3 +3,4 @@
 pub mod board;
 mod card;
 pub mod end;
+pub mod entry;
