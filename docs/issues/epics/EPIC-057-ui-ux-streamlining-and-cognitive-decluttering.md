@@ -2,7 +2,7 @@
 id: EPIC-057
 type: epic
 title: "UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering"
-status: backlog
+status: review
 parents: []
 labels: [m14, ui, ux]
 acceptance_criteria:

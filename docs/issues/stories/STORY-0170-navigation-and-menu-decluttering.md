@@ -2,7 +2,7 @@
 id: STORY-0170
 type: story
 title: "Menu De-Cluttering, Visual Spacing, and Progressive Disclosure"
-status: in_progress
+status: review
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 5
@@ -43,6 +43,13 @@ Preserve all keyboard shortcuts even when secondary buttons are folded into over
 
 ## Dependencies
 EPIC-057
+
+## Implementation (2026-11-22)
+Reviewed against the three criteria; no code change in this round.
+
+Criterion 1 (at most 3 core actions in a header): met for the stack page (New item, Start rehearsal and the menu), the item list and the editor header. Not settled for the PDF viewer. Its header shows Back, Previous, the page number, Next, zoom -, Fit, +, the find field, More and Panels. If navigation counts as a core action, the viewer does not meet the criterion, and the fix (moving zoom into More, keeping its shortcuts) is a design decision for the owner. The story's own text says the viewer keeps those buttons because its tests rely on them. The owner decides whether the viewer meets it; the box stays ticked as the author set it, and this round did not change it.
+
+Criteria 2 and 3 (spacing, typography): the density scale and the typography tests are in place (`tests/visual_rhythm.rs`, `tests/typography.rs`). Whether the result looks airy and uncluttered needs a person at a window. The "checked on screen" note above is the author's headless check; this round did not repeat it.
 
 ## Open Questions
 None.
