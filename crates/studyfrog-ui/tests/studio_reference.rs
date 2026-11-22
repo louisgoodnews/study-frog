@@ -10,6 +10,7 @@ use studyfrog_script::wiki::{Category, label, topics};
 use studyfrog_ui::console_ui::ConsoleMsg;
 use studyfrog_ui::model::apply;
 use studyfrog_ui::msg::Msg;
+use studyfrog_ui::script_events::EVENT_KINDS;
 use studyfrog_ui::script_studio::wiki_panel::WikiMsg;
 use studyfrog_ui::state::Screen;
 
@@ -45,6 +46,23 @@ fn each_topic_has_its_own_key_in_its_category() {
     assert_eq!(tag_keys.len(), 2, "tag is a keyword and a function");
     assert!(tag_keys.contains(&label(Category::Syntax)));
     assert!(tag_keys.contains(&label(Category::BuiltinFunctions)));
+}
+
+#[test]
+fn every_lifecycle_event_kind_has_an_entry_in_its_category() {
+    for kind in EVENT_KINDS {
+        assert!(
+            topics()
+                .iter()
+                .any(|t| t.name == *kind && t.category == Category::LifecycleEvents),
+            "no lifecycle entry for the event {kind}"
+        );
+    }
+    let listed = topics()
+        .iter()
+        .filter(|t| t.category == Category::LifecycleEvents)
+        .count();
+    assert_eq!(listed, EVENT_KINDS.len(), "no entry for an unknown event");
 }
 
 #[test]

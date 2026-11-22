@@ -36,6 +36,11 @@ The backup recipe is a reminder: the language cannot start a backup, and the rec
 
 Tests: `studyfrog-script/tests/cookbook.rs` (parse, run on an empty engine, no writes in read-only recipes) and `studyfrog-ui/tests/studio_reference.rs` (every recipe offered, run path, appending). Recipes that reach `vault.` or `calendar.` are not run by the engine test, because the app provides those names when it runs a script.
 
+## Implementation check (2026-11-22)
+Re-checked against the criteria: ten recipes, "Insert into editor" on every recipe and "Run in console" on the seven read-only ones. No code changed here. The tests `the_cookbook_offers_every_recipe_and_runs_the_read_only_ones` and `running_a_recipe_opens_a_new_tab_and_keeps_the_users_tab` in `studyfrog-ui/tests/studio_reference.rs` still pass.
+
+Needs a person at a window: that the recipe buttons read well in the panel and that the console output appears where expected after "Run in console".
+
 ## Design Notes
 Keep cookbook templates self-contained and documented with inline comments.
 

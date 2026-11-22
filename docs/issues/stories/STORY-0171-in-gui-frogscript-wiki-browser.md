@@ -42,5 +42,12 @@ In ScriptStudio the panel opens beside the editor ("Reference" in the tab bar). 
 
 Tests: `studyfrog-script/tests/wiki.rs`, `studyfrog-ui/tests/studio_reference.rs`. The script editor now has an accessible name ("Script text"), which the console tests check.
 
+## Implementation (2026-11-22)
+The description also names a Lifecycle Events category, which the first pass did not have. It is now there: `wiki_topics_events` lists one entry for each event kind of the bus (`studyfrog-ui::script_events::EVENT_KINDS`, fourteen in all), each with the `on = [...]` line that starts a job on it. The category is the sixth heading in the panel. The drift test `every_lifecycle_event_kind_has_an_entry_in_its_category` in `studyfrog-ui/tests/studio_reference.rs` fails when an event has no entry or an entry names no event. The reference's `CATEGORIES` test in `studyfrog-script/tests/wiki.rs` now expects six headings.
+
+Not done: the epic's "Help" (F1) entry point is not built. This story's criteria are about ScriptStudio, so it is left for EPIC-058.
+
+Needs a person at a window: the look of the new category heading and the panel's layout with six categories, in light and dark themes.
+
 ## Open Questions
 None.

@@ -57,7 +57,7 @@ fn every_keyword_has_an_entry() {
 }
 
 #[test]
-fn every_category_has_topics_and_the_five_headings_are_listed() {
+fn every_category_has_topics_and_the_six_headings_are_listed() {
     let labels: Vec<&str> = CATEGORIES.iter().map(|c| label(*c)).collect();
     assert_eq!(
         labels,
@@ -66,7 +66,8 @@ fn every_category_has_topics_and_the_five_headings_are_listed() {
             "Operators",
             "Control Flow",
             "Built-in Functions",
-            "Vault Objects"
+            "Vault Objects",
+            "Lifecycle Events"
         ]
     );
     for c in CATEGORIES {

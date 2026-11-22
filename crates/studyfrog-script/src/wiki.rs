@@ -1,7 +1,8 @@
-//! The FrogScript reference (STORY-0171): topics in five categories, each with its signature, what it
+//! The FrogScript reference (STORY-0171): topics in six categories, each with its signature, what it
 //! returns, a summary and an example. Data in `wiki_topics`; the search is here. Pure.
 
 use crate::wiki_topics::LANGUAGE;
+use crate::wiki_topics_events::EVENTS;
 use crate::wiki_topics_library::LIBRARY;
 
 /// The categories the reference is shown in.
@@ -17,15 +18,18 @@ pub enum Category {
     BuiltinFunctions,
     /// The objects a script can reach: vault, calendar, timetable, diary and run.
     VaultObjects,
+    /// The events of the instance that start a script listed under `on` in `scripts.toml`.
+    LifecycleEvents,
 }
 
 /// Every category, in the order the reference lists them.
-pub const CATEGORIES: [Category; 5] = [
+pub const CATEGORIES: [Category; 6] = [
     Category::Syntax,
     Category::Operators,
     Category::ControlFlow,
     Category::BuiltinFunctions,
     Category::VaultObjects,
+    Category::LifecycleEvents,
 ];
 
 /// The heading the category is listed under.
@@ -36,6 +40,7 @@ pub fn label(category: Category) -> &'static str {
         Category::ControlFlow => "Control Flow",
         Category::BuiltinFunctions => "Built-in Functions",
         Category::VaultObjects => "Vault Objects",
+        Category::LifecycleEvents => "Lifecycle Events",
     }
 }
 
@@ -71,9 +76,13 @@ macro_rules! topic_entry {
 }
 pub(crate) use topic_entry;
 
-/// Every topic: the language first, then the library.
+/// Every topic: the language first, then the library, then the lifecycle events.
 pub fn topics() -> Vec<&'static Topic> {
-    LANGUAGE.iter().chain(LIBRARY.iter()).collect()
+    LANGUAGE
+        .iter()
+        .chain(LIBRARY.iter())
+        .chain(EVENTS.iter())
+        .collect()
 }
 
 /// The topic with this name, if there is one.

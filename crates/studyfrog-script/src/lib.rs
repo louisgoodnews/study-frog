@@ -24,6 +24,7 @@ pub mod token;
 pub mod val;
 pub mod wiki;
 pub mod wiki_topics;
+pub mod wiki_topics_events;
 pub mod wiki_topics_library;
 
 use ast::Program;
