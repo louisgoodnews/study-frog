@@ -63,8 +63,7 @@ Review (2026-11-22): criterion 1 unticked. As written it asks for a top-level Im
 Criterion 1 is met now. The top bar has an "Import" button after "+ Create" (`crates/studyfrog-ui/src/view/navbar.rs`). It opens the same transfer dialog on the Import tab (`TransferMsg::Open(Tab::Import, scope)`), scoped to the selected stack when there is one. The Import entries in the items toolbar's More menu and in the stack page's More actions were removed, since they are now the same entry. Export stays in both. The Create dialog's own More menu and Settings > Import and export keep their Import entries: the first is reached only from inside a modal, the second is a settings page. The top bar has no collapse rule, so the button stays visible at both sizes and the search field narrows instead. At 960x640 the search field is about 60 px wide. Recheck that as a real search-width question for the owner.
 
 Checked in the running binary (display :89, a copy of the build, vault `/home/user/study-frog`):
-- 960x640 before the change (default window): /tmp/claude-0/import/a.png
-- 960x640 after the first attempt: the bell was drawn under the button; the search floor was 110 px. Fixed by a 60 px search floor and a 176 px trailing reserve.
+- 960x640 after the first attempt (the bell was drawn under the button; search floor 110 px). Fixed by a 60 px search floor and a 176 px trailing reserve. The screenshot of the first attempt was overwritten; the pre-change bar had the bell at the same place as the fixed one.
 - 960x640 after the fix: /tmp/claude-0/import/c960.png (all controls visible, gap before the bell)
 - 960x640 click on Import: /tmp/claude-0/import/f960-dialog.png (dialog opens on Import)
 - 1280x800: /tmp/claude-0/import/c1280.png (all controls, Import between Create and the zen button)
