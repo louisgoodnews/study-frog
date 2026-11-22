@@ -10,7 +10,7 @@ use crate::token::Token;
 use crate::{ScriptError, parse_frogscript};
 
 pub mod complete;
-pub use complete::{completions, with_completion};
+pub use complete::{completions, step, with_completion, word_at};
 
 /// The built-in functions a script can call (see `eval_stdlib`).
 pub const BUILTINS: &[&str] = &[

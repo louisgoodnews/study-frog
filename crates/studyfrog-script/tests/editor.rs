@@ -104,3 +104,15 @@ fn a_completion_replaces_the_word_before_the_cursor() {
     let (text, _) = with_completion("vault.st", 8, "stacks");
     assert_eq!(text, "vault.stacks");
 }
+
+#[test]
+fn the_highlighted_completion_wraps_and_the_word_is_read_back() {
+    use studyfrog_script::editor::{step, word_at};
+    assert_eq!(step(0, 3, true), 1);
+    assert_eq!(step(2, 3, true), 0, "down from the last wraps to the first");
+    assert_eq!(step(0, 3, false), 2, "up from the first wraps to the last");
+    assert_eq!(step(0, 0, true), 0);
+    assert_eq!(word_at("x = pri", 7), "pri");
+    assert_eq!(word_at("vault.st", 8), "st");
+    assert_eq!(word_at("x = ", 4), "");
+}

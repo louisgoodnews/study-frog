@@ -56,3 +56,17 @@ pub fn with_completion(src: &str, cursor: usize, choice: &str) -> (String, usize
     out.push_str(&src[cursor..]);
     (out, start + choice.len())
 }
+
+/// The word being typed before `cursor` (empty when there is none).
+pub fn word_at(src: &str, cursor: usize) -> String {
+    word_before(src, cursor).1.to_owned()
+}
+
+/// The highlighted completion after an Up or Down press, wrapping at either end.
+pub fn step(current: usize, len: usize, forward: bool) -> usize {
+    match (len, forward) {
+        (0, _) => 0,
+        (n, true) => (current + 1) % n,
+        (n, false) => (current + n - 1) % n,
+    }
+}
