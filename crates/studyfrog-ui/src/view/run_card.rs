@@ -1,8 +1,10 @@
 //! The inside of the rehearsal card: the prompt, the answer, the marks and the rating buttons.
 
 mod parts;
-use self::parts::{case_controls, case_result, mark_row, reveal_controls, source_link};
-use eframe::egui::{self, Button, Color32, FontId, Key, RichText, Stroke, TextStyle, vec2};
+use self::parts::{
+    case_controls, case_result, last_time_line, mark_row, reveal_controls, source_link,
+};
+use eframe::egui::{self, Button, Color32, FontId, Key, RichText, Sense, Stroke, TextStyle, vec2};
 use studyfrog_core::event::Difficulty;
 use studyfrog_core::review::Rating;
 use studyfrog_core::run::RunMode;
@@ -69,16 +71,22 @@ fn markdown(
     });
 }
 
-/// The room the item's text may take below the top of the window: the header, the hints and the rating
-/// buttons, so the item's area stays in view.
-const ITEM_CHROME: f32 = 352.0;
+/// The room the card takes below the item's area: the header, the hints and the rating buttons (the row
+/// above them is counted by `rating_row_height`), so the item's area stays in view.
+const ITEM_CHROME: f32 = 332.0;
 /// The least height of the item's area, however small the window.
 const ITEM_MIN: f32 = 40.0;
+
+/// The line above each rating button, every column reserving it, so the buttons stay level.
+fn rating_row_height(ui: &egui::Ui) -> f32 {
+    ui.text_style_height(&TextStyle::Body) + ui.spacing().item_spacing.y
+}
 
 /// The item's text, in an area of its own that scrolls, so a long item never pushes the rating buttons off
 /// the screen; the buttons follow the area.
 pub(crate) fn item_scroll(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let height = (ui.ctx().content_rect().height() - ITEM_CHROME).max(ITEM_MIN);
+    let fixed = ITEM_CHROME + rating_row_height(ui);
+    let height = (ui.ctx().content_rect().height() - fixed).max(ITEM_MIN);
     let rating = egui::ScrollArea::vertical()
         .id_salt("rehearsal-item-scroll")
         .max_height(height)
@@ -149,6 +157,8 @@ fn rating_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = palette_of(ui);
     let colors = [p.danger, p.warning, p.success, p.accent];
     let suggested = run.scored.as_ref().map(|s| s.rating);
+    let line_size = crate::typo::body_size(ui);
+    let text_height = ui.text_style_height(&TextStyle::Body);
     let previous = current_item(&run.session)
         .and_then(|uid| run.content.get(&uid))
         .and_then(|c| c.previous);
@@ -157,18 +167,12 @@ fn rating_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             let c = colors[i];
             let strong = suggested == Some(rating);
             let width = cols[i].available_width();
-            match previous {
-                Some(r) if r == rating => {
-                    let (word, mark) = previous_mark(&p, rating);
-                    cols[i].label(
-                        RichText::new(format!("Last time: {word}"))
-                            .color(mark)
-                            .strong(),
-                    );
-                }
-                _ => {
-                    cols[i].add_space(20.0);
-                }
+            // One line in every column, so the buttons stay level even in a narrow window. The blank line is space,
+            // not a label, so it has no accessible name to report.
+            if let Some(text) = last_time_line(&p, previous, rating, line_size) {
+                cols[i].add(egui::Label::new(text).truncate());
+            } else {
+                cols[i].allocate_exact_size(vec2(0.0, text_height), Sense::hover());
             }
             let button = Button::new(RichText::new(label).color(c).strong())
                 .fill(tint(c, if strong { 90 } else { 32 }))
@@ -183,16 +187,6 @@ fn rating_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         }
     });
-}
-
-/// The difficulty word a previous rating stands for, and its colour: difficult in red, medium in orange,
-/// easy (and good) in green. The word is shown with the colour, so colour is not the only cue (STORY-0196).
-fn previous_mark(p: &crate::theme::Palette, rating: Rating) -> (&'static str, Color32) {
-    match rating {
-        Rating::Again => ("Difficult", p.danger),
-        Rating::Hard => ("Medium", p.warning),
-        Rating::Good | Rating::Easy => ("Easy", p.success),
-    }
 }
 
 fn score_line(scored: &crate::run_state::Scored, ui: &mut egui::Ui) {

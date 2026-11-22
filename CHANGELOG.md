@@ -11,7 +11,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - **Help links to the FrogScript reference (`crates/studyfrog-ui`, EPIC-058)**: the Help screen's page tree has a "FrogScript reference" button (with a vault open) that opens the reference in ScriptStudio, expanded, with the same panel as the Console's "Reference" button. Test: `studyfrog-ui/tests/help_wiki.rs`.
 
 ### Changed
+- **Previous rating on the rating button (`crates/studyfrog-ui`, STORY-0196, EPIC-065)**: the rating button of the item's previous rating has a "Last: <word>" line above it in the colour of its difficulty (red Difficult, orange Medium, green Easy); the line is in the body size, and no line shows for an item never rated.
 - **Board headings count every work item of each status (`tools/repo-lint`, EPIC-058)**: the per-status counts in the board's headings include every kind of item, not only tasks.
+
+### Fixed
+- **Rehearsal rating buttons stay level and the hint line stays on screen (`crates/studyfrog-ui`, STORY-0195, EPIC-065)**: a previous rating no longer pushes the Good button down or cuts off the keyboard hints at 1280 by 800; the item area takes the room the rating line needs. Test: `studyfrog-ui/tests/run_previous_mark.rs`.
 
 ## [1.0.0] - 2026-11-22
 

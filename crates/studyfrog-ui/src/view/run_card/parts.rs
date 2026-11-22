@@ -147,3 +147,35 @@ pub(super) fn case_result(run: &RunView, ui: &mut egui::Ui) {
         });
     }
 }
+
+/// The line above the rating button that matches the previous rating: "Last: <word>" in the colour of its
+/// difficulty. The other buttons have no line.
+pub(super) fn last_time_line(
+    p: &crate::theme::Palette,
+    previous: Option<Rating>,
+    rating: Rating,
+    size: f32,
+) -> Option<RichText> {
+    match previous {
+        Some(r) if r == rating => {
+            let (word, mark) = previous_mark(p, rating);
+            Some(
+                RichText::new(format!("Last: {word}"))
+                    .size(size)
+                    .color(mark)
+                    .strong(),
+            )
+        }
+        _ => None,
+    }
+}
+
+/// The difficulty word a previous rating stands for, and its colour: difficult in red, medium in orange,
+/// easy (and good) in green. The word is shown with the colour, so colour is not the only cue (STORY-0196).
+fn previous_mark(p: &crate::theme::Palette, rating: Rating) -> (&'static str, Color32) {
+    match rating {
+        Rating::Again => ("Difficult", p.danger),
+        Rating::Hard => ("Medium", p.warning),
+        Rating::Good | Rating::Easy => ("Easy", p.success),
+    }
+}
