@@ -9,6 +9,7 @@ use crate::control_parts::shown_rows;
 use crate::control_state::{notices_json, state_json, ulid};
 use crate::state::{Notice, NoticeKind, State};
 
+pub mod appearance;
 pub mod homework;
 
 /// Rows a `query` answers with at most.
@@ -95,6 +96,7 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
     }
     match cmd {
         Command::Homework(HomeworkCmd::List) => Ok(homework::list_json(state)),
+        Command::Appearance(_) => Ok(appearance::appearance_json(state)),
         Command::Help => Ok(help_json()),
         Command::Notices => Ok(notices_json(state)),
         Command::Query(text) => query_result(state, text),

@@ -48,6 +48,7 @@ pub fn class_of(cmd: &Command) -> Class {
         }
         C::Homework(HomeworkCmd::List | HomeworkCmd::Tab(_)) => Class::Read,
         C::Homework(_) => Class::Write,
+        C::Appearance(_) => Class::Write,
         C::Item(_) | C::Stack(_) | C::Import { .. } | C::Export(_) => Class::Write,
         C::VaultOpen(_) | C::VaultClose | C::Screenshot(_) => Class::Write,
         C::Rehearse(RehearseCmd::Setup(_) | RehearseCmd::Leave | RehearseCmd::Finish) => {

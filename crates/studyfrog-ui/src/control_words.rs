@@ -7,6 +7,7 @@ use studyfrog_core::run::RunMode;
 use crate::control_cmd::{Command, ExportArgs, LogsQuery, RehearseCmd, SetupArgs};
 use crate::control_words_items::{flag, item, need, split_flags, stack};
 
+pub mod appearance;
 pub mod homework;
 use crate::setup::Preset;
 use crate::state::Screen;
@@ -165,6 +166,7 @@ fn two_words(words: &[String]) -> Result<Command, String> {
         "item" => Command::Item(item(rest)?),
         "stack" => Command::Stack(stack(rest)?),
         "homework" => Command::Homework(homework::parse(rest)?),
+        "appearance" => Command::Appearance(appearance::parse(rest)?),
         "rehearse" => Command::Rehearse(rehearse(rest)?),
         "screenshot" => Command::Screenshot(arg(0, "PNG path")?.into()),
         "logs" => Command::Logs(logs_query(rest)?),

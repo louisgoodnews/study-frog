@@ -206,6 +206,7 @@ pub fn plan_for(state: &State, cmd: &Command) -> Result<Plan, String> {
         Command::Item(c) => item(state, c),
         Command::Stack(c) => stack(state, c),
         Command::Homework(c) => homework::plan(state, c),
+        Command::Appearance(m) => one(Msg::Appearance(*m)),
         Command::Rehearse(c) => rehearse(state, c),
         Command::Query(text) => Ok(vec![vec![
             Msg::Navigate(Screen::Library),

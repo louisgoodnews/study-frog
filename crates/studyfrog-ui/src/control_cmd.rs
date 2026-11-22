@@ -59,6 +59,8 @@ pub enum Command {
     },
     /// Homework: the list, tabs, new items, advancing and ticking.
     Homework(HomeworkCmd),
+    /// Appearance: one setting (theme, density, text size, accent), saved.
+    Appearance(crate::appearance_ui::AppearanceMsg),
     /// Save a picture of the window.
     Screenshot(PathBuf),
     /// Read (and maybe follow) the console log.

@@ -75,6 +75,11 @@ pub const COMMANDS: &[Row] = &[
         "write",
     ),
     (
+        "appearance theme system|dark|light | density compact|comfortable|spacious | text <percent> | accent blue|green|purple|orange|pink|teal",
+        "Appearance: one setting changed and saved; the answer is the appearance now, with the spacing factor of its density",
+        "write",
+    ),
+    (
         "stack create <title> [--parent F]",
         "Modal: OpenCreate, SetKind(Stack), SetParent, Edit(Title), Submit",
         "write",
