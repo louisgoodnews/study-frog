@@ -2,10 +2,11 @@
 //! script output and lifecycle events as they arrive. Pure: lines go out through `outbox`, which the
 //! window's glue (`console_link`) sends to its own control protocol, and come back as `Line`.
 
-use serde_json::Value;
+pub mod lines;
 
+use crate::console_ui::lines::entry_of;
 use crate::effect::Effect;
-use crate::state::State;
+use crate::state::{Notice, NoticeKind, State};
 
 /// Entries kept; older ones are dropped.
 pub const MAX_ENTRIES: usize = 500;
@@ -32,8 +33,10 @@ pub enum EntryKind {
 }
 
 /// One entry of the transcript.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Entry {
+    /// Seconds on the app's clock when it was made (the console log shows it).
+    pub at: f64,
     /// What it is.
     pub kind: EntryKind,
     /// The text shown.
@@ -41,12 +44,14 @@ pub struct Entry {
 }
 
 /// The console's state.
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct ConsoleState {
     /// The line being typed.
     pub input: String,
     /// The transcript, oldest first.
     pub entries: Vec<Entry>,
+    /// The text the output is filtered by (empty: everything).
+    pub search: String,
     /// Lines typed before, oldest first.
     pub history: Vec<String>,
     /// Where Up/Down are in `history`.
@@ -94,83 +99,12 @@ pub enum ConsoleMsg {
     Wiki(crate::script_studio::wiki_panel::WikiMsg),
     /// ScriptStudio: refresh script file list.
     StudioRefreshList,
-}
-
-fn cut(text: String) -> String {
-    if text.chars().count() <= MAX_TEXT {
-        return text;
-    }
-    let kept: String = text.chars().take(MAX_TEXT).collect();
-    format!("{kept}\n… (cut)")
-}
-
-fn script_text(data: &Value) -> String {
-    let job = data.get("job").and_then(Value::as_str).unwrap_or("?");
-    let how = match (data.get("ok"), data.get("timed_out")) {
-        (Some(Value::Bool(true)), _) => "finished".to_owned(),
-        (_, Some(Value::Bool(true))) => "ran over its timeout".to_owned(),
-        _ => format!(
-            "failed (exit code {})",
-            data.get("code").unwrap_or(&Value::Null)
-        ),
-    };
-    let mut text = format!("script {job} {how}");
-    for key in ["stdout", "stderr", "error"] {
-        if let Some(s) = data
-            .get(key)
-            .and_then(Value::as_str)
-            .filter(|s| !s.is_empty())
-        {
-            text = format!("{text}\n{s}");
-        }
-    }
-    text
-}
-
-/// The entry a returned line becomes.
-pub fn entry_of(line: &str) -> Entry {
-    let Ok(v) = serde_json::from_str::<Value>(line) else {
-        return Entry {
-            kind: EntryKind::Answer,
-            text: line.to_owned(),
-        };
-    };
-    if let Some(event) = v.get("event").and_then(Value::as_str) {
-        let data = v.get("data").cloned().unwrap_or(Value::Null);
-        if data.get("kind").and_then(Value::as_str) == Some("script_finished") {
-            let inner = data.get("data").cloned().unwrap_or(Value::Null);
-            return Entry {
-                kind: EntryKind::Script,
-                text: script_text(&inner),
-            };
-        }
-        let kind = data.get("kind").and_then(Value::as_str).unwrap_or(event);
-        let detail = data
-            .get("data")
-            .map_or_else(|| data.to_string(), Value::to_string);
-        return Entry {
-            kind: EntryKind::Event,
-            text: format!("{kind} {detail}"),
-        };
-    }
-    match v.get("ok").and_then(Value::as_bool) {
-        Some(false) => Entry {
-            kind: EntryKind::Error,
-            text: v
-                .get("error")
-                .and_then(Value::as_str)
-                .unwrap_or("error")
-                .to_owned(),
-        },
-        _ => {
-            let result = v.get("result").unwrap_or(&v);
-            let text = serde_json::to_string_pretty(result).unwrap_or_default();
-            Entry {
-                kind: EntryKind::Answer,
-                text: cut(text),
-            }
-        }
-    }
+    /// The output search text changed.
+    Search(String),
+    /// Write the transcript to the vault's log file.
+    ExportLog,
+    /// The transcript was written to this path, or not.
+    Exported(Result<String, String>),
 }
 
 fn push(c: &mut ConsoleState, e: Entry) {
@@ -194,7 +128,7 @@ fn step_history(c: &mut ConsoleState, older: bool) {
 }
 
 /// Apply one message to the console.
-pub fn apply_console(c: &mut ConsoleState, m: ConsoleMsg) {
+pub fn apply_console(c: &mut ConsoleState, m: ConsoleMsg, now: f64) {
     match m {
         ConsoleMsg::Edit(text) => c.input = text,
         ConsoleMsg::Submit => {
@@ -209,6 +143,7 @@ pub fn apply_console(c: &mut ConsoleState, m: ConsoleMsg) {
             push(
                 c,
                 Entry {
+                    at: now,
                     kind: EntryKind::Command,
                     text: line.clone(),
                 },
@@ -218,7 +153,8 @@ pub fn apply_console(c: &mut ConsoleState, m: ConsoleMsg) {
         ConsoleMsg::Older => step_history(c, true),
         ConsoleMsg::Newer => step_history(c, false),
         ConsoleMsg::Clear => c.entries.clear(),
-        ConsoleMsg::Line(line) => push(c, entry_of(&line)),
+        ConsoleMsg::Line(line) => push(c, entry_of(&line, now)),
+        ConsoleMsg::Search(query) => c.search = query,
         _ => {}
     }
 }
@@ -226,6 +162,7 @@ pub fn apply_console(c: &mut ConsoleState, m: ConsoleMsg) {
 /// The console's part of `update`: the state is changed in place.
 pub fn update(state: State, m: ConsoleMsg) -> (State, Vec<Effect>) {
     let mut state = state;
+    let now = state.now;
     match m {
         ConsoleMsg::StudioSelectTab(_)
         | ConsoleMsg::StudioCloseTab(_)
@@ -240,7 +177,23 @@ pub fn update(state: State, m: ConsoleMsg) -> (State, Vec<Effect>) {
             crate::script_studio_exec::apply_studio_msg(&mut state, m);
         }
         ConsoleMsg::Wiki(w) => crate::script_studio::wiki_panel::apply(&mut state.console, w),
-        _ => apply_console(&mut state.console, m),
+        ConsoleMsg::ExportLog => {
+            let text = crate::console_ui::lines::export_text(&state.console);
+            return (state, vec![Effect::ExportConsole(text)]);
+        }
+        ConsoleMsg::Exported(Ok(path)) => {
+            state.notice = Some(Notice {
+                kind: NoticeKind::Info,
+                text: format!("The console log was written to {path}."),
+            });
+        }
+        ConsoleMsg::Exported(Err(why)) => {
+            state.notice = Some(Notice {
+                kind: NoticeKind::Error,
+                text: format!("Could not write the console log: {why}"),
+            });
+        }
+        _ => apply_console(&mut state.console, m, now),
     }
     (state, Vec::new())
 }

@@ -452,7 +452,7 @@
 | [STORY-0149](docs/issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md) Rename ScriptRunner across application and documentation to avoid trademark conflicts (2) | done | 0/0 |
 | [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and domain-specific language (DSL) research (5) | backlog | 0/0 |
 | [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers (5) | backlog | 0/0 |
-| [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging for user scripts (3) | backlog | 0/0 |
+| [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging for user scripts (3) | review | 0/0 |
 | [STORY-0153](docs/issues/stories/STORY-0153-frogcanvas-data-model-and-serialization.md) FrogCanvas Data Model and Spatial Serialization (5) | done | 2/2 |
 | [STORY-0154](docs/issues/stories/STORY-0154-frogcanvas-interactive-ui-and-rendering.md) FrogCanvas Interactive UI and Rendering (5) | done | 2/2 |
 | [STORY-0155](docs/issues/stories/STORY-0155-pdf-visual-bounding-box-cropping.md) PDF Visual Bounding Box Cropping (5) | done | 2/2 |

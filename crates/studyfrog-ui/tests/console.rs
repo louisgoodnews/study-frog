@@ -9,7 +9,8 @@ use common::views::{harness, open_model};
 use control_common::*;
 use egui_kittest::kittest::Queryable;
 use studyfrog_ui::console_link::{link_new, poll, submit};
-use studyfrog_ui::console_ui::{ConsoleMsg, ConsoleState, EntryKind, apply_console, entry_of};
+use studyfrog_ui::console_ui::lines::entry_of;
+use studyfrog_ui::console_ui::{ConsoleMsg, ConsoleState, EntryKind, apply_console};
 use studyfrog_ui::control_events::bus_new;
 use studyfrog_ui::model::apply;
 use studyfrog_ui::msg::Msg;
@@ -19,8 +20,8 @@ use studyfrog_ui::state::Screen;
 fn lines_are_sent_kept_in_the_history_and_walked_with_up_and_down() {
     let mut c = ConsoleState::default();
     for line in ["state", "  ", "query type = card", "query type = card"] {
-        apply_console(&mut c, ConsoleMsg::Edit(line.into()));
-        apply_console(&mut c, ConsoleMsg::Submit);
+        apply_console(&mut c, ConsoleMsg::Edit(line.into()), 0.0);
+        apply_console(&mut c, ConsoleMsg::Submit, 0.0);
     }
     assert_eq!(
         c.outbox,
@@ -31,43 +32,45 @@ fn lines_are_sent_kept_in_the_history_and_walked_with_up_and_down() {
         ["state", "query type = card"],
         "blank and repeated lines are not kept twice"
     );
-    apply_console(&mut c, ConsoleMsg::Older);
+    apply_console(&mut c, ConsoleMsg::Older, 0.0);
     assert_eq!(c.input, "query type = card");
-    apply_console(&mut c, ConsoleMsg::Older);
-    apply_console(&mut c, ConsoleMsg::Older);
+    apply_console(&mut c, ConsoleMsg::Older, 0.0);
+    apply_console(&mut c, ConsoleMsg::Older, 0.0);
     assert_eq!(c.input, "state");
-    apply_console(&mut c, ConsoleMsg::Newer);
+    apply_console(&mut c, ConsoleMsg::Newer, 0.0);
     assert_eq!(c.input, "query type = card");
-    apply_console(&mut c, ConsoleMsg::Newer);
+    apply_console(&mut c, ConsoleMsg::Newer, 0.0);
     assert_eq!(c.input, "", "past the newest is an empty line");
-    apply_console(&mut c, ConsoleMsg::Clear);
+    apply_console(&mut c, ConsoleMsg::Clear, 0.0);
     assert!(c.entries.is_empty());
 }
 
 #[test]
 fn answers_errors_events_and_script_output_become_entries() {
-    let ok = entry_of(r#"{"id":1,"ok":true,"result":{"screen":"home"}}"#);
+    let ok = entry_of(r#"{"id":1,"ok":true,"result":{"screen":"home"}}"#, 0.0);
     assert_eq!(ok.kind, EntryKind::Answer);
     assert!(ok.text.contains("\"screen\": \"home\""));
-    let err = entry_of(r#"{"id":1,"ok":false,"error":"unknown command x"}"#);
+    let err = entry_of(r#"{"id":1,"ok":false,"error":"unknown command x"}"#, 0.0);
     assert_eq!(
         (err.kind, err.text.as_str()),
         (EntryKind::Error, "unknown command x")
     );
     let ev = entry_of(
         r#"{"event":"lifecycle","data":{"kind":"item_created","at_ms":1,"data":{"title":"T"}}}"#,
+        0.0,
     );
     assert_eq!(ev.kind, EntryKind::Event);
     assert!(ev.text.starts_with("item_created {"), "{}", ev.text);
     let script = entry_of(
         r#"{"event":"lifecycle","data":{"kind":"script_finished","data":{"job":"health","ok":false,"code":2,"stdout":"checked 3","stderr":"boom"}}}"#,
+        0.0,
     );
     assert_eq!(script.kind, EntryKind::Script);
     assert_eq!(
         script.text,
         "script health failed (exit code 2)\nchecked 3\nboom"
     );
-    assert_eq!(entry_of("started health").text, "started health");
+    assert_eq!(entry_of("started health", 0.0).text, "started health");
 }
 
 #[test]
@@ -131,7 +134,7 @@ fn the_link_brings_back_answers_logs_and_events_from_the_instance() {
     let entries: Vec<_> = lines
         .into_iter()
         .map(|m| match m {
-            Msg::Console(ConsoleMsg::Line(l)) => entry_of(&l),
+            Msg::Console(ConsoleMsg::Line(l)) => entry_of(&l, 0.0),
             other => panic!("{other:?}"),
         })
         .collect();
@@ -178,7 +181,7 @@ fn script_run_and_script_list_go_to_the_runner_and_its_output_comes_back() {
     let mut texts = Vec::new();
     for _ in 0..300 {
         texts.extend(poll(&link).into_iter().map(|m| match m {
-            Msg::Console(ConsoleMsg::Line(l)) => entry_of(&l).text,
+            Msg::Console(ConsoleMsg::Line(l)) => entry_of(&l, 0.0).text,
             other => panic!("{other:?}"),
         }));
         if texts.iter().any(|t| t.contains("hello from hello.sh")) {

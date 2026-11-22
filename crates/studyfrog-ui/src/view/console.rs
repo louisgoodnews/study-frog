@@ -3,9 +3,11 @@
 
 use eframe::egui::{self, RichText, TextStyle};
 
+pub mod output;
+
 use crate::console_ui::{ConsoleMsg, Entry, EntryKind};
 use crate::msg::Msg;
-use crate::script_studio::{ConsoleFilter, active_tab};
+use crate::script_studio::active_tab;
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::kit;
@@ -23,7 +25,8 @@ fn entry(ui: &mut egui::Ui, e: &Entry) {
         EntryKind::Stdout => ("stdout: ", p.text),
         EntryKind::Stderr => ("stderr: ", p.danger),
     };
-    let text = RichText::new(format!("{prefix}{}", e.text))
+    // Each line carries its time on the app's clock, so a failure can be placed among the other lines.
+    let text = RichText::new(format!("{:>8.1}s  {prefix}{}", e.at, e.text))
         .text_style(TextStyle::Monospace)
         .color(color);
     ui.add(egui::Label::new(text).wrap().selectable(true));
@@ -128,44 +131,6 @@ fn editor_column(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 }
 
-fn is_visible(e: &Entry, filter: ConsoleFilter) -> bool {
-    match filter {
-        ConsoleFilter::All => true,
-        ConsoleFilter::Stdout => matches!(
-            e.kind,
-            EntryKind::Command | EntryKind::Answer | EntryKind::Script | EntryKind::Stdout
-        ),
-        ConsoleFilter::Stderr => matches!(e.kind, EntryKind::Error | EntryKind::Stderr),
-        ConsoleFilter::Events => matches!(e.kind, EntryKind::Event),
-    }
-}
-
-fn output_filter_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let active = state.console.studio.filter;
-    ui.horizontal(|ui| {
-        ui.label(RichText::new("Streams:").strong());
-        let filters = [
-            (ConsoleFilter::All, "All"),
-            (ConsoleFilter::Stdout, "Stdout"),
-            (ConsoleFilter::Stderr, "Stderr / Errors"),
-            (ConsoleFilter::Events, "Events"),
-        ];
-        for (f, name) in filters {
-            if ui.selectable_label(active == f, name).clicked() {
-                out.push(Msg::Console(ConsoleMsg::StudioSetFilter(f)));
-            }
-        }
-        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if kit::quiet_button(ui, "Clear Output")
-                .on_hover_text("Clears the output of the script.")
-                .clicked()
-            {
-                out.push(Msg::Console(ConsoleMsg::Clear));
-            }
-        });
-    });
-}
-
 /// The Console and ScriptStudio screen.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let expanded = state.console.studio.expanded;
@@ -209,15 +174,14 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.add_space(6.0);
     }
 
-    output_filter_bar(state, ui, out);
+    output::bar(state, ui, out);
     ui.add_space(4.0);
 
-    let filter = state.console.studio.filter;
     let visible_entries: Vec<_> = state
         .console
         .entries
         .iter()
-        .filter(|e| is_visible(e, filter))
+        .filter(|e| super::console::output::visible(e, &state.console))
         .collect();
 
     egui::ScrollArea::vertical()

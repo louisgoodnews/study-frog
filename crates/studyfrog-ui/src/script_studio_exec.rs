@@ -66,6 +66,7 @@ pub fn execute_studio_script(
 
 fn push_entry(state: &mut State, kind: EntryKind, text: impl Into<String>) {
     state.console.entries.push(Entry {
+        at: state.now,
         kind,
         text: text.into(),
     });
