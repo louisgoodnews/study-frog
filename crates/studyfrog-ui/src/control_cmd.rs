@@ -56,11 +56,17 @@ pub enum Command {
         path: String,
         /// The stack folder to import into.
         stack: Option<String>,
+        /// Into the vault root (no stack).
+        root: bool,
+        /// Into a new stack with this name.
+        new_stack: Option<String>,
     },
     /// Homework: the list, tabs, new items, advancing and ticking.
     Homework(HomeworkCmd),
     /// Appearance: one setting (theme, density, text size, accent), saved.
     Appearance(crate::appearance_ui::AppearanceMsg),
+    /// Set the PDF viewer's find field: the vault-relative file to open first (if any), and the text.
+    PdfFind(Option<String>, String),
     /// Save a picture of the window.
     Screenshot(PathBuf),
     /// Read (and maybe follow) the console log.

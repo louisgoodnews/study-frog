@@ -2,7 +2,7 @@
 
 use studyfrog_service::xfer_plan::{PlanLine, Policy};
 
-use crate::state::VaultInfo;
+use crate::state::{Notice, NoticeKind, State, VaultInfo};
 
 /// Which half of the dialog is shown.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -75,6 +75,19 @@ pub struct Imported {
     pub info: VaultInfo,
 }
 
+/// What the last import did, kept after the preview is gone: its counts and the pages or files left out.
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct ImportSummary {
+    /// Items created.
+    pub created: usize,
+    /// Items replaced.
+    pub replaced: usize,
+    /// Items left out.
+    pub skipped: usize,
+    /// Why each left-out item was left out (such as a page without text).
+    pub left_out: Vec<String>,
+}
+
 /// The dialog's fields.
 #[derive(Debug, Clone, PartialEq)]
 pub struct TransferState {
@@ -110,6 +123,8 @@ pub struct TransferState {
     pub csv: studyfrog_service::xfer_csv_map::CsvOptions,
     /// The name of a stack the import creates, when the user chose "New stack"; `None` otherwise.
     pub new_stack: Option<String>,
+    /// What the last import did (its counts and what was left out).
+    pub imported: Option<ImportSummary>,
 }
 
 /// Where an import puts its items, from the dialog's choices. `Ok(None)` is "as the file says",
@@ -135,6 +150,7 @@ impl Default for TransferState {
             policy: Policy::Skip,
             with_schedule: false,
             preview: None,
+            imported: None,
             status: None,
             busy: false,
             found: None,
@@ -203,4 +219,31 @@ pub fn refused(
 ) -> (crate::state::State, Vec<crate::effect::Effect>) {
     state.transfer.status = Some(text);
     (state, Vec::new())
+}
+
+/// The summary of an import: its counts and the pages or files the preview said were left out.
+pub fn import_summary(done: &Imported, preview: Option<&Preview>) -> ImportSummary {
+    ImportSummary {
+        created: done.created,
+        replaced: done.replaced,
+        skipped: done.skipped,
+        left_out: preview.map(|p| p.warnings.clone()).unwrap_or_default(),
+    }
+}
+
+/// What a finished import leaves in the state: the vault refreshed, the summary kept, the notice.
+pub fn finish_import(state: &mut State, done: Imported) {
+    let text = format!(
+        "Imported: {} created, {} replaced, {} left out.",
+        done.created, done.replaced, done.skipped
+    );
+    state.transfer.imported = Some(import_summary(&done, state.transfer.preview.as_deref()));
+    state.transfer.preview = None;
+    state.vault = Some(done.info);
+    state.library.stale = true;
+    state.transfer.status = Some(text.clone());
+    state.notice = Some(Notice {
+        kind: NoticeKind::Info,
+        text,
+    });
 }

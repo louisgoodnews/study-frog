@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Import destinations, PDF cards and PDF find in the control protocol (`crates/studyfrog-ui`, `crates/studyfrog-service`, STORY-0191)**: `import --root` and `import --new-stack NAME` choose the import destination as the dialog does; the import answer lists the pages left out; PDF import is covered by tests (one card per page with text, the others listed); `pdf find TEXT [--file F]` opens the PDF and sets its find field, and the answer lists the pages found.
 - **Writing and grading a mock exam (`crates/studyfrog-ui`, STORY-0187)**: the generated exam can be started and answered question by question; finishing grades each answer against its rubric and shows the grade (German scale, pass at 50 %), the points by topic, and the review of every question.
 - **Mock exam from notes in the app (`crates/studyfrog-ui`, STORY-0186)**: "Mock exam" on the rehearse setup makes an exam of ten questions from the stack's notes, with the local model when one may see them, and saves it into the stack as a note with its reference answers.
 - **Mock exam generation from notes (`crates/studyfrog-rehearsal`, `crates/studyfrog-agent`, `crates/studyfrog-service`, STORY-0186)**: the notes are cut into topic chunks; the local model writes questions per chunk (or templates stand in); each question is checked against its topic's notes; the result is balanced to 40/30/30 and assembled into a mock exam with reference answers.

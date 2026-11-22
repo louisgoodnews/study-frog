@@ -18,6 +18,7 @@ use crate::state::{Screen, Selection, State};
 use crate::transfer_types::Tab;
 use crate::transfer_ui::TransferMsg;
 
+pub mod files;
 pub mod homework;
 
 /// Phases of messages; background work settles between phases.
@@ -226,14 +227,13 @@ pub fn plan_for(state: &State, cmd: &Command) -> Result<Plan, String> {
             transfer(TransferMsg::Mode(a.scheduling)),
             transfer(TransferMsg::Export),
         ]]),
-        Command::Import { path, stack } => Ok(vec![
-            vec![
-                transfer(TransferMsg::Open(Tab::Import, stack.clone())),
-                transfer(TransferMsg::Path(path.clone())),
-                transfer(TransferMsg::Preview),
-            ],
-            vec![transfer(TransferMsg::Import)],
-        ]),
+        Command::Import {
+            path,
+            stack,
+            root,
+            new_stack,
+        } => files::import(path, stack, *root, new_stack),
+        Command::PdfFind(file, text) => files::pdf_find(file, text),
         Command::Dismiss => one(Msg::DismissNotice),
         Command::CloseModal => Ok(vec![vec![
             Msg::Modal(ModalMsg::Close),

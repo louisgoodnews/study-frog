@@ -9,6 +9,7 @@ use crate::control_words_items::{flag, item, need, split_flags, stack};
 
 pub mod appearance;
 pub mod homework;
+pub mod pdf;
 use crate::setup::Preset;
 use crate::state::Screen;
 use crate::transfer_types::Format;
@@ -167,6 +168,7 @@ fn two_words(words: &[String]) -> Result<Command, String> {
         "stack" => Command::Stack(stack(rest)?),
         "homework" => Command::Homework(homework::parse(rest)?),
         "appearance" => Command::Appearance(appearance::parse(rest)?),
+        "pdf" => pdf::parse(rest)?,
         "rehearse" => Command::Rehearse(rehearse(rest)?),
         "screenshot" => Command::Screenshot(arg(0, "PNG path")?.into()),
         "logs" => Command::Logs(logs_query(rest)?),
@@ -181,11 +183,26 @@ fn two_words(words: &[String]) -> Result<Command, String> {
             })
         }
         "import" => {
-            let (flags, pos) = split_flags(rest, &[])?;
+            let (flags, pos) = split_flags(rest, &["root"])?;
             let path = need(&pos, 0, "file to import")?.to_owned();
+            let stack = flag(&flags, "stack").map(str::to_owned);
+            let new_stack = flag(&flags, "new-stack").map(str::to_owned);
+            let root = flags.iter().any(|(n, _)| *n == "root");
+            if [stack.is_some(), new_stack.is_some(), root]
+                .iter()
+                .filter(|b| **b)
+                .count()
+                > 1
+            {
+                return Err(
+                    "choose one destination: --root, --new-stack NAME or --stack F".to_owned(),
+                );
+            }
             Command::Import {
                 path,
-                stack: flag(&flags, "stack").map(str::to_owned),
+                stack,
+                root,
+                new_stack,
             }
         }
         other => return Err(format!("unknown command {other} (try help)")),

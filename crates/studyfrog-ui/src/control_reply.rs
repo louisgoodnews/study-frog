@@ -11,6 +11,8 @@ use crate::state::{Notice, NoticeKind, State};
 
 pub mod appearance;
 pub mod homework;
+pub mod import;
+pub mod pdf;
 
 /// Rows a `query` answers with at most.
 pub const MAX_QUERY_ROWS: usize = 500;
@@ -97,12 +99,26 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
     match cmd {
         Command::Homework(HomeworkCmd::List) => Ok(homework::list_json(state)),
         Command::Appearance(_) => Ok(appearance::appearance_json(state)),
+        Command::Import { .. } => Ok(with_part(
+            state_json(state),
+            "import",
+            import::import_json(state),
+        )),
+        Command::PdfFind(..) => Ok(with_part(state_json(state), "pdf", pdf::pdf_json(state))),
         Command::Help => Ok(help_json()),
         Command::Notices => Ok(notices_json(state)),
         Command::Query(text) => query_result(state, text),
         Command::Stack(StackCmd::Settings(folder)) => stack_settings(state, folder),
         _ => Ok(state_json(state)),
     }
+}
+
+/// `answer` with one more field (the state's answer keeps its notice and screen).
+fn with_part(mut answer: Value, key: &str, part: Value) -> Value {
+    if let Some(o) = answer.as_object_mut() {
+        o.insert(key.to_owned(), part);
+    }
+    answer
 }
 
 /// The whole answer line for `cmd`.

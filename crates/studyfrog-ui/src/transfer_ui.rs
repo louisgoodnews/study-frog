@@ -10,7 +10,7 @@ use crate::state::{Notice, NoticeKind, State};
 pub use crate::transfer_types::{
     CsvInfo, Format, Imported, Preview, Tab, TransferJob, TransferState,
 };
-use crate::transfer_types::{import_target, refused};
+use crate::transfer_types::{finish_import, import_target, refused};
 
 /// What happened in the dialog.
 #[derive(Debug, Clone, PartialEq)]
@@ -202,6 +202,7 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
         }
         TransferMsg::Import => {
             t.busy = true;
+            t.imported = None;
             let (path, policy) = (t.path.trim().to_owned(), t.policy);
             let target = match import_target(t) {
                 Ok(target) => target,
@@ -225,16 +226,7 @@ pub fn update(state: State, msg: TransferMsg) -> (State, Vec<Effect>) {
         TransferMsg::Imported(result) => {
             t.busy = false;
             match result {
-                Ok(done) => {
-                    let text = format!(
-                        "Imported: {} created, {} replaced, {} left out.",
-                        done.created, done.replaced, done.skipped
-                    );
-                    state.vault = Some(done.info);
-                    state.library.stale = true;
-                    state.transfer.preview = None;
-                    say(&mut state, text, NoticeKind::Info);
-                }
+                Ok(done) => finish_import(&mut state, *done),
                 Err(e) => say(
                     &mut state,
                     format!("Could not import: {e}"),

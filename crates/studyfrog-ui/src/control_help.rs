@@ -151,6 +151,11 @@ pub const COMMANDS: &[Row] = &[
         "write",
     ),
     (
+        "pdf find <text> [--file F]",
+        "PDF: Open(file) when given, then Query(text) in the viewer's find field; the answer lists the pages found",
+        "read",
+    ),
+    (
         "import <file> [--stack F]",
         "Transfer: Open(Import), Path, Preview; then Import",
         "write",

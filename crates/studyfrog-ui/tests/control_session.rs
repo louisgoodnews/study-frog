@@ -145,6 +145,8 @@ fn exports_imports_and_failures_answer_with_their_outcome() {
             .unwrap()
             .starts_with("Imported")
     );
+    assert!(r["result"]["import"]["created"].is_number(), "{r}");
+    assert_eq!(r["result"]["import"]["left_out"], serde_json::json!([]));
     let r = ask(&mut e, "import /no/such/file.csv");
     assert_eq!(r["ok"], false, "{r}");
     let missing = ask(&mut e, "item open 0000000000000000000000000Z");

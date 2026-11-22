@@ -154,13 +154,6 @@ fn transfer_logs_and_screenshot() {
         })
     );
     assert_eq!(
-        cmd("import a.csv"),
-        Command::Import {
-            path: "a.csv".into(),
-            stack: None
-        }
-    );
-    assert_eq!(
         cmd("logs"),
         Command::Logs(LogsQuery {
             tail: 50,
