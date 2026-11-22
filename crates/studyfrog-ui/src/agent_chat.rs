@@ -64,7 +64,7 @@ pub fn chat_replied(state: State, result: Result<String, String>) -> (State, Vec
             let mut messages = state.agent.chat_messages.clone();
             messages.push(Message {
                 role: Role::Assistant,
-                content: format!("⚠️ Error: {e}"),
+                content: format!("Error: {e}"),
             });
             with(state, |a| AgentState {
                 chat_busy: false,

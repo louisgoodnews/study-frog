@@ -103,7 +103,7 @@ pub fn render_chat_stream(ui: &mut egui::Ui, state: &ChatStreamState, p: &Palett
                 let display_text = if state.is_streaming && !state.is_thinking {
                     let cursor_active = (now * 2.5).sin() > 0.0;
                     if cursor_active {
-                        format!("{}▌", state.buffer)
+                        format!("{}_", state.buffer)
                     } else {
                         format!("{} ", state.buffer)
                     }
@@ -150,7 +150,7 @@ pub fn render_chat_stream(ui: &mut egui::Ui, state: &ChatStreamState, p: &Palett
             .show(ui, |ui| {
                 ui.set_width(ui.available_width());
                 ui.horizontal(|ui| {
-                    ui.label(RichText::new("⚠ Error:").strong().color(p.danger));
+                    ui.label(RichText::new("Error:").strong().color(p.danger));
                     ui.label(RichText::new(err).color(p.danger));
                 });
             });

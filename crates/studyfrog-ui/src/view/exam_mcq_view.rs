@@ -26,7 +26,7 @@ fn choice_tag(idx: usize) -> char {
     if idx < 26 {
         (b'A' + idx as u8) as char
     } else {
-        '•'
+        '#'
     }
 }
 
@@ -81,14 +81,14 @@ fn render_choices(
                     tint(p.success, 40),
                     Stroke::new(2.0, p.success),
                     p.success,
-                    "✓ ",
+                    "+ ",
                 )
             } else if sel {
                 (
                     tint(p.danger, 40),
                     Stroke::new(2.0, p.danger),
                     p.danger,
-                    "✗ ",
+                    "x ",
                 )
             } else {
                 (p.surface, Stroke::new(1.0, p.border), p.text_weak, "  ")
@@ -98,10 +98,10 @@ fn render_choices(
                 tint(p.accent, 35),
                 Stroke::new(2.0, p.accent),
                 p.accent,
-                "● ",
+                "(*) ",
             )
         } else {
-            (p.surface, Stroke::new(1.0, p.border), p.text, "○ ")
+            (p.surface, Stroke::new(1.0, p.border), p.text, "( ) ")
         };
 
         let label = format!("{prefix}{tag}. {choice}");
