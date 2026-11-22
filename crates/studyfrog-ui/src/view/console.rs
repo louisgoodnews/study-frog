@@ -100,18 +100,33 @@ fn studio_tab_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 }
 
-/// The editor, and the FrogScript reference beside it when it is open.
+/// The share of the height the editor and the reference take; the output pane below keeps the rest.
+const STUDIO_SHARE: f32 = 0.6;
+/// The least height of the editor and reference band, so the editor still shows a few lines.
+const STUDIO_MIN_HEIGHT: f32 = 260.0;
+/// The reference's share of the width when it opens, and the width range it can be resized within.
+const REFERENCE_SHARE: f32 = 0.38;
+const REFERENCE_MIN: f32 = 300.0;
+/// The least width the editor keeps beside the reference.
+const EDITOR_MIN: f32 = 300.0;
+
+/// The editor, and the FrogScript reference beside it when it is open. The pair takes a share of the
+/// height so the output pane below stays in the window. The reference is a resizable right panel and
+/// the editor fills the rest of the width.
 fn studio_editor(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if !state.console.studio.wiki.open {
         editor_column(state, ui, out);
         return;
     }
-    let (w, h) = (ui.available_width(), ui.available_height());
-    ui.horizontal_top(|ui| {
-        ui.allocate_ui(egui::vec2(w * 0.62, h), |ui| editor_column(state, ui, out));
-        ui.allocate_ui(egui::vec2(w * 0.36, h), |ui| {
-            crate::view::studio_reference::draw(state, ui, out);
-        });
+    let width = ui.available_width();
+    let height = (ui.available_height() * STUDIO_SHARE).max(STUDIO_MIN_HEIGHT);
+    let band = egui::vec2(width, height);
+    ui.allocate_ui_with_layout(band, egui::Layout::top_down(egui::Align::Min), |ui| {
+        egui::Panel::right("studio-reference")
+            .default_size((width * REFERENCE_SHARE).max(REFERENCE_MIN))
+            .size_range(REFERENCE_MIN..=(width - EDITOR_MIN).max(REFERENCE_MIN))
+            .show(ui, |ui| crate::view::studio_reference::draw(state, ui, out));
+        egui::CentralPanel::default().show(ui, |ui| editor_column(state, ui, out));
     });
 }
 

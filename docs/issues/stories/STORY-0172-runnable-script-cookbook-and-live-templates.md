@@ -2,7 +2,7 @@
 id: STORY-0172
 type: story
 title: "Interactive FrogScript Cookbook and 1-Click Code Templates"
-status: review
+status: done
 epic: EPIC-058
 parents: ['EPIC-058']
 estimate: 3
@@ -23,9 +23,9 @@ Provide an interactive cookbook of practical scripts within the FrogScript Wiki:
 - Add a "Run in Console" action that executes read-only query recipes immediately and displays the output in the console stream.
 
 ## Acceptance Criteria
-- [ ] Curated cookbook of at least 8 ready-to-run script recipes for common study automation tasks
-- [ ] 1-click "Insert into Editor" button copying cookbook code directly into the active editor tab
-- [ ] 1-click "Run in Console" button executing sample scripts with instant output preview
+- [x] Curated cookbook of at least 8 ready-to-run script recipes for common study automation tasks
+- [x] 1-click "Insert into Editor" button copying cookbook code directly into the active editor tab
+- [x] 1-click "Run in Console" button executing sample scripts with instant output preview
 
 ## Implementation (2026-11-21)
 `studyfrog-script::cookbook` holds ten recipes: seven read-only (overdue review analyzer, due today, weekly progress, stack summary, exams in the next two weeks, tag census, backup reminder) and three that change items (bulk card tagger, vocabulary cleaner, priority reset). The cookbook sits at the foot of the FrogScript reference panel.
@@ -51,6 +51,12 @@ Keep cookbook templates self-contained and documented with inline comments.
 
 ## Dependencies
 EPIC-058
+
+## Verification (2026-11-22, after BUG-0020)
+- Criterion 1 (at least 8 recipes): ten recipes are in the cookbook. The test `studio_reference_layout.rs` counts an "Insert into editor" button for each recipe inside the window at 960x640, 1280x800 and 1600x900. In the running app the cookbook showed Overdue review analyzer, Tags every card, Vocabulary cleaner and Priority reset (`/tmp/claude-0/wiki/after-cookbook-top-1600.png`, `after-cookbook-1280.png`).
+- Criterion 2 (Insert into editor): clicked on "Priority reset" at 1600x900 and at 1280x800; the recipe was appended to the active tab, which was marked changed (`/tmp/claude-0/wiki/after-insert-1600.png`, `after-insert-1280.png`).
+- Criterion 3 (Run in console): clicked on "Overdue review analyzer" at 1600x900; a new tab opened with the recipe, the run printed its stdout and "+ Result: []" in the console, and the user's tab was kept (`/tmp/claude-0/wiki/after-run-1600.png`).
+Open, found in the run and not fixed here: the recipe's `log_info(f"{len(overdue)} items are overdue")` printed the braces literally (`stdout: [INFO] {len(overdue)} items are overdue`), so the interpolation in that recipe does not run. The recipe's wording is not changed by this work.
 
 ## Open Questions
 None.

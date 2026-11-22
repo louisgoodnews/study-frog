@@ -171,7 +171,7 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 - [ ] EPIC-057 UI/UX streamlining and Universal Import Hub: STORY-0168, STORY-0169, STORY-0170
 
 **Milestone 14.2: In-app extensibility and memory drills**
-- [ ] EPIC-058 FrogScript Wiki: STORY-0171, STORY-0172
+- [x] EPIC-058 FrogScript Wiki: STORY-0171, STORY-0172
 - [ ] [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode
   - [x] [STORY-0173](docs/issues/stories/STORY-0173-memory-session-engine-and-pair-mechanics.md) Session engine, deck pairing, flip states
   - [x] STORY-0174 Grid UI and card backs (flip, keyboard, names; the look and feel of the flip still need a check on a window)

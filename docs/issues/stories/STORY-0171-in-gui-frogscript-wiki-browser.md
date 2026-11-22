@@ -2,7 +2,7 @@
 id: STORY-0171
 type: story
 title: "In-App FrogScript Wiki and Standard Library Reference Browser"
-status: review
+status: done
 epic: EPIC-058
 parents: ['EPIC-058']
 estimate: 5
@@ -23,9 +23,9 @@ Develop the in-GUI Wiki browser:
 - Provide a fast search filter box to instantly locate methods, signatures, and descriptions.
 
 ## Acceptance Criteria
-- [ ] Documentation side-panel or modal tab in ScriptStudio displaying categorized topics
-- [ ] Topic coverage includes Syntax, Operators, Control Flow, Built-in Functions, and Vault Objects
-- [ ] Search filter allowing rapid lookup of functions by keyword or return type
+- [x] Documentation side-panel or modal tab in ScriptStudio displaying categorized topics
+- [x] Topic coverage includes Syntax, Operators, Control Flow, Built-in Functions, and Vault Objects
+- [x] Search filter allowing rapid lookup of functions by keyword or return type
 
 ## Design Notes
 Implement lightweight searchable tree navigation in egui, rendering selected topic documentation via the existing markdown viewer.
@@ -53,6 +53,13 @@ Review (2026-11-22): criteria 1 to 3 NOT MET in the running app. The panel opens
 
 ## Window check (2026-11-22, EPIC-058)
 The panel opens from ScriptStudio's "Reference" button and from the Help screen's "FrogScript reference" button, and its heading and search box show in the window. The topics do not: beside the editor the list is blank, even after scrolling, and the editor text is squeezed, at 1280x800 and at 1600x900 (BUG-0020). The three criteria above name what the panel shows, so they are unticked here. The data and the search are covered by `studyfrog-script/tests/wiki.rs` and `studyfrog-ui/tests/studio_reference.rs`, but that is not a window check. Screenshots: `/tmp/claude-0/epic58/03-help-to-reference.png`, `05-console-reference-button.png`, `07-console-reference-settled.png`.
+
+## Verification (2026-11-22, after BUG-0020)
+The reference now shows in the running app beside the editor, at 1280x800 and 1600x900, from the Console's "Reference" button and the Help screen's "FrogScript reference" button (`/tmp/claude-0/wiki/after-reference-1280.png`, `after-reference-1600.png`, `after-help-to-reference-1280.png`, `after-help-to-reference-1600.png`).
+- Criterion 1 (side-panel with categorized topics): the panel lists the topics under their category headings (`after-reference-1600.png`, `after-reference-scrolled-1600.png`).
+- Criterion 2 (coverage): the headings Syntax, Operators, Control Flow, Built-in Functions, Vault Objects and Lifecycle Events were each seen in the running window at 1600x900 by scrolling (`after-cats-c-1600.png`, `after-cats-b-1600.png`, `after-reference-scrolled-1600.png`, `after-search-1600.png`). The test `studio_reference_layout.rs` checks each category heading and topic at 960x640, 1280x800 and 1600x900.
+- Criterion 3 (search): typing "len" in the search field showed "Built-in Functions: len" and "Vault Objects: calendar, run" and hid the rest (`after-search-1600.png`).
+Tests: `studyfrog-ui/tests/studio_reference_layout.rs`, `studio_reference.rs`, `help_wiki.rs`. Still open for a person at a window: the look in the light theme, which was not checked.
 
 ## Open Questions
 None.
