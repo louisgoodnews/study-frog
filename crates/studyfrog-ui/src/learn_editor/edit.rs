@@ -62,6 +62,17 @@ fn remove_node(e: &mut LearnEditor, id: &str) {
     if e.selected.as_deref() == Some(id) {
         e.selected = None;
     }
+    // Removing wires shifts the indices of the others, so no wire stays selected.
+    e.selected_wire = None;
+    refresh(e);
+}
+
+/// Remove the wire with this index, if there is one.
+fn remove_wire(e: &mut LearnEditor, i: usize) {
+    if i < e.graph.edges.len() {
+        e.graph.edges.remove(i);
+    }
+    e.selected_wire = None;
     refresh(e);
 }
 
@@ -110,6 +121,7 @@ pub(crate) fn apply(e: &mut LearnEditor, msg: LearnMsg) -> Vec<LearnEffect> {
             e.graph = graph;
             e.layout = layout;
             e.selected = None;
+            e.selected_wire = None;
             e.connecting = false;
             e.report = None;
             e.notice = None;
@@ -135,12 +147,7 @@ pub(crate) fn apply(e: &mut LearnEditor, msg: LearnMsg) -> Vec<LearnEffect> {
         LearnMsg::To(id) => e.to = id,
         LearnMsg::When(when) => e.when = when,
         LearnMsg::AddWire => add_wire(e),
-        LearnMsg::RemoveWire(i) => {
-            if i < e.graph.edges.len() {
-                e.graph.edges.remove(i);
-                refresh(e);
-            }
-        }
+        LearnMsg::RemoveWire(i) => remove_wire(e, i),
         LearnMsg::ClickNode(id) => {
             if e.connecting {
                 // The first click starts the wire, the second ends it; the condition is the one chosen in the form.
@@ -154,6 +161,13 @@ pub(crate) fn apply(e: &mut LearnEditor, msg: LearnMsg) -> Vec<LearnEffect> {
                 }
             } else {
                 e.selected = Some(id);
+                e.selected_wire = None;
+            }
+        }
+        LearnMsg::ClickWire(i) => {
+            if !e.connecting && i < e.graph.edges.len() {
+                e.selected_wire = Some(i);
+                e.selected = None;
             }
         }
         LearnMsg::MoveBy(id, dx, dy) => {
@@ -162,6 +176,7 @@ pub(crate) fn apply(e: &mut LearnEditor, msg: LearnMsg) -> Vec<LearnEffect> {
         }
         LearnMsg::PlaceAt(x, y) => {
             if !e.connecting {
+                e.selected_wire = None;
                 add_node(e, Some([x.max(0.0), y.max(0.0)]));
             }
         }
@@ -171,7 +186,9 @@ pub(crate) fn apply(e: &mut LearnEditor, msg: LearnMsg) -> Vec<LearnEffect> {
             e.to.clear();
         }
         LearnMsg::DeleteSelected => {
-            if let Some(id) = e.selected.clone() {
+            if let Some(i) = e.selected_wire {
+                remove_wire(e, i);
+            } else if let Some(id) = e.selected.clone() {
                 remove_node(e, &id);
             }
         }

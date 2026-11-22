@@ -81,5 +81,7 @@ EPIC-066, and the features named above.
 
 Checked in the running window: a new mode takes steps by clicking the empty canvas; connect mode draws a wire between two steps with its arrow. Open, confirmed in the window: a wire cannot be selected or deleted (clicking it does nothing), and a step connected to itself draws no loop. Not checked in the window: starting a custom run and the custom report (needs a saved, valid mode).
 
+Added and checked in the running window: clicking a wire (not in connect mode) selects it, drawn thicker in the accent colour; "Delete selected" removes the selected wire and leaves its steps, and clicking a step or empty canvas clears the wire selection. Covered by `tests/learn_wire.rs` (selection, delete, connect mode, index shift after a removal, and the wire geometry for straight and arc wires). Still open: a step connected to itself draws no loop, and the custom run and report have not been checked in the window.
+
 ## Open Questions
 None.

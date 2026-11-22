@@ -54,6 +54,8 @@ pub struct LearnEditor {
     pub layout: Layout,
     /// The node the canvas last selected.
     pub selected: Option<String>,
+    /// The wire the canvas last selected, by its index in the graph's wires.
+    pub selected_wire: Option<usize>,
     /// Whether a click on a node starts or ends a wire (canvas connect mode).
     pub connecting: bool,
 }
@@ -77,6 +79,7 @@ pub fn new_editor() -> LearnEditor {
         report: None,
         layout: Layout::new(),
         selected: None,
+        selected_wire: None,
         connecting: false,
     }
 }
@@ -147,7 +150,9 @@ pub enum LearnMsg {
     PlaceAt(f32, f32),
     /// "Connect" was pressed: clicks on nodes now draw wires.
     ToggleConnect,
-    /// "Delete selected" was pressed: the selected node goes, with its wires.
+    /// A wire was clicked on the canvas (its index): selected.
+    ClickWire(usize),
+    /// "Delete selected" was pressed: the selected wire goes, or else the selected node with its wires.
     DeleteSelected,
     /// The run of a learn mode was made, with its graph (or why not).
     Started(Result<(studyfrog_core::run::Run, LearnGraph), String>),
