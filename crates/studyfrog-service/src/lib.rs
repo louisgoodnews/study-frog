@@ -69,6 +69,7 @@ mod inline_sync_apply;
 pub mod item_keys;
 pub mod item_schedule;
 pub mod kanban;
+pub mod learn_mode_store;
 pub mod library_rows;
 pub mod logging;
 pub mod mcp_client_io;

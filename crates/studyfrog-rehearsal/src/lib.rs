@@ -10,6 +10,7 @@ pub mod formula_gen;
 pub mod formula_trace;
 pub mod grade;
 pub mod input;
+pub mod learn_graph;
 pub mod match_mode;
 pub mod memory;
 pub mod memory_deck;
