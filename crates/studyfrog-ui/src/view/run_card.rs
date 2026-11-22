@@ -58,22 +58,46 @@ fn markdown(
 ) {
     ui.scope(|ui| {
         ui.set_max_width(ui.available_width());
+        ui.data_mut(|d| d.insert_temp(egui::Id::NULL, crate::view::preview::WideProse));
         ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
         ui.style_mut()
             .text_styles
             .insert(TextStyle::Body, FontId::proportional(size));
         ui.visuals_mut().override_text_color = color;
         draw_blocks(ui, blocks, out);
+        ui.data_mut(|d| d.remove::<crate::view::preview::WideProse>(egui::Id::NULL));
     });
 }
 
-pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+/// The room the item's text may take below the top of the window: the header, the hints and the rating
+/// buttons, so the item's area stays in view.
+const ITEM_CHROME: f32 = 330.0;
+/// The least height of the item's area, however small the window.
+const ITEM_MIN: f32 = 40.0;
+
+/// The item's text, in an area of its own that scrolls, so a long item never pushes the rating buttons off
+/// the screen; the buttons follow the area.
+pub(crate) fn item_scroll(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let height = (ui.ctx().content_rect().height() - ITEM_CHROME).max(ITEM_MIN);
+    let rating = egui::ScrollArea::vertical()
+        .id_salt("rehearsal-item-scroll")
+        .max_height(height)
+        .auto_shrink([false, false])
+        .show(ui, |ui| item(run, ui, out))
+        .inner;
+    if rating {
+        rating_buttons(run, ui, out);
+    }
+}
+
+/// Draws the item's text and marks. Returns whether the rating buttons follow it.
+pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) -> bool {
     let Some((uid, content)) =
         current_item(&run.session).and_then(|uid| run.content.get(&uid).map(|c| (uid, c)))
     else {
         ui.add_space(24.0);
         ui.label("Loading…");
-        return;
+        return false;
     };
     ui.add_space(6.0);
     let (prompt, answer) = run
@@ -91,7 +115,7 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.add_space(8.0);
     if crate::exam_ui::is_exam(run) {
         crate::view::exam_card::controls(run, ui, out);
-        return;
+        return false;
     }
     mark_row(run, ui, out);
     ui.add_space(12.0);
@@ -115,8 +139,9 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             score_line(scored, ui);
         }
         ui.add_space(14.0);
-        rating_buttons(run, ui, out);
+        return true;
     }
+    false
 }
 
 /// Four equal buttons, coloured from "again" to "easy"; the suggested one is filled stronger.

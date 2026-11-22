@@ -12,7 +12,7 @@ use crate::run_update::{awaiting_rating, awaiting_reveal, is_over};
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::kit;
-use crate::view::run_card::{MARKS, RATINGS, item, paused};
+use crate::view::run_card::{MARKS, RATINGS, item_scroll, paused};
 
 fn act(out: &mut Vec<Msg>, action: Action) {
     out.push(Msg::RunAction(action));
@@ -39,8 +39,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .auto_shrink([false, false])
         .show(ui, |ui| {
             ui.vertical_centered(|ui| {
-                // The card is as wide as the reading measure, so answers keep 60 to 75 characters a line.
-                ui.set_max_width(crate::typo::measure(ui) + 2.0 * crate::theme::PAD_CARD);
+                // The card takes the whole width, so a long item has room (STORY-0195); its prose runs at most
+                // about 1.6 reading measures (see `preview::RUN_PROSE_SHARE`).
+                ui.set_max_width(ui.available_width());
                 let p = palette_of(ui);
                 let color = crate::item_look::run_color(run);
                 let colors = crate::item_look::card_colors(&p, ui.visuals().dark_mode, color);
@@ -49,7 +50,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     if run.session.run.state == RunState::Paused {
                         paused(ui, out);
                     } else {
-                        item(run, ui, out);
+                        item_scroll(run, ui, out);
                     }
                 });
                 if run.show_comments {

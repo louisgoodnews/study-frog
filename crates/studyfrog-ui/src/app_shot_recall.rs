@@ -2,7 +2,7 @@
 //! its sync preview open), `focus` (the timer running on the home screen) and `focus-done` (a finished
 //! work block with its card). Also the memory game's demo screens (`memory-demo`, `memory-won`).
 
-mod mock;
+pub mod mock;
 
 use crate::effect::Effect;
 use crate::model::{Model, apply};

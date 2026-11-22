@@ -7,6 +7,13 @@ use crate::msg::Msg;
 use crate::typo::{self, Tier};
 use crate::view::preview_rich as rich;
 
+/// Set (as a temporary flag of the frame) by the rehearsal card, which lets its prose run wider than the
+/// reading measure: the item takes more of the screen (STORY-0195).
+#[derive(Clone, Copy)]
+pub struct WideProse;
+/// How much wider the rehearsal card's prose is than the reading measure (about 110 characters a line).
+pub const RUN_PROSE_SHARE: f32 = 1.6;
+
 /// Draw `blocks`; clicking a wikilink pushes [`Msg::OpenLink`].
 pub fn draw_blocks(ui: &mut egui::Ui, blocks: &[Block], out: &mut Vec<Msg>) {
     let toc = if blocks.iter().any(|b| matches!(b, Block::Toc)) {
@@ -148,7 +155,10 @@ pub(super) fn spans_line(
     heading: Option<u8>,
     out: &mut Vec<Msg>,
 ) {
-    let measure = typo::measure(ui);
+    let wide = ui
+        .data(|d| d.get_temp::<WideProse>(egui::Id::NULL))
+        .is_some();
+    let measure = typo::measure(ui) * if wide { RUN_PROSE_SHARE } else { 1.0 };
     let line = typo::line_height(text_size(ui, heading));
     // The row height is taken when the wrapping layout starts, so it is set on a scope around it: then the first
     // line of a paragraph is exactly as tall as the others.

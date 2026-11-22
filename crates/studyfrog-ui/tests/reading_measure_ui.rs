@@ -51,7 +51,7 @@ fn help_paragraphs_keep_to_the_measure_on_a_wide_window() {
 }
 
 #[test]
-fn a_long_answer_in_a_run_keeps_to_the_measure() {
+fn a_long_answer_in_a_run_keeps_to_about_one_and_a_half_measures() {
     let mut m = running_model(RunMode::Flip);
     let content = ItemContent {
         case: None,
@@ -72,7 +72,8 @@ fn a_long_answer_in_a_run_keeps_to_the_measure() {
     h.run();
     h.get_by_label("Show answer (Space)").click();
     h.run();
-    let measure = measure_at(&h.ctx, 15.0);
+    // The run's prose may run wider than the reading measure: `preview::RUN_PROSE_SHARE` (STORY-0195).
+    let measure = measure_at(&h.ctx, 15.0) * 1.6;
     let answer = h.get_by_label_contains("Because small, uncharged").rect();
     assert!(
         answer.width() <= measure + 1.0,
