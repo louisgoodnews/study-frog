@@ -175,6 +175,7 @@ fn occluded_run(root: &str, mode: RunMode) -> Model {
         },
     ];
     let content = ItemContent {
+        case: None,
         title: "Brain".into(),
         prompt: "Name the part.".into(),
         answer: "**Hippocampus**".into(),

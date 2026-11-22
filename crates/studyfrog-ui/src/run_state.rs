@@ -53,6 +53,8 @@ pub struct RunView {
     pub show_comments: bool,
     /// Draft comment input in the drawer.
     pub comment_draft: String,
+    /// The case study on screen, when the item is one: ticked options and the check.
+    pub case_run: crate::setup::case::run::CaseRun,
 }
 
 /// A fresh view of a not-yet-started session.
@@ -74,6 +76,7 @@ pub fn run_view_new(session: Session, started_time: f64) -> RunView {
         exam: crate::exam_ui::ExamProgress::default(),
         show_comments: false,
         comment_draft: String::new(),
+        case_run: Default::default(),
     }
 }
 

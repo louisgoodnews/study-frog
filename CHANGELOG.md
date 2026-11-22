@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- **Case studies in a rehearsal run (`crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0199)**: a case question in a run shows its options and justification, a check against the rubric, and the result under the revealed answer, with the suggested rating filled in. The rating stays the student's; the typed answer and the check are not stored yet.
 - **Local-model scoring of case justifications (`crates/studyfrog-agent`, `crates/studyfrog-ui`, STORY-0200)**: a selected local model checks a case justification against the rubric; a remote one is never sent the text. The keyword check shows at once and is replaced when the model answers; caveats are shown.
 - **Tour offer as a card on Home (`crates/studyfrog-ui`)**: the first-run tour is offered on the Home screen with "Start the tour" and "Not now", instead of a toast over the screen.
 - **Case studies (`crates/studyfrog-service`, `crates/studyfrog-ui`, STORY-0179, STORY-0181)**: a case study is a question file with its decision, options, expected choices and rubric in front matter; the rehearse screen's "Case study" opens a stack's cases, scores a choice and a justification against the rubric, and shows the result as pills.

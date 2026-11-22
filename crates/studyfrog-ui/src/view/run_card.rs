@@ -1,7 +1,7 @@
 //! The inside of the rehearsal card: the prompt, the answer, the marks and the rating buttons.
 
 mod parts;
-use self::parts::{mark_row, reveal_controls, source_link};
+use self::parts::{case_controls, case_result, mark_row, reveal_controls, source_link};
 use eframe::egui::{self, Button, Color32, FontId, Key, RichText, Stroke, TextStyle, vec2};
 use studyfrog_core::event::Difficulty;
 use studyfrog_core::review::Rating;
@@ -96,6 +96,9 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     mark_row(run, ui, out);
     ui.add_space(12.0);
     if awaiting_reveal(run) {
+        if let Some(case) = content.case.as_deref() {
+            case_controls(run, case, ui, out);
+        }
         reveal_controls(run, ui, out);
     } else if awaiting_rating(run) {
         ui.separator();
@@ -103,6 +106,10 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         // The answer is body text in the text colour (APCA body target), set apart by the rule above it.
         let body = crate::typo::body_size(ui);
         markdown(ui, &answer, body, None, out);
+        if content.case.is_some() {
+            ui.add_space(8.0);
+            case_result(run, ui);
+        }
         if let Some(scored) = &run.scored {
             ui.add_space(8.0);
             score_line(scored, ui);

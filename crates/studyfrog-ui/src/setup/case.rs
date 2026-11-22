@@ -8,6 +8,7 @@ use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::case_study::CaseStudyItem;
 
 mod check;
+pub mod run;
 
 use crate::effect::Effect;
 use crate::state::{Selection, State};
@@ -27,6 +28,10 @@ pub enum CaseMsg {
     Submit,
     /// The local model answered (its reply text, or why there was none).
     ModelReplied(Result<String, String>),
+    /// An option of the case in a run was ticked (or unticked).
+    RunPick(usize, bool),
+    /// Check the answer of the case in a run.
+    RunCheck,
     /// The next case.
     Next,
     /// Close the case-study view.
@@ -77,6 +82,8 @@ pub fn update(state: State, msg: CaseMsg) -> (State, Vec<Effect>) {
             Vec::new(),
         ),
         CaseMsg::Next => (map(state, next), Vec::new()),
+        CaseMsg::RunPick(i, on) => (run::pick(state, i, on), Vec::new()),
+        CaseMsg::RunCheck => (run::check(state), Vec::new()),
         CaseMsg::Close => (with_case(state, None), Vec::new()),
     }
 }

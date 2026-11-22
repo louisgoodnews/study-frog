@@ -54,6 +54,7 @@ fn help_paragraphs_keep_to_the_measure_on_a_wide_window() {
 fn a_long_answer_in_a_run_keeps_to_the_measure() {
     let mut m = running_model(RunMode::Flip);
     let content = ItemContent {
+        case: None,
         title: "Membrane".into(),
         prompt: "Why is the membrane selectively permeable?".into(),
         answer: LONG.into(),

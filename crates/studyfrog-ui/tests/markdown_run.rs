@@ -15,6 +15,7 @@ use studyfrog_ui::msg::Msg;
 fn the_prompt_and_the_answer_are_drawn_as_markdown() {
     let mut m = running_model(RunMode::Flip);
     let content = ItemContent {
+        case: None,
         title: "t".into(),
         prompt: "Capital of **France** and *Spain*?".into(),
         answer: "- `Paris`\n- Madrid".into(),

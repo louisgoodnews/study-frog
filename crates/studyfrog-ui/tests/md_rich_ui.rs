@@ -54,6 +54,7 @@ fn every_text_colour_is_readable_on_the_backgrounds_of_both_themes() {
 fn card(prompt: &str, answer: &str) -> egui_kittest::Harness<'static, common::views::App> {
     let mut m = running_model(RunMode::Flip);
     let content = ItemContent {
+        case: None,
         title: "t".into(),
         prompt: prompt.into(),
         answer: answer.into(),

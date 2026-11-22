@@ -125,6 +125,7 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
         run.latencies.extend(out.latency);
         if clears_answer {
             run.answer.clear();
+            run.case_run = Default::default();
             run.scored = None;
         }
         effects.extend(prefetch(&mut run));

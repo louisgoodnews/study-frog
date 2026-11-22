@@ -42,6 +42,7 @@ fn running(p: Pacing) -> Model {
     apply(&mut m, Msg::RunReady(Ok(run)));
     for (uid, prompt, answer) in [(1, "Capital of France?", "Paris"), (2, "7 x 8?", "56")] {
         let content = ItemContent {
+            case: None,
             title: prompt.into(),
             prompt: prompt.into(),
             answer: answer.into(),

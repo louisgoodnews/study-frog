@@ -34,6 +34,8 @@ pub struct ItemContent {
     pub is_note: bool,
     /// Timestamped comments attached to the item (STORY-0135, STORY-0140).
     pub comments: Vec<studyfrog_core::comment::ItemComment>,
+    /// The case study the question is, with its options, decision and rubric (STORY-0199).
+    pub case: Option<Box<studyfrog_rehearsal::case_study::CaseStudyItem>>,
 }
 
 fn content_of(doc: &Doc) -> ItemContent {
@@ -50,6 +52,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             color: None,
             expected: None,
             occlusion: None,
+            case: None,
             is_note: false,
             comments,
         },
@@ -62,6 +65,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             color: None,
             expected: None,
             occlusion: None,
+            case: None,
             is_note: false,
             comments,
         },
@@ -74,6 +78,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             color: None,
             expected: None,
             occlusion: None,
+            case: None,
             is_note: true,
             comments,
         },
@@ -86,6 +91,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             color: None,
             expected: None,
             occlusion: None,
+            case: None,
             is_note: true,
             comments,
         },
@@ -98,6 +104,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             color: None,
             expected: None,
             occlusion: None,
+            case: None,
             is_note: true,
             comments,
         },
@@ -126,6 +133,7 @@ pub fn load_item_content(session: &VaultSession, uid: Uid) -> Result<ItemContent
                 .and_then(|c| studyfrog_core::item_color::normalize_color(&c)),
             ..content_of(&doc)
         };
+        let content = crate::content_case::with_case(&doc, content);
         let content = crate::content_cloze::with_cloze(&doc, content, reviews.len());
         crate::content_occlusion::with_occlusion_view(&doc, content, reviews.len())
     })

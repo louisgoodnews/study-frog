@@ -47,3 +47,17 @@ fn a_case_is_created_in_a_stack_and_read_back_beside_plain_questions() {
     assert_eq!(cases.len(), 1, "{cases:?}");
     assert_eq!(cases[0].1, case());
 }
+
+#[test]
+fn a_run_loads_the_case_with_its_options_and_rubric() {
+    let dir = vault("case-content", None);
+    let (mut session, _) = open_vault(dir.0.to_str().unwrap()).unwrap();
+    let (_, created) =
+        create_case_study(&mut session, Some("s"), "Screen", &case(), ids()).expect("created");
+    let uid =
+        studyfrog_md::ulid::parse_ulid(&created.uid.map(studyfrog_md::ulid::format_ulid).unwrap())
+            .unwrap();
+    let content = studyfrog_service::content::load_item_content(&session, uid).unwrap();
+    assert_eq!(content.case.as_deref(), Some(&case()));
+    assert_eq!(content.prompt, case().vignette);
+}

@@ -38,6 +38,7 @@ pub fn finished_run_marked(
 ) -> Model {
     let mut m = running_model(RunMode::Flip);
     let content = ItemContent {
+        case: None,
         title: "Numbers".into(),
         prompt: "Count".into(),
         answer: TWENTY_WORDS.into(),

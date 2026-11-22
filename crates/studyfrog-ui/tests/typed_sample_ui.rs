@@ -70,6 +70,7 @@ fn rehearsal_excludes_notes_from_typing_and_shows_flip_controls() {
     m.state.now = 0.0;
     apply(&mut m, Msg::RunReady(Ok(run)));
     let note_content = ItemContent {
+        case: None,
         title: "Note Title".into(),
         prompt: "Note Prompt".into(),
         answer: "Note Answer".into(),
@@ -108,6 +109,7 @@ fn rehearsal_card_view_shows_typed_input_when_sampled() {
     m.state.now = 0.0;
     apply(&mut m, Msg::RunReady(Ok(run)));
     let card_content = ItemContent {
+        case: None,
         title: "Card Title".into(),
         prompt: "Card Question".into(),
         answer: "Card Answer".into(),

@@ -36,7 +36,7 @@ pub(super) fn source_link(content: &ItemContent, ui: &mut egui::Ui, out: &mut Ve
 }
 
 pub(super) fn reveal_controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let answering = is_item_typed(run);
+    let answering = is_item_typed(run) && !is_case_item(run);
     if answering {
         if let Some(text) = text_field(ui, "Your answer", &run.answer, "type your answer", 3) {
             out.push(Msg::AnswerEdited(text));
@@ -79,4 +79,71 @@ pub(super) fn reveal_controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Ms
             act(out, Action::Skip);
         }
     });
+}
+
+/// Whether the item on screen is a case study (its options replace the typed answer box).
+fn is_case_item(run: &RunView) -> bool {
+    current_item(&run.session)
+        .and_then(|uid| run.content.get(&uid))
+        .is_some_and(|c| c.case.is_some())
+}
+
+/// The case study's options and justification, and the check of them (STORY-0199).
+pub(super) fn case_controls(
+    run: &RunView,
+    case: &studyfrog_rehearsal::case_study::CaseStudyItem,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+) {
+    ui.label(egui::RichText::new(&case.decision_prompt).strong());
+    for (i, option) in case.options.iter().enumerate() {
+        let mut on = run.case_run.picks.get(i).copied().unwrap_or(false);
+        if ui.checkbox(&mut on, option).changed() {
+            out.push(Msg::Case(crate::setup::case::CaseMsg::RunPick(i, on)));
+        }
+    }
+    if let Some(text) = text_field(
+        ui,
+        "Your justification",
+        &run.answer,
+        "explain why this choice",
+        4,
+    ) {
+        out.push(Msg::AnswerEdited(text));
+    }
+    let ready = !run.answer.trim().is_empty();
+    let check = ui.add_enabled_ui(ready, |ui| {
+        kit::primary_button(ui, "Check my answer")
+            .on_hover_text("Checks the choice and the justification against the case's rubric, then shows the answer.")
+    });
+    if check.inner.clicked() {
+        out.push(Msg::Case(crate::setup::case::CaseMsg::RunCheck));
+        out.push(Msg::RunAction(Action::Flip));
+    }
+    ui.add_space(4.0);
+}
+
+/// The check's result under the revealed answer: the choice, and a met or missing pill per rubric point.
+pub(super) fn case_result(run: &RunView, ui: &mut egui::Ui) {
+    let Some(report) = &run.case_run.report else {
+        return;
+    };
+    let pal = palette_of(ui);
+    ui.horizontal_wrapped(|ui| {
+        if report.choice_valid {
+            kit::pill(ui, "Choice: the expected one", pal.success);
+        } else {
+            kit::pill(ui, "Choice: not the expected one", pal.danger);
+        }
+    });
+    for result in &report.criteria {
+        ui.horizontal_wrapped(|ui| {
+            if result.met {
+                kit::pill(ui, "Met", pal.success);
+            } else {
+                kit::pill(ui, "Missing", pal.danger);
+            }
+            ui.label(&result.criterion);
+        });
+    }
 }

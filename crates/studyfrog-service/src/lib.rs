@@ -21,6 +21,7 @@ pub mod case_items;
 pub mod cognitive_report;
 pub mod compare;
 pub mod content;
+pub mod content_case;
 pub mod content_cloze;
 pub mod content_occlusion;
 pub mod contrast;
