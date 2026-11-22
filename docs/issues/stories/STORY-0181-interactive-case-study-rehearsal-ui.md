@@ -2,7 +2,7 @@
 id: STORY-0181
 type: story
 title: "Interactive Case-Study Rehearsal UI and Multi-Step Feedback Display"
-status: review
+status: done
 epic: EPIC-061
 parents: ['EPIC-061']
 estimate: 3
@@ -38,6 +38,8 @@ Reached from the rehearse setup's What step: "Case study" opens the valid cases 
 Open: the view is a practice screen of its own, not a step inside a rehearsal run; cases in a run's queue are STORY-0199. A local model checks the justification when one is selected (STORY-0200).
 
 Tests: `studyfrog-ui/tests/case_study_ui.rs` (opening, scoring, next, view text). A screenshot (`--screen case-demo`) shows the layout and the pills.
+
+Audit (2026-11-22): all three criteria MET in the running app. (1) The vignette sits in a framed block at 1280x800 and 960x640 (`/tmp/claude-0/audit/g3/02-case-list.png`, `/tmp/claude-0/audit/g3/07-case-960.png`). (2) Dual inputs: option checkboxes and a multi-line justification box (`/tmp/claude-0/audit/g3/02-case-list.png`). (3) After "Check my answer": status pill, score, choice pill, and a green Met or red Missing pill per criterion with its feedback and the "Consider:" advice (`/tmp/claude-0/audit/g3/03-case-checked.png`, `/tmp/claude-0/audit/g3/04-case-scrolled.png`, `/tmp/claude-0/audit/g3/06-wrong-checked.png` for "Alternative procedure recommended"). Defect filed: the Case study button ignores the ticked stack (BUG-0023, `/tmp/claude-0/audit/g3/08a-setup.png`).
 
 ## Design Notes
 Strictly utilize `palette_of(ui)` theme tokens (success, warning, danger, surface, border). Ensure line counts $\le 250$ LOC per file (Invariant P6).

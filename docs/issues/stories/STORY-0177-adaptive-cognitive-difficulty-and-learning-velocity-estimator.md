@@ -40,5 +40,12 @@ The calibrated starting difficulty is on by default, and the Scheduling section 
 
 Tests: `studyfrog-service/tests/calibrated_start.rs` (prior unchanged without data, direction of the blend, one timing per item), `studyfrog-service/tests/calibrated_switch.rs` (the switch is written, kept in the file and read back), `studyfrog-config/tests/srs_switch.rs`, and `studyfrog-ui/tests/srs_switch_ui.rs`.
 
+## Audit (2026-11-22)
+Audited in the running app (display :92, fixture vault with 64 timed reviews over 10 days, values checked against the rows). Verdicts:
+- Empirical difficulty engine (D_emp): NOT CHECKABLE in the app. No screen shows the index; the engine is pure and its tests were not run in this audit. Left as ticked by the owner.
+- Learning velocity and consolidation over time: MET. The Cognitive profile shows the velocity (61.15 passing answers per minute) and days between passing reviews by week (`/tmp/claude-0/audit/g2/02-cognitive.png`, `/tmp/claude-0/audit/g2/04-cognitive-bottom.png`). The velocity is one figure, not a curve (BUG-0030).
+- Calibrated D0 priors: NOT CHECKABLE. The Settings switch exists (per the notes), but its effect on the first schedule needs a comparison of two schedules, not done here. Left unticked.
+Open: this story stays in review.
+
 ## Open Questions
 None.

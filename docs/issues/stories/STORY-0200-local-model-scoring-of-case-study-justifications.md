@@ -2,7 +2,7 @@
 id: STORY-0200
 type: story
 title: "Local-model scoring of case-study justifications, with the rubric prompt template"
-status: review
+status: done
 epic: EPIC-061
 parents: ['EPIC-061']
 estimate: 3
@@ -27,6 +27,8 @@ STORY-0180 scored answers with a keyword check only, and the case view did not c
 - [x] A remote model is never sent the student's text for a case
 - [x] An unreadable or missing reply keeps the keyword check and says why
 - [x] The prompt template asks for the choice first, then each rubric point, and a caveats field
+
+Audit (2026-11-22): all four criteria MET, with a local stub endpoint on 127.0.0.1 (no real model is installed; the stub returns JSON, so model quality is NOT CHECKABLE here). (1) A local provider's JSON replaced the keyword check: the source line reads "Checked by the local model" and the model's feedback shows (`/tmp/claude-0/audit/g3/08-model-good.png`, `/tmp/claude-0/audit/g3/10-model-caveat.png`). (2) A remote provider (`https://api.example.com/v1`, allowed) was not sent the text: the view says "Only a local model checks the justification, so the keyword check is shown." and no model call is pending (`/tmp/claude-0/audit/g3/12-model-remote.png`; `submit` returns no `AgentChat` effect for a remote provider). (3) A reply with no JSON kept the keyword check and said why: "The local model could not check it (the reply had no JSON object); the keyword check is shown." (`/tmp/claude-0/audit/g3/11-model-garbage.png`). (4) The prompt (`rubric_eval::case_system`) asks for the choice first, then each criterion against the justification alone, and ends with a JSON object with `caveats` (code read).
 
 ## Design Notes
 The template runs in one reply, not two calls: the stages are instructions inside it. A second call per criterion would cost more and was not needed for the parse. The keyword check remains the fallback when no local model is selected.

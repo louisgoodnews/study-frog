@@ -2,7 +2,7 @@
 id: STORY-0199
 type: story
 title: "Case studies in the rehearsal run queue"
-status: review
+status: done
 epic: EPIC-061
 parents: ['EPIC-061']
 estimate: 5
@@ -34,6 +34,8 @@ The suggestion: by the overall score (Easy from 90 %, Good from 70 %, Hard from 
 The check's score (value, verdict, engine) is stored for the item and run through `record_answer_score`, as a typed answer's score is (`AnswerEffect::Record`); the rating is recorded and schedules the item. The typed justification text is not stored, as for typed answers. The engine accepts typed answers only in answer modes, so the check does not go through the typed-answer path; the local model is not used inside a run (it is in the case view, STORY-0200).
 
 Tests: `studyfrog-ui/tests/case_run.rs` (suggested rating), `studyfrog-service/tests/case_items.rs` (a run loads the case). A screenshot of the run (`--screen run` on a one-case vault) shows the case controls.
+
+Audit (2026-11-22): all three criteria MET in the running app. (1) An answer-mode run on the Diag stack held the malformed case, the case, and the question Q1 in one queue (`/tmp/claude-0/audit/g3/13-run-start.png`, `/tmp/claude-0/audit/g3/16-run-after-rate.png`). (2) The case showed its vignette, expected options, and justification box; "Check my answer" showed the choice pill, Met and Missing pills, and a suggested rating of Good for 80 % before the next item (`/tmp/claude-0/audit/g3/14-run-item2.png`, `/tmp/claude-0/audit/g3/15-run-case-checked.png`). (3) After rating Good, the run's event count went from 2 to 7 and the case's status changed from "new" to "learning" (`/tmp/claude-0/audit/g3/17-item-case.png`). Exam runs: see EPIC-061 (BUG-0022).
 
 ## Design Notes
 The case view currently works outside a run (`setup::case`). The run item view needs the same widgets; share them rather than copy. Keep files under 250 lines.

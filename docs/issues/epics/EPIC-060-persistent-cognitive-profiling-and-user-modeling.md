@@ -26,13 +26,21 @@ Develop a comprehensive Cognitive Profiling and User Modeling subsystem:
 - [ ] Persistent interaction telemetry recording per-item dwell time, response latency, and semantic deviation scores in SQLite
 - [ ] Adaptive cognitive profile engine estimating personalized item difficulty and learning velocity
 - [ ] Long-term user modeling feeding calibrated priors into FSRS parameter optimization and familiarity scheduling
-- [ ] Cognitive profile and memory velocity dashboard integrated into Reports
+- [x] Cognitive profile and memory velocity dashboard integrated into Reports
 
 ## Design Notes
 Implement persistence in `studyfrog-store` with SQLite migrations. Implement telemetry analysis as pure free functions in `studyfrog-report` (Invariant P1). Ensure all `.rs` files remain $\le 250$ LOC (Invariant P6).
 
 ## Dependencies
 None.
+
+## Audit (2026-11-22)
+Audited in the running app (display :92). Verdicts per criterion:
+- Telemetry recorded per item with dwell, latency and semantic scores: NOT MET. dwell and latency are stored, but `semantic_score` is NULL in `review_telemetry` (BUG-0031). Left unticked.
+- Adaptive profile engine (difficulty and velocity): NOT CHECKABLE for the item difficulty (no screen shows it); the velocity is shown (`/tmp/claude-0/audit/g2/02-cognitive.png`). Left unticked.
+- Calibrated priors feeding FSRS: NOT CHECKABLE in the app (see STORY-0177). Left unticked.
+- Dashboard integrated into Reports: MET (`/tmp/claude-0/audit/g2/02-cognitive.png`). Ticked.
+Open: BUG-0030, BUG-0031, BUG-0032. The epic stays in review.
 
 ## Open Questions
 None.

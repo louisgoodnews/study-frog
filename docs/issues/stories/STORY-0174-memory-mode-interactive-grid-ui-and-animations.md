@@ -2,7 +2,7 @@
 id: STORY-0174
 type: story
 title: "Memory Mode Interactive Card Grid UI, Card Back Styling, and Audio-Visual Feedback"
-status: review
+status: done
 epic: EPIC-059
 parents: ['EPIC-059']
 estimate: 3
@@ -51,6 +51,13 @@ EPIC-059, STORY-0173
 - **Names:** "Card N, face down", "Card N: text" or "Card N, matched: text" (unchanged).
 - **Tests:** `studyfrog-ui/tests/memory_flip.rs` (width at each point of the turn, which side shows, reduced motion, clamping) and `tests/memory_grid_ui.rs` (Enter turns a card, the arrow keys move, names, the two launch points).
 - **Not done / needs a person at a window:** the look and feel of the 0.2 s flip, and whether the focus ring reads well, are not checked on a screen. A mouse click also gives a card focus, so the ring can show after a click. The back is still the dot lattice; there is no frog artwork.
+
+## Audit (2026-11-22)
+Audited in the running app (display :91, 1280x800 and 960x640). Verdicts:
+- Responsive grid: MET. 16 cards laid out in 6 columns at 1280x800 and fitting at 960x640 (`/tmp/claude-0/audit/g1/08-memory-board.png`, `/tmp/claude-0/audit/g1/19-newgame-960.png`).
+- Card back: MET. Face-down cards show a dot lattice in palette tokens, a subtle geometric pattern (`/tmp/claude-0/audit/g1/08-memory-board.png`).
+- Feedback: MET for face-up text (`/tmp/claude-0/audit/g1/09-flipped-two.png`), the match glow (`/tmp/claude-0/audit/g1/13-match.png`) and the mismatch outline (`/tmp/claude-0/audit/g1/09-flipped-two.png`, shown before the cards turn back). Hover and the shake were not captured in a screenshot.
+Open from this audit: BUG-0024 (the rehearse button ignores ticked stacks), BUG-0026 (timeout does not reveal cards), BUG-0028 (layout at 960x640 after a win).
 
 ## Open Questions
 None.

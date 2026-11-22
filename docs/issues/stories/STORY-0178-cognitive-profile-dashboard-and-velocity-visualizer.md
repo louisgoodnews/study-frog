@@ -27,7 +27,7 @@ Build the Cognitive Profile visualization in `studyfrog-ui`:
 
 ## Acceptance Criteria
 - [x] Cognitive Profile tab added to the Reports screen
-- [x] Visual charts showing personal learning velocity, response latency distribution, and semantic accuracy trends
+- [ ] Visual charts showing personal learning velocity, response latency distribution, and semantic accuracy trends
 - [x] Metacognitive calibration widget comparing subjective user ratings against objective telemetry metrics
 
 ## Implementation (2026-11-21)
@@ -48,6 +48,14 @@ Strictly follow `palette_of(ui)` colors without hardcoded RGB values. Adhere to 
 
 ## Dependencies
 EPIC-060, STORY-0176, STORY-0177
+
+## Audit (2026-11-22)
+Audited in the running app (display :92, fixture vault). Verdicts:
+- Cognitive Profile tab on Reports: MET (`/tmp/claude-0/audit/g2/02-cognitive.png`).
+- Charts for velocity, latency and semantic accuracy: NOT MET, so the tick is removed. Velocity is one figure, not a curve; the latency chart is a scatter against word count, not a distribution; no semantic accuracy trend (no semantic scores are recorded). See BUG-0030 and BUG-0031.
+- Metacognitive calibration: MET. Rated Easy 33% (21 of 64) and answered in time 36% match the stored rows (`/tmp/claude-0/audit/g2/04-cognitive-bottom.png`, the calibration block in `02-cognitive.png`).
+- At 960 by 640 the charts fit; the Reports tab row is cut off (BUG-0032, `/tmp/claude-0/audit/g2/05-cognitive-960.png`).
+Open: this story stays in review.
 
 ## Open Questions
 None.
