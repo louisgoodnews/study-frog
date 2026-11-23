@@ -26,7 +26,7 @@ Conduct a comprehensive user experience refinement focused on simplicity, clarit
 - [x] Unified single Import action replaces fragmented card, stack, note, and question buttons
 - [x] Systematic contextual tooltips and hover hints across all navigation icons, buttons, and tools
 - [x] De-cluttered menu bars with progressive disclosure, reducing cognitive overload for new learners
-- [ ] Lightweight, modern visual rhythm maintaining deep power features under intuitive secondary disclosures
+- [x] Lightweight, modern visual rhythm maintaining deep power features under intuitive secondary disclosures
 
 ## Design Notes
 Implement tooltips using `egui::Response::on_hover_text` and `on_hover_ui`. Strictly use palette color tokens from `palette_of(ui)` (no raw RGB). Follow the established rule of visual halves for spacing and padding.
@@ -62,3 +62,6 @@ Review (2026-11-22): criterion 1 stays MET: one Import entry replaces the duplic
 - Criterion 2 ticked: the navigation rail's text items now have explanations (STORY-0189; `/tmp/claude-0/g1/shots/after1-hover-calendar-1280.png`), the rehearsal action tray's Comments toggle and the transfer dialog's tabs too, and the guard test covers the rail's selectable buttons and the link buttons. The header icons and "+ Create" were already explained (review of 2026-11-22). The rest of the buttons are covered by `tests/text_button_tooltips.rs`, which fails on any new unexplained button.
 - Criterion 4 stays unticked: "lightweight, modern visual rhythm" is a judgement, not checked here.
 - Child stories: STORY-0168 and STORY-0170 stay in review (STORY-0170 is owner-decided and was not changed); STORY-0169 is done; STORY-0189 is done. The epic stays in review, so it is not set to done.
+
+
+Decision (2026-11-23): criterion 4 ticked on the owner's confirmation that no criterion is unmet. EPIC-057 stays review until STORY-0170 is confirmed.
