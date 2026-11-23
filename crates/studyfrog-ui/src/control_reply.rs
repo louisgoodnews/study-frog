@@ -4,6 +4,7 @@
 use serde_json::{Value, json};
 
 use crate::control_cmd::calendar::CalendarCmd;
+use crate::control_cmd::ollama::OllamaCmd;
 use crate::control_cmd::{Command, HomeworkCmd, StackCmd};
 use crate::control_help::help_json;
 use crate::control_parts::shown_rows;
@@ -17,6 +18,7 @@ pub mod diary;
 pub mod focus;
 pub mod homework;
 pub mod import;
+pub mod ollama;
 pub mod panels;
 pub mod pdf;
 pub mod report_tabs;
@@ -127,6 +129,9 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
             Ok(homework::tab_json(state))
         }
         Command::Board(c) => board::answer(state, c),
+        Command::Audit => ollama::audit_json(state),
+        Command::Ollama(OllamaCmd::Status) => ollama::status_json(state),
+        Command::Ollama(OllamaCmd::Suggest) => ollama::suggest_json(state),
         Command::Screens(c) => panels::answer(state, c),
         Command::Stack(StackCmd::Delete(folder)) => panels::stack_deleted(state, folder),
         Command::Diary(c) => diary::answer(state, c),

@@ -32,6 +32,8 @@ pub struct Host {
     pub registry: Registry,
     /// Sends the AI agent's requests (the application links the network library).
     pub transport: Option<studyfrog_agent::provider::Transport>,
+    /// Fetches the local Ollama status (the application links the network library).
+    pub get: Option<studyfrog_agent::provider::HttpGet>,
     /// Shows a folder in the system's file manager (the logs folder from Settings > Data).
     pub opener: Option<Opener>,
 }

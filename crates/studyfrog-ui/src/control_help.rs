@@ -3,6 +3,7 @@
 
 use serde_json::{Value, json};
 
+pub mod ollama;
 pub mod panels;
 pub mod screens;
 
@@ -223,6 +224,7 @@ pub fn help_json() -> Value {
         .iter()
         .chain(screens::ROWS.iter())
         .chain(panels::ROWS.iter())
+        .chain(ollama::ROWS.iter())
         .map(|(usage, does, class)| json!({"usage": usage, "does": does, "class": class}))
         .collect();
     json!({

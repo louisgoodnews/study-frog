@@ -1,0 +1,89 @@
+# Curated Ollama models for the setup assistant (STORY-0206). Shipped with the app; refreshed in releases.
+#   name                the tag to pull, as `ollama pull NAME` takes it
+#   parameters          the parameter count as people write it
+#   parameters_millions the same count in millions, for ranking
+#   quantization        the quantization of the default build
+#   download_bytes      the size of the download in bytes (leave out when unknown: never ranked as fitting)
+#   memory_bytes        the memory needed to run it (weights, cache and working space), in bytes
+# The sizes are approximate values from the Ollama library; check them with `ollama show NAME`
+# before a release.
+
+[[model]]
+name = "qwen2.5:0.5b"
+parameters = "0.5B"
+parameters_millions = 500
+quantization = "Q4_K_M"
+download_bytes = 398000000
+memory_bytes = 900000000
+
+[[model]]
+name = "llama3.2:1b"
+parameters = "1B"
+parameters_millions = 1240
+quantization = "Q4_K_M"
+download_bytes = 1300000000
+memory_bytes = 1800000000
+
+[[model]]
+name = "qwen2.5:1.5b"
+parameters = "1.5B"
+parameters_millions = 1540
+quantization = "Q4_K_M"
+download_bytes = 986000000
+memory_bytes = 2000000000
+
+[[model]]
+name = "gemma2:2b"
+parameters = "2B"
+parameters_millions = 2610
+quantization = "Q4_0"
+download_bytes = 1600000000
+memory_bytes = 2600000000
+
+[[model]]
+name = "llama3.2:3b"
+parameters = "3.2B"
+parameters_millions = 3210
+quantization = "Q4_K_M"
+download_bytes = 2000000000
+memory_bytes = 3000000000
+
+[[model]]
+name = "qwen2.5:3b"
+parameters = "3.1B"
+parameters_millions = 3090
+quantization = "Q4_K_M"
+download_bytes = 1900000000
+memory_bytes = 3000000000
+
+[[model]]
+name = "phi3.5:3.8b"
+parameters = "3.8B"
+parameters_millions = 3820
+quantization = "Q4_0"
+download_bytes = 2200000000
+memory_bytes = 3500000000
+
+[[model]]
+name = "qwen2.5:7b"
+parameters = "7.6B"
+parameters_millions = 7620
+quantization = "Q4_K_M"
+download_bytes = 4700000000
+memory_bytes = 6500000000
+
+[[model]]
+name = "mistral:7b"
+parameters = "7.2B"
+parameters_millions = 7240
+quantization = "Q4_0"
+download_bytes = 4100000000
+memory_bytes = 6000000000
+
+[[model]]
+name = "qwen2.5:14b"
+parameters = "14.8B"
+parameters_millions = 14770
+quantization = "Q4_K_M"
+download_bytes = 9000000000
+memory_bytes = 11000000000

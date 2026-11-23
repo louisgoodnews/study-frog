@@ -143,3 +143,7 @@ pub struct HttpResponse {
 
 /// Sends a request; the application binary supplies it (an error is a sentence for the user).
 pub type Transport = fn(&HttpRequest) -> Result<HttpResponse, String>;
+
+/// Fetches a local address with a GET (the Ollama status probe); the application binary supplies it.
+/// Arguments: the full address and the timeout in seconds.
+pub type HttpGet = fn(&str, u32) -> Result<HttpResponse, String>;

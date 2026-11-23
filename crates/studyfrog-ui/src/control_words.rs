@@ -13,6 +13,7 @@ pub mod calendar;
 pub mod diary;
 pub mod help;
 pub mod homework;
+pub mod ollama;
 pub mod panels;
 pub mod pdf;
 pub mod reports;
@@ -231,6 +232,8 @@ pub fn command_from_words(words: &[String]) -> Result<Command, String> {
         "achievements" | "graph" | "assistant" | "agent" | "settings" | "match" | "folders" => {
             panels::parse(words)?
         }
+        "audit" => Command::Audit,
+        "ollama" => ollama::parse(&words[1..])?,
         "back" => Command::Back,
         "forward" => Command::Forward,
         "notices" | "notifications" => Command::Notices,

@@ -81,6 +81,12 @@ pub fn plan(cmd: &Command) -> Result<Plan, String> {
         Command::Board(c) => board(c)?,
         Command::Diary(c) => diary(c),
         Command::Reports(tab) => reports(*tab),
+        Command::Audit | Command::Ollama(_) => vec![vec![ollama_check()]],
         _ => Vec::new(),
     })
+}
+
+/// The local-model setup's check of this computer and Ollama (STORY-0206); the answer reads it.
+fn ollama_check() -> Msg {
+    crate::agent_types::ollama::msg(crate::agent_types::ollama::OllamaMsg::Refresh)
 }

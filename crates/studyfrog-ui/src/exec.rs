@@ -13,7 +13,6 @@ use studyfrog_service::track::create_card_tracked;
 use studyfrog_slm::models::Opened;
 
 use studyfrog_ext::types::Registry;
-
 pub mod console;
 
 use crate::host::{FilePicker, FolderPicker};
@@ -49,6 +48,8 @@ pub struct Worker {
     pub registry: Registry,
     /// Sends the AI agent's requests.
     pub transport: Option<studyfrog_agent::provider::Transport>,
+    /// Fetches the local Ollama status (GET, local address only).
+    pub get: Option<studyfrog_agent::provider::HttpGet>,
     /// Where the agent logs its calls (never their content).
     pub state_dir: Option<PathBuf>,
     /// The PDF read last (vault-relative path and bytes), kept for the page requests that follow.

@@ -12,6 +12,7 @@ pub mod board;
 pub mod calendar;
 pub mod diary;
 pub mod homework;
+pub mod ollama;
 pub mod screens;
 pub mod ui;
 pub use homework::{HomeworkCmd, HomeworkNew};
@@ -84,6 +85,10 @@ pub enum Command {
     Ui(ui::UiCmd),
     /// The screens that had only `nav`: achievements, graph, assistant, settings, match, folders, PDF open.
     Screens(screens::ScreenCmd),
+    /// The hardware audit of this computer, for the local-model setup (STORY-0206).
+    Audit,
+    /// The local Ollama service: its status, or the models suggested for this computer.
+    Ollama(ollama::OllamaCmd),
     /// Read (and maybe follow) the console log.
     Logs(LogsQuery),
     /// Stream lifecycle events of these kinds (all when empty) until the connection closes.

@@ -1,6 +1,8 @@
 //! Performing the assistant's other effects: connections, and what AI clients staged or changed over
 //! MCP (STORY-0119), and the external tool servers the assistant uses (STORY-0121).
 
+pub mod ollama;
+
 use studyfrog_service::mcp_client_io::{call_server_tool, discover_server};
 use studyfrog_service::mcp_servers::{load_servers, save_servers};
 use studyfrog_service::mcp_staging::{list_staged, remove_staged};
@@ -62,6 +64,9 @@ pub fn run(w: &mut Worker, effect: AgentEffect, now_ns: i64) -> Msg {
         AgentEffect::RemoveConnection(name) => crate::exec_agent::remove(w, &name),
         AgentEffect::AllowConnection(name, on) => crate::exec_agent::allow(w, &name, on),
         AgentEffect::TestConnection(p) => test_connection(w, &p, now_ns),
+        AgentEffect::RefreshOllama => crate::exec_mcp::ollama::refresh(w),
+        AgentEffect::TestLocalModel(name) => crate::exec_mcp::ollama::test_model(w, &name, now_ns),
+        AgentEffect::SetLocalModel(name) => crate::exec_mcp::ollama::set_local(w, &name),
         AgentEffect::LoadMcp => load(w),
         AgentEffect::RemoveStaged(id) => match &w.session {
             Some(s) => match remove_staged(&s.root, &id) {

@@ -20,6 +20,7 @@ pub fn worker_new(config_dir: Option<PathBuf>) -> Worker {
         file_picker: None,
         registry: Registry::default(),
         transport: None,
+        get: None,
         state_dir: None,
         pdf_bytes: None,
         opener: None,
@@ -39,6 +40,7 @@ pub fn worker_with_host(
         file_picker: host.file_picker,
         registry: host.registry,
         transport: host.transport,
+        get: host.get,
         opener: host.opener,
         ..worker_new(config_dir)
     }

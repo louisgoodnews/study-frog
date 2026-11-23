@@ -117,6 +117,12 @@ pub enum AgentEffect {
     AllowConnection(String, bool),
     /// Send a tiny request to a connection to see whether it answers.
     TestConnection(studyfrog_agent::provider::Provider),
+    /// Check this computer and the local Ollama service (STORY-0206).
+    RefreshOllama,
+    /// Test a local model with one short prompt (STORY-0206).
+    TestLocalModel(String),
+    /// Save a tested local model as the local connection (STORY-0206).
+    SetLocalModel(String),
     /// Read the staged proposals and the undo entries of the open vault.
     LoadMcp,
     /// Remove a staged proposal (applied or discarded), then read them again.

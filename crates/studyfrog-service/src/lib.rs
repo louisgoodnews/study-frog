@@ -79,6 +79,7 @@ pub mod mcp_client_io;
 pub mod mcp_servers;
 pub mod mcp_staging;
 pub mod mcp_undo;
+pub mod ollama;
 pub mod pdf_export;
 mod pdf_export_doc;
 mod pdf_export_exec;

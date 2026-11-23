@@ -1,5 +1,6 @@
 //! The state and messages of the assistant screen (ADR 0009).
 
+pub mod ollama;
 use studyfrog_agent::exam::ExamItem;
 use studyfrog_agent::provider::{Message, Protocol};
 use studyfrog_agent::wiki::{ContextItem, Proposal};
@@ -85,6 +86,8 @@ pub struct AgentState {
     pub mcp: crate::agent_mcp_types::McpUi,
     /// "Test connection": running tests and their outcomes.
     pub conn_tests: crate::agent_conn_test::ConnTests,
+    /// The local-model setup: the audit, Ollama's status and the suggestions (STORY-0206).
+    pub ollama: crate::agent_types::ollama::OllamaPanel,
     /// Chat messages.
     pub chat_messages: Vec<Message>,
     /// Chat input text.
@@ -119,6 +122,7 @@ impl Default for AgentState {
             error: None,
             mcp: crate::agent_mcp_types::McpUi::default(),
             conn_tests: crate::agent_conn_test::ConnTests::default(),
+            ollama: crate::agent_types::ollama::OllamaPanel::default(),
             chat_messages: Vec::new(),
             chat_input: String::new(),
             chat_busy: false,
@@ -143,6 +147,8 @@ pub enum AgentMsg {
     AddConnection,
     /// Test a connection, or its outcome.
     Test(crate::agent_conn_test::TestMsg),
+    /// The local-model setup (STORY-0206).
+    Ollama(crate::agent_types::ollama::OllamaMsg),
     /// Remove a connection and its key.
     RemoveConnection(String),
     /// Allow or forbid sending vault text to a remote connection.

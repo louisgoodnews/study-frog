@@ -60,3 +60,24 @@ pub fn send(request: &HttpRequest) -> Result<HttpResponse, String> {
         headers,
     })
 }
+
+/// GET an address and return the answer, whatever its status. Used only for the local Ollama address
+/// (the setup assistant); an error names the address and nothing else.
+pub fn get(url: &str, timeout_secs: u32) -> Result<HttpResponse, String> {
+    let agent: ureq::Agent = ureq::Agent::config_builder()
+        .timeout_global(Some(Duration::from_secs(u64::from(timeout_secs))))
+        .http_status_as_error(false)
+        .build()
+        .into();
+    let mut response = agent.get(url).call().map_err(|e| describe(&e, url))?;
+    let status = response.status().as_u16();
+    let body = response
+        .body_mut()
+        .read_to_string()
+        .map_err(|e| describe(&e, url))?;
+    Ok(HttpResponse {
+        status,
+        body,
+        headers: Vec::new(),
+    })
+}

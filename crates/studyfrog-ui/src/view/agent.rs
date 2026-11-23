@@ -8,6 +8,7 @@ use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::widgets::text_field;
+mod ollama;
 use crate::view::{agent_wiki, kit};
 
 fn send(out: &mut Vec<Msg>, m: AgentMsg) {
@@ -61,6 +62,8 @@ fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let a = &state.agent;
     let weak = palette_of(ui).text_weak;
     ui.label(RichText::new("Connect a model that runs on this computer (Ollama and similar) or at a provider (OpenAI, Anthropic and similar). The assistant only proposes changes; you decide what is applied. API keys are kept in a private file in your config folder, never in the vault.").color(weak));
+    ollama::panel(state, ui, out);
+    ui.add_space(8.0);
     if let Some(e) = &a.connections.error {
         ui.colored_label(ui.visuals().error_fg_color, e);
     }

@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (10) | Ready (0) | In progress (0/3) | Review (11) | Blocked (3) | Done (584) |
+| Backlog (9) | Ready (0) | In progress (0/3) | Review (12) | Blocked (3) | Done (584) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0053](docs/issues/bugs/BUG-0053-mock-exam-formula-note-gives-no-calculation-question.md) Mock exam from notes with a formula line gives no calculation question in the template path (2) |  |  | [BUG-0051](docs/issues/bugs/BUG-0051-math-drill-praises-answer-with-wrong-step.md) Math drill says 'Correct. Well worked.' when the final answer is within tolerance but a working step is wrong (1) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -542,7 +542,7 @@
 | [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines on the owner's machine (2) | blocked | 0/0 |
 | [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time of the rehearsal card, reports and console measured in the running window (5) | backlog | 0/2 |
 | [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Allocations in the render loops, counted with dhat, and a profile of the slowest screen (3) | backlog | 0/2 |
-| [STORY-0206](docs/issues/stories/STORY-0206-ollama-setup-assistant-with-hardware-audit-and-model-suggestions.md) Ollama setup assistant: hardware audit, live Ollama status and model suggestions that fit this machine (5) | backlog | 0/0 |
+| [STORY-0206](docs/issues/stories/STORY-0206-ollama-setup-assistant-with-hardware-audit-and-model-suggestions.md) Ollama setup assistant: hardware audit, live Ollama status and model suggestions that fit this machine (5) | review | 0/0 |
 
 ## Epics
 
