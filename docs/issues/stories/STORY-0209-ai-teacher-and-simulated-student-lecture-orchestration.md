@@ -2,7 +2,7 @@
 id: STORY-0209
 type: story
 title: "AI teacher and simulated student lecture orchestration (local and remote models)"
-status: backlog
+status: done
 epic: EPIC-068
 parents: ['EPIC-068']
 estimate: 5
@@ -25,10 +25,10 @@ Implement the prompt builders and turn orchestrator across `studyfrog-agent` and
 - Orchestrate turn progression: next lecture segment, simulated student question, teacher answer, and user interjection.
 
 ## Acceptance Criteria
-- [ ] Lecture generation grounds teacher explanations and simulated student questions in selected vault notes, stacks, or lecture PDFs
-- [ ] Orchestration works with both local models (e.g. Ollama) and configured remote providers through `studyfrog-agent`, respecting provider consent settings
-- [ ] Context budgeting (rolling summary plus recent turns) keeps prompts bounded for small local models
-- [ ] Users can ask questions or interject at any point and receive contextual teacher and peer responses
+- [x] Lecture generation grounds teacher explanations and simulated student questions in selected vault notes, stacks, or lecture PDFs
+- [x] Orchestration works with both local models (e.g. Ollama) and configured remote providers through `studyfrog-agent`, respecting provider consent settings
+- [x] Context budgeting (rolling summary plus recent turns) keeps prompts bounded for small local models
+- [x] Users can ask questions or interject at any point and receive contextual teacher and peer responses
 
 ## Design Notes
 - Reuse `studyfrog-service::agent::ask` and existing `Provider` configuration so no new HTTP client or wire format is introduced.
@@ -40,3 +40,7 @@ Implement the prompt builders and turn orchestrator across `studyfrog-agent` and
 
 ## Open Questions
 - Whether simulated students should share the teacher's selected model by default with an optional per-role override later.
+
+## Verification note
+
+All four criteria are ticked on the strength of the tests in `studyfrog-service` (`classroom_start`, `classroom_lecture`, `classroom_provider`) and `studyfrog-agent` (`lecture_*`). The provider criterion is verified with a fake model and stub transport only; a run against a live Ollama instance or a configured remote provider has not been done.
