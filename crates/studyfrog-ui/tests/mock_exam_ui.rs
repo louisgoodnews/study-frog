@@ -101,7 +101,7 @@ fn saving_asks_for_the_note_and_the_outcome_is_reported() {
 
 #[test]
 fn writing_the_answers_and_finishing_grades_the_exam() {
-    use studyfrog_ui::setup::mock_exam::grading::total;
+    use studyfrog_ui::setup::mock_exam::grading::{DEFAULT_PASS_MARK, total};
     let g = generate(
         &studyfrog_rehearsal::curriculum::chunk_markdown(notes()),
         4,
@@ -128,13 +128,17 @@ fn writing_the_answers_and_finishing_grades_the_exam() {
         .graded
         .clone()
         .expect("graded");
-    assert_eq!(total(&graded).earned, total(&graded).possible, "{graded:?}");
+    assert_eq!(
+        total(&graded, DEFAULT_PASS_MARK).earned,
+        total(&graded, DEFAULT_PASS_MARK).possible,
+        "{graded:?}"
+    );
     assert!(!state.rehearse.mock.as_ref().unwrap().started);
 }
 
 #[test]
 fn an_unwritten_exam_earns_nothing() {
-    use studyfrog_ui::setup::mock_exam::grading::total;
+    use studyfrog_ui::setup::mock_exam::grading::{DEFAULT_PASS_MARK, total};
     let g = generate(
         &studyfrog_rehearsal::curriculum::chunk_markdown(notes()),
         4,
@@ -152,8 +156,8 @@ fn an_unwritten_exam_earns_nothing() {
         .graded
         .clone()
         .unwrap();
-    assert_eq!(total(&graded).earned, 0);
-    assert_eq!(total(&graded).word, "Nicht bestanden");
+    assert_eq!(total(&graded, DEFAULT_PASS_MARK).earned, 0);
+    assert_eq!(total(&graded, DEFAULT_PASS_MARK).word, "Nicht bestanden");
 }
 
 #[test]
@@ -180,4 +184,51 @@ fn the_exam_is_made_from_the_stack_ticked_in_the_setup_and_names_it() {
             .as_ref()
             .is_some_and(|m| m.title.contains("diag"))
     );
+}
+
+#[test]
+fn the_pass_mark_is_a_setting_of_the_exam_that_moves_the_verdict_and_is_clamped() {
+    use studyfrog_rehearsal::grade::grade_label;
+    use studyfrog_ui::setup::mock_exam::MockExamUi;
+    use studyfrog_ui::setup::mock_exam::grading::{
+        DEFAULT_PASS_MARK, Graded, clamp_pass_mark, pass_mark_of, total,
+    };
+    // 6 of 10 points is 60 %: grade 3.3 at the default pass mark of 50 %, a fail at 65 %.
+    let one = Graded {
+        topic: "Test".to_owned(),
+        prompt: "Question".to_owned(),
+        answer: String::new(),
+        sample_answer: String::new(),
+        points_made: Vec::new(),
+        possible: 10,
+        earned: 6,
+        counted: true,
+        from_model: false,
+        caveat: None,
+    };
+    let mut state = State::default();
+    state.rehearse.mock = Some(MockExamUi {
+        graded: Some(vec![one.clone()]),
+        ..MockExamUi::default()
+    });
+    let ui = state.rehearse.mock.clone().unwrap();
+    assert_eq!(pass_mark_of(&ui), DEFAULT_PASS_MARK);
+    assert_eq!(
+        grade_label(total(std::slice::from_ref(&one), pass_mark_of(&ui)).grade),
+        "3.3"
+    );
+
+    let (state, effects) = update(state, MockExamMsg::SetPassMark(65.0));
+    assert!(effects.is_empty());
+    let ui = state.rehearse.mock.clone().unwrap();
+    assert_eq!(pass_mark_of(&ui), 65.0);
+    let graded = ui.graded.clone().unwrap();
+    assert_eq!(grade_label(total(&graded, pass_mark_of(&ui)).grade), "5.0");
+    assert_eq!(grade_label(total(&graded, DEFAULT_PASS_MARK).grade), "3.3");
+
+    let (state, _) = update(state, MockExamMsg::SetPassMark(250.0));
+    assert_eq!(pass_mark_of(state.rehearse.mock.as_ref().unwrap()), 100.0);
+    let (state, _) = update(state, MockExamMsg::SetPassMark(0.0));
+    assert_eq!(pass_mark_of(state.rehearse.mock.as_ref().unwrap()), 1.0);
+    assert_eq!(clamp_pass_mark(f32::NAN), DEFAULT_PASS_MARK);
 }

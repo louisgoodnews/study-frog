@@ -84,3 +84,20 @@ fn a_configured_pass_mark_applies_to_the_whole_exam() {
     assert_eq!(grade_label(exam_result(&[21], &[30], 60.0).grade), "2.7");
     assert_eq!(grade_label(exam_result(&[21], &[30], 75.0).grade), "5.0");
 }
+
+#[test]
+fn a_pass_mark_under_fifty_passes_at_four_and_fails_below_it() {
+    // 45 % as pass mark (STORY-0187): 47 % passes with 4.0, 44 % fails with 5.0.
+    let (badge, word) = percentage_to_german_grade(47.0, 45.0);
+    assert_eq!((grade_label(badge).as_str(), word), ("4.0", "Ausreichend"));
+    assert_eq!(grade_label(percentage_to_german_grade(44.0, 45.0).0), "5.0");
+    assert!(is_passing(percentage_to_german_grade(47.0, 45.0).0));
+    assert!(!is_passing(percentage_to_german_grade(44.0, 45.0).0));
+}
+
+#[test]
+fn a_pass_mark_of_sixty_moves_the_pass_edge_and_keeps_the_bands_above() {
+    assert_eq!(grade_label(percentage_to_german_grade(62.0, 60.0).0), "3.3");
+    assert_eq!(grade_label(percentage_to_german_grade(59.9, 60.0).0), "5.0");
+    assert_eq!(grade_label(percentage_to_german_grade(60.0, 60.0).0), "3.3");
+}

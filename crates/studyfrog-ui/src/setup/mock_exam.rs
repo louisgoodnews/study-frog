@@ -44,6 +44,8 @@ pub enum MockExamMsg {
     Answer(usize, String),
     /// Grade the answers written so far.
     Finish,
+    /// Set the pass mark of the exam, in whole percent (STORY-0187).
+    SetPassMark(f32),
     /// The answers were graded by the local model (the keyword check is done at once when no model is used).
     Graded(Vec<grading::Graded>),
     /// Close the exam view.
@@ -143,6 +145,8 @@ pub struct MockExamUi {
     pub elapsed_sec: u32,
     /// The answers are locked: submitted, and the result not yet shown.
     pub locked: bool,
+    /// The pass mark in percent, when the student has set one; `None` is the default.
+    pub pass_mark: Option<f32>,
 }
 
 /// Handle a mock-exam message.
@@ -207,6 +211,13 @@ pub fn update(state: State, msg: MockExamMsg) -> (State, Vec<Effect>) {
                 locked: false,
                 started: false,
                 graded: Some(graded),
+                ..ui
+            });
+            (with_ui(state, ui), Vec::new())
+        }
+        MockExamMsg::SetPassMark(pct) => {
+            let ui = map_ui(&state, |ui| MockExamUi {
+                pass_mark: Some(grading::clamp_pass_mark(pct)),
                 ..ui
             });
             (with_ui(state, ui), Vec::new())

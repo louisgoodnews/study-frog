@@ -129,7 +129,7 @@ fn a_failed_pdf_listing_says_why() {
 
 #[test]
 fn finishing_with_no_model_grades_by_the_keyword_check_at_once() {
-    use studyfrog_ui::setup::mock_exam::grading::total;
+    use studyfrog_ui::setup::mock_exam::grading::{DEFAULT_PASS_MARK, total};
     let g = generate(
         &studyfrog_rehearsal::curriculum::chunk_markdown(notes()),
         4,
@@ -143,7 +143,7 @@ fn finishing_with_no_model_grades_by_the_keyword_check_at_once() {
     let ui = state.rehearse.mock.unwrap();
     let graded = ui.graded.expect("graded at once");
     assert!(graded.iter().all(|q| !q.from_model));
-    assert_eq!(total(&graded).earned, 0);
+    assert_eq!(total(&graded, DEFAULT_PASS_MARK).earned, 0);
 }
 
 #[test]

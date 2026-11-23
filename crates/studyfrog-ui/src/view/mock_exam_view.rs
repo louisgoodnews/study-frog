@@ -29,7 +29,12 @@ pub fn draw(ui: &mut egui::Ui, m: &MockExamUi, out: &mut Vec<Msg>) {
         ui.colored_label(pal.danger, error);
     }
     if let Some(graded) = &m.graded {
-        result::draw(ui, graded);
+        result::draw(
+            ui,
+            graded,
+            crate::setup::mock_exam::grading::pass_mark_of(m),
+            out,
+        );
     } else if let Some(g) = &m.result {
         if m.started {
             answering(ui, g, m, out);

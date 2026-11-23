@@ -5,6 +5,8 @@ use eframe::egui::{self, RichText};
 use studyfrog_agent::rubric_eval::KEYWORD_CAVEAT;
 use studyfrog_rehearsal::grade::{grade_label, is_passing};
 
+use crate::msg::Msg;
+use crate::setup::mock_exam::MockExamMsg;
 use crate::setup::mock_exam::grading::{Graded, breakdown, total};
 use crate::theme::palette_of;
 
@@ -19,16 +21,37 @@ pub fn engine_line(graded: &[Graded]) -> String {
     }
 }
 
-/// Draw the result of a graded exam.
-pub fn draw(ui: &mut egui::Ui, graded: &[Graded]) {
+/// The pass mark control: a whole percent from 1 to 100, which regrades nothing (the points stay).
+fn pass_mark_line(ui: &mut egui::Ui, pass_mark: f32, out: &mut Vec<Msg>) {
+    let mut pct = pass_mark;
+    ui.horizontal(|ui| {
+        ui.label("Pass mark");
+        let field = ui
+            .add(
+                egui::DragValue::new(&mut pct)
+                    .range(1.0..=100.0)
+                    .speed(1.0)
+                    .max_decimals(0)
+                    .suffix(" %"),
+            )
+            .on_hover_text("The share of the points needed to pass. Below it the grade is 5.0. The grade and the verdict change at once.");
+        if field.changed() {
+            out.push(Msg::MockExam(MockExamMsg::SetPassMark(pct)));
+        }
+    });
+}
+
+/// Draw the result of a graded exam at its pass mark.
+pub fn draw(ui: &mut egui::Ui, graded: &[Graded], pass_mark: f32, out: &mut Vec<Msg>) {
     let pal = palette_of(ui);
-    let t = total(graded);
+    let t = total(graded, pass_mark);
     let pct = t.percent.unwrap_or(0.0);
     let (verdict, color) = if is_passing(t.grade) {
         ("Passed", pal.success)
     } else {
         ("Not passed", pal.danger)
     };
+    pass_mark_line(ui, pass_mark, out);
     ui.label(
         RichText::new(format!(
             "{} / {} points · {:.0} % · Grade {} ({})",
@@ -56,7 +79,7 @@ pub fn draw(ui: &mut egui::Ui, graded: &[Graded]) {
         } else {
             earned as f32 / possible as f32
         };
-        let c = if share * 100.0 >= crate::setup::mock_exam::grading::PASS_MARK {
+        let c = if share * 100.0 >= pass_mark {
             pal.success
         } else {
             pal.danger

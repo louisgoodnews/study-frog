@@ -27,7 +27,7 @@ Develop the automated exam generation pipeline in `studyfrog-agent`:
 - Parse and validate the output into a structured `MockExam` instance ready for execution.
 
 ## Acceptance Criteria
-- [ ] Curriculum chunking engine extracting core themes, definitions, and formulas from lecture PDFs or Markdown notes
+- [x] Curriculum chunking engine extracting core themes, definitions, and formulas from lecture PDFs or Markdown notes
 - [x] Multi-stage SLM generation pipeline producing balanced exam question papers with sample answers and scoring rubrics
 - [x] Validation filter rejecting hallucinated or out-of-syllabus items
 
@@ -89,3 +89,10 @@ Review (2026-11-22): the rehearse setup's "Mock exam from a PDF" and "Mock exam"
 - BUG-0040 (ticked stack): fixed (`/tmp/claude-0/review-e/19-mock-pair.png`: Pair ticked, Statistik open, title "Mock exam: pair").
 - Status stays review: criterion 1 is open (formulas) and criteria 2 and 3 cannot be checked here, and the PDF path still shows "untitled".
 
+## Verification (2026-11-23)
+
+- Criterion 1 (chunking: definitions and formulas): MET for Markdown notes, in the running app with a healthy vault (stack Statistik: note "Formel" with the full line "Standardfehler = s / Wurzel(n) = 2 / 2 = 1", note "Normalverteilung" with sentences and a formula line, two cards). The mock exam from the notes has a definition question ("Explain the following in your own words: Reliabilitaet") and a "Part C: calculations" with formula questions 6 (Formel) and 7 (Normalverteilung) (`/tmp/claude-0/g3/07-mock-exam-preview.png`). The PDF route was checked earlier (see the audit above). BUG-0053 holds the formula-count question.
+- Criterion 2 (SLM pipeline with sample answers and rubrics): NOT CHECKABLE. No local model is installed in this container. The no-model path ran: "0 from the model, 7 from the notes' templates", with reference answers and rubric points (`/tmp/claude-0/g3/07-mock-exam-preview.png`).
+- Criterion 3 (validation filter): NOT CHECKABLE. The filter runs on model output only.
+- The ticks on criteria 2 and 3 were set before this check and rest on no model run. They are left as set for the owner to decide.
+- Status stays review: criteria 2 and 3 need a local model run.

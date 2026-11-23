@@ -2,7 +2,7 @@
 id: STORY-0187
 type: story
 title: "Mock Exam Grading Report, German University Grade Scale (1.0 - 5.0), and Chapter Analytics"
-status: review
+status: done
 epic: EPIC-063
 parents: ['EPIC-063']
 estimate: 3
@@ -31,7 +31,7 @@ Build the exam evaluation and review system:
   - Expandable review of each question with the student's answer, SLM points awarded, and model answer.
 
 ## Acceptance Criteria
-- [ ] Total score summation with percentage calculation and configurable pass mark threshold
+- [x] Total score summation with percentage calculation and configurable pass mark threshold
 - [x] German university grading scale conversion mapping percentages to 1.0, 1.3, 1.7, ..., 4.0, 5.0
 - [x] Comprehensive exam review screen showing question-by-question student answers, reference solutions, and earned points
 
@@ -91,3 +91,14 @@ Review (2026-11-22): checked in the running app (no local model), `/tmp/claude-0
 - Layout at 960x640: the exam view fits (`/tmp/claude-0/review-e/21-960-preview.png`, `22-960-started.png`).
 - Status stays review: criterion 1 is open.
 
+## Implementation (2026-11-23, pass mark)
+
+The pass mark is a setting of the exam: `MockExamUi::pass_mark` (`None` is the default, 50 %), set by `MockExamMsg::SetPassMark` and clamped to whole percent from 1 to 100 (`setup::mock_exam::grading::clamp_pass_mark`). The graded result has a "Pass mark" control above the grade. It changes the grade, the verdict and the per-topic colours at once and regrades nothing, since each question's points do not depend on the mark. The setting lasts as long as the exam view is open, like the other results; it is not kept in the app settings.
+
+`studyfrog-rehearsal::grade::percentage_to_german_grade` had a fault for a pass mark under 50 %: the percentages from the mark up to 50 fell through the fixed bands to 5.0, so a 42 % exam at a 40 % mark read "Nicht bestanden". They now give 4.0 (Ausreichend).
+
+## Verification (2026-11-23)
+
+- Criterion 1 (summation, percentage, configurable pass mark): MET, in the running app. Healthy vault (stack Statistik, 4 items), a 10-question exam from templates, answers typed in the window: "10 / 24 points · 42 % · Grade 5.0 (Nicht bestanden)" with the pass mark at 50 % (`/tmp/claude-0/g3/19-graded-top.png`). Pass mark set to 40: "Grade 4.0 (Ausreichend)", "Passed" (`/tmp/claude-0/g3/20-pass-40.png`). Pass mark set to 60: "Grade 5.0 (Nicht bestanden)", "Not passed" (`/tmp/claude-0/g3/21-pass-60.png`). Tests: `studyfrog-ui/tests/mock_exam_ui.rs` (`the_pass_mark_is_a_setting_of_the_exam_that_moves_the_verdict_and_is_clamped`), `studyfrog-rehearsal/tests/grade.rs` (`a_pass_mark_under_fifty_passes_at_four_and_fails_below_it`, `a_pass_mark_of_sixty_moves_the_pass_edge_and_keeps_the_bands_above`, `a_configured_pass_mark_applies_to_the_whole_exam`).
+- Criterion 2 (German scale) and criterion 3 (review screen): ticked earlier with evidence; not re-run here. The grade tests still pass.
+- Open, not criteria: results are not kept after the view closes; model grading is unmeasured (no local model in this container).

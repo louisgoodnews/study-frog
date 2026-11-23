@@ -8,8 +8,25 @@ use studyfrog_rehearsal::curriculum_build::AnswerKey;
 use studyfrog_rehearsal::grade::{ExamResult, exam_result};
 use studyfrog_rehearsal::mock_exam::{MockExam, all_questions};
 
-/// Share of the points at which the exam is passed (German "Ausreichend": 50 %).
-pub const PASS_MARK: f32 = 50.0;
+use super::MockExamUi;
+
+/// Share of the points at which the exam is passed by default (German "Ausreichend": 50 %). The student
+/// can set another pass mark for the exam (STORY-0187).
+pub const DEFAULT_PASS_MARK: f32 = 50.0;
+
+/// The pass mark of an exam in percent: the student's setting, or the default.
+pub fn pass_mark_of(ui: &MockExamUi) -> f32 {
+    ui.pass_mark.unwrap_or(DEFAULT_PASS_MARK)
+}
+
+/// The pass mark as the student may set it: whole percent from 1 to 100; anything else is clamped.
+pub fn clamp_pass_mark(pct: f32) -> f32 {
+    if pct.is_finite() {
+        pct.round().clamp(1.0, 100.0)
+    } else {
+        DEFAULT_PASS_MARK
+    }
+}
 
 /// One question after grading.
 #[derive(Debug, Clone, PartialEq)]
@@ -90,11 +107,12 @@ pub fn counted_possible(g: &Graded) -> u32 {
     if g.counted { g.possible } else { 0 }
 }
 
-/// The exam's total: points, percentage and grade. Questions that are not counted are left out.
-pub fn total(graded: &[Graded]) -> ExamResult {
+/// The exam's total: points, percentage and grade at this pass mark. Questions that are not counted are
+/// left out.
+pub fn total(graded: &[Graded], pass_mark: f32) -> ExamResult {
     let earned: Vec<u32> = graded.iter().map(|g| g.earned).collect();
     let possible: Vec<u32> = graded.iter().map(counted_possible).collect();
-    exam_result(&earned, &possible, PASS_MARK)
+    exam_result(&earned, &possible, pass_mark)
 }
 
 /// Points earned and available per topic, in the order the topics first appear.
@@ -134,7 +152,7 @@ mod tests {
         assert!(g.iter().all(|q| q.earned == q.possible), "{g:?}");
         let none = grade(&exam, &keys, &[]);
         assert!(none.iter().all(|q| q.earned == 0));
-        assert_eq!(total(&none).percent.unwrap_or(0.0), 0.0);
+        assert_eq!(total(&none, DEFAULT_PASS_MARK).percent.unwrap_or(0.0), 0.0);
     }
 
     #[test]

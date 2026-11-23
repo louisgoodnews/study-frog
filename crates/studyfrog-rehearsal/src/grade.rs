@@ -32,19 +32,20 @@ pub fn percentage(earned: u32, possible: u32) -> Option<f32> {
 }
 
 /// Convert a percentage to a German grade and its word. Below `pass_mark` the result is always 5.0
-/// (not passed), whatever the band; otherwise the fixed bands apply.
+/// (not passed), whatever the band; otherwise the fixed bands apply. A pass mark under 50 % passes
+/// the percentages between it and 50 % with 4.0 (Ausreichend), so the grade never contradicts the mark.
 pub fn percentage_to_german_grade(pct: f32, pass_mark: f32) -> (GradeBadge, &'static str) {
     let pct = if pct.is_finite() { pct } else { 0.0 };
     if pct < pass_mark {
         let (_, tenths, word) = BANDS[BANDS.len() - 1];
         return (GradeBadge { tenths }, word);
     }
-    for &(min, tenths, word) in &BANDS {
+    for &(min, tenths, word) in &BANDS[..BANDS.len() - 1] {
         if pct >= min {
             return (GradeBadge { tenths }, word);
         }
     }
-    let (_, tenths, word) = BANDS[BANDS.len() - 1];
+    let (_, tenths, word) = BANDS[BANDS.len() - 2];
     (GradeBadge { tenths }, word)
 }
 
