@@ -8,6 +8,7 @@ pub mod curriculum_templates;
 pub mod distractor;
 pub mod exam;
 pub mod formula_gen;
+pub mod formula_report;
 pub mod formula_trace;
 pub mod grade;
 pub mod input;

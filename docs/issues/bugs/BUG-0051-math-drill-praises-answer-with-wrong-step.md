@@ -50,3 +50,13 @@ Listed in the front matter.
 - App evidence: s_x 13.3, r_xx 0.7, row `1 - r_xx` typed 0.5, answer 7.28 (within 1 %): the box shows the new headline and the row name, and no "Correct. Well worked.".
 - Not checked on screen: the green praise with every row right. The path is the same text for the `WellWorked` verdict, covered by the test.
 - Status is `review`, not `done`: its parent EPIC-062 has every child done (STORY-0182, 0183, 0184 and this bug), and the issue rules then require the epic to be done. EPIC-062 has two acceptance criteria still open (the formula engine covers only the standard error, not the confidence bands and standard scores; the drill has no hints). The owner decides whether to close the epic or reopen its criteria.
+
+## Verification (2026-11-23)
+
+The fix holds in the running app (1280x800, copy at `/tmp/claude-0/g2`; s_x 13.9, r_xx 0.76, correct s_e 6.810):
+- A wrong first row (`1 - r_xx` typed 0.5) with the answer 6.8 (0.2 % off, inside the 1 %): the headline is "The final answer is within tolerance, but a working row is wrong." and the line is "Check the row 1 - r_xx."; "Correct. Well worked." does not appear (`/tmp/claude-0/g2/shot-44-bug-check.png`).
+- Every row right (0.24, 0.49, 6.81) and the answer 6.8: "Correct. Well worked." and "All steps are correct." (`/tmp/claude-0/g2/shot-47-praise.png`). The praise path with every row right, which the 2026-11-22 note left unchecked, is now seen on screen.
+- A wrong second row (`sqrt(1 - r_xx)` typed 0.46): the headline is the same warning, the line names "Check the row sqrt(1 - r_xx).", and there is no praise (`/tmp/claude-0/g2/shot-46-bug-praise.png`).
+- The first-row message no longer tells the student to go back: it reads "This step does not match the formula. Check it against the formula and try again." (`mistake_message`, `Mistake::Unexplained`).
+
+Status stays review, as the owner asked; the epic cannot be done until this is done.

@@ -21,6 +21,8 @@ pub enum MathMsg {
     Answer(String),
     /// A row was selected: the keypad types into it.
     Active(usize),
+    /// Reveal the value of the next working row (a hint). The answer is not marked.
+    Hint,
     /// A key of the keypad was pressed.
     Key(String),
     /// Check the working and the answer.
@@ -50,6 +52,8 @@ pub struct MathDrill {
     pub feedback: Option<Feedback>,
     /// The full solution is shown.
     pub solution: bool,
+    /// How many working rows have their value revealed by a hint, in order (0 to 3).
+    pub hints: usize,
 }
 
 /// What the check said.
@@ -95,6 +99,7 @@ pub fn new_drill(seed: u64) -> MathDrill {
         answer: String::new(),
         feedback: None,
         solution: false,
+        hints: 0,
     }
 }
 
@@ -123,6 +128,10 @@ fn apply(d: MathDrill, msg: MathMsg) -> MathDrill {
         MathMsg::Check => check(d),
         MathMsg::Solution => MathDrill {
             solution: !d.solution,
+            ..d
+        },
+        MathMsg::Hint => MathDrill {
+            hints: (d.hints + 1).min(STEP_LABELS.len()),
             ..d
         },
         MathMsg::Next => new_drill(d.seed.wrapping_add(1)),

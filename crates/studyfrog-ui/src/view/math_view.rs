@@ -2,6 +2,7 @@
 //! a keypad, the check with its feedback, and the full solution on demand.
 
 use eframe::egui::{self, Frame, Stroke, TextEdit};
+use studyfrog_rehearsal::formula_report::score_report;
 use studyfrog_rehearsal::formula_trace::{TraceStep, Verdict, se_trace, verdict};
 
 use crate::msg::Msg;
@@ -35,7 +36,14 @@ pub fn draw(ui: &mut egui::Ui, d: &MathDrill, out: &mut Vec<Msg>) {
     let trace = se_trace(e.s_x, e.r_xx);
     let wrong = d.feedback.as_ref().and_then(|f| f.diagnosis.deviates_at);
     for i in 0..3 {
-        row(ui, d, i, &trace, (wrong == Some(i), d.solution), out);
+        row(
+            ui,
+            d,
+            i,
+            &trace,
+            (wrong == Some(i), d.solution || i < d.hints),
+            out,
+        );
     }
     ui.add_space(6.0);
     answer_row(ui, d, out);
@@ -47,6 +55,15 @@ pub fn draw(ui: &mut egui::Ui, d: &MathDrill, out: &mut Vec<Msg>) {
             .clicked()
         {
             out.push(Msg::Math(MathMsg::Check));
+        }
+        if d.hints < STEP_LABELS.len()
+            && kit::quiet_button(ui, "Hint")
+                .on_hover_text(
+                    "Reveals the value of the next working row. The answer is not marked.",
+                )
+                .clicked()
+        {
+            out.push(Msg::Math(MathMsg::Hint));
         }
         if kit::quiet_button(ui, "Show full solution")
             .on_hover_text("Shows each step of the solution with its value.")
@@ -69,7 +86,7 @@ pub fn draw(ui: &mut egui::Ui, d: &MathDrill, out: &mut Vec<Msg>) {
     });
     feedback(ui, d, &pal);
     if d.solution {
-        solution(ui, &trace);
+        solution(ui, d, &trace);
     }
 }
 
@@ -78,7 +95,7 @@ fn row(
     d: &MathDrill,
     i: usize,
     trace: &[TraceStep],
-    (deviates, solution): (bool, bool),
+    (deviates, revealed): (bool, bool),
     out: &mut Vec<Msg>,
 ) {
     let pal = palette_of(ui);
@@ -106,7 +123,7 @@ fn row(
                     out.push(Msg::Math(MathMsg::Step(i, text)));
                 }
                 // The correct value is shown only with the solution: it would give the answer away.
-                if let (true, Some(step)) = (solution, trace.get(i)) {
+                if let (true, Some(step)) = (revealed, trace.get(i)) {
                     ui.weak(format!("({})", fmt(step.value)));
                 }
             });
@@ -179,12 +196,34 @@ fn feedback(ui: &mut egui::Ui, d: &MathDrill, pal: &crate::theme::Palette) {
         });
 }
 
-fn solution(ui: &mut egui::Ui, trace: &[TraceStep]) {
+fn solution(ui: &mut egui::Ui, d: &MathDrill, trace: &[TraceStep]) {
     ui.add_space(8.0);
     ui.label(egui::RichText::new("Full solution").strong());
     for (label, step) in STEP_LABELS.iter().zip(trace) {
         ui.label(format!("{label} = {}", fmt(step.value)));
     }
+    score(ui, d, trace);
+}
+
+/// The result of the exercise: the person's standard scores and the confidence band of the true score
+/// around the raw score (EPIC-062). Shown with the solution, since the band depends on the answer.
+fn score(ui: &mut egui::Ui, d: &MathDrill, trace: &[TraceStep]) {
+    let e = &d.exercise;
+    let se = trace.last().map_or(0.0, |s| s.value);
+    let r = score_report(e.raw, e.mean, e.s_x, se);
+    ui.add_space(6.0);
+    ui.label(format!(
+        "A person scores {} on this test (mean {}, s_x {}).",
+        e.raw, e.mean, e.s_x
+    ));
+    ui.label(format!(
+        "z = {:.2}, T score = {:.1}, IQ-scale score = {:.1}.",
+        r.z, r.t_score, r.iq_score
+    ));
+    ui.label(format!(
+        "95% confidence band for the true score: {:.1} to {:.1}.",
+        r.band.0, r.band.1
+    ));
 }
 
 fn fmt(x: f64) -> String {

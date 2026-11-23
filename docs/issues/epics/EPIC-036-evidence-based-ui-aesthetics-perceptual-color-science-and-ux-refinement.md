@@ -57,3 +57,12 @@ stories). Spec `docs/specs/ui-colour-and-type.md`.
 ## Review (2026-11-22)
 
 Review (2026-11-22): criterion 2 stays unticked. Its line-length bound is stated in characters (55 to 75 cpl); the Help page measured about 60 to 70 cpl (/tmp/claude-0/review-a/help-1280.png), but note preview and rehearsal were not checked here, and the pixel question sits with STORY-0114. Criteria 1 and 3 were not re-checked here. Status stays review.
+
+## Verification (2026-11-23)
+
+Checked in the running app (1280x800, copy at `/tmp/claude-0/g2`) and by the tests at this head.
+- Criterion 1 (palettes in OKLCH, APCA Lc in tests): stays ticked. `appearance_apca` (6), `appearance_palette` (1, every palette meets the text and control rules) and `color_science` (11) pass. The Appearance settings show the six accents with legible labels (`/tmp/claude-0/g2/shot-51-appearance.png`). The Lc values were read from the tests, not measured from the pixels.
+- Criterion 2 (55 to 75 cpl, 4-tier scale, tabular numerals): NOT ticked. The 4-tier scale, the 1.5 line height and the tabular digits hold (`typography` tests pass; the focus timer pill keeps its digits in place across three frames, `/tmp/claude-0/g2/crop-focus-stack.png`). The measure holds in Help, the note preview and the rehearsal cards (about 60 to 67 characters per line). It does not hold in note editing: the Markdown editor is `desired_width(f32::INFINITY)` (`crates/studyfrog-ui/src/view/md_editor/mod.rs`, line 89), so its lines run the full window width. The criterion names note editing, so it stays open until the editor is bounded or the owner narrows the criterion.
+- Criterion 3 (tonal surfaces, Gestalt spacing, Zen): stays ticked. The Zen button in the top bar hides the sidebar and the status bar during a run (`/tmp/claude-0/g2/shot-13-zen-button.png`). Reports (`shot-14-reports.png`) and the stack page (`shot-16-stack.png`) use tonal panels instead of nested 1 px boxes. The Details notebook was not reached in this session (item rows did not open by mouse), so its part is not re-checked here.
+
+Status stays review: criterion 2 is open. STORY-0114 (child) stays review for the same epic.

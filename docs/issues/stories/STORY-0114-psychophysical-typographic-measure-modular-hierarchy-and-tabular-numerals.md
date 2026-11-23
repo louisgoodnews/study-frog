@@ -81,3 +81,12 @@ Criterion 1 is ticked on this evidence. Criteria 2 and 3 stay ticked as before, 
 
 
 Note (2026-11-22): status returned to review. The reading measure is met as reworded, but EPIC-036 (its parent) has criteria that are not yet checked in the app, and the issue checker does not allow a done child under an open epic.
+
+## Verification (2026-11-23)
+
+All three criteria, as worded now, checked in the running app (1280x800, copy at `/tmp/claude-0/g2`) and by the tests at this head:
+- Criterion 1 (reading measure about 60 to 75 characters per line at every text size): Help at the default size has full lines of about 60 to 67 characters in a column of about 450 px (`/tmp/claude-0/g2/shot-03-help.png`), the same measure as the 2026-11-22 note. `tests/reading_measure_ui.rs` (2 pass) and `tests/typography.rs` (the measure at each offered text size) pass.
+- Criterion 2 (4-tier scale, 1.45 to 1.55 line spacing): Help shows the page title, section heading, body and caption tiers and even line pitch (`shot-03-help.png`). `tests/typography.rs` passes: four tiers that follow the text size, a line height of 1.5, and views that take their sizes from the scale.
+- Criterion 3 (tabular digits in timers and counters): the focus pill reads "Focus 24:59", "24:57", "24:56" across three frames; the pill keeps its width and the digits keep their places (`/tmp/claude-0/g2/crop-focus-stack.png`). `tests/typography.rs` passes: both built-in fonts have tabular digits, and a ticking number never outgrows its template.
+
+Status stays review: the parent EPIC-036 stays review (its criterion 2 covers note editing, which is not bounded; see its verification).

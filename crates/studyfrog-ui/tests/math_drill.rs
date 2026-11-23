@@ -98,3 +98,48 @@ fn the_view_shows_the_formula_the_given_values_and_the_check() {
         assert!(h.query_by_label_contains(text).is_some(), "missing {text}");
     }
 }
+
+#[test]
+fn a_hint_reveals_the_next_working_value_and_does_not_mark_the_answer() {
+    let state = opened(9);
+    let state = send(state, MathMsg::Hint);
+    assert_eq!(drill(&state).hints, 1);
+    assert!(
+        drill(&state).feedback.is_none(),
+        "a hint must not check the answer"
+    );
+    let state = send(state, MathMsg::Hint);
+    let state = send(state, MathMsg::Hint);
+    let state = send(state, MathMsg::Hint);
+    assert_eq!(drill(&state).hints, 3, "hints stop at the last working row");
+    let state = send(state, MathMsg::Next);
+    assert_eq!(drill(&state).hints, 0, "a new problem starts with no hints");
+}
+
+#[test]
+fn a_hint_keeps_the_feedback_of_an_earlier_check() {
+    let state = opened(9);
+    let state = send(state, MathMsg::Check);
+    let checked = drill(&state).feedback.clone();
+    let state = send(state, MathMsg::Hint);
+    assert_eq!(drill(&state).feedback, checked);
+}
+
+#[test]
+fn the_solution_shows_the_standard_scores_and_the_band() {
+    let state = opened(11);
+    let state = send(state, MathMsg::Solution);
+    let mut m = open_model();
+    m.state.screen = Screen::Rehearse;
+    m.state.rehearse = state.rehearse;
+    let mut h = harness(m);
+    h.run_steps(4);
+    for text in [
+        "z = ",
+        "T score = ",
+        "IQ-scale score = ",
+        "95% confidence band",
+    ] {
+        assert!(h.query_by_label_contains(text).is_some(), "missing {text}");
+    }
+}
