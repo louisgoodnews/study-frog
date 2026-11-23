@@ -71,7 +71,7 @@ fn field(
                 .desired_width(width),
         )
         .on_hover_text(crate::view::tips::with_key(hint, "Ctrl+F or /"));
-    if crate::view::search_focus::focus_field(ui.ctx(), &r, text.chars().count(), requested) {
+    if crate::view::search_focus::focus_field(ui.ctx(), &r, name, text.chars().count(), requested) {
         crate::view::search_focus::taken(out, name);
     }
     r.widget_info(|| {

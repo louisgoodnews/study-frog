@@ -2,7 +2,7 @@
 //! a keypad, the check with its feedback, and the full solution on demand.
 
 use eframe::egui::{self, Frame, Stroke, TextEdit};
-use studyfrog_rehearsal::formula_trace::{TraceStep, se_trace};
+use studyfrog_rehearsal::formula_trace::{TraceStep, Verdict, se_trace, verdict};
 
 use crate::msg::Msg;
 use crate::setup::math::{MathDrill, MathMsg, STEP_LABELS};
@@ -152,17 +152,29 @@ fn feedback(ui: &mut egui::Ui, d: &MathDrill, pal: &crate::theme::Palette) {
         return;
     };
     ui.add_space(8.0);
-    let (color, text) = if f.answer_correct {
-        (pal.success, "Correct. Well worked.")
-    } else {
-        (pal.warning, "Not yet: the answer is outside the tolerance.")
+    let rows_right = f.diagnosis.deviates_at.is_none();
+    let (color, text) = match verdict(f.answer_correct, rows_right) {
+        Verdict::WellWorked => (pal.success, "Correct. Well worked."),
+        Verdict::AnswerRightRowWrong => (
+            pal.warning,
+            "The final answer is within tolerance, but a working row is wrong.",
+        ),
+        Verdict::AnswerOutside => (pal.warning, "Not yet: the answer is outside the tolerance."),
     };
+    let row = f
+        .diagnosis
+        .deviates_at
+        .and_then(|i| STEP_LABELS.get(i))
+        .map(|label| format!("Check the row {label}."));
     Frame::new()
         .stroke(Stroke::new(2.0, color))
         .corner_radius(10)
         .inner_margin(10)
         .show(ui, |ui| {
             ui.colored_label(color, text);
+            if let Some(row) = row {
+                ui.label(row);
+            }
             ui.label(&f.diagnosis.message);
         });
 }

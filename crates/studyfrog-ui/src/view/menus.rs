@@ -171,10 +171,17 @@ pub fn search_cluster(
     let mut text = state.chrome.search.clone();
     let field = ui.add(
         TextEdit::singleline(&mut text)
-            .hint_text("Search items")
+            .id(crate::view::search_focus::top_bar_id())
+            .hint_text(crate::view::search_focus::TOP_BAR)
             .desired_width(width),
     );
-    field.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, "Search items"));
+    if crate::view::search_focus::top_bar_wanted(ui.ctx()) {
+        field.request_focus();
+    }
+    crate::view::search_focus::track(ui.ctx(), &field, crate::view::search_focus::TOP_BAR);
+    field.widget_info(|| {
+        WidgetInfo::labeled(Role::TextInput, true, crate::view::search_focus::TOP_BAR)
+    });
     if text != state.chrome.search {
         out.push(Msg::Chrome(ChromeMsg::SearchEdited(text)));
     }

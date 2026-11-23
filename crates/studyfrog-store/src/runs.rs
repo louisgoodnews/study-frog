@@ -155,6 +155,36 @@ pub fn append_events(conn: &Connection, events: &[RunEvent]) -> Result<(), Store
     Ok(())
 }
 
+/// The number the next event of `run` takes: one past the highest stored, or 0.
+fn next_seq(conn: &Connection, run: Uid) -> Result<u32, StoreError> {
+    conn.query_row(
+        "SELECT COALESCE(MAX(seq) + 1, 0) FROM run_event WHERE run_uid = ?1",
+        [format_ulid(run)],
+        |r| r.get(0),
+    )
+    .map_err(sql_err)
+}
+
+/// Append events, numbering each from its run's stored log. The caller's `seq` is only an order
+/// hint: a screen that counts on its own (after the vault was reopened, or after a recovery wrote a
+/// `run_aborted`) can no longer repeat a number. Call inside the caller's transaction. Returns the
+/// events as stored.
+pub fn append_events_numbered(
+    conn: &Connection,
+    events: &[RunEvent],
+) -> Result<Vec<RunEvent>, StoreError> {
+    let mut stored = Vec::with_capacity(events.len());
+    for e in events {
+        let numbered = RunEvent {
+            seq: next_seq(conn, e.run)?,
+            ..e.clone()
+        };
+        append_events(conn, std::slice::from_ref(&numbered))?;
+        stored.push(numbered);
+    }
+    Ok(stored)
+}
+
 /// Crash recovery: every run still idle, running or paused becomes aborted and its log is closed
 /// with a `run_aborted` event. Returns how many runs were recovered.
 pub fn abort_unfinished_runs(conn: &mut Connection) -> Result<usize, StoreError> {
@@ -170,12 +200,16 @@ pub fn abort_unfinished_runs(conn: &mut Connection) -> Result<usize, StoreError>
     };
     for text in &unfinished {
         let run = uid_of(text)?;
-        let (next_seq, last_t): (u32, u32) = tx
-            .query_row("SELECT COALESCE(MAX(seq) + 1, 0), COALESCE(MAX(t_ms), 0) FROM run_event WHERE run_uid = ?1", [text], |r| Ok((r.get(0)?, r.get(1)?)))
+        let last_t: u32 = tx
+            .query_row(
+                "SELECT COALESCE(MAX(t_ms), 0) FROM run_event WHERE run_uid = ?1",
+                [text],
+                |r| r.get(0),
+            )
             .map_err(sql_err)?;
         let closing = RunEvent {
             run,
-            seq: next_seq,
+            seq: next_seq(&tx, run)?,
             t_ms: last_t,
             item: None,
             kind: studyfrog_core::event::EventKind::RunAborted,

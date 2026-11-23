@@ -2,7 +2,7 @@
 id: BUG-0042
 type: bug
 title: "A script run by hand from the job editor is reported under the name of the job that uses that file"
-status: backlog
+status: done
 estimate: 1
 labels: [m12, console]
 acceptance_criteria:
@@ -19,8 +19,8 @@ Screenshot: `/tmp/claude-0/audit/g5/0151-console-run.png`.
 Report a by-hand run under the file's name (or the job's name only when the run was started by that job). Check the Console and the exported log.
 
 ## Acceptance Criteria
-- [ ] Running a file by hand reports the file's name, e.g. 'hello.py', in the started and finished lines
-- [ ] A job's own runs still report the job's name
+- [x] Running a file by hand reports the file's name, e.g. 'hello.py', in the started and finished lines
+- [x] A job's own runs still report the job's name
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-ui/src/console_ui.rs`, `crates/studyfrog-service/src/scripting/script_launch.rs`.
@@ -31,3 +31,10 @@ Report a by-hand run under the file's name (or the job's name only when the run 
 
 ## Open Questions
 - None.
+
+## Fix
+
+- Cause: `find_job` matches a job by its script file as well as its name, and the by-hand run took the job's name as its report name.
+- Fix: `studyfrog-ui::script_runner::resolve_run` reports a run under the name typed unless that is the job's own name. The run keeps the job's access and timeout, so the by-hand run gains no access. A script of its own still runs with write access under its file name.
+- Tests: `crates/studyfrog-ui/tests/script_run_name.rs` (four tests: by-hand file name with the job's policy, a job's own name, a script of its own, an unknown name).
+- App evidence: the job editor's "Run a script by hand" (hello.py, arguments `xray yankee`) logged `started hello.py; its output follows when it ends` and `+ script hello.py finished`, with the log entry `script hello.py finished`; `script run daily-hello` still reports `daily-hello`.

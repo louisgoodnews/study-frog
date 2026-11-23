@@ -129,8 +129,28 @@ pub fn mistake_message(m: Mistake) -> &'static str {
             "This is close: check the rounding. Keep more decimals until the last step."
         }
         Mistake::Unexplained => {
-            "This step does not match the formula. Go back to the step before and check it."
+            "This step does not match the formula. Check it against the formula and try again."
         }
+    }
+}
+
+/// The headline of a drill result. Praise only when the answer and every working row are right.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Verdict {
+    /// The answer is within tolerance and every submitted row is right.
+    WellWorked,
+    /// The answer is within tolerance, but a working row is wrong: no praise.
+    AnswerRightRowWrong,
+    /// The answer is outside the tolerance.
+    AnswerOutside,
+}
+
+/// The verdict for a result: `rows_right` is true when no submitted working row deviates.
+pub fn verdict(answer_correct: bool, rows_right: bool) -> Verdict {
+    match (answer_correct, rows_right) {
+        (true, true) => Verdict::WellWorked,
+        (true, false) => Verdict::AnswerRightRowWrong,
+        (false, _) => Verdict::AnswerOutside,
     }
 }
 

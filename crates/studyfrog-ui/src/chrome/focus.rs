@@ -13,6 +13,7 @@ pub fn update(mut state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
             state.chrome.search_focus = false;
             state.chrome.focused = Some(name);
         }
+        ChromeMsg::SearchFocusLeft => state.chrome.focused = None,
         _ => {}
     }
     (state, Vec::new())

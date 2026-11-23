@@ -42,6 +42,10 @@ pub fn frame(model: &mut Model, ui: &mut egui::Ui) -> Vec<Effect> {
         .duration_since(std::time::UNIX_EPOCH)
         .map_or(0, |d| i64::try_from(d.as_millis()).unwrap_or(i64::MAX));
     let mut msgs = view::draw(&model.state, ui);
+    msgs.extend(crate::view::search_focus::end_of_frame(
+        ui.ctx(),
+        &model.state,
+    ));
     if ui.input(|i| !i.events.is_empty() || i.pointer.is_moving() || i.pointer.any_down()) {
         msgs.push(Msg::Activity);
     }

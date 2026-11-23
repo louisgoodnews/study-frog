@@ -2,7 +2,7 @@
 id: BUG-0051
 type: bug
 title: "Math drill says 'Correct. Well worked.' when the final answer is within tolerance but a working step is wrong"
-status: backlog
+status: review
 estimate: 1
 labels: [m14, rehearse, ui]
 epic: EPIC-062
@@ -41,3 +41,12 @@ Listed in the front matter.
 ## Open Questions
 
 - Should a correct final answer with a wrong step show a neutral line ("The answer is right, but one step does not match the formula") or no praise at all? Left to the design of the drill feedback.
+
+## Fix
+
+- Cause: the result box chose its headline from the answer check alone, so a correct final answer with a wrong working row got "Correct. Well worked."; the first-row message also said to go back to the step before.
+- Fix: `studyfrog-rehearsal::formula_trace::verdict` returns the headline: praise only when the answer and every submitted row are right; with a wrong row, "The final answer is within tolerance, but a working row is wrong." followed by the name of the first wrong row ("Check the row 1 - r_xx."). The generic step message no longer tells the student to go back to the step before.
+- Tests: `crates/studyfrog-rehearsal/tests/formula_verdict.rs` (`a_right_answer_with_a_wrong_first_row_is_not_praised`, `a_right_answer_with_every_row_right_is_praised`, `a_wrong_answer_is_outside_the_tolerance_whatever_the_rows`); `tests/formula.rs` still passes.
+- App evidence: s_x 13.3, r_xx 0.7, row `1 - r_xx` typed 0.5, answer 7.28 (within 1 %): the box shows the new headline and the row name, and no "Correct. Well worked.".
+- Not checked on screen: the green praise with every row right. The path is the same text for the `WellWorked` verdict, covered by the test.
+- Status is `review`, not `done`: its parent EPIC-062 has every child done (STORY-0182, 0183, 0184 and this bug), and the issue rules then require the epic to be done. EPIC-062 has two acceptance criteria still open (the formula engine covers only the standard error, not the confidence bands and standard scores; the drill has no hints). The owner decides whether to close the epic or reopen its criteria.

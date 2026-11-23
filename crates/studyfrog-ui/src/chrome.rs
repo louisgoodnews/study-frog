@@ -92,6 +92,8 @@ pub enum ChromeMsg {
     SearchFocus,
     /// A search field took the keyboard: its name.
     SearchFocusTaken(String),
+    /// No search field has the keyboard any more: the state stops naming one.
+    SearchFocusLeft,
     /// The search finished: the query it was for, and what it found.
     SearchResults(String, Result<Vec<ItemRow>, String>),
     /// The PDF part of a search finished.
@@ -220,7 +222,9 @@ pub fn update(state: State, msg: ChromeMsg) -> (State, Vec<Effect>) {
             with(state, c)
         }
         ChromeMsg::SearchEdited(text) => search_edited(state, text),
-        ChromeMsg::SearchFocus | ChromeMsg::SearchFocusTaken(_) => focus::update(state, msg),
+        ChromeMsg::SearchFocus | ChromeMsg::SearchFocusTaken(_) | ChromeMsg::SearchFocusLeft => {
+            focus::update(state, msg)
+        }
         ChromeMsg::SearchResults(query, result) => search_results(state, query, result),
         ChromeMsg::PdfResults(query, result) => pdf_results(state, query, result),
         ChromeMsg::Notify(m) => crate::notify::update(state, m),

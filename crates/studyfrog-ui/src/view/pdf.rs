@@ -32,6 +32,7 @@ fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool
     if crate::view::search_focus::focus_field(
         ui.ctx(),
         &field,
+        crate::view::search_focus::PDF_FIND,
         view.query.chars().count(),
         requested,
     ) {

@@ -12,7 +12,9 @@ use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::StepOutput;
 use studyfrog_rehearsal::session::Session;
 use studyfrog_store::error::{StoreError, sql_err};
-use studyfrog_store::runs::{abort_unfinished_runs, append_events, insert_run, set_run_state};
+use studyfrog_store::runs::{
+    abort_unfinished_runs, append_events_numbered, insert_run, set_run_state,
+};
 use studyfrog_store::schedule::{
     insert_review_of, load_mem_state_in, load_sm2_state_in, save_mem_state_in, save_sm2_state_in,
 };
@@ -72,14 +74,13 @@ pub fn record_step(
     vault: &VaultSettings,
 ) -> Result<(), StoreError> {
     let tx = conn.transaction().map_err(sql_err)?;
-    append_events(&tx, &out.events)?;
-    let started = out
-        .events
+    let stored = append_events_numbered(&tx, &out.events)?;
+    let started = stored
         .iter()
         .any(|e| e.kind == EventKind::RunStarted)
         .then_some(now);
     set_run_state(&tx, ctx.run, ctx.state, started)?;
-    for e in &out.events {
+    for e in &stored {
         if let (EventKind::ItemRated(rating), Some(item)) = (&e.kind, e.item) {
             // A custom run's graph decides whether the item comes back; a built-in run requeues on Again.
             let back = crate::learn_run::record_rating(&tx, ctx.run, item, *rating, now)?;

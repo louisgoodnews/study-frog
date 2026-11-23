@@ -90,37 +90,53 @@ pub fn start(r: &Runner, python: &str, l: Launch) -> bool {
     true
 }
 
+/// The run a typed `script run WHAT [ARGS]` asks for. A job's own name runs the job under that name.
+/// A script that a job uses is run under the name typed, the file's name, with that job's access and
+/// timeout; a script file of its own (`is_file`) runs with write access. `None` when there is neither.
+pub fn resolve_run(
+    cfg: &ScriptsConfig,
+    what: &str,
+    args: &[String],
+    is_file: bool,
+) -> Option<Launch> {
+    if let Some(job) = find_job(cfg, what) {
+        let name = if job.name == what {
+            job.name.clone()
+        } else {
+            what.to_owned()
+        };
+        let args = if args.is_empty() {
+            job.args.clone()
+        } else {
+            args.to_vec()
+        };
+        return Some(Launch {
+            job: name,
+            args,
+            ..launch_of(job, None)
+        });
+    }
+    is_file.then(|| Launch {
+        job: what.to_owned(),
+        script: what.to_owned(),
+        args: args.to_vec(),
+        access: Access::Write,
+        timeout_secs: DEFAULT_TIMEOUT_SECS,
+        event: None,
+    })
+}
+
 /// Start the job named `what` (or whose script is `what`), else the script file `what` in the scripts
 /// folder with write access; what was started, or why not.
 pub fn run_named(r: &Runner, what: &str, args: &[String]) -> Result<String, String> {
     let cfg = load_config(&r.paths.scripts);
-    let l = match find_job(&cfg, what) {
-        Some(job) => Launch {
-            args: if args.is_empty() {
-                job.args.clone()
-            } else {
-                args.to_vec()
-            },
-            ..launch_of(job, None)
-        },
-        None if r.paths.scripts.join(what).is_file()
-            && studyfrog_service::scripting::config::safe_script_path(what) =>
-        {
-            Launch {
-                job: what.to_owned(),
-                script: what.to_owned(),
-                args: args.to_vec(),
-                access: Access::Write,
-                timeout_secs: DEFAULT_TIMEOUT_SECS,
-                event: None,
-            }
-        }
-        None => {
-            return Err(format!(
-                "no job or script {what} in {}",
-                r.paths.scripts.display()
-            ));
-        }
+    let is_file = r.paths.scripts.join(what).is_file()
+        && studyfrog_service::scripting::config::safe_script_path(what);
+    let Some(l) = resolve_run(&cfg, what, args, is_file) else {
+        return Err(format!(
+            "no job or script {what} in {}",
+            r.paths.scripts.display()
+        ));
     };
     let name = l.job.clone();
     if start(r, &cfg.python, l) {
