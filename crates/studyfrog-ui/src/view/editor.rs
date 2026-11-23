@@ -170,13 +170,18 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let title = ui.label(RichText::new("Title").color(palette_of(ui).text_weak));
-    let mut text = e.form.title.clone();
-    let edit = TextEdit::singleline(&mut text)
-        .font(crate::typo::font(ui, crate::typo::Tier::Heading))
-        .desired_width(f32::INFINITY);
-    if ui.add(edit).labelled_by(title.id).changed() {
-        out.push(Msg::Edit(EditAction::Title(text)));
-    }
+    // The title is part of the text column, so it keeps to the same reading measure as the text.
+    let measure = crate::typo::measure(ui);
+    ui.scope(|ui| {
+        ui.set_max_width(measure);
+        let mut text = e.form.title.clone();
+        let edit = TextEdit::singleline(&mut text)
+            .font(crate::typo::font(ui, crate::typo::Tier::Heading))
+            .desired_width(f32::INFINITY);
+        if ui.add(edit).labelled_by(title.id).changed() {
+            out.push(Msg::Edit(EditAction::Title(text)));
+        }
+    });
     ui.add_space(8.0);
     for (i, f) in e.form.fields.iter().enumerate() {
         if let Some(t) = md_editor(

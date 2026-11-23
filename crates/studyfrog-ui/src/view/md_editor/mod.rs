@@ -12,6 +12,7 @@ use eframe::egui::{self, TextEdit};
 use crate::image_ui::ImageTarget;
 use crate::msg::Msg;
 use crate::theme::palette_of;
+use crate::typo;
 use crate::view::preview::draw_blocks;
 use blocks::blocks_of;
 use resize::{LINE, MAX_HEIGHT, MIN_HEIGHT, resize_grip};
@@ -34,6 +35,17 @@ fn macro_at_caret(
     let (span, e) = crate::md_macros::macro_before(now, caret)?;
     let (text, sel) = crate::md_macros::expand_in(now, span, &e);
     Some((text, sel, e.picture))
+}
+
+/// The widest the text may be: one reading measure, or in Split mode two measures and the gap between them, so
+/// each side is one measure. Never wider than the space there is.
+fn column_width(ui: &egui::Ui, mode: Mode) -> f32 {
+    let one = typo::measure(ui);
+    let wanted = match mode {
+        Mode::Split => 2.0 * one + ui.spacing().item_spacing.x,
+        Mode::Write | Mode::Preview => one,
+    };
+    wanted.min(ui.available_width())
 }
 
 /// How the editor shows the text.
@@ -104,16 +116,19 @@ pub fn md_editor(
                 draw_blocks(ui, &cache.1, out);
             });
     };
-    match mode {
-        Mode::Write => body(ui, &mut current, &mut changed),
-        Mode::Preview => rendered(ui, text, out),
-        Mode::Split => {
-            ui.columns(2, |cols| {
-                body(&mut cols[0], &mut current, &mut changed);
-                rendered(&mut cols[1], &current, out);
-            });
+    ui.scope(|ui| {
+        ui.set_max_width(column_width(ui, mode));
+        match mode {
+            Mode::Write => body(ui, &mut current, &mut changed),
+            Mode::Preview => rendered(ui, text, out),
+            Mode::Split => {
+                ui.columns(2, |cols| {
+                    body(&mut cols[0], &mut current, &mut changed);
+                    rendered(&mut cols[1], &current, out);
+                });
+            }
         }
-    }
+    });
     if changed
         && mode != Mode::Preview
         && let Some(done) = macro_at_caret(ui, text_id, (text, &current))

@@ -66,3 +66,10 @@ Checked in the running app (1280x800, copy at `/tmp/claude-0/g2`) and by the tes
 - Criterion 3 (tonal surfaces, Gestalt spacing, Zen): stays ticked. The Zen button in the top bar hides the sidebar and the status bar during a run (`/tmp/claude-0/g2/shot-13-zen-button.png`). Reports (`shot-14-reports.png`) and the stack page (`shot-16-stack.png`) use tonal panels instead of nested 1 px boxes. The Details notebook was not reached in this session (item rows did not open by mouse), so its part is not re-checked here.
 
 Status stays review: criterion 2 is open. STORY-0114 (child) stays review for the same epic.
+
+## Verification (2026-11-23, note editor measure)
+
+Criterion 2 stays unticked. The note editor now keeps its text to the reading measure: the body and the title are at most one `typo::measure` wide (in Split mode each side is one measure), and the details stay in the side column. Checked in the running app at 1280x800 and 960x640 (`/tmp/claude-0/sidebar/before-1280.png` and `after-1280.png`, `before-960.png` and `after-960.png`; Write mode at 1280x800 in `/tmp/claude-0/sidebar/after-1280-write.png`) and by `tests/editor_measure_ui.rs` at 1280x800 and 1600x900 in Write and Split.
+
+The criterion is still not met in full, for two reasons. The editor's text is the monospace code font, so the measure holds about 50 characters per line there, below the 55 floor. And the default view for a note's fields is Split, where two measures do not fit beside the details at 1280x800 or 960x640, so each side runs about 40 characters per line. The owner should decide whether the measure is taken in the code font (about 70 characters of it, about 550 pt) and whether Split is the default at these widths.
+

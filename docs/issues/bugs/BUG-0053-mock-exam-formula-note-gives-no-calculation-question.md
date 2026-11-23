@@ -2,7 +2,7 @@
 id: BUG-0053
 type: bug
 title: "Mock exam from notes with a formula line gives no calculation question in the template path"
-status: backlog
+status: review
 estimate: 2
 labels: [m14, rehearse, agent]
 epic: EPIC-063
@@ -21,7 +21,7 @@ Screenshot: `/tmp/claude-0/review-e/20-mock-stat.png`.
 The template path should turn a formula line in the notes into a calculation question with its reference solution and point scheme, as STORY-0186 describes. Find out where the formula line is lost (the chunking, the balance step or the template choice) and fix it. Check with the Statistik stack: the exam should have a calculation part.
 
 ## Acceptance Criteria
-- [ ] A note with a formula line (a line with '=' and a digit) makes a calculation question in the mock exam when no model is selected
+- [x] A note with a formula line (a line with '=' and a digit) makes a calculation question in the mock exam when no model is selected
 - [ ] The mock exam has a 'Part C: calculations' section when the notes hold formulas, and the question counts follow the 40 / 30 / 30 plan
 
 ## Design Notes
@@ -51,3 +51,16 @@ Vault: stack Statistik with the note "Formel" in full ("Standardfehler = s / Wur
 - Criterion 2 (Part C present, counts follow 40 / 30 / 30): Part C present, so that half holds. The counts do not follow the plan: 7 questions (2 recall, 3 case, 2 calculation), because the notes supplied 7 of the 10 asked for. The decision on padding the exam or rewording the criterion is still open (see Triage above).
 - The reported symptom came from the reporter's truncated note (`formel.md` holding only `'Standardfehler`), not from the template path. The reporter must confirm with the full vault. The bug stays open in the backlog; no code changed for it.
 - Observed, not filed: a sentence with "=" counts as a formula. Question 7 asks for the formula of "Der z-Wert misst den Abstand eines Werts vom Mittelwert in Standardabweichungen: z" and its model answer is the whole sentence with "z = (x - Mittelwert) / s = 6 / 3 = 2". A quantity name should not be a sentence. Candidate for a follow-up under STORY-0186.
+
+## Fix and verification (2026-11-23): cause confirmed, in review
+
+No code changed. The report came from a note that was cut short, not from the template path.
+
+Reproduction in the running app (this branch's build), no model selected, the stack Statistik ticked under Stacks, "Mock exam" on the rehearse setup:
+
+- Healthy stack (`formel.md` complete, plus Mittelwert, Median and Normalverteilung): 7 questions, Part C present, with question 6 "Give the formula for Standardfehler and explain its symbols" from Formel and question 7 from Normalverteilung (`/tmp/claude-0/bug53/h2-mock.png`).
+- Damaged stack (`formel.md` body only `'Standardfehler`, otherwise the same): 6 questions, Part C present, but only question 6 from Normalverteilung; the Formel calculation is gone (`/tmp/claude-0/bug53/d2-mock.png`).
+- Isolated: Formel as the only formula note (no Normalverteilung), complete note: 4 questions, Part C present with "4. (4 points, Formel) Give the formula for Standardfehler" (`/tmp/claude-0/bug53/s1-solo-healthy.png`).
+- Isolated, damaged note: 3 questions, Part B only, no Part C at all, which matches the report (`/tmp/claude-0/bug53/s3-solo-damaged.png`).
+
+A note without a formula line makes no calculation question, so the cut note is correct behaviour; the complete note gives one. Criterion 1 is met. Criterion 2's Part C half is met. Its count half (40 / 30 / 30) is not: the notes supply 3 to 7 of the 10 questions asked for, and that is an open decision recorded in the triage above (pad the exam or reword the criterion), so the criterion stays unticked. The bug stays in review, not done, because the issue rules do not allow `done` with an unchecked criterion: the reporter must confirm the cause with the full vault, and the owner must decide the count clause. If the full vault shows a different result, reopen this bug.

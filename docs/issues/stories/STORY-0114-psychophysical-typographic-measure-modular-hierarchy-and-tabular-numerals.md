@@ -90,3 +90,8 @@ All three criteria, as worded now, checked in the running app (1280x800, copy at
 - Criterion 3 (tabular digits in timers and counters): the focus pill reads "Focus 24:59", "24:57", "24:56" across three frames; the pill keeps its width and the digits keep their places (`/tmp/claude-0/g2/crop-focus-stack.png`). `tests/typography.rs` passes: both built-in fonts have tabular digits, and a ticking number never outgrows its template.
 
 Status stays review: the parent EPIC-036 stays review (its criterion 2 covers note editing, which is not bounded; see its verification).
+
+## Note (2026-11-23): the note editor follows the same measure
+
+The Markdown note editor now follows the same measure as the preview and the help pages: its text and title are at most one `typo::measure` wide (in Split mode each side is one measure), with the details in the side column. Test: `studyfrog-ui/tests/editor_measure_ui.rs` (1280x800 and 1600x900, Write and Split). The editor's code font runs about 50 characters per line at this width, not the 70 the measure is built on, and Split at 1280x800 and 960x640 is narrower than a measure per side; see EPIC-036's verification for the open criterion 2.
+
