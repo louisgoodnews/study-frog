@@ -1,7 +1,7 @@
 //! Pure transitions for a classroom session: creation and chat turns. Each function either
 //! applies its change or returns an error and leaves the session as it was.
 
-use crate::classroom::{ChatTurn, ClassroomError, ClassroomSession, Participant};
+use crate::classroom::{ChatTurn, ClassroomError, ClassroomSession, Participant, SourceRef};
 use crate::time::UnixMs;
 use crate::uid::Uid;
 
@@ -33,6 +33,7 @@ pub fn new_session(
         turns: Vec::new(),
         assignments: Vec::new(),
         submissions: Vec::new(),
+        sources: Vec::new(),
     })
 }
 
@@ -58,6 +59,15 @@ pub fn append_turn(
         at,
         text: text.to_owned(),
     });
+    Ok(())
+}
+
+/// Adds a vault item as a source of the lecture. Each item is listed once.
+pub fn add_source(session: &mut ClassroomSession, source: SourceRef) -> Result<(), ClassroomError> {
+    if session.sources.contains(&source) {
+        return Err(ClassroomError::DuplicateSource);
+    }
+    session.sources.push(source);
     Ok(())
 }
 

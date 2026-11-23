@@ -3,6 +3,7 @@
 mod arena;
 mod civil;
 mod classroom;
+mod classroom_sources;
 mod diary;
 mod exam;
 mod library;

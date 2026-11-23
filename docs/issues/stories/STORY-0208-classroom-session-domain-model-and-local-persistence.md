@@ -2,7 +2,7 @@
 id: STORY-0208
 type: story
 title: "Classroom session domain model and local storage persistence"
-status: backlog
+status: done
 epic: EPIC-068
 parents: ['EPIC-068']
 estimate: 5
@@ -24,9 +24,9 @@ Define the domain model in `studyfrog-core` and local persistence in `studyfrog-
 - Assignments (solo or group), student/user submissions, and teacher grades with structured feedback.
 
 ## Acceptance Criteria
-- [ ] Pure data types and free transition functions in `studyfrog-core` model classroom sessions, participants (teacher, simulated students, user), chat turns, solo/group assignments, submissions, and grades
-- [ ] SQLite migration and repository functions in `studyfrog-store` persist and reload full classroom sessions without data loss across restarts
-- [ ] Sessions can be listed, resumed, deleted, and exported as readable Markdown transcripts
+- [x] Pure data types and free transition functions in `studyfrog-core` model classroom sessions, participants (teacher, simulated students, user), chat turns, solo/group assignments, submissions, and grades
+- [x] SQLite migration and repository functions in `studyfrog-store` persist and reload full classroom sessions without data loss across restarts
+- [x] Sessions can be listed, resumed, deleted, and exported as readable Markdown transcripts
 
 ## Design Notes
 - Follow Invariant P1 (no inherent `impl` blocks; pure free functions) and Invariant P6 ($\le 250$ LOC per file).

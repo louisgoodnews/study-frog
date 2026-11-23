@@ -114,6 +114,26 @@ pub struct Submission {
     pub grade: Option<GradeReport>,
 }
 
+/// The kind of vault item a session draws its lecture material from.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SourceKind {
+    /// A stack (folder of notes, cards and questions).
+    Stack,
+    /// A single note.
+    Note,
+    /// A PDF in the library.
+    Pdf,
+}
+
+/// A vault item the lecture is grounded in.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SourceRef {
+    /// Which kind of item `uid` names.
+    pub kind: SourceKind,
+    /// Identity of the stack, note or PDF.
+    pub uid: Uid,
+}
+
 /// One classroom session, from creation to its last turn.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ClassroomSession {
@@ -131,6 +151,8 @@ pub struct ClassroomSession {
     pub assignments: Vec<Assignment>,
     /// Turned-in answers, at most one per owner and assignment.
     pub submissions: Vec<Submission>,
+    /// The vault items the lecture is grounded in, in the order they were added.
+    pub sources: Vec<SourceRef>,
 }
 
 /// Why a classroom operation was refused. A refused operation leaves the session unchanged.
@@ -164,6 +186,8 @@ pub enum ClassroomError {
     AlreadySubmitted,
     /// Grading was requested before the owner turned in.
     NotSubmitted,
+    /// The same vault item is already a source of this session.
+    DuplicateSource,
     /// The submission already has a grade; grades are recorded once.
     AlreadyGraded,
     /// Points are more than the maximum, or the maximum is zero.

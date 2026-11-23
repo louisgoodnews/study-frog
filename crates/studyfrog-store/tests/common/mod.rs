@@ -2,6 +2,7 @@
 
 //! Test helpers: unique temporary directories without extra dependencies.
 
+pub mod classroom;
 pub mod vault;
 
 use std::path::{Path, PathBuf};
