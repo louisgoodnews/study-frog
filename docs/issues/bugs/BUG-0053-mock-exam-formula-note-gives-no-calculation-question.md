@@ -34,3 +34,11 @@ The template path should turn a formula line in the notes into a calculation que
 
 ## Open Questions
 - Whether the formula line is kept when it sits in a note whose title is a term (the case above), or only in a note of its own.
+
+## Triage (2026-11-23): not reproduced as filed; stays backlog
+
+- The vault that showed the defect had a damaged note: `formel.md` held only `'Standardfehler` (the rest of the line was lost when the fixture was written), so the note had no formula line. Its calculation question could not exist.
+- With the complete line ("Standardfehler = s / Wurzel(n) = 2 / 2 = 1") the pre-fix binary already gives a "Part C: calculations" section, in the running app (`/tmp/claude-0/exam/b02-mock-notes.png`, Part C present). The template path is therefore not losing formula lines.
+- Changed on the way (BUG-0038 and BUG-0052 changes touch the same code): the calculation question no longer prints the formula, and its rubric points come from the formula's sides. Tests: `studyfrog-service/tests/exam_defects.rs` `a_formula_note_gives_a_calculation_part_and_the_prompt_does_not_print_the_formula`, `studyfrog-rehearsal/tests/curriculum_build.rs` `a_calculation_is_asked_for_by_its_quantity_and_checked_by_its_expression`.
+- Not met: acceptance criterion 2 ("the question counts follow the 40 / 30 / 30 plan"). The template path makes at most one question per definition and per chunk for cases, so a short note set gives a shorter exam (the preview says so: "The notes supplied 6 of the 10 questions asked for"). The counts follow the plan only when the notes hold enough items. A decision is needed on whether the exam should be padded or the criterion reworded.
+- Next step: the reporter should confirm with the full vault, and the criterion decision is open.

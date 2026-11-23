@@ -109,7 +109,7 @@ fn a_lecture_pdf_is_listed_then_made_into_an_exam() {
         matches!(
             effects.as_slice(),
             [Effect::MockExam(MockExamEffect::Generate { source: ExamSource::Slide(p), title, .. })]
-                if p == "folien/norm.pdf" && title == "Mock exam: Normierung"
+                if p == "folien/norm.pdf" && title == "Mock exam: norm.pdf"
         ),
         "{effects:?}"
     );

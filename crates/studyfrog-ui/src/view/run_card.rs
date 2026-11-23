@@ -122,6 +122,9 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) -> bool
     source_link(content, ui, out);
     ui.add_space(8.0);
     if crate::exam_ui::is_exam(run) {
+        if let Some(case) = content.case.as_deref() {
+            crate::view::exam_card::case_question(case, ui);
+        }
         crate::view::exam_card::controls(run, ui, out);
         return false;
     }

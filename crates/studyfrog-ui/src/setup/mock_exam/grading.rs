@@ -3,7 +3,7 @@
 //! of rubric points the answer makes; the results are summed by the grade scale. Pure: the model call is
 //! passed in.
 
-use studyfrog_agent::exam_grade::{Ask, grade_answer, share_met};
+use studyfrog_agent::exam_grade::{Ask, grade_answer, is_counted, share_met};
 use studyfrog_rehearsal::curriculum_build::AnswerKey;
 use studyfrog_rehearsal::grade::{ExamResult, exam_result};
 use studyfrog_rehearsal::mock_exam::{MockExam, all_questions};
@@ -22,12 +22,15 @@ pub struct Graded {
     pub answer: String,
     /// The reference answer.
     pub sample_answer: String,
-    /// Each rubric point, and whether the answer makes it.
-    pub points_made: Vec<(String, bool)>,
+    /// Each rubric point: `Some(true)` when the answer makes it, `Some(false)` when it does not, and `None`
+    /// when the keyword check could not test it ("not checked by word overlap").
+    pub points_made: Vec<(String, Option<bool>)>,
     /// Points available.
     pub possible: u32,
     /// Points earned.
     pub earned: u32,
+    /// False when no rubric point could be checked: the question is left out of the exam's total.
+    pub counted: bool,
     /// True when the local model judged the answer; false when the keyword check did.
     pub from_model: bool,
     /// What the student should know about this grade, if anything.
@@ -60,10 +63,10 @@ pub fn grade_with(
                 &answer,
                 ask.as_deref_mut(),
             );
-            let points_made: Vec<(String, bool)> = judged
+            let points_made: Vec<(String, Option<bool>)> = judged
                 .criteria
                 .iter()
-                .map(|c| (c.criterion.clone(), c.met))
+                .map(|c| (c.criterion.clone(), c.checked.then_some(c.met)))
                 .collect();
             let possible = u32::from(q.points.0);
             Graded {
@@ -74,6 +77,7 @@ pub fn grade_with(
                 points_made,
                 possible,
                 earned: (possible as f32 * share_met(&judged.criteria)).round() as u32,
+                counted: is_counted(&judged.criteria),
                 from_model: judged.from_model,
                 caveat: judged.caveat,
             }
@@ -81,10 +85,15 @@ pub fn grade_with(
         .collect()
 }
 
-/// The exam's total: points, percentage and grade.
+/// Points available for a question in the total: none when it is not counted.
+pub fn counted_possible(g: &Graded) -> u32 {
+    if g.counted { g.possible } else { 0 }
+}
+
+/// The exam's total: points, percentage and grade. Questions that are not counted are left out.
 pub fn total(graded: &[Graded]) -> ExamResult {
     let earned: Vec<u32> = graded.iter().map(|g| g.earned).collect();
-    let possible: Vec<u32> = graded.iter().map(|g| g.possible).collect();
+    let possible: Vec<u32> = graded.iter().map(counted_possible).collect();
     exam_result(&earned, &possible, PASS_MARK)
 }
 
@@ -95,9 +104,9 @@ pub fn breakdown(graded: &[Graded]) -> Vec<(String, u32, u32)> {
         match out.iter_mut().find(|(t, _, _)| *t == g.topic) {
             Some(row) => {
                 row.1 += g.earned;
-                row.2 += g.possible;
+                row.2 += counted_possible(g);
             }
-            None => out.push((g.topic.clone(), g.earned, g.possible)),
+            None => out.push((g.topic.clone(), g.earned, counted_possible(g))),
         }
     }
     out
@@ -172,6 +181,7 @@ mod tests {
             points_made: Vec::new(),
             possible: p,
             earned: e,
+            counted: true,
             from_model: false,
             caveat: None,
         };

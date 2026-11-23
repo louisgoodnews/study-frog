@@ -25,9 +25,10 @@ pub fn finish(state: State) -> (State, Vec<Effect>) {
                 answers: ui.answers.clone(),
                 provider,
             });
+            // The answers are locked from here until the result is shown.
             let ui = MockExamUi {
-                started: false,
                 judging: true,
+                locked: true,
                 graded: None,
                 ..ui
             };

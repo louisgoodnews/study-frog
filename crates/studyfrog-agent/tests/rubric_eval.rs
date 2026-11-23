@@ -65,3 +65,19 @@ fn offline_fallback_names_missing_ideas() {
     );
     assert!(r.overall_pct < 1.0);
 }
+
+/// BUG-0038: a point with no word the keyword check can match is not checked, and does not count as missing.
+#[test]
+fn a_point_with_no_word_to_match_is_not_checked_and_not_counted_as_missing() {
+    let rubric = vec!["a b c".to_owned(), "names the test scores".to_owned()];
+    let r = fallback_evaluate("The test scores match the criterion.", true, &rubric);
+    assert!(!r.criteria[0].checked, "{:?}", r.criteria[0]);
+    assert!(!r.criteria[0].met);
+    assert!(
+        r.criteria[0]
+            .feedback
+            .starts_with("Not checked by word overlap")
+    );
+    assert!(r.criteria[1].checked && r.criteria[1].met);
+    assert!((overall_pct(true, &r.criteria) - 100.0).abs() < 1e-3);
+}

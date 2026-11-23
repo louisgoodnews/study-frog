@@ -67,7 +67,8 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
             let (state, ended) = crate::run_clock::tick(state);
             let (state, saved) = crate::editor_save::tick(crate::editor_leave::expire(state));
             let (state, focus) = crate::focus_ui::tick(state);
-            (state, [polled, more, ended, saved, focus].concat())
+            let (state, timed) = crate::setup::mock_exam::clock::tick(state);
+            (state, [polled, more, ended, saved, focus, timed].concat())
         }
         Msg::PickImage(t) => crate::image_ui::pick(state, t),
         Msg::ImageAdded(t, r) => crate::image_ui::added(state, t, r),

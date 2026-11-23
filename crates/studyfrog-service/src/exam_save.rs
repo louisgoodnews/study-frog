@@ -14,7 +14,8 @@ use crate::exam_gen::chunks_of_pdf;
 use crate::pdfs::pdf_abs_path;
 use crate::session::{ServiceError, VaultSession};
 
-/// The notes of a folder (the vault root when `None`), cut into chunks: each item's title is a topic.
+/// The notes of a folder (the vault root when `None`), cut into chunks: each item's title is a topic and its
+/// body (or answer) is the text.
 pub fn notes_chunks(
     session: &VaultSession,
     folder: Option<&str>,
@@ -26,7 +27,14 @@ pub fn notes_chunks(
         .filter(|r| matches!(r.kind, ItemKind::Note | ItemKind::Card | ItemKind::Question))
     {
         let c = load_item_content(session, row.uid)?;
-        md.push_str(&format!("# {}\n{}\n{}\n\n", c.title, c.prompt, c.answer));
+        // The body of a note, or the answer of a card or question. Their prompt is left out: a reference
+        // answer must not repeat the question (BUG-0052).
+        let body = if c.answer.trim().is_empty() {
+            &c.prompt
+        } else {
+            &c.answer
+        };
+        md.push_str(&format!("# {}\n{}\n\n", c.title, body));
     }
     Ok(chunk_markdown(&md))
 }

@@ -138,7 +138,9 @@ pub(super) fn case_result(run: &RunView, ui: &mut egui::Ui) {
     });
     for result in &report.criteria {
         ui.horizontal_wrapped(|ui| {
-            if result.met {
+            if !result.checked {
+                kit::pill(ui, "Not checked by word overlap", pal.text_weak);
+            } else if result.met {
                 kit::pill(ui, "Met", pal.success);
             } else {
                 kit::pill(ui, "Missing", pal.danger);

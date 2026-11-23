@@ -18,6 +18,7 @@ pub mod model_catalog;
 pub mod model_provider;
 pub mod provider;
 pub mod rubric_eval;
+pub mod rubric_prompt;
 pub mod settings;
 pub mod sidecar_process;
 pub mod sidecar_supervisor;

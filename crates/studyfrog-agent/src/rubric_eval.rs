@@ -4,6 +4,8 @@
 
 use serde::Deserialize;
 
+pub use crate::rubric_prompt::case_system;
+
 /// Share of the score for choosing correctly; the rest is the rubric.
 pub const CHOICE_WEIGHT: f32 = 0.4;
 /// Share of the score for the rubric points met.
@@ -13,6 +15,9 @@ pub const KEYWORD_CAVEAT: &str = "Checked by word overlap, without a model: a co
 
 /// Share of a criterion's significant words that must appear for it to count as met.
 pub const MATCH_SHARE: f32 = 0.6;
+/// What the student is told about a point the keyword check cannot test.
+pub const NOT_CHECKED: &str =
+    "Not checked by word overlap: this point has no word of four letters or more to match.";
 
 /// Whether one criterion was met, and what to tell the student.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -21,6 +26,9 @@ pub struct CriterionResult {
     pub criterion: String,
     /// Whether the justification makes the point.
     pub met: bool,
+    /// Whether the point was tested at all. The keyword check cannot test a point with no word of four
+    /// letters or more; such a point is not checked, and it is neither met nor missing.
+    pub checked: bool,
     /// One sentence for the student.
     pub feedback: String,
 }
@@ -40,12 +48,13 @@ pub struct EvalReport {
     pub caveats: Option<String>,
 }
 
-/// Overall score from the choice and the criteria, 0 to 100.
+/// Overall score from the choice and the criteria, 0 to 100. Criteria that were not checked do not count.
 pub fn overall_pct(choice_valid: bool, criteria: &[CriterionResult]) -> f32 {
-    let rubric = if criteria.is_empty() {
+    let checked: Vec<&CriterionResult> = criteria.iter().filter(|c| c.checked).collect();
+    let rubric = if checked.is_empty() {
         1.0
     } else {
-        criteria.iter().filter(|c| c.met).count() as f32 / criteria.len() as f32
+        checked.iter().filter(|c| c.met).count() as f32 / checked.len() as f32
     };
     let choice = if choice_valid { 1.0 } else { 0.0 };
     ((CHOICE_WEIGHT * choice + RUBRIC_WEIGHT * rubric) * 100.0).clamp(0.0, 100.0)
@@ -81,8 +90,11 @@ pub fn fallback_evaluate(justification: &str, choice_valid: bool, rubric: &[Stri
             let wanted = significant_words(criterion);
             let missing: Vec<&String> = wanted.iter().filter(|w| !have.contains(w)).collect();
             let covered = wanted.len() - missing.len();
-            let met = !wanted.is_empty() && covered as f32 >= MATCH_SHARE * wanted.len() as f32;
-            let feedback = if met {
+            let checked = !wanted.is_empty();
+            let met = checked && covered as f32 >= MATCH_SHARE * wanted.len() as f32;
+            let feedback = if !checked {
+                NOT_CHECKED.to_owned()
+            } else if met {
                 "Covered.".to_owned()
             } else {
                 let hints: Vec<&str> = missing.iter().take(3).map(|w| w.as_str()).collect();
@@ -91,6 +103,7 @@ pub fn fallback_evaluate(justification: &str, choice_valid: bool, rubric: &[Stri
             CriterionResult {
                 criterion: criterion.clone(),
                 met,
+                checked,
                 feedback,
             }
         })
@@ -138,11 +151,13 @@ pub fn parse_model_report(json: &str, rubric: &[String]) -> Result<EvalReport, S
                 Some(w) => CriterionResult {
                     criterion: criterion.clone(),
                     met: w.met,
+                    checked: true,
                     feedback: w.feedback.clone(),
                 },
                 None => CriterionResult {
                     criterion: criterion.clone(),
                     met: false,
+                    checked: true,
                     feedback: "Not assessed by the model.".to_owned(),
                 },
             }
@@ -164,38 +179,6 @@ pub fn json_span(reply: &str) -> Option<&str> {
     (start < end).then(|| &reply[start..=end])
 }
 
-/// The instructions for checking one case's answer with the local model. The model works in two stages
-/// in its reply: the choice first, then each rubric point against the justification alone. It ends with
-/// one JSON object, read by [`parse_model_report`].
-pub fn case_system(
-    vignette: &str,
-    decision: &str,
-    options: &[String],
-    expected: &[String],
-    rubric: &[String],
-) -> String {
-    let mut out = format!(
-        "You check a student's answer to a case study. Work in two stages, then finish.\n\n\
-         Stage 1, the choice. The options were: {}. The expected choice is: {}. Say whether the student's \
-         choice is the expected one: choice_valid is true only then.\n\n\
-         Stage 2, the rubric. For each criterion below, look for the point in the student's justification only, \
-         not in the case. Mark it met only when the justification makes that point. In its feedback, quote the \
-         words that show it, or say in one sentence what is missing.\n\n\
-         Case: {vignette}\nDecision: {decision}\n\nCriteria:\n",
-        options.join("; "),
-        expected.join("; ")
-    );
-    for c in rubric {
-        out.push_str(&format!("- {c}\n"));
-    }
-    out.push_str(
-        "\nEnd with ONE JSON object on its own, like {\"choice_valid\": true, \"criteria_results\": \
-         [{\"criterion_text\": \"<criterion exactly as listed>\", \"met\": true, \"feedback\": \"<one sentence>\"}], \
-         \"caveats\": \"<what the student should double-check, or empty>\"}. Give every criterion once.",
-    );
-    out
-}
-
 #[cfg(test)]
 mod tests {
     #![allow(clippy::unwrap_used)]
@@ -209,25 +192,6 @@ mod tests {
             Some("{\"choice_valid\": true, \"criteria_results\": []}")
         );
         assert_eq!(json_span("no json here"), None);
-    }
-
-    #[test]
-    fn the_prompt_names_the_choice_the_criteria_and_the_json_shape() {
-        let sys = case_system(
-            "A clinic screens for anxiety.",
-            "Which instrument?",
-            &["Short screen".to_owned(), "Interview".to_owned()],
-            &["Short screen".to_owned()],
-            &["addresses scoring speed".to_owned()],
-        );
-        for part in [
-            "expected choice is: Short screen",
-            "- addresses scoring speed",
-            "criteria_results",
-            "caveats",
-        ] {
-            assert!(sys.contains(part), "missing {part}: {sys}");
-        }
     }
 
     #[test]

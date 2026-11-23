@@ -2,7 +2,7 @@
 id: BUG-0022
 type: bug
 title: "In an exam run, a case study shows only its vignette, without its decision prompt or options"
-status: backlog
+status: done
 estimate: 2
 labels: [m14, rehearse, ui]
 epic: EPIC-061
@@ -51,3 +51,13 @@ None.
 Reproduced. Case "Klinik-Screening" (decision "Which instrument should the clinic use?", options Short screen | Full interview | Self-report scale) in the Diagnostik stack, run as an exam (`rehearse setup --preset all --stack diagnostik --mode exam`). The item shows only the vignette and a "Your answer" box; the decision prompt and the options are missing (`/tmp/claude-0/verifyA/24-exam-run-case.png`). Left in the backlog. The answer-mode comparison was not retaken in this round.
 
 Review (2026-11-22): still NOT FIXED. Current binary, vault `/tmp/claude-0/review-d/vault`, stack `diag`, exam (`rehearse setup --preset all --stack diag --mode exam`, then `rehearse type x` and `rehearse submit` to item 4 of 4). The state reports `prompt` = the vignette only, and the screen shows the vignette with "Your answer" and "Submit and lock answer" only, with no decision prompt and no options (`/tmp/claude-0/review-d/05-exam-case.png`). The same case in answer mode shows the decision, the three options and the justification box (`/tmp/claude-0/review-d/06-answer-case.png`). Status stays backlog.
+
+## Fix (2026-11-23)
+
+Cause: `view/run_card.rs` returned from `item()` after the exam's answer controls, so the case's decision and options (`case_controls`, which are answer-mode widgets with checkboxes and "Check my answer", and that flips the card) were never drawn in an exam.
+
+Change: `view/exam_card.rs` draws the case's decision (bold), its options as text, and "Name your choice and justify it in your written answer." above "Your answer". The exam's grading is unchanged; whether a case is graded from the choice is still the open question.
+
+Test: `view/exam_card.rs` `a_case_in_an_exam_shows_its_decision_and_every_option`.
+
+Verified in the running app (fixed build, 2026-11-23, exam run of stack `diag`): the decision, the three options and the answer box show at 1280 by 800 (`/tmp/claude-0/exam/a-case-1280.png`) and at 960 by 640 (`/tmp/claude-0/exam/a-case-01-exam.png`). Before the fix: `/tmp/claude-0/exam/b-case-01-exam.png` (vignette and "Your answer" only).

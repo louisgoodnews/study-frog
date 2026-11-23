@@ -42,6 +42,12 @@ pub fn draw(ui: &mut egui::Ui, graded: &[Graded]) {
     );
     ui.colored_label(color, verdict);
     ui.weak(engine_line(graded));
+    let left_out = graded.iter().filter(|g| !g.counted).count();
+    if left_out > 0 {
+        ui.weak(format!(
+            "{left_out} question(s) not counted: no rubric point of them could be checked by word overlap."
+        ));
+    }
     ui.add_space(8.0);
     ui.label(RichText::new("By topic").strong());
     for (topic, earned, possible) in breakdown(graded) {
@@ -64,17 +70,12 @@ pub fn draw(ui: &mut egui::Ui, graded: &[Graded]) {
     ui.label(RichText::new("Review").strong());
     for (i, g) in graded.iter().enumerate() {
         ui.add_space(6.0);
-        ui.label(
-            RichText::new(format!(
-                "{}. ({} / {} points, {}) {}",
-                i + 1,
-                g.earned,
-                g.possible,
-                g.topic,
-                g.prompt
-            ))
-            .strong(),
-        );
+        let score = if g.counted {
+            format!("{} / {} points", g.earned, g.possible)
+        } else {
+            "not counted".to_owned()
+        };
+        ui.label(RichText::new(format!("{}. ({score}, {}) {}", i + 1, g.topic, g.prompt)).strong());
         ui.label(format!(
             "Your answer: {}",
             if g.answer.trim().is_empty() {
@@ -89,10 +90,10 @@ pub fn draw(ui: &mut egui::Ui, graded: &[Graded]) {
         }
         for (point, met) in &g.points_made {
             ui.horizontal_wrapped(|ui| {
-                let (word, c) = if *met {
-                    ("Made", pal.success)
-                } else {
-                    ("Missing", pal.danger)
+                let (word, c) = match met {
+                    Some(true) => ("Made", pal.success),
+                    Some(false) => ("Missing", pal.danger),
+                    None => ("Not checked by word overlap", pal.text_weak),
                 };
                 crate::view::kit::pill(ui, word, c);
                 ui.label(point);

@@ -2,7 +2,7 @@
 id: EPIC-061
 type: epic
 title: "Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification"
-status: review
+status: done
 parents: []
 labels: [m14, rehearse, agent, ui]
 acceptance_criteria:
@@ -28,7 +28,7 @@ Deliver an advanced scenario-based learning subsystem:
 - [x] Specialized Case Study item format supporting rich scenario vignettes, decision inputs, and justification criteria
 - [x] Multi-criteria local SLM evaluator scoring both categorical decisions (e.g. test selection) and conceptual rationales
 - [x] Structured rehearsal UI rendering case scenarios, dual-input fields, and criterion-by-criterion semantic feedback
-- [ ] Seamless integration with existing stacks, spaced repetition scheduling, and exam runs
+- [x] Seamless integration with existing stacks, spaced repetition scheduling, and exam runs
 
 ## Design Notes
 Implement domain types in `studyfrog-core` / `studyfrog-rehearsal`. Implement multi-criteria SLM prompting and parsing in `studyfrog-agent` (using local Ollama/candle). Ensure all functions remain pure free functions (Invariant P1) and files stay $\le 250$ LOC (Invariant P6).
@@ -51,3 +51,7 @@ Review (2026-11-22): criterion 4 re-checked in the running app (`/tmp/claude-0/r
 - Spaced repetition: MET. A spaced run (`--preset spaced --mode answer`, effect `update_schedule`) rated the case "hard" after the answer "Short screen". The vault index now holds a `review` row for the case (rating 3) and a `mem_state` row with a due date about 2 days later (`/tmp/claude-0/review-d/11-spaced-after.png`). Checked with a copy of `.studyfrog/index.sqlite`.
 - Exam runs: NOT MET. The exam run shows the vignette and "Your answer" only, with no decision prompt or options (BUG-0022 still open, `/tmp/claude-0/review-d/05-exam-case.png`). An exam run is also practice_only in the schedule (correct by design: "an exam never changes your review schedule").
 - Criterion 4 stays unticked; the epic stays in review.
+
+## Fix (2026-11-23)
+
+Criterion 4 is MET. Its only open part was the exam run, where a case showed only its vignette (BUG-0022, now done). The exam run now shows the decision and the options above the answer box, at 1280 by 800 (`/tmp/claude-0/exam/a-case-1280.png`). Stacks, library and spaced scheduling were verified earlier (review of 2026-11-22). Children: BUG-0022 is done. The epic is done.

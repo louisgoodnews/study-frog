@@ -91,3 +91,21 @@ fn a_rubric_point_the_model_skips_is_not_met() {
 fn an_empty_rubric_earns_no_share() {
     assert_eq!(share_met(&[]), 0.0);
 }
+
+/// BUG-0038: an answer with no checked point is not counted; checked points alone set the share.
+#[test]
+fn unchecked_points_leave_the_share_to_the_checked_ones() {
+    use studyfrog_agent::exam_grade::is_counted;
+    let rubric = vec![
+        "a b c".to_owned(),
+        "names the true score variance".to_owned(),
+    ];
+    let g = grade_answer(QUESTION, SAMPLE, &rubric, "true score variance", None);
+    assert!(!g.from_model);
+    assert!((share_met(&g.criteria) - 1.0).abs() < 1e-6);
+    assert!(is_counted(&g.criteria));
+    let none = vec!["a b c".to_owned()];
+    let g = grade_answer(QUESTION, SAMPLE, &none, "anything", None);
+    assert!(!is_counted(&g.criteria));
+    assert_eq!(share_met(&g.criteria), 0.0);
+}

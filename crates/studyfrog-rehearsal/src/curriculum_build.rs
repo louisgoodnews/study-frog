@@ -4,6 +4,8 @@
 use crate::curriculum::{Chunk, significant_words};
 use crate::mock_exam::{ExamQuestion, ExamSection, MockExam, QuestionPoints};
 
+pub use crate::curriculum_templates::templates;
+
 /// Kinds of question, in the exam's order.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Kind {
@@ -107,68 +109,6 @@ pub fn accept(q: &GeneratedQuestion, chunks: &[Chunk]) -> Result<(), String> {
         );
     }
     Ok(())
-}
-
-/// Offline questions from the notes' own definitions and formulas, so an exam can be made without a
-/// model. The answers are the notes' lines themselves, and the questions say so.
-pub fn templates(chunks: &[Chunk], wanted: Plan) -> Vec<GeneratedQuestion> {
-    let mut out = Vec::new();
-    let mut recall = Vec::new();
-    let mut calc = Vec::new();
-    for c in chunks {
-        for d in &c.definitions {
-            recall.push(GeneratedQuestion {
-                kind: Kind::Recall,
-                prompt: format!("Explain the following in your own words: {}", term_of(d)),
-                sample_answer: d.clone(),
-                rubric: vec!["gives the meaning, not just the term".to_owned()],
-                points: 2,
-                topic: c.topic.clone(),
-            });
-        }
-        for f in &c.formulas {
-            calc.push(GeneratedQuestion {
-                kind: Kind::Calculation,
-                prompt: format!("State the formula and what each symbol means: {f}"),
-                sample_answer: f.clone(),
-                rubric: vec![
-                    "names the formula".to_owned(),
-                    "explains the symbols".to_owned(),
-                ],
-                points: 4,
-                topic: c.topic.clone(),
-            });
-        }
-    }
-    let case: Vec<GeneratedQuestion> = chunks
-        .iter()
-        .map(|c| GeneratedQuestion {
-            kind: Kind::Case,
-            prompt: format!("A colleague applies the ideas of {} in a new study. Which points must the study respect?", c.topic),
-            sample_answer: c.text.chars().take(240).collect(),
-            rubric: vec!["names one key point of the topic".to_owned()],
-            points: 4,
-            topic: c.topic.clone(),
-        })
-        .collect();
-    out.extend(recall.into_iter().take(wanted.recall));
-    out.extend(case.into_iter().take(wanted.case));
-    out.extend(calc.into_iter().take(wanted.calc));
-    out
-}
-
-/// The term of a definition line: the text before the colon, or the first words before " ist "/" is ".
-fn term_of(line: &str) -> String {
-    match line.split_once(':') {
-        Some((t, _)) => t.trim().to_owned(),
-        None => line
-            .split(" ist ")
-            .chain(line.split(" is "))
-            .next()
-            .unwrap_or(line)
-            .trim()
-            .to_owned(),
-    }
 }
 
 /// Put the questions into the exam's sections, in kind order, and keep their reference answers beside it.

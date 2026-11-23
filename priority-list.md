@@ -184,7 +184,7 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
   - [x] STORY-0178 Cognitive profile dashboard (curves, distribution and semantic trend, BUG-0030)
 
 **Milestone 14.4: University academic mastery lab**
-- [ ] EPIC-061 Case-study decision matrices
+- [x] EPIC-061 Case-study decision matrices
   - [x] STORY-0179 Case-study model and vault storage (built: model, validation, question files with the case fields)
   - [ ] STORY-0180 Rubric evaluator (done; the prompt template open)
   - [x] STORY-0181 Case-study rehearsal UI (built: vignette, choice and justification, evaluation pills; not yet inside a rehearsal run)

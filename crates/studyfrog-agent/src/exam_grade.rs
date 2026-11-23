@@ -20,12 +20,20 @@ pub struct AnswerGrade {
     pub caveat: Option<String>,
 }
 
-/// Share of the rubric points made, 0.0 to 1.0. An answer against an empty rubric earns nothing.
+/// Share of the checked rubric points made, 0.0 to 1.0. Points not checked by word overlap do not count
+/// either way. An answer with no checked point earns nothing.
 pub fn share_met(criteria: &[CriterionResult]) -> f32 {
-    if criteria.is_empty() {
+    let checked: Vec<&CriterionResult> = criteria.iter().filter(|c| c.checked).collect();
+    if checked.is_empty() {
         return 0.0;
     }
-    criteria.iter().filter(|c| c.met).count() as f32 / criteria.len() as f32
+    checked.iter().filter(|c| c.met).count() as f32 / checked.len() as f32
+}
+
+/// Whether the answer can be graded at all: at least one rubric point was checked. An answer that is
+/// not counted is left out of the exam's total rather than scored 0.
+pub fn is_counted(criteria: &[CriterionResult]) -> bool {
+    criteria.iter().any(|c| c.checked)
 }
 
 /// Grade `answer` to a question. With a model, it judges each rubric point; without one, or when its reply
@@ -119,11 +127,13 @@ pub fn parse_criteria(reply: &str, rubric: &[String]) -> Result<Vec<CriterionRes
                 Some(w) => CriterionResult {
                     criterion: point.clone(),
                     met: w.met,
+                    checked: true,
                     feedback: w.feedback.clone(),
                 },
                 None => CriterionResult {
                     criterion: point.clone(),
                     met: false,
+                    checked: true,
                     feedback: "Not assessed by the model.".to_owned(),
                 },
             }

@@ -5,6 +5,7 @@ use studyfrog_agent::provider::{Provider, may_send};
 
 use crate::agent_conn::selected_provider;
 use crate::effect::Effect;
+use crate::pdf_names::file_name;
 use crate::setup::mock_exam::{
     EXAM_QUESTIONS, ExamSource, MockExamEffect, MockExamUi, SlideChoice,
 };
@@ -90,16 +91,8 @@ pub fn slides_listed(state: State, result: Result<Vec<SlideChoice>, String>) -> 
 
 /// Make an exam from the lecture PDF at `path`.
 pub fn from_slide(state: State, path: String) -> (State, Vec<Effect>) {
-    let title = state
-        .rehearse
-        .mock
-        .as_ref()
-        .and_then(|ui| ui.slides.as_ref())
-        .and_then(|list| list.iter().find(|c| c.path == path))
-        .map_or_else(
-            || format!("Mock exam: {path}"),
-            |c| format!("Mock exam: {}", c.title),
-        );
+    // The exam is titled with the PDF's file name: a PDF's own title is often a program's placeholder (BUG-0039).
+    let title = format!("Mock exam: {}", file_name(&path));
     let (provider, note) = exam_model(&state);
     let ui = MockExamUi {
         title: title.clone(),

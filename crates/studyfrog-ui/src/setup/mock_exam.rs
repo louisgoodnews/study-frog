@@ -7,6 +7,7 @@ use studyfrog_rehearsal::curriculum_build::AnswerKey;
 use studyfrog_rehearsal::mock_exam::MockExam;
 use studyfrog_service::exam_gen::Generated;
 
+pub mod clock;
 mod finish;
 pub mod grading;
 mod open;
@@ -136,6 +137,12 @@ pub struct MockExamUi {
     pub answers: Vec<String>,
     /// The graded questions, once the exam is finished.
     pub graded: Option<Vec<grading::Graded>>,
+    /// When the exam was started, on the app clock in seconds; the timer counts from it.
+    pub started_at: Option<f64>,
+    /// Whole seconds of the exam's time used, as the timer last read them.
+    pub elapsed_sec: u32,
+    /// The answers are locked: submitted, and the result not yet shown.
+    pub locked: bool,
 }
 
 /// Handle a mock-exam message.
@@ -169,15 +176,22 @@ pub fn update(state: State, msg: MockExamMsg) -> (State, Vec<Effect>) {
         MockExamMsg::Save => save::save(state),
         MockExamMsg::Saved(result) => save::saved(state, result),
         MockExamMsg::Start => {
+            let now = state.now;
             let ui = map_ui(&state, |ui| MockExamUi {
                 started: true,
                 graded: None,
+                started_at: Some(now),
+                elapsed_sec: 0,
+                locked: false,
                 ..ui
             });
             (with_ui(state, ui), Vec::new())
         }
         MockExamMsg::Answer(i, text) => {
             let ui = map_ui(&state, |ui| {
+                if ui.locked {
+                    return ui;
+                }
                 let mut answers = ui.answers.clone();
                 if let Some(slot) = answers.get_mut(i) {
                     *slot = text;
@@ -190,6 +204,8 @@ pub fn update(state: State, msg: MockExamMsg) -> (State, Vec<Effect>) {
         MockExamMsg::Graded(graded) => {
             let ui = map_ui(&state, |ui| MockExamUi {
                 judging: false,
+                locked: false,
+                started: false,
                 graded: Some(graded),
                 ..ui
             });

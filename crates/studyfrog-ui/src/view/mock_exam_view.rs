@@ -4,8 +4,10 @@
 mod result;
 
 use eframe::egui::{self, RichText, TextEdit};
+use studyfrog_rehearsal::mock_timer::{TimerStatus, timer_status};
 
 use crate::msg::Msg;
+use crate::run_clock::mmss;
 use crate::setup::mock_exam::{MockExamMsg, MockExamUi, SlideChoice};
 use crate::theme::palette_of;
 use crate::view::kit;
@@ -146,12 +148,33 @@ fn preview(
     }
 }
 
+/// The time left and, in the last ten and two minutes, the warning in the danger colour (BUG-0045).
+fn timer_line(ui: &mut egui::Ui, limit_sec: u32, elapsed_sec: u32) {
+    let pal = palette_of(ui);
+    let left = limit_sec.saturating_sub(elapsed_sec);
+    ui.label(RichText::new(format!("Time left {}", mmss(left * 1000))).strong());
+    match timer_status(limit_sec, elapsed_sec) {
+        TimerStatus::TwoMinutesLeft => {
+            ui.colored_label(pal.danger, "Two minutes left");
+        }
+        TimerStatus::TenMinutesLeft => {
+            ui.colored_label(pal.danger, "Ten minutes left");
+        }
+        TimerStatus::Running { .. } | TimerStatus::Expired => {}
+    }
+}
+
 fn answering(
     ui: &mut egui::Ui,
     g: &studyfrog_service::exam_gen::Generated,
     m: &MockExamUi,
     out: &mut Vec<Msg>,
 ) {
+    if m.locked {
+        ui.weak("Submitted. Your answers are locked until the result is shown.");
+    } else {
+        timer_line(ui, g.exam.time_limit_min * 60, m.elapsed_sec);
+    }
     for (i, q) in g
         .exam
         .sections
@@ -171,7 +194,8 @@ fn answering(
         let field = ui.add(
             TextEdit::multiline(&mut text)
                 .desired_rows(3)
-                .desired_width(f32::INFINITY),
+                .desired_width(f32::INFINITY)
+                .interactive(!m.locked),
         );
         field.widget_info(|| {
             egui::WidgetInfo::labeled(egui::Role::TextInput, true, format!("Answer {}", i + 1))
@@ -181,8 +205,11 @@ fn answering(
         }
     }
     ui.add_space(8.0);
+    if m.locked {
+        return;
+    }
     if kit::primary_button(ui, "Finish and grade")
-        .on_hover_text("Grades every answer and shows the grade with the review.")
+        .on_hover_text("Grades every answer and shows the grade with the review. The exam also ends when the time runs out.")
         .clicked()
     {
         out.push(Msg::MockExam(MockExamMsg::Finish));

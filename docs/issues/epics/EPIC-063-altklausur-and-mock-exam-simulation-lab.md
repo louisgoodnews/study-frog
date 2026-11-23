@@ -23,9 +23,9 @@ Develop a comprehensive Altklausur / Mock Exam Simulation Lab:
 4. **University Grade Conversion & Analytics**: Compute aggregate scores, assign a university grade according to standard distribution tables (1.0, 1.3, 1.7, ..., 4.0, 5.0), and highlight knowledge deficits per module chapter.
 
 ## Acceptance Criteria
-- [ ] Comprehensive mock exam framework with configurable question points, total duration, and strict test rules
+- [x] Comprehensive mock exam framework with configurable question points, total duration, and strict test rules
 - [ ] Automated exam generation from lecture slides and course scripts using local SLM prompting
-- [ ] Multi-format question mix combining free-text conceptual recall, case scenarios, and calculation problems
+- [x] Multi-format question mix combining free-text conceptual recall, case scenarios, and calculation problems
 - [x] Detailed exam grading report mapping achieved percentages to the German university grading scale (1.0 to 5.0)
 
 ## Design Notes
@@ -61,3 +61,12 @@ Review (2026-11-22): checked in the running app (no local model), `/tmp/claude-0
 - Children: STORY-0186 and STORY-0187 stay in review; BUG-0038, BUG-0039, BUG-0045 stay in backlog; BUG-0040 is done (verified, `/tmp/claude-0/review-e/19-mock-pair.png`). New: BUG-0052, BUG-0053.
 - Status stays review.
 
+## Fix (2026-11-23)
+
+Criteria 1 and 3 are MET in the running app (fixed build):
+- Criterion 1 (strict test rules): the exam shows the time left, warns at ten and at two minutes, submits when the time runs out and locks the answers while they are graded (BUG-0045, `/tmp/claude-0/exam/t-03-started.png`, `/tmp/claude-0/exam/t-05-two-warning.png`, `/tmp/claude-0/exam/t-06-expired.png`, `/tmp/claude-0/exam/l-05-judging.png`). Points set the total duration (three minutes a point; 12 minutes for one 4-point case).
+- Criterion 3 (question mix): the notes exam shows Part A (recall), Part B (case scenarios) and Part C (calculations) (`/tmp/claude-0/exam/b02-mock-notes.png`, `/tmp/claude-0/exam/a-notes-01-preview.png`). The counts follow the 40 / 30 / 30 plan only as far as the notes supply (BUG-0053 is open on that point).
+
+Criterion 2 stays unticked: the local model stages were not run, because no model is installed here. The epic stays in review.
+
+Child bugs: BUG-0045 and BUG-0052 are done; BUG-0053 is backlog (not reproduced as filed; see its triage note). BUG-0038 and BUG-0039 were found in this audit and have no epic link; their notes say what was fixed.

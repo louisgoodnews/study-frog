@@ -69,8 +69,8 @@ fn list_slides(w: &mut Worker, now_ns: i64) -> Msg {
                 rows.into_iter()
                     .filter(|r| r.error.is_none())
                     .map(|r| SlideChoice {
+                        title: crate::pdf_names::label(&r.path, &r.title),
                         path: r.path,
-                        title: r.title,
                     })
                     .collect()
             })

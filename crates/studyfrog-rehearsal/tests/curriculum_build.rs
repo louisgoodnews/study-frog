@@ -100,3 +100,43 @@ fn assembly_keeps_the_kinds_in_order_with_their_keys() {
     assert_eq!(keys.len(), 3);
     assert!(studyfrog_rehearsal::mock_exam::validate_mock_exam(&exam).is_ok());
 }
+
+/// BUG-0038: a recall rubric point is the meaning from the notes, so the keyword check can test it.
+#[test]
+fn a_recall_rubric_point_is_the_meaning_from_the_notes() {
+    let chunks = chunk_markdown("# Gueltigkeit\nGueltigkeit: misst, was er soll.\n");
+    let qs = templates(&chunks, plan(3));
+    let recall = qs.iter().find(|q| q.kind == Kind::Recall).unwrap();
+    assert_eq!(recall.rubric, ["misst, was er soll"]);
+    assert_eq!(recall.sample_answer, "Gueltigkeit: misst, was er soll.");
+    assert!(
+        !recall
+            .rubric
+            .iter()
+            .any(|r| r.contains("not just the term"))
+    );
+}
+
+/// BUG-0038 and BUG-0053: a calculation's rubric names the quantity and the expression, and its prompt does not
+/// print the formula.
+#[test]
+fn a_calculation_is_asked_for_by_its_quantity_and_checked_by_its_expression() {
+    let chunks = chunk_markdown("# Formel\nStandardfehler = s / Wurzel(n) = 2 / 2 = 1\n");
+    let qs = templates(&chunks, plan(10));
+    let calc = qs.iter().find(|q| q.kind == Kind::Calculation).unwrap();
+    assert_eq!(calc.rubric, ["Standardfehler", "s / Wurzel(n)"]);
+    assert_eq!(
+        calc.prompt,
+        "Give the formula for Standardfehler and explain its symbols."
+    );
+    assert!(!calc.prompt.contains("Wurzel"));
+}
+
+/// BUG-0052: a case template's rubric is a sentence of the notes, never the question.
+#[test]
+fn a_case_rubric_point_is_a_sentence_of_the_notes() {
+    let chunks = chunk_markdown("# Mittelwert\nSumme durch Anzahl\n");
+    let qs = templates(&chunks, plan(10));
+    let case = qs.iter().find(|q| q.kind == Kind::Case).unwrap();
+    assert_eq!(case.rubric, ["Summe durch Anzahl"]);
+}
