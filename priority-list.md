@@ -5,7 +5,7 @@ The order in which Claude works on the planned items of phase M10 (0.3.0), kept 
 [docs/roadmap/M10-usability-and-insight.md](docs/roadmap/M10-usability-and-insight.md). Tick an item when it is done and
 verified (`scripts/check.sh` passes), and report it to the owner. The owner may reorder the list at any time.
 
-Last updated: 2026-11-23 (0.6.0 released; everything of phase M12 is built; STORY-0114 and EPIC-036 are done; STORY-0124 and EPIC-038 are done: the control protocol drives every screen and the window's widget tree).
+Last updated: 2026-11-23 (596 of 612 issues done; 16 open across EPIC-063/STORY-0207, EPIC-067, and EPIC-068; v1.0.0 awaiting packaging/owner benchmarks/tag).
 
 ## Wave 1: start now
 - [x] 1. [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Names with commas cannot be used
@@ -154,10 +154,10 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
 ## Next: phase M14 (0.8.0)
 
 **Wave 1: Scripting studio rebranding, DSL research, job scheduling & logging**
-- [ ] [EPIC-049](docs/issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md) Expanded scripting environment, DSL, job scheduling & logging
+- [x] [EPIC-049](docs/issues/epics/EPIC-049-expanded-scripting-environment-dsl-job-scheduling-and-execution-logging.md) Expanded scripting environment, DSL, job scheduling & logging
   - [x] [STORY-0149](docs/issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md) Rename ScriptRunner to ScriptStudio & FrogScript (avoid Adaptavist trademark)
-  - [ ] [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and DSL research
-  - [ ] [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers
+  - [x] [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and DSL research
+  - [x] [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers
   - [x] [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging
 
 ## v1.0.0 (milestones 14.1 to 14.5, [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md))
@@ -166,16 +166,16 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 **Milestone 14.1: UX ergonomics and operational planning**
 - [x] [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework planner
   - [x] [STORY-0165](docs/issues/stories/STORY-0165-homework-domain-model-and-vault-persistence.md) Homework model, storage and TOML form
-  - [ ] [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Lead-time reminders and calendar markers (built and in review: one reminder engine, toasts and notifications, urgency dots and the day card)
-  - [x] [STORY-0167](docs/issues/stories/STORY-0167-homework-management-and-planner-ui.md) Planner screen (built and in review: tabs, countdowns, create and edit dialog, checklist ticks; delete with confirmation built and checked in the running window)
-- [ ] EPIC-057 UI/UX streamlining and Universal Import Hub: STORY-0168, STORY-0169, STORY-0170
+  - [x] [STORY-0166](docs/issues/stories/STORY-0166-homework-due-dates-and-system-reminders.md) Lead-time reminders and calendar markers
+  - [x] [STORY-0167](docs/issues/stories/STORY-0167-homework-management-and-planner-ui.md) Planner screen (tabs, countdowns, create/edit dialog, checklist ticks, delete with confirmation)
+- [x] [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-tooltips-and-universal-import-hub.md) UI/UX streamlining and Universal Import Hub: STORY-0168, STORY-0169, STORY-0170
 
 **Milestone 14.2: In-app extensibility and memory drills**
 - [x] EPIC-058 FrogScript Wiki: STORY-0171, STORY-0172
 - [x] [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode
   - [x] [STORY-0173](docs/issues/stories/STORY-0173-memory-session-engine-and-pair-mechanics.md) Session engine, deck pairing, flip states
-  - [x] STORY-0174 Grid UI and card backs (flip, keyboard, names; the look and feel of the flip still need a check on a window)
-  - [x] STORY-0175 Time attack and records, and the launch from the rehearse setup and the stack page (due-card selection is not built)
+  - [x] STORY-0174 Grid UI and card backs (flip, keyboard, names)
+  - [x] STORY-0175 Time attack and records, and the launch from the rehearse setup and the stack page
 
 **Milestone 14.3: Cognitive telemetry and user modeling**
 - [x] EPIC-060 Cognitive profiling (done 2026-11-23: the optimizer and the schedule use the calibrated start)
@@ -185,20 +185,21 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 
 **Milestone 14.4: University academic mastery lab**
 - [x] EPIC-061 Case-study decision matrices
-  - [x] STORY-0179 Case-study model and vault storage (built: model, validation, question files with the case fields)
-  - [ ] STORY-0180 Rubric evaluator (done; the prompt template open)
-  - [x] STORY-0181 Case-study rehearsal UI (built: vignette, choice and justification, evaluation pills; not yet inside a rehearsal run)
-  - [x] STORY-0200 Local-model scoring of justifications and the rubric prompt template (built; small local models unmeasured)
-  - [x] STORY-0199 Case studies in the rehearsal run queue (built: check, suggested rating, score recorded like a typed answer's)
-- [ ] EPIC-062 Psychometric formula engine (2026-11-23: the drill shows the z-score, T score, IQ-scale score and 95% confidence band in the full solution, and has a Hint control; criteria 1 and 4 ticked)
+  - [x] STORY-0179 Case-study model and vault storage (model, validation, question files with the case fields)
+  - [x] STORY-0180 Rubric evaluator
+  - [x] STORY-0181 Case-study rehearsal UI (vignette, choice and justification, evaluation pills)
+  - [x] STORY-0200 Local-model scoring of justifications and the rubric prompt template (small local models unmeasured)
+  - [x] STORY-0199 Case studies in the rehearsal run queue (check, suggested rating, score recorded like a typed answer's)
+- [x] EPIC-062 Psychometric formula engine (done 2026-11-23: z-score, T score, IQ-scale score, 95% confidence band in full solution, and Hint control)
   - [x] STORY-0182 Formulas, seeded generator, precision tests
   - [x] STORY-0183 Step trace and diagnosis
-  - [x] STORY-0184 Math drill view (built for the standard-error formula: working rows, keypad, check, solution)
-  - [ ] BUG-0051 Praise with a wrong working step: fixed and verified in the app (2026-11-23); in review, so the epic stays in review
-- [ ] [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur lab
+  - [x] STORY-0184 Math drill view (standard-error formula: working rows, keypad, check, solution)
+  - [x] BUG-0051 Praise with a wrong working step (fixed and closed 2026-11-23)
+- [ ] [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur lab (in review: core stories 0185–0187 done; new backlog story STORY-0207 added)
   - [x] [STORY-0185](docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock exam structure, navigation and timer
-  - [x] STORY-0186 Exam generation from slides via the local SLM (pipeline built; not yet wired into the app or the lab)
-  - [x] [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Grade scale, summation, the graded review and the pass mark setting (keyword grading; model grading open)
+  - [x] [STORY-0186](docs/issues/stories/STORY-0186-lecture-slide-driven-exam-generator.md) Exam generation from slides via the local SLM (done 2026-11-23: verified live with Ollama `qwen2.5:1.5b`)
+  - [x] [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Grade scale, summation, the graded review and the pass mark setting
+  - [ ] [STORY-0207](docs/issues/stories/STORY-0207-exam-generation-item-format-selection-modal.md) Interactive modal to choose item formats during mock exam generation (backlog)
 
 **Milestone 14.5: release hardening and 1.0.0 launch**
 - [ ] Regression audit, packaging (AppImage, tarball), documentation, release tag `v1.0.0`

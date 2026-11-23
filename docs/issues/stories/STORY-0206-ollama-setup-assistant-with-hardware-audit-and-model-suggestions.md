@@ -2,7 +2,7 @@
 id: STORY-0206
 type: story
 title: "Ollama setup assistant: hardware audit, live Ollama status and model suggestions that fit this machine"
-status: review
+status: done
 epic: EPIC-055
 parents: ['EPIC-055']
 estimate: 5
@@ -33,7 +33,7 @@ Add an assistant (a panel in the local-model settings and a screen reachable fro
 - [x] The assistant queries the local Ollama service (by default at 127.0.0.1:11434) for its version and the models already installed, and shows whether Ollama is missing, not running, running with no models, or ready
 - [x] The assistant lists models suggested for this machine, ranked by fit: each suggestion shows its download size, the memory it needs, whether it fits in memory or video memory, whether it is already installed, and a short reason for its rank; the list updates when the audit or the installed models change
 - [x] The assistant guides the setup step by step from the state it found (install Ollama, start the service, pull a model, run it), with each command shown in a copyable block and the next step highlighted; the steps are the same whether the user is on Linux, macOS or Windows
-- [ ] The user picks a suggested or installed model as StudyFrog's local model, and the assistant checks it with one short test prompt before it is used for scoring or grading
+- [x] The user picks a suggested or installed model as StudyFrog's local model, and the assistant checks it with one short test prompt before it is used for scoring or grading
 - [x] Nothing is downloaded, installed or started without the user's explicit confirmation; the assistant contacts only the local Ollama address and no other host
 - [x] The same audit, status and suggestions are available through the control protocol (for example `ollama status`, `ollama suggest`), so an AI agent can run the setup check
 
@@ -73,3 +73,9 @@ Checked 2026-11-23 on Linux (4 logical cores, no GPU, no Ollama installed), in t
 - Criterion 6 (nothing without confirmation): by code review and tests. The app runs only read-only commands (`ollama --version`, `nvidia-smi`, `sysctl`, `vm_stat`, `df`, reads of `/proc` and sysfs), each with a timeout; the install, pull and start steps are commands for the user to copy; the HTTP calls go to the loopback address only (`a_remote_address_is_never_contacted`). The test prompt runs only when the user presses its button. Not traced at the network level.
 - Criterion 7 (control protocol): in the window `ctl audit`, `ctl ollama status` and `ctl ollama suggest` answered the same data as the panel (missing, then ready with the stub). Headless tests in `studyfrog-ui/tests/ollama_control.rs` (parsing and answer shapes); the help table lists the three rows.
 - Gate: `scripts/check.sh` (see the commit message for its result).
+
+### Live Ollama verification (2026-11-23, owner's machine)
+Verified on Linux (Intel Core i5-10210U, 8 logical cores, AVX/AVX2/F16C/FMA, 6.8 GB free / 16.5 GB RAM, 11.3 GB free in `~/.ollama/models`) against live Ollama `0.40.16` at `127.0.0.1:11434` using a scratch `STUDYFROG_HOME`:
+- Before pulling a model: `ctl ollama status` reported `state: "no_models"` with next step "Pull a model"; `ctl ollama suggest` ranked 7 fitting models (`phi3.5:3.8b` #1, `qwen2.5:1.5b` #5) and marked `7b`/`14b` models `too_large`.
+- After `ollama pull qwen2.5:1.5b` (986 MB): `ctl ollama status` reported `state: "ready"` with 1 model and advanced the guide to "Run the model"; `ctl ollama suggest` promoted `qwen2.5:1.5b` to rank 1 (`installed: true`).
+- Criterion 5 (live test prompt): in the running StudyFrog window (Assistant > Connections), clicking "Check this computer" and then "Test and use qwen2.5:1.5b" received a real reply from Ollama in 4,743 ms (`logs/agent.log`: `Local model (Ollama) 127.0.0.1 200`), displayed `"Test passed for qwen2.5:1.5b: Local model (Ollama) answered: the connection to 127.0.0.1 works with the model qwen2.5:1.5b."`, and saved `Local model (Ollama)` (`protocol = "ollama"`, `model = "qwen2.5:1.5b"`, `allowed = true`) to `config/providers.toml`.

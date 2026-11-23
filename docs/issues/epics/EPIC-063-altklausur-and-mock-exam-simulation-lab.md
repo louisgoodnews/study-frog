@@ -24,7 +24,7 @@ Develop a comprehensive Altklausur / Mock Exam Simulation Lab:
 
 ## Acceptance Criteria
 - [x] Comprehensive mock exam framework with configurable question points, total duration, and strict test rules
-- [ ] Automated exam generation from lecture slides and course scripts using local SLM prompting
+- [x] Automated exam generation from lecture slides and course scripts using local SLM prompting
 - [x] Multi-format question mix combining free-text conceptual recall, case scenarios, and calculation problems
 - [x] Detailed exam grading report mapping achieved percentages to the German university grading scale (1.0 to 5.0)
 
@@ -70,3 +70,7 @@ Criteria 1 and 3 are MET in the running app (fixed build):
 Criterion 2 stays unticked: the local model stages were not run, because no model is installed here. The epic stays in review.
 
 Child bugs: BUG-0045 and BUG-0052 are done; BUG-0053 is backlog (not reproduced as filed; see its triage note). BUG-0038 and BUG-0039 were found in this audit and have no epic link; their notes say what was fixed.
+
+## Verification (2026-11-23, live Ollama on owner's machine)
+
+Criterion 2 is MET in the running app with live Ollama `0.40.16` (`qwen2.5:1.5b`): clicking "Mock exam" on the `Statistik` stack sent 3 chunked prompts to `127.0.0.1` (`200`), produced a balanced multi-format exam (Parts A/B/C) with a model-generated question and grounded reference answer, and filtered 8 unsupported model items (`STORY-0186` now `done`). All child stories and bugs are `done`; epic closed.

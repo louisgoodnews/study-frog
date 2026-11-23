@@ -2,7 +2,7 @@
 id: STORY-0186
 type: story
 title: "Lecture Slide and Script-Driven Exam Generation Engine via Local SLM"
-status: review
+status: done
 epic: EPIC-063
 parents: ['EPIC-063']
 estimate: 5
@@ -96,3 +96,10 @@ Review (2026-11-22): the rehearse setup's "Mock exam from a PDF" and "Mock exam"
 - Criterion 3 (validation filter): NOT CHECKABLE. The filter runs on model output only.
 - The ticks on criteria 2 and 3 were set before this check and rest on no model run. They are left as set for the owner to decide.
 - Status stays review: criteria 2 and 3 need a local model run.
+
+## Verification (2026-11-23, live Ollama on owner's machine)
+
+Verified in the running StudyFrog window with `Local model (Ollama)` (`qwen2.5:1.5b` on Ollama `0.40.16`, `127.0.0.1:11434`) against a seeded `Statistik` stack containing a `Klassische Testtheorie` note (definitions, formula, and case vignette):
+- Criterion 2 (multi-stage SLM generation pipeline): `logs/agent.log` recorded 3 HTTP `200` requests to `127.0.0.1` (one per heading chunk). The generated exam preview reported `9 questions, 84 minutes, 28 points: 1 from the model, 8 from the notes' templates` across Part A (conceptual recall), Part B (case scenarios), and Part C (calculations), including model-generated question 1 (*"Bitte definieren Sie die drei Begriffe Reliabilität, Validität und Objektivität."*) with a grounded reference answer under "Show reference answers".
+- Criterion 3 (validation filter): the preview reported `8 questions were left out because the notes do not support them`, confirming the grounding/out-of-syllabus filter actively ran on real model output and rejected unsupported items while retaining the grounded question and topping up from templates.
+- All three acceptance criteria are verified; status set to `done`.

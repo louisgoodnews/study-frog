@@ -2,7 +2,7 @@
 id: EPIC-055
 type: epic
 title: "Offline Local SLM Internal Assistant"
-status: review
+status: done
 parents: []
 labels: [m13, slm, agent]
 acceptance_criteria:
