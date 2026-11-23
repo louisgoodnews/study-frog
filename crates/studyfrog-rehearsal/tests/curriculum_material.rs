@@ -3,67 +3,54 @@
 
 use studyfrog_rehearsal::curriculum::chunk_markdown;
 use studyfrog_rehearsal::curriculum_build::{
-    GeneratedQuestion, Kind, Plan, Short, material, plan, short_note, shortfalls, templates,
+    ExamItemFormat, FormatPlan, FormatShort, GeneratedQuestion, material, plan, short_note,
+    shortfalls, templates,
 };
+use studyfrog_rehearsal::exam_format::{plan_count, plan_total, set_plan_count};
 
-/// BUG-0055: full notes (four definitions, three formulas, five paragraphs) give the plan's counts exactly.
+fn legacy_made(recall: usize, case: usize, calc: usize) -> FormatPlan {
+    let mut p = FormatPlan::default();
+    set_plan_count(&mut p, ExamItemFormat::OpenQuestion, recall);
+    set_plan_count(&mut p, ExamItemFormat::CaseScenario, case);
+    set_plan_count(&mut p, ExamItemFormat::Calculation, calc);
+    p
+}
+
+/// BUG-0055: full notes give the plan's counts exactly.
 #[test]
 fn full_material_gives_the_plan_counts_and_no_shortfall() {
     let chunks = chunk_markdown(FULL);
     let want = plan(10);
-    assert_eq!(
-        want,
-        Plan {
-            recall: 4,
-            case: 3,
-            calc: 3
-        }
-    );
-    assert_eq!(
-        material(&chunks),
-        Plan {
-            recall: 4,
-            case: 5,
-            calc: 3
-        }
-    );
+    assert_eq!(want, legacy_made(4, 3, 3));
+    let mat = material(&chunks);
+    assert_eq!(plan_count(&mat, ExamItemFormat::OpenQuestion), 4);
+    assert_eq!(plan_count(&mat, ExamItemFormat::CaseScenario), 5);
+    assert_eq!(plan_count(&mat, ExamItemFormat::Calculation), 3);
     let qs = templates(&chunks, want);
-    assert_eq!(count_kind(&qs, Kind::Recall), 4);
-    assert_eq!(count_kind(&qs, Kind::Case), 3);
-    assert_eq!(count_kind(&qs, Kind::Calculation), 3);
+    assert_eq!(count_fmt(&qs, ExamItemFormat::OpenQuestion), 4);
+    assert_eq!(count_fmt(&qs, ExamItemFormat::CaseScenario), 3);
+    assert_eq!(count_fmt(&qs, ExamItemFormat::Calculation), 3);
     assert!(shortfalls(want, made_of(&qs)).is_empty());
 }
 
-/// BUG-0055: partial notes (two definitions, one paragraph, one formula) give what they hold, and each short part
-/// is named with its counts.
+/// BUG-0055: partial notes give what they hold, and each short part is named with its counts.
 #[test]
 fn partial_material_gives_what_it_holds_and_names_each_short_part() {
     let chunks = chunk_markdown(PARTIAL);
-    assert_eq!(
-        material(&chunks),
-        Plan {
-            recall: 2,
-            case: 1,
-            calc: 1
-        }
-    );
+    let mat = material(&chunks);
+    assert_eq!(plan_count(&mat, ExamItemFormat::OpenQuestion), 2);
+    assert_eq!(plan_count(&mat, ExamItemFormat::CaseScenario), 1);
+    assert_eq!(plan_count(&mat, ExamItemFormat::Calculation), 1);
     let want = plan(10);
     let qs = templates(&chunks, want);
     let made = made_of(&qs);
-    assert_eq!(
-        made,
-        Plan {
-            recall: 2,
-            case: 1,
-            calc: 1
-        }
-    );
+    assert_eq!(made, legacy_made(2, 1, 1));
     let short = shortfalls(want, made);
     assert_eq!(short.len(), 3);
     assert_eq!(
         short[0],
-        Short {
-            kind: Kind::Recall,
+        FormatShort {
+            format: ExamItemFormat::OpenQuestion,
             wanted: 4,
             made: 2
         }
@@ -79,14 +66,7 @@ fn partial_material_gives_what_it_holds_and_names_each_short_part() {
 #[test]
 fn empty_material_makes_no_questions_and_every_part_is_short() {
     let chunks = chunk_markdown("");
-    assert_eq!(
-        material(&chunks),
-        Plan {
-            recall: 0,
-            case: 0,
-            calc: 0
-        }
-    );
+    assert_eq!(material(&chunks), FormatPlan::default());
     let want = plan(10);
     let qs = templates(&chunks, want);
     assert!(qs.is_empty());
@@ -98,7 +78,7 @@ fn empty_material_makes_no_questions_and_every_part_is_short() {
 fn the_plan_adds_up_to_the_total() {
     for total in 3..=20 {
         let p = plan(total);
-        assert_eq!(p.recall + p.case + p.calc, total, "total {total}");
+        assert_eq!(plan_total(&p), total, "total {total}");
     }
 }
 
@@ -106,14 +86,14 @@ const FULL: &str = "# Reliabilität\nReliabilität: consistency of measurement o
 
 const PARTIAL: &str = "# Reliabilität\nReliabilität: consistency of measurement over repeated testing occasions.\nValidität: the degree to which a test measures what it claims to measure.\ns_e = s_x * sqrt(1 - r_xx)\n";
 
-fn count_kind(qs: &[GeneratedQuestion], kind: Kind) -> usize {
-    qs.iter().filter(|q| q.kind == kind).count()
+fn count_fmt(qs: &[GeneratedQuestion], format: ExamItemFormat) -> usize {
+    qs.iter().filter(|q| q.format == format).count()
 }
 
-fn made_of(qs: &[GeneratedQuestion]) -> Plan {
-    Plan {
-        recall: count_kind(qs, Kind::Recall),
-        case: count_kind(qs, Kind::Case),
-        calc: count_kind(qs, Kind::Calculation),
-    }
+fn made_of(qs: &[GeneratedQuestion]) -> FormatPlan {
+    legacy_made(
+        count_fmt(qs, ExamItemFormat::OpenQuestion),
+        count_fmt(qs, ExamItemFormat::CaseScenario),
+        count_fmt(qs, ExamItemFormat::Calculation),
+    )
 }

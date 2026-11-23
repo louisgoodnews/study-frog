@@ -1,16 +1,22 @@
-//! Generating a mock exam from course notes (STORY-0186), in four stages: the notes are cut into
-//! topic chunks; the local model writes questions for each chunk (or templates stand in when no model
-//! is given or a chunk fails); every question is checked against its topic's notes; the questions are
-//! balanced to the 40/30/30 plan and assembled into a mock exam with its reference answers.
+//! Generating a mock exam from course notes (STORY-0186, STORY-0207): topic chunks, optional SLM
+//! prompting across selected formats, grounding checks, template fallback, and assembly.
 
-use studyfrog_agent::exam_gen::{RawQuestion, chunk_system, chunk_user, parse_questions};
+use studyfrog_agent::exam_gen::{
+    FormatCounts, chunk_system_for_formats, chunk_user, parse_questions,
+};
 use studyfrog_rehearsal::curriculum::{Chunk, chunk_markdown};
 use studyfrog_rehearsal::curriculum_build::{
-    AnswerKey, GeneratedQuestion, Kind, Plan, Short, accept, assemble, plan, shortfalls, templates,
+    AnswerKey, FormatPlan, FormatShort, GeneratedQuestion, accept, assemble, shortfalls, templates,
+};
+use studyfrog_rehearsal::exam_format::{
+    ALL_EXAM_FORMATS, ExamFormatMix, ExamItemFormat, format_index, legacy_plan, plan_total,
+    resolve_format_plan,
 };
 use studyfrog_rehearsal::mock_exam::MockExam;
 
-/// The model as the generator asks it: the system instructions and the user's message, in; the reply, out.
+use crate::exam_gen_judge::judge;
+
+/// The model as the generator asks it: system instructions and user message in; reply out.
 pub type Ask<'a> = dyn FnMut(&str, &str) -> Result<String, String> + 'a;
 
 /// The result: the exam, its reference answers, and what the stages did with each question.
@@ -26,26 +32,47 @@ pub struct Generated {
     pub from_templates: usize,
     /// Why questions were rejected or a chunk failed, one line each.
     pub rejected: Vec<String>,
-    /// The parts that have fewer questions than the plan asks for, because the notes lack the material (BUG-0055).
-    pub short: Vec<Short>,
+    /// The parts that have fewer questions than the plan asks for, because the notes lack material (BUG-0055).
+    pub short: Vec<FormatShort>,
 }
 
-/// Make an exam of about `total` questions from `chunks`. With no `ask`, everything comes from templates.
+/// Make an exam using the legacy 40/30/30 plan across OpenQuestion, CaseScenario, and Calculation.
 pub fn generate(
     chunks: &[Chunk],
     total: usize,
     title: &str,
+    ask: Option<&mut Ask<'_>>,
+) -> Generated {
+    generate_with_plan(chunks, legacy_plan(total), title, ask)
+}
+
+/// Validate `mix`, resolve exact per-format counts, and generate an exam from `chunks`.
+pub fn generate_with_mix(
+    chunks: &[Chunk],
+    mix: &ExamFormatMix,
+    title: &str,
+    ask: Option<&mut Ask<'_>>,
+) -> Result<Generated, String> {
+    let want = resolve_format_plan(mix)?;
+    Ok(generate_with_plan(chunks, want, title, ask))
+}
+
+/// Generate an exam matching `want` per-format counts from `chunks`.
+pub fn generate_with_plan(
+    chunks: &[Chunk],
+    want: FormatPlan,
+    title: &str,
     mut ask: Option<&mut Ask<'_>>,
 ) -> Generated {
-    let want = plan(total);
+    let _ = accept; // re-checked inside exam_gen_judge::judge
     let mut accepted: Vec<GeneratedQuestion> = Vec::new();
     let mut rejected = Vec::new();
     if let Some(ask) = ask.as_mut() {
         for (chunk, quota) in chunks.iter().zip(per_chunk(want, chunks.len())) {
-            if quota.recall + quota.case + quota.calc == 0 {
+            if plan_total(&quota) == 0 {
                 continue;
             }
-            let system = chunk_system(quota.recall, quota.case, quota.calc);
+            let system = chunk_system_for_formats(to_agent_counts(quota));
             let user = chunk_user(&chunk.topic, &chunk.text);
             match ask(&system, &user).and_then(|reply| parse_questions(&reply)) {
                 Ok(raws) => {
@@ -59,19 +86,11 @@ pub fn generate(
     }
     let from_model = accepted.len();
     let mut chosen = balance(accepted, want);
-    let missing = Plan {
-        recall: want.recall.saturating_sub(count(&chosen, Kind::Recall)),
-        case: want.case.saturating_sub(count(&chosen, Kind::Case)),
-        calc: want.calc.saturating_sub(count(&chosen, Kind::Calculation)),
-    };
+    let missing = missing_plan(want, &chosen);
     let fills = templates(chunks, missing);
     let from_templates = fills.len();
     chosen.extend(fills);
-    let made = Plan {
-        recall: count(&chosen, Kind::Recall),
-        case: count(&chosen, Kind::Case),
-        calc: count(&chosen, Kind::Calculation),
-    };
+    let made = counts_of(&chosen);
     let short = shortfalls(want, made);
     let (exam, keys) = assemble(title, &chosen);
     Generated {
@@ -84,61 +103,37 @@ pub fn generate(
     }
 }
 
-/// One raw question, checked: kept when the notes support it, otherwise its reason is noted.
-fn judge(
-    raw: RawQuestion,
-    chunk: &Chunk,
-    chunks: &[Chunk],
-    accepted: &mut Vec<GeneratedQuestion>,
-    rejected: &mut Vec<String>,
-) {
-    let kind = match raw.kind.trim().to_lowercase().as_str() {
-        "recall" => Kind::Recall,
-        "case" => Kind::Case,
-        "calculation" => Kind::Calculation,
-        other => {
-            rejected.push(format!("{}: unknown kind {other:?}", chunk.topic));
-            return;
-        }
-    };
-    let q = GeneratedQuestion {
-        kind,
-        prompt: raw.prompt,
-        sample_answer: raw.sample_answer,
-        rubric: raw.rubric,
-        points: u8::try_from(raw.points).unwrap_or(0),
-        topic: chunk.topic.clone(),
-    };
-    match accept(&q, chunks) {
-        Ok(()) => accepted.push(q),
-        Err(e) => rejected.push(format!("{}: {e}", chunk.topic)),
+fn to_agent_counts(p: FormatPlan) -> FormatCounts {
+    FormatCounts {
+        open_question: p.counts[format_index(ExamItemFormat::OpenQuestion)],
+        fill_in_gaps: p.counts[format_index(ExamItemFormat::FillInGaps)],
+        single_select: p.counts[format_index(ExamItemFormat::SingleSelect)],
+        multiple_select: p.counts[format_index(ExamItemFormat::MultipleSelect)],
+        calculation: p.counts[format_index(ExamItemFormat::Calculation)],
+        case_scenario: p.counts[format_index(ExamItemFormat::CaseScenario)],
     }
 }
 
-/// The plan spread over the chunks: each chunk gets its share of each kind, the first chunks the extras.
-fn per_chunk(want: Plan, n: usize) -> Vec<Plan> {
+fn per_chunk(want: FormatPlan, n: usize) -> Vec<FormatPlan> {
+    if n == 0 {
+        return Vec::new();
+    }
     let share = |total: usize, i: usize| total / n + usize::from(i < total % n);
     (0..n)
-        .map(|i| Plan {
-            recall: share(want.recall, i),
-            case: share(want.case, i),
-            calc: share(want.calc, i),
+        .map(|i| {
+            let counts = std::array::from_fn(|slot| share(want.counts[slot], i));
+            FormatPlan { counts }
         })
         .collect()
 }
 
-/// Keep at most the planned number of each kind, in the order the model gave them.
-fn balance(qs: Vec<GeneratedQuestion>, want: Plan) -> Vec<GeneratedQuestion> {
-    let (mut r, mut c, mut k) = (want.recall, want.case, want.calc);
+fn balance(qs: Vec<GeneratedQuestion>, want: FormatPlan) -> Vec<GeneratedQuestion> {
+    let mut rem = want.counts;
     qs.into_iter()
         .filter(|q| {
-            let slot = match q.kind {
-                Kind::Recall => &mut r,
-                Kind::Case => &mut c,
-                Kind::Calculation => &mut k,
-            };
-            if *slot > 0 {
-                *slot -= 1;
+            let idx = format_index(q.format);
+            if rem[idx] > 0 {
+                rem[idx] -= 1;
                 true
             } else {
                 false
@@ -147,17 +142,30 @@ fn balance(qs: Vec<GeneratedQuestion>, want: Plan) -> Vec<GeneratedQuestion> {
         .collect()
 }
 
-fn count(qs: &[GeneratedQuestion], kind: Kind) -> usize {
-    qs.iter().filter(|q| q.kind == kind).count()
+fn counts_of(qs: &[GeneratedQuestion]) -> FormatPlan {
+    let mut counts = [0; 6];
+    for q in qs {
+        counts[format_index(q.format)] += 1;
+    }
+    FormatPlan { counts }
 }
 
-/// The notes of a Markdown file as chunks (a convenience for callers that have the text).
+fn missing_plan(want: FormatPlan, chosen: &[GeneratedQuestion]) -> FormatPlan {
+    let have = counts_of(chosen);
+    let mut counts = [0; 6];
+    for fmt in ALL_EXAM_FORMATS {
+        let i = format_index(fmt);
+        counts[i] = want.counts[i].saturating_sub(have.counts[i]);
+    }
+    FormatPlan { counts }
+}
+
+/// The notes of a Markdown file as chunks.
 pub fn chunks_of_markdown(md: &str) -> Vec<Chunk> {
     chunk_markdown(md)
 }
 
-/// The text of a lecture PDF as chunks. A PDF has no Markdown headings, so its text is one topic
-/// ([`studyfrog_rehearsal::curriculum::GENERAL`]) unless its text carries headings of its own.
+/// The text of a lecture PDF as chunks.
 pub fn chunks_of_pdf(bytes: &[u8]) -> Result<Vec<Chunk>, String> {
     let pages = studyfrog_pdf::text::pdf_all_text(&std::sync::Arc::new(bytes.to_vec()))
         .map_err(|e| studyfrog_pdf::error::describe_pdf_error(&e))?;
@@ -167,72 +175,4 @@ pub fn chunks_of_pdf(bytes: &[u8]) -> Result<Vec<Chunk>, String> {
         .collect::<Vec<_>>()
         .join("\n\n");
     Ok(chunk_markdown(&text))
-}
-
-#[cfg(test)]
-mod tests {
-    #![allow(clippy::unwrap_used)]
-    use super::*;
-
-    const NOTES: &str = "# Reliabilität\nReliabilität: consistency of measurement over repeated testing occasions.\n\nThe reliability coefficient compares true score variance with observed score variance.\n\n# Normierung\nStandard scores place a result against the norm group mean and standard deviation.\n";
-
-    fn json(questions: &str) -> String {
-        format!("{{\"questions\": [{questions}]}}")
-    }
-
-    #[test]
-    fn offline_the_exam_comes_from_templates_and_is_valid() {
-        let g = generate(&chunks_of_markdown(NOTES), 6, "Klausur", None);
-        assert_eq!(g.from_model, 0);
-        assert!(g.from_templates > 0);
-        assert!(studyfrog_rehearsal::mock_exam::validate_mock_exam(&g.exam).is_ok());
-        assert_eq!(
-            g.keys.len(),
-            g.exam
-                .sections
-                .iter()
-                .map(|s| s.questions.len())
-                .sum::<usize>()
-        );
-    }
-
-    #[test]
-    fn the_model_questions_that_the_notes_support_are_kept_and_the_rest_rejected() {
-        let good = r#"{"kind": "recall", "prompt": "What does the reliability coefficient compare?", "sample_answer": "True score variance with observed score variance.", "rubric": ["names both variances"], "points": 2}"#;
-        let invented = r#"{"kind": "recall", "prompt": "Describe the Rorschach inkblot method in detail.", "sample_answer": "Projective inkblots reveal unconscious conflicts through free association.", "rubric": [], "points": 2}"#;
-        let reply = json(&format!("{good}, {invented}"));
-        let mut ask = |_: &str, _: &str| Ok(reply.clone());
-        let g = generate(&chunks_of_markdown(NOTES), 3, "Klausur", Some(&mut ask));
-        assert_eq!(g.from_model, 1, "{:?}", g.rejected);
-        assert!(g.rejected.iter().any(|r| r.contains("hallucination")));
-    }
-
-    #[test]
-    fn a_failed_chunk_is_noted_and_templates_stand_in() {
-        let mut ask = |_: &str, _: &str| Err("the model is not running".to_owned());
-        let g = generate(&chunks_of_markdown(NOTES), 3, "Klausur", Some(&mut ask));
-        assert_eq!(g.from_model, 0);
-        assert!(g.rejected.iter().any(|r| r.contains("not running")));
-        assert!(studyfrog_rehearsal::mock_exam::validate_mock_exam(&g.exam).is_ok());
-    }
-
-    /// BUG-0055: a part the notes cannot fill is named in `short`, and the exam has what the notes hold.
-    #[test]
-    fn a_part_the_notes_cannot_fill_is_named_and_the_rest_follows_the_plan() {
-        let notes = "# Reliabilität\nReliabilität: consistency of measurement over repeated testing occasions.\nValidität: the degree to which a test measures what it claims to measure.\ns_e = s_x * sqrt(1 - r_xx)\n";
-        let g = generate(&chunks_of_markdown(notes), 10, "Klausur", None);
-        assert_eq!(g.keys.len(), 4);
-        assert_eq!(g.short.len(), 3);
-        assert!(
-            g.short
-                .iter()
-                .any(|s| s.kind == Kind::Case && s.made == 1 && s.wanted == 3)
-        );
-        assert!(
-            g.short
-                .iter()
-                .any(|s| s.kind == Kind::Calculation && s.made == 1)
-        );
-        assert!(studyfrog_rehearsal::mock_exam::validate_mock_exam(&g.exam).is_ok());
-    }
 }

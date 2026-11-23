@@ -26,9 +26,13 @@ pub fn mock_graded(model: &mut Model) {
         return;
     };
     let Some(g) = ui.result.as_ref() else { return };
-    let mut answers = vec![String::new(); g.keys.len()];
-    if let Some(k) = g.keys.first() {
-        answers[0] = format!("{} {}", k.sample_answer, k.rubric.join(" "));
+    let mut answers = crate::setup::mock_exam::answer::init_answers(&g.exam);
+    if let (Some(k), Some(slot)) = (g.keys.first(), answers.first_mut()) {
+        *slot = studyfrog_rehearsal::exam_answer::ExamAnswer::Text(format!(
+            "{} {}",
+            k.sample_answer,
+            k.rubric.join(" ")
+        ));
     }
     ui.graded = Some(crate::setup::mock_exam::grading::grade(
         &g.exam, &g.keys, &answers,

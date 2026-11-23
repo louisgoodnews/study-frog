@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 //! Tests for the mock exam model, navigation, review overview, and the strict timer.
 
+use studyfrog_rehearsal::exam_format::ExamItemFormat;
 use studyfrog_rehearsal::mock_exam::{
     ExamQuestion, ExamSection, MockExam, QuestionPoints, total_points, validate_mock_exam,
 };
@@ -11,9 +12,12 @@ use studyfrog_rehearsal::mock_timer::{TimerAlert, TimerStatus, alerts_between, t
 
 fn q(points: u8) -> ExamQuestion {
     ExamQuestion {
+        format: ExamItemFormat::OpenQuestion,
         prompt: "Define reliability".to_owned(),
         topic: "Psychometrics".to_owned(),
         points: QuestionPoints(points),
+        options: Vec::new(),
+        gap_hints: Vec::new(),
     }
 }
 

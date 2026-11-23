@@ -1,9 +1,10 @@
-#![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
-//! The mock exam from a lecture PDF and the model (STORY-0186, STORY-0187): which model writes or grades it,
-//! what the student is told when there is none, and the PDF listing.
+#![allow(clippy::unwrap_used, clippy::expect_used)]
+//! The mock exam from a lecture PDF and the model (STORY-0186, STORY-0187, STORY-0207).
 
 use studyfrog_service::exam_gen::generate;
 use studyfrog_ui::effect::Effect;
+use studyfrog_ui::modal_types::Modal;
+use studyfrog_ui::setup::mock_exam::format_modal::FormatModalMsg;
 use studyfrog_ui::setup::mock_exam::{
     ExamSource, MockExamEffect, MockExamMsg, SlideChoice, update,
 };
@@ -31,16 +32,21 @@ fn with_selected(url: &str, allowed: bool) -> State {
     state
 }
 
+fn confirm_open(mut state: State) -> (State, Vec<Effect>) {
+    if matches!(state.browser.selection, Selection::Nothing) {
+        state.browser.selection = Selection::Stack("bio".to_owned());
+    }
+    let (state, fx) = update(state, MockExamMsg::Open);
+    assert!(fx.is_empty());
+    assert!(matches!(state.modal, Some(Modal::MockExamFormat(_))));
+    update(state, MockExamMsg::FormatModal(FormatModalMsg::Confirm))
+}
+
 #[test]
 fn with_no_model_selected_the_exam_says_it_is_made_from_templates() {
-    let (state, effects) = update(
-        {
-            let mut s = State::default();
-            s.browser.selection = Selection::Stack("bio".to_owned());
-            s
-        },
-        MockExamMsg::Open,
-    );
+    let mut s = State::default();
+    s.browser.selection = Selection::Stack("bio".to_owned());
+    let (state, effects) = confirm_open(s);
     let note = state.rehearse.mock.as_ref().and_then(|m| m.note.clone());
     assert!(note.is_some_and(|n| n.contains("No model is selected")));
     assert!(matches!(
@@ -54,10 +60,7 @@ fn with_no_model_selected_the_exam_says_it_is_made_from_templates() {
 
 #[test]
 fn a_remote_model_that_may_not_see_the_notes_is_not_sent_them() {
-    let (state, effects) = update(
-        with_selected("https://api.example.com/v1", false),
-        MockExamMsg::Open,
-    );
+    let (state, effects) = confirm_open(with_selected("https://api.example.com/v1", false));
     assert!(
         state
             .rehearse
@@ -77,10 +80,7 @@ fn a_remote_model_that_may_not_see_the_notes_is_not_sent_them() {
 
 #[test]
 fn a_local_model_writes_the_exam_and_no_note_is_needed() {
-    let (state, effects) = update(
-        with_selected("http://localhost:11434", false),
-        MockExamMsg::Open,
-    );
+    let (state, effects) = confirm_open(with_selected("http://localhost:11434", false));
     assert!(state.rehearse.mock.as_ref().unwrap().note.is_none());
     assert!(matches!(
         effects.as_slice(),
@@ -92,7 +92,7 @@ fn a_local_model_writes_the_exam_and_no_note_is_needed() {
 }
 
 #[test]
-fn a_lecture_pdf_is_listed_then_made_into_an_exam() {
+fn a_lecture_pdf_is_listed_then_configured_then_made_into_an_exam() {
     let (state, effects) = update(State::default(), MockExamMsg::OpenSlides);
     assert!(matches!(
         effects.as_slice(),
@@ -105,6 +105,9 @@ fn a_lecture_pdf_is_listed_then_made_into_an_exam() {
     let (state, _) = update(state, MockExamMsg::Slides(Ok(list.clone())));
     assert_eq!(state.rehearse.mock.as_ref().unwrap().slides, Some(list));
     let (state, effects) = update(state, MockExamMsg::FromSlide("folien/norm.pdf".to_owned()));
+    assert!(effects.is_empty());
+    assert!(matches!(state.modal, Some(Modal::MockExamFormat(_))));
+    let (state, effects) = update(state, MockExamMsg::FormatModal(FormatModalMsg::Confirm));
     assert!(
         matches!(
             effects.as_slice(),
@@ -136,7 +139,7 @@ fn finishing_with_no_model_grades_by_the_keyword_check_at_once() {
         "Klausur",
         None,
     );
-    let (state, _) = update(State::default(), MockExamMsg::Open);
+    let (state, _) = confirm_open(State::default());
     let (state, _) = update(state, MockExamMsg::Generated(Ok(Box::new(g))));
     let (state, effects) = update(state, MockExamMsg::Finish);
     assert!(effects.is_empty());
@@ -155,10 +158,7 @@ fn finishing_with_a_local_model_asks_it_to_grade_and_shows_its_result() {
         None,
     );
     let n = g.keys.len();
-    let (state, _) = update(
-        with_selected("http://localhost:11434", false),
-        MockExamMsg::Open,
-    );
+    let (state, _) = confirm_open(with_selected("http://localhost:11434", false));
     let (state, _) = update(state, MockExamMsg::Generated(Ok(Box::new(g))));
     let (state, effects) = update(state, MockExamMsg::Finish);
     assert!(

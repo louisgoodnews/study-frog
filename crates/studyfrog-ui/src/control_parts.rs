@@ -54,6 +54,12 @@ pub fn modal_json(m: &Modal) -> Value {
         Modal::DeleteItem(uid, title) => json!({
             "kind": "delete_item", "item_uid": ulid(*uid), "title": title,
         }),
+        Modal::MockExamFormat(f) => json!({
+            "kind": "mock_exam_format",
+            "title": f.title,
+            "total": studyfrog_rehearsal::exam_format::resolved_mix_total(&f.mix),
+            "error": f.error,
+        }),
     }
 }
 

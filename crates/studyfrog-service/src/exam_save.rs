@@ -4,7 +4,9 @@
 use studyfrog_core::plan::ItemKind;
 use studyfrog_rehearsal::curriculum::{Chunk, chunk_markdown};
 use studyfrog_rehearsal::curriculum_build::AnswerKey;
-use studyfrog_rehearsal::mock_exam::{MockExam, total_points};
+use studyfrog_rehearsal::exam_answer::{choice_tag, format_expected_text};
+use studyfrog_rehearsal::exam_format::{ExamItemFormat, format_label};
+use studyfrog_rehearsal::mock_exam::{MockExam, all_questions, total_points};
 use studyfrog_store::overview::list_items;
 
 use crate::content::load_item_content;
@@ -67,17 +69,48 @@ pub fn exam_markdown(exam: &MockExam, keys: &[AnswerKey]) -> String {
         for q in &section.questions {
             n += 1;
             out.push_str(&format!(
-                "{n}. ({} points, {}) {}\n",
-                q.points.0, q.topic, q.prompt
+                "{n}. [{}] ({} points, {}) {}\n",
+                format_label(q.format),
+                q.points.0,
+                q.topic,
+                q.prompt
             ));
+            match q.format {
+                ExamItemFormat::SingleSelect => {
+                    for (idx, opt) in q.options.iter().enumerate() {
+                        out.push_str(&format!("   ( ) {}. {opt}\n", choice_tag(idx)));
+                    }
+                }
+                ExamItemFormat::MultipleSelect => {
+                    for (idx, opt) in q.options.iter().enumerate() {
+                        out.push_str(&format!("   [ ] {}. {opt}\n", choice_tag(idx)));
+                    }
+                }
+                ExamItemFormat::FillInGaps => {
+                    let hints: Vec<String> = q
+                        .gap_hints
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(idx, h)| h.as_ref().map(|t| format!("[{}] {t}", idx + 1)))
+                        .collect();
+                    if !hints.is_empty() {
+                        out.push_str(&format!("   Hints: {}\n", hints.join("; ")));
+                    }
+                }
+                ExamItemFormat::OpenQuestion
+                | ExamItemFormat::Calculation
+                | ExamItemFormat::CaseScenario => {}
+            }
         }
     }
+    let questions = all_questions(exam);
     out.push_str("\n## Reference answers\n\n");
     for (i, k) in keys.iter().enumerate() {
+        let opts = questions.get(i).map_or(&[][..], |q| q.options.as_slice());
+        let expected = format_expected_text(k, opts);
         out.push_str(&format!(
-            "{}. {}\n   Points to make: {}\n",
+            "{}. {expected}\n   Points to make: {}\n",
             i + 1,
-            k.sample_answer,
             k.rubric.join("; ")
         ));
     }

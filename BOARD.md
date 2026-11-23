@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (23) | Ready (0) | In progress (0/3) | Review (3) | Blocked (3) | Done (596) |
+| Backlog (22) | Ready (0) | In progress (0/3) | Review (2) | Blocked (3) | Done (598) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -547,7 +547,7 @@
 | [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time of the rehearsal card, reports and console measured in the running window (5) | backlog | 0/2 |
 | [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Allocations in the render loops, counted with dhat, and a profile of the slowest screen (3) | backlog | 0/2 |
 | [STORY-0206](docs/issues/stories/STORY-0206-ollama-setup-assistant-with-hardware-audit-and-model-suggestions.md) Ollama setup assistant: hardware audit, live Ollama status and model suggestions that fit this machine (5) | done | 0/0 |
-| [STORY-0207](docs/issues/stories/STORY-0207-exam-generation-item-format-selection-modal.md) Interactive modal to choose item formats during mock exam generation (5) | backlog | 0/0 |
+| [STORY-0207](docs/issues/stories/STORY-0207-exam-generation-item-format-selection-modal.md) Interactive modal to choose item formats during mock exam generation (5) | done | 0/0 |
 | [STORY-0208](docs/issues/stories/STORY-0208-classroom-session-domain-model-and-local-persistence.md) Classroom session domain model and local storage persistence (5) | backlog | 0/2 |
 | [STORY-0209](docs/issues/stories/STORY-0209-ai-teacher-and-simulated-student-lecture-orchestration.md) AI teacher and simulated student lecture orchestration (local and remote models) (5) | backlog | 0/2 |
 | [STORY-0210](docs/issues/stories/STORY-0210-individual-and-group-task-assignments-turn-in-and-grading.md) Individual and group task assignments, turn-in workflow, and automated grading (5) | backlog | 0/2 |
@@ -619,7 +619,7 @@
 | [EPIC-060](docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | done | 7/7 |
 | [EPIC-061](docs/issues/epics/EPIC-061-case-study-and-diagnostic-decision-matrix.md) Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification | done | 6/6 |
 | [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | done | 4/4 |
-| [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | review | 7/8 |
+| [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | done | 8/8 |
 | [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | done | 7/7 |
 | [EPIC-065](docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | done | 3/3 |
 | [EPIC-066](docs/issues/epics/EPIC-066-learn-mode-research-platform.md) Learn-mode research platform: visual node-based technique editor | done | 1/1 |

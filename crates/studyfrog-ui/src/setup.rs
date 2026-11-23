@@ -70,6 +70,8 @@ pub struct Rehearse {
     pub mock: Option<mock_exam::MockExamUi>,
     /// The timing chosen for the next memory game.
     pub memory_timer: studyfrog_rehearsal::memory_summary::MemoryTimer,
+    /// Last confirmed mock-exam item format mix remembered for this session (STORY-0207).
+    pub mock_format_prefs: studyfrog_rehearsal::exam_format::ExamFormatMix,
 }
 
 /// Ask for a fresh count (or show why the form is invalid).

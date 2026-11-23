@@ -2,7 +2,7 @@
 id: EPIC-063
 type: epic
 title: "Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale"
-status: review
+status: done
 parents: []
 labels: [m14, rehearse, agent, ui]
 acceptance_criteria:
@@ -74,3 +74,7 @@ Child bugs: BUG-0045 and BUG-0052 are done; BUG-0053 is backlog (not reproduced 
 ## Verification (2026-11-23, live Ollama on owner's machine)
 
 Criterion 2 is MET in the running app with live Ollama `0.40.16` (`qwen2.5:1.5b`): clicking "Mock exam" on the `Statistik` stack sent 3 chunked prompts to `127.0.0.1` (`200`), produced a balanced multi-format exam (Parts A/B/C) with a model-generated question and grounded reference answer, and filtered 8 unsupported model items (`STORY-0186` now `done`). All child stories and bugs are `done`; epic closed.
+
+## Verification (2026-11-23, STORY-0207 closeout)
+
+`STORY-0207` (interactive 6-format configuration modal, format-aware SLM prompting & offline templates, inline cloze/radio/checkbox answering, deterministic objective grading + explicit multiple-select scoring rule, and session persistence) is implemented and verified across `studyfrog-rehearsal`, `studyfrog-agent`, `studyfrog-service`, `studyfrog-ui` (`egui_kittest`), and `./scripts/check.sh`. All `EPIC-063` child stories (`STORY-0185`, `STORY-0186`, `STORY-0187`, `STORY-0207`) are `done`; `EPIC-063` is `done`.

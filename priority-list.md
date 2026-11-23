@@ -5,7 +5,7 @@ The order in which Claude works on the planned items of phase M10 (0.3.0), kept 
 [docs/roadmap/M10-usability-and-insight.md](docs/roadmap/M10-usability-and-insight.md). Tick an item when it is done and
 verified (`scripts/check.sh` passes), and report it to the owner. The owner may reorder the list at any time.
 
-Last updated: 2026-11-23 (596 of 625 issues done; 29 open across EPIC-063/STORY-0207, EPIC-067, and EPIC-068; v1.0.0 awaiting packaging/owner benchmarks/tag).
+Last updated: 2026-11-23 (598 of 625 issues done; 27 open across EPIC-067 and EPIC-068; v1.0.0 awaiting packaging/owner benchmarks/tag).
 
 ## Wave 1: start now
 - [x] 1. [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Names with commas cannot be used
@@ -195,11 +195,11 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
   - [x] STORY-0183 Step trace and diagnosis
   - [x] STORY-0184 Math drill view (standard-error formula: working rows, keypad, check, solution)
   - [x] BUG-0051 Praise with a wrong working step (fixed and closed 2026-11-23)
-- [ ] [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur lab (in review: core stories 0185–0187 done; new backlog story STORY-0207 added)
+- [x] [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur lab (done 2026-11-23: STORY-0185–0187 and STORY-0207 all done)
   - [x] [STORY-0185](docs/issues/stories/STORY-0185-mock-exam-structure-and-timer-controls.md) Mock exam structure, navigation and timer
   - [x] [STORY-0186](docs/issues/stories/STORY-0186-lecture-slide-driven-exam-generator.md) Exam generation from slides via the local SLM (done 2026-11-23: verified live with Ollama `qwen2.5:1.5b`)
   - [x] [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Grade scale, summation, the graded review and the pass mark setting
-  - [ ] [STORY-0207](docs/issues/stories/STORY-0207-exam-generation-item-format-selection-modal.md) Interactive modal to choose item formats during mock exam generation (backlog)
+  - [x] [STORY-0207](docs/issues/stories/STORY-0207-exam-generation-item-format-selection-modal.md) Interactive modal to choose item formats during mock exam generation (done 2026-11-23)
 
 **Milestone 14.5: release hardening and 1.0.0 launch**
 - [ ] Regression audit, packaging (AppImage, tarball), documentation, release tag `v1.0.0`

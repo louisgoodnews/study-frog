@@ -1,4 +1,8 @@
-//! Mock exam structure: sections of weighted questions (STORY-0185). Pure data and validation.
+//! Mock exam structure: sections of weighted questions (STORY-0185, STORY-0207). Pure data and validation.
+
+use std::collections::HashSet;
+
+use crate::exam_format::ExamItemFormat;
 
 /// Points a question is worth, from 1 to 10.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -10,12 +14,18 @@ pub const MAX_QUESTION_POINTS: u8 = 10;
 /// One question on a mock exam.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExamQuestion {
+    /// Item format of this question.
+    pub format: ExamItemFormat,
     /// What is asked (one line).
     pub prompt: String,
     /// The course chapter or topic, for the breakdown in the grade report.
     pub topic: String,
     /// Points available.
     pub points: QuestionPoints,
+    /// Selectable choices for single- and multiple-select questions.
+    pub options: Vec<String>,
+    /// Per-gap optional hints for fill-in-the-gaps questions.
+    pub gap_hints: Vec<Option<String>>,
 }
 
 /// A part of the exam, such as "Part A: short definitions".
@@ -88,7 +98,33 @@ pub fn validate_mock_exam(exam: &MockExam) -> Result<(), String> {
                     "a question carries between 1 and {MAX_QUESTION_POINTS} points"
                 ));
             }
+            validate_question_format(q)?;
         }
+    }
+    Ok(())
+}
+
+fn validate_question_format(q: &ExamQuestion) -> Result<(), String> {
+    match q.format {
+        ExamItemFormat::SingleSelect | ExamItemFormat::MultipleSelect => {
+            if q.options.len() < 2 {
+                return Err("select questions need at least two options".to_owned());
+            }
+            let mut seen = HashSet::new();
+            for opt in &q.options {
+                let norm = opt.trim().to_lowercase();
+                if norm.is_empty() {
+                    return Err("select options must not be empty".to_owned());
+                }
+                if !seen.insert(norm) {
+                    return Err("select options must be distinct".to_owned());
+                }
+            }
+        }
+        ExamItemFormat::FillInGaps if q.gap_hints.is_empty() => {
+            return Err("fill-in-the-gaps questions need at least one gap".to_owned());
+        }
+        _ => {}
     }
     Ok(())
 }

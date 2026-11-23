@@ -1,13 +1,13 @@
-//! Making, grading and saving a mock exam (STORY-0186, STORY-0187): the notes or a lecture PDF are read from the
-//! vault, the model (if one may see them) writes the questions and judges the answers, and the exam is saved
-//! as a note. The model call is the same as the one the case-study check makes.
+//! Making, grading and saving a mock exam (STORY-0186, STORY-0187, STORY-0207).
 
 use studyfrog_agent::provider::{Message, Provider, Role};
 use studyfrog_rehearsal::curriculum_build::AnswerKey;
+use studyfrog_rehearsal::exam_answer::ExamAnswer;
+use studyfrog_rehearsal::exam_format::ExamFormatMix;
 use studyfrog_rehearsal::mock_exam::MockExam;
 use studyfrog_service::agent::{Ask, ask};
 use studyfrog_service::create::fresh_id_source;
-use studyfrog_service::exam_gen::generate;
+use studyfrog_service::exam_gen::generate_with_mix;
 use studyfrog_service::exam_save::{notes_chunks, save_exam, slide_chunks};
 use studyfrog_service::pdfs::{index_pdfs_fully, pdf_library};
 
@@ -20,10 +20,10 @@ pub fn run(w: &mut Worker, effect: MockExamEffect, now_ns: i64) -> Msg {
     match effect {
         MockExamEffect::Generate {
             source,
-            total,
+            mix,
             title,
             provider,
-        } => generate_exam(w, &source, total, &title, provider.as_ref(), now_ns),
+        } => generate_exam(w, &source, &mix, &title, provider.as_ref(), now_ns),
         MockExamEffect::ListSlides => list_slides(w, now_ns),
         MockExamEffect::Grade {
             exam,
@@ -58,8 +58,6 @@ pub fn run(w: &mut Worker, effect: MockExamEffect, now_ns: i64) -> Msg {
     }
 }
 
-/// The lecture PDFs of the vault that can be read, by title. The PDF index is brought up to date first, so a
-/// PDF added to the vault is listed.
 fn list_slides(w: &mut Worker, now_ns: i64) -> Msg {
     let result = match w.session.as_mut() {
         None => Err("no vault is open".to_owned()),
@@ -82,7 +80,7 @@ fn list_slides(w: &mut Worker, now_ns: i64) -> Msg {
 fn generate_exam(
     w: &Worker,
     source: &ExamSource,
-    total: usize,
+    mix: &ExamFormatMix,
     title: &str,
     provider: Option<&Provider>,
     now_ns: i64,
@@ -103,22 +101,21 @@ fn generate_exam(
         }
     };
     let now_ms = now_ns / 1_000_000;
-    let generated = match provider {
+    let outcome = match provider {
         Some(p) => {
             let mut ask_model = |system: &str, user: &str| model_call(w, p, now_ms, system, user);
-            generate(&chunks, total, title, Some(&mut ask_model))
+            generate_with_mix(&chunks, mix, title, Some(&mut ask_model))
         }
-        None => generate(&chunks, total, title, None),
+        None => generate_with_mix(&chunks, mix, title, None),
     };
-    Msg::MockExam(MockExamMsg::Generated(Ok(Box::new(generated))))
+    Msg::MockExam(MockExamMsg::Generated(outcome.map(Box::new)))
 }
 
-/// Grade the answers with the local model; a question it cannot grade falls back to the keyword check.
 fn grade_exam(
     w: &Worker,
     exam: &MockExam,
     keys: &[AnswerKey],
-    answers: &[String],
+    answers: &[ExamAnswer],
     provider: &Provider,
     now_ns: i64,
 ) -> Msg {
@@ -128,7 +125,6 @@ fn grade_exam(
     Msg::MockExam(MockExamMsg::Graded(graded))
 }
 
-/// One question to the local model: its reply, or why there was none.
 fn model_call(
     w: &Worker,
     p: &Provider,

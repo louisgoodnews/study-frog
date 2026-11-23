@@ -36,6 +36,7 @@ pub mod document;
 pub mod drill;
 pub mod exam;
 pub mod exam_gen;
+mod exam_gen_judge;
 pub mod exam_save;
 pub mod expiry;
 pub mod explore;

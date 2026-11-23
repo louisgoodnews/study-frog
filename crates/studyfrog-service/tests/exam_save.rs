@@ -71,3 +71,35 @@ fn a_folders_notes_become_topic_chunks_and_an_exam_is_saved_as_a_note() {
     let saved = fs::read_to_string(d.0.join(&path)).unwrap();
     assert!(saved.contains("Bio Klausur") && saved.contains("Reference answers"));
 }
+
+#[test]
+fn exam_markdown_renders_choices_and_masks_cloze_before_reference_answers() {
+    use studyfrog_rehearsal::exam_format::{
+        ExamItemFormat, MixMode, default_format_mix, format_index,
+    };
+    use studyfrog_service::exam_gen::{chunks_of_markdown, generate_with_mix};
+
+    let notes = "# Reliabilität\nReliabilität: consistency of measurement over repeated testing occasions.\nValidität: degree to which a test measures what it claims.\n";
+    let mut mix = default_format_mix();
+    mix.mode = MixMode::Counts;
+    for a in &mut mix.formats {
+        a.enabled = false;
+        a.value = 0;
+    }
+    for fmt in [
+        ExamItemFormat::FillInGaps,
+        ExamItemFormat::SingleSelect,
+        ExamItemFormat::MultipleSelect,
+    ] {
+        mix.formats[format_index(fmt)].enabled = true;
+        mix.formats[format_index(fmt)].value = 1;
+    }
+    let g = generate_with_mix(&chunks_of_markdown(notes), &mix, "Mixed", None).unwrap();
+    let md = exam_markdown(&g.exam, &g.keys);
+    let (questions_part, answers_part) = md.split_once("## Reference answers").unwrap();
+    assert!(questions_part.contains("( ) A."));
+    assert!(questions_part.contains("[ ] A."));
+    assert!(questions_part.contains("[1]"));
+    assert!(!questions_part.contains("{{c"));
+    assert!(answers_part.contains("[1]"));
+}

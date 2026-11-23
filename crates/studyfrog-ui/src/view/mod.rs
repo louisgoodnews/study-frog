@@ -79,6 +79,7 @@ mod modal_fields;
 mod modal_formats;
 mod modal_found;
 pub mod modal_import;
+mod modal_mock_format;
 pub mod modal_pdf_export;
 pub mod modal_pdf_preview;
 pub mod modal_size;
@@ -126,6 +127,7 @@ pub(crate) mod run_comments;
 mod run_diary_prompt;
 mod run_slow;
 mod run_timer;
+mod screens;
 pub mod search_focus;
 mod session_form;
 mod settings;
@@ -164,7 +166,7 @@ pub(crate) mod window_frame;
 mod zen;
 use crate::appearance_ui::AppearanceMsg;
 use crate::msg::Msg;
-use crate::state::{Screen, State};
+use crate::state::State;
 use eframe::egui;
 /// Draw the whole window for `state`.
 pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
@@ -181,42 +183,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui) -> Vec<Msg> {
     let page = egui::Frame::central_panel(ui.style()).inner_margin(egui::Margin::symmetric(20, 14));
     egui::CentralPanel::default()
         .frame(page)
-        .show(ui, |ui| match state.screen {
-            Screen::Welcome => welcome::draw(state, ui, &mut out),
-            Screen::Home => home::draw(state, ui, &mut out),
-            Screen::Folders => folders::draw(state, ui, &mut out),
-            Screen::Library => library::draw(state, ui, &mut out),
-            Screen::Rehearse if crate::setup::memory::run_on_screen(state) => {
-                if state.split_pdf.active {
-                    pdf_split::draw_split_rehearse(state, ui, &mut out);
-                } else {
-                    run::draw(state, ui, &mut out);
-                }
-            }
-            Screen::Rehearse => setup::draw(state, ui, &mut out),
-            Screen::Settings => settings::draw(state, ui, &mut out),
-            Screen::Editor => {
-                if state.split_pdf.active {
-                    pdf_split::draw_split_editor(state, ui, &mut out);
-                } else {
-                    editor::draw(state, ui, &mut out);
-                }
-            }
-            Screen::Graph => graph::draw(state, ui, &mut out),
-            Screen::Calendar => calendar::draw(state, ui, &mut out),
-            Screen::Homework => homework::draw(state, ui, &mut out),
-            Screen::Board => board::draw(state, ui, &mut out),
-            Screen::Achievements => achievements::draw(state, ui, &mut out),
-            Screen::Agent => agent::draw(state, ui, &mut out),
-            Screen::Prompts => prompts_screen::draw(state, ui, &mut out),
-            Screen::Reports => reports::draw(state, ui, &mut out),
-            Screen::Diary => diary::draw(state, ui, &mut out),
-            Screen::Pdf => pdf::draw(state, ui, &mut out),
-            Screen::Help => help::draw(state, ui, &mut out),
-            Screen::Console => console::draw(state, ui, &mut out),
-            Screen::Canvas => canvas::draw(state, ui, &mut out),
-            Screen::Match => match_grid::draw(state, ui, &mut out),
-        });
+        .show(ui, |ui| screens::draw_screen(state, ui, &mut out));
     if ui.input(|i| i.key_pressed(egui::Key::F1)) {
         out.push(Msg::Help(crate::help_types::HelpMsg::ForScreen));
     }

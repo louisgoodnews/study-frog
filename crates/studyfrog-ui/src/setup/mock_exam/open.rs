@@ -1,14 +1,13 @@
-//! Opening a mock exam (STORY-0186): from the notes of the stack that is open, or from a lecture PDF of the
-//! vault (its slides). The model writes the questions when one is selected and may see the text. Pure.
+//! Opening a mock exam (STORY-0186, STORY-0207): validates the source and opens the format selection modal.
 
 use studyfrog_agent::provider::{Provider, may_send};
 
+use super::format_modal::{modal_for_notes, modal_for_slide};
+use super::{MockExamEffect, MockExamUi, SlideChoice, with_ui};
 use crate::agent_conn::selected_provider;
 use crate::effect::Effect;
+use crate::modal_types::Modal;
 use crate::pdf_names::file_name;
-use crate::setup::mock_exam::{
-    EXAM_QUESTIONS, ExamSource, MockExamEffect, MockExamUi, SlideChoice,
-};
 use crate::setup::stack_source::{StackSource, stack_source};
 use crate::state::State;
 
@@ -17,7 +16,7 @@ pub const NO_MODEL: &str = "No model is selected, so the questions come from tem
 /// The note when the selected model is remote and may not see the text.
 pub const REMOTE_NOT_ALLOWED: &str = "The selected model is remote and may not see your notes, so the questions come from templates. Allow it in Agent settings, or select a local model.";
 
-/// Make an exam from the stack ticked in the What step, or else the stack that is open (or the inbox).
+/// Validate the open stack and open the item format configuration modal.
 pub fn open(state: State) -> (State, Vec<Effect>) {
     let folder = match stack_source(&state) {
         StackSource::Stack(f) => Some(f),
@@ -30,28 +29,21 @@ pub fn open(state: State) -> (State, Vec<Effect>) {
                 ),
                 ..MockExamUi::default()
             };
-            return (super::with_ui(state, Some(ui)), Vec::new());
+            return (with_ui(state, Some(ui)), Vec::new());
         }
     };
     let title = match &folder {
         Some(f) => format!("Mock exam: {f}"),
         None => "Mock exam: inbox".to_owned(),
     };
-    let (provider, note) = exam_model(&state);
-    let ui = MockExamUi {
-        folder: folder.clone(),
-        title: title.clone(),
-        loading: true,
-        note,
-        ..MockExamUi::default()
-    };
-    let effect = Effect::MockExam(MockExamEffect::Generate {
-        source: ExamSource::Notes(folder),
-        total: EXAM_QUESTIONS,
-        title,
-        provider,
-    });
-    (super::with_ui(state, Some(ui)), vec![effect])
+    let modal = modal_for_notes(folder, title, state.rehearse.mock_format_prefs.clone());
+    (
+        State {
+            modal: Some(Modal::MockExamFormat(Box::new(modal))),
+            ..state
+        },
+        Vec::new(),
+    )
 }
 
 /// Ask the vault for its lecture PDFs, to choose the one an exam is made from.
@@ -64,7 +56,7 @@ pub fn open_slides(state: State) -> (State, Vec<Effect>) {
         ..MockExamUi::default()
     };
     (
-        super::with_ui(state, Some(ui)),
+        with_ui(state, Some(ui)),
         vec![Effect::MockExam(MockExamEffect::ListSlides)],
     )
 }
@@ -86,31 +78,23 @@ pub fn slides_listed(state: State, result: Result<Vec<SlideChoice>, String>) -> 
             ..ui
         },
     };
-    super::with_ui(state, Some(ui))
+    with_ui(state, Some(ui))
 }
 
-/// Make an exam from the lecture PDF at `path`.
+/// Open the item format configuration modal for the lecture PDF at `path`.
 pub fn from_slide(state: State, path: String) -> (State, Vec<Effect>) {
-    // The exam is titled with the PDF's file name: a PDF's own title is often a program's placeholder (BUG-0039).
     let title = format!("Mock exam: {}", file_name(&path));
-    let (provider, note) = exam_model(&state);
-    let ui = MockExamUi {
-        title: title.clone(),
-        loading: true,
-        note,
-        ..MockExamUi::default()
-    };
-    let effect = Effect::MockExam(MockExamEffect::Generate {
-        source: ExamSource::Slide(path),
-        total: EXAM_QUESTIONS,
-        title,
-        provider,
-    });
-    (super::with_ui(state, Some(ui)), vec![effect])
+    let modal = modal_for_slide(path, title, state.rehearse.mock_format_prefs.clone());
+    (
+        State {
+            modal: Some(Modal::MockExamFormat(Box::new(modal))),
+            ..state
+        },
+        Vec::new(),
+    )
 }
 
-/// The model that writes the questions, and the note for the student when there is none. A model sees the
-/// text only when it is local, or when the user allowed it.
+/// The model that writes the questions, and the note for the student when there is none.
 pub fn exam_model(state: &State) -> (Option<Provider>, Option<String>) {
     match selected_provider(&state.agent) {
         None => (None, Some(NO_MODEL.to_owned())),

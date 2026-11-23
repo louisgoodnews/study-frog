@@ -34,6 +34,8 @@ pub enum Modal {
     LearnEditor(Box<crate::learn_editor::LearnEditor>),
     /// The scheduled and event-bound jobs (STORY-0151).
     ScriptJobs(Box<crate::console_ui::jobs::JobsEditor>),
+    /// Configure mock exam item formats before generating (STORY-0207).
+    MockExamFormat(Box<crate::setup::mock_exam::format_modal::MockExamFormatModal>),
 }
 
 /// The priority and difficulty the user chose; `None` leaves the default.

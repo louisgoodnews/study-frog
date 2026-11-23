@@ -1,7 +1,9 @@
-//! Finishing a mock exam (STORY-0187): a selected local model grades the answers in the worker; without one,
-//! the keyword check grades them at once. A remote model is not sent the student's answers. Pure.
+//! Finishing a mock exam (STORY-0187, STORY-0207): objective-only exams grade immediately; open-ended
+//! items use a selected local model in the worker or keyword fallback synchronously. Pure.
 
 use studyfrog_agent::provider::is_local;
+use studyfrog_rehearsal::exam_answer::is_objective_format;
+use studyfrog_rehearsal::mock_exam::all_questions;
 
 use super::grading;
 use crate::agent_conn::selected_provider;
@@ -17,7 +19,13 @@ pub fn finish(state: State) -> (State, Vec<Effect>) {
     let Some(g) = ui.result.clone() else {
         return (state, Vec::new());
     };
-    match selected_provider(&state.agent).filter(is_local) {
+    let needs_model = all_questions(&g.exam)
+        .iter()
+        .any(|q| !is_objective_format(q.format));
+    match selected_provider(&state.agent)
+        .filter(is_local)
+        .filter(|_| needs_model)
+    {
         Some(provider) => {
             let effect = Effect::MockExam(MockExamEffect::Grade {
                 exam: Box::new(g.exam.clone()),
@@ -25,7 +33,6 @@ pub fn finish(state: State) -> (State, Vec<Effect>) {
                 answers: ui.answers.clone(),
                 provider,
             });
-            // The answers are locked from here until the result is shown.
             let ui = MockExamUi {
                 judging: true,
                 locked: true,

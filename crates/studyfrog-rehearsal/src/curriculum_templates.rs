@@ -1,61 +1,100 @@
-//! Offline questions for a mock exam, made from the notes' own definitions, formulas and text (STORY-0186), so
-//! an exam can be made with no model. Every rubric point is taken from the notes, so the keyword check can test
-//! it (BUG-0038); a point with no word to match is shown as not checked. Pure.
+//! Offline questions for a mock exam across all 6 item formats (STORY-0186, STORY-0207). Pure.
 
 use crate::curriculum::Chunk;
-use crate::curriculum_build::{GeneratedQuestion, Kind, Plan};
+use crate::curriculum_build::GeneratedQuestion;
+use crate::curriculum_choices::{multiple_select_pool, single_select_pool};
+use crate::curriculum_gaps::make_gap_question;
+use crate::exam_format::{ExamItemFormat, FormatPlan, plan_count, set_plan_count};
 
-/// Longest key point taken from a note, in characters.
 const KEY_POINT_CHARS: usize = 160;
 
-/// Offline questions from the notes' own definitions, formulas and text, up to the wanted number of each
-/// kind. The answers are the notes' own lines, and the questions say so.
-pub fn templates(chunks: &[Chunk], wanted: Plan) -> Vec<GeneratedQuestion> {
-    let pool = pool(chunks);
-    let mut out: Vec<GeneratedQuestion> = pool.recall.into_iter().take(wanted.recall).collect();
-    out.extend(pool.case.into_iter().take(wanted.case));
-    out.extend(pool.calc.into_iter().take(wanted.calc));
+/// Offline questions from the notes' definitions, formulas, text, and synthesized gaps/choices.
+pub fn templates(chunks: &[Chunk], wanted: FormatPlan) -> Vec<GeneratedQuestion> {
+    let p = pool(chunks);
+    let mut out = Vec::new();
+    out.extend(
+        p.open
+            .into_iter()
+            .take(plan_count(&wanted, ExamItemFormat::OpenQuestion)),
+    );
+    out.extend(
+        p.gaps
+            .into_iter()
+            .take(plan_count(&wanted, ExamItemFormat::FillInGaps)),
+    );
+    out.extend(
+        p.single
+            .into_iter()
+            .take(plan_count(&wanted, ExamItemFormat::SingleSelect)),
+    );
+    out.extend(
+        p.multiple
+            .into_iter()
+            .take(plan_count(&wanted, ExamItemFormat::MultipleSelect)),
+    );
+    out.extend(
+        p.calc
+            .into_iter()
+            .take(plan_count(&wanted, ExamItemFormat::Calculation)),
+    );
+    out.extend(
+        p.case
+            .into_iter()
+            .take(plan_count(&wanted, ExamItemFormat::CaseScenario)),
+    );
     out
 }
 
-/// How many questions of each kind the notes can supply offline: one recall question per definition, one
-/// case per paragraph, one calculation per formula. A part wanted above this is short (BUG-0055).
-pub fn material(chunks: &[Chunk]) -> Plan {
+/// How many questions of each format the notes can supply offline (BUG-0055).
+pub fn material(chunks: &[Chunk]) -> FormatPlan {
     let p = pool(chunks);
-    Plan {
-        recall: p.recall.len(),
-        case: p.case.len(),
-        calc: p.calc.len(),
-    }
+    let mut plan = FormatPlan::default();
+    set_plan_count(&mut plan, ExamItemFormat::OpenQuestion, p.open.len());
+    set_plan_count(&mut plan, ExamItemFormat::FillInGaps, p.gaps.len());
+    set_plan_count(&mut plan, ExamItemFormat::SingleSelect, p.single.len());
+    set_plan_count(&mut plan, ExamItemFormat::MultipleSelect, p.multiple.len());
+    set_plan_count(&mut plan, ExamItemFormat::Calculation, p.calc.len());
+    set_plan_count(&mut plan, ExamItemFormat::CaseScenario, p.case.len());
+    plan
 }
 
-/// Every offline question the notes can supply, by kind, in the notes' order.
 struct Pool {
-    recall: Vec<GeneratedQuestion>,
-    case: Vec<GeneratedQuestion>,
+    open: Vec<GeneratedQuestion>,
+    gaps: Vec<GeneratedQuestion>,
+    single: Vec<GeneratedQuestion>,
+    multiple: Vec<GeneratedQuestion>,
     calc: Vec<GeneratedQuestion>,
+    case: Vec<GeneratedQuestion>,
 }
 
 fn pool(chunks: &[Chunk]) -> Pool {
-    let mut recall = Vec::new();
+    let mut open = Vec::new();
     let mut calc = Vec::new();
     let mut case = Vec::new();
+    let mut gaps = Vec::new();
     for c in chunks {
         for d in &c.definitions {
-            recall.push(GeneratedQuestion {
-                kind: Kind::Recall,
+            open.push(GeneratedQuestion {
+                format: ExamItemFormat::OpenQuestion,
                 prompt: format!("Explain the following in your own words: {}", term_of(d)),
                 sample_answer: d.clone(),
                 rubric: vec![meaning_of(d)],
                 points: 2,
                 topic: c.topic.clone(),
+                options: Vec::new(),
+                correct_indices: Vec::new(),
+                gap_hints: Vec::new(),
+                gap_answers: Vec::new(),
             });
+            if let Some(gq) = make_gap_question(&c.topic, d) {
+                gaps.push(gq);
+            }
         }
         calc.extend(c.formulas.iter().map(|f| calculation(f, &c.topic)));
         for para in paragraphs(&c.text) {
             let n = case.len() + 1;
             case.push(GeneratedQuestion {
-                kind: Kind::Case,
+                format: ExamItemFormat::CaseScenario,
                 prompt: format!(
                     "Case {n}: a colleague applies the ideas of {} in a new study. Which points must the study respect?",
                     c.topic
@@ -64,13 +103,28 @@ fn pool(chunks: &[Chunk]) -> Pool {
                 rubric: vec![key_point(&para, &c.topic)],
                 points: 4,
                 topic: c.topic.clone(),
+                options: Vec::new(),
+                correct_indices: Vec::new(),
+                gap_hints: Vec::new(),
+                gap_answers: Vec::new(),
             });
+            if c.definitions.is_empty()
+                && let Some(gq) = make_gap_question(&c.topic, &key_point(&para, &c.topic))
+            {
+                gaps.push(gq);
+            }
         }
     }
-    Pool { recall, case, calc }
+    Pool {
+        open,
+        gaps,
+        single: single_select_pool(chunks),
+        multiple: multiple_select_pool(chunks),
+        calc,
+        case,
+    }
 }
 
-/// The non-empty paragraphs of a chunk's text.
 fn paragraphs(text: &str) -> Vec<String> {
     text.split("\n\n")
         .map(str::trim)
@@ -79,8 +133,6 @@ fn paragraphs(text: &str) -> Vec<String> {
         .collect()
 }
 
-/// A calculation from a formula line: the quantity it names (the left side) and the expression it gives
-/// (the right side). The question asks for the formula without printing it.
 fn calculation(formula: &str, topic: &str) -> GeneratedQuestion {
     let parts: Vec<&str> = formula
         .split('=')
@@ -93,16 +145,19 @@ fn calculation(formula: &str, topic: &str) -> GeneratedQuestion {
         rubric.push((*expression).to_owned());
     }
     GeneratedQuestion {
-        kind: Kind::Calculation,
+        format: ExamItemFormat::Calculation,
         prompt: format!("Give the formula for {name} and explain its symbols."),
         sample_answer: formula.to_owned(),
         rubric,
         points: 4,
         topic: topic.to_owned(),
+        options: Vec::new(),
+        correct_indices: Vec::new(),
+        gap_hints: Vec::new(),
+        gap_answers: Vec::new(),
     }
 }
 
-/// The first sentence of a note's text, cut to a length a rubric point can hold; the topic when there is none.
 fn key_point(text: &str, topic: &str) -> String {
     text.split(['.', '\n'])
         .map(str::trim)
@@ -113,9 +168,8 @@ fn key_point(text: &str, topic: &str) -> String {
         )
 }
 
-/// The meaning of a definition line: the text after its term, without the final full stop. The whole line
-/// when there is no meaning after the term.
-fn meaning_of(line: &str) -> String {
+/// The meaning of a definition line: the text after its term, without the final full stop.
+pub fn meaning_of(line: &str) -> String {
     let rest = match line.split_once(':') {
         Some((_, meaning)) => meaning,
         None => line
@@ -132,7 +186,7 @@ fn meaning_of(line: &str) -> String {
 }
 
 /// The term of a definition line: the text before the colon, or the first words before " ist "/" is ".
-fn term_of(line: &str) -> String {
+pub fn term_of(line: &str) -> String {
     match line.split_once(':') {
         Some((t, _)) => t.trim().to_owned(),
         None => line

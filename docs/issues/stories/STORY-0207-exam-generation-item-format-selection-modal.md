@@ -2,7 +2,7 @@
 id: STORY-0207
 type: story
 title: "Interactive modal to choose item formats during mock exam generation"
-status: backlog
+status: done
 epic: EPIC-063
 parents: ['EPIC-063']
 estimate: 5
@@ -32,11 +32,11 @@ Add an interactive **Exam Generation Format Modal** before generating a mock exa
    - Grade objective formats (single select, multiple select, exact/normalized gap fills) deterministically alongside SLM/keyword grading for open questions and case scenarios.
 
 ## Acceptance Criteria
-- [ ] Launching mock exam generation (from notes or lecture PDFs) opens an interactive configuration modal where the user selects which item formats to include (e.g. open question, fill in the gaps / cloze, single select, multiple select, calculation, case scenario)
-- [ ] The modal lets the user set the desired format mix (counts or weights per selected format) and total question count, with sensible defaults and validation preventing an empty selection
-- [ ] The exam generation pipeline (both local/remote model prompting and offline template fallback) respects the selected item formats and produces structured questions matching each chosen format
-- [ ] The mock exam runner and grading/review views render, accept answers for, and grade every supported format (free text, gap fills, single-choice radio selection, multi-choice checkbox selection)
-- [ ] Selected format preferences are remembered for the session and covered by headless UI and service tests
+- [x] Launching mock exam generation (from notes or lecture PDFs) opens an interactive configuration modal where the user selects which item formats to include (e.g. open question, fill in the gaps / cloze, single select, multiple select, calculation, case scenario)
+- [x] The modal lets the user set the desired format mix (counts or weights per selected format) and total question count, with sensible defaults and validation preventing an empty selection
+- [x] The exam generation pipeline (both local/remote model prompting and offline template fallback) respects the selected item formats and produces structured questions matching each chosen format
+- [x] The mock exam runner and grading/review views render, accept answers for, and grade every supported format (free text, gap fills, single-choice radio selection, multi-choice checkbox selection)
+- [x] Selected format preferences are remembered for the session and covered by headless UI and service tests
 
 ## Design Notes
 - Reuse existing cloze (`studyfrog-md` / `STORY-0108`) and case-study choice/option primitives where they fit cleanly, keeping all logic in pure free functions (Invariant P1) and files $\le 250$ LOC (Invariant P6).
@@ -49,3 +49,9 @@ Add an interactive **Exam Generation Format Modal** before generating a mock exa
 ## Open Questions
 - Should multiple-select grading use all-or-nothing scoring or partial credit with a penalty for wrong selections (standard German *Mehrfachauswahl* rules)?
 - Should the modal also expose exam duration / pass-mark overrides alongside item formats?
+
+## Implementation (2026-11-23)
+
+- **`studyfrog-rehearsal`**: Added `exam_format` / `exam_format_mix` (`ExamItemFormat` 6 variants, `MixMode`, `ExamFormatMix`, `FormatPlan`, validation & Hamilton largest-remainder resolution, `Part A`..`Part F` headings), `curriculum_choices` / `curriculum_gaps` offline synthesizers, and `exam_answer` / `exam_answer_grade` (`ExamAnswer`, `MULTI_SELECT_RULE` net partial credit `max(0, hits - wrong) / correct_count`, normalized `grade_fill_in_gaps`, `grade_single_select`, `grade_multiple_select`).
+- **`studyfrog-agent` & `studyfrog-service`**: Added `FormatCounts`, extended `RawQuestion`, `chunk_system_for_formats`, `exam_gen_judge` (`studyfrog_md::cloze::cloze_spans` normalization), `generate_with_mix`, and format-aware `exam_markdown`.
+- **`studyfrog-ui`**: Added `Modal::MockExamFormat`, session-persistent `Rehearse::mock_format_prefs`, format-specific answering controls (textareas, inline Tab-navigable cloze gaps, single-select radios, multiple-select checkboxes), `By format` breakdown, and explicit `MULTI_SELECT_RULE` display in graded review. Covered by `studyfrog-rehearsal`, `studyfrog-agent`, `studyfrog-service`, and `egui_kittest` suites.

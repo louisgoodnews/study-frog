@@ -20,6 +20,7 @@ Phases M0 to M12. Each phase has entry criteria, an epic breakdown (every epic h
 | M11 | 0.4.1–0.4.3 Details notebook tabs, create workflow, vault switcher, stack moving, item deletion, and CSV import | EPIC-031 | [M11-diary](M11-diary.md) |
 | M12 | External models, PDF optimization, Python API, achievements, prompts, item keys & colorization, exam mode, behavioral analytics & forecasting, active-recall formats, UI psychophysics, MCP, and CLI control protocol (0.5.0 and 0.6.0) | EPIC-028 to EPIC-030, EPIC-032 to EPIC-038 | [M12-models-and-extensibility](M12-models-and-extensibility.md) |
 | M13 | Universal item linking (stacks, cards, questions, answers, notes), graph and hover previews | EPIC-039 | [ROADMAP](ROADMAP.md) |
+| M14 | Academic workstation (v1.0.0): homework, import hub, wiki, memory mode, telemetry, cases, formulas, Altklausur lab (`EPIC-063` done) | EPIC-056 to EPIC-063 | [v1.0.0-roadmap](../v1.0.0-roadmap.md) |
 
 ## M0 Bootstrap
 
@@ -364,4 +365,9 @@ See [M12-models-and-extensibility](M12-models-and-extensibility.md).
   - **STORY-0122** StudyFrog application files in ~/.local/ with logs and configurations
   - **STORY-0124** Interactive CLI control protocol and console log streaming for AI agents
 - **EPIC-039** Universal item linking between stacks, cards, questions, answers, and notes
+
+## M14 Academic Workstation (v1.0.0)
+
+See [docs/v1.0.0-roadmap.md](../v1.0.0-roadmap.md) for the full `EPIC-056`–`EPIC-063` breakdown.
+- **EPIC-063** Altklausur Lab & Mock Exam Simulation (`done` 2026-11-23: `STORY-0185`, `STORY-0186`, `STORY-0187`, `STORY-0207`)
 
