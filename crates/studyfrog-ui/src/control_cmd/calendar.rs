@@ -8,6 +8,8 @@ use crate::calendar_mode::CalendarViewMode;
 /// What a `calendar` or `reminders` command asks for.
 #[derive(Debug, Clone, PartialEq)]
 pub enum CalendarCmd {
+    /// Read the view and the period on screen (opens the calendar).
+    Show,
     /// Switch the view: month, week, day or timetable.
     View(CalendarViewMode),
     /// Show the month of this date and select the day.

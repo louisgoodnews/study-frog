@@ -9,8 +9,8 @@ use crate::calendar_mode::CalendarViewMode;
 use crate::effect::Effect;
 pub use crate::plan_msg::PlanMsg;
 use crate::planner_ops::{
-    changed, failed, loaded, month_of, save, save_timetable, shift_month, shift_period, with,
-    with_sessions,
+    changed, failed, loaded, month_of, save, save_timetable, shift_month, shift_period, show_month,
+    with, with_sessions,
 };
 use crate::session_form::{SessionForm, apply_form_edit, form_from, form_new};
 use crate::state::State;
@@ -102,7 +102,11 @@ pub fn grid_of(month: (i32, u8)) -> [Date; 42] {
 pub fn update(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
     let refresh = matches!(
         msg,
-        PlanMsg::Loaded(Ok(_)) | PlanMsg::Month(_) | PlanMsg::ShiftPeriod(_) | PlanMsg::Today
+        PlanMsg::Loaded(Ok(_))
+            | PlanMsg::Month(_)
+            | PlanMsg::ShowMonth(_)
+            | PlanMsg::ShiftPeriod(_)
+            | PlanMsg::Today
     );
     let (state, mut effects) = update_one(state, msg);
     if refresh {
@@ -174,6 +178,7 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
         }
         PlanMsg::TimetableChanged(Err(e)) => failed(state, e),
         PlanMsg::Month(delta) => with(state, shift_month(p, delta)),
+        PlanMsg::ShowMonth(day) => with(state, show_month(p, day)),
         PlanMsg::Today => {
             let sessions = p.sessions.clone();
             let p = Planner {

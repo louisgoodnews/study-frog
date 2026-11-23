@@ -34,6 +34,9 @@ pub enum PlanMsg {
     TimetableChanged(Result<Vec<TimetableEntry>, String>),
     /// Show another month (relative).
     Month(i64),
+    /// Show the month of this date (absolute: applied when it arrives, so it is right whatever the
+    /// month was before the calendar loaded).
+    ShowMonth(studyfrog_core::civil::Date),
     /// Jump to today.
     Today,
     /// Choose a day.

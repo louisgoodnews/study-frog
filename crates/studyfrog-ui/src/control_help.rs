@@ -3,6 +3,8 @@
 
 use serde_json::{Value, json};
 
+pub mod screens;
+
 /// One row: usage, what it does in the application (messages or effects), class.
 pub type Row = (&'static str, &'static str, &'static str);
 
@@ -218,6 +220,7 @@ pub const COMMANDS: &[Row] = &[
 pub fn help_json() -> Value {
     let rows: Vec<Value> = COMMANDS
         .iter()
+        .chain(screens::ROWS.iter())
         .map(|(usage, does, class)| json!({"usage": usage, "does": does, "class": class}))
         .collect();
     json!({

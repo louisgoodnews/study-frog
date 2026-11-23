@@ -27,8 +27,10 @@ pub enum BoardMsg {
     Force(bool),
     /// The new-card title changed.
     NewTitle(String),
-    /// "Add card" was activated.
+    /// "Add card" was activated: the card goes to the first column.
     Add,
+    /// The card goes to the column with this name (ignoring case); a name no column has is refused.
+    AddTo(String),
     /// A card was dropped on a column at a position.
     Move {
         /// The card.

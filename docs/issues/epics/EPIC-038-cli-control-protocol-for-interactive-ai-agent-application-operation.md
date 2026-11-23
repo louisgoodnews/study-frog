@@ -46,6 +46,8 @@ Both stories are in review: STORY-0122 (application home and logs) and STORY-012
 ## Verification
 Review (2026-11-22): criterion 1 NOT MET: calendar, board, diary, reports, achievements, settings, assistant and the folder operations are reached by `nav` and show only the screen name; no AccessKit tree; no stack delete (see STORY-0124). Criterion 2 NOT MET: `ctl state` is a semantic snapshot, but there is no live UI widget/state tree; live logs are MET (`ctl logs --follow` streamed a notice and a control warning as they happened). Criterion 3 MET: with no `STUDYFROG_HOME`, a headless run under a fake `HOME` created `~/.local/share/studyfrog/run/` and `config/app.toml` (`appearance density` write); with `STUDYFROG_HOME` set, `config/`, `logs/studyfrog.log`, `logs/console.jsonl` and `run/control.sock`/`control.json` were written.
 
+Review (2026-11-23): criterion 1 NOT MET, narrowed: calendar, board, diary and reports can now be driven (`board`, `board add`, `diary list|open|add`, `reports <tab>`, `calendar view|period` answer with their data; see STORY-0124's note). Still open: achievements, settings, assistant, graph, match, folders and PDF are reachable by `nav` only, and there is no stack delete. Criterion 2 NOT MET: no live UI widget or AccessKit tree; `state` is a semantic snapshot, and live logs are still MET (`ctl logs --follow`, 2026-11-22). Criterion 3 MET (unchanged).
+
 ## Dependencies
 EPIC-008 (UI Shell), EPIC-028 (Extensibility), and EPIC-037 (MCP).
 

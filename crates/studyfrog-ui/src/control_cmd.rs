@@ -8,7 +8,9 @@ use studyfrog_service::create_more::NewKind;
 
 use crate::state::Screen;
 
+pub mod board;
 pub mod calendar;
+pub mod diary;
 pub mod homework;
 pub use homework::{HomeworkCmd, HomeworkNew};
 /// One request: the caller's id (echoed in the answer) and the command.
@@ -68,6 +70,12 @@ pub enum Command {
     PdfFind(Option<String>, String),
     /// Calendar: the view, the period, a day's homework, and the reminders due.
     Calendar(calendar::CalendarCmd),
+    /// The board: the columns and their cards, one column, a new card.
+    Board(board::BoardCmd),
+    /// The diary: the entries of a day or range, one entry, a new entry.
+    Diary(diary::DiaryCmd),
+    /// The reports screen, on this tab (`None`: the tab it shows).
+    Reports(Option<crate::explorer_ui::ReportTab>),
     /// Save a picture of the window.
     Screenshot(PathBuf),
     /// Read (and maybe follow) the console log.

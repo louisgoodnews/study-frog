@@ -59,6 +59,18 @@ pub fn shift_month(p: Planner, delta: i64) -> Planner {
     with_sessions(Planner { month, ..p }, sessions)
 }
 
+/// Show the month of `day`, keeping the sessions.
+pub fn show_month(p: Planner, day: Date) -> Planner {
+    let sessions = p.sessions.clone();
+    with_sessions(
+        Planner {
+            month: month_of(day),
+            ..p
+        },
+        sessions,
+    )
+}
+
 /// Shift active date period based on the current view mode.
 pub fn shift_period(p: Planner, delta: i64) -> Planner {
     match p.view_mode {

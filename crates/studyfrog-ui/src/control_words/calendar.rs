@@ -12,6 +12,8 @@ use crate::control_words_items::{flag, need, split_flags};
 pub fn parse(rest: &[String]) -> Result<Command, String> {
     let words: Vec<&str> = rest.iter().map(String::as_str).collect();
     let cmd = match words.first().copied() {
+        Some("view") if words.len() == 1 => CalendarCmd::Show,
+        Some("period") if words.len() == 1 => CalendarCmd::Show,
         Some("view") => {
             let word = need(&words, 1, "a view: month, week, day or timetable")?;
             CalendarCmd::View(view_named(word)?)

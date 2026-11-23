@@ -73,3 +73,27 @@ pub fn list_json(state: &State) -> Value {
 pub fn refusal(state: &State) -> Option<String> {
     state.planner.homework_ui.error.clone()
 }
+
+fn tab_name(tab: studyfrog_calendar::homework_query::HomeworkTab) -> &'static str {
+    use studyfrog_calendar::homework_query::HomeworkTab;
+    match tab {
+        HomeworkTab::All => "all",
+        HomeworkTab::Active => "active",
+        HomeworkTab::DueToday => "due-today",
+        HomeworkTab::Overdue => "overdue",
+        HomeworkTab::Completed => "completed",
+    }
+}
+
+/// The tab in front and the subject (stack folder) the list is narrowed to, if any.
+pub fn tab_json(state: &State) -> Value {
+    let ui = &state.planner.homework_ui;
+    let subject = ui.subject.and_then(|uid| {
+        state
+            .vault
+            .as_ref()
+            .and_then(|v| v.overview.stacks.iter().find(|s| s.uid == uid))
+            .map(|s| s.folder.clone())
+    });
+    json!({"tab": tab_name(ui.tab), "subject": subject})
+}

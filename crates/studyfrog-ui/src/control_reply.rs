@@ -11,11 +11,15 @@ use crate::control_state::{notices_json, state_json, ulid};
 use crate::state::{Notice, NoticeKind, State};
 
 pub mod appearance;
+pub mod board;
 pub mod calendar;
+pub mod diary;
 pub mod focus;
 pub mod homework;
 pub mod import;
 pub mod pdf;
+pub mod report_tabs;
+pub mod reports;
 pub mod tooltip;
 
 /// Rows a `query` answers with at most.
@@ -114,6 +118,15 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
         Command::Calendar(CalendarCmd::Homework(day)) => Ok(calendar::homework_json(state, *day)),
         Command::Calendar(CalendarCmd::RemindersDue) => Ok(calendar::reminders_json(state)),
         Command::Calendar(CalendarCmd::SessionAdd(add)) => calendar::session_added(state, add),
+        Command::Calendar(CalendarCmd::View(_) | CalendarCmd::Period(_) | CalendarCmd::Show) => {
+            Ok(calendar::selection_json(state))
+        }
+        Command::Homework(HomeworkCmd::Tab(_) | HomeworkCmd::Subject(_)) => {
+            Ok(homework::tab_json(state))
+        }
+        Command::Board(c) => board::answer(state, c),
+        Command::Diary(c) => diary::answer(state, c),
+        Command::Reports(tab) => reports::answer(state, *tab),
         Command::PdfFind(..) => Ok(with_part(state_json(state), "pdf", pdf::pdf_json(state))),
         Command::Help(None) => Ok(help_json()),
         Command::Help(Some(name)) => tooltip::tooltip_json(name),

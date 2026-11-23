@@ -69,3 +69,33 @@ pub fn reminders_json(state: &State) -> Value {
         }),
     }
 }
+
+fn view_name(mode: crate::calendar_mode::CalendarViewMode) -> &'static str {
+    use crate::calendar_mode::CalendarViewMode;
+    match mode {
+        CalendarViewMode::Month => "month",
+        CalendarViewMode::Week => "week",
+        CalendarViewMode::Day => "day",
+        CalendarViewMode::Timetable => "timetable",
+    }
+}
+
+/// The selection on screen: the view, the visible month, the selected day and its sessions.
+pub fn selection_json(state: &State) -> Value {
+    let p = &state.planner;
+    let (year, month) = p.month;
+    let sessions: Vec<Value> = p
+        .sessions
+        .iter()
+        .filter(|s| s.start.date == p.selected)
+        .map(|s| {
+            json!({"title": s.title, "start": format_minute(s.start.minute), "minutes": s.duration_min})
+        })
+        .collect();
+    json!({
+        "view": view_name(p.view_mode),
+        "month": format!("{year:04}-{month:02}"),
+        "selected": format_date(p.selected),
+        "sessions": sessions,
+    })
+}

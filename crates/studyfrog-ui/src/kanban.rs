@@ -67,23 +67,50 @@ fn loaded(state: State, result: Result<Board, String>) -> (State, Vec<Effect>) {
 }
 
 fn add(state: State) -> (State, Vec<Effect>) {
-    let title = state.kanban.new_title.trim().to_owned();
     let first = state
         .kanban
         .board
         .as_ref()
         .and_then(|b| b.columns.first().map(|c| c.id));
     match first {
-        Some(column) if !title.is_empty() => {
-            let kanban = Kanban {
-                new_title: String::new(),
-                ..state.kanban.clone()
-            };
-            let op = BoardOp::AddCard { column, title };
-            command(State { kanban, ..state }, op)
-        }
-        _ => (state, Vec::new()),
+        Some(column) => add_in(state, column),
+        None => (state, Vec::new()),
     }
+}
+
+/// The card goes to the column with this name (the first one matching, ignoring case).
+fn add_to(state: State, name: &str) -> (State, Vec<Effect>) {
+    let found = state.kanban.board.as_ref().and_then(|b| {
+        b.columns
+            .iter()
+            .find(|c| c.name.eq_ignore_ascii_case(name.trim()))
+            .map(|c| c.id)
+    });
+    match found {
+        Some(column) => add_in(state, column),
+        None => {
+            let text = format!("No column named {}.", name.trim());
+            let notice = Some(Notice {
+                kind: NoticeKind::Error,
+                text,
+            });
+            (State { notice, ..state }, Vec::new())
+        }
+    }
+}
+
+/// Add the card titled in the new-card field to `column`; an empty title adds nothing.
+fn add_in(state: State, column: Uid) -> (State, Vec<Effect>) {
+    let title = state.kanban.new_title.trim().to_owned();
+    if title.is_empty() {
+        return (state, Vec::new());
+    }
+    let kanban = Kanban {
+        new_title: String::new(),
+        ..state.kanban.clone()
+    };
+    let op = BoardOp::AddCard { column, title };
+    command(State { kanban, ..state }, op)
 }
 
 fn open(state: State, id: Uid) -> (State, Vec<Effect>) {
@@ -168,6 +195,7 @@ pub fn update(state: State, msg: BoardMsg) -> (State, Vec<Effect>) {
             },
         ),
         BoardMsg::Add => add(state),
+        BoardMsg::AddTo(name) => add_to(state, &name),
         BoardMsg::Move { card, to, index } => command(
             state,
             BoardOp::Move {

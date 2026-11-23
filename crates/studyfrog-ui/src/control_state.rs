@@ -126,6 +126,8 @@ pub fn state_json(state: &State) -> Value {
         "notice_item": state.notice_link.as_ref().map(|(_, uid)| ulid(*uid)),
         "toasts": toasts,
         "notices": notices_json(state),
+        "planner": crate::control_reply::calendar::selection_json(state),
+        "homework": crate::control_reply::homework::tab_json(state),
         "history": {"back": state.history.at > 0, "forward": state.history.at + 1 < state.history.entries.len()},
     })
 }

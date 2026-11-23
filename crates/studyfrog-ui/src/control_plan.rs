@@ -21,6 +21,7 @@ use crate::transfer_ui::TransferMsg;
 pub mod calendar;
 pub mod files;
 pub mod homework;
+pub mod screens;
 pub mod search;
 
 /// Phases of messages; background work settles between phases.
@@ -236,12 +237,12 @@ pub fn plan_for(state: &State, cmd: &Command) -> Result<Plan, String> {
             new_stack,
         } => files::import(path, stack, *root, new_stack),
         Command::PdfFind(file, text) => files::pdf_find(file, text),
-        Command::Calendar(c) => calendar::plan(state, c),
+        Command::Calendar(c) => calendar::plan(c),
         Command::Dismiss => one(Msg::DismissNotice),
         Command::CloseModal => Ok(vec![vec![
             Msg::Modal(ModalMsg::Close),
             Msg::Modal(ModalMsg::Discard),
         ]]),
-        _ => Ok(Vec::new()),
+        other => screens::plan(other),
     }
 }
