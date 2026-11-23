@@ -2,7 +2,7 @@
 id: STORY-0170
 type: story
 title: "Menu De-Cluttering, Visual Spacing, and Progressive Disclosure"
-status: done
+status: review
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 5
@@ -90,3 +90,6 @@ Criterion 1: MET as read above, checked in the running app (build of this branch
 - Reading note for the owner: if the overflow trigger itself counts as a visible primary button, the header shows four buttons (Back to library, Previous, Next, More…), not three. The stack page counts its menu trigger among its visible three, so the owner may want to decide the rule.
 
 Criteria 2 and 3: unchanged; their ticks stand (not re-checked here). Status set to done: all three criteria are ticked.
+
+
+Note (2026-11-23): returned to review for the owner. The criterion does not name the core actions; the implementation reads them as Back to library, Previous and Next, with More... as the overflow trigger. Whether that reading is acceptable, and whether More... counts as a visible button, is the owner's decision.
