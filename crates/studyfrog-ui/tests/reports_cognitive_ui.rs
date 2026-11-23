@@ -11,6 +11,7 @@ use studyfrog_core::review::Rating;
 use studyfrog_core::uid::Uid;
 use studyfrog_service::cognitive_report::profile;
 use studyfrog_store::reports::HistoryRow;
+use studyfrog_store::telemetry::TelemetryPoint;
 use studyfrog_ui::explorer_ui::ReportTab;
 use studyfrog_ui::model::Model;
 use studyfrog_ui::state::Screen;
@@ -32,7 +33,7 @@ fn on_cognitive(rows: &[HistoryRow]) -> Model {
     m.state.explorer.tab = ReportTab::Cognitive;
     let mut b = bundle();
     b.analytics = Box::new(analytics());
-    b.cognitive = profile(rows);
+    b.cognitive = profile(rows, &[]);
     m.state.reports = Some(b);
     m
 }
@@ -51,6 +52,8 @@ fn calibration_and_velocity_are_shown_with_their_charts() {
         "Rated Easy",
         "Answered in time",
         "Learning velocity",
+        "Answer times, in bins of 2 seconds",
+        "Semantic accuracy over time",
         "Answer time against the length of the words",
         "Share of answers that passed, cumulative by week",
         "Days between passing reviews, by week (consolidation)",
@@ -58,6 +61,37 @@ fn calibration_and_velocity_are_shown_with_their_charts() {
         assert!(h.query_by_label(text).is_some(), "missing {text}");
     }
     assert_all_named(&h, "cognitive profile");
+}
+
+#[test]
+fn the_semantic_trend_says_why_it_is_empty_and_shows_the_scored_count() {
+    let rows = [row(Rating::Good, 0, 3_000, 4_000)];
+    let mut h = harness(on_cognitive(&rows));
+    h.run_steps(4);
+    assert!(
+        h.query_by_label(
+            "Not shown yet: no answer has a semantic score. A typed answer that is judged records one; flip-mode answers have nothing to score."
+        )
+        .is_some()
+    );
+
+    let scored = [point(0, Some(1.0)), point(1, None), point(2, Some(0.5))];
+    let mut m = on_cognitive(&rows);
+    m.state.reports.as_mut().unwrap().cognitive = profile(&rows, &scored);
+    let mut h = harness(m);
+    h.run_steps(4);
+    assert!(h.query_by_label("2 judged answers.").is_some());
+}
+
+fn point(at: i64, semantic: Option<f32>) -> TelemetryPoint {
+    TelemetryPoint {
+        item: Uid(1),
+        reviewed_at_ms: at,
+        latency_ms: 1_000,
+        dwell_ms: 2_000,
+        semantic_score: semantic,
+        text_complexity: 10,
+    }
 }
 
 #[test]

@@ -22,6 +22,8 @@ use studyfrog_store::telemetry::{TelemetryPoint, record_telemetry};
 use studyfrog_md::ulid::{compose_ulid, format_ulid};
 use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 
+pub use crate::rating_timing::RatingTiming;
+
 use crate::create::IdSource;
 use crate::day::DayWindow;
 use crate::familiarity::{retime_fsrs, retime_sm2};
@@ -37,7 +39,7 @@ pub fn begin_run(conn: &Connection, run: &Run) -> Result<(), StoreError> {
 
 /// What `record_step` needs to know about the run: its identity, what it does to the schedule and
 /// its lifecycle state after the step.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct StepContext {
     /// The run.
     pub run: Uid,
@@ -47,15 +49,6 @@ pub struct StepContext {
     pub state: RunState,
     /// For a rating: how long the answer was on screen and how long it should take to read.
     pub timing: Option<RatingTiming>,
-}
-
-/// The timing of a rating, for familiarity: the answer's time on screen and the reading time it should need.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct RatingTiming {
-    /// Milliseconds the answer was on screen before the rating, paused time excluded.
-    pub answer_ms: u32,
-    /// Milliseconds the answer's words should take to read at the user's speed.
-    pub expected_ms: u32,
 }
 
 /// The context of a session after a step.
@@ -150,10 +143,10 @@ pub(crate) fn rate_item_in(
             &TelemetryPoint {
                 item,
                 reviewed_at_ms: now.0,
-                latency_ms: t.answer_ms,
-                dwell_ms: t.answer_ms,
-                semantic_score: None,
-                text_complexity: t.expected_ms,
+                latency_ms: t.latency_ms,
+                dwell_ms: t.dwell_ms,
+                semantic_score: t.semantic.map(|s| s.clamp(0.0, 1.0)),
+                text_complexity: t.text_words,
             },
         )?;
     }

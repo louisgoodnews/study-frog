@@ -21,7 +21,7 @@ fn row(rating: Rating, at_ms: i64, answer_ms: Option<u32>, expected_ms: Option<u
 
 #[test]
 fn empty_history_gives_an_empty_profile() {
-    let p = profile(&[]);
+    let p = profile(&[], &[]);
     assert_eq!(p.answers, 0);
     assert_eq!(p.timed, 0);
     assert!(p.velocity.is_none());
@@ -35,7 +35,7 @@ fn untimed_answers_count_but_are_not_plotted() {
         row(Rating::Good, 0, None, None),
         row(Rating::Good, 1, Some(4_000), None),
     ];
-    let p = profile(&rows);
+    let p = profile(&rows, &[]);
     assert_eq!(p.answers, 2);
     assert_eq!(p.timed, 0);
     assert!(p.length_points.is_empty());
@@ -51,7 +51,7 @@ fn calibration_compares_easy_ratings_with_in_time_answers() {
         row(Rating::Good, 2, Some(2_000), Some(4_000)),
         row(Rating::Hard, 3, Some(8_000), Some(4_000)),
     ];
-    let cal = profile(&rows).calibration.expect("calibration");
+    let cal = profile(&rows, &[]).calibration.expect("calibration");
     assert!((cal.easy_share - 0.5).abs() < 1e-6);
     assert!((cal.in_time_share - 0.5).abs() < 1e-6);
 }
@@ -63,7 +63,7 @@ fn weekly_pass_is_the_cumulative_share_per_week() {
         row(Rating::Again, 1, None, None),
         row(Rating::Easy, WEEK_MS + 5, None, None),
     ];
-    let weeks = profile(&rows).weekly_pass;
+    let weeks = profile(&rows, &[]).weekly_pass;
     assert_eq!(weeks.len(), 2);
     assert_eq!(weeks[0], (0.0, 0.5));
     // Cumulative: two of three answers so far passed.
@@ -77,7 +77,7 @@ fn velocity_is_passes_per_minute_of_answering() {
     let rows: Vec<HistoryRow> = (0..5)
         .map(|i| row(Rating::Good, i, Some(60_000), Some(4_000)))
         .collect();
-    let v = profile(&rows).velocity.expect("velocity");
+    let v = profile(&rows, &[]).velocity.expect("velocity");
     assert!((v - 1.0).abs() < 1e-9, "{v}");
 }
 
@@ -86,7 +86,7 @@ fn length_points_keep_the_most_recent_five_hundred() {
     let rows: Vec<HistoryRow> = (0..600)
         .map(|i| row(Rating::Good, i, Some(1_000 + i as u32), Some(2_000)))
         .collect();
-    let p = profile(&rows);
+    let p = profile(&rows, &[]);
     assert_eq!(p.timed, 600);
     assert_eq!(p.length_points.len(), 500);
     assert!((p.length_points[0].1 - 1.1).abs() < 1e-3);
@@ -111,7 +111,7 @@ fn consolidation_is_the_mean_gap_of_passing_reviews_per_week() {
         elapsed_days: 9.0,
         ..row(Rating::Again, 3, None, None)
     });
-    let c = profile(&rows).consolidation;
+    let c = profile(&rows, &[]).consolidation;
     assert_eq!(c.len(), 1, "{c:?}");
     assert_eq!(c[0].0, 0.0);
     assert!((c[0].1 - 3.0).abs() < 1e-6, "{c:?}");

@@ -73,6 +73,7 @@ pub fn rate(
     let out = StepOutput {
         events: vec![event],
         latency: None,
+        dwell_ms: None,
     };
     let ctx = StepContext {
         run,
@@ -81,6 +82,10 @@ pub fn rate(
         timing: timing.map(|(answer_ms, expected_ms)| RatingTiming {
             answer_ms,
             expected_ms,
+            latency_ms: answer_ms / 2,
+            dwell_ms: answer_ms,
+            text_words: 12,
+            semantic: None,
         }),
     };
     record_step(conn, &ctx, &out, UnixMs(now), settings).unwrap();

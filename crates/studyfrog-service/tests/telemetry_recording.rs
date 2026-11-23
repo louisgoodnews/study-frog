@@ -20,8 +20,10 @@ fn a_timed_rating_is_recorded_once_with_its_timing() {
     let rows = load_telemetry_range(&session.conn, 0, i64::MAX).unwrap();
     assert_eq!(rows.len(), 1, "{rows:?}");
     assert_eq!(rows[0].item, ITEM);
-    assert_eq!(rows[0].latency_ms, 3_000);
-    assert_eq!(rows[0].text_complexity, 4_500);
+    // fam_support records latency as half the answer time, dwell as the answer time and 12 words.
+    assert_eq!(rows[0].latency_ms, 1_500);
+    assert_eq!(rows[0].dwell_ms, 3_000);
+    assert_eq!(rows[0].text_complexity, 12);
     assert!(rows[0].semantic_score.is_none());
 }
 

@@ -12,6 +12,7 @@ use studyfrog_report::retention::{RetentionBucket, ReviewPoint, retention_curve}
 use studyfrog_report::simulate::{SimConfig, simulate_history};
 use studyfrog_srs::params::Params;
 use studyfrog_store::reports::{HistoryRow, load_all_events, load_review_history, load_scheduled};
+use studyfrog_store::telemetry::load_telemetry_range;
 
 use crate::session::{ServiceError, VaultSession, current_settings};
 use crate::settings::params_for;
@@ -165,6 +166,7 @@ pub fn build_reports_with(
     let store = ServiceError::Store;
     let params = params_for(&current_settings(session), None);
     let rows = load_review_history(&session.conn).map_err(store)?;
+    let telemetry = load_telemetry_range(&session.conn, i64::MIN, i64::MAX).map_err(store)?;
     let points: Vec<ReviewPoint> = rows
         .iter()
         .map(|r| ReviewPoint {
@@ -190,7 +192,7 @@ pub fn build_reports_with(
     let model = estimate_model(&history, today);
     Ok(ReportBundle {
         reviews: rows.len(),
-        cognitive: crate::cognitive_report::profile(&rows),
+        cognitive: crate::cognitive_report::profile(&rows, &telemetry),
         retention: retention_curve(&points),
         latency: latency_stats(&mut all),
         histogram: bins,

@@ -1,15 +1,18 @@
-//! The Cognitive profile tab (STORY-0178): timing against length, weekly recall, learning velocity
-//! and the metacognitive calibration widget. Read-only; the numbers come from the review history.
+//! The Cognitive profile tab (STORY-0178, BUG-0030): the learning velocity curve, the answer-time
+//! distribution, the semantic accuracy trend, the metacognitive calibration and the timing, recall
+//! and consolidation charts. Read-only; the numbers come from the review history and the telemetry.
 
 use eframe::egui::{self, ProgressBar, RichText};
 use studyfrog_service::cognitive_report::{Calibration, CognitiveProfile};
 
 use crate::msg::Msg;
 use crate::state::State;
-use crate::view::reports_cognitive_charts::{latency_scatter, weekly_line};
+use crate::view::reports_cognitive_charts::{bars, curve, latency_scatter};
 
 /// The gap, in shares, beyond which the calibration note names a mismatch.
 const GAP: f32 = 0.15;
+/// Width of one answer-time bin, in seconds, as the chart labels it.
+const BIN_S: u32 = 2;
 
 /// Draw the cognitive profile tab.
 pub fn draw(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
@@ -29,6 +32,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
             ui.add_space(16.0);
             velocity(ui, p);
             ui.add_space(16.0);
+            answer_times(ui, p);
+            ui.add_space(16.0);
+            semantic(ui, p);
+            ui.add_space(16.0);
             section(ui, "Answer time against the length of the words");
             if p.length_points.is_empty() {
                 ui.label("No timed answers yet.");
@@ -40,16 +47,16 @@ pub fn draw(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
             if p.weekly_pass.is_empty() {
                 ui.label("No reviews yet.");
             } else {
-                weekly_line(ui, &p.weekly_pass, 1.0, "100%");
+                curve(
+                    ui,
+                    &p.weekly_pass,
+                    1.0,
+                    "100%",
+                    &end_label(&p.weekly_pass, "week"),
+                );
             }
             ui.add_space(16.0);
-            section(ui, "Days between passing reviews, by week (consolidation)");
-            if p.consolidation.is_empty() {
-                ui.label("No passing reviews with a gap yet.");
-            } else {
-                let top = p.consolidation.iter().fold(1.0_f32, |m, (_, d)| m.max(*d));
-                weekly_line(ui, &p.consolidation, top, &format!("{top:.0} days"));
-            }
+            consolidation(ui, p);
         });
     });
 }
@@ -89,11 +96,80 @@ fn calibration(ui: &mut egui::Ui, c: Option<Calibration>) {
     ui.label(note);
 }
 
-/// Learning velocity, in passing answers per minute of answering.
+/// The label under the last point of a curve: the unit and the last x, for example `week 3`.
+fn end_label(points: &[(f32, f32)], unit: &str) -> String {
+    let last = points.last().map_or(0.0, |(x, _)| *x);
+    format!("{unit} {last:.0}")
+}
+
+/// Learning velocity: the figure, and the curve of passing answers per minute of answering, by
+/// cumulative answering minutes.
 fn velocity(ui: &mut egui::Ui, p: &CognitiveProfile) {
     section(ui, "Learning velocity");
     match p.velocity {
         Some(v) => ui.label(format!("{v:.2} passing answers per minute of answering.")),
         None => ui.label("Needs more timed answers to measure."),
     };
+    if p.velocity_curve.is_empty() {
+        return;
+    }
+    let top = p
+        .velocity_curve
+        .iter()
+        .fold(f32::EPSILON, |m, (_, y)| m.max(*y));
+    let minutes = p.velocity_curve.last().map_or(0.0, |(x, _)| *x);
+    curve(
+        ui,
+        &p.velocity_curve,
+        top,
+        &format!("{top:.2} per min"),
+        &format!("{minutes:.1} min answering"),
+    );
+}
+
+/// The distribution of answer times.
+fn answer_times(ui: &mut egui::Ui, p: &CognitiveProfile) {
+    section(ui, "Answer times, in bins of 2 seconds");
+    if p.latency_bins.iter().all(|c| *c == 0) {
+        ui.label("No timed answers yet.");
+    } else {
+        bars(ui, &p.latency_bins, BIN_S);
+    }
+}
+
+/// The semantic accuracy trend: the running mean of the judged answers' scores, or why there is none.
+fn semantic(ui: &mut egui::Ui, p: &CognitiveProfile) {
+    section(ui, "Semantic accuracy over time");
+    if p.semantic_trend.is_empty() {
+        ui.label(
+            "Not shown yet: no answer has a semantic score. A typed answer that is judged records one; flip-mode answers have nothing to score.",
+        );
+        return;
+    }
+    ui.label(format!("{} judged answers.", p.scored));
+    let n = p.semantic_trend.last().map_or(0.0, |(x, _)| *x);
+    curve(
+        ui,
+        &p.semantic_trend,
+        1.0,
+        "100%",
+        &format!("answer {n:.0}"),
+    );
+}
+
+/// The mean days between passing reviews, by week.
+fn consolidation(ui: &mut egui::Ui, p: &CognitiveProfile) {
+    section(ui, "Days between passing reviews, by week (consolidation)");
+    if p.consolidation.is_empty() {
+        ui.label("No passing reviews with a gap yet.");
+        return;
+    }
+    let top = p.consolidation.iter().fold(1.0_f32, |m, (_, d)| m.max(*d));
+    curve(
+        ui,
+        &p.consolidation,
+        top,
+        &format!("{top:.0} days"),
+        &end_label(&p.consolidation, "week"),
+    );
 }

@@ -46,6 +46,9 @@ pub struct StepOutput {
     pub events: Vec<RunEvent>,
     /// Latency of the item interaction this step completed, if any (paused time excluded).
     pub latency: Option<Latency>,
+    /// For a rating: how long the item was on screen before it was rated, paused time excluded
+    /// (its dwell, which the latency does not cover).
+    pub dwell_ms: Option<u32>,
 }
 
 /// Why an input was refused. The session is unchanged.

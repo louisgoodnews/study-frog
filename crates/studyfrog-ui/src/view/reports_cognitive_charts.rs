@@ -1,4 +1,5 @@
-//! Painter charts of the cognitive profile: the latency scatter and the weekly recall line.
+//! Painter charts of the cognitive profile: the latency scatter, curves over time and the answer-time
+//! distribution.
 
 use eframe::egui::{self, Align2, Pos2, Rect, Sense, Shape, Stroke, Vec2};
 
@@ -7,7 +8,7 @@ use crate::theme::palette_of;
 /// Height of a chart, in points.
 const HEIGHT: f32 = 220.0;
 /// Room left of the plot for the value labels, in points.
-const LEFT: f32 = 64.0;
+const LEFT: f32 = 88.0;
 /// Room below the plot for the value labels, in points.
 const BOTTOM: f32 = 30.0;
 /// Widest a chart is drawn, in points.
@@ -85,21 +86,21 @@ pub fn latency_scatter(ui: &mut egui::Ui, points: &[(f32, f32)]) {
     );
 }
 
-/// A line over weeks: `points` are (week, value) and the value runs from zero to `top`, which the
-/// top label names (for example `100%` or `12 days`).
-pub fn weekly_line(ui: &mut egui::Ui, points: &[(f32, f32)], top: f32, top_label: &str) {
+/// A curve over x (from zero to the last x) and y (from zero to `top`, which `top_label` names).
+/// `end_label` is written under the last x, for example `week 3`.
+pub fn curve(ui: &mut egui::Ui, points: &[(f32, f32)], top: f32, top_label: &str, end_label: &str) {
     let pal = palette_of(ui);
     let (r, painter) = area(ui);
     axes(&painter, r, pal.border);
-    let last = points.iter().fold(1.0_f32, |m, (w, _)| m.max(*w));
+    let last = points.iter().fold(1.0_f32, |m, (x, _)| m.max(*x));
     let top = top.max(f32::EPSILON);
-    let at = |w: f32, v: f32| {
+    let at = |x: f32, y: f32| {
         Pos2::new(
-            r.left() + w / last * r.width(),
-            r.bottom() - (v / top).clamp(0.0, 1.0) * r.height(),
+            r.left() + x / last * r.width(),
+            r.bottom() - (y / top).clamp(0.0, 1.0) * r.height(),
         )
     };
-    let pts: Vec<Pos2> = points.iter().map(|(w, v)| at(*w, *v)).collect();
+    let pts: Vec<Pos2> = points.iter().map(|(x, y)| at(*x, *y)).collect();
     if pts.len() > 1 {
         painter.add(Shape::line(pts.clone(), Stroke::new(2.0, pal.accent)));
     }
@@ -124,7 +125,44 @@ pub fn weekly_line(ui: &mut egui::Ui, points: &[(f32, f32)], top: f32, top_label
         &painter,
         r.right_bottom() + Vec2::new(0.0, 4.0),
         Align2::RIGHT_TOP,
-        &format!("week {last:.0}"),
+        end_label,
+        pal.text_weak,
+    );
+}
+
+/// Counts per bin as bars from zero. Bin `i` starts at `i * bin_s` seconds; the last bin holds
+/// everything longer, and its label ends in `+`.
+pub fn bars(ui: &mut egui::Ui, counts: &[u32], bin_s: u32) {
+    let pal = palette_of(ui);
+    let (r, painter) = area(ui);
+    axes(&painter, r, pal.border);
+    let top = counts.iter().copied().max().unwrap_or(0).max(1) as f32;
+    let slot = r.width() / counts.len().max(1) as f32;
+    for (i, count) in counts.iter().enumerate() {
+        let x0 = r.left() + i as f32 * slot + slot * 0.15;
+        let x1 = r.left() + (i as f32 + 1.0) * slot - slot * 0.15;
+        let h = *count as f32 / top * r.height();
+        let bar = Rect::from_min_max(Pos2::new(x0, r.bottom() - h), Pos2::new(x1, r.bottom()));
+        painter.rect_filled(bar, 2.0, pal.accent.gamma_multiply(0.7));
+        let start = i as u32 * bin_s;
+        let text = if i + 1 == counts.len() {
+            format!("{start}+ s")
+        } else {
+            format!("{start}")
+        };
+        label(
+            &painter,
+            Pos2::new((x0 + x1) / 2.0, r.bottom() + 4.0),
+            Align2::CENTER_TOP,
+            &text,
+            pal.text_weak,
+        );
+    }
+    label(
+        &painter,
+        r.left_top() - Vec2::new(4.0, 0.0),
+        Align2::RIGHT_TOP,
+        &format!("{top:.0} answers"),
         pal.text_weak,
     );
 }

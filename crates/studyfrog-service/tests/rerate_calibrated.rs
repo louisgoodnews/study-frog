@@ -62,6 +62,7 @@ fn rate(conn: &mut rusqlite::Connection, item: Uid, at: i64, answer_ms: u32, exp
             kind: RunEventKind::ItemRated(Good),
         }],
         latency: None,
+        dwell_ms: None,
     };
     let ctx = StepContext {
         run: item,
@@ -70,6 +71,10 @@ fn rate(conn: &mut rusqlite::Connection, item: Uid, at: i64, answer_ms: u32, exp
         timing: Some(RatingTiming {
             answer_ms,
             expected_ms,
+            latency_ms: answer_ms,
+            dwell_ms: answer_ms,
+            text_words: 0,
+            semantic: None,
         }),
     };
     record_step(conn, &ctx, &out, UnixMs(at), &settings).unwrap();

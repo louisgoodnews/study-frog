@@ -181,7 +181,7 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 - [ ] EPIC-060 Cognitive profiling
   - [x] STORY-0176 Telemetry schema, recording and queries (step 30)
   - [ ] STORY-0177 Difficulty and velocity engine (done; the D0 wiring into `initial_state` and the report chart are open)
-  - [ ] STORY-0178 Cognitive profile dashboard
+  - [x] STORY-0178 Cognitive profile dashboard (curves, distribution and semantic trend, BUG-0030)
 
 **Milestone 14.4: University academic mastery lab**
 - [ ] EPIC-061 Case-study decision matrices

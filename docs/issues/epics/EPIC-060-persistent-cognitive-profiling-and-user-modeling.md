@@ -23,7 +23,7 @@ Develop a comprehensive Cognitive Profiling and User Modeling subsystem:
 4. **Learning Insights Visualization**: Provide a dedicated Cognitive Profile view in Reports illustrating retention velocity, accuracy curves across complexity tiers, and metacognitive calibration.
 
 ## Acceptance Criteria
-- [ ] Persistent interaction telemetry recording per-item dwell time, response latency, and semantic deviation scores in SQLite
+- [x] Persistent interaction telemetry recording per-item dwell time, response latency, and semantic deviation scores in SQLite
 - [ ] Adaptive cognitive profile engine estimating personalized item difficulty and learning velocity
 - [ ] Long-term user modeling feeding calibrated priors into FSRS parameter optimization and familiarity scheduling
 - [x] Cognitive profile and memory velocity dashboard integrated into Reports
@@ -51,6 +51,8 @@ Checked in the running app (`/tmp/claude-0/verifyB`), a vault with 7 answered re
 The epic stays in review. Open: BUG-0030, BUG-0031, BUG-0048.
 
 Review (2026-11-22): criterion 1 stays unticked, NOT MET: `review_telemetry` rows have dwell_ms equal to latency_ms and semantic_score NULL, including the row for a typed answer whose `answer_score` is 1.0 (BUG-0031, BUG-0048; DB `/tmp/claude-0/review-c/vault/.studyfrog/index.sqlite`). Criterion 2 NOT CHECKABLE: velocity is shown (`/tmp/claude-0/review-c/shots/02-cognitive.png`), but no screen shows per-item difficulty. Criterion 3 NOT CHECKABLE in the app (see STORY-0177). Criterion 4 stays ticked: the Cognitive profile tab opens from Reports (`02-cognitive.png`). Status stays review.
+
+Fix (2026-11-23): criterion 1 is met (ticked). Each timed rating writes one `review_telemetry` row with the dwell (shown to rated), the latency (shown to the first response), the item's words and, for a typed answer, its similarity score from the built-in word matcher (no model installed). Flip-mode rows have no answer to score and stay NULL. BUG-0030, BUG-0031 and BUG-0048 are done. Evidence: DB `/tmp/claude-0/cog/vault/.studyfrog/index.sqlite` (10 rows, dwell differs from latency on all, 5 scores filled); screenshots `/tmp/claude-0/cog/07-cognitive-1280-low.png` and `/tmp/claude-0/cog/10-cognitive-960-semantic.png`. Criterion 2 stays unticked: velocity is now a curve, but no screen shows per-item difficulty (the D_emp index). Criterion 3 stays unticked: the D0 priors have no screen and need two first schedules compared. Status stays review.
 
 ## Open Questions
 None.

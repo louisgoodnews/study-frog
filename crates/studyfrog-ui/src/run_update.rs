@@ -1,21 +1,22 @@
 //! Update logic of a rehearsal run. The pure engine (`step`) is called right here; the shell only
 //! supplies the time (`State::now`) and executes the effects that save progress.
 
+mod timing;
+
 use studyfrog_core::run::{Run, RunState};
 use studyfrog_core::settings::AnswerEngine;
-use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::{Action, Input};
 use studyfrog_rehearsal::learn_graph::LearnGraph;
-use studyfrog_rehearsal::reading::{expected_ms, item_records, word_count};
 use studyfrog_rehearsal::session::{ItemPhase, current_item, session_new};
 use studyfrog_rehearsal::step::step;
-use studyfrog_service::rehearse::{RatingTiming, step_context};
+use studyfrog_service::rehearse::step_context;
 
 use crate::effect::Effect;
 use crate::msg::Msg;
 use crate::run_state::{ItemContent, LOOKAHEAD, RunView, engine_ms, run_view_new};
 use crate::setup::{Rehearse, plan_from_form, refresh_preview};
 use crate::state::{Notice, NoticeKind, State};
+use timing::rating_timing;
 
 pub(crate) fn error(state: State, text: impl Into<String>) -> (State, Vec<Effect>) {
     let notice = Some(Notice {
@@ -112,6 +113,8 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
     };
     let t_ms = engine_ms(state.now, run.started_time, run.session.last_t_ms);
     let rated_item = current_item(&run.session);
+    // Read before a rating clears the typed answer: the score is the item's semantic judgement.
+    let judged = run.scored.as_ref().map(|s| s.score.value);
     let clears_answer = matches!(action, Action::Rate(_) | Action::Skip)
         || (crate::exam_ui::is_exam(&run) && matches!(action, Action::SubmitAnswer(_)));
     let mut effects = Vec::new();
@@ -130,6 +133,7 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
         _ => None,
     };
     if let Ok(out) = step(&mut run.session, Input { t_ms, action }) {
+        let dwell = out.dwell_ms;
         effects.extend(submitted);
         run.events.extend(out.events.iter().cloned());
         run.latencies.extend(out.latency);
@@ -150,24 +154,11 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
             }
         }
         let mut ctx = step_context(&run.session);
-        ctx.timing = rated_item.and_then(|item| rating_timing(&run, item));
+        ctx.timing = rated_item.and_then(|item| rating_timing(&run, item, (dwell, judged)));
         effects.push(Effect::RecordStep { ctx, out });
     }
     state.rehearse.run = Some(run);
     (state, effects)
-}
-
-/// How long the answer of `item` was on screen before it was rated and how long its words should take to read.
-fn rating_timing(run: &RunView, item: Uid) -> Option<RatingTiming> {
-    let record = item_records(&run.events)
-        .into_iter()
-        .find(|r| r.item == item)?;
-    let answer_ms = record.rated.and(record.read_ms)?;
-    let words = word_count(&run.content.get(&item)?.answer);
-    (words > 0).then(|| RatingTiming {
-        answer_ms,
-        expected_ms: expected_ms(words, &run.reading),
-    })
 }
 
 /// Request the content of the current item and the next few that are not loaded yet.

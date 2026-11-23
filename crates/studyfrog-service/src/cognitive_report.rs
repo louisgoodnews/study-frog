@@ -7,6 +7,9 @@
 use studyfrog_core::review::Rating;
 use studyfrog_report::difficulty::learning_velocity;
 use studyfrog_store::reports::HistoryRow;
+use studyfrog_store::telemetry::TelemetryPoint;
+
+use crate::cognitive_curves::{latency_bins, semantic_trend, velocity_curve};
 
 /// The most recent answers kept for the latency scatter.
 const MAX_POINTS: usize = 500;
@@ -42,6 +45,15 @@ pub struct CognitiveProfile {
     /// Per week since the first review: (week number, mean days between passing reviews). A rising
     /// gap is consolidation: the items are remembered for longer between reviews.
     pub consolidation: Vec<(f32, f32)>,
+    /// Passing answers per minute of answering, after each timed answer: (cumulative answering
+    /// minutes, rate so far). See `cognitive_curves::velocity_curve`.
+    pub velocity_curve: Vec<(f32, f32)>,
+    /// Timed answers per answer-time bin (`cognitive_curves::BIN_MS` wide).
+    pub latency_bins: Vec<u32>,
+    /// Answers with a semantic score recorded.
+    pub scored: usize,
+    /// Running mean of the semantic scores: (scored answers so far, mean in `[0, 1]`).
+    pub semantic_trend: Vec<(f32, f32)>,
 }
 
 /// Whether a rating counts as recalled.
@@ -49,8 +61,8 @@ fn passed(r: Rating) -> bool {
     matches!(r, Rating::Good | Rating::Easy)
 }
 
-/// Build the profile from the review history, oldest first.
-pub fn profile(rows: &[HistoryRow]) -> CognitiveProfile {
+/// Build the profile from the review history, oldest first, and the recorded telemetry, oldest first.
+pub fn profile(rows: &[HistoryRow], telemetry: &[TelemetryPoint]) -> CognitiveProfile {
     let timed: Vec<(&HistoryRow, u32, u32)> = rows
         .iter()
         .filter_map(|r| Some((r, r.answer_ms?, r.expected_ms?)))
@@ -68,6 +80,13 @@ pub fn profile(rows: &[HistoryRow]) -> CognitiveProfile {
         weekly_pass: weekly_pass(rows),
         calibration: calibration(&timed),
         consolidation: consolidation(rows),
+        velocity_curve: velocity_curve(&timed),
+        latency_bins: latency_bins(&timed),
+        scored: telemetry
+            .iter()
+            .filter(|p| p.semantic_score.is_some())
+            .count(),
+        semantic_trend: semantic_trend(telemetry),
     }
 }
 

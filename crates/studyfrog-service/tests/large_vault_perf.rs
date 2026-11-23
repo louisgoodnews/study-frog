@@ -106,6 +106,7 @@ fn rate_new(conn: &mut rusqlite::Connection, item: Uid, settings: &VaultSettings
             kind: RunEventKind::ItemRated(Rating::Good),
         }],
         latency: None,
+        dwell_ms: None,
     };
     let ctx = StepContext {
         run,
@@ -114,6 +115,10 @@ fn rate_new(conn: &mut rusqlite::Connection, item: Uid, settings: &VaultSettings
         timing: Some(RatingTiming {
             answer_ms: 3_000,
             expected_ms: 4_000,
+            latency_ms: 1_000,
+            dwell_ms: 3_000,
+            text_words: 0,
+            semantic: None,
         }),
     };
     record_step(conn, &ctx, &out, UnixMs(now), settings).unwrap();

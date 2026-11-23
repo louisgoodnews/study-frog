@@ -170,6 +170,7 @@ fn skip(s: &mut Session, t: u32, item: Option<Uid>, out: &mut StepOutput) {
 }
 
 fn rate(s: &mut Session, t: u32, item: Option<Uid>, rating: Rating, out: &mut StepOutput) {
+    out.dwell_ms = item.map(|_| item_latency(s, t));
     out.events
         .push(event(s, t, item, EventKind::ItemRated(rating)));
     if let Some(uid) = item {
