@@ -2,7 +2,7 @@
 id: BUG-0051
 type: bug
 title: "Math drill says 'Correct. Well worked.' when the final answer is within tolerance but a working step is wrong"
-status: review
+status: done
 estimate: 1
 labels: [m14, rehearse, ui]
 epic: EPIC-062

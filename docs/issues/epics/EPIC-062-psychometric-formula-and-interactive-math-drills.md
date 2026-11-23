@@ -2,7 +2,7 @@
 id: EPIC-062
 type: epic
 title: "Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification"
-status: review
+status: done
 parents: []
 labels: [m14, rehearse, ui]
 acceptance_criteria:
@@ -58,3 +58,6 @@ Running app (1280x800 and 960x640; copy at `/tmp/claude-0/g2`): the first hint r
 The score and band are in the full solution, not after Check, because the band depends on the answer: it is shown on demand, like the solution.
 
 Criteria 2 and 3 were verified on 2026-11-22 and are unchanged. The epic stays in review: BUG-0051 (a child) is still in review, and a parent is done only when every child is done. Children: STORY-0182, STORY-0183 and STORY-0184 are done; BUG-0051 is in review (its fix verified in the app this session).
+
+
+Decision (2026-11-23): closed. Every criterion is ticked and BUG-0051 (its child) is verified fixed in the app.

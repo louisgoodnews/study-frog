@@ -4,10 +4,10 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (9) | Ready (0) | In progress (0/3) | Review (12) | Blocked (3) | Done (584) |
+| Backlog (9) | Ready (0) | In progress (0/3) | Review (10) | Blocked (3) | Done (586) |
 | --- | --- | --- | --- | --- | --- |
-| [BUG-0053](docs/issues/bugs/BUG-0053-mock-exam-formula-note-gives-no-calculation-question.md) Mock exam from notes with a formula line gives no calculation question in the template path (2) |  |  | [BUG-0051](docs/issues/bugs/BUG-0051-math-drill-praises-answer-with-wrong-step.md) Math drill says 'Correct. Well worked.' when the final answer is within tolerance but a working step is wrong (1) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+| [BUG-0053](docs/issues/bugs/BUG-0053-mock-exam-formula-note-gives-no-calculation-question.md) Mock exam from notes with a formula line gives no calculation question in the template path (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+| [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
 | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 | [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
 | [TASK-0284](docs/issues/tasks/TASK-0284-scripted-screens-on-a-10k-vault-for-the-frame-time-run.md) Scripted visit of the rehearsal card, reports and console on a 10k-note vault (2) |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
@@ -56,6 +56,7 @@
 |  |  |  |  |  | [BUG-0048](docs/issues/bugs/BUG-0048-telemetry-dwell-repeats-latency-and-complexity-is-time.md) review_telemetry stores dwell_ms equal to latency_ms, and text_complexity holds a reading-time estimate (2) |
 |  |  |  |  |  | [BUG-0049](docs/issues/bugs/BUG-0049-search-focus-leaves-top-bar-search-and-home-pending.md) search --focus never takes the keyboard on Home or a stack screen, and the top-bar search field is never focused (2) |
 |  |  |  |  |  | [BUG-0050](docs/issues/bugs/BUG-0050-state-names-focused-field-after-it-leaves-the-screen.md) state keeps reporting focused_field 'Query text' after the library query box has left the screen (1) |
+|  |  |  |  |  | [BUG-0051](docs/issues/bugs/BUG-0051-math-drill-praises-answer-with-wrong-step.md) Math drill says 'Correct. Well worked.' when the final answer is within tolerance but a working step is wrong (1) |
 |  |  |  |  |  | [BUG-0052](docs/issues/bugs/BUG-0052-mock-exam-reference-answer-repeats-card-question.md) Mock exam reference answer for a card question starts with the card's question text (1) |
 |  |  |  |  |  | [BUG-0054](docs/issues/bugs/BUG-0054-rehearsal-setup-without-preset-keeps-practice-only.md) A rehearsal setup without a preset keeps the previous practice preset, so the run writes no reviews (2) |
 |  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
@@ -609,7 +610,7 @@
 | [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time | done | 11/11 |
 | [EPIC-060](docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | done | 7/7 |
 | [EPIC-061](docs/issues/epics/EPIC-061-case-study-and-diagnostic-decision-matrix.md) Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification | done | 6/6 |
-| [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | review | 3/4 |
+| [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | done | 4/4 |
 | [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | review | 4/6 |
 | [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | done | 7/7 |
 | [EPIC-065](docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | done | 3/3 |
