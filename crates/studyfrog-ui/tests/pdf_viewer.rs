@@ -196,6 +196,12 @@ fn the_viewer_screen_shows_its_controls_and_asks_for_the_page_picture() {
     for label in ["Back to library", "Previous", "Next"] {
         assert!(h.query_by_label(label).is_some(), "{label}");
     }
+    h.get_by_label("More…").click();
+    h.run_steps(2);
+    assert!(
+        h.query_by_label("Fit width").is_some(),
+        "the fit presets are in More"
+    );
     h.get_by_label("Panels…").click();
     h.run_steps(2);
     for label in ["Outline", "Pages", "Hide"] {
@@ -203,12 +209,6 @@ fn the_viewer_screen_shows_its_controls_and_asks_for_the_page_picture() {
     }
     h.key_press(eframe::egui::Key::Escape);
     h.run_steps(2);
-    h.get_by_label("More…").click();
-    h.run_steps(2);
-    assert!(
-        h.query_by_label("Fit width").is_some(),
-        "the fit presets are in More"
-    );
     assert!(h.query_by_label("Find in this PDF (Ctrl+F or /)").is_some());
     let asked = h
         .state()

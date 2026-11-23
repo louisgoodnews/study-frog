@@ -1,14 +1,14 @@
 //! The PDF screen: a toolbar, a side panel (outline or page thumbnails) and the page.
 
+mod more_menu;
 mod toolbar_nav;
-use self::toolbar_nav::{fit_presets, navigation, zoom_controls};
+use self::more_menu::more;
+use self::toolbar_nav::navigation;
 use eframe::egui::{self, Panel, RichText, TextEdit};
 
 use crate::msg::Msg;
-use crate::pdf_arrange_types::ArrangeMsg;
 use crate::pdf_link_types::LinkMsg;
-use crate::pdf_select::selected_text;
-use crate::pdf_types::{PdfMsg, PdfView, Side, Zoom};
+use crate::pdf_types::{PdfMsg, PdfView, Side};
 use crate::state::State;
 use crate::view::{pdf_arrange, pdf_notes, pdf_page, pdf_side};
 
@@ -49,56 +49,11 @@ fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool
     if view.query.trim().is_empty() {
         return;
     }
-    if ui
-        .button("Previous hit")
-        .on_hover_text("Goes to the previous match.")
-        .clicked()
-    {
-        msg(out, PdfMsg::PreviousHit);
-    }
-    if ui
-        .button("Next hit")
-        .on_hover_text("Goes to the next match.")
-        .clicked()
-    {
-        msg(out, PdfMsg::NextHit);
-    }
     ui.weak(format!("{} pages", view.found.len()));
 }
 
-fn side_buttons(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    for (side, name) in [
-        (Side::Outline, "Outline"),
-        (Side::Pages, "Pages"),
-        (Side::Notes, "Notes"),
-        (Side::Extract, "Extract"),
-        (Side::Closed, "Hide"),
-    ] {
-        if ui
-            .add(egui::Button::selectable(view.side == side, name))
-            .clicked()
-        {
-            msg(out, PdfMsg::ShowSide(side));
-            ui.close();
-        }
-    }
-}
-
-fn copy_button(view: &PdfView, ui: &mut egui::Ui) {
-    let words = view
-        .text
-        .as_ref()
-        .map(|t| t.words.as_slice())
-        .unwrap_or(&[]);
-    let text = selected_text(words, &view.selection);
-    let button = ui
-        .add_enabled(!text.is_empty(), egui::Button::new("Copy selection"))
-        .on_hover_text("Copies the selected text.");
-    if button.clicked() {
-        ui.ctx().copy_text(text);
-    }
-}
-
+/// The header: Back, the page, the find field and More. Zoom, search hits, copy, arrange and the
+/// side panels are in More.
 fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool) {
     ui.horizontal_wrapped(|ui| {
         if ui
@@ -112,28 +67,9 @@ fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: boo
         ui.separator();
         navigation(view, ui, out);
         ui.separator();
-        zoom_controls(view, ui, out);
-        ui.separator();
         search(view, ui, out, requested);
         ui.separator();
-        ui.menu_button("More…", |ui| {
-            fit_presets(view, ui, out);
-            copy_button(view, ui);
-            if ui
-                .button("Arrange pages ...")
-                .on_hover_text("Opens the page arranger to reorder or remove pages.")
-                .clicked()
-            {
-                msg(out, PdfMsg::Arrange(ArrangeMsg::Start));
-                ui.close();
-            }
-        })
-        .response
-        .on_hover_text("Shows more options.");
-        ui.separator();
-        ui.menu_button("Panels…", |ui| side_buttons(view, ui, out))
-            .response
-            .on_hover_text("Shows or hides the side panels: outline, pages, notes and extracts.");
+        more(view, ui, out);
     });
 }
 

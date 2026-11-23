@@ -1,5 +1,6 @@
-//! The viewer toolbar's page and zoom controls, moved out of `pdf.rs` to keep it readable.
+//! The viewer's page controls and the zoom presets, kept out of `pdf.rs` to keep it readable.
 use super::*;
+use crate::pdf_types::Zoom;
 
 pub(super) fn navigation(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let pages = view.info.as_ref().map_or(0, |i| i.page_count);
@@ -29,17 +30,11 @@ pub(super) fn navigation(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     }
 }
 
-pub(super) fn zoom_controls(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    if ui.button("-").on_hover_text("Zoom out").clicked() {
-        msg(out, PdfMsg::ZoomOut);
-    }
-    let name = match view.zoom {
+/// The zoom as the menu shows it: a fit, or a percentage.
+pub(super) fn zoom_name(zoom: Zoom) -> String {
+    match zoom {
         Zoom::FitWidth | Zoom::FitPage => "Fit".to_owned(),
         Zoom::Percent(p) => format!("{p} %"),
-    };
-    ui.label(name);
-    if ui.button("+").on_hover_text("Zoom in").clicked() {
-        msg(out, PdfMsg::ZoomIn);
     }
 }
 

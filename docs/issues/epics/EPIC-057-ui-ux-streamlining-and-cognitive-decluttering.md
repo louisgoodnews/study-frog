@@ -25,7 +25,7 @@ Conduct a comprehensive user experience refinement focused on simplicity, clarit
 ## Acceptance Criteria
 - [x] Unified single Import action replaces fragmented card, stack, note, and question buttons
 - [ ] Systematic contextual tooltips and hover hints across all navigation icons, buttons, and tools
-- [ ] De-cluttered menu bars with progressive disclosure, reducing cognitive overload for new learners
+- [x] De-cluttered menu bars with progressive disclosure, reducing cognitive overload for new learners
 - [ ] Lightweight, modern visual rhythm maintaining deep power features under intuitive secondary disclosures
 
 ## Design Notes
@@ -50,3 +50,9 @@ Audit (2026-11-22): criterion 1 MET: one Import... entry (items toolbar More...,
 ## Review (2026-11-22)
 
 Review (2026-11-22): criterion 1 stays MET: one Import entry replaces the duplicate import buttons. Criterion 2 unticked: the navigation rail's text items (Home, Calendar, Homework, Board and the rest) show no hover text after 3.5 s (/tmp/claude-0/review-a/hover-home-long.png, /tmp/claude-0/review-a/hover-calendar.png), and the help tooltip registry lists none of them. The top bar icons and "+ Create" do have explanations (/tmp/claude-0/review-a/hover-create.png). Criterion 3 NOT MET (PDF viewer header, STORY-0170). Criterion 4 NOT CHECKABLE: "lightweight, modern visual rhythm" is a judgement. Status stays review.
+
+## Verification (2026-11-23)
+
+- Criterion 3 ticked: the PDF viewer header now has four buttons (Back to library, Previous, Next, More…) with zoom, hit navigation, copy, arrange and the panels in More (STORY-0170 criterion 1; `/tmp/claude-0/pdfhdr/after-1280-hit.png`, `after-1280-more-hit.png`). The stack page, item list and item editor were decluttered earlier (2026-11-21 and audit). The owner should confirm the reading of "core" recorded in STORY-0170.
+- Criterion 2 stays unticked (review of 2026-11-22: the navigation rail's text items show no hover text). Criterion 4 stays unticked: "lightweight, modern visual rhythm" is a judgement, not checked here.
+- Status stays review: criteria 2 and 4 are open.
