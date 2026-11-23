@@ -5,7 +5,7 @@ The order in which Claude works on the planned items of phase M10 (0.3.0), kept 
 [docs/roadmap/M10-usability-and-insight.md](docs/roadmap/M10-usability-and-insight.md). Tick an item when it is done and
 verified (`scripts/check.sh` passes), and report it to the owner. The owner may reorder the list at any time.
 
-Last updated: 2026-11-23 (596 of 612 issues done; 16 open across EPIC-063/STORY-0207, EPIC-067, and EPIC-068; v1.0.0 awaiting packaging/owner benchmarks/tag).
+Last updated: 2026-11-23 (596 of 625 issues done; 29 open across EPIC-063/STORY-0207, EPIC-067, and EPIC-068; v1.0.0 awaiting packaging/owner benchmarks/tag).
 
 ## Wave 1: start now
 - [x] 1. [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Names with commas cannot be used
@@ -203,3 +203,20 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 
 **Milestone 14.5: release hardening and 1.0.0 launch**
 - [ ] Regression audit, packaging (AppImage, tarball), documentation, release tag `v1.0.0`
+
+## Next: Performance Benchmarking (`EPIC-067`) & Classroom Simulation (`EPIC-068`)
+
+**Performance benchmarking & continuous improvement**
+- [ ] [EPIC-067](docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement (`blocked` on owner's reference machine)
+  - [ ] [STORY-0201](docs/issues/stories/STORY-0201-reference-runs-on-the-owners-machine-with-identity-recorded.md) Reference runs on the owner's machine (`blocked`; `TASK-0278` in review, `TASK-0279` interleaved paired runs in backlog)
+  - [ ] [STORY-0202](docs/issues/stories/STORY-0202-regression-rule-compare-two-runs-flag-only-real-large-changes.md) Regression rule (`review`; `TASK-0282` release check in backlog)
+  - [ ] [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines (`blocked`)
+  - [ ] [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time measured in the running window (`backlog`; `TASK-0283`, `TASK-0284`)
+  - [ ] [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Render-loop allocations with `dhat` and slowest-screen profile (`backlog`; `TASK-0285`, `TASK-0286`)
+
+**Classroom simulation**
+- [ ] [EPIC-068](docs/issues/epics/EPIC-068-classroom-simulation-with-ai-teacher-and-students.md) Classroom simulation: AI-driven lectures, simulated students, group tasks, and graded submissions (`backlog`)
+  - [ ] [STORY-0208](docs/issues/stories/STORY-0208-classroom-session-domain-model-and-local-persistence.md) Classroom session domain model and local storage persistence ([TASK-0287](docs/issues/tasks/TASK-0287-classroom-domain-types-and-state-transitions.md), [TASK-0288](docs/issues/tasks/TASK-0288-sqlite-schema-and-local-classroom-session-store.md))
+  - [ ] [STORY-0209](docs/issues/stories/STORY-0209-ai-teacher-and-simulated-student-lecture-orchestration.md) AI teacher and simulated student lecture orchestration ([TASK-0289](docs/issues/tasks/TASK-0289-lecture-grounding-context-budgeting-and-persona-prompts.md), [TASK-0290](docs/issues/tasks/TASK-0290-classroom-turn-orchestrator-and-service-use-cases.md))
+  - [ ] [STORY-0210](docs/issues/stories/STORY-0210-individual-and-group-task-assignments-turn-in-and-grading.md) Individual and group task assignments, turn-in workflow, and automated grading ([TASK-0291](docs/issues/tasks/TASK-0291-solo-and-group-task-assignment-and-collaboration.md), [TASK-0292](docs/issues/tasks/TASK-0292-task-turn-in-and-teacher-grading-pipeline.md))
+  - [ ] [STORY-0211](docs/issues/stories/STORY-0211-classroom-chat-ui-session-browser-and-assignment-workspace.md) Classroom-chat UI, session browser, and assignment submission workspace ([TASK-0293](docs/issues/tasks/TASK-0293-classroom-setup-dialog-and-lecture-chat-view.md), [TASK-0294](docs/issues/tasks/TASK-0294-assignments-panel-group-collaboration-turn-in-and-grades.md), [TASK-0295](docs/issues/tasks/TASK-0295-saved-classroom-sessions-browser-tests-and-control-hooks.md))
