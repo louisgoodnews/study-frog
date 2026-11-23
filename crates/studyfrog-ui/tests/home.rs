@@ -220,3 +220,19 @@ fn the_summary_figures_have_room_and_the_page_keeps_a_margin_from_the_sidebar() 
         title.x0 as f32 - sidebar.right()
     );
 }
+
+#[test]
+fn a_streak_of_one_day_reads_in_the_singular() {
+    let mut s = summary(3);
+    s.streak_days = 1;
+    let mut m = open_model();
+    apply(&mut m, Msg::Navigate(Screen::Home));
+    apply(&mut m, Msg::Home(HomeMsg::Loaded(Ok(Box::new(s)))));
+    let mut h = harness(m);
+    h.run();
+    assert!(
+        h.query_by_label("1 day").is_some(),
+        "a one-day streak reads '1 day'"
+    );
+    assert!(h.query_by_label("1 days").is_none());
+}

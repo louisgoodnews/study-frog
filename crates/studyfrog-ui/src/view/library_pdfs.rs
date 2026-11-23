@@ -1,6 +1,7 @@
 //! PDFs in the library and on the home page: a list per stack with page counts, adding, renaming.
 
 use eframe::egui::{self, RichText, TextEdit};
+use studyfrog_core::count::counted;
 use studyfrog_store::pdf_index::PdfRow;
 
 use crate::msg::Msg;
@@ -17,8 +18,7 @@ fn send(out: &mut Vec<Msg>, m: LibraryMsg) {
 fn pages_word(row: &PdfRow) -> String {
     match (&row.error, row.pages) {
         (Some(_), _) => "cannot be read".to_owned(),
-        (None, 1) => "1 page".to_owned(),
-        (None, n) => format!("{n} pages"),
+        (None, n) => counted(n, "page", "pages"),
     }
 }
 

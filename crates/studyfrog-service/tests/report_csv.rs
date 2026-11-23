@@ -66,8 +66,8 @@ fn the_table_has_a_header_and_one_row_per_number_for_every_section() {
     assert!(csv.ends_with("\r\n"));
     for want in [
         "summary,all,reviews,42",
-        "retention,1 days,recalled,9",
-        "retention,1 days,retention_rate,0.9000",
+        "retention,1 day,recalled,9",
+        "retention,1 day,retention_rate,0.9000",
         "retention,8+ days,reviews,0",
         "latency,all items,p95_ms,4000",
         "forecast,day 1,expected_reviews,7.5",

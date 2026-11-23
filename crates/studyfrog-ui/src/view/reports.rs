@@ -74,7 +74,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
     });
     ui.add_space(4.0);
-    ui.horizontal(|ui| {
+    ui.horizontal_wrapped(|ui| {
         for (tab, label) in [
             (ReportTab::Performance, "Performance"),
             (ReportTab::Memory, "Memory and forecast"),

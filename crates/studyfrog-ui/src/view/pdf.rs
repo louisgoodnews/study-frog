@@ -5,6 +5,7 @@ mod toolbar_nav;
 use self::more_menu::more;
 use self::toolbar_nav::navigation;
 use eframe::egui::{self, Panel, RichText, TextEdit};
+use studyfrog_core::count::counted;
 
 use crate::msg::Msg;
 use crate::pdf_link_types::LinkMsg;
@@ -49,7 +50,7 @@ fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool
     if view.query.trim().is_empty() {
         return;
     }
-    ui.weak(format!("{} pages", view.found.len()));
+    ui.weak(counted(view.found.len(), "page", "pages"));
 }
 
 /// The header: Back, the page, the find field and More. Zoom, search hits, copy, arrange and the

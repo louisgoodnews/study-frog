@@ -1,5 +1,6 @@
-//! In-app notifications that can be clicked. They sit at the top right, just under the header, so they
-//! never cover the controls at the bottom of a screen (the setup's Next button, the status bar).
+//! In-app notifications that can be clicked. They sit at the bottom right, just above the status bar, so
+//! they never cover the header actions or a page's primary button at the top (the Day view's "+ Add
+//! session", STORY-0170 and BUG-0036).
 
 use eframe::egui::{self, Align2, Button, Order, vec2};
 
@@ -10,6 +11,8 @@ use crate::view::icons::{Glyph, icon_button};
 
 /// The widest a toast is drawn, in points: narrow enough to stay clear of the step bars.
 const TOAST_WIDTH: f32 = 340.0;
+/// The gap above the status bar, so the stack does not sit on its text.
+const ABOVE_STATUS_BAR: f32 = 44.0;
 
 /// The toasts, newest at the bottom of their stack.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
@@ -18,7 +21,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     egui::Area::new(egui::Id::unique("toasts"))
         .order(Order::Foreground)
-        .anchor(Align2::RIGHT_TOP, vec2(-16.0, 56.0))
+        .anchor(Align2::RIGHT_BOTTOM, vec2(-16.0, -ABOVE_STATUS_BAR))
         .show(ui.ctx(), |ui| {
             ui.set_max_width(TOAST_WIDTH);
             for (i, toast) in state.toasts.iter().enumerate() {

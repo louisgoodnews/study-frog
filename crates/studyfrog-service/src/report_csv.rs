@@ -61,7 +61,7 @@ fn row(section: &str, subject: &str, metric: &str, value: impl ToString) -> Stri
 
 fn gap_label(b: &RetentionBucket) -> String {
     match (b.from_days, b.to_days) {
-        (f, t) if f == t => format!("{f} days"),
+        (f, t) if f == t => studyfrog_core::count::counted(f, "day", "days"),
         (f, u32::MAX) => format!("{f}+ days"),
         (f, t) => format!("{f}-{t} days"),
     }

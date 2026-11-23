@@ -63,7 +63,7 @@ fn due_reminders_become_toasts_and_notifications_and_a_click_opens_the_calendar(
     assert_eq!(m.state.toasts.len(), 2);
     assert_eq!(
         reminder_text(&due(1440)),
-        "Due: Exam prep (in 1 days, 2027-03-01 09:00)"
+        "Due: Exam prep (in 1 day, 2027-03-01 09:00)"
     );
     assert_eq!(
         m.state.chrome.notifications.len() - before,

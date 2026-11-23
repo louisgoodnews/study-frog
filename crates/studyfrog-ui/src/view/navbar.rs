@@ -1,26 +1,25 @@
 //! The top bar: sidebar toggle and vault switcher, brand, global search and Create, and the
 //! notification, help, settings and profile buttons on the right. Menus open under their button.
 
-use eframe::egui::{
-    self, Align, Key, Layout, Panel, Rect, RichText, Role, TextEdit, WidgetInfo, vec2,
-};
+use eframe::egui::{self, Align, Layout, Panel, Rect, RichText, vec2};
 
 use crate::chrome::{ChromeMsg, Menu, unread, vault_label};
 use crate::help_types::HelpMsg;
-use crate::library_ui::LibraryMsg;
-use crate::modal::ModalMsg;
 use crate::msg::Msg;
-use crate::state::{Screen, Selection, State};
+use crate::state::{Screen, State};
 use crate::theme::palette_of;
-use crate::transfer_ui::{Tab, TransferMsg};
 use crate::view::icons::{Glyph, icon_button};
-use crate::view::kit;
 use crate::view::menus;
 
 const HEIGHT: f32 = 40.0;
 const LEFT_WIDTH: f32 = 440.0;
 /// The room the search keeps clear for the Create and Import buttons after it.
 const TRAILING_W: f32 = 176.0;
+/// Below this much room after the right-hand buttons, the header keeps only the sidebar toggle and the logo on
+/// the left, and Import moves out of the way (BUG-0021: at 640 by 420 the items overlapped).
+const NARROW_ROOM: f32 = 320.0;
+/// The brand's width in the narrow header: the sidebar toggle and the logo.
+const NARROW_LEFT_W: f32 = 72.0;
 
 fn chrome(out: &mut Vec<Msg>, m: ChromeMsg) {
     out.push(Msg::Chrome(m));
@@ -60,7 +59,12 @@ fn left_and_middle(
     anchors: &mut Vec<(Menu, Rect)>,
 ) {
     let total = ui.available_width();
-    let left_w = LEFT_WIDTH.min(total * 0.45);
+    let narrow = total < NARROW_ROOM;
+    let left_w = if narrow {
+        NARROW_LEFT_W.min(total)
+    } else {
+        LEFT_WIDTH.min(total * 0.45)
+    };
     let middle_w = (total - left_w - ui.spacing().item_spacing.x).max(0.0);
     let left_to_right = Layout::left_to_right(Align::Center);
     // A section keeps its full width even when its content is narrower, so the sections stay where they are.
@@ -71,12 +75,17 @@ fn left_and_middle(
             add(ui);
         });
     };
-    section(ui, left_w, &mut |ui| brand_cluster(state, ui, out, anchors));
+    section(ui, left_w, &mut |ui| {
+        brand_cluster(state, ui, out, anchors, narrow)
+    });
     section(ui, middle_w, &mut |ui| {
+        // The search, Create and Import are clipped to their room, so at a narrow width they do not draw over the
+        // window buttons beside them.
+        ui.set_clip_rect(ui.max_rect());
         if state.vault.is_some() {
             let search_w = (middle_w * 0.8 - TRAILING_W).clamp(60.0, 560.0);
             ui.add_space(((middle_w - search_w - TRAILING_W) / 2.0).max(0.0));
-            search_cluster(state, ui, out, search_w);
+            menus::search_cluster(state, ui, out, search_w, narrow);
         }
     });
 }
@@ -85,11 +94,14 @@ fn toggle(out: &mut Vec<Msg>, menu: Menu) {
     chrome(out, ChromeMsg::ToggleMenu(menu));
 }
 
+/// The sidebar toggle, the vault switcher, history, the logo and the name. A narrow header keeps only the toggle and
+/// the logo.
 fn brand_cluster(
     state: &State,
     ui: &mut egui::Ui,
     out: &mut Vec<Msg>,
     anchors: &mut Vec<(Menu, Rect)>,
+    narrow: bool,
 ) {
     if state.vault.is_some() {
         if icon_button(
@@ -102,19 +114,14 @@ fn brand_cluster(
         {
             chrome(out, ChromeMsg::ToggleSidebar);
         }
-        let switcher = icon_button(
-            ui,
-            Glyph::Grid,
-            "Switch vault",
-            state.chrome.menu == Some(Menu::Vaults),
-        );
-        if switcher.clicked() {
-            toggle(out, Menu::Vaults);
+        if !narrow {
+            vault_and_history(state, ui, out, anchors);
         }
-        anchors.push((Menu::Vaults, switcher.rect));
-        super::navbar_history::buttons(state, ui, out, anchors);
     }
     frog(ui);
+    if narrow {
+        return;
+    }
     let brand =
         ui.add(egui::Label::new(RichText::new("StudyFrog").strong()).sense(egui::Sense::click()));
     if state.vault.is_some() && brand.clicked() {
@@ -128,49 +135,24 @@ fn brand_cluster(
     }
 }
 
-fn search_cluster(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f32) {
-    let mut text = state.chrome.search.clone();
-    let field = ui.add(
-        TextEdit::singleline(&mut text)
-            .hint_text("Search items")
-            .desired_width(width),
+/// The vault switcher and the back, forward and history buttons.
+fn vault_and_history(
+    state: &State,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+    anchors: &mut Vec<(Menu, Rect)>,
+) {
+    let switcher = icon_button(
+        ui,
+        Glyph::Grid,
+        "Switch vault",
+        state.chrome.menu == Some(Menu::Vaults),
     );
-    field.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, "Search items"));
-    if text != state.chrome.search {
-        chrome(out, ChromeMsg::SearchEdited(text));
+    if switcher.clicked() {
+        toggle(out, Menu::Vaults);
     }
-    if field.has_focus() && ui.input(|i| i.key_pressed(Key::Escape)) {
-        chrome(out, ChromeMsg::SearchClear);
-    }
-    let enter = field.lost_focus() && ui.input(|i| i.key_pressed(Key::Enter));
-    let stack = crate::item_look::stack_by_key(state, &state.chrome.search).map(|s| s.uid);
-    if let (true, Some(uid)) = (enter, stack.or(state.chrome.results.first().map(|r| r.uid))) {
-        out.push(Msg::OpenItem(uid));
-        chrome(out, ChromeMsg::SearchClear);
-    }
-    menus::search_results(state, ui, field.rect, out);
-    // The view below owns the one accent-filled action; Create stays findable by its accent label.
-    let create = kit::quiet_button(ui, "+ Create").on_hover_text("Creates a new item.");
-    if create.clicked() {
-        out.push(Msg::Modal(ModalMsg::OpenCreate));
-    }
-    let import = kit::quiet_button(ui, "Import").on_hover_text(
-        "Opens the import dialog: pick a file or folder and see what it holds before importing.",
-    );
-    if import.clicked() {
-        out.push(Msg::Library(LibraryMsg::Transfer(TransferMsg::Open(
-            Tab::Import,
-            import_scope(state),
-        ))));
-    }
-}
-
-/// The stack the browser has selected, if any: the import then starts with that stack as its target.
-fn import_scope(state: &State) -> Option<String> {
-    match &state.browser.selection {
-        Selection::Stack(folder) => Some(folder.clone()),
-        Selection::Nothing | Selection::Inbox => None,
-    }
+    anchors.push((Menu::Vaults, switcher.rect));
+    super::navbar_history::buttons(state, ui, out, anchors);
 }
 
 fn help_button(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {

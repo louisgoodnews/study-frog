@@ -2,6 +2,7 @@
 //! stretch to the window so nothing important hides below the fold and no part sits empty.
 
 use eframe::egui::{self, RichText};
+use studyfrog_core::count::counted;
 use studyfrog_core::plan::item_kind_name;
 use studyfrog_service::home::HomeSummary;
 
@@ -97,7 +98,7 @@ fn hero(h: &HomeSummary, items: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.horizontal(|ui| {
             ui.spacing_mut().item_spacing.x = 40.0;
             kit::stat(ui, &h.ready_today.to_string(), "items ready for today");
-            kit::stat(ui, &format!("{} days", h.streak_days), "Streak");
+            kit::stat(ui, &counted(h.streak_days, "day", "days"), "Streak");
             kit::stat(ui, &h.reviews_today.to_string(), "Reviews today");
             kit::stat(ui, &items.to_string(), "Items in your vault");
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {

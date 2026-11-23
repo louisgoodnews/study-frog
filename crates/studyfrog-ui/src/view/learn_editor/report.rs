@@ -2,6 +2,7 @@
 //! alone. Built-in reports never include these runs.
 
 use eframe::egui::{self, RichText};
+use studyfrog_core::count::noun;
 
 use crate::learn_editor::{LearnEditor, LearnMsg};
 use crate::msg::Msg;
@@ -33,10 +34,6 @@ fn summary_line(runs: i64, finished: i64, items: i64) -> String {
         noun(runs, "run", "runs"),
         noun(items, "item", "items"),
     )
-}
-
-fn noun<'a>(n: i64, one: &'a str, many: &'a str) -> &'a str {
-    if n == 1 { one } else { many }
 }
 
 fn list(ui: &mut egui::Ui, title: &str, rows: &[(String, i64)]) {

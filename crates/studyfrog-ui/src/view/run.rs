@@ -1,7 +1,7 @@
 //! The rehearsal screen: prompt and timer only, keyboard first. Space reveals, 1-4 rate, S skips,
 //! P pauses, Esc stops. Shortcuts are off while a text field has the keyboard.
 
-use eframe::egui::{self, Align, Key, Layout, RichText};
+use eframe::egui::{self, Key, RichText};
 use studyfrog_core::run::{RunMode, RunState};
 use studyfrog_rehearsal::input::Action;
 use studyfrog_rehearsal::session::ItemPhase;
@@ -149,12 +149,13 @@ fn exam_shortcuts(run: &RunView, pressed: &dyn Fn(Key) -> bool, out: &mut Vec<Ms
     }
 }
 
-/// Position, mode, timer and the pause and stop buttons, with the progress bar under them.
+/// Position, mode, timer and the buttons, with the progress bar under them. The items are one wrapped row, so at
+/// a narrow window the buttons move to a second line instead of drawing over the position and the timer.
 fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let s = &run.session;
     let weak = palette_of(ui).text_weak;
     let position = (s.cursor + 1).min(s.queue.len());
-    ui.horizontal(|ui| {
+    ui.horizontal_wrapped(|ui| {
         let total = s.queue.len();
         let count = format!("{position} / {total}");
         let widest = crate::typo::figure_template(&format!("{total} / {total}"));
@@ -181,56 +182,7 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
         if let Some(clock) = crate::run_clock::clock_of(state, run) {
             crate::view::run_timer::draw(&clock, ui);
         }
-        ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-            let stop = if s.run.mode == RunMode::Exam {
-                "Stop exam (not graded)"
-            } else {
-                "Stop (Esc)"
-            };
-            if ui
-                .button(stop)
-                .on_hover_text("Ends the run now and keeps what you answered.")
-                .clicked()
-            {
-                act(out, Action::Abort);
-            }
-            if s.run.state == RunState::Running
-                && ui
-                    .button("Pause (P)")
-                    .on_hover_text("Pauses the timer and hides the question (P).")
-                    .clicked()
-            {
-                act(out, Action::Pause);
-            }
-            if s.run.mode != RunMode::Exam
-                && let Some(uid) = studyfrog_rehearsal::session::current_item(s)
-                && ui
-                    .button("Edit (Ctrl+E)")
-                    .on_hover_text("Opens this for editing (Ctrl+E).")
-                    .clicked()
-            {
-                out.push(Msg::RehearsalEdit(
-                    crate::rehearsal_edit::RehearsalEditMsg::Open(uid),
-                ));
-            }
-            let comment_count = studyfrog_rehearsal::session::current_item(s)
-                .and_then(|uid| run.content.get(&uid))
-                .map(|c| c.comments.len())
-                .unwrap_or(0);
-            let comments_label = if comment_count > 0 {
-                format!("Comments ({comment_count})")
-            } else {
-                "Comments".to_string()
-            };
-            if ui
-                .selectable_label(run.show_comments, comments_label)
-                .clicked()
-            {
-                out.push(Msg::RehearsalEdit(
-                    crate::rehearsal_edit::RehearsalEditMsg::ToggleComments,
-                ));
-            }
-        });
+        strip_buttons(run, ui, out);
     });
     let p = crate::run_progress::progress(s);
     kit::progress_with_text(
@@ -239,4 +191,57 @@ fn top_strip(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>
         &crate::run_progress::text(p),
         "Run progress",
     );
+}
+
+/// Comments, Edit, Pause and Stop, in that order from left to right.
+fn strip_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let s = &run.session;
+    let comment_count = studyfrog_rehearsal::session::current_item(s)
+        .and_then(|uid| run.content.get(&uid))
+        .map(|c| c.comments.len())
+        .unwrap_or(0);
+    let comments_label = if comment_count > 0 {
+        format!("Comments ({comment_count})")
+    } else {
+        "Comments".to_string()
+    };
+    if ui
+        .selectable_label(run.show_comments, comments_label)
+        .clicked()
+    {
+        out.push(Msg::RehearsalEdit(
+            crate::rehearsal_edit::RehearsalEditMsg::ToggleComments,
+        ));
+    }
+    if s.run.mode != RunMode::Exam
+        && let Some(uid) = studyfrog_rehearsal::session::current_item(s)
+        && ui
+            .button("Edit (Ctrl+E)")
+            .on_hover_text("Opens this for editing (Ctrl+E).")
+            .clicked()
+    {
+        out.push(Msg::RehearsalEdit(
+            crate::rehearsal_edit::RehearsalEditMsg::Open(uid),
+        ));
+    }
+    if s.run.state == RunState::Running
+        && ui
+            .button("Pause (P)")
+            .on_hover_text("Pauses the timer and hides the question (P).")
+            .clicked()
+    {
+        act(out, Action::Pause);
+    }
+    let stop = if s.run.mode == RunMode::Exam {
+        "Stop exam (not graded)"
+    } else {
+        "Stop (Esc)"
+    };
+    if ui
+        .button(stop)
+        .on_hover_text("Ends the run now and keeps what you answered.")
+        .clicked()
+    {
+        act(out, Action::Abort);
+    }
 }

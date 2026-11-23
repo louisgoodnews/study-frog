@@ -4,6 +4,7 @@
 use studyfrog_calendar::homework_reminders::DueHomeworkReminder;
 use studyfrog_calendar::reminders::{DueAll, DueReminder};
 use studyfrog_core::civil::format_minute;
+use studyfrog_core::count::counted;
 
 use crate::effect::Effect;
 use crate::modal_types::{Toast, ToastAction};
@@ -13,27 +14,42 @@ use crate::state::{Notice, NoticeKind, Screen, State};
 /// How many ticks (about a second each) pass between two looks at the calendar.
 pub const CHECK_EVERY: u32 = 30;
 
+/// The lead of a calendar entry, as the time before it starts: "in 15 min", "in 2 h", "in 1 day".
 fn lead_text(minutes: u32) -> String {
     match minutes {
         0 => "now".to_owned(),
         1..=59 => format!("in {minutes} min"),
         60..=1439 => format!("in {} h", minutes / 60),
-        _ => format!("in {} days", minutes / 1440),
+        _ => format!("in {}", counted(minutes / 1440, "day", "days")),
     }
 }
 
-/// The words of one reminder: "Due: Exam prep, in 1 days, 2027-03-01 09:00".
+/// The time left before a due time: "45 min", "1 h 8 min", "11 h", "1 day".
+pub fn left_text(minutes: u32) -> String {
+    match minutes {
+        0..=59 => format!("{minutes} min"),
+        60..=1439 => match minutes % 60 {
+            0 => format!("{} h", minutes / 60),
+            m => format!("{} h {m} min", minutes / 60),
+        },
+        _ => counted(minutes / 1440, "day", "days"),
+    }
+}
+
+/// The words of one reminder: "Due: Exam prep (in 1 day, 2027-03-01 09:00)".
 pub fn reminder_text(r: &DueReminder) -> String {
     let date = studyfrog_core::civil::format_date(r.date);
     let at = format_minute(r.start_minute);
     format!("{} ({}, {date} {at})", r.title, lead_text(r.minutes_before))
 }
 
-/// The words of one homework reminder: "Homework: Essay 2 (in 2 h, 2026-12-02 09:00)".
+/// The words of one homework reminder, saying the time left before the due time, not the lead it
+/// fired at: "Homework: Kurzquiz (due in 1 h 8 min, 2026-11-23 22:30)".
 pub fn homework_text(r: &DueHomeworkReminder) -> String {
     let date = studyfrog_core::civil::format_date(r.due.date);
     let at = format_minute(r.due.minute);
-    format!("{} ({}, {date} {at})", r.title, lead_text(r.lead_min))
+    let left = left_text(r.remaining_min);
+    format!("{} (due in {left}, {date} {at})", r.title)
 }
 
 /// Count ticks while a vault is open and ask for a calendar check on the first and every

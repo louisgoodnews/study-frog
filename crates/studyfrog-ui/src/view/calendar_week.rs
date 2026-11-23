@@ -1,6 +1,6 @@
 //! Calendar 7-day weekly schedule view (STORY-0142).
 
-use eframe::egui::{self, RichText, Sense, vec2};
+use eframe::egui::{self, RichText, Role, Sense, WidgetInfo, vec2};
 
 use crate::view::homework_marks;
 use studyfrog_calendar::recurrence::occurrences_all;
@@ -19,6 +19,8 @@ const START_HOUR: u16 = 6;
 const END_HOUR: u16 = 22;
 const ROW_HEIGHT: f32 = 42.0;
 const TIME_COL_WIDTH: f32 = 50.0;
+/// The room the vertical scroll bar takes at the right edge of the hourly grid.
+const SCROLL_BAR_ROOM: f32 = 16.0;
 
 fn week_days(selected: Date) -> [Date; 7] {
     let offset = i64::from(weekday_index(weekday(selected)));
@@ -45,8 +47,10 @@ pub fn draw(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<
     let days = week_days(p.selected);
     let occurrences = occurrences_all(&p.sessions, days[0], days[6]);
 
+    // The time column and the seven day columns sit in rows of eight items, so eight gaps go between them.
+    let gaps = 8.0 * ui.spacing().item_spacing.x;
     let avail_width = ui.available_width();
-    let col_width = ((avail_width - TIME_COL_WIDTH - 16.0) / 7.0).max(100.0);
+    let col_width = ((avail_width - TIME_COL_WIDTH - gaps - SCROLL_BAR_ROOM) / 7.0).max(100.0);
 
     // Week header row
     ui.horizontal(|ui| {
@@ -55,6 +59,8 @@ pub fn draw(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<
             let is_today = day == p.today;
             let is_selected = day == p.selected;
             let (rect, resp) = ui.allocate_exact_size(vec2(col_width, 28.0), Sense::click());
+            let label = format!("{} {}", weekday_name(i), day.day);
+            resp.widget_info(|| WidgetInfo::labeled(Role::Button, true, label.clone()));
             if resp.clicked() {
                 out.push(Msg::Plan(PlanMsg::Select(day)));
             }
@@ -62,7 +68,6 @@ pub fn draw(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<
                 ui.painter()
                     .rect_filled(rect, 4.0, pal.accent.gamma_multiply(0.18));
             }
-            let label = format!("{} {}", weekday_name(i), day.day);
             let mut text = RichText::new(label).strong();
             if is_today {
                 text = text.color(pal.accent);

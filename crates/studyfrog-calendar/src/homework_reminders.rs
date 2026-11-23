@@ -21,6 +21,8 @@ pub struct DueHomeworkReminder {
     pub due: LocalTime,
     /// The lead time that triggered it, in minutes.
     pub lead_min: u32,
+    /// The time left before the due time, in minutes (at most the lead time).
+    pub remaining_min: u32,
 }
 
 /// What has been shown already: (item, lead time in minutes).
@@ -60,6 +62,7 @@ pub fn due_homework_reminders(
             title: item.title.clone(),
             due: item.due,
             lead_min: lead,
+            remaining_min: remaining,
         });
     }
     out

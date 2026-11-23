@@ -1,12 +1,16 @@
 //! What the top-bar menus contain, and the search results under the search field.
 
-use eframe::egui::{self, Rect};
+use eframe::egui::{self, Key, Rect, Role, TextEdit, WidgetInfo};
 use studyfrog_core::plan::item_kind_name;
 
 use crate::chrome::{ChromeMsg, Menu};
+use crate::library_ui::LibraryMsg;
+use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::pdf_types::PdfMsg;
-use crate::state::State;
+use crate::state::{Selection, State};
+use crate::transfer_ui::{Tab, TransferMsg};
+use crate::view::kit;
 use crate::view::popup::{close, dismissed, popup};
 
 /// The menu that is open, under its button.
@@ -153,5 +157,60 @@ fn pdf_hits(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             out.push(Msg::Pdf(PdfMsg::Open(hit.path.clone(), page)));
             out.push(Msg::Chrome(ChromeMsg::SearchClear));
         }
+    }
+}
+
+/// The search field of `width`, then Create, and Import unless `narrow`.
+pub fn search_cluster(
+    state: &State,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+    width: f32,
+    narrow: bool,
+) {
+    let mut text = state.chrome.search.clone();
+    let field = ui.add(
+        TextEdit::singleline(&mut text)
+            .hint_text("Search items")
+            .desired_width(width),
+    );
+    field.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, "Search items"));
+    if text != state.chrome.search {
+        out.push(Msg::Chrome(ChromeMsg::SearchEdited(text)));
+    }
+    if field.has_focus() && ui.input(|i| i.key_pressed(Key::Escape)) {
+        out.push(Msg::Chrome(ChromeMsg::SearchClear));
+    }
+    let enter = field.lost_focus() && ui.input(|i| i.key_pressed(Key::Enter));
+    let stack = crate::item_look::stack_by_key(state, &state.chrome.search).map(|s| s.uid);
+    if let (true, Some(uid)) = (enter, stack.or(state.chrome.results.first().map(|r| r.uid))) {
+        out.push(Msg::OpenItem(uid));
+        out.push(Msg::Chrome(ChromeMsg::SearchClear));
+    }
+    search_results(state, ui, field.rect, out);
+    // The view below owns the one accent-filled action; Create stays findable by its accent label.
+    let create = kit::quiet_button(ui, "+ Create").on_hover_text("Creates a new item.");
+    if create.clicked() {
+        out.push(Msg::Modal(ModalMsg::OpenCreate));
+    }
+    if narrow {
+        return;
+    }
+    let import = kit::quiet_button(ui, "Import").on_hover_text(
+        "Opens the import dialog: pick a file or folder and see what it holds before importing.",
+    );
+    if import.clicked() {
+        out.push(Msg::Library(LibraryMsg::Transfer(TransferMsg::Open(
+            Tab::Import,
+            import_scope(state),
+        ))));
+    }
+}
+
+/// The stack the browser has selected, if any: the import then starts with that stack as its target.
+fn import_scope(state: &State) -> Option<String> {
+    match &state.browser.selection {
+        Selection::Stack(folder) => Some(folder.clone()),
+        Selection::Nothing | Selection::Inbox => None,
     }
 }
