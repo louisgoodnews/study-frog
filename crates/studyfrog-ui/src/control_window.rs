@@ -10,6 +10,8 @@ use eframe::egui;
 
 use crate::control_cmd::{Command, ControlPolicy, Request, allowed};
 use crate::control_conn::Job;
+pub mod tree;
+pub mod ui;
 use crate::control_engine::log_failure;
 use crate::control_plan::plan_for;
 use crate::control_reply::{err_line, ok_line, result_for};
@@ -50,6 +52,10 @@ pub struct WindowControl {
     /// Removes the socket when the window closes.
     #[cfg(unix)]
     pub guard: Option<crate::control_socket::ControlGuard>,
+    /// The widget tree the frames report (`ui tree`, `ui find`, `ui click`).
+    pub tree: Option<tree::Shared>,
+    /// A widget command being carried out.
+    pub ui: Option<ui::UiPending>,
 }
 
 fn apply_phase(model: &mut Model, msgs: Vec<Msg>) -> Vec<Effect> {
@@ -86,6 +92,11 @@ fn start(c: &mut WindowControl, model: &mut Model, ctx: &egui::Context) -> Vec<E
     if let Command::Screenshot(path) = &req.cmd {
         let path = path.clone();
         screenshot(ctx, req, reply, path);
+        return Vec::new();
+    }
+    if let (Command::Ui(cmd), Some(tree)) = (&req.cmd, c.tree.clone()) {
+        let cmd = cmd.clone();
+        c.ui = Some(ui::start(&tree, ctx, req, reply, cmd, policy));
         return Vec::new();
     }
     let mut phases: VecDeque<Vec<Msg>> = match plan_for(&model.state, &req.cmd) {
@@ -126,6 +137,12 @@ pub fn pump(
     ctx: &egui::Context,
     idle: bool,
 ) -> Vec<Effect> {
+    if let Some(u) = c.ui.take() {
+        if let Some(tree) = c.tree.clone() {
+            c.ui = ui::pump(&tree, ctx, idle, u, c.logs.as_ref(), model.state.wall_ms);
+        }
+        return Vec::new();
+    }
     let Some(mut p) = c.pending.take() else {
         return start(c, model, ctx);
     };
@@ -171,6 +188,8 @@ pub fn window_control_new(
             return None;
         }
     };
+    let tree = tree::slot_new();
+    ctx.add_plugin(tree::TreePlugin { slot: tree.clone() });
     let (inbox, jobs) = std::sync::mpsc::channel();
     let repaint = ctx.clone();
     let wake: crate::control_conn::Wake = std::sync::Arc::new(move || repaint.request_repaint());
@@ -191,6 +210,8 @@ pub fn window_control_new(
         logs,
         ctx: Some(ctx),
         guard: Some(guard),
+        tree: Some(tree),
+        ui: None,
     })
 }
 

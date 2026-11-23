@@ -51,5 +51,5 @@ fn import_destinations_are_one_of_root_stack_or_new_stack() {
         Command::PdfFind(None, "test score".into())
     );
     assert!(err("pdf find").contains("text"));
-    assert!(err("pdf open a.pdf").contains("find"));
+    assert!(err("pdf move a.pdf").contains("find"));
 }

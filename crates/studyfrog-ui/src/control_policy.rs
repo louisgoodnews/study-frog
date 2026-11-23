@@ -4,6 +4,8 @@
 use crate::control_cmd::board::BoardCmd;
 use crate::control_cmd::calendar::CalendarCmd;
 use crate::control_cmd::diary::DiaryCmd;
+use crate::control_cmd::screens::{AssistantCmd, MatchCmd, ScreenCmd, SettingsCmd};
+use crate::control_cmd::ui::UiCmd;
 use crate::control_cmd::{Command, HomeworkCmd, ItemCmd, RehearseCmd, StackCmd};
 
 /// How much a command may change.
@@ -45,7 +47,11 @@ pub fn policy_default() -> ControlPolicy {
 pub fn class_of(cmd: &Command) -> Class {
     use Command as C;
     match cmd {
-        C::Item(ItemCmd::Delete(_)) => Class::Destructive,
+        C::Item(ItemCmd::Delete(_)) | C::Stack(StackCmd::Delete(_)) => Class::Destructive,
+        C::Ui(UiCmd::Click(_)) => Class::Write,
+        C::Screens(ScreenCmd::Assistant(AssistantCmd::Send(_))) => Class::Write,
+        C::Screens(ScreenCmd::Settings(SettingsCmd::SlowAnswer(_))) => Class::Write,
+        C::Screens(ScreenCmd::Match(MatchCmd::Start)) => Class::Write,
         C::Item(ItemCmd::Open(_)) | C::Stack(StackCmd::Open(_) | StackCmd::Settings(_)) => {
             Class::Read
         }

@@ -2,7 +2,7 @@
 id: EPIC-038
 type: epic
 title: "CLI control protocol for interactive AI agent application operation"
-status: review
+status: done
 parents: []
 labels: [m12, core, service, ui, app]
 acceptance_criteria:
@@ -27,8 +27,8 @@ Deliver a full-featured CLI Control Protocol and `~/.local/` application directo
    - Consolidate StudyFrog's application-level files under `~/.local/share/studyfrog/` (or XDG-compliant `~/.local/` subdirectories) containing global configurations (`app.toml`, `secrets.toml`, `profiles/`), structured rotating application and console logs (`logs/studyfrog.log`, `logs/console.jsonl`), cached SLM models, and runtime control socket/PID metadata.
 
 ## Acceptance Criteria
-- [ ] AI agents can interactively operate a running or headless StudyFrog instance via a structured CLI control protocol with full access to all application features, screens, and actions
-- [ ] The control protocol exposes live UI state trees, semantic screen snapshots, and real-time console and application logs
+- [x] AI agents can interactively operate a running or headless StudyFrog instance via a structured CLI control protocol with full access to all application features, screens, and actions
+- [x] The control protocol exposes live UI state trees, semantic screen snapshots, and real-time console and application logs
 - [x] StudyFrog stores application files, configurations, runtime control endpoints, and structured console logs in a standardized ~/.local/ directory hierarchy
 
 ## Design Notes
@@ -47,6 +47,8 @@ Both stories are in review: STORY-0122 (application home and logs) and STORY-012
 Review (2026-11-22): criterion 1 NOT MET: calendar, board, diary, reports, achievements, settings, assistant and the folder operations are reached by `nav` and show only the screen name; no AccessKit tree; no stack delete (see STORY-0124). Criterion 2 NOT MET: `ctl state` is a semantic snapshot, but there is no live UI widget/state tree; live logs are MET (`ctl logs --follow` streamed a notice and a control warning as they happened). Criterion 3 MET: with no `STUDYFROG_HOME`, a headless run under a fake `HOME` created `~/.local/share/studyfrog/run/` and `config/app.toml` (`appearance density` write); with `STUDYFROG_HOME` set, `config/`, `logs/studyfrog.log`, `logs/console.jsonl` and `run/control.sock`/`control.json` were written.
 
 Review (2026-11-23): criterion 1 NOT MET, narrowed: calendar, board, diary and reports can now be driven (`board`, `board add`, `diary list|open|add`, `reports <tab>`, `calendar view|period` answer with their data; see STORY-0124's note). Still open: achievements, settings, assistant, graph, match, folders and PDF are reachable by `nav` only, and there is no stack delete. Criterion 2 NOT MET: no live UI widget or AccessKit tree; `state` is a semantic snapshot, and live logs are still MET (`ctl logs --follow`, 2026-11-22). Criterion 3 MET (unchanged).
+
+Review (2026-11-23, closing the epic): criterion 1 MET for a running window and for every command family: the seven screens that had only `nav` (achievements, graph, assistant, settings, match, folders, PDF open) and `stack delete` now have commands, and `ui tree`, `ui find` and `ui click` drive any widget of the window (the window's AccessKit tree, captured by a plugin when asked). Criterion 2 MET: the tree is the live UI state (`ui tree`), `state` the semantic snapshot, and logs stream (`ctl logs --follow`). Limits: a headless instance has no widgets (`ui` is refused with the reason); the graph has no stack scope; a configured assistant was not run. Details and the answers are in STORY-0124's Verification.
 
 ## Dependencies
 EPIC-008 (UI Shell), EPIC-028 (Extensibility), and EPIC-037 (MCP).

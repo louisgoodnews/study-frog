@@ -2,7 +2,7 @@
 id: STORY-0192
 type: story
 title: "Search and tooltips in the control protocol"
-status: review
+status: done
 epic: EPIC-064
 parents: ['EPIC-064']
 estimate: 2
@@ -33,6 +33,9 @@ None.
 - Limit: the focus is confirmed by a frame that draws the field; the protocol tests run without a frame, so `pending` stays true there. Not yet checked in the running app.
 
 Review (2026-11-22): criterion 1 MET on the library query view: `ctl query status=new`, then `ctl search --focus`, answered `focus: {focused: "Query text", pending: false}`, and `state` reports `focused_field: "Query text"`. Limit: on Home and on a stack Summary (no search field of their own) the request stays `pending: true` and the top-bar "Search items" field is not focused (BUG-0049). Criterion 2 MET: `ctl "help tooltip \"Back (Alt+Left)\""` answers the explanation ("Goes back to the screen you were on before.") and the shortcut in the name; "Zen mode (Ctrl+Shift+F)" likewise. Criterion 3 NOT MET, unticked: after `nav home`, `state` still reports `focused_field: "Query text"` with no library screen open (BUG-0050).
+
+## Closed (2026-11-23)
+Set to done with EPIC-064, whose criterion 1 is now met (see EPIC-064's Verification); its children are all done.
 
 ## Dependencies
 EPIC-064, and the features named above.

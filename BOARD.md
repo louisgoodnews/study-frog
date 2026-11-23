@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (10) | Ready (0) | In progress (0/3) | Review (15) | Blocked (3) | Done (580) |
+| Backlog (10) | Ready (0) | In progress (0/3) | Review (11) | Blocked (3) | Done (584) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0053](docs/issues/bugs/BUG-0053-mock-exam-formula-note-gives-no-calculation-question.md) Mock exam from notes with a formula line gives no calculation question in the template path (2) |  |  | [BUG-0051](docs/issues/bugs/BUG-0051-math-drill-praises-answer-with-wrong-step.md) Math drill says 'Correct. Well worked.' when the final answer is within tolerance but a working step is wrong (1) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -460,7 +460,7 @@
 | [STORY-0121](docs/issues/stories/STORY-0121-built-in-assistant-mcp-client-host-for-external-academic-tool-servers.md) Built-in Assistant MCP client host for external academic tool servers (8) | done | 0/0 |
 | [STORY-0122](docs/issues/stories/STORY-0122-studyfrog-application-files-in-local-with-logs-and-configurations.md) StudyFrog application files in ~/.local/ with logs and configurations (5) | done | 0/0 |
 | [STORY-0123](docs/issues/stories/STORY-0123-colorization-field-for-items-influencing-details-and-rehearsal-background.md) Colorization field for items influencing details and rehearsal view background (3) | done | 0/0 |
-| [STORY-0124](docs/issues/stories/STORY-0124-interactive-cli-control-protocol-and-console-log-streaming-for-ai-agents.md) Interactive CLI control protocol and console log streaming for AI agents (8) | review | 0/0 |
+| [STORY-0124](docs/issues/stories/STORY-0124-interactive-cli-control-protocol-and-console-log-streaming-for-ai-agents.md) Interactive CLI control protocol and console log streaming for AI agents (8) | done | 0/0 |
 | [STORY-0125](docs/issues/stories/STORY-0125-specify-the-exam-run-mode-and-its-grade-scale.md) Specify the exam run mode and its grade scale (2) | done | 0/0 |
 | [STORY-0126](docs/issues/stories/STORY-0126-exam-run-data-model-and-engine-rules.md) Exam run data model and strict engine rules (5) | done | 2/2 |
 | [STORY-0127](docs/issues/stories/STORY-0127-exam-scoring-grading-and-result-history.md) Exam scoring, grading and result history (5) | done | 2/2 |
@@ -528,7 +528,7 @@
 | [STORY-0189](docs/issues/stories/STORY-0189-tooltips-for-text-buttons.md) Hover Explanations for Text Buttons Across the App (5) | done | 0/0 |
 | [STORY-0190](docs/issues/stories/STORY-0190-homework-commands-in-the-control-protocol.md) Homework commands in the control protocol (2) | done | 0/0 |
 | [STORY-0191](docs/issues/stories/STORY-0191-import-destinations-and-pdf-cards-in-the-control-protocol.md) Import destinations and PDF cards in the control protocol (3) | done | 0/0 |
-| [STORY-0192](docs/issues/stories/STORY-0192-search-and-tooltips-in-the-control-protocol.md) Search and tooltips in the control protocol (2) | review | 0/0 |
+| [STORY-0192](docs/issues/stories/STORY-0192-search-and-tooltips-in-the-control-protocol.md) Search and tooltips in the control protocol (2) | done | 0/0 |
 | [STORY-0193](docs/issues/stories/STORY-0193-appearance-and-density-in-the-control-protocol.md) Appearance and density in the control protocol (2) | done | 0/0 |
 | [STORY-0194](docs/issues/stories/STORY-0194-calendar-reminders-and-homework-markers-in-the-control-protocol.md) Calendar, reminders and homework markers in the control protocol (3) | done | 0/0 |
 | [STORY-0195](docs/issues/stories/STORY-0195-in-rehearsal-view-the-item-takes-more-of-the-screen.md) In rehearsal view, the item takes more of the screen (3) | done | 0/0 |
@@ -585,7 +585,7 @@
 | [EPIC-035](docs/issues/epics/EPIC-035-rich-active-recall-formats-inline-note-extraction-and-focus-workflows.md) Rich active-recall formats, inline note extraction, and focus workflows | done | 5/5 |
 | [EPIC-036](docs/issues/epics/EPIC-036-evidence-based-ui-aesthetics-perceptual-color-science-and-ux-refinement.md) Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement | review | 3/4 |
 | [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md) State-of-the-art Model Context Protocol (MCP) server, client host, and extensible registry | done | 5/5 |
-| [EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md) CLI control protocol for interactive AI agent application operation | review | 1/2 |
+| [EPIC-038](docs/issues/epics/EPIC-038-cli-control-protocol-for-interactive-ai-agent-application-operation.md) CLI control protocol for interactive AI agent application operation | done | 2/2 |
 | [EPIC-039](docs/issues/epics/EPIC-039-universal-item-linking-between-stacks-cards-questions-answers-and-notes.md) Universal item linking between stacks, cards, questions, answers, and notes | done | 1/1 |
 | [EPIC-040](docs/issues/epics/EPIC-040-intermittent-typed-active-recall-and-flexible-rehearsal-presentation.md) Intermittent typed active recall and flexible rehearsal presentation | done | 1/1 |
 | [EPIC-041](docs/issues/epics/EPIC-041-modularity-system-driven-architecture-and-decoupled-background-services.md) Modularity: system-driven application architecture and decoupled background services | done | 0/0 |
@@ -611,7 +611,7 @@
 | [EPIC-061](docs/issues/epics/EPIC-061-case-study-and-diagnostic-decision-matrix.md) Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification | done | 6/6 |
 | [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | review | 3/4 |
 | [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | review | 4/6 |
-| [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | review | 6/7 |
+| [EPIC-064](docs/issues/epics/EPIC-064-control-protocol-coverage-for-the-new-features.md) CLI control protocol coverage for the new features | done | 7/7 |
 | [EPIC-065](docs/issues/epics/EPIC-065-rehearsal-view-layout-ratings-and-item-colour.md) Rehearsal view: item size, previous ratings and item colour | done | 3/3 |
 | [EPIC-066](docs/issues/epics/EPIC-066-learn-mode-research-platform.md) Learn-mode research platform: visual node-based technique editor | done | 1/1 |
 | [EPIC-067](docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement | blocked | 0/5 |

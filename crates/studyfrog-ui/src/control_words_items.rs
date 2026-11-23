@@ -108,6 +108,7 @@ pub fn stack(words: &[String]) -> Result<StackCmd, String> {
         "open" => StackCmd::Open(folder()?),
         "settings" => StackCmd::Settings(folder()?),
         "move" => StackCmd::Move(folder()?, rest.get(2).copied().unwrap_or("").to_owned()),
+        "delete" => StackCmd::Delete(folder()?),
         other => return Err(format!("unknown stack operation {other}")),
     })
 }

@@ -10,6 +10,7 @@ pub fn pdf_json(state: &State) -> Value {
         Some(v) => json!({
             "open": true,
             "path": v.path,
+            "page_count": v.info.as_ref().map(|i| i.page_count),
             "query": v.query,
             "found_pages": v.found.iter().map(|p| p + 1).collect::<Vec<_>>(),
             "pages_without_text": v.scanned.iter().map(|p| p + 1).collect::<Vec<_>>(),

@@ -5,6 +5,7 @@ mod common;
 
 use serde_json::{Value, json};
 use studyfrog_ui::control_cmd::{Command, ItemCmd};
+use studyfrog_ui::control_help::panels::ROWS as PANEL_ROWS;
 use studyfrog_ui::control_help::screens::ROWS as SCREEN_ROWS;
 use studyfrog_ui::control_help::{COMMANDS, help_json};
 use studyfrog_ui::control_parse::parse_request;
@@ -158,12 +159,13 @@ fn answers_and_events_are_single_json_lines() {
     assert_eq!(err, json!({"id": null, "ok": false, "error": "no"}));
     assert!(!event_line("log", json!({"m": "a\nb"})).contains('\n'));
     let help = help_json();
-    let rows = COMMANDS.len() + SCREEN_ROWS.len();
+    let rows = COMMANDS.len() + SCREEN_ROWS.len() + PANEL_ROWS.len();
     assert_eq!(help["commands"].as_array().unwrap().len(), rows);
     assert!(
         COMMANDS
             .iter()
             .chain(SCREEN_ROWS)
+            .chain(PANEL_ROWS)
             .all(|(_, _, class)| ["read", "write", "destructive"].contains(class))
     );
 }

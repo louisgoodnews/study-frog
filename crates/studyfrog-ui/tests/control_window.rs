@@ -19,6 +19,8 @@ fn control(policy: ControlPolicy) -> (WindowControl, Inbox) {
         ctx: None,
         #[cfg(unix)]
         guard: None,
+        tree: None,
+        ui: None,
     };
     (c, inbox)
 }

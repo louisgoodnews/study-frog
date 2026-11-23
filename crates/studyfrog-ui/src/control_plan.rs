@@ -1,6 +1,5 @@
 //! What each control command does, as the messages a user's clicks would send. Pure: a command and
-//! the state give a plan, a list of phases; the driver applies one phase, lets the background work
-//! finish, then applies the next (an item must be loaded before its page can be changed).
+//! the state give phases; the driver applies one, lets the background work finish, then the next.
 
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::Action;
@@ -21,6 +20,7 @@ use crate::transfer_ui::TransferMsg;
 pub mod calendar;
 pub mod files;
 pub mod homework;
+pub mod panels;
 pub mod screens;
 pub mod search;
 
@@ -152,6 +152,7 @@ fn stack(state: &State, cmd: &StackCmd) -> Result<Plan, String> {
             resolve_stack(state, folder)?;
             vec![open_stack(folder)]
         }
+        StackCmd::Delete(folder) => return panels::stack_delete(state, folder),
         StackCmd::Move(folder, into) => {
             resolve_stack(state, folder)?;
             if !into.is_empty() {
@@ -238,6 +239,7 @@ pub fn plan_for(state: &State, cmd: &Command) -> Result<Plan, String> {
         } => files::import(path, stack, *root, new_stack),
         Command::PdfFind(file, text) => files::pdf_find(file, text),
         Command::Calendar(c) => calendar::plan(c),
+        Command::Screens(c) => panels::plan(state, c),
         Command::Dismiss => one(Msg::DismissNotice),
         Command::CloseModal => Ok(vec![vec![
             Msg::Modal(ModalMsg::Close),

@@ -17,10 +17,12 @@ pub mod diary;
 pub mod focus;
 pub mod homework;
 pub mod import;
+pub mod panels;
 pub mod pdf;
 pub mod report_tabs;
 pub mod reports;
 pub mod tooltip;
+pub mod ui;
 
 /// Rows a `query` answers with at most.
 pub const MAX_QUERY_ROWS: usize = 500;
@@ -125,6 +127,8 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
             Ok(homework::tab_json(state))
         }
         Command::Board(c) => board::answer(state, c),
+        Command::Screens(c) => panels::answer(state, c),
+        Command::Stack(StackCmd::Delete(folder)) => panels::stack_deleted(state, folder),
         Command::Diary(c) => diary::answer(state, c),
         Command::Reports(tab) => reports::answer(state, *tab),
         Command::PdfFind(..) => Ok(with_part(state_json(state), "pdf", pdf::pdf_json(state))),

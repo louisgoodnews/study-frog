@@ -108,6 +108,10 @@ pub fn handle_with(e: &mut Engine, req: &Request, policy: &ControlPolicy) -> Str
     if let Err(why) = allowed(policy, &req.cmd) {
         return refuse(e, req, &why);
     }
+    if let Command::Ui(_) = req.cmd {
+        let why = "the widget tree is in a window: attach to a running window with `studyfrog ctl`";
+        return refuse(e, req, why);
+    }
     if let Command::Screenshot(_) = req.cmd {
         let why = "a headless instance has no window to take a picture of; attach to a running window with `studyfrog ctl`";
         return refuse(e, req, why);

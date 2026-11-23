@@ -12,6 +12,8 @@ pub mod board;
 pub mod calendar;
 pub mod diary;
 pub mod homework;
+pub mod screens;
+pub mod ui;
 pub use homework::{HomeworkCmd, HomeworkNew};
 /// One request: the caller's id (echoed in the answer) and the command.
 #[derive(Debug, Clone, PartialEq)]
@@ -78,6 +80,10 @@ pub enum Command {
     Reports(Option<crate::explorer_ui::ReportTab>),
     /// Save a picture of the window.
     Screenshot(PathBuf),
+    /// The widget tree of the window: the named widgets, find one, click one.
+    Ui(ui::UiCmd),
+    /// The screens that had only `nav`: achievements, graph, assistant, settings, match, folders, PDF open.
+    Screens(screens::ScreenCmd),
     /// Read (and maybe follow) the console log.
     Logs(LogsQuery),
     /// Stream lifecycle events of these kinds (all when empty) until the connection closes.
@@ -146,6 +152,8 @@ pub enum StackCmd {
     Open(String),
     /// Move the stack into another one (`""`: the top level).
     Move(String, String),
+    /// Delete the stack and its folder, after the confirmation the folders screen asks for.
+    Delete(String),
     /// The stack's scheduling settings, and its page.
     Settings(String),
 }
