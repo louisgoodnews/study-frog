@@ -2,6 +2,7 @@
 
 mod arena;
 mod civil;
+mod classroom;
 mod diary;
 mod exam;
 mod library;

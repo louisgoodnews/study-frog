@@ -2,7 +2,7 @@
 id: TASK-0287
 type: task
 title: "Classroom domain types and pure state transitions in studyfrog-core"
-status: backlog
+status: done
 epic: EPIC-068
 parents: ['STORY-0208']
 estimate: 2
@@ -20,9 +20,9 @@ Part of `STORY-0208`. All classroom domain types and invariants belong in `study
 Add a `classroom` module to `studyfrog-core` with plain structs/enums and pure free functions for session creation, turn appending, solo/group assignment validation, submission locking, and grade recording.
 
 ## Acceptance Criteria
-- [ ] `studyfrog-core` defines pure data structs and enums for `ClassroomSession`, `Participant`, `ChatTurn`, `Assignment`, `GroupRoster`, `Submission`, and `GradeReport`
-- [ ] Pure free functions validate state transitions (append turn, assign task, submit answer, record grade) and reject invalid operations
-- [ ] Unit tests cover all transitions and edge cases with zero inherent `impl` blocks and files $\le 250$ LOC
+- [x] `studyfrog-core` defines pure data structs and enums for `ClassroomSession`, `Participant`, `ChatTurn`, `Assignment`, `GroupRoster`, `Submission`, and `GradeReport`
+- [x] Pure free functions validate state transitions (append turn, assign task, submit answer, record grade) and reject invalid operations
+- [x] Unit tests cover all transitions and edge cases with zero inherent `impl` blocks and files $\le 250$ LOC
 
 ## Design Notes
 - Follow Invariant P1 (pure free functions) and P6 ($\le 250$ LOC per file).
