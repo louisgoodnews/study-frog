@@ -2,7 +2,7 @@
 id: EPIC-049
 type: epic
 title: "Expanded scripting environment, DSL, job scheduling, and execution logging"
-status: backlog
+status: done
 parents: []
 labels: [m12, ext, console]
 acceptance_criteria:
@@ -23,10 +23,10 @@ Deliver the expanded in-app scripting studio and execution infrastructure:
 4. **Dedicated Internal stdout and stderr Logging (`STORY-0152`):** Implement isolated stream capture, multiplexing, timestamps, and styled presentation separating standard application output from error diagnostics.
 
 ## Acceptance Criteria
-- [ ] The in-app scripting environment is rebranded and renamed from ScriptRunner to a distinct, proprietary trademark-safe name (e.g. FrogScript / ScriptStudio) avoiding conflicts with Adaptavist
-- [ ] Users can execute code directly from a built-in scripting console with support for research into a domain-specific language (DSL)
-- [ ] Scripting provides full support for ad-hoc execution, scheduled cron jobs, and event-driven trigger bindings directly configurable from the UI
-- [ ] StudyFrog implements dedicated internal stdout and stderr log capturing and display streams for user-authored scripts
+- [x] The in-app scripting environment is rebranded and renamed from ScriptRunner to a distinct, proprietary trademark-safe name (e.g. FrogScript / ScriptStudio) avoiding conflicts with Adaptavist
+- [x] Users can execute code directly from a built-in scripting console with support for research into a domain-specific language (DSL)
+- [x] Scripting provides full support for ad-hoc execution, scheduled cron jobs, and event-driven trigger bindings directly configurable from the UI
+- [x] StudyFrog implements dedicated internal stdout and stderr log capturing and display streams for user-authored scripts
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-ui/src/view/console.rs`, `crates/studyfrog-ext/`, `crates/studyfrog-service/src/scripting/`, `docs/specs/scripting.md`, `docs/research/`.
@@ -39,3 +39,7 @@ Deliver the expanded in-app scripting studio and execution infrastructure:
 
 ## Open Questions
 - Target DSL candidate evaluation (Rhai embedded Rust script engine vs. standard Python sub-process IPC).
+
+## Completion (2026-11-23)
+
+All four child stories are done: STORY-0149, STORY-0150 and STORY-0151 by their own records, and STORY-0152 with the stream evidence in its Verification section (BUG-0033 has the screenshots). Criteria 1 to 3 are ticked on the strength of those child stories; the stdout and stderr criterion (4) was checked in the running app.

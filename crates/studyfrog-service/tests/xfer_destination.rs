@@ -51,3 +51,39 @@ fn the_destination_decides_the_folder_of_each_item() {
         "an item with no stack needs a target when the file says none"
     );
 }
+
+const SAME_STACK: &str = r#"{"format":"studyfrog-export","version":1,"exported":"2026-01-01T00:00:00Z","scheduling":false,"stacks":[],"items":[{"kind":"card","title":"One","stack":"statistik","text":"q1","answer":"a1","tags":[]},{"kind":"card","title":"Two","stack":"statistik","text":"q2","answer":"a2","tags":[]}]}"#;
+
+#[test]
+fn a_file_naming_the_chosen_stack_lands_in_that_stack_not_a_copy_of_it() {
+    let dir = std::env::temp_dir().join(format!("studyfrog-same-{}", std::process::id()));
+    let _ = fs::remove_dir_all(&dir);
+    fs::create_dir_all(&dir).unwrap();
+    let _guard = Dir(dir.clone());
+    let (session, _) = open_vault(dir.to_str().unwrap()).unwrap();
+    let bundle = from_json(SAME_STACK).unwrap();
+    let folders = |target: Option<&str>| -> Vec<String> {
+        plan_import(&session, &bundle, target)
+            .unwrap()
+            .lines
+            .iter()
+            .map(|l| l.folder.clone())
+            .collect()
+    };
+    assert_eq!(folders(Some("statistik")), ["statistik", "statistik"]);
+    assert_eq!(
+        folders(Some("Languages/statistik")),
+        ["Languages/statistik", "Languages/statistik"],
+        "a nested chosen stack is named by its last part"
+    );
+    assert_eq!(
+        folders(None),
+        ["statistik", "statistik"],
+        "as the file says"
+    );
+    assert_eq!(
+        folders(Some("Spanish")),
+        ["Spanish/statistik", "Spanish/statistik"],
+        "a different chosen stack still nests the file's stack"
+    );
+}

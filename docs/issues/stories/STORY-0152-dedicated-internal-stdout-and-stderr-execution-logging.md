@@ -2,7 +2,7 @@
 id: STORY-0152
 type: story
 title: "Dedicated internal stdout and stderr execution logging for user scripts"
-status: review
+status: done
 epic: EPIC-049
 parents: [EPIC-049]
 estimate: 3
@@ -24,9 +24,9 @@ Implement dedicated stdout and stderr capture and display:
 4. Support clearing active streams and exporting execution logs to `<vault>/logs/script_runs.log` for inspection.
 
 ## Acceptance Criteria
-- [ ] The application captures stdout and stderr from user scripts into dedicated, distinct internal streams
-- [ ] The script execution UI displays stdout and stderr with distinct visual styling (e.g. standard text vs. error highlights) and timestamps
-- [ ] Internal execution logs can be filtered, cleared, and exported for troubleshooting user-authored scripts
+- [x] The application captures stdout and stderr from user scripts into dedicated, distinct internal streams
+- [x] The script execution UI displays stdout and stderr with distinct visual styling (e.g. standard text vs. error highlights) and timestamps
+- [x] Internal execution logs can be filtered, cleared, and exported for troubleshooting user-authored scripts
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-ui/src/view/console.rs`, `crates/studyfrog-app/src/script_runner.rs`, `crates/studyfrog-service/src/scripting/`.
@@ -57,3 +57,10 @@ Criterion 2 NOT MET; unticked by this audit, which contradicts the earlier windo
 Criterion 3 NOT MET: the All, Stdout and Events filters, the output search and Clear Output work (/tmp/claude-0/audit/g5/0152-cleared.png). Export log wrote /tmp/claude-0/audit/g5/vault/logs/script_runs.log, and the status bar confirmed the path. But the Stderr filter is empty for script stderr and the export does not label streams (BUG-0033).
 
 Review (2026-11-22): criterion 1 NOT MET: the stderr line of `err.sh` appears in the Stdout view, and the Stderr / Errors view says "No entries for selected filter" (`/tmp/claude-0/review-c/shots/10-filter-stdout.png`, `/tmp/claude-0/review-c/shots/11-filter-stderr.png`). Criterion 2 NOT MET: both lines are the same green (`/tmp/claude-0/review-c/shots/09-run-all.png`). Criterion 3 NOT MET: the Stderr filter is empty for script stderr; All, Stdout and output search work (`09-run-all.png`, `10-filter-stdout.png`). Export not re-run. BUG-0033 still open. Status stays review.
+
+## Verification (2026-11-23)
+
+All three criteria are ticked, with the evidence from the running app (fixed build; BUG-0033 has the details and the before screenshots):
+- Criterion 1: the service already captured stdout and stderr separately (`studyfrog-service/src/scripting/exec.rs`). The console now keeps them apart: `err-line` is under Stderr / Errors and not under Stdout (`/tmp/claude-0/stderr/after-stderr.png`, `/tmp/claude-0/stderr/after-stdout.png`).
+- Criterion 2: stderr is drawn in the error colour (sampled about (252,146,135)), stdout in the body text colour ((230,232,235)); each line carries its time (`31.0s`) (`/tmp/claude-0/stderr/after-all.png`).
+- Criterion 3: the Stderr / Errors and Stdout filters work; Clear Output empties the transcript (`/tmp/claude-0/stderr/after-cleared2.png`); Export log writes `Stdout: out-line` and `Stderr: err-line` to `vault/logs/script_runs.log` (`/tmp/claude-0/stderr/after-script_runs.log`).

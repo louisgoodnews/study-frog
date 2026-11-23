@@ -30,6 +30,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - **Memory board fits the space below its message at 960 by 640 (`crates/studyfrog-ui`, BUG-0028)**: the board is sized to the height left under the HUD, message and Play again rather than in an unbounded scroll area.
 - **Rehearse setup footer wraps so the item count is not cut off (`crates/studyfrog-ui`, BUG-0029)**: at 1280 by 800 the count sits in full beside Next, and at 960 by 640 the Next button is in view.
 - **Rehearsal rating buttons stay level and the hint line stays on screen (`crates/studyfrog-ui`, STORY-0195, EPIC-065)**: a previous rating no longer pushes the Good button down or cuts off the keyboard hints at 1280 by 800; the item area takes the room the rating line needs. Test: `studyfrog-ui/tests/run_previous_mark.rs`.
+- **Script stderr is its own stream (`crates/studyfrog-ui`, BUG-0033, STORY-0152, EPIC-049)**: a script run in the console gives its outcome, its stdout and its stderr as separate entries; stderr shows under Stderr / Errors in the error colour and not under Stdout, and the exported log labels each line `Stdout:` or `Stderr:`. Tests: `studyfrog-ui/tests/console.rs`.
+- **CSV import into the chosen stack uses that stack (`crates/studyfrog-service`, BUG-0037)**: a file whose stack column names the chosen stack puts its cards in that stack instead of a new `statistik/statistik`; other stacks still nest under the chosen one. Test: `studyfrog-service/tests/xfer_destination.rs`.
 
 ## [1.0.0] - 2026-11-22
 

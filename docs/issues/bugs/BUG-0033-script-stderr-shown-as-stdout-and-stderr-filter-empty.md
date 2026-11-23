@@ -2,7 +2,7 @@
 id: BUG-0033
 type: bug
 title: "Script stderr is shown in the stdout stream and the Stderr / Errors filter stays empty"
-status: backlog
+status: done
 estimate: 3
 labels: [m12, console, ext]
 acceptance_criteria:
@@ -24,9 +24,9 @@ Screenshots (`/tmp/claude-0/audit/g5/`): `0151-console-run.png` (both lines gree
 Route a script's standard error into the stderr stream of the console (the stream the Stderr / Errors filter reads) and draw it in the error or warning palette. Keep the stream label when the log is exported. Check in the window with a script that writes to both streams.
 
 ## Acceptance Criteria
-- [ ] Text a script writes to standard error appears under the Stderr / Errors filter and not under Stdout
-- [ ] Script stderr lines are drawn in the error palette, not in the same green as stdout
-- [ ] Export log labels each script line as stdout or stderr
+- [x] Text a script writes to standard error appears under the Stderr / Errors filter and not under Stdout
+- [x] Script stderr lines are drawn in the error palette, not in the same green as stdout
+- [x] Export log labels each script line as stdout or stderr
 
 ## Design Notes
 - Touchpoints: `crates/studyfrog-ui/src/view/console.rs`, `crates/studyfrog-ui/src/console_ui.rs`, `crates/studyfrog-ui/src/log_stream.rs`, `crates/studyfrog-service/src/scripting/exec.rs`.
@@ -48,3 +48,13 @@ Review (2026-11-22): NOT FIXED. The stderr line is under Stdout (`/tmp/claude-0/
 
 ## Open Questions
 - None.
+
+## Fix (2026-11-23)
+
+Cause: `console_ui/lines.rs` joined a script run's stdout and stderr into one `Script` entry (green, shown under Stdout), so no entry reached the Stderr / Errors stream. Fix: `entries_of` turns a `script_finished` line into an outcome entry, a `Stdout` entry and a `Stderr` entry; stderr is drawn in the danger colour and the export labels each line with its stream (STORY-0152).
+
+Tests: `studyfrog-ui/tests/console.rs` (`script_stdout_and_stderr_each_get_their_own_stream_entry`, which failed before the fix; `script_run_and_script_list_go_to_the_runner_and_its_output_comes_back`; `answers_errors_events_and_script_output_become_entries`).
+
+Checked in the running app (Xvfb, `err.sh` writes `out-line` to stdout and `err-line` to stderr, run from Console > Jobs > Run):
+- Before, unmodified build: Stderr / Errors says "No entries for selected filter" (`/tmp/claude-0/stderr/before-stderr.png`); the line is under Stdout in green (`/tmp/claude-0/stderr/before-all.png`); export is unlabelled (`/tmp/claude-0/stderr/before-script_runs.log`).
+- After, fixed build: Stderr / Errors shows `stderr: err-line` in red (`/tmp/claude-0/stderr/after-stderr.png`); Stdout shows `stdout: out-line` in body text, the outcome in green (`/tmp/claude-0/stderr/after-stdout.png`); All view `/tmp/claude-0/stderr/after-all.png`; export labels `Stdout: out-line` and `Stderr: err-line` (`/tmp/claude-0/stderr/after-script_runs.log`).

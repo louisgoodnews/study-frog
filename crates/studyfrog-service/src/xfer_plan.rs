@@ -70,13 +70,20 @@ pub fn counts(plan: &ImportPlan) -> (usize, usize, usize) {
     )
 }
 
+/// Whether an item's stack names the chosen stack itself, by its whole path or its last part. Such an
+/// item goes into the chosen stack; a copy of that stack is not nested under it (BUG-0037).
+fn names_chosen(target: &str, stack: &str) -> bool {
+    stack == target || target.rsplit('/').next() == Some(stack)
+}
+
 /// Where an item goes. `None` is "as the file says"; `Some("")` is the vault root (an item with no stack
 /// goes there, and its stack, if it names one, is made at the root); `Some(folder)` puts items in that
-/// folder, nested by their own stack.
+/// folder, nested by their own stack, unless their stack is the chosen one.
 fn destination(item: &XItem, target: Option<&str>) -> Result<String, String> {
     let folder = match (target, item.stack.trim()) {
         (Some(""), s) => s.to_owned(),
         (Some(t), "") => t.to_owned(),
+        (Some(t), s) if names_chosen(t, s) => t.to_owned(),
         (Some(t), s) => format!("{t}/{s}"),
         (None, "") => return Err("it names no stack; choose one to import into".to_owned()),
         (None, s) => s.to_owned(),

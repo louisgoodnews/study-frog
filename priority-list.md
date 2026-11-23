@@ -158,7 +158,7 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
   - [x] [STORY-0149](docs/issues/stories/STORY-0149-rename-scriptrunner-to-avoid-trademark-conflicts.md) Rename ScriptRunner to ScriptStudio & FrogScript (avoid Adaptavist trademark)
   - [ ] [STORY-0150](docs/issues/stories/STORY-0150-in-app-code-execution-console-and-dsl-research.md) In-app code execution console and DSL research
   - [ ] [STORY-0151](docs/issues/stories/STORY-0151-scripting-ad-hoc-runs-scheduled-jobs-and-event-driven-triggers.md) Scripting ad-hoc runs, scheduled recurring jobs, and event-driven triggers
-  - [ ] [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging
+  - [x] [STORY-0152](docs/issues/stories/STORY-0152-dedicated-internal-stdout-and-stderr-execution-logging.md) Dedicated internal stdout and stderr execution logging
 
 ## v1.0.0 (milestones 14.1 to 14.5, [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md))
 Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its acceptance criteria hold and `scripts/check.sh` passes.

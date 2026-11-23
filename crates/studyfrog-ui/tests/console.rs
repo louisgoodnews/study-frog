@@ -9,7 +9,7 @@ use common::views::{harness, open_model};
 use control_common::*;
 use egui_kittest::kittest::Queryable;
 use studyfrog_ui::console_link::{link_new, poll, submit};
-use studyfrog_ui::console_ui::lines::entry_of;
+use studyfrog_ui::console_ui::lines::{entries_of, entry_of};
 use studyfrog_ui::console_ui::{ConsoleMsg, ConsoleState, EntryKind, apply_console};
 use studyfrog_ui::control_events::bus_new;
 use studyfrog_ui::model::apply;
@@ -66,11 +66,29 @@ fn answers_errors_events_and_script_output_become_entries() {
         0.0,
     );
     assert_eq!(script.kind, EntryKind::Script);
-    assert_eq!(
-        script.text,
-        "script health failed (exit code 2)\nchecked 3\nboom"
-    );
+    assert_eq!(script.text, "script health failed (exit code 2)");
     assert_eq!(entry_of("started health", 0.0).text, "started health");
+}
+
+#[test]
+fn script_stdout_and_stderr_each_get_their_own_stream_entry() {
+    let mut c = ConsoleState::default();
+    let line = r#"{"event":"lifecycle","data":{"kind":"script_finished","data":{"job":"err","ok":true,"code":0,"stdout":"out-line","stderr":"err-line"}}}"#;
+    apply_console(&mut c, ConsoleMsg::Line(line.into()), 1.0);
+    let got: Vec<(EntryKind, &str)> = c
+        .entries
+        .iter()
+        .map(|e| (e.kind, e.text.as_str()))
+        .collect();
+    assert_eq!(
+        got,
+        [
+            (EntryKind::Script, "script err finished"),
+            (EntryKind::Stdout, "out-line"),
+            (EntryKind::Stderr, "err-line"),
+        ],
+        "stderr must not be merged into the stdout stream"
+    );
 }
 
 #[test]
@@ -180,24 +198,31 @@ fn script_run_and_script_list_go_to_the_runner_and_its_output_comes_back() {
     submit(&link, "script list");
     let mut texts = Vec::new();
     for _ in 0..300 {
-        texts.extend(poll(&link).into_iter().map(|m| match m {
-            Msg::Console(ConsoleMsg::Line(l)) => entry_of(&l, 0.0).text,
+        texts.extend(poll(&link).into_iter().flat_map(|m| match m {
+            Msg::Console(ConsoleMsg::Line(l)) => entries_of(&l, 0.0),
             other => panic!("{other:?}"),
         }));
-        if texts.iter().any(|t| t.contains("hello from hello.sh")) {
+        if texts.iter().any(|e| e.text.contains("hello from hello.sh")) {
             break;
         }
         child_pause();
     }
-    let all = texts.join("\n");
+    let all = texts
+        .iter()
+        .map(|e| e.text.as_str())
+        .collect::<Vec<_>>()
+        .join("\n");
     assert!(all.contains("started hello.sh"), "{all}");
     assert!(all.contains("no job or script nothing.sh"), "{all}");
     assert!(
         all.contains("scripts.toml"),
         "the list names the file: {all}"
     );
+    assert!(all.contains("script hello.sh finished"), "{all}");
     assert!(
-        all.contains("script hello.sh finished\nhello from hello.sh"),
-        "{all}"
+        texts
+            .iter()
+            .any(|e| e.kind == EntryKind::Stdout && e.text == "hello from hello.sh"),
+        "the script's stdout is its own stdout entry: {all}"
     );
 }

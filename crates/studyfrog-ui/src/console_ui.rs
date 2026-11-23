@@ -5,7 +5,7 @@
 pub mod jobs;
 pub mod lines;
 
-use crate::console_ui::lines::entry_of;
+use crate::console_ui::lines::entries_of;
 use crate::effect::Effect;
 use crate::state::{Notice, NoticeKind, State};
 
@@ -167,7 +167,11 @@ pub fn apply_console(c: &mut ConsoleState, m: ConsoleMsg, now: f64) {
         ConsoleMsg::Older => step_history(c, true),
         ConsoleMsg::Newer => step_history(c, false),
         ConsoleMsg::Clear => c.entries.clear(),
-        ConsoleMsg::Line(line) => push(c, entry_of(&line, now)),
+        ConsoleMsg::Line(line) => {
+            for e in entries_of(&line, now) {
+                push(c, e);
+            }
+        }
         ConsoleMsg::Search(query) => c.search = query,
         _ => {}
     }
