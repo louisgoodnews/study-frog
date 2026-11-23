@@ -4,7 +4,7 @@
 use crate::curriculum::{Chunk, significant_words};
 use crate::mock_exam::{ExamQuestion, ExamSection, MockExam, QuestionPoints};
 
-pub use crate::curriculum_templates::templates;
+pub use crate::curriculum_templates::{material, templates};
 
 /// Kinds of question, in the exam's order.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -73,6 +73,49 @@ pub fn plan(total: usize) -> Plan {
         p.recall = p.recall.saturating_sub(over);
     }
     p
+}
+
+/// A part of the exam with fewer questions than the plan asks for (BUG-0055).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Short {
+    /// The part.
+    pub kind: Kind,
+    /// Questions the plan asks for.
+    pub wanted: usize,
+    /// Questions the exam has.
+    pub made: usize,
+}
+
+/// The parts short of the plan, in the exam's order. Empty when every part has what the plan asks for.
+pub fn shortfalls(want: Plan, made: Plan) -> Vec<Short> {
+    [
+        (Kind::Recall, want.recall, made.recall),
+        (Kind::Case, want.case, made.case),
+        (Kind::Calculation, want.calc, made.calc),
+    ]
+    .into_iter()
+    .filter(|&(_, wanted, have)| have < wanted)
+    .map(|(kind, wanted, made)| Short { kind, wanted, made })
+    .collect()
+}
+
+/// The line the exam shows for a short part: how many it has, and what the notes lack.
+pub fn short_note(s: &Short) -> String {
+    let (part, lacks) = match s.kind {
+        Kind::Recall => (
+            "Part A (conceptual recall)",
+            "definitions (a line \"Term: meaning\" or \"X ist ...\")",
+        ),
+        Kind::Case => ("Part B (case scenarios)", "paragraphs of text"),
+        Kind::Calculation => (
+            "Part C (calculations)",
+            "formulas (a line with \"=\" and a digit)",
+        ),
+    };
+    format!(
+        "{part} has {} of the {} questions the plan asks for: the notes have too few {lacks}. Add them to the notes to fill it.",
+        s.made, s.wanted
+    )
 }
 
 /// Why a generated question is rejected, or `Ok` when the notes support it.

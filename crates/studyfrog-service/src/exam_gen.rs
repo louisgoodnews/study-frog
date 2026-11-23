@@ -6,7 +6,7 @@
 use studyfrog_agent::exam_gen::{RawQuestion, chunk_system, chunk_user, parse_questions};
 use studyfrog_rehearsal::curriculum::{Chunk, chunk_markdown};
 use studyfrog_rehearsal::curriculum_build::{
-    AnswerKey, GeneratedQuestion, Kind, Plan, accept, assemble, plan, templates,
+    AnswerKey, GeneratedQuestion, Kind, Plan, Short, accept, assemble, plan, shortfalls, templates,
 };
 use studyfrog_rehearsal::mock_exam::MockExam;
 
@@ -26,6 +26,8 @@ pub struct Generated {
     pub from_templates: usize,
     /// Why questions were rejected or a chunk failed, one line each.
     pub rejected: Vec<String>,
+    /// The parts that have fewer questions than the plan asks for, because the notes lack the material (BUG-0055).
+    pub short: Vec<Short>,
 }
 
 /// Make an exam of about `total` questions from `chunks`. With no `ask`, everything comes from templates.
@@ -65,6 +67,12 @@ pub fn generate(
     let fills = templates(chunks, missing);
     let from_templates = fills.len();
     chosen.extend(fills);
+    let made = Plan {
+        recall: count(&chosen, Kind::Recall),
+        case: count(&chosen, Kind::Case),
+        calc: count(&chosen, Kind::Calculation),
+    };
+    let short = shortfalls(want, made);
     let (exam, keys) = assemble(title, &chosen);
     Generated {
         exam,
@@ -72,6 +80,7 @@ pub fn generate(
         from_model,
         from_templates,
         rejected,
+        short,
     }
 }
 
@@ -204,6 +213,26 @@ mod tests {
         let g = generate(&chunks_of_markdown(NOTES), 3, "Klausur", Some(&mut ask));
         assert_eq!(g.from_model, 0);
         assert!(g.rejected.iter().any(|r| r.contains("not running")));
+        assert!(studyfrog_rehearsal::mock_exam::validate_mock_exam(&g.exam).is_ok());
+    }
+
+    /// BUG-0055: a part the notes cannot fill is named in `short`, and the exam has what the notes hold.
+    #[test]
+    fn a_part_the_notes_cannot_fill_is_named_and_the_rest_follows_the_plan() {
+        let notes = "# Reliabilität\nReliabilität: consistency of measurement over repeated testing occasions.\nValidität: the degree to which a test measures what it claims to measure.\ns_e = s_x * sqrt(1 - r_xx)\n";
+        let g = generate(&chunks_of_markdown(notes), 10, "Klausur", None);
+        assert_eq!(g.keys.len(), 4);
+        assert_eq!(g.short.len(), 3);
+        assert!(
+            g.short
+                .iter()
+                .any(|s| s.kind == Kind::Case && s.made == 1 && s.wanted == 3)
+        );
+        assert!(
+            g.short
+                .iter()
+                .any(|s| s.kind == Kind::Calculation && s.made == 1)
+        );
         assert!(studyfrog_rehearsal::mock_exam::validate_mock_exam(&g.exam).is_ok());
     }
 }

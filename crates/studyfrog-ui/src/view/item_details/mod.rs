@@ -72,7 +72,8 @@ fn tab_bar(e: &Editor, ui: &mut egui::Ui) -> DetailsTab {
     };
 
     let mut chosen = current;
-    ui.horizontal(|ui| {
+    // Wraps: four tabs are wider than a narrow details column, and a row that overflows widens the column (BUG-0056).
+    ui.horizontal_wrapped(|ui| {
         for &tab in tabs {
             let selected = tab == current;
             let resp = ui.selectable_label(selected, tab_label(tab));

@@ -41,9 +41,10 @@ fn page(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .show(ui, |ui| main_column(e, ui, out));
         });
         ui.allocate_ui_with_layout(egui::vec2(side, height), down, |ui| {
-            // Both directions: the detail rows are wider than the column at narrow windows, and they must
-            // stay inside the window.
-            egui::ScrollArea::both()
+            // The column is `side` wide: without this bound the row offers the rest of the window, and the
+            // chips wrap past the window's edge (BUG-0056).
+            ui.set_max_width(side);
+            egui::ScrollArea::vertical()
                 .id_salt("side")
                 .show(ui, |ui| item_details::details(state, e, ui, out));
         });

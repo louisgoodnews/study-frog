@@ -11,8 +11,35 @@ const KEY_POINT_CHARS: usize = 160;
 /// Offline questions from the notes' own definitions, formulas and text, up to the wanted number of each
 /// kind. The answers are the notes' own lines, and the questions say so.
 pub fn templates(chunks: &[Chunk], wanted: Plan) -> Vec<GeneratedQuestion> {
+    let pool = pool(chunks);
+    let mut out: Vec<GeneratedQuestion> = pool.recall.into_iter().take(wanted.recall).collect();
+    out.extend(pool.case.into_iter().take(wanted.case));
+    out.extend(pool.calc.into_iter().take(wanted.calc));
+    out
+}
+
+/// How many questions of each kind the notes can supply offline: one recall question per definition, one
+/// case per paragraph, one calculation per formula. A part wanted above this is short (BUG-0055).
+pub fn material(chunks: &[Chunk]) -> Plan {
+    let p = pool(chunks);
+    Plan {
+        recall: p.recall.len(),
+        case: p.case.len(),
+        calc: p.calc.len(),
+    }
+}
+
+/// Every offline question the notes can supply, by kind, in the notes' order.
+struct Pool {
+    recall: Vec<GeneratedQuestion>,
+    case: Vec<GeneratedQuestion>,
+    calc: Vec<GeneratedQuestion>,
+}
+
+fn pool(chunks: &[Chunk]) -> Pool {
     let mut recall = Vec::new();
     let mut calc = Vec::new();
+    let mut case = Vec::new();
     for c in chunks {
         for d in &c.definitions {
             recall.push(GeneratedQuestion {
@@ -25,22 +52,31 @@ pub fn templates(chunks: &[Chunk], wanted: Plan) -> Vec<GeneratedQuestion> {
             });
         }
         calc.extend(c.formulas.iter().map(|f| calculation(f, &c.topic)));
+        for para in paragraphs(&c.text) {
+            let n = case.len() + 1;
+            case.push(GeneratedQuestion {
+                kind: Kind::Case,
+                prompt: format!(
+                    "Case {n}: a colleague applies the ideas of {} in a new study. Which points must the study respect?",
+                    c.topic
+                ),
+                sample_answer: para.chars().take(240).collect(),
+                rubric: vec![key_point(&para, &c.topic)],
+                points: 4,
+                topic: c.topic.clone(),
+            });
+        }
     }
-    let case = chunks.iter().map(|c| GeneratedQuestion {
-        kind: Kind::Case,
-        prompt: format!(
-            "A colleague applies the ideas of {} in a new study. Which points must the study respect?",
-            c.topic
-        ),
-        sample_answer: c.text.chars().take(240).collect(),
-        rubric: vec![key_point(&c.text, &c.topic)],
-        points: 4,
-        topic: c.topic.clone(),
-    });
-    let mut out: Vec<GeneratedQuestion> = recall.into_iter().take(wanted.recall).collect();
-    out.extend(case.take(wanted.case));
-    out.extend(calc.into_iter().take(wanted.calc));
-    out
+    Pool { recall, case, calc }
+}
+
+/// The non-empty paragraphs of a chunk's text.
+fn paragraphs(text: &str) -> Vec<String> {
+    text.split("\n\n")
+        .map(str::trim)
+        .filter(|p| !p.is_empty())
+        .map(str::to_owned)
+        .collect()
 }
 
 /// A calculation from a formula line: the quantity it names (the left side) and the expression it gives

@@ -95,6 +95,9 @@ fn preview(
             crate::setup::mock_exam::EXAM_QUESTIONS
         ));
     }
+    for s in &g.short {
+        ui.label(studyfrog_rehearsal::curriculum_build::short_note(s));
+    }
     if !g.rejected.is_empty() {
         ui.weak(format!(
             "{} questions were left out because the notes do not support them.",
