@@ -190,9 +190,17 @@ pub fn build_reports_with(
         })
         .collect();
     let model = estimate_model(&history, today);
+    let mut cognitive = crate::cognitive_report::profile(&rows, &telemetry);
+    let titles = crate::cognitive_items::titles_of(
+        &studyfrog_store::analytics_rows::load_item_facts(&session.conn).map_err(store)?,
+    );
+    cognitive.item_difficulty = crate::cognitive_items::item_difficulties(&telemetry, &titles);
+    cognitive.schedule = Some(crate::schedule_compare::compare_second_reviews(
+        &rows, &params,
+    ));
     Ok(ReportBundle {
         reviews: rows.len(),
-        cognitive: crate::cognitive_report::profile(&rows, &telemetry),
+        cognitive,
         retention: retention_curve(&points),
         latency: latency_stats(&mut all),
         histogram: bins,

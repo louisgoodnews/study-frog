@@ -10,6 +10,8 @@ use studyfrog_store::reports::HistoryRow;
 use studyfrog_store::telemetry::TelemetryPoint;
 
 use crate::cognitive_curves::{latency_bins, semantic_trend, velocity_curve};
+use crate::cognitive_items::ItemDifficulty;
+use crate::schedule_compare::ScheduleCompare;
 
 /// The most recent answers kept for the latency scatter.
 const MAX_POINTS: usize = 500;
@@ -54,6 +56,10 @@ pub struct CognitiveProfile {
     pub scored: usize,
     /// Running mean of the semantic scores: (scored answers so far, mean in `[0, 1]`).
     pub semantic_trend: Vec<(f32, f32)>,
+    /// The items by estimated difficulty, hardest first (set by the report builder).
+    pub item_difficulty: Vec<ItemDifficulty>,
+    /// The adaptive schedule against the fixed one, `None` without a history (set by the builder).
+    pub schedule: Option<ScheduleCompare>,
 }
 
 /// Whether a rating counts as recalled.
@@ -87,6 +93,8 @@ pub fn profile(rows: &[HistoryRow], telemetry: &[TelemetryPoint]) -> CognitivePr
             .filter(|p| p.semantic_score.is_some())
             .count(),
         semantic_trend: semantic_trend(telemetry),
+        item_difficulty: Vec::new(),
+        schedule: None,
     }
 }
 

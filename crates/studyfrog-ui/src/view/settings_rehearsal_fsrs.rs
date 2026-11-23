@@ -8,8 +8,9 @@ use std::path::Path;
 use eframe::egui::{self, Grid, RichText};
 use rusqlite::{Connection, OpenFlags};
 use studyfrog_service::fsrs_optimize::{
-    FsrsOptimizationMetrics, load_review_records, run_fsrs_optimization,
+    FsrsOptimizationMetrics, load_review_records_calibrated, run_fsrs_optimization,
 };
+use studyfrog_srs::params::params_default;
 
 use crate::msg::Msg;
 use crate::state::State;
@@ -41,7 +42,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
             .join(".studyfrog")
             .join("index.sqlite");
         if let Ok(conn) = Connection::open_with_flags(&db_path, OpenFlags::SQLITE_OPEN_READ_ONLY)
-            && let Ok(samples) = load_review_records(&conn)
+            && let Ok(samples) = load_review_records_calibrated(
+                &conn,
+                &params_default(),
+                vault.settings.calibrated_start,
+            )
             && let Some(res) = run_fsrs_optimization(&samples, None)
         {
             ui.data_mut(|d| d.insert_temp(id, res));

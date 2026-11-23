@@ -28,7 +28,7 @@ fn opening_the_screen_computes_the_reports_and_failures_are_reported() {
             }
         ]
     );
-    apply(&mut m, Msg::ReportsBuilt(Ok(bundle())));
+    apply(&mut m, Msg::ReportsBuilt(Ok(Box::new(bundle()))));
     assert_eq!(m.state.reports.as_ref().unwrap().reviews, 120);
     apply(&mut m, Msg::ReportsBuilt(Err("disk".into())));
     assert_eq!(m.state.notice.as_ref().unwrap().kind, NoticeKind::Error);
@@ -40,7 +40,7 @@ fn the_three_reports_show_their_numbers_as_text() {
     let mut m = open_model();
     m.state.screen = Screen::Reports;
     m.state.explorer.tab = studyfrog_ui::explorer_ui::ReportTab::Memory;
-    apply(&mut m, Msg::ReportsBuilt(Ok(bundle())));
+    apply(&mut m, Msg::ReportsBuilt(Ok(Box::new(bundle()))));
     let mut h = harness(m);
     h.run();
     for text in [
@@ -99,7 +99,7 @@ fn an_empty_history_says_so_and_still_draws() {
         analytics: Default::default(),
         cognitive: Default::default(),
     };
-    apply(&mut m, Msg::ReportsBuilt(Ok(empty)));
+    apply(&mut m, Msg::ReportsBuilt(Ok(Box::new(empty))));
     let mut h = harness(m);
     h.run();
     assert!(

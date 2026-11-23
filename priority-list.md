@@ -178,9 +178,9 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
   - [x] STORY-0175 Time attack and records, and the launch from the rehearse setup and the stack page (due-card selection is not built)
 
 **Milestone 14.3: Cognitive telemetry and user modeling**
-- [ ] EPIC-060 Cognitive profiling
+- [x] EPIC-060 Cognitive profiling (done 2026-11-23: the optimizer and the schedule use the calibrated start)
   - [x] STORY-0176 Telemetry schema, recording and queries (step 30)
-  - [ ] STORY-0177 Difficulty and velocity engine (done; the D0 wiring into `initial_state` and the report chart are open)
+  - [x] STORY-0177 Difficulty and velocity engine (done 2026-11-23: per-item difficulty list and the adaptive-against-fixed comparison on the Cognitive profile; the D0 start checked in the running app)
   - [x] STORY-0178 Cognitive profile dashboard (curves, distribution and semantic trend, BUG-0030)
 
 **Milestone 14.4: University academic mastery lab**

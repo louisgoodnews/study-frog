@@ -2,7 +2,7 @@
 id: EPIC-060
 type: epic
 title: "Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling"
-status: review
+status: done
 parents: []
 labels: [m14, report, store, srs]
 acceptance_criteria:
@@ -24,8 +24,8 @@ Develop a comprehensive Cognitive Profiling and User Modeling subsystem:
 
 ## Acceptance Criteria
 - [x] Persistent interaction telemetry recording per-item dwell time, response latency, and semantic deviation scores in SQLite
-- [ ] Adaptive cognitive profile engine estimating personalized item difficulty and learning velocity
-- [ ] Long-term user modeling feeding calibrated priors into FSRS parameter optimization and familiarity scheduling
+- [x] Adaptive cognitive profile engine estimating personalized item difficulty and learning velocity
+- [x] Long-term user modeling feeding calibrated priors into FSRS parameter optimization and familiarity scheduling
 - [x] Cognitive profile and memory velocity dashboard integrated into Reports
 
 ## Design Notes
@@ -53,6 +53,15 @@ The epic stays in review. Open: BUG-0030, BUG-0031, BUG-0048.
 Review (2026-11-22): criterion 1 stays unticked, NOT MET: `review_telemetry` rows have dwell_ms equal to latency_ms and semantic_score NULL, including the row for a typed answer whose `answer_score` is 1.0 (BUG-0031, BUG-0048; DB `/tmp/claude-0/review-c/vault/.studyfrog/index.sqlite`). Criterion 2 NOT CHECKABLE: velocity is shown (`/tmp/claude-0/review-c/shots/02-cognitive.png`), but no screen shows per-item difficulty. Criterion 3 NOT CHECKABLE in the app (see STORY-0177). Criterion 4 stays ticked: the Cognitive profile tab opens from Reports (`02-cognitive.png`). Status stays review.
 
 Fix (2026-11-23): criterion 1 is met (ticked). Each timed rating writes one `review_telemetry` row with the dwell (shown to rated), the latency (shown to the first response), the item's words and, for a typed answer, its similarity score from the built-in word matcher (no model installed). Flip-mode rows have no answer to score and stay NULL. BUG-0030, BUG-0031 and BUG-0048 are done. Evidence: DB `/tmp/claude-0/cog/vault/.studyfrog/index.sqlite` (10 rows, dwell differs from latency on all, 5 scores filled); screenshots `/tmp/claude-0/cog/07-cognitive-1280-low.png` and `/tmp/claude-0/cog/10-cognitive-960-semantic.png`. Criterion 2 stays unticked: velocity is now a curve, but no screen shows per-item difficulty (the D_emp index). Criterion 3 stays unticked: the D0 priors have no screen and need two first schedules compared. Status stays review.
+
+## Verification (2026-11-23)
+Checked in the running app (`/tmp/claude-0/g4`, the same fixture as STORY-0177: six cards, 60 timed answers over ten days).
+- Criterion 1, telemetry in SQLite: MET (ticked earlier). 60 telemetry rows, one per answer, DB `/tmp/claude-0/g4/vault/.studyfrog/index.sqlite`.
+- Criterion 2, adaptive profile engine (per-item difficulty and velocity): MET. The Cognitive profile now lists each item's estimated difficulty, from the existing engine (`cognitive_items::item_difficulties`), the slow cards highest: `/tmp/claude-0/g4/shots/final-end.png`. The velocity is shown as before (6.84 passing answers per minute): `/tmp/claude-0/g4/shots/final-top.png`. The item screen (`/tmp/claude-0/g4/shots/item-after.png`) is unchanged; its Difficulty field is the author's mark, not the estimate, so the estimate is on the profile list. Tests: `studyfrog-service/tests/cognitive_items.rs`, `studyfrog-ui/tests/reports_cognitive_ui.rs`.
+- Criterion 3, calibrated priors into FSRS: MET (ticked 2026-11-23). The calibrated starting difficulty feeds the live schedule (the stored states of the on and off vaults differ, `/tmp/claude-0/g4/vault/.studyfrog/index.sqlite` and `/tmp/claude-0/g4/vault-off/.studyfrog/index.sqlite`), and the FSRS parameter optimizer now replays each item's first review from the calibrated start when the switch is on (`fsrs_optimize::reviews_to_records_calibrated`, `load_review_records_calibrated`). Checked in the running app, Settings > Rehearsal > Optimize FSRS Parameters: switch on, initial loss 0.0197, final loss 0.0192, RMSE 0.0428 (`/tmp/claude-0/g4/shots/opt-on-metrics.png`); switch off (`calibrated_start = false` in the vault's `studyfrog.toml`), initial loss 0.0201, final loss 0.0195, RMSE 0.0431 (`/tmp/claude-0/g4/shots/opt-off-metrics.png`). Familiarity scheduling takes the stored state, so it gets the calibrated start too (`familiarity::retime_fsrs`). Tests: `studyfrog-service/tests/fsrs_optimize.rs` (`a_calibrated_first_state_differs_only_when_there_are_observations`), `studyfrog-service/tests/calibrated_start.rs`.
+  The report replays (backtest, the simulations) still start from the plain prior: they model the schedule, not the user's history, so they are not part of this criterion.
+- Criterion 4, Cognitive profile in Reports: MET (ticked earlier).
+The epic is done: all four criteria are ticked, and its children STORY-0176, STORY-0177 and STORY-0178 are done. BUG-0030, BUG-0031 and BUG-0048 are done.
 
 ## Open Questions
 None.

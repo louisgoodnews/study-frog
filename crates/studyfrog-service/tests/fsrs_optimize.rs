@@ -162,3 +162,33 @@ fn sqlite_reviews_integration() {
         .expect("metrics should be calculated for loaded records");
     assert_eq!(metrics.sample_count, 2);
 }
+
+#[test]
+fn a_calibrated_first_state_differs_only_when_there_are_observations() {
+    use studyfrog_service::fsrs_optimize::reviews_to_records_calibrated;
+    let params = params_default();
+    let item = Uid(12);
+    let first = Review {
+        item,
+        rating: Rating::Good,
+        at: UnixMs(1_000_000),
+        elapsed_days: 0.0,
+    };
+    let second = Review {
+        item,
+        rating: Rating::Good,
+        at: UnixMs(1_086_400_000),
+        elapsed_days: 1.0,
+    };
+    let plain = reviews_to_records(&[first, second], &params);
+    assert_eq!(
+        reviews_to_records_calibrated(&[first, second], &params, &[]),
+        plain
+    );
+    let slow = reviews_to_records_calibrated(&[first, second], &params, &[9.0; 20]);
+    assert_eq!(slow.len(), 1);
+    assert!(
+        slow[0].difficulty > plain[0].difficulty,
+        "{slow:?} vs {plain:?}"
+    );
+}

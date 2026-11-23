@@ -157,7 +157,9 @@ pub fn achievements(w: &mut Worker, now_ns: i64) -> Msg {
 pub fn reports(w: &Worker, now_ns: i64) -> Msg {
     let now = UnixMs(millis(now_ns));
     let result = match &w.session {
-        Some(session) => build_reports_local(session, now).map_err(|e| e.to_string()),
+        Some(session) => build_reports_local(session, now)
+            .map(Box::new)
+            .map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
     };
     Msg::ReportsBuilt(result)

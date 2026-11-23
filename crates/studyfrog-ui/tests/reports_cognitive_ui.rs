@@ -9,6 +9,7 @@ use common::views::{assert_all_named, harness, open_model};
 use egui_kittest::kittest::Queryable;
 use studyfrog_core::review::Rating;
 use studyfrog_core::uid::Uid;
+use studyfrog_service::cognitive_items::ItemDifficulty;
 use studyfrog_service::cognitive_report::profile;
 use studyfrog_store::reports::HistoryRow;
 use studyfrog_store::telemetry::TelemetryPoint;
@@ -57,10 +58,33 @@ fn calibration_and_velocity_are_shown_with_their_charts() {
         "Answer time against the length of the words",
         "Share of answers that passed, cumulative by week",
         "Days between passing reviews, by week (consolidation)",
+        "Estimated difficulty by item (1 easy to 10 hard)",
+        "Adaptive schedule against the fixed one (second review)",
     ] {
         assert!(h.query_by_label(text).is_some(), "missing {text}");
     }
     assert_all_named(&h, "cognitive profile");
+}
+
+#[test]
+fn each_item_shows_its_title_and_estimated_difficulty() {
+    let mut m = on_cognitive(&[]);
+    if let Some(r) = m.state.reports.as_mut() {
+        r.cognitive.item_difficulty = vec![ItemDifficulty {
+            item: Uid(1),
+            title: "Osmosis".into(),
+            folder: "biology".into(),
+            difficulty: 5.8,
+            answers: 10,
+        }];
+    }
+    let mut h = harness(m);
+    h.run_steps(4);
+    assert!(
+        h.query_by_label("Osmosis in biology: from 10 answers")
+            .is_some(),
+        "item row missing"
+    );
 }
 
 #[test]

@@ -3,16 +3,24 @@
 //! Evaluates calibration quality (RMSE, log-loss) and fits personal FSRS-6 weights
 //! directly from historical review logs in SQLite.
 
+use std::collections::HashMap;
+
 use rusqlite::Connection;
 use studyfrog_core::memory::MemState;
 use studyfrog_core::review::{Rating, Review};
-use studyfrog_srs::fsrs::{initial_state, next_state};
+use studyfrog_core::uid::Uid;
+use studyfrog_srs::fsrs::next_state;
 use studyfrog_srs::optimizer::{
     AdamConfig, ReviewRecord, default_adam_config, optimize_fsrs_parameters, predict_retrievability,
 };
 use studyfrog_srs::params::{Params, params_default};
 use studyfrog_store::error::StoreError;
-use studyfrog_store::reviews::load_all_reviews_timed;
+use studyfrog_store::reviews::{TimedReview, load_all_reviews_timed};
+
+use crate::schedule::{calibrated_initial, timing_difficulty};
+
+/// First-answer difficulties a calibrated start learns from at most (as the store reads them).
+const MAX_OBSERVED: usize = 500;
 
 /// Evaluation metrics produced by FSRS parameter calibration.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -78,14 +86,24 @@ pub fn run_fsrs_optimization(
     })
 }
 
-/// Replay an item's chronological reviews into optimization sample records.
+/// Replay an item's chronological reviews into optimization sample records, from the plain prior.
 pub fn reviews_to_records(reviews: &[Review], params: &Params) -> Vec<ReviewRecord> {
+    reviews_to_records_calibrated(reviews, params, &[])
+}
+
+/// Like [`reviews_to_records`], but the first state starts from the calibrated prior: its difficulty
+/// is blended with `observed` (see `schedule::calibrated_initial`). With no observations it is the same.
+pub fn reviews_to_records_calibrated(
+    reviews: &[Review],
+    params: &Params,
+    observed: &[f64],
+) -> Vec<ReviewRecord> {
     let mut out = Vec::new();
     let mut state: Option<MemState> = None;
     for r in reviews {
         match state {
             None => {
-                state = Some(initial_state(r.rating, params));
+                state = Some(calibrated_initial(r.rating, params, observed));
             }
             Some(prev) => {
                 out.push(ReviewRecord {
@@ -101,21 +119,62 @@ pub fn reviews_to_records(reviews: &[Review], params: &Params) -> Vec<ReviewReco
     out
 }
 
-/// Load historical reviews from SQLite and convert them into FSRS optimization samples using custom params.
-pub fn load_review_records_with_params(
+/// The difficulty of each item's first timed answer, with the instant it was made, oldest first.
+fn first_observations(all: &HashMap<Uid, Vec<TimedReview>>) -> Vec<(i64, f64)> {
+    let mut out: Vec<(i64, f64)> = all
+        .values()
+        .filter_map(|reviews| {
+            let (review, timing) = reviews.iter().min_by_key(|(r, _)| r.at.0)?;
+            let &(answer, expected) = timing.as_ref()?;
+            Some((review.at.0, timing_difficulty(answer, expected)))
+        })
+        .collect();
+    out.sort_by_key(|p| p.0);
+    out
+}
+
+/// The difficulties of the first answers made before `at`: the newest [`MAX_OBSERVED`].
+fn observed_before(observations: &[(i64, f64)], at: i64) -> Vec<f64> {
+    let end = observations.partition_point(|p| p.0 < at);
+    observations[end.saturating_sub(MAX_OBSERVED)..end]
+        .iter()
+        .map(|p| p.1)
+        .collect()
+}
+
+/// Load historical reviews from SQLite and convert them into FSRS optimization samples using custom
+/// params. With `calibrated`, each item's first state starts from the calibrated prior (STORY-0177).
+pub fn load_review_records_calibrated(
     conn: &Connection,
     params: &Params,
+    calibrated: bool,
 ) -> Result<Vec<ReviewRecord>, StoreError> {
     let all = load_all_reviews_timed(conn)?;
+    let observations = if calibrated {
+        first_observations(&all)
+    } else {
+        Vec::new()
+    };
     let mut items: Vec<_> = all.into_iter().collect();
     items.sort_by_key(|(uid, _)| *uid);
     let mut records = Vec::new();
     for (_uid, mut timed_reviews) in items {
         timed_reviews.sort_by_key(|(r, _)| r.at.0);
+        let observed = timed_reviews
+            .first()
+            .map_or_else(Vec::new, |(r, _)| observed_before(&observations, r.at.0));
         let reviews: Vec<Review> = timed_reviews.into_iter().map(|(r, _)| r).collect();
-        records.extend(reviews_to_records(&reviews, params));
+        records.extend(reviews_to_records_calibrated(&reviews, params, &observed));
     }
     Ok(records)
+}
+
+/// Load historical reviews from SQLite and convert them into FSRS optimization samples using custom params.
+pub fn load_review_records_with_params(
+    conn: &Connection,
+    params: &Params,
+) -> Result<Vec<ReviewRecord>, StoreError> {
+    load_review_records_calibrated(conn, params, false)
 }
 
 /// Load historical reviews from SQLite and convert them into FSRS optimization samples using default params.

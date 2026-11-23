@@ -38,23 +38,27 @@ pub fn apply_rating(
     apply_rating_calibrated(prev, item, rating, now, params, &[])
 }
 
-/// The difficulties the user's first answers imply, on the scale of the difficulty engine, from the
-/// answers made before `before_ms`. Each is computed from the answer time and the reading time the
-/// words should take; semantic scores are not stored, so a neutral score is used.
+/// The difficulty a first answer implies, on the scale of the difficulty engine. Computed from the
+/// answer time and the reading time the words should take; semantic scores are not stored, so a
+/// neutral score is used.
+pub fn timing_difficulty(answer_ms: u32, expected_ms: u32) -> f64 {
+    empirical_difficulty(&Observation {
+        latency_ms: f64::from(answer_ms),
+        dwell_ms: f64::from(answer_ms),
+        words: f64::from(expected_ms) / EXPECTED_MS_PER_WORD,
+        semantic: None,
+    })
+}
+
+/// The difficulties the user's first answers imply, from the answers made before `before_ms`
+/// (see [`timing_difficulty`]).
 pub fn observed_difficulties_before(
     conn: &Connection,
     before_ms: i64,
 ) -> Result<Vec<f64>, StoreError> {
     Ok(first_review_timings_before(conn, before_ms)?
         .into_iter()
-        .map(|(answer_ms, expected_ms)| {
-            empirical_difficulty(&Observation {
-                latency_ms: f64::from(answer_ms),
-                dwell_ms: f64::from(answer_ms),
-                words: f64::from(expected_ms) / EXPECTED_MS_PER_WORD,
-                semantic: None,
-            })
-        })
+        .map(|(answer_ms, expected_ms)| timing_difficulty(answer_ms, expected_ms))
         .collect())
 }
 

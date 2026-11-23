@@ -209,7 +209,7 @@ pub enum Msg {
     /// Something happened in the window chrome (sidebar, menus, search).
     Chrome(ChromeMsg),
     /// The reports were computed.
-    ReportsBuilt(Result<ReportBundle, String>),
+    ReportsBuilt(Result<Box<ReportBundle>, String>),
     /// The achievements were measured.
     AchievementsChecked(Result<AchievementReport, String>),
     /// The application's logs folder: open it, or how that went (STORY-0122).

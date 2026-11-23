@@ -6,11 +6,11 @@ use crate::effect::Effect;
 use crate::state::{Notice, NoticeKind, State};
 
 /// Keep the reports; a failure is reported and the previous reports stay.
-pub fn built(state: State, result: Result<ReportBundle, String>) -> (State, Vec<Effect>) {
+pub fn built(state: State, result: Result<Box<ReportBundle>, String>) -> (State, Vec<Effect>) {
     match result {
         Ok(reports) => (
             State {
-                reports: Some(reports),
+                reports: Some(*reports),
                 ..state
             },
             Vec::new(),

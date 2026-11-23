@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (10) | Ready (0) | In progress (0/3) | Review (17) | Blocked (3) | Done (578) |
+| Backlog (10) | Ready (0) | In progress (0/3) | Review (15) | Blocked (3) | Done (580) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0053](docs/issues/bugs/BUG-0053-mock-exam-formula-note-gives-no-calculation-question.md) Mock exam from notes with a formula line gives no calculation question in the template path (2) |  |  | [BUG-0051](docs/issues/bugs/BUG-0051-math-drill-praises-answer-with-wrong-step.md) Math drill says 'Correct. Well worked.' when the final answer is within tolerance but a working step is wrong (1) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -513,7 +513,7 @@
 | [STORY-0174](docs/issues/stories/STORY-0174-memory-mode-interactive-grid-ui-and-animations.md) Memory Mode Interactive Card Grid UI, Card Back Styling, and Audio-Visual Feedback (3) | done | 0/0 |
 | [STORY-0175](docs/issues/stories/STORY-0175-memory-time-attack-records-and-rehearsal-launch.md) Time-Attack Countdown Mode, Session Records, and Rehearsal Launch Entry Points (2) | done | 0/0 |
 | [STORY-0176](docs/issues/stories/STORY-0176-persistent-cognitive-telemetry-and-interaction-metrics.md) Persistent Interaction Telemetry and Cognitive Metrics Schema in SQLite (3) | done | 0/0 |
-| [STORY-0177](docs/issues/stories/STORY-0177-adaptive-cognitive-difficulty-and-learning-velocity-estimator.md) Adaptive Cognitive Difficulty and Learning Velocity Estimation Engine (5) | review | 0/0 |
+| [STORY-0177](docs/issues/stories/STORY-0177-adaptive-cognitive-difficulty-and-learning-velocity-estimator.md) Adaptive Cognitive Difficulty and Learning Velocity Estimation Engine (5) | done | 0/0 |
 | [STORY-0178](docs/issues/stories/STORY-0178-cognitive-profile-dashboard-and-velocity-visualizer.md) Cognitive Profile Dashboard and Learning Velocity Visualization in Reports (3) | done | 0/0 |
 | [STORY-0179](docs/issues/stories/STORY-0179-scenario-diagnostic-case-study-schema-and-model.md) Scenario-Based Diagnostic Case Study Item Schema and Domain Model (3) | done | 0/0 |
 | [STORY-0180](docs/issues/stories/STORY-0180-slm-multi-criteria-semantic-evaluator.md) SLM Multi-Criteria Semantic Evaluator for Decision Choices and Conceptual Rationales (5) | done | 0/0 |
@@ -607,7 +607,7 @@
 | [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | review | 4/5 |
 | [EPIC-058](docs/issues/epics/EPIC-058-in-gui-frogscript-wiki-and-reference.md) In-GUI FrogScript Wiki and Interactive Documentation | done | 2/2 |
 | [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time | done | 11/11 |
-| [EPIC-060](docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | review | 6/7 |
+| [EPIC-060](docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | done | 7/7 |
 | [EPIC-061](docs/issues/epics/EPIC-061-case-study-and-diagnostic-decision-matrix.md) Scenario-Based Case Studies, Diagnostic Decision Matrices, and Semantic Verification | done | 6/6 |
 | [EPIC-062](docs/issues/epics/EPIC-062-psychometric-formula-and-interactive-math-drills.md) Psychometric Formula Engine, Step-by-Step Calculation Drills, and Math Gamification | review | 3/4 |
 | [EPIC-063](docs/issues/epics/EPIC-063-altklausur-and-mock-exam-simulation-lab.md) Altklausur Lab: Simulated Mock Exams, Slide Extraction, and University Grade Scale | review | 4/6 |
