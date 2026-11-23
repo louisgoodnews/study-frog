@@ -17,7 +17,7 @@ use studyfrog_store::db::{open_db, open_memory};
 use studyfrog_store::migrate::{migrate, schema_version};
 use studyfrog_store::schema::MIGRATIONS;
 
-const CHILD_TABLES: [&str; 7] = [
+const CHILD_TABLES: [&str; 8] = [
     "classroom_participant",
     "classroom_turn",
     "classroom_assignment",
@@ -25,6 +25,7 @@ const CHILD_TABLES: [&str; 7] = [
     "classroom_group_member",
     "classroom_submission",
     "classroom_grade",
+    "classroom_source",
 ];
 
 fn migrated(conn: &mut Connection) {

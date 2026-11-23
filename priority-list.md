@@ -5,7 +5,7 @@ The order in which Claude works on the planned items of phase M10 (0.3.0), kept 
 [docs/roadmap/M10-usability-and-insight.md](docs/roadmap/M10-usability-and-insight.md). Tick an item when it is done and
 verified (`scripts/check.sh` passes), and report it to the owner. The owner may reorder the list at any time.
 
-Last updated: 2026-11-23 (598 of 625 issues done; 27 open across EPIC-067 and EPIC-068; v1.0.0 awaiting packaging/owner benchmarks/tag).
+Last updated: 2026-11-23 (601 of 625 issues done; 24 open across EPIC-067 and EPIC-068; v1.0.0 awaiting packaging/owner benchmarks/tag).
 
 ## Wave 1: start now
 - [x] 1. [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Names with commas cannot be used
@@ -216,7 +216,7 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 
 **Classroom simulation**
 - [ ] [EPIC-068](docs/issues/epics/EPIC-068-classroom-simulation-with-ai-teacher-and-students.md) Classroom simulation: AI-driven lectures, simulated students, group tasks, and graded submissions (`backlog`)
-  - [ ] [STORY-0208](docs/issues/stories/STORY-0208-classroom-session-domain-model-and-local-persistence.md) Classroom session domain model and local storage persistence ([TASK-0287](docs/issues/tasks/TASK-0287-classroom-domain-types-and-state-transitions.md), [TASK-0288](docs/issues/tasks/TASK-0288-sqlite-schema-and-local-classroom-session-store.md))
+  - [x] [STORY-0208](docs/issues/stories/STORY-0208-classroom-session-domain-model-and-local-persistence.md) Classroom session domain model and local storage persistence ([TASK-0287](docs/issues/tasks/TASK-0287-classroom-domain-types-and-state-transitions.md), [TASK-0288](docs/issues/tasks/TASK-0288-sqlite-schema-and-local-classroom-session-store.md)) (done 2026-11-23)
   - [ ] [STORY-0209](docs/issues/stories/STORY-0209-ai-teacher-and-simulated-student-lecture-orchestration.md) AI teacher and simulated student lecture orchestration ([TASK-0289](docs/issues/tasks/TASK-0289-lecture-grounding-context-budgeting-and-persona-prompts.md), [TASK-0290](docs/issues/tasks/TASK-0290-classroom-turn-orchestrator-and-service-use-cases.md))
   - [ ] [STORY-0210](docs/issues/stories/STORY-0210-individual-and-group-task-assignments-turn-in-and-grading.md) Individual and group task assignments, turn-in workflow, and automated grading ([TASK-0291](docs/issues/tasks/TASK-0291-solo-and-group-task-assignment-and-collaboration.md), [TASK-0292](docs/issues/tasks/TASK-0292-task-turn-in-and-teacher-grading-pipeline.md))
   - [ ] [STORY-0211](docs/issues/stories/STORY-0211-classroom-chat-ui-session-browser-and-assignment-workspace.md) Classroom-chat UI, session browser, and assignment submission workspace ([TASK-0293](docs/issues/tasks/TASK-0293-classroom-setup-dialog-and-lecture-chat-view.md), [TASK-0294](docs/issues/tasks/TASK-0294-assignments-panel-group-collaboration-turn-in-and-grades.md), [TASK-0295](docs/issues/tasks/TASK-0295-saved-classroom-sessions-browser-tests-and-control-hooks.md))
