@@ -1,5 +1,5 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
-//! The PDF viewer header: the core actions stay in it at 1280 by 800, and More holds the rest.
+//! The PDF viewer header: Previous, Next and More stay in it at 1280 by 800 (three buttons), and More holds the rest.
 
 mod common;
 #[path = "../../studyfrog-pdf/tests/common/mod.rs"]
@@ -43,11 +43,11 @@ fn viewer_at_1280(model: Model) -> egui_kittest::Harness<'static, (Model, Vec<Ef
         )
 }
 
-/// The labels of the buttons on the header row, the row that holds "Back to library", sorted.
+/// The labels of the buttons on the header row, the row that holds "Previous", sorted.
 fn header_row_buttons(h: &egui_kittest::Harness<'_, (Model, Vec<Effect>)>) -> Vec<String> {
     use eframe::egui::accesskit::Role;
     use egui_kittest::kittest::{NodeT, Queryable};
-    let row = h.get_by_label("Back to library").rect().min.y;
+    let row = h.get_by_label("Previous").rect().min.y;
     let mut labels: Vec<String> = h
         .query_all_by_role(Role::Button)
         .filter(|n| (n.rect().min.y - row).abs() < 4.0)
@@ -60,7 +60,7 @@ fn header_row_buttons(h: &egui_kittest::Harness<'_, (Model, Vec<Effect>)>) -> Ve
 #[test]
 fn the_pdf_header_at_1280_holds_only_the_core_actions_and_more_holds_the_rest() {
     use egui_kittest::kittest::Queryable;
-    let mut core = ["Back to library", "More…", "Next", "Previous"].map(str::to_owned);
+    let mut core = ["More…", "Next", "Previous"].map(str::to_owned);
     core.sort();
     for (i, query) in ["", "Reliab"].into_iter().enumerate() {
         let (_d, mut model, mut worker) = open_with_pdf(&format!("header-core-{i}"));
@@ -103,6 +103,7 @@ fn every_action_moved_out_of_the_header_is_still_reachable_from_more() {
     h.get_by_label("More…").click();
     h.run_steps(2);
     for label in [
+        "Back to library",
         "Zoom in",
         "Zoom out",
         "Fit width",

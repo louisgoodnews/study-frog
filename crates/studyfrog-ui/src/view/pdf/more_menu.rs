@@ -1,5 +1,5 @@
-//! The viewer's "More…" menu: zoom, search hits, copy, arrange pages and the side panels. The
-//! header keeps only the core actions; everything here is one click further.
+//! The viewer's "More…" menu: back to the library, zoom, search hits, copy, arrange pages and the side
+//! panels. The header keeps only Previous, Next and this button; everything here is one click further.
 use super::toolbar_nav::{fit_presets, zoom_name};
 use super::*;
 use crate::pdf_arrange_types::ArrangeMsg;
@@ -7,6 +7,8 @@ use crate::pdf_select::selected_text;
 
 pub(super) fn more(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.menu_button("More…", |ui| {
+        back_button(ui, out);
+        ui.separator();
         zoom_items(view, ui, out);
         ui.separator();
         hit_items(view, ui, out);
@@ -19,7 +21,20 @@ pub(super) fn more(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .on_hover_text("Shows or hides the side panels: outline, pages, notes and extracts.");
     })
     .response
-    .on_hover_text("Zoom, search hits, copy, arrange pages and the side panels.");
+    .on_hover_text(
+        "Back to the library, zoom, search hits, copy, arrange pages and the side panels.",
+    );
+}
+
+fn back_button(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if ui
+        .button("Back to library")
+        .on_hover_text("Goes back to the library.")
+        .clicked()
+    {
+        msg(out, PdfMsg::Close);
+        ui.close();
+    }
 }
 
 fn zoom_items(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {

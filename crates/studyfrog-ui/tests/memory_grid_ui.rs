@@ -94,6 +94,9 @@ fn the_stack_page_starts_a_memory_game_in_rehearse() {
     m.state.browser.selection = Selection::Stack("french".to_owned());
     let mut h = harness(m);
     h.run_steps(2);
+    // The stack page keeps Memory game in More actions, beside the less common actions.
+    h.get_by_label("More actions").click();
+    h.run_steps(2);
     h.get_by_label("Memory game").click();
     h.run_steps(2);
     let state = &h.state().0.state;

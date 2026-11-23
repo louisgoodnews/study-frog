@@ -47,6 +47,8 @@ fn a_picture_inside_the_vault_loads_and_one_outside_is_only_named() {
         "![green](assets/t.png)\n\n![secret](../../etc/x.png)",
     ));
     egui_extras::install_image_loaders(&h.ctx);
+    // A note opens in Write; the pictures show in the Split preview beside the text.
+    h.get_by_label("Body: split").click();
     for _ in 0..6 {
         h.run_steps(2);
         std::thread::sleep(std::time::Duration::from_millis(30));
@@ -80,6 +82,7 @@ fn a_missing_or_unreadable_picture_is_named_and_never_crashes_the_window() {
         "![gone](assets/gone.png)\n\n![bad](assets/bad.png)",
     ));
     h.run_steps(2); // no loaders installed yet
+    h.get_by_label("Body: split").click();
     egui_extras::install_image_loaders(&h.ctx);
     for _ in 0..6 {
         h.run_steps(2);

@@ -36,6 +36,7 @@ fn editing() -> Model {
 #[test]
 fn the_form_and_the_live_preview_show_side_by_side() {
     let mut h = harness(editing());
+    h.get_by_label("Body: split").click(); // a note opens in Write; side by side is Split
     h.run_steps(2);
     for label in [
         "Title",
@@ -99,6 +100,7 @@ fn revert_is_disabled_until_there_is_something_to_revert() {
 #[test]
 fn a_wikilink_in_the_preview_is_clickable() {
     let mut h = harness(editing());
+    h.get_by_label("Body: split").click();
     h.run_steps(2);
     h.get_all_by_label("Beta").next().unwrap().click();
     h.run_steps(2);

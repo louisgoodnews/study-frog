@@ -95,3 +95,7 @@ Status stays review: the parent EPIC-036 stays review (its criterion 2 covers no
 
 The Markdown note editor now follows the same measure as the preview and the help pages: its text and title are at most one `typo::measure` wide (in Split mode each side is one measure), with the details in the side column. Test: `studyfrog-ui/tests/editor_measure_ui.rs` (1280x800 and 1600x900, Write and Split). The editor's code font runs about 50 characters per line at this width, not the 70 the measure is built on, and Split at 1280x800 and 960x640 is narrower than a measure per side; see EPIC-036's verification for the open criterion 2.
 
+
+## Decision (2026-11-23): the note editor's measure
+
+The note editor now sets its text in the body font and opens a note in Write (EPIC-036 holds the measurements and the reasons). In Write, a note's lines hold 59 characters at 1280x800 and 960x640, up from 49. Split still falls short of the band (about 50 characters per line at 1280x800, about 28 at 960x640), so it is not claimed here. This story's criteria are unchanged; its status stays review while EPIC-036 is open.

@@ -2,7 +2,7 @@
 id: EPIC-057
 type: epic
 title: "UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering"
-status: review
+status: done
 parents: []
 labels: [m14, ui, ux]
 acceptance_criteria:
@@ -65,3 +65,7 @@ Review (2026-11-22): criterion 1 stays MET: one Import entry replaces the duplic
 
 
 Decision (2026-11-23): criterion 4 ticked on the owner's confirmation that no criterion is unmet. EPIC-057 stays review until STORY-0170 is confirmed.
+
+## Decision (2026-11-23): EPIC-057 is done
+
+STORY-0170 is done (its criterion 1 is decided and recorded there), so this epic's last open child is closed. Its four criteria were already ticked: STORY-0168 and STORY-0169 are done, and STORY-0189 was done before. Criterion 4 (the visual rhythm) stays ticked on the owner's confirmation of 2026-11-23.

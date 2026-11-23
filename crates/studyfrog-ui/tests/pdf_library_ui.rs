@@ -194,6 +194,9 @@ fn a_pdf_link_in_a_note_opens_the_viewer_at_that_page() {
     );
     let mut h = harness(m);
     h.run_steps(2);
+    // A note opens in Write; the link is in the Split preview.
+    h.get_by_label("Body: split").click();
+    h.run_steps(2);
     h.get_by_label_contains("the proof").click();
     h.run_steps(2);
     let view = h.state().0.state.pdf.as_ref().unwrap().clone();

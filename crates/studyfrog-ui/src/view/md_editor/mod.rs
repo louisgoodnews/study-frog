@@ -95,11 +95,15 @@ pub fn md_editor(
         .clamp(MIN_HEIGHT, MAX_HEIGHT);
     let rows = (height / LINE).round().max(2.0) as usize;
     let body = |ui: &mut egui::Ui, current: &mut String, changed: &mut bool| {
+        // The body is the body font, not the code font: the measure is set in that font's
+        // characters (`typo::measure`), and a monospace line holds about 30 % fewer of them.
+        // `code_editor()` also locks focus so Tab inserts a tab; keep that.
         let edit = TextEdit::multiline(current)
             .id(text_id)
             .desired_rows(rows)
             .desired_width(f32::INFINITY)
-            .code_editor();
+            .font(typo::font(ui, typo::Tier::Body))
+            .lock_focus(true);
         if ui.add(edit).labelled_by(label.id).changed() {
             *changed = true;
         }

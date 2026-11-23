@@ -54,17 +54,10 @@ fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool
     ui.weak(counted(view.found.len(), "page", "pages"));
 }
 
-/// The header: Back, the page, the find field and More. Zoom, search hits, copy, arrange and the
-/// side panels are in More.
+/// The header shows three buttons: Previous, Next and More. Back to library, zoom, search hits, copy,
+/// arrange and the side panels are in More.
 fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool) {
     ui.horizontal_wrapped(|ui| {
-        if ui
-            .button("Back to library")
-            .on_hover_text("Goes back to the library.")
-            .clicked()
-        {
-            msg(out, PdfMsg::Close);
-        }
         ui.label(RichText::new(crate::pdf_names::label(&view.path, &view.title)).strong());
         ui.separator();
         navigation(view, ui, out);

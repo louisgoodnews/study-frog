@@ -73,3 +73,23 @@ Criterion 2 stays unticked. The note editor now keeps its text to the reading me
 
 The criterion is still not met in full, for two reasons. The editor's text is the monospace code font, so the measure holds about 50 characters per line there, below the 55 floor. And the default view for a note's fields is Split, where two measures do not fit beside the details at 1280x800 or 960x640, so each side runs about 40 characters per line. The owner should decide whether the measure is taken in the code font (about 70 characters of it, about 550 pt) and whether Split is the default at these widths.
 
+
+## Decision (2026-11-23, criterion 2: the editor measure)
+
+Decided: the note text is set in the body font, not the code font, and a note opens in Write, not Split. This is the smallest pair that brings the note's text into the 55 to 75 band in its default view.
+- Why the code font was too narrow: the measure (`typo::measure`) is built from the body font's average characters, and a monospace line holds about 30 % fewer of them. The editor set its text in monospace, so a line held about 49. The body now uses `typo::font(ui, Tier::Body)`; `lock_focus` stays on so Tab still inserts a tab (`view/md_editor/mod.rs`).
+- Why Write is the default: in Split each side is half the width the details column leaves, about 50 characters per line at 1280x800 and about 28 at 960x640 with the new font. No font brings two measures into that width, so Split cannot hold the band in this layout. Write holds it (`view/editor.rs`, the default for a `Doc::Note`; stacks, cards, questions and diary entries keep Split).
+
+Measured in the running app (full lines counted from screenshots; the window at 1280x800 and 960x640):
+
+| View | Before | After |
+|---|---|---|
+| Write (the default for notes) | 49 at both sizes | 59 at both sizes (lines 56 to 64) |
+| Split, text side | 37 to 42 at 1280x800; 22 to 28 at 960x640 | 50 at 1280x800; about 28 at 960x640 (21 to 34) |
+| Preview | unchanged (61 to 67, measured earlier) | unchanged |
+
+Screenshots: `/tmp/claude-0/decide/shots/base-write-1280.png`, `after-note-1280-default.png`, `base-split-1280.png`, `after-split-1280.png`, `after-split-960.png`, `after-write-960.png`.
+
+Test: `studyfrog-ui/tests/editor_measure_ui.rs`, `a_note_opens_in_write_and_its_body_holds_55_to_75_characters_per_line` (1280x800 and 960x640).
+
+Criterion 2 stays unticked, for one reason: Split, a note-editing view, holds about 50 characters per line at 1280x800 and about 28 at 960x640, below the band. The window is the limit. The owner should decide one of: accept Split as a window-limited view, as STORY-0114 accepted for narrow windows; or give Split a layout that stacks the two sides when the window cannot hold two measures. Status stays review.

@@ -193,7 +193,7 @@ fn the_viewer_screen_shows_its_controls_and_asks_for_the_page_picture() {
     );
     let mut h = harness(model);
     h.run_steps(3);
-    for label in ["Back to library", "Previous", "Next"] {
+    for label in ["Previous", "Next", "More…"] {
         assert!(h.query_by_label(label).is_some(), "{label}");
     }
     h.get_by_label("More…").click();

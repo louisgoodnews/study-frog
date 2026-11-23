@@ -10,6 +10,7 @@ use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::item_details;
 use crate::view::md_editor::{Mode, md_editor};
+use studyfrog_md::doc::Doc;
 
 const SIDE_WIDTH: f32 = 300.0;
 
@@ -184,12 +185,20 @@ fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
     });
     ui.add_space(8.0);
+    // A note opens as Write, so its text holds the reading measure at every window size. Split (the
+    // text beside its rendering) is one click away, but a window of 1280 by 800 holds only about 54
+    // characters per line in it.
+    let start = if matches!(e.doc, Doc::Note(_)) {
+        Mode::Write
+    } else {
+        Mode::Split
+    };
     for (i, f) in e.form.fields.iter().enumerate() {
         if let Some(t) = md_editor(
             ui,
             f.label,
             &f.text,
-            (f.rows, Mode::Split),
+            (f.rows, start),
             Some(ImageTarget::Item(i)),
             out,
         ) {

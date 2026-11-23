@@ -91,6 +91,8 @@ characters at every offered text size (tested, single lines move a few character
 centred column of that width; a rehearsal card is that wide plus its padding; the item page's preview keeps
 paragraphs to it inside a wider pane.
 
+The note editor's text is set in the same body font, so it holds the same measure (EPIC-036). A note opens in Write, where its lines hold about 59 characters at 1280x800 and 960x640. Split shows the text beside its rendering in a narrower column, about 50 characters per line at 1280x800 and about 28 at 960x640, so it is not held to the band.
+
 The research figure of 620 to 680 px assumes a wider font at about 16 px; in StudyFrog's font that width would hold
 about 100 characters, so the measure is kept in characters, not pixels.
 

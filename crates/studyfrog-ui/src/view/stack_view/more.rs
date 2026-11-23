@@ -3,6 +3,18 @@ use super::*;
 
 pub(super) fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.menu_button("More actions", |ui| {
+        if ui
+            .button("Memory game")
+            .on_hover_text("Plays a memory game with the cards of this stack, with the timing chosen in Rehearse.")
+            .clicked()
+        {
+            out.push(Msg::Navigate(crate::state::Screen::Rehearse));
+            out.push(Msg::Memory(crate::setup::memory::MemoryMsg::StartStack(
+                stack.folder.clone(),
+            )));
+            ui.close();
+        }
+        ui.separator();
         if let Some(pick) = status_menu(ui, stack.status, None) {
             send(out, StackViewMsg::SetStatus(stack.uid, pick));
         }

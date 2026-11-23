@@ -70,15 +70,6 @@ fn actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg
         {
             out.push(Msg::Home(HomeMsg::RehearseStack(stack.folder.clone())));
         }
-        if kit::quiet_button(ui, "Memory game")
-            .on_hover_text("Plays a memory game with the cards of this stack, with the timing chosen in Rehearse.")
-            .clicked()
-        {
-            out.push(Msg::Navigate(crate::state::Screen::Rehearse));
-            out.push(Msg::Memory(crate::setup::memory::MemoryMsg::StartStack(
-                stack.folder.clone(),
-            )));
-        }
         more_actions(state, stack, ui, out);
     });
 }

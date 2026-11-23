@@ -2,7 +2,7 @@
 id: STORY-0170
 type: story
 title: "Menu De-Cluttering, Visual Spacing, and Progressive Disclosure"
-status: review
+status: done
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 5
@@ -93,3 +93,25 @@ Criteria 2 and 3: unchanged; their ticks stand (not re-checked here). Status set
 
 
 Note (2026-11-23): returned to review for the owner. The criterion does not name the core actions; the implementation reads them as Back to library, Previous and Next, with More... as the overflow trigger. Whether that reading is acceptable, and whether More... counts as a visible button, is the owner's decision.
+
+## Decision (2026-11-23): the core actions
+
+Rule: a header shows at most three visible buttons, and the overflow trigger ("More actions", "More…") counts among them. The rest sit in its menu. The criterion says "visible primary buttons", and the trigger is one. The stack page already counted its trigger this way.
+
+Core actions, and why:
+- PDF viewer: Previous and Next. They are what a reader does on every page, and the page field sits beside them. The third visible button is More…. Back to library is the first item in More…; the sidebar's Items entry also leads to the library.
+- Stack page: New item and Start rehearsal, the actions that create and study the stack. The third visible button is More actions. Memory game moved into More actions, as its first item.
+- Item editor: Back (the way out of the item). It shows Back and More actions; the key is a label, not a button, and already met the rule.
+
+Button counts in each header row, the trigger included, at 1280x800 (the same at 960x640 for the PDF):
+- PDF viewer, with a search term: 4 before (Back to library, Previous, Next, More…) and 3 after (Previous, Next, More…). With the earlier header of 2026-11-22 it was 9.
+- Stack page: 4 before (New item, Start rehearsal, Memory game, More actions) and 3 after.
+- Item editor: 2 before and 2 after.
+
+Screenshots: `/tmp/claude-0/decide/shots/base-pdf-1280-hit.png` and `after-pdf-1280-hit.png`; `after-pdf-1280-more.png` (More… with Back to library first); `base-pdf-960-hit.png` and `after-pdf-960-hit.png`; `after-stack-1280.png`; `after-back-from-more.png` (Back to library from More… leaves the viewer).
+
+Tests: `studyfrog-ui/tests/header_core_ui.rs` (stack page and item editor), `pdf_header.rs` (header holds Previous, Next and More…; every moved action is in More…), `pdf_viewer.rs`, `memory_grid_ui.rs` (Memory game from More actions).
+
+Scope: this applies to the screen headers the story names. The app's top bar (sidebar toggle, back and forward, history, search, + Create, Import, notifications, full screen, help, settings, account and window controls) is app chrome, not a screen header, and is not counted here. The owner should say if it must meet the same rule.
+
+Criterion 1 is met on this reading and stays ticked. All three criteria are ticked, so the story is done.
