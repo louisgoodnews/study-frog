@@ -168,7 +168,11 @@ fn source_link(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let label = page.map_or(format!("Open source ({path})"), |p| {
         format!("Open source ({path}, page {})", p + 1)
     });
-    if ui.link(label).clicked() {
+    if ui
+        .link(label)
+        .on_hover_text("Opens the source file at this page.")
+        .clicked()
+    {
         out.push(Msg::Pdf(crate::pdf_types::PdfMsg::Open(
             path.to_owned(),
             page.unwrap_or(0),

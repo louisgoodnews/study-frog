@@ -37,7 +37,11 @@ fn leech_row(r: &LeechRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     kit::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.horizontal_wrapped(|ui| {
-            if ui.link(&r.title).clicked() {
+            if ui
+                .link(&r.title)
+                .on_hover_text("Opens this item.")
+                .clicked()
+            {
                 out.push(Msg::OpenItem(r.uid));
             }
             let why: Vec<&str> = r.leech.reasons.iter().map(|x| reason(*x)).collect();
@@ -75,11 +79,11 @@ fn pair_row(p: &PairRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     kit::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.horizontal_wrapped(|ui| {
-            if ui.link(&p.a.1).clicked() {
+            if ui.link(&p.a.1).on_hover_text("Opens this item.").clicked() {
                 out.push(Msg::OpenItem(p.a.0));
             }
             ui.label("and");
-            if ui.link(&p.b.1).clicked() {
+            if ui.link(&p.b.1).on_hover_text("Opens this item.").clicked() {
                 out.push(Msg::OpenItem(p.b.0));
             }
         });

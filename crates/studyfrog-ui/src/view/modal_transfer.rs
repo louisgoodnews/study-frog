@@ -192,8 +192,24 @@ pub fn transfer(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             RichText::new("Import and export")
                 .size(crate::typo::size(ui, crate::typo::Tier::Heading)),
         );
-        for (tab, label) in [(Tab::Export, "Export"), (Tab::Import, "Import")] {
-            if ui.selectable_label(t.tab == tab, label).clicked() {
+        let tabs = [
+            (
+                Tab::Export,
+                "Export",
+                "Writes the library or a stack to a file.",
+            ),
+            (
+                Tab::Import,
+                "Import",
+                "Reads cards, notes or stacks from a file or folder.",
+            ),
+        ];
+        for (tab, label, tip) in tabs {
+            if ui
+                .selectable_label(t.tab == tab, label)
+                .on_hover_text(tip)
+                .clicked()
+            {
                 send(out, TransferMsg::Tab(tab));
             }
         }

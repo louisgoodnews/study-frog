@@ -68,7 +68,9 @@ fn row(n: &Notification, offset: i32, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         let opens = n.target.is_some();
         let clicked = if opens {
-            ui.link(text).clicked()
+            ui.link(text)
+                .on_hover_text("Opens what this notice is about.")
+                .clicked()
         } else {
             ui.label(text).clicked()
         };

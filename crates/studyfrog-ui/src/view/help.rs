@@ -72,7 +72,11 @@ fn side(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 fn entry(ui: &mut egui::Ui, open: bool, title: &str, page: PageRef, out: &mut Vec<Msg>) {
     let width = ui.available_width();
     let button = egui::Button::selectable(open, title).min_size(egui::vec2(width, 24.0));
-    if ui.add(button).clicked() {
+    if ui
+        .add(button)
+        .on_hover_text("Opens this help page.")
+        .clicked()
+    {
         send(out, HelpMsg::Open(page));
     }
 }

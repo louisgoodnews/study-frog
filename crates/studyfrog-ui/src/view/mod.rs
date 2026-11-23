@@ -69,6 +69,7 @@ mod math_view;
 mod md_editor;
 mod memory;
 mod menus;
+mod menus_search;
 mod mock_exam_view;
 mod modal;
 mod modal_create;
@@ -161,7 +162,6 @@ mod welcome;
 pub(crate) mod widgets;
 pub(crate) mod window_frame;
 mod zen;
-
 use crate::appearance_ui::AppearanceMsg;
 use crate::msg::Msg;
 use crate::state::{Screen, State};

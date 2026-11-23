@@ -29,6 +29,7 @@ fn chrome(out: &mut Vec<Msg>, m: ChromeMsg) {
 /// right edge, and the rest takes the room that is left, so nothing can push the window buttons out of the window.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let mut anchors: Vec<(Menu, Rect)> = Vec::new();
+    let mut narrow = false;
     Panel::top("navbar").show(ui, |ui| {
         super::window_frame::drag_area(ui, ui.max_rect());
         ui.horizontal(|ui| {
@@ -43,21 +44,22 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     help_button(state, ui, out);
                 }
                 ui.with_layout(Layout::left_to_right(Align::Center), |ui| {
-                    left_and_middle(state, ui, out, &mut anchors);
+                    narrow = left_and_middle(state, ui, out, &mut anchors);
                 });
             });
         });
     });
-    menus::draw(state, ui, &anchors, out);
+    menus::draw(state, ui, &anchors, narrow, out);
 }
 
-/// The brand on the left and the search in the middle of the room that is left.
+/// The brand on the left and the search in the middle of the room that is left. Returns whether the header is
+/// narrow, so the Profile menu lists Import.
 fn left_and_middle(
     state: &State,
     ui: &mut egui::Ui,
     out: &mut Vec<Msg>,
     anchors: &mut Vec<(Menu, Rect)>,
-) {
+) -> bool {
     let total = ui.available_width();
     let narrow = total < NARROW_ROOM;
     let left_w = if narrow {
@@ -85,9 +87,10 @@ fn left_and_middle(
         if state.vault.is_some() {
             let search_w = (middle_w * 0.8 - TRAILING_W).clamp(60.0, 560.0);
             ui.add_space(((middle_w - search_w - TRAILING_W) / 2.0).max(0.0));
-            menus::search_cluster(state, ui, out, search_w, narrow);
+            super::menus_search::search_cluster(state, ui, out, search_w, narrow);
         }
     });
+    narrow
 }
 
 fn toggle(out: &mut Vec<Msg>, menu: Menu) {

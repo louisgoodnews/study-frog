@@ -44,7 +44,11 @@ fn row(tree: &[SubStack], i: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 ui.data_mut(|d| d.insert_temp(id, !open));
             }
         }
-        if ui.link(&sub.title).clicked() {
+        if ui
+            .link(&sub.title)
+            .on_hover_text("Opens this sub-stack.")
+            .clicked()
+        {
             out.push(Msg::Select(Selection::Stack(sub.folder.clone())));
         }
         ui.weak(line(sub));

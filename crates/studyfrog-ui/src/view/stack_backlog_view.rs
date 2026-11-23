@@ -69,7 +69,11 @@ fn column(
                         .map_or("Inbox", |r| r.title.as_str());
                     ui.weak(format!("(from {from})"));
                 }
-                if ui.link(format!("Open {name}")).clicked() {
+                if ui
+                    .link(format!("Open {name}"))
+                    .on_hover_text("Opens this item.")
+                    .clicked()
+                {
                     out.push(Msg::OpenItem(item.uid));
                 }
                 let (label, target) = if up_next {

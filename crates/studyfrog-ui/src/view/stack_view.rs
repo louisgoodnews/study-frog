@@ -35,12 +35,20 @@ fn ancestors<'a>(stacks: &'a [StackRow], stack: &StackRow) -> Vec<&'a StackRow> 
 
 fn breadcrumb(stacks: &[StackRow], stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal_wrapped(|ui| {
-        if ui.link("All items").clicked() {
+        if ui
+            .link("All items")
+            .on_hover_text("Shows the items of every stack.")
+            .clicked()
+        {
             out.push(Msg::Select(Selection::Nothing));
         }
         for a in ancestors(stacks, stack) {
             ui.label("/");
-            if ui.link(&a.title).clicked() {
+            if ui
+                .link(&a.title)
+                .on_hover_text("Opens this stack.")
+                .clicked()
+            {
                 out.push(Msg::Select(Selection::Stack(a.folder.clone())));
             }
         }

@@ -179,7 +179,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                                 item.uid,
                                 |ui| {
                                     ui.horizontal(|ui| {
-                                        if ui.link(&text).clicked() {
+                                        if ui
+                                            .link(&text)
+                                            .on_hover_text("Opens this item.")
+                                            .clicked()
+                                        {
                                             out.push(Msg::OpenItem(item.uid));
                                         }
                                         if let Selection::Stack(folder) = &state.browser.selection

@@ -74,7 +74,11 @@ pub fn toc(ui: &mut egui::Ui, headings: &[Heading]) {
         for (level, text) in headings {
             ui.horizontal(|ui| {
                 ui.add_space(f32::from(level - top) * 14.0);
-                if ui.link(text).clicked() {
+                if ui
+                    .link(text)
+                    .on_hover_text("Scrolls to this heading.")
+                    .clicked()
+                {
                     ui.data_mut(|d| d.insert_temp(Id::NULL, ScrollTo(text.clone())));
                     ui.ctx().request_repaint();
                 }

@@ -124,7 +124,11 @@ fn feed(s: &StackSummary, now_ms: i64, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     for a in &s.activity {
         ui.horizontal_wrapped(|ui| {
-            if ui.link(&a.title).clicked() {
+            if ui
+                .link(&a.title)
+                .on_hover_text("Opens this item.")
+                .clicked()
+            {
                 out.push(Msg::OpenItem(a.uid));
             }
             ui.weak(format!("{} {}", what(a), super::home::ago(now_ms, a.at_ms)));
@@ -134,7 +138,11 @@ fn feed(s: &StackSummary, now_ms: i64, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn substack(sub: &SubStack, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal_wrapped(|ui| {
-        if ui.link(&sub.title).clicked() {
+        if ui
+            .link(&sub.title)
+            .on_hover_text("Opens this sub-stack.")
+            .clicked()
+        {
             out.push(Msg::Select(Selection::Stack(sub.folder.clone())));
         }
         let familiarity = sub

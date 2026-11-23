@@ -207,6 +207,7 @@ fn strip_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     };
     if ui
         .selectable_label(run.show_comments, comments_label)
+        .on_hover_text(crate::view::tips::comments())
         .clicked()
     {
         out.push(Msg::RehearsalEdit(

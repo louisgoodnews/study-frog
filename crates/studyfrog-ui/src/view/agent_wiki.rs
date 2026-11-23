@@ -201,7 +201,11 @@ fn help_scope(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         if ui.checkbox(&mut on, label).changed() {
             send(out, AgentMsg::UseHelpPages(on));
         }
-        if ui.link("Open help").clicked() {
+        if ui
+            .link("Open help")
+            .on_hover_text("Opens the help page about this.")
+            .clicked()
+        {
             out.push(Msg::Navigate(crate::state::Screen::Help));
         }
     });

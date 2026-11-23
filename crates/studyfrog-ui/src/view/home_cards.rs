@@ -63,7 +63,11 @@ pub(super) fn recent_column(h: &HomeSummary, fill: f32, ui: &mut egui::Ui, out: 
         for i in &h.recent_items {
             ui.horizontal(|ui| {
                 kit::pill(ui, item_kind_name(i.kind), p.text_weak);
-                if ui.link(&i.title).clicked() {
+                if ui
+                    .link(&i.title)
+                    .on_hover_text("Opens this item.")
+                    .clicked()
+                {
                     out.push(Msg::OpenItem(i.uid));
                 }
             });
@@ -104,7 +108,11 @@ pub(super) fn attention_card(h: &HomeSummary, ui: &mut egui::Ui, out: &mut Vec<M
         ui.set_width(ui.available_width());
         for a in &h.attention {
             ui.horizontal_wrapped(|ui| {
-                if ui.link(&a.title).clicked() {
+                if ui
+                    .link(&a.title)
+                    .on_hover_text("Opens this item.")
+                    .clicked()
+                {
                     out.push(Msg::OpenItem(a.uid));
                 }
                 ui.weak(a.reasons.join(" · "));

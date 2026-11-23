@@ -34,7 +34,11 @@ fn card(
         ui.weak(format!("(from {primary})"));
     }
     ui.horizontal(|ui| {
-        if ui.link(format!("Open {title}")).clicked() {
+        if ui
+            .link(format!("Open {title}"))
+            .on_hover_text("Opens this item.")
+            .clicked()
+        {
             out.push(Msg::OpenItem(uid));
         }
         ui.menu_button(format!("Move {title}"), |ui| {

@@ -13,13 +13,15 @@ const CALLER_HOVER: &str = "hover: from the caller";
 const HOVER: [&str; 3] = ["on_hover_text", "tips::", "on_hover_ui"];
 
 /// Calls that draw a text button. Definitions (`fn primary_button(`) are not calls.
-const CALLS: [&str; 6] = [
+const CALLS: [&str; 8] = [
     ".button(",
     ".menu_button(",
     "primary_button(",
     "quiet_button(",
     "Button::new(",
+    "Button::selectable(",
     ".small_button(",
+    ".link(",
 ];
 
 fn sources(dir: &Path, out: &mut Vec<PathBuf>) {
@@ -163,11 +165,11 @@ fn used_with_hover(text: &str, at: usize, name: &str) -> bool {
 }
 
 /// Whether the call at `at` (its pattern `call`) is explained: its text, with the chain on it, or, for
-/// a `Button::new` passed to `add`, the chain on that `add`, names a hover text. A `Button::new` bound
-/// to a name is explained when that name is added with a hover text.
+/// a `Button::new` or `Button::selectable` passed to `add`, the chain on that `add`, names a hover text. A
+/// `Button::` call bound to a name is explained when that name is added with a hover text.
 fn explained(text: &str, at: usize, call: &str) -> bool {
     let b = text.as_bytes();
-    let (start, close) = if call == "Button::new(" {
+    let (start, close) = if call.starts_with("Button::") {
         match enclosing_open(b, at) {
             Some(open)
                 if text[..open].ends_with(".add") || text[..open].ends_with(".add_enabled") =>
@@ -184,7 +186,8 @@ fn explained(text: &str, at: usize, call: &str) -> bool {
     if HOVER.iter().any(|h| window.contains(h)) {
         return true;
     }
-    call == "Button::new(" && bound_name(text, at).is_some_and(|n| used_with_hover(text, at, &n))
+    call.starts_with("Button::")
+        && bound_name(text, at).is_some_and(|n| used_with_hover(text, at, &n))
 }
 
 /// Every call in the UI source that has no explanation: "file:line".

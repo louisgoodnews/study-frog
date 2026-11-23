@@ -50,6 +50,37 @@ const EXPLAIN: &[(&str, &str)] = &[
     ),
     ("Close", "Closes this dialog."),
     ("Dismiss notification", "Hides this message."),
+    // The navigation rail (STORY-0189), by the label each screen has in the rail.
+    (
+        "Home",
+        "Your overview: what is due today and where to start.",
+    ),
+    ("Folders", "The vault's stacks and items, as folders."),
+    ("Items", "All cards, notes and questions, as a list."),
+    ("Rehearse", "Study the items that are due for recall now."),
+    ("Match", "A memory game: find the matching pairs of cards."),
+    (
+        "Calendar",
+        "Sessions, reminders and the timetable, by day, week or month.",
+    ),
+    ("Homework", "Assignments with their due dates and status."),
+    ("Board", "A board of your work, in columns by status."),
+    ("Reports", "Analytics on your memory and study habits."),
+    ("Diary", "A journal of your study, one entry a day."),
+    (
+        "Achievements",
+        "Your progress and the milestones you have reached.",
+    ),
+    ("Graph", "How your notes and stacks link together."),
+    ("Canvas", "A free board to arrange notes and items."),
+    (
+        "Assistant",
+        "Ask the AI assistant about your study material.",
+    ),
+    ("Prompts", "Interactive AI prompt templates."),
+    ("Console", "The ScriptStudio and FrogScript workbench."),
+    ("Settings", "Preferences and appearance for the app."),
+    ("Help", "Documentation and guides for each screen."),
 ];
 
 /// The explanation of the control called `name` (`None` when no tooltip has that name).
@@ -102,6 +133,11 @@ pub fn mark(difficulty: Difficulty) -> String {
 /// The tooltip of the button that shows the answer.
 pub fn show_answer() -> String {
     with_key("Shows the answer.", "Space")
+}
+
+/// The tooltip of the Comments button in the rehearsal's action tray.
+pub fn comments() -> String {
+    with_key("Shows or hides the comments on this item.", "C")
 }
 
 /// The tooltip of the button that skips the item.

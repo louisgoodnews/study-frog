@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (10) | Ready (0) | In progress (0/3) | Review (19) | Blocked (3) | Done (576) |
+| Backlog (10) | Ready (0) | In progress (0/3) | Review (18) | Blocked (3) | Done (577) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0053](docs/issues/bugs/BUG-0053-mock-exam-formula-note-gives-no-calculation-question.md) Mock exam from notes with a formula line gives no calculation question in the template path (2) |  |  | [BUG-0051](docs/issues/bugs/BUG-0051-math-drill-praises-answer-with-wrong-step.md) Math drill says 'Correct. Well worked.' when the final answer is within tolerance but a working step is wrong (1) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -525,7 +525,7 @@
 | [STORY-0186](docs/issues/stories/STORY-0186-lecture-slide-driven-exam-generator.md) Lecture Slide and Script-Driven Exam Generation Engine via Local SLM (5) | review | 0/0 |
 | [STORY-0187](docs/issues/stories/STORY-0187-exam-grading-and-university-grade-scale.md) Mock Exam Grading Report, German University Grade Scale (1.0 - 5.0), and Chapter Analytics (3) | review | 0/0 |
 | [STORY-0188](docs/issues/stories/STORY-0188-search-keyboard-shortcut.md) Keyboard Shortcut to Focus Search (Ctrl+F and /) (3) | done | 0/0 |
-| [STORY-0189](docs/issues/stories/STORY-0189-tooltips-for-text-buttons.md) Hover Explanations for Text Buttons Across the App (5) | review | 0/0 |
+| [STORY-0189](docs/issues/stories/STORY-0189-tooltips-for-text-buttons.md) Hover Explanations for Text Buttons Across the App (5) | done | 0/0 |
 | [STORY-0190](docs/issues/stories/STORY-0190-homework-commands-in-the-control-protocol.md) Homework commands in the control protocol (2) | done | 0/0 |
 | [STORY-0191](docs/issues/stories/STORY-0191-import-destinations-and-pdf-cards-in-the-control-protocol.md) Import destinations and PDF cards in the control protocol (3) | done | 0/0 |
 | [STORY-0192](docs/issues/stories/STORY-0192-search-and-tooltips-in-the-control-protocol.md) Search and tooltips in the control protocol (2) | review | 0/0 |
@@ -604,7 +604,7 @@
 | [EPIC-054](docs/issues/epics/EPIC-054-fsrs-auto-tuning-and-inline-card-capture.md) FSRS Auto-Tuning and Inline Card Capture | done | 2/2 |
 | [EPIC-055](docs/issues/epics/EPIC-055-offline-local-slm-internal-assistant.md) Offline Local SLM Internal Assistant | review | 3/4 |
 | [EPIC-056](docs/issues/epics/EPIC-056-homework-and-assignment-planner.md) Homework and Assignment Planner: Due Dates, Reminders, and Timetable Integration | done | 5/5 |
-| [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | review | 3/5 |
+| [EPIC-057](docs/issues/epics/EPIC-057-ui-ux-streamlining-and-cognitive-decluttering.md) UI/UX Streamlining, Universal Import Hub, and Cognitive De-Cluttering | review | 4/5 |
 | [EPIC-058](docs/issues/epics/EPIC-058-in-gui-frogscript-wiki-and-reference.md) In-GUI FrogScript Wiki and Interactive Documentation | done | 2/2 |
 | [EPIC-059](docs/issues/epics/EPIC-059-memory-mode-rehearsal.md) Memory Mode Rehearsal: Card-Flipping Pair Concentration Drill Against Time | done | 11/11 |
 | [EPIC-060](docs/issues/epics/EPIC-060-persistent-cognitive-profiling-and-user-modeling.md) Persistent Cognitive Profiling, Interaction Telemetry, and User Modeling | review | 6/7 |

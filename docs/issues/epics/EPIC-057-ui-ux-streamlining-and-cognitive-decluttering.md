@@ -24,7 +24,7 @@ Conduct a comprehensive user experience refinement focused on simplicity, clarit
 
 ## Acceptance Criteria
 - [x] Unified single Import action replaces fragmented card, stack, note, and question buttons
-- [ ] Systematic contextual tooltips and hover hints across all navigation icons, buttons, and tools
+- [x] Systematic contextual tooltips and hover hints across all navigation icons, buttons, and tools
 - [x] De-cluttered menu bars with progressive disclosure, reducing cognitive overload for new learners
 - [ ] Lightweight, modern visual rhythm maintaining deep power features under intuitive secondary disclosures
 
@@ -56,3 +56,9 @@ Review (2026-11-22): criterion 1 stays MET: one Import entry replaces the duplic
 - Criterion 3 ticked: the PDF viewer header now has four buttons (Back to library, Previous, Next, More…) with zoom, hit navigation, copy, arrange and the panels in More (STORY-0170 criterion 1; `/tmp/claude-0/pdfhdr/after-1280-hit.png`, `after-1280-more-hit.png`). The stack page, item list and item editor were decluttered earlier (2026-11-21 and audit). The owner should confirm the reading of "core" recorded in STORY-0170.
 - Criterion 2 stays unticked (review of 2026-11-22: the navigation rail's text items show no hover text). Criterion 4 stays unticked: "lightweight, modern visual rhythm" is a judgement, not checked here.
 - Status stays review: criteria 2 and 4 are open.
+
+## Verification (2026-11-23)
+
+- Criterion 2 ticked: the navigation rail's text items now have explanations (STORY-0189; `/tmp/claude-0/g1/shots/after1-hover-calendar-1280.png`), the rehearsal action tray's Comments toggle and the transfer dialog's tabs too, and the guard test covers the rail's selectable buttons and the link buttons. The header icons and "+ Create" were already explained (review of 2026-11-22). The rest of the buttons are covered by `tests/text_button_tooltips.rs`, which fails on any new unexplained button.
+- Criterion 4 stays unticked: "lightweight, modern visual rhythm" is a judgement, not checked here.
+- Child stories: STORY-0168 and STORY-0170 stay in review (STORY-0170 is owner-decided and was not changed); STORY-0169 is done; STORY-0189 is done. The epic stays in review, so it is not set to done.

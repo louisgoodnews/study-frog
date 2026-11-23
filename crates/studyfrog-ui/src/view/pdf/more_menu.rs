@@ -80,6 +80,7 @@ fn side_buttons(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ] {
         if ui
             .add(egui::Button::selectable(view.side == side, name))
+            .on_hover_text("Shows this panel beside the page.")
             .clicked()
         {
             msg(out, PdfMsg::ShowSide(side));

@@ -22,7 +22,10 @@ fn outline(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.add_space(entry.level as f32 * 12.0);
             let here = entry.page == Some(view.page);
             let button = egui::Button::selectable(here, &entry.title);
-            if ui.add(button).clicked()
+            if ui
+                .add(button)
+                .on_hover_text("Goes to this part of the document.")
+                .clicked()
                 && let Some(page) = entry.page
             {
                 out.push(Msg::Pdf(PdfMsg::GoTo(page)));

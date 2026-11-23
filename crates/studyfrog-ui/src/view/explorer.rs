@@ -80,7 +80,11 @@ fn crumbs(e: &Explorer, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                         .strong(),
                 );
             } else {
-                if ui.link(label).clicked() {
+                if ui
+                    .link(label)
+                    .on_hover_text("Goes back to this stack or folder.")
+                    .clicked()
+                {
                     send(out, ExplorerMsg::Open(scope.clone()));
                 }
                 ui.label("›");
@@ -176,7 +180,11 @@ fn row(r: &Row, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             RowKind::Item(k) => (item_kind_name(k), pal.text_weak),
         };
         kit::pill(ui, word, color);
-        if ui.link(&r.label).clicked() {
+        if ui
+            .link(&r.label)
+            .on_hover_text("Opens this stack or item.")
+            .clicked()
+        {
             send(out, ExplorerMsg::Open(r.target.clone()));
         }
         let weak = |t: String| RichText::new(t).small().color(pal.text_weak);

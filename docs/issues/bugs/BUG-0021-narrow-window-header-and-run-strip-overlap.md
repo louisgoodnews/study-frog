@@ -35,3 +35,10 @@ Find why the header's and the run strip's items are laid out wider than the wind
 
 ## Open Questions
 - None.
+
+## Fix (2026-11-23, second round)
+
+- The rest at 640 by 420 is fixed. The search cluster moved to `view/menus_search.rs` (new). In a narrow header Create is laid out first at the right edge and the search field takes what is left, so "+ Create" is whole and the search field is not drawn under it. Import is not drawn in the narrow header; it is the first entry of the Profile menu ("Import...", `view/menus.rs` `profile`), which opens the same transfer dialog on the Import tab.
+- Checked in the running app: before `/tmp/claude-0/g1/shots/before-home-640.png` ("+ Cre" cut at its edge, no Import); after `/tmp/claude-0/g1/shots/after1-home-640.png` (Create whole, no overlap), `after1-profile-640.png` (Import in the Profile menu), `after1-import-640.png` (it opens the dialog), `after1-rehearse-640.png` (the run strip wraps, nothing overlaps, the hint line wraps); at 1280 by 800 the header keeps Import (`after1-home-1280.png`).
+- Known: at 640 by 420 the search field is about 40 px wide, a stub. Holding a full search field there would need the logo or the sidebar toggle to go, or Create to be shortened; that is a design choice for the owner.
+- Tests: `studyfrog-ui/tests/window_fit_layout.rs` (both tests pass); the dialog at 640 is wider than the window (`after1-import-640.png`), a separate layout problem not in this bug.

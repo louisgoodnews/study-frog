@@ -57,7 +57,11 @@ fn linked_from(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         for item in &e.backlinks {
             ui.horizontal(|ui| {
                 kit::pill(ui, studyfrog_core::plan::item_kind_name(item.kind), weak);
-                if ui.link(&item.title).clicked() {
+                if ui
+                    .link(&item.title)
+                    .on_hover_text("Opens this linked item.")
+                    .clicked()
+                {
                     out.push(Msg::OpenItem(item.uid));
                 }
             });
@@ -77,7 +81,7 @@ fn links(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.weak("No links yet. Write [[Title]] to link a note.");
         }
         for t in targets {
-            if ui.link(&t).clicked() {
+            if ui.link(&t).on_hover_text("Opens this link.").clicked() {
                 out.push(Msg::OpenLink(t));
             }
         }

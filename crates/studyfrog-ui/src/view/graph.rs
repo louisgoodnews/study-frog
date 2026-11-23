@@ -154,7 +154,11 @@ fn item_list(g: &GraphState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .max_height(160.0)
             .show(ui, |ui| {
                 for node in g.graph.nodes.iter().take(LIST_LIMIT) {
-                    if ui.link(&node.title).clicked() {
+                    if ui
+                        .link(&node.title)
+                        .on_hover_text("Opens this item.")
+                        .clicked()
+                    {
                         out.push(Msg::OpenItem(node.uid));
                     }
                 }

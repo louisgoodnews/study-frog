@@ -25,7 +25,11 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     ui.label("The items this stack knows least:");
     for row in &g.least {
         ui.horizontal_wrapped(|ui| {
-            if ui.link(&row.title).clicked() {
+            if ui
+                .link(&row.title)
+                .on_hover_text("Opens this item.")
+                .clicked()
+            {
                 out.push(Msg::OpenItem(row.uid));
             }
             ui.weak(format!("{} % - {}", row.percent, row.drivers));

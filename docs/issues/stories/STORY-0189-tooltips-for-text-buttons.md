@@ -2,7 +2,7 @@
 id: STORY-0189
 type: story
 title: "Hover Explanations for Text Buttons Across the App"
-status: review
+status: done
 epic: EPIC-057
 parents: ['EPIC-057']
 estimate: 5
@@ -23,7 +23,7 @@ STORY-0169 gave the icon buttons explanations on hover, and the rating and diffi
 - Start with the navigation rail, header bars, the rehearsal action tray, the item editor and the import and export dialog, then the rest.
 
 ## Acceptance Criteria
-- [ ] Every text button on the navigation, header, action tray and dialog screens has a hover explanation, with its keyboard shortcut where one exists
+- [x] Every text button on the navigation, header, action tray and dialog screens has a hover explanation, with its keyboard shortcut where one exists
 - [x] A test fails when a new text button is added without a hover explanation
 - [x] Explanations are one line and say what the button does, not just repeat its label
 
@@ -48,3 +48,10 @@ None. The two questions were decided; see the implementation notes above.
 ## Review (2026-11-22)
 
 Review (2026-11-22): criterion 1 unticked: the navigation rail's text items (Home, Calendar, Homework, Board) show no hover text (/tmp/claude-0/review-a/hover-home-long.png, /tmp/claude-0/review-a/hover-calendar.png). The rail is named in this story's Description. Header and action buttons do have explanations ("+ Create": "Creates a new item.", /tmp/claude-0/review-a/hover-create.png; the PDF find field, /tmp/claude-0/review-a/hover-pdf-find.png). Criterion 2 (guard test): the test is present (`crates/studyfrog-ui/tests/text_button_tooltips.rs`); not run here, since cargo is not allowed in this review. Criterion 3 MET on the sampled explanations, each one line. Status stays review.
+
+## Verification (2026-11-23)
+
+- Criterion 1 ticked. The navigation rail's 18 screens now have a one-line explanation (`view::tips`, used by `view/sidebar.rs`; `ctl help tooltip Calendar` answers it too). The help page list says "Opens this help page.", and the rehearsal action tray's Comments toggle (shortcut C) now explains itself with Pause, Stop and Edit. The transfer dialog's Export and Import tabs have explanations. Checked in the running app: `/tmp/claude-0/g1/shots/after1-hover-calendar-1280.png` (nav rail), `after1-hover-calendar-640.png`, `after2-hover-comments-1280.png`, `after1-hover-stop-1280.png` (Stop, shows "Ends the run now and keeps what you answered."), `after2-import-choosefolder.png` (dialog button), `after3-export-tab-1280.png` (dialog tab). The header buttons were checked in the earlier review. Shortcut wording was checked on the rehearsal and header buttons; other screens were checked by the source scan only.
+- Criterion 2 ticked (already met; now wider). `tests/text_button_tooltips.rs` also scans `Button::selectable(` and `.link(` calls. That found 28 call sites without an explanation (item-title links, the PDF fit buttons, Contents entries, the vault menu's "Open another vault..."); each now has a line. `cargo test -p studyfrog-ui --test text_button_tooltips` passes.
+- Criterion 3 ticked: each explanation is one line and says what the control does (read in the source and seen on screen).
+- Not covered: the choice chips and toggles (export formats and scopes, period and view tabs, "Any" and "Standard" filters) use `selectable_label`, which the scan does not read. They are options rather than buttons; a hover line for them is open if the owner wants it.

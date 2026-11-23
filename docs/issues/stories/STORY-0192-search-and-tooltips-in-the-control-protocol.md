@@ -22,7 +22,7 @@ The focused field is the egui memory's focused id; the protocol reads it on the 
 ## Acceptance Criteria
 - [x] search focus focuses the search field of the screen in front and the answer names the focused field
 - [x] help tooltip with a control name answers with the explanation and the shortcut view::tips gives it
-- [ ] the state snapshot names the focused field
+- [x] the state snapshot names the focused field
 
 ## Design Notes
 None.
@@ -39,3 +39,12 @@ EPIC-064, and the features named above.
 
 ## Open Questions
 None.
+
+## Verification (2026-11-23)
+
+Checked in the running app (640 by 420 and 1280 by 800, display :101), not headless:
+- Criterion 1: on Home, `search --focus` answered `focus: {focused: "Search items", pending: false}` (BUG-0049 fixed); on the library query view it answered `{focused: "Query text", pending: false}`.
+- Criterion 2: `help tooltip "Back (Alt+Left)"` answered its explanation and the shortcut in the name; `help tooltip Calendar` (a navigation rail name, added 2026-11-23) answered "Sessions, reminders and the timetable, by day, week or month."; an unknown name lists the names it knows.
+- Criterion 3: `state` named `focused_field: "Search items"` on Home and `"Query text"` on the library; after `nav home` it is `null` (BUG-0050 fixed).
+- Nothing was missing in the protocol itself; the navigation rail names were added to the tooltip table so `help tooltip` answers them.
+- Status stays review, although all three criteria are ticked. The issue rule (`tools/repo-lint`, `check_status`) makes a parent done exactly when all its children are; this is the last child of EPIC-064, whose criterion 1 (every shipped feature drivable through the protocol) is open and not verified here. Story and epic should move to done together once the owner decides EPIC-064's criterion 1.

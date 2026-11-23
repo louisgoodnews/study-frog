@@ -95,7 +95,8 @@ fn groups(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             let width = ui.available_width();
             let button = egui::Button::selectable(state.screen == screen, label)
                 .min_size(egui::vec2(width, 26.0));
-            if ui.add(button).clicked() {
+            let hover = crate::view::tips::for_name(label);
+            if ui.add(button).on_hover_text(hover).clicked() {
                 out.push(Msg::Navigate(screen));
             }
         }

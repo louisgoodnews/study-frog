@@ -98,7 +98,11 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let width = ui.available_width();
     let open_other =
         egui::Button::selectable(false, "Open another vault…").min_size(egui::vec2(width, 28.0));
-    if ui.add(open_other).clicked() {
+    if ui
+        .add(open_other)
+        .on_hover_text("Pick a vault folder to open it.")
+        .clicked()
+    {
         out.push(Msg::CloseVault);
         close(out);
     }

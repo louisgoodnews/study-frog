@@ -80,7 +80,11 @@ fn sourced(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let Some(uid) = parse_ulid(&item.uid) else {
             continue;
         };
-        if ui.link(format!("{page}{}", item.title)).clicked() {
+        if ui
+            .link(format!("{page}{}", item.title))
+            .on_hover_text("Opens this item.")
+            .clicked()
+        {
             out.push(Msg::OpenItem(uid));
         }
     }

@@ -40,12 +40,20 @@ pub(super) fn zoom_name(zoom: Zoom) -> String {
 
 pub(super) fn fit_presets(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let fit = view.zoom == Zoom::FitWidth;
-    if ui.add(egui::Button::selectable(fit, "Fit width")).clicked() {
+    if ui
+        .add(egui::Button::selectable(fit, "Fit width"))
+        .on_hover_text("Scales the page to the width of the window.")
+        .clicked()
+    {
         msg(out, PdfMsg::SetZoom(Zoom::FitWidth));
         ui.close();
     }
     let page = view.zoom == Zoom::FitPage;
-    if ui.add(egui::Button::selectable(page, "Fit page")).clicked() {
+    if ui
+        .add(egui::Button::selectable(page, "Fit page"))
+        .on_hover_text("Scales the whole page to fit the window.")
+        .clicked()
+    {
         msg(out, PdfMsg::SetZoom(Zoom::FitPage));
         ui.close();
     }

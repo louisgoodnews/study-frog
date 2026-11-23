@@ -148,7 +148,11 @@ fn due_column(h: &HomeSummary, fill: f32, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         for i in &h.due_items {
             ui.horizontal(|ui| {
                 kit::pill(ui, item_kind_name(i.kind), p.text_weak);
-                if ui.link(&i.title).clicked() {
+                if ui
+                    .link(&i.title)
+                    .on_hover_text("Opens this item.")
+                    .clicked()
+                {
                     out.push(Msg::OpenItem(i.uid));
                 }
                 if let Some(due) = i.due {

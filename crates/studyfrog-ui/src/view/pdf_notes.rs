@@ -82,7 +82,11 @@ fn entry(view: &PdfView, at: usize, mark: &PdfMark, ui: &mut egui::Ui, out: &mut
             } else {
                 "Highlight"
             };
-            if ui.link(format!("{kind}, page {}", mark.page + 1)).clicked() {
+            if ui
+                .link(format!("{kind}, page {}", mark.page + 1))
+                .on_hover_text("Jumps to this mark on the page.")
+                .clicked()
+            {
                 send(out, MarkMsg::Jump(mark.id));
             }
             if mark.kind == MarkKind::Highlight {
