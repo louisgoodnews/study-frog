@@ -194,8 +194,8 @@ fn a_pdf_link_in_a_note_opens_the_viewer_at_that_page() {
     );
     let mut h = harness(m);
     h.run_steps(2);
-    // A note opens in Write; the link is in the Split preview.
-    h.get_by_label("Body: split").click();
+    // A note opens in Write; the link is in the preview below the text.
+    h.get_by_label("Body: preview below").click();
     h.run_steps(2);
     h.get_by_label_contains("the proof").click();
     h.run_steps(2);

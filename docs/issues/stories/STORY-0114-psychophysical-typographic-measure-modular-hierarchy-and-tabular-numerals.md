@@ -2,7 +2,7 @@
 id: STORY-0114
 type: story
 title: "Psychophysical typographic measure, modular hierarchy, and tabular numerals"
-status: review
+status: done
 epic: EPIC-036
 parents: [EPIC-036]
 estimate: 3
@@ -99,3 +99,7 @@ The Markdown note editor now follows the same measure as the preview and the hel
 ## Decision (2026-11-23): the note editor's measure
 
 The note editor now sets its text in the body font and opens a note in Write (EPIC-036 holds the measurements and the reasons). In Write, a note's lines hold 59 characters at 1280x800 and 960x640, up from 49. Split still falls short of the band (about 50 characters per line at 1280x800, about 28 at 960x640), so it is not claimed here. This story's criteria are unchanged; its status stays review while EPIC-036 is open.
+
+## Decision (2026-11-23): Split sits under the text
+
+The note editor's Split view put the text and its rendering side by side, so each side held 28 to 50 characters per line. Split is now a secondary toggle, **Preview below**, which stacks the rendering under the text; the text keeps one reading measure in Write, Preview and Split. Reason: beside each other, two measures do not fit in the window next to the details column. The numbers and the screenshots are in EPIC-036's verification. The criteria are unchanged and all ticked, so the story is done with its epic.

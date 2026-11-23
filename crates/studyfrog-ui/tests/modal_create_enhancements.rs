@@ -102,7 +102,7 @@ fn auto_expansion_to_full_window_when_kind_is_note_and_default_write_view() {
     assert!(full > NORMAL + 100.0, "widest should be larger than normal");
 
     assert!(h.query_by_label("Body: write").is_some());
-    assert!(h.query_by_label("Body: split").is_some());
+    assert!(h.query_by_label("Body: preview below").is_some());
     assert!(h.query_by_label("Body: preview").is_some());
     assert!(h.query_by_label("Body").is_some());
 }

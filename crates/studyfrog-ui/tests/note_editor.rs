@@ -25,7 +25,7 @@ fn a_new_note_opens_a_full_markdown_editor_with_a_toolbar_and_a_live_preview() {
         "Bold in Body",
         "Bullet list in Body",
         "Link to a note in Body",
-        "Body: split",
+        "Body: preview below",
         "Body: preview",
     ] {
         assert!(h.query_by_label(name).is_some(), "missing {name}");

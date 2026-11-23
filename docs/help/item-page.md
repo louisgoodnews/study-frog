@@ -29,7 +29,8 @@ The **Title** is at the top. Below it is a Markdown editor for every text of the
 - a question has a **Prompt** and a **Reference answer**,
 - a stack has a description.
 
-Each editor has a toolbar and three views: **Write**, **Split** (text and preview side by side) and **Preview**.
+Each editor has a toolbar and two views: **Write** and **Preview**. **Preview below** adds the rendering under the text
+when you want to see both; the text keeps its reading width.
 The toolbar has **Bold**, **Italic**, **Underline**, **Strikethrough**, **Colour**, **Code**, **Heading**, **Quote**,
 **Bullet list**, **Numbered list**, **Link**, **Link to a note**, **Table**, **Rule** and **Picture**.
 In a list, **Enter** starts the next item (the next number, the same bullet, or an unchecked box for a task) and **Enter** or **Backspace** on an empty item ends the list.

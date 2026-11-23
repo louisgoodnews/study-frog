@@ -185,9 +185,8 @@ fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
     });
     ui.add_space(8.0);
-    // A note opens as Write, so its text holds the reading measure at every window size. Split (the
-    // text beside its rendering) is one click away, but a window of 1280 by 800 holds only about 54
-    // characters per line in it.
+    // A note opens as Write. Split puts the rendering under the text, not beside it, so the text keeps
+    // the reading measure in every view; beside it, each side fell to 28 to 50 characters per line.
     let start = if matches!(e.doc, Doc::Note(_)) {
         Mode::Write
     } else {

@@ -41,12 +41,16 @@ fn editing() -> Model {
     m
 }
 
-/// The body's text area at `width` x `height`, in Write mode or in Split mode.
+/// The body's text area at `width` x `height`, in Write mode or in Split mode (the rendering under the text).
 fn check_at(width: f32, height: f32, write: bool) {
     let mut h = harness(editing());
     h.set_size(egui::vec2(width, height));
     h.run_steps(3);
-    let mode = if write { "Body: write" } else { "Body: split" };
+    let mode = if write {
+        "Body: write"
+    } else {
+        "Body: preview below"
+    };
     h.get_by_label(mode).click();
     h.run_steps(3);
     let measure = measure_at(&h.ctx, 15.0);
@@ -90,22 +94,26 @@ fn mean_chars_per_line(ctx: &egui::Context, width: f32) -> f32 {
     counts.iter().sum::<usize>() as f32 / counts.len() as f32
 }
 
-/// A note opens in Write, and its body holds 55 to 75 characters per line at 1280 by 800 and 960 by 640. (Split is
-/// narrower than one measure a side at these sizes and falls below 55; it is not asserted here.)
+/// A note's body holds 55 to 75 characters per line in Write and in Split (the rendering under the text), at
+/// 1280 by 800 and 960 by 640.
 #[test]
-fn a_note_opens_in_write_and_its_body_holds_55_to_75_characters_per_line() {
+fn a_note_body_holds_55_to_75_characters_per_line_in_write_and_split() {
     for (width, height) in [(1280.0, 800.0), (960.0, 640.0)] {
-        let mut h = harness(editing());
-        h.set_size(egui::vec2(width, height));
-        h.run_steps(3);
-        let body = h
-            .get_by_role_and_label(egui::accesskit::Role::MultilineTextInput, "Body")
-            .rect()
-            .width();
-        let mean = mean_chars_per_line(&h.ctx, body);
-        assert!(
-            (55.0..=75.0).contains(&mean),
-            "at {width}x{height} the body is {body} wide: {mean} characters per line"
-        );
+        for label in ["Body: write", "Body: preview below"] {
+            let mut h = harness(editing());
+            h.set_size(egui::vec2(width, height));
+            h.run_steps(3);
+            h.get_by_label(label).click();
+            h.run_steps(3);
+            let body = h
+                .get_by_role_and_label(egui::accesskit::Role::MultilineTextInput, "Body")
+                .rect()
+                .width();
+            let mean = mean_chars_per_line(&h.ctx, body);
+            assert!(
+                (55.0..=75.0).contains(&mean),
+                "at {width}x{height} ({label}) the body is {body} wide: {mean} characters per line"
+            );
+        }
     }
 }

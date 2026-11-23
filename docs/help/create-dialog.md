@@ -19,7 +19,7 @@ New stacks, notes, cards and questions are made in the Create dialog. Open it wi
 2. **Title**: a large field at the top. For a card or question it is optional: it is taken from the text if you
    leave it empty.
 3. **The Markdown editors**: the body of a note, the front and back of a card, the prompt and reference answer of a
-   question, or the description of a stack. They have the same toolbar, **Write**, **Split** and **Preview** as on
+   question, or the description of a stack. They have the same toolbar, **Write**, **Preview** and **Preview below** as on
    the [[item-page|item page]], and a bar underneath that makes each one taller.
 4. **Priority**, **Difficulty** and **Tags**.
 5. For a stack: a **Due date (optional)**, picked from a month grid, and reminders under **Remind me:**.

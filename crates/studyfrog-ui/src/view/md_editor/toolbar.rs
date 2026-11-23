@@ -38,11 +38,7 @@ pub(super) fn toolbar(
 ) -> Option<(String, (usize, usize))> {
     let mut edited = None;
     ui.horizontal_wrapped(|ui| {
-        for (m, label) in [
-            (Mode::Write, "Write"),
-            (Mode::Split, "Split"),
-            (Mode::Preview, "Preview"),
-        ] {
+        for (m, label) in [(Mode::Write, "Write"), (Mode::Preview, "Preview")] {
             let r = ui.selectable_label(mode == m, label);
             r.widget_info(|| {
                 WidgetInfo::labeled(
@@ -53,6 +49,20 @@ pub(super) fn toolbar(
             });
             if r.clicked() {
                 ui.data_mut(|d| d.insert_temp(mode_id, m));
+            }
+        }
+        if mode != Mode::Preview {
+            // Split is a secondary choice: the rendering goes under the text, which keeps its measure.
+            let split = mode == Mode::Split;
+            let r = ui.selectable_label(split, "Preview below").on_hover_text(
+                "Shows the rendering under the text. The text keeps its reading width.",
+            );
+            r.widget_info(|| {
+                WidgetInfo::labeled(Role::Button, true, format!("{name}: preview below"))
+            });
+            if r.clicked() {
+                let next = if split { Mode::Write } else { Mode::Split };
+                ui.data_mut(|d| d.insert_temp(mode_id, next));
             }
         }
         if mode == Mode::Preview {

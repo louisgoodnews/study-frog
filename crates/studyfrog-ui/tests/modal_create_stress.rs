@@ -208,7 +208,10 @@ fn test_note_modal_auto_expansion_write_view_and_resizing() {
     h.run_steps(4);
     let full = widest(&h.ctx);
     assert_eq!(width(&h.ctx, NewKind::Note), full);
-    assert!(h.query_by_label("Body: write").is_some() && h.query_by_label("Body: split").is_some());
+    assert!(
+        h.query_by_label("Body: write").is_some()
+            && h.query_by_label("Body: preview below").is_some()
+    );
 
     h.get_by_label("Shrink the dialog").click();
     h.run_steps(4);

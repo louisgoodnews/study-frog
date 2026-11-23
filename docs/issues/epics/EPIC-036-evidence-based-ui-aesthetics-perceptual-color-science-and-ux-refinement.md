@@ -2,7 +2,7 @@
 id: EPIC-036
 type: epic
 title: "Evidence-based UI aesthetics, perceptual color science, and cognitive-load UX refinement"
-status: review
+status: done
 parents: []
 labels: [m12, core, ui, docs]
 acceptance_criteria:
@@ -30,7 +30,7 @@ Elevate StudyFrog's user interface (`crates/studyfrog-ui`) using empirical psych
 
 ## Acceptance Criteria
 - [x] All theme palettes, accents, semantic badges, and item tints are calibrated in OKLCH perceptual color space and verified against WCAG 3 APCA perceptual contrast (Lc) thresholds in automated tests
-- [ ] Long-form reading, note editing, and rehearsal views enforce psychophysical typographic line-length bounds (55-75 cpl), a 4-tier modular scale, and tabular numerals for timers and metrics
+- [x] Long-form reading, note editing, and rehearsal views enforce psychophysical typographic line-length bounds (55-75 cpl), a 4-tier modular scale, and tabular numerals for timers and metrics
 - [x] Screen layouts minimize extraneous cognitive load and visual edge entropy by replacing nested box borders with tonal surface elevation, Gestalt proximity spacing, and a Zen focus mode
 
 ## Design Notes
@@ -93,3 +93,25 @@ Screenshots: `/tmp/claude-0/decide/shots/base-write-1280.png`, `after-note-1280-
 Test: `studyfrog-ui/tests/editor_measure_ui.rs`, `a_note_opens_in_write_and_its_body_holds_55_to_75_characters_per_line` (1280x800 and 960x640).
 
 Criterion 2 stays unticked, for one reason: Split, a note-editing view, holds about 50 characters per line at 1280x800 and about 28 at 960x640, below the band. The window is the limit. The owner should decide one of: accept Split as a window-limited view, as STORY-0114 accepted for narrow windows; or give Split a layout that stacks the two sides when the window cannot hold two measures. Status stays review.
+
+## Decision (2026-11-23): Split sits under the text, not beside it
+
+Criterion 2 failed in Split only: the two sides shared the width, so each side held 28 to 50 characters per line. Owner's instruction: make Split less prominent. Decided: Split is no longer a tab next to Write. The toolbar has **Write** and **Preview**, and a secondary toggle **Preview below** (accessible name "<field>: preview below") that stacks the rendering under the text. The text keeps one reading measure in every view. Both sides of the old two-column layout are gone, so no side is narrower than the measure. No keyboard shortcut switched views (the only editor shortcuts are list keys and Ctrl+Shift+C for cloze), so none changed. Help pages (`docs/help/item-page.md`, `docs/help/create-dialog.md`) describe the new views.
+
+Reason: beside each other, two measures do not fit in the window next to the details column (1280x800 and 960x640). Stacked, the window limits only the width, which is the case STORY-0114 accepts.
+
+## Verification (2026-11-23, Split under the text)
+
+Running app, 1280x800 and 960x640, a note of four paragraphs (the full lines of prose, counted from the screenshots; a line is counted as full when the next word does not fit):
+
+| View | 1280x800 | 960x640 |
+|---|---|---|
+| Write (default for notes) | mean 55.2 characters per full line (18 lines, 42 to 63) | same |
+| Preview below (text side) | same wrap as Write: 55.2 | same |
+| Preview (rendering only) | mean 57.2 (17 lines, 43 to 63) | same |
+
+The body in Split wraps the same as in Write, so the table holds for both. The mean sits at the floor of the band in Write and Split, so a small change in the note text could move it below 55. Screenshots: `/tmp/claude-0/split/shots/1280-write.png`, `1280-split-scrolled.png`, `1280-preview.png`, `960-write.png`, `960-split-scrolled.png`, `960-preview-top.png`.
+
+Tests: `studyfrog-ui/tests/editor_measure_ui.rs` (`a_note_body_holds_55_to_75_characters_per_line_in_write_and_split`, 1280x800 and 960x640, Write and Preview below) and the editor view tests, all passing.
+
+Criteria 1 and 3 are unchanged and stay ticked. Criterion 2 is ticked on the measurements above, so every criterion is ticked and the status is done. STORY-0114 is done with it.
