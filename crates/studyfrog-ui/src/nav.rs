@@ -73,6 +73,12 @@ pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
     let allowed = (screen == Screen::Welcome || screen == Screen::Help || state.vault.is_some())
         && (screen == Screen::Editor || !crate::editor::has_unsaved_changes(&state));
     if allowed {
+        // Entering the rehearse screen from another one is a new setup, which starts from Spaced (BUG-0054).
+        let state = if screen == Screen::Rehearse && state.screen != Screen::Rehearse {
+            crate::setup::start_setup(state)
+        } else {
+            state
+        };
         screen_effects(state, screen)
     } else {
         (state, Vec::new())

@@ -139,3 +139,44 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         _ => (state, Vec::new()),
     }
 }
+
+/// The control word of a preset: the words `rehearse setup --preset` takes.
+pub fn preset_name(p: Preset) -> &'static str {
+    match p {
+        Preset::Spaced => "spaced",
+        Preset::EverythingInOrder => "all",
+        Preset::Shuffled => "shuffled",
+        Preset::Hardest => "hardest",
+        Preset::Stalest => "stalest",
+    }
+}
+
+/// The preset the form matches, if it matches one. Stacks, kinds and tags do not count; a field
+/// changed away from its preset leaves none.
+pub fn preset_of(f: &SetupForm) -> Option<Preset> {
+    [
+        Preset::Spaced,
+        Preset::EverythingInOrder,
+        Preset::Shuffled,
+        Preset::Hardest,
+        Preset::Stalest,
+    ]
+    .into_iter()
+    .find(|p| apply_edit(f.clone(), SetupEdit::Preset(*p)) == *f)
+}
+
+/// A new setup starts from Spaced (BUG-0054): the preset is reset, and the stacks, kinds and tags
+/// chosen before are kept.
+pub fn start_setup(state: State) -> State {
+    let form = apply_edit(
+        state.rehearse.form.clone(),
+        SetupEdit::Preset(Preset::Spaced),
+    );
+    State {
+        rehearse: Rehearse {
+            form,
+            ..state.rehearse.clone()
+        },
+        ..state
+    }
+}

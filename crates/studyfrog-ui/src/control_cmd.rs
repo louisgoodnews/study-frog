@@ -183,10 +183,10 @@ pub enum RehearseCmd {
     Finish,
 }
 
-/// The setup of a run; what is not given keeps its value.
+/// The setup of a run; what is not given keeps its value, except the preset (see [`SetupArgs::preset`]).
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct SetupArgs {
-    /// `spaced`, `all`, `shuffled`, `hardest` or `stalest`.
+    /// `spaced`, `all`, `shuffled`, `hardest` or `stalest`. Not given: `spaced`.
     pub preset: Option<crate::setup::Preset>,
     /// Flip cards or type answers.
     pub mode: Option<studyfrog_core::run::RunMode>,

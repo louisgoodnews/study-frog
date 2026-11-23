@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (20) | Ready (0) | In progress (0/3) | Review (19) | Blocked (3) | Done (565) |
+| Backlog (20) | Ready (0) | In progress (0/3) | Review (19) | Blocked (3) | Done (566) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0022](docs/issues/bugs/BUG-0022-exam-case-study-hides-decision-and-options.md) In an exam run, a case study shows only its vignette, without its decision prompt or options (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [BUG-0038](docs/issues/bugs/BUG-0038-keyword-grading-gives-zero-to-correct-answers-with-generic-rubric.md) Mock exam keyword grading scores correct answers 0 because the rubric points are generic text (3) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -48,6 +48,7 @@
 |  |  |  |  |  | [BUG-0046](docs/issues/bugs/BUG-0046-memory-game-missing-from-calendar-sessions.md) The Calendar's session and planned-review rows offer no Memory game entry point (2) |
 |  |  |  |  |  | [BUG-0047](docs/issues/bugs/BUG-0047-memory-game-button-during-rehearsal-shows-rehearsal.md) Memory game on a stack page shows the open rehearsal instead of starting a memory board (2) |
 |  |  |  |  |  | [BUG-0048](docs/issues/bugs/BUG-0048-telemetry-dwell-repeats-latency-and-complexity-is-time.md) review_telemetry stores dwell_ms equal to latency_ms, and text_complexity holds a reading-time estimate (2) |
+|  |  |  |  |  | [BUG-0054](docs/issues/bugs/BUG-0054-rehearsal-setup-without-preset-keeps-practice-only.md) A rehearsal setup without a preset keeps the previous practice preset, so the run writes no reviews (2) |
 |  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 |  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |

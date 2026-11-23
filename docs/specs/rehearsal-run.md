@@ -23,6 +23,7 @@ Semantics:
 - Defaults (confirmed by the owner): spaced runs `UpdateSchedule` with `requeue_again`; the presets that go
   through everything (in order, shuffled) and the drill presets are `PracticeOnly`. The user can override `effect` (for example a sequential first pass over new material
   that should start the schedule).
+- A setup starts from Spaced unless it chooses a preset (BUG-0054): `rehearse setup` without `--preset`, and the rehearse screen when it is opened from another screen, reset the preset (stacks, kinds and tags are kept).
 - Rationale for `PracticeOnly`: cramming outside the scheduled spacing would distort the memory model's
   inputs (design judgement, see learning-science notes); latency data is still valuable, so events are always recorded.
 - A difficulty filter or order needs an FSRS memory state; items without one (new items, SM-2 items) are

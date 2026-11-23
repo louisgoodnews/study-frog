@@ -11,7 +11,7 @@ use crate::control_state::ulid;
 use crate::editor::{Editor, is_dirty};
 use crate::modal_types::Modal;
 use crate::run_state::RunView;
-use crate::setup::Preview;
+use crate::setup::{Preview, preset_name, preset_of};
 use crate::state::{Screen, State};
 
 /// Rows of the library list a snapshot carries at most.
@@ -105,6 +105,7 @@ pub fn rehearse_json(state: &State) -> Value {
         "step": format!("{:?}", r.step).to_lowercase(),
         "mode": run_mode_name(r.form.mode),
         "preview": preview_json(&r.preview),
+        "preset": preset_of(&r.form).map(preset_name),
         "starting": r.starting,
         "run": r.run.as_ref().map(run_json),
     })
