@@ -6,6 +6,7 @@ pub mod arena;
 pub mod civil;
 pub mod classroom;
 pub mod classroom_ops;
+pub mod classroom_status;
 pub mod classroom_work;
 pub mod comment;
 pub mod count;

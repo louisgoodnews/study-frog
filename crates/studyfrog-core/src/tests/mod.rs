@@ -5,6 +5,7 @@ mod civil;
 mod classroom;
 mod classroom_assign;
 mod classroom_sources;
+mod classroom_status;
 mod diary;
 mod exam;
 mod library;
