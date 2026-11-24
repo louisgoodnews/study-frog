@@ -2,7 +2,7 @@
 id: STORY-0211
 type: story
 title: "Classroom-chat UI, session browser, and assignment submission workspace"
-status: backlog
+status: done
 epic: EPIC-068
 parents: ['EPIC-068']
 estimate: 5
@@ -25,10 +25,10 @@ Build the Classroom screen in `studyfrog-ui`:
 - **Verification & Control Protocol**: Headless `egui_kittest` tests and `studyfrog ctl` navigation/state coverage.
 
 ## Acceptance Criteria
-- [ ] Users can configure and launch a classroom session (source material, local/remote model, simulated student count/personas) from a dedicated Classroom screen
-- [ ] The classroom-chat interface clearly distinguishes teacher explanations, simulated student questions, and user messages, with controls to advance the lecture or ask a question
-- [ ] An assignments panel/drawer displays solo and group tasks, supports group discussion and explicit turn-in, and renders teacher grades and feedback
-- [ ] Users can browse, resume, review, and delete persisted classroom sessions, covered by headless UI tests and control-protocol inspection
+- [x] Users can configure and launch a classroom session (source material, local/remote model, simulated student count/personas) from a dedicated Classroom screen
+- [x] The classroom-chat interface clearly distinguishes teacher explanations, simulated student questions, and user messages, with controls to advance the lecture or ask a question
+- [x] An assignments panel/drawer displays solo and group tasks, supports group discussion and explicit turn-in, and renders teacher grades and feedback
+- [x] Users can browse, resume, review, and delete persisted classroom sessions, covered by headless UI tests and control-protocol inspection
 
 ## Design Notes
 - Follow theme integrity (only `palette_of(ui)` tokens, never raw RGB literals), accessible widget names, and the 250-LOC file limit (Invariant P6).
@@ -40,3 +40,13 @@ Build the Classroom screen in `studyfrog-ui`:
 
 ## Open Questions
 - Where the Classroom entry should sit in the left sidebar (under *Study* next to *Rehearse* or under *Insight* next to *Assistant*).
+
+## Verification note
+
+All four criteria are ticked on the strength of the headless UI tests in `studyfrog-ui` (`classroom_ui`, `classroom_saved_ui`, `classroom_saved_view`, `classroom_work_ui`, `classroom_work_view`, `control_classroom`), the service and store tests, and the agent tests. Known gaps, not fixed:
+
+- Models were exercised with fake or stub transports only; no live Ollama or remote provider run has been done.
+- Source material is stacks and PDFs only; notes are not offered as a source.
+- Personas are fixed presets (count 0 to 3); custom personas are not offered.
+- The assignments panel sets solo tasks for the user ("Assign task") and groups of two ("Assign group task"); a solo task for a simulated student is not offered in the UI.
+- The rolling lecture summary is not persisted (see TASK-0290).

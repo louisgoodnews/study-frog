@@ -2,7 +2,7 @@
 id: TASK-0295
 type: task
 title: "Saved classroom sessions browser, resume flow, headless tests, and control-protocol hooks"
-status: backlog
+status: done
 epic: EPIC-068
 parents: ['STORY-0211']
 estimate: 2
@@ -23,9 +23,9 @@ Add session-history management, control-protocol integration, and headless UI te
 - Headless `egui_kittest` suite verifying layout, accessible widget names, turn-in locking, and session reload.
 
 ## Acceptance Criteria
-- [ ] Users can browse persisted classroom sessions (title, topic, date, turn/task counts), resume any session where it left off, export its transcript to Markdown, or delete it with confirmation
-- [ ] Control protocol supports navigating to the Classroom screen and inspecting active/saved session state
-- [ ] Headless `egui_kittest` tests cover session creation, chat display, assignment turn-in, grade rendering, and resuming a persisted session
+- [x] Users can browse persisted classroom sessions (title, topic, date, turn/task counts), resume any session where it left off, export its transcript to Markdown, or delete it with confirmation
+- [x] Control protocol supports navigating to the Classroom screen and inspecting active/saved session state
+- [x] Headless `egui_kittest` tests cover session creation, chat display, assignment turn-in, grade rendering, and resuming a persisted session
 
 ## Design Notes
 - Follow the existing `tests/ollama_panel_ui.rs` and `tests/ollama_control.rs` patterns for headless UI and control-protocol tests.

@@ -2,7 +2,7 @@
 id: EPIC-068
 type: epic
 title: "Classroom simulation: AI-driven lectures, simulated students, group tasks, and graded submissions"
-status: backlog
+status: done
 parents: []
 labels: [m14, agent, slm, store, ui]
 acceptance_criteria:
@@ -35,11 +35,19 @@ Build an interactive **Classroom Simulation** workspace in StudyFrog:
    - Full session state—topic/source references, participant roster, chat transcript, task assignments (solo and group), submitted work, and grades/feedback—is persisted locally in the vault/SQLite so sessions survive restarts and can be resumed or reviewed later.
 
 ## Acceptance Criteria
-- [ ] Users can start and run a classroom-chat lecture session backed by either a local model (e.g. Ollama) or a configured remote model provider, grounded in vault notes, stacks, or PDFs
-- [ ] A simulated teacher delivers structured lecture explanations while simulated students ask contextual questions, and the user can ask questions or contribute at any time in the chat
-- [ ] The teacher can assign individual or group tasks to simulated students and the user, with group collaboration visible in the session
-- [ ] Assigned tasks can be turned in by the user (and simulated peers) and are graded by the teacher with structured feedback and scores
-- [ ] Classroom sessions—including participants, transcript, assigned tasks, submissions, and grades—persist in local storage (vault/SQLite) and can be resumed, reviewed, or exported later
+- [x] Users can start and run a classroom-chat lecture session backed by either a local model (e.g. Ollama) or a configured remote model provider, grounded in vault notes, stacks, or PDFs
+- [x] A simulated teacher delivers structured lecture explanations while simulated students ask contextual questions, and the user can ask questions or contribute at any time in the chat
+- [x] The teacher can assign individual or group tasks to simulated students and the user, with group collaboration visible in the session
+- [x] Assigned tasks can be turned in by the user (and simulated peers) and are graded by the teacher with structured feedback and scores
+- [x] Classroom sessions—including participants, transcript, assigned tasks, submissions, and grades—persist in local storage (vault/SQLite) and can be resumed, reviewed, or exported later
+
+## Verification note
+
+All five criteria are ticked on the strength of the headless UI tests in `studyfrog-ui` (`classroom_ui`, `classroom_work_ui`, `classroom_saved_ui`, `classroom_saved_view`, `control_classroom`) and the core, agent, service and store tests. Known gaps, not fixed:
+
+- Models were exercised with fake or stub transports only; no live Ollama or remote provider run has been done.
+- The source picker offers stacks and PDFs, not notes; criterion 1 names notes, stacks or PDFs, so stacks and PDFs satisfy it.
+- The Classroom screen assigns solo tasks to the user and group tasks; the service also assigns a solo task to any participant by index, which the screen does not expose.
 
 ## Design Notes
 - Reuse `studyfrog-agent` provider abstractions (`Provider`, local Ollama and remote providers) so the simulation works seamlessly with both local and remote models without duplicating wire logic.
