@@ -8,6 +8,7 @@ use studyfrog_core::classroom_ops::is_blank;
 use studyfrog_core::uid::Uid;
 use studyfrog_service::classroom_task::Assignees;
 
+pub mod saved;
 use crate::classroom_types::{ClassroomEffect, ClassroomMsg};
 use crate::effect::Effect;
 use crate::state::State;
@@ -71,20 +72,19 @@ fn apply(state: &mut State, msg: ClassroomMsg) -> Vec<Effect> {
         | ClassroomMsg::TurnIn
         | ClassroomMsg::AskGrade
         | ClassroomMsg::AssignGroups => crate::classroom_work_ui::apply(state, msg),
+        ClassroomMsg::Saved(msg) => saved::apply(state, msg),
         ClassroomMsg::Leave => {
             if !state.classroom.busy {
                 state.classroom.session = None;
                 state.classroom.error = None;
             }
-            Vec::new()
+            saved::refresh()
         }
         ClassroomMsg::Done { session, error } => {
             state.classroom.busy = false;
-            if session.is_some() {
-                state.classroom.session = session;
-            }
+            state.classroom.session = session.or_else(|| state.classroom.session.take());
             state.classroom.error = error;
-            Vec::new()
+            saved::refresh()
         }
     }
 }

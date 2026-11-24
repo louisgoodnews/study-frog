@@ -12,9 +12,21 @@ const WIDE: f32 = 720.0;
 /// Draw the form or the chat, whichever the state calls for.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     match state.classroom.session {
-        None => super::classroom_setup::draw(state, ui, out),
+        None => setup_and_saved(state, ui, out),
         Some(_) => workspace(state, ui, out),
     }
+}
+
+/// The session form, then the saved sessions below it, in one scrolling column.
+fn setup_and_saved(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    egui::ScrollArea::vertical()
+        .id_salt("classroom-setup")
+        .auto_shrink([false, false])
+        .show(ui, |ui| {
+            super::classroom_setup::draw(state, ui, out);
+            ui.add_space(12.0);
+            super::classroom_saved::draw(state, ui, out);
+        });
 }
 
 /// The chat and the panel side by side when there is room, else one scrolling column.

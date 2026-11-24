@@ -147,3 +147,33 @@ pub fn library_json(state: &State) -> Value {
         "in_scope": lib.scope_total, "shown": lib.shown.len(), "rows": shown_rows(state, MAX_ROWS),
     })
 }
+
+/// The active session (or null), the saved sessions and what the last action reported.
+pub fn classroom_json(state: &State) -> Value {
+    let c = &state.classroom;
+    let active = c.session.as_ref().map(|s| {
+        json!({
+            "id": ulid(s.id), "title": s.title, "turns": s.turns.len(),
+            "tasks": s.assignments.len(), "submissions": s.submissions.len(),
+            "participants": s.participants.len(),
+        })
+    });
+    let saved: Vec<Value> = c
+        .saved
+        .iter()
+        .map(|s| {
+            json!({
+                "id": ulid(s.id), "title": s.title, "created_at_ms": s.created_at.0,
+                "turns": s.turns, "tasks": s.tasks,
+            })
+        })
+        .collect();
+    json!({
+        "busy": c.busy,
+        "error": c.error,
+        "active": active,
+        "saved": saved,
+        "confirm_delete": c.confirm_delete.map(ulid),
+        "notice": c.saved_notice,
+    })
+}

@@ -62,6 +62,7 @@ pub use crate::exec_worker::{worker_new, worker_with_host};
 
 mod areas;
 mod classroom;
+mod classroom_saved;
 mod mock;
 
 /// Perform one effect and report what happened. `now_ns` is the current Unix time in nanoseconds.

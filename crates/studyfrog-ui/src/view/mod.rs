@@ -31,6 +31,7 @@ mod classroom;
 mod classroom_chat;
 mod classroom_drawer;
 mod classroom_grade;
+mod classroom_saved;
 mod classroom_setup;
 mod classroom_tasks;
 mod console;

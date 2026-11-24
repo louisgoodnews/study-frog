@@ -24,6 +24,10 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
             ],
         ),
         Screen::Homework => (State { screen, ..state }, vec![Effect::LoadHomework]),
+        Screen::Classroom => (
+            State { screen, ..state },
+            crate::classroom_ui::saved::refresh(),
+        ),
         Screen::Folders => (
             State { screen, ..state },
             vec![

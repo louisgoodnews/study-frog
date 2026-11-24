@@ -25,6 +25,10 @@ use crate::msg::Msg;
 
 /// Performs one classroom effect and reports the stored session and any failure.
 pub fn run(w: &mut Worker, effect: ClassroomEffect, now_ns: i64) -> Msg {
+    let effect = match effect {
+        ClassroomEffect::Saved(saved) => return super::classroom_saved::run(w, saved),
+        other => other,
+    };
     let now_ms = (now_ns / 1_000_000).max(0);
     let (id, outcome) = perform(w, effect, now_ms);
     let session = id.and_then(|id| reload(w, id));
@@ -45,6 +49,10 @@ fn perform(
         return (None, Err("Open a vault first.".to_owned()));
     };
     match effect {
+        ClassroomEffect::Saved(_) => (
+            None,
+            Err("Saved sessions are read by their own worker.".to_owned()),
+        ),
         ClassroomEffect::Start {
             title,
             sources,
