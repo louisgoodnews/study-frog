@@ -17,7 +17,7 @@ use studyfrog_store::db::{open_db, open_memory};
 use studyfrog_store::migrate::{migrate, schema_version};
 use studyfrog_store::schema::MIGRATIONS;
 
-const CHILD_TABLES: [&str; 8] = [
+const CHILD_TABLES: [&str; 9] = [
     "classroom_participant",
     "classroom_turn",
     "classroom_assignment",
@@ -26,6 +26,7 @@ const CHILD_TABLES: [&str; 8] = [
     "classroom_submission",
     "classroom_grade",
     "classroom_source",
+    "classroom_rubric",
 ];
 
 fn migrated(conn: &mut Connection) {
@@ -41,8 +42,8 @@ fn count(conn: &Connection, table: &str) -> i64 {
 fn migration_32_creates_the_classroom_tables() {
     let mut conn = open_memory().unwrap();
     migrated(&mut conn);
-    assert_eq!(schema_version(&conn).unwrap(), 32);
-    for table in ["classroom_session", "classroom_grade"]
+    assert_eq!(schema_version(&conn).unwrap(), 33);
+    for table in ["classroom_session", "classroom_grade", "classroom_rubric"]
         .into_iter()
         .chain(CHILD_TABLES)
     {

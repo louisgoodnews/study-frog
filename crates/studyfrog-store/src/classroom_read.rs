@@ -150,14 +150,26 @@ fn read_assignments(conn: &Connection, key: &str) -> Result<Vec<Assignment>, Sto
     rows.into_iter()
         .map(|(uid, title, prompt, kind, assignee)| {
             let kind = assignment_kind(conn, key, &uid, &kind, assignee)?;
+            let rubric = read_rubric(conn, key, &uid)?;
             Ok(Assignment {
                 id: uid_of(&uid)?,
                 title,
                 prompt,
+                rubric,
                 kind,
             })
         })
         .collect()
+}
+
+/// The grading points of one assignment, in order.
+fn read_rubric(conn: &Connection, key: &str, assignment: &str) -> Result<Vec<String>, StoreError> {
+    query_all(
+        conn,
+        "SELECT text FROM classroom_rubric WHERE session_uid = ?1 AND assignment_uid = ?2 ORDER BY idx",
+        params![key, assignment],
+        |r| r.get(0),
+    )
 }
 
 fn assignment_kind(

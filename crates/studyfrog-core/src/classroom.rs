@@ -72,6 +72,8 @@ pub struct Assignment {
     pub title: String,
     /// The task text the students see.
     pub prompt: String,
+    /// The grading points: each is a criterion the answer is judged on. Never empty.
+    pub rubric: Vec<String>,
     /// Solo or group.
     pub kind: AssignmentKind,
 }
@@ -172,6 +174,8 @@ pub enum ClassroomError {
     UnknownAssignment(Uid),
     /// An assignment with this id already exists.
     DuplicateAssignment(Uid),
+    /// The assignment has no rubric point: grading needs at least one.
+    NoRubric,
     /// A group has fewer than two members, or a group assignment has no groups.
     GroupTooSmall,
     /// A participant appears twice in one group.

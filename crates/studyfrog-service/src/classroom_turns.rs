@@ -166,7 +166,7 @@ fn ask_student(
 }
 
 /// Appends a turn to the in-memory session and writes the session to the store.
-fn store_turn(
+pub(crate) fn store_turn(
     lecture: &Lecture<'_>,
     session: &mut ClassroomSession,
     speaker: usize,

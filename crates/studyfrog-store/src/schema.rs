@@ -1,7 +1,7 @@
 //! Schema as data. See `docs/specs/storage-schema.md`.
 
 use crate::migrate::Migration;
-use crate::schema_classroom::V32;
+use crate::schema_classroom::{V32, V33};
 use crate::schema_diary::V23;
 use crate::schema_early::{V2, V3};
 use crate::schema_exam::V25;
@@ -74,6 +74,11 @@ pub const MIGRATIONS: &[Migration] = &[
         version: 32,
         name: "classroom sessions, participants, turns, work and grades",
         sql: V32,
+    },
+    Migration {
+        version: 33,
+        name: "classroom assignment rubric points",
+        sql: V33,
     },
 ];
 

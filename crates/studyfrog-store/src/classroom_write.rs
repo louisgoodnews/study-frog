@@ -102,9 +102,26 @@ fn write_assignments(
             params![uid, a_uid, db_int(seq), a.title, a.prompt, kind, assignee],
         )
         .map_err(sql_err)?;
+        write_rubric(conn, uid, &a_uid, &a.rubric)?;
         if let AssignmentKind::Group { groups } = &a.kind {
             write_groups(conn, uid, &a_uid, groups)?;
         }
+    }
+    Ok(())
+}
+
+fn write_rubric(
+    conn: &Connection,
+    uid: &str,
+    assignment: &str,
+    rubric: &[String],
+) -> Result<(), StoreError> {
+    for (idx, point) in rubric.iter().enumerate() {
+        conn.execute(
+            "INSERT INTO classroom_rubric (session_uid, assignment_uid, idx, text) VALUES (?1, ?2, ?3, ?4)",
+            params![uid, assignment, db_int(idx), point],
+        )
+        .map_err(sql_err)?;
     }
     Ok(())
 }

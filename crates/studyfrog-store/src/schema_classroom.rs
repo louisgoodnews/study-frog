@@ -1,4 +1,4 @@
-//! Schema step 32: classroom sessions (EPIC-068, STORY-0208). Normalized tables for the session header,
+//! Schema steps 32 and 33: classroom sessions (EPIC-068, STORY-0208). Normalized tables for the session header,
 //! its participants, ordered chat turns, assignments, group rosters, submissions and grades. Every child
 //! table cascades from `classroom_session`, so deleting a session removes all of it in one statement.
 
@@ -97,5 +97,17 @@ CREATE TABLE classroom_source (
     item_uid    TEXT NOT NULL,
     PRIMARY KEY (session_uid, idx),
     UNIQUE (session_uid, kind, item_uid)
+) WITHOUT ROWID;
+";
+
+/// Additive: the grading points of each assignment, in order (migration 33).
+pub(crate) const V33: &str = "
+CREATE TABLE classroom_rubric (
+    session_uid    TEXT NOT NULL,
+    assignment_uid TEXT NOT NULL,
+    idx            INTEGER NOT NULL CHECK (idx >= 0),
+    text           TEXT NOT NULL,
+    PRIMARY KEY (session_uid, assignment_uid, idx),
+    FOREIGN KEY (session_uid, assignment_uid) REFERENCES classroom_assignment (session_uid, uid) ON DELETE CASCADE
 ) WITHOUT ROWID;
 ";

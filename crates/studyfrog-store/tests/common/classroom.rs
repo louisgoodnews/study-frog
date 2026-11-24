@@ -62,12 +62,14 @@ pub fn sample(id: u128, title: &str, created: i64) -> ClassroomSession {
                 id: Uid(0xA1),
                 title: name("Warm-up"),
                 prompt: name("Define a cell."),
+                rubric: vec![name("Names the cell's parts")],
                 kind: AssignmentKind::Solo { assignee: 3 },
             },
             Assignment {
                 id: Uid(0xA2),
                 title: name("Project"),
                 prompt: name("Draw a cell."),
+                rubric: vec![name("Labels every organelle"), name("Shows the membrane")],
                 kind: AssignmentKind::Group {
                     groups: vec![
                         GroupRoster {

@@ -9,9 +9,9 @@ use crate::classroom_ops::{check_participant, is_blank, is_student};
 use crate::time::UnixMs;
 use crate::uid::Uid;
 
-/// Adds an assignment. Its id must be new, its text non-blank, and every assignee a student.
-/// A group assignment needs at least one group, each with two or more distinct members, and no
-/// participant may sit in two groups.
+/// Adds an assignment. Its id must be new, its text and rubric points non-blank (with at least one
+/// rubric point), and every assignee a student. A group assignment needs at least one group, each
+/// with two or more distinct members, and no participant may sit in two groups.
 pub fn assign(
     session: &mut ClassroomSession,
     assignment: Assignment,
@@ -22,9 +22,21 @@ pub fn assign(
     if is_blank(&assignment.title) || is_blank(&assignment.prompt) {
         return Err(ClassroomError::EmptyText);
     }
+    check_rubric(&assignment.rubric)?;
     check_kind(session, &assignment.kind)?;
     session.assignments.push(assignment);
     Ok(())
+}
+
+/// Checks that there is at least one rubric point and that none is blank.
+fn check_rubric(rubric: &[String]) -> Result<(), ClassroomError> {
+    if rubric.is_empty() {
+        Err(ClassroomError::NoRubric)
+    } else if rubric.iter().any(|point| is_blank(point)) {
+        Err(ClassroomError::EmptyText)
+    } else {
+        Ok(())
+    }
 }
 
 /// Checks the assignees of an assignment kind against the session's participants.
