@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Headless UI and update tests for marking folders as stacks or normal folders (TASK-0217).
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 
@@ -142,7 +143,7 @@ fn executor_runs_mark_and_unmark_against_real_vault() {
     let mut w = worker_new(None);
     execute(
         &mut w,
-        Effect::OpenVault(vault.path.display().to_string()),
+        Effect::Vault(EffectVault::OpenVault(vault.path.display().to_string())),
         NOW_NS,
     );
 

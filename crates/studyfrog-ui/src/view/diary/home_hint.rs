@@ -1,4 +1,5 @@
 //! Quiet, dismissible Home screen hint when no diary entry exists yet today.
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, Align, Layout, RichText, Role, WidgetInfo};
 use studyfrog_core::civil::date_from_days;
@@ -40,7 +41,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 });
                 if write_btn.clicked() {
                     out.push(Msg::Diary(DiaryMsg::NewEntry(today)));
-                    out.push(Msg::Navigate(Screen::Diary));
+                    out.push(Msg::Vault(MsgVault::Navigate(Screen::Diary)));
                 }
             });
         });

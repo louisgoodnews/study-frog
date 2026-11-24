@@ -1,6 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! What AI clients staged over MCP shows on the assistant's "Work the vault" tab, is reviewed and
 //! applied like the assistant's own proposals, and their structural changes can be undone there.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 mod mcp_common;
@@ -23,7 +25,9 @@ fn opened(path: &Path) -> (Model, Worker) {
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::OpenVault(path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            path.display().to_string(),
+        ))],
     );
     (model, worker)
 }
@@ -55,7 +59,11 @@ fn a_staged_proposal_is_reviewed_applied_and_then_gone() {
     drop(c);
     let before = markdown_files(&vault.path).len();
     let (mut model, mut worker) = opened(&vault.path);
-    step(&mut model, &mut worker, Msg::Navigate(Screen::Agent));
+    step(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Agent)),
+    );
     assert_eq!(model.state.agent.mcp.staged.len(), 2);
     let id_of = |m: &Model, tool: &str| {
         let s = m.state.agent.mcp.staged.iter();
@@ -131,7 +139,11 @@ fn a_change_by_an_ai_tool_is_undone_from_the_assistant() {
     );
     drop(c);
     let (mut model, mut worker) = opened(&vault.path);
-    step(&mut model, &mut worker, Msg::Navigate(Screen::Agent));
+    step(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Agent)),
+    );
     step(
         &mut model,
         &mut worker,

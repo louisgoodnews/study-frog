@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The Backlog tab: grouping, the count per status, and moving items between the lists.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -45,7 +47,10 @@ fn model() -> Model {
     m.state.app.stack_tabs = vec!["french:backlog".into()];
     m.state.wall_ms = TODAY * 86_400_000;
     apply(&mut m, Msg::Library(LibraryMsg::Loaded(Ok(rows()))));
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     m
 }
 
@@ -89,11 +94,15 @@ fn the_tab_shows_both_lists_and_a_button_moves_an_item_through_the_worker() {
 
     let (vault, mut model, mut worker) = opened("backlog-move");
     model.state.app.stack_tabs = vec!["french:backlog".into()];
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
     send(
         &mut model,
         &mut worker,
-        Msg::Select(Selection::Stack("french".into())),
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
     );
     let before = backlog(&model.state.library, "french", 0);
     assert_eq!(

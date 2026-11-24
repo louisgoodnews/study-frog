@@ -1,4 +1,5 @@
 //! Screenshot setups for the mock exam: an exam made offline, and a graded one.
+use crate::msg::MsgRehearsal;
 
 use crate::effect::Effect;
 use crate::model::{Model, apply};
@@ -58,7 +59,7 @@ pub fn long_run(model: &mut Model) -> Vec<Effect> {
     };
     model.state.now = 0.0;
     model.state.screen = Screen::Rehearse;
-    let _ = apply(model, Msg::RunReady(Ok(run)));
+    let _ = apply(model, Msg::Rehearsal(MsgRehearsal::RunReady(Ok(run))));
     let answer = (1..=30)
         .map(|i| format!("Paragraph {i}: the answer goes on for a while, with enough words to wrap across the card, so the item has more text than fits."))
         .collect::<Vec<_>>()
@@ -76,9 +77,12 @@ pub fn long_run(model: &mut Model) -> Vec<Effect> {
         is_note: false,
         comments: Vec::new(),
     };
-    let _ = apply(model, Msg::ItemLoaded(Uid(1), Ok(content)));
+    let _ = apply(
+        model,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(content))),
+    );
     // The demo's own messages are applied here; no effect is left to load an item from a vault.
-    let _ = apply(model, Msg::RunAction(Action::Flip));
+    let _ = apply(model, Msg::Rehearsal(MsgRehearsal::RunAction(Action::Flip)));
     Vec::new()
 }
 

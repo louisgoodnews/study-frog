@@ -1,6 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The memory game's entry points: from a calendar session and a planned review (BUG-0046), and
 //! from a stack page while a rehearsal run is open (BUG-0047).
+use studyfrog_ui::effect::EffectBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -89,7 +91,9 @@ fn a_session_starts_a_memory_game_with_its_stack() {
     assert_eq!(m.state.browser.selection, Selection::Stack("french".into()));
     assert!(memory(&m.state).loading);
     assert!(
-        fx.contains(&Effect::MemoryDeck(Some("french".into()))),
+        fx.contains(&Effect::Browse(EffectBrowse::MemoryDeck(Some(
+            "french".into()
+        )))),
         "{fx:?}"
     );
 }
@@ -124,7 +128,7 @@ fn a_memory_game_takes_the_page_over_an_open_run() {
     let mut m = running_model(RunMode::Flip);
     assert!(m.state.rehearse.run.is_some());
     // The stack page's Memory game button: navigate to Rehearse, then start the game.
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
     apply(&mut m, Msg::Memory(MemoryMsg::StartStack("french".into())));
     apply(&mut m, Msg::Memory(MemoryMsg::Loaded(Ok(cards(4)))));
     assert!(memory(&m.state).session.is_some());

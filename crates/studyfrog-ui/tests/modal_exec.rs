@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Creating items through the executor against a real vault.
+use studyfrog_ui::effect::EffectImport;
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 
@@ -16,11 +18,11 @@ fn the_executor_creates_nested_stacks_and_items_and_reports_refusals() {
     let mut w = worker_new(None);
     execute(
         &mut w,
-        Effect::OpenVault(vault.path.display().to_string()),
+        Effect::Vault(EffectVault::OpenVault(vault.path.display().to_string())),
         NOW_NS,
     );
-    let make =
-        |kind, title: &str, text: &str, answer: &str, parent: Option<&str>| Effect::CreateItem {
+    let make = |kind, title: &str, text: &str, answer: &str, parent: Option<&str>| {
+        Effect::Import(EffectImport::CreateItem {
             kind,
             title: title.into(),
             text: text.into(),
@@ -30,7 +32,8 @@ fn the_executor_creates_nested_stacks_and_items_and_reports_refusals() {
             due: None,
             also_in: None,
             choices: (None, None),
-        };
+        })
+    };
     let msgs = execute(
         &mut w,
         make(NewKind::Stack, "Verbs", "", "", Some("french")),

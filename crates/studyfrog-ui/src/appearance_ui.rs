@@ -1,5 +1,6 @@
 //! The appearance and start-up settings in the state: changing them (saved at once, shown at once by
 //! [`crate::theme_apply::sync`]), the start screen, the last screen and the window. Pure.
+use crate::effect::EffectVault;
 
 use studyfrog_core::appearance::{
     Accent, Appearance, Density, StartScreen, TEXT_SIZES, ThemeChoice, WindowState, ZOOMS,
@@ -105,7 +106,7 @@ pub fn remember_screen(state: State) -> (State, Vec<Effect>) {
         Some(k) if a.last_screen.as_deref() != Some(k) => {
             let mut state = state;
             state.app.appearance.last_screen = Some(k.to_owned());
-            let save = Effect::SaveAppSettings(state.app.clone());
+            let save = Effect::Vault(EffectVault::SaveAppSettings(state.app.clone()));
             (state, vec![save])
         }
         _ => (state, Vec::new()),
@@ -164,6 +165,6 @@ pub fn update(state: State, msg: AppearanceMsg) -> (State, Vec<Effect>) {
     if state.app.appearance == before {
         return (state, Vec::new());
     }
-    let save = Effect::SaveAppSettings(state.app.clone());
+    let save = Effect::Vault(EffectVault::SaveAppSettings(state.app.clone()));
     (state, vec![save])
 }

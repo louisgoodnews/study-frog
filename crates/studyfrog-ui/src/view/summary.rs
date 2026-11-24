@@ -1,4 +1,5 @@
 //! The end-of-run screen: the counts as tiles and bars, and a scrollable card for every item.
+use crate::msg::MsgRehearsal;
 
 use eframe::egui::{self, RichText};
 use studyfrog_core::event::{Difficulty, difficulty_name};
@@ -53,11 +54,11 @@ pub(crate) fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
         if active {
             out.push(Msg::Diary(crate::diary_msg::DiaryMsg::PromptSkip));
         } else {
-            out.push(Msg::LeaveRun);
+            out.push(Msg::Rehearsal(MsgRehearsal::LeaveRun));
         }
     }
     if pressed(egui::Key::Space) {
-        out.push(Msg::LeaveRun);
+        out.push(Msg::Rehearsal(MsgRehearsal::LeaveRun));
     }
     if pressed(egui::Key::Enter) {
         let active = run
@@ -95,7 +96,7 @@ pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>)
                         .on_hover_text("Goes back to the setup of the run.")
                         .clicked()
                     {
-                        out.push(Msg::LeaveRun);
+                        out.push(Msg::Rehearsal(MsgRehearsal::LeaveRun));
                     }
                 });
             });

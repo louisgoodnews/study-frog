@@ -1,4 +1,5 @@
 //! The home screen's update logic and the shortcuts that start a rehearsal from it. Pure.
+use crate::msg::MsgRehearsal;
 
 use studyfrog_service::home::HomeSummary;
 
@@ -53,7 +54,7 @@ fn start_today(state: State) -> (State, Vec<Effect>) {
         screen: Screen::Rehearse,
         ..state
     };
-    run_update::update(state, Msg::StartRunClicked)
+    run_update::update(state, Msg::Rehearsal(MsgRehearsal::StartRunClicked))
 }
 
 fn rehearse_stack(state: State, folder: &str) -> (State, Vec<Effect>) {

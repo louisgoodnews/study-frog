@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The real egui views, run headlessly with the kittest harness: clicks, typing, navigation.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -46,7 +48,10 @@ fn the_vault_dialog_opens_a_typed_path_and_the_welcome_page_lists_recent_vaults(
 
     h.get_by_label("Open vault").click();
     h.run_steps(3); // the spinner keeps repainting, so the loop never settles
-    assert_eq!(h.state().1, [Effect::OpenVault("/v/new".into())]);
+    assert_eq!(
+        h.state().1,
+        [Effect::Vault(EffectVault::OpenVault("/v/new".into()))]
+    );
     assert!(h.state().0.state.opening);
     assert!(
         h.query_by_label("Opening and indexing the vault…")
@@ -60,7 +65,10 @@ fn the_vault_dialog_opens_a_typed_path_and_the_welcome_page_lists_recent_vaults(
     h.run();
     h.get_by_label("/v/old").click();
     h.run_steps(3);
-    assert_eq!(h.state().1, [Effect::OpenVault("/v/old".into())]);
+    assert_eq!(
+        h.state().1,
+        [Effect::Vault(EffectVault::OpenVault("/v/old".into()))]
+    );
 }
 
 #[test]
@@ -131,7 +139,7 @@ fn invalid_vault_settings_are_shown_on_the_settings_screen() {
     let mut m = open_model();
     m.state.vault.as_mut().unwrap().settings_error =
         Some("line 2: scheduler must be \"fsrs\" or \"sm2\"".into());
-    apply(&mut m, Msg::Navigate(Screen::Settings));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Settings)));
     let mut h = harness(m);
     h.run();
     assert!(
@@ -170,7 +178,7 @@ fn ticks_never_stack_polls_and_resume_after_a_reply() {
         h.state()
             .1
             .iter()
-            .filter(|e| **e == Effect::PollVault)
+            .filter(|e| **e == Effect::Vault(EffectVault::PollVault))
             .count()
     };
     assert_eq!(
@@ -179,7 +187,10 @@ fn ticks_never_stack_polls_and_resume_after_a_reply() {
         "one poll stays outstanding however many ticks pass"
     );
 
-    apply(&mut h.state_mut().0, Msg::VaultPolled(Ok(None)));
+    apply(
+        &mut h.state_mut().0,
+        Msg::Vault(MsgVault::VaultPolled(Ok(None))),
+    );
     h.run_steps(8);
     assert_eq!(polls(&h), 2, "after the reply, the next tick polls again");
 }
@@ -213,7 +224,7 @@ fn vault_switcher_shows_clean_folder_names_and_disambiguates_duplicates() {
     );
     h.get_by_label("Kognitive Neurowissenschaft").click();
     h.run_steps(3);
-    assert!(h.state().1.contains(&Effect::OpenVault(
+    assert!(h.state().1.contains(&Effect::Vault(EffectVault::OpenVault(
         "/home/user/Studium/WiSe/Kognitive Neurowissenschaft".into()
-    )));
+    ))));
 }

@@ -2,6 +2,7 @@
 //! Gemini and DeepSeek (STORY-0083, STORY-0084) through the application's real HTTP sender
 //! (`studyfrog_net::send`) and the worker, against a fake server on 127.0.0.1 that answers in each
 //! provider's documented wire format. No real endpoint is contacted.
+use studyfrog_ui::effect::EffectAssistant;
 
 use std::io::{Read, Write};
 use std::net::TcpListener;
@@ -67,10 +68,10 @@ fn worker_with(label: &str, p: &Provider) -> Worker {
     std::fs::create_dir_all(&dir).unwrap();
     let mut w = worker_new(Some(dir));
     w.transport = Some(studyfrog_net::send);
-    let save = Effect::SaveConnection {
+    let save = Effect::Assistant(EffectAssistant::SaveConnection {
         provider: p.clone(),
         key: Some(KEY.into()),
-    };
+    });
     let saved = format!("{:?}", execute(&mut w, save, NOW));
     assert!(saved.contains("Saved(Ok"), "{saved}");
     w
@@ -91,12 +92,12 @@ fn chat(w: &mut Worker, p: &Provider, purpose: ChatPurpose) -> Msg {
         role: Role::User,
         content: "What is spacing?".into(),
     }];
-    let effect = Effect::AgentChat {
+    let effect = Effect::Assistant(EffectAssistant::AgentChat {
         provider: p.clone(),
         system: "Examiner".into(),
         messages,
         purpose,
-    };
+    });
     execute(w, effect, NOW).pop().unwrap()
 }
 

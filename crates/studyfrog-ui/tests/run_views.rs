@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The rehearsal screen's real widgets, headless: clicks, keys, pause, summary, accessibility.
+use studyfrog_ui::effect::EffectRehearsal;
+use studyfrog_ui::msg::MsgRehearsal;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -72,7 +75,7 @@ fn the_prompt_is_shown_then_revealed_then_rated_with_the_mouse() {
         h.state()
             .1
             .iter()
-            .any(|e| matches!(e, Effect::RecordStep { .. })),
+            .any(|e| matches!(e, Effect::Rehearsal(EffectRehearsal::RecordStep { .. }))),
         "every step is saved"
     );
 }
@@ -168,9 +171,12 @@ fn typing_an_answer_does_not_trigger_shortcuts_and_submitting_reveals_the_refere
 #[test]
 fn the_start_button_needs_items_and_asks_for_a_run() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
-    apply(&mut m, Msg::PreviewReady(Ok(0)));
-    apply(&mut m, Msg::SetupStep(SetupStep::Review));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
+    apply(&mut m, Msg::Rehearsal(MsgRehearsal::PreviewReady(Ok(0))));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::SetupStep(SetupStep::Review)),
+    );
     let mut h = harness(m);
     h.run();
     h.get_by_label("Start rehearsal").click();
@@ -179,11 +185,14 @@ fn the_start_button_needs_items_and_asks_for_a_run() {
         !h.state()
             .1
             .iter()
-            .any(|e| matches!(e, Effect::StartRun { .. })),
+            .any(|e| matches!(e, Effect::Rehearsal(EffectRehearsal::StartRun { .. }))),
         "nothing to rehearse, nothing starts"
     );
 
-    apply(&mut h.state_mut().0, Msg::PreviewReady(Ok(5)));
+    apply(
+        &mut h.state_mut().0,
+        Msg::Rehearsal(MsgRehearsal::PreviewReady(Ok(5))),
+    );
     h.run();
     h.get_by_label("Start rehearsal").click();
     h.run_steps(3);
@@ -191,7 +200,7 @@ fn the_start_button_needs_items_and_asks_for_a_run() {
         h.state()
             .1
             .iter()
-            .any(|e| matches!(e, Effect::StartRun { .. }))
+            .any(|e| matches!(e, Effect::Rehearsal(EffectRehearsal::StartRun { .. })))
     );
 }
 

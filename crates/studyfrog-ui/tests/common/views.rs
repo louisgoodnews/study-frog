@@ -1,5 +1,7 @@
 #![allow(dead_code, clippy::unwrap_used, clippy::expect_used)] // shared test helpers
 //! Helpers for the headless view tests.
+use studyfrog_ui::msg::MsgRehearsal;
+use studyfrog_ui::msg::MsgVault;
 
 use egui_kittest::Harness;
 use studyfrog_core::scheduler::Scheduler;
@@ -66,8 +68,11 @@ pub fn info() -> VaultInfo {
 pub fn open_model() -> Model {
     let mut m = Model::default();
     m.state.app.tutorial_offered = true; // the first-run offer has its own tests
-    apply(&mut m, Msg::VaultOpened(Ok(info())));
-    apply(&mut m, Msg::Navigate(studyfrog_ui::state::Screen::Library));
+    apply(&mut m, Msg::Vault(MsgVault::VaultOpened(Ok(info()))));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::Navigate(studyfrog_ui::state::Screen::Library)),
+    );
     m
 }
 
@@ -85,9 +90,12 @@ pub fn running_model(mode: studyfrog_core::run::RunMode) -> Model {
         started_at: None,
     };
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(studyfrog_ui::state::Screen::Rehearse));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::Navigate(studyfrog_ui::state::Screen::Rehearse)),
+    );
     m.state.now = 0.0;
-    apply(&mut m, Msg::RunReady(Ok(run)));
+    apply(&mut m, Msg::Rehearsal(MsgRehearsal::RunReady(Ok(run))));
     for (uid, prompt, answer) in [(1, "Capital of France?", "Paris"), (2, "7 x 8?", "56")] {
         let content = ItemContent {
             case: None,
@@ -102,7 +110,10 @@ pub fn running_model(mode: studyfrog_core::run::RunMode) -> Model {
             is_note: false,
             comments: Vec::new(),
         };
-        apply(&mut m, Msg::ItemLoaded(Uid(uid), Ok(content)));
+        apply(
+            &mut m,
+            Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(uid), Ok(content))),
+        );
     }
     m
 }

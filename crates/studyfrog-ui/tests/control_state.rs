@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The control protocol's pure state serializer, command plans and answers.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgEditor;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -66,11 +69,19 @@ fn an_open_vault_is_described_with_its_stacks_and_the_screen_parts() {
     assert_eq!(v["vault"]["stacks"][0]["folder"], "french");
     assert_eq!(v["vault"]["stacks"][0]["cards"], 2);
     assert_eq!(v["vault"]["inbox_items"], 1);
-    common::flow::send(&mut m, &mut w, Msg::Navigate(Screen::Library));
+    common::flow::send(
+        &mut m,
+        &mut w,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
     let v = state_json(&m.state);
     assert_eq!(v["library"]["total"], 4);
     assert_eq!(v["library"]["rows"].as_array().unwrap().len(), 4);
-    common::flow::send(&mut m, &mut w, Msg::OpenItem(studyfrog_core::uid::Uid(10)));
+    common::flow::send(
+        &mut m,
+        &mut w,
+        Msg::Browse(MsgBrowse::OpenItem(studyfrog_core::uid::Uid(10))),
+    );
     let v = state_json(&m.state);
     assert_eq!(v["screen"], "editor");
     assert_eq!(v["editor"]["title"], "A");
@@ -95,7 +106,11 @@ fn items_are_found_by_ulid_or_key_and_stacks_by_folder() {
             .unwrap_err()
             .contains("no item FLASHCARD_1")
     );
-    common::flow::send(&mut m, &mut w, Msg::Navigate(Screen::Library));
+    common::flow::send(
+        &mut m,
+        &mut w,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
     m.state.library.items[0].row.key = Some("FLASHCARD_7".into());
     let uid = m.state.library.items[0].uid;
     assert_eq!(resolve_item(&m.state, "flashcard_7").unwrap(), uid);
@@ -113,15 +128,21 @@ fn commands_become_the_messages_the_screens_send() {
     let s = &m.state;
     assert_eq!(
         plan_for(s, &cmd("nav board")).unwrap(),
-        vec![vec![Msg::Navigate(Screen::Board)]]
+        vec![vec![Msg::Vault(MsgVault::Navigate(Screen::Board))]]
     );
     let delete = plan_for(s, &cmd("item delete 0000000000000000000000000A")).unwrap();
     assert_eq!(delete.len(), 2, "the item is loaded before it is deleted");
-    assert_eq!(delete[1][1], Msg::Edit(EditAction::ConfirmDelete));
+    assert_eq!(
+        delete[1][1],
+        Msg::Editor(MsgEditor::Edit(EditAction::ConfirmDelete))
+    );
     let edit = plan_for(s, &cmd("item edit 0000000000000000000000000A title New")).unwrap();
     assert_eq!(
         edit[1],
-        vec![Msg::Edit(EditAction::Title("New".into())), Msg::SaveClicked]
+        vec![
+            Msg::Editor(MsgEditor::Edit(EditAction::Title("New".into()))),
+            Msg::Editor(MsgEditor::SaveClicked)
+        ]
     );
     assert!(plan_for(s, &cmd("item move 0000000000000000000000000A german")).is_err());
     assert!(plan_for(s, &cmd("rehearse setup --stack german")).is_err());

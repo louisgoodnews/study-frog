@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! STORY-0122: "Open logs folder" in Settings > Data through an injected opener, and worker events
 //! (failures, import and export outcomes) written to the application log.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 
@@ -95,13 +96,13 @@ fn failed_effects_and_export_outcomes_go_to_the_application_log() {
     w.state_dir = Some(logs.clone());
     execute_logged(
         &mut w,
-        Effect::OpenVault("/no/such/vault/here".into()),
+        Effect::Vault(EffectVault::OpenVault("/no/such/vault/here".into())),
         1_800_000_000_000_000_000,
     );
     let vault = common::sample_vault("logs-export");
     execute_logged(
         &mut w,
-        Effect::OpenVault(vault.path.display().to_string()),
+        Effect::Vault(EffectVault::OpenVault(vault.path.display().to_string())),
         1,
     );
     let csv = Effect::Library(LibraryEffect::Transfer(TransferJob::ReportCsv(false)));

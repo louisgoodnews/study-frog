@@ -1,5 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The reports screen.
+use studyfrog_ui::effect::EffectReports;
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgReports;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -19,18 +23,24 @@ use studyfrog_ui::state::{NoticeKind, Screen};
 fn opening_the_screen_computes_the_reports_and_failures_are_reported() {
     let mut m = open_model();
     assert_eq!(
-        apply(&mut m, Msg::Navigate(Screen::Reports)),
+        apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Reports))),
         [
-            Effect::BuildReports,
-            Effect::Explore {
+            Effect::Reports(EffectReports::BuildReports),
+            Effect::Reports(EffectReports::Explore {
                 scope: Default::default(),
                 period: Default::default()
-            }
+            })
         ]
     );
-    apply(&mut m, Msg::ReportsBuilt(Ok(Box::new(bundle()))));
+    apply(
+        &mut m,
+        Msg::Reports(MsgReports::ReportsBuilt(Ok(Box::new(bundle())))),
+    );
     assert_eq!(m.state.reports.as_ref().unwrap().reviews, 120);
-    apply(&mut m, Msg::ReportsBuilt(Err("disk".into())));
+    apply(
+        &mut m,
+        Msg::Reports(MsgReports::ReportsBuilt(Err("disk".into()))),
+    );
     assert_eq!(m.state.notice.as_ref().unwrap().kind, NoticeKind::Error);
     assert!(m.state.reports.is_some(), "the last reports stay");
 }
@@ -40,7 +50,10 @@ fn the_three_reports_show_their_numbers_as_text() {
     let mut m = open_model();
     m.state.screen = Screen::Reports;
     m.state.explorer.tab = studyfrog_ui::explorer_ui::ReportTab::Memory;
-    apply(&mut m, Msg::ReportsBuilt(Ok(Box::new(bundle()))));
+    apply(
+        &mut m,
+        Msg::Reports(MsgReports::ReportsBuilt(Ok(Box::new(bundle())))),
+    );
     let mut h = harness(m);
     h.run();
     for text in [
@@ -99,7 +112,10 @@ fn an_empty_history_says_so_and_still_draws() {
         analytics: Default::default(),
         cognitive: Default::default(),
     };
-    apply(&mut m, Msg::ReportsBuilt(Ok(Box::new(empty))));
+    apply(
+        &mut m,
+        Msg::Reports(MsgReports::ReportsBuilt(Ok(Box::new(empty)))),
+    );
     let mut h = harness(m);
     h.run();
     assert!(
@@ -119,11 +135,15 @@ fn the_executor_computes_reports_for_a_real_vault() {
     let mut worker = worker_new(None);
     execute(
         &mut worker,
-        Effect::OpenVault(vault.path.display().to_string()),
+        Effect::Vault(EffectVault::OpenVault(vault.path.display().to_string())),
         NOW_NS,
     );
-    let msgs = execute(&mut worker, Effect::BuildReports, NOW_NS);
-    let Msg::ReportsBuilt(Ok(r)) = &msgs[0] else {
+    let msgs = execute(
+        &mut worker,
+        Effect::Reports(EffectReports::BuildReports),
+        NOW_NS,
+    );
+    let Msg::Reports(MsgReports::ReportsBuilt(Ok(r))) = &msgs[0] else {
         panic!("{:?}", msgs[0])
     };
     assert_eq!((r.reviews, r.forecast.len()), (0, 30));

@@ -1,4 +1,8 @@
 //! The editor: state and update logic. Pure.
+use crate::effect::EffectBrowse;
+use crate::effect::EffectEditor;
+use crate::msg::MsgBrowse;
+use crate::msg::MsgEditor;
 
 use studyfrog_core::uid::Uid;
 use studyfrog_md::blocks::{Block, parse_blocks};
@@ -109,29 +113,42 @@ pub fn has_unsaved_changes(state: &State) -> bool {
     state.editor.as_ref().is_some_and(is_dirty)
 }
 
+mod link;
+use link::link_resolved;
+
 /// Handle the editor's messages.
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
     match msg {
-        Msg::OpenItem(uid) => open_item(state, uid),
-        Msg::DocumentLoaded(uid, result) => loaded(state, uid, result),
-        Msg::FamCurveLoaded(uid, Ok(curve)) => crate::editor_edit::curve(state, uid, curve),
-        Msg::BacklinksLoaded(uid, result) => crate::editor_edit::backlinks(state, uid, result),
-        Msg::Edit(action) => crate::editor_edit::edit(state, action),
-        Msg::SaveClicked => crate::editor_save::save(state),
-        Msg::Saved(result) => crate::editor_save::saved(state, result),
-        Msg::KeepMineClicked => keep_mine(state),
-        Msg::RevertClicked => revert(state),
-        Msg::ReloadClicked => reload(state),
-        Msg::CloseEditor => close(state),
-        Msg::OpenLink(target) => (state, vec![Effect::ResolveLink(target)]),
-        Msg::LinkResolved(target, result) => link_resolved(state, &target, result),
+        Msg::Browse(MsgBrowse::OpenItem(uid)) => open_item(state, uid),
+        Msg::Editor(MsgEditor::DocumentLoaded(uid, result)) => loaded(state, uid, result),
+        Msg::Browse(MsgBrowse::FamCurveLoaded(uid, Ok(curve))) => {
+            crate::editor_edit::curve(state, uid, curve)
+        }
+        Msg::Browse(MsgBrowse::BacklinksLoaded(uid, result)) => {
+            crate::editor_edit::backlinks(state, uid, result)
+        }
+        Msg::Editor(MsgEditor::Edit(action)) => crate::editor_edit::edit(state, action),
+        Msg::Editor(MsgEditor::SaveClicked) => crate::editor_save::save(state),
+        Msg::Editor(MsgEditor::Saved(result)) => crate::editor_save::saved(state, result),
+        Msg::Editor(MsgEditor::KeepMineClicked) => keep_mine(state),
+        Msg::Editor(MsgEditor::RevertClicked) => revert(state),
+        Msg::Editor(MsgEditor::ReloadClicked) => reload(state),
+        Msg::Editor(MsgEditor::CloseEditor) => close(state),
+        Msg::Editor(MsgEditor::OpenLink(target)) => (
+            state,
+            vec![Effect::Editor(EffectEditor::ResolveLink(target))],
+        ),
+        Msg::Editor(MsgEditor::LinkResolved(target, result)) => {
+            link_resolved(state, &target, result)
+        }
         _ => (state, Vec::new()),
     }
 }
 
 fn open_item(state: State, uid: Uid) -> (State, Vec<Effect>) {
     let state = if state.editor.as_ref().is_some_and(|e| e.uid != uid) {
-        let (state, waiting) = crate::editor_save::flush_before(state, Msg::OpenItem(uid));
+        let (state, waiting) =
+            crate::editor_save::flush_before(state, Msg::Browse(MsgBrowse::OpenItem(uid)));
         if let Some(effects) = waiting {
             return (state, effects);
         }
@@ -139,7 +156,7 @@ fn open_item(state: State, uid: Uid) -> (State, Vec<Effect>) {
     } else {
         state
     };
-    (state, vec![Effect::LoadDocument(uid)])
+    (state, vec![Effect::Editor(EffectEditor::LoadDocument(uid))])
 }
 
 /// "Keep mine" after a conflict: read the file again for its new fingerprint and save the edits over it.
@@ -152,7 +169,7 @@ fn keep_mine(state: State) -> (State, Vec<Effect>) {
     if let Some(e) = &mut state.editor {
         e.keep_mine = true;
     }
-    (state, vec![Effect::LoadDocument(uid)])
+    (state, vec![Effect::Editor(EffectEditor::LoadDocument(uid))])
 }
 
 fn loaded(state: State, uid: Uid, result: Result<LoadedDoc, String>) -> (State, Vec<Effect>) {
@@ -169,7 +186,7 @@ fn loaded(state: State, uid: Uid, result: Result<LoadedDoc, String>) -> (State, 
                 editor.previews = previews(&form);
                 (editor.form, editor.dirty_since) = (form, Some(state.wall_ms));
             }
-            let ask = Effect::LoadBacklinks(uid, editor.form.title.clone());
+            let ask = Effect::Browse(EffectBrowse::LoadBacklinks(uid, editor.form.title.clone()));
             let state = State {
                 editor: Some(editor),
                 screen: Screen::Editor,
@@ -200,14 +217,15 @@ fn reload(state: State) -> (State, Vec<Effect>) {
     match &state.editor {
         Some(e) => {
             let uid = e.uid;
-            (state, vec![Effect::LoadDocument(uid)])
+            (state, vec![Effect::Editor(EffectEditor::LoadDocument(uid))])
         }
         None => (state, Vec::new()),
     }
 }
 
 fn close(state: State) -> (State, Vec<Effect>) {
-    let (state, waiting) = crate::editor_save::flush_before(state, Msg::CloseEditor);
+    let (state, waiting) =
+        crate::editor_save::flush_before(state, Msg::Editor(MsgEditor::CloseEditor));
     if let Some(effects) = waiting {
         return (state, effects);
     }
@@ -219,24 +237,4 @@ fn close(state: State) -> (State, Vec<Effect>) {
         },
         Vec::new(),
     )
-}
-
-fn link_resolved(
-    state: State,
-    target: &str,
-    result: Result<Option<Uid>, String>,
-) -> (State, Vec<Effect>) {
-    match result {
-        Ok(Some(uid)) => open_item(state, uid),
-        Ok(None) => notice(
-            state,
-            NoticeKind::Error,
-            format!("No item is titled \"{target}\"."),
-        ),
-        Err(e) => notice(
-            state,
-            NoticeKind::Error,
-            format!("Could not follow the link: {e}"),
-        ),
-    }
 }

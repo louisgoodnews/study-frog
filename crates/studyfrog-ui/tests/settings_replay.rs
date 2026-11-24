@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Settings shows whether familiarity helps on the user's own history, and never switches it off itself.
+use studyfrog_ui::effect::EffectReports;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -26,9 +28,13 @@ fn report(verdict: Verdict) -> ReplayReport {
 #[test]
 fn opening_settings_asks_for_the_reports_and_the_verdict_is_told_in_words() {
     let (_v, mut model, mut worker) = opened("settings-replay");
-    let fx = apply(&mut model, Msg::Navigate(Screen::Settings));
-    assert!(fx.contains(&Effect::BuildReports));
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Settings));
+    let fx = apply(&mut model, Msg::Vault(MsgVault::Navigate(Screen::Settings)));
+    assert!(fx.contains(&Effect::Reports(EffectReports::BuildReports)));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Settings)),
+    );
     let r = &model.state.reports.as_ref().unwrap().replay;
     assert_eq!(
         r.verdict,

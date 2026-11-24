@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Item status on screen: the menu on the item page, labels on list rows and a stack's roll-up.
+use studyfrog_ui::effect::EffectBrowse;
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -26,7 +29,10 @@ fn editing(text: &str) -> Model {
         doc,
         hash: 1,
     };
-    apply(&mut m, Msg::DocumentLoaded(Uid(0xA), Ok(loaded)));
+    apply(
+        &mut m,
+        Msg::Editor(MsgEditor::DocumentLoaded(Uid(0xA), Ok(loaded))),
+    );
     m
 }
 
@@ -62,7 +68,10 @@ fn choosing_automatic_removes_the_key_and_an_untouched_unknown_word_stays() {
     let mut m = editing(
         "---\nid: 0000000000000000000000000A\nkind: card\ntitle: C\nstatus: done\n---\nq\n???\na\n",
     );
-    apply(&mut m, Msg::Edit(EditAction::Status(None)));
+    apply(
+        &mut m,
+        Msg::Editor(MsgEditor::Edit(EditAction::Status(None))),
+    );
     let e = m.state.editor.as_ref().unwrap();
     let saved = apply_form(&e.doc, &e.form).unwrap();
     assert!(
@@ -104,13 +113,16 @@ fn the_menu_says_what_the_history_makes_of_an_item_without_a_status() {
 #[test]
 fn list_rows_show_each_items_status_and_the_stack_shows_its_roll_up() {
     let mut m = open_model();
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     m.state.app.stack_tabs = vec!["french:list".into()];
     let items = vec![
         row(1, "Bonjour", Status::Learning),
         row(2, "Au revoir", Status::Done),
     ];
-    apply(&mut m, Msg::ItemsLoaded(Ok(items)));
+    apply(&mut m, Msg::Browse(MsgBrowse::ItemsLoaded(Ok(items))));
     let (mut one, mut two) = (lib_item(1, "Bonjour"), lib_item(2, "Au revoir"));
     (one.row.status, two.row.status) = (Status::Learning, Status::Done);
     let rows = studyfrog_ui::library_ui::LibraryMsg::Loaded(Ok(vec![one, two]));
@@ -122,7 +134,10 @@ fn list_rows_show_each_items_status_and_the_stack_shows_its_roll_up() {
         (Status::Done, 2),
         (Status::Paused, 0),
     ];
-    apply(&mut m, Msg::StatusCountsLoaded(Ok(counts)));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::StatusCountsLoaded(Ok(counts))),
+    );
     let mut h = harness(m);
     h.run_steps(2);
     assert!(h.query_by_label("Learning").is_some() && h.query_by_label("Complete").is_some());
@@ -137,12 +152,21 @@ fn list_rows_show_each_items_status_and_the_stack_shows_its_roll_up() {
 #[test]
 fn a_failed_count_clears_the_roll_up_and_selecting_a_stack_asks_for_it() {
     let mut m = open_model();
-    let fx = apply(&mut m, Msg::Select(Selection::Stack("french".into())));
-    assert!(
-        fx.iter()
-            .any(|e| matches!(e, studyfrog_ui::effect::Effect::LoadStatusCounts(_)))
+    let fx = apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
     );
-    apply(&mut m, Msg::StatusCountsLoaded(Ok(vec![(Status::New, 4)])));
-    apply(&mut m, Msg::StatusCountsLoaded(Err("disk".into())));
+    assert!(fx.iter().any(|e| matches!(
+        e,
+        studyfrog_ui::effect::Effect::Browse(EffectBrowse::LoadStatusCounts(_))
+    )));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::StatusCountsLoaded(Ok(vec![(Status::New, 4)]))),
+    );
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::StatusCountsLoaded(Err("disk".into()))),
+    );
     assert!(m.state.browser.status_counts.is_empty());
 }

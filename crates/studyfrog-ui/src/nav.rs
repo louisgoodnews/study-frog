@@ -1,29 +1,42 @@
 //! Changing screens: which ones may be left, and what each one needs loaded.
+use crate::effect::EffectAssistant;
+use crate::effect::EffectBrowse;
+use crate::effect::EffectEditor;
+use crate::effect::EffectPlanner;
+use crate::effect::EffectReports;
+use crate::effect::EffectVault;
+use crate::msg::MsgVault;
 
 use crate::effect::Effect;
 use crate::state::{Screen, State};
 
 fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
     match screen {
-        Screen::Graph => (State { screen, ..state }, vec![Effect::LoadGraph]),
+        Screen::Graph => (
+            State { screen, ..state },
+            vec![Effect::Editor(EffectEditor::LoadGraph)],
+        ),
         Screen::Calendar => (
             State { screen, ..state },
-            vec![Effect::LoadSessions, Effect::LoadHomework],
+            vec![
+                Effect::Planner(EffectPlanner::LoadSessions),
+                Effect::LoadHomework,
+            ],
         ),
         Screen::Homework => (State { screen, ..state }, vec![Effect::LoadHomework]),
         Screen::Folders => (
             State { screen, ..state },
             vec![
                 Effect::Folders(crate::folders_types::FolderEffect::Scan),
-                Effect::LoadLibrary,
+                Effect::Browse(EffectBrowse::LoadLibrary),
                 crate::pdf_library_ui::load(),
             ],
         ),
         Screen::Home | Screen::Library => (
             State { screen, ..state },
             vec![
-                Effect::LoadHome,
-                Effect::LoadSessions,
+                Effect::Vault(EffectVault::LoadHome),
+                Effect::Planner(EffectPlanner::LoadSessions),
                 Effect::Folders(crate::folders_types::FolderEffect::Scan),
                 crate::pdf_library_ui::load(),
             ],
@@ -38,21 +51,41 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
             let tools = Effect::Agent(crate::agent_mcp_types::AgentEffect::LoadServers);
             (
                 State { screen, ..state },
-                vec![Effect::LoadAgent, mcp, tools, pages],
+                vec![
+                    Effect::Assistant(EffectAssistant::LoadAgent),
+                    mcp,
+                    tools,
+                    pages,
+                ],
             )
         }
         Screen::Reports => {
             let ask = crate::explorer_ui::refresh(&state);
-            (State { screen, ..state }, vec![Effect::BuildReports, ask])
+            (
+                State { screen, ..state },
+                vec![Effect::Reports(EffectReports::BuildReports), ask],
+            )
         }
-        Screen::Settings => (State { screen, ..state }, vec![Effect::BuildReports]),
-        Screen::Prompts => (State { screen, ..state }, vec![Effect::LoadAgent]),
+        Screen::Settings => (
+            State { screen, ..state },
+            vec![Effect::Reports(EffectReports::BuildReports)],
+        ),
+        Screen::Prompts => (
+            State { screen, ..state },
+            vec![Effect::Assistant(EffectAssistant::LoadAgent)],
+        ),
         Screen::Diary => (
             State { screen, ..state },
             vec![Effect::Diary(crate::diary_types::DiaryEffect::LoadEntries)],
         ),
-        Screen::Achievements => (State { screen, ..state }, vec![Effect::CheckAchievements]),
-        Screen::Board => (State { screen, ..state }, vec![Effect::LoadBoard]),
+        Screen::Achievements => (
+            State { screen, ..state },
+            vec![Effect::Reports(EffectReports::CheckAchievements)],
+        ),
+        Screen::Board => (
+            State { screen, ..state },
+            vec![Effect::Planner(EffectPlanner::LoadBoard)],
+        ),
         Screen::Rehearse => crate::setup::refresh_preview(State { screen, ..state }),
         _ => (State { screen, ..state }, Vec::new()),
     }
@@ -63,7 +96,7 @@ pub fn navigate(state: State, screen: Screen) -> (State, Vec<Effect>) {
     let state = if screen == Screen::Editor {
         state
     } else {
-        let then = crate::msg::Msg::Navigate(screen);
+        let then = crate::msg::Msg::Vault(MsgVault::Navigate(screen));
         let (state, waiting) = crate::editor_save::flush_before(state, then);
         if let Some(effects) = waiting {
             return (state, effects);

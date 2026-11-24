@@ -1,4 +1,5 @@
 //! Performing the calendar and board effects. Thin: the rules live in the service and domain crates.
+use crate::msg::MsgVault;
 
 use studyfrog_board::ops::BoardOp;
 use studyfrog_calendar::session::Session;
@@ -48,7 +49,7 @@ pub fn reminders(w: &Worker, now_ns: i64) -> Msg {
         }
         None => Ok(studyfrog_calendar::reminders::DueAll::default()),
     };
-    Msg::RemindersDue(result)
+    Msg::Vault(MsgVault::RemindersDue(result))
 }
 
 fn today(now_ns: i64) -> Date {

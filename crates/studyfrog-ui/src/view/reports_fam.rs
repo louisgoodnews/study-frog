@@ -1,4 +1,5 @@
 //! The familiarity report: the spread of values, and per stack and per subject the roll-up with its least familiar items.
+use crate::msg::MsgBrowse;
 
 use eframe::egui;
 use studyfrog_service::fam_report::{FamGroup, FamReport};
@@ -43,7 +44,7 @@ fn groups(title: &str, list: &[FamGroup], ui: &mut egui::Ui, out: &mut Vec<Msg>)
                     .on_hover_text("Opens this item.")
                     .clicked()
                 {
-                    out.push(Msg::OpenItem(row.uid));
+                    out.push(Msg::Browse(MsgBrowse::OpenItem(row.uid)));
                 }
                 ui.weak(format!("{} % - {}", row.percent, row.drivers));
             });

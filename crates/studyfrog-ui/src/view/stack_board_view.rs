@@ -1,5 +1,6 @@
 //! The Board tab: the stack's items in a column for each status. An item moves by dragging it to another column or with its
 //! menu, which writes the status into its file.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, CornerRadius, Frame, Id, Margin, Stroke};
 use studyfrog_core::status::{STATUSES, Status, status_label};
@@ -39,7 +40,7 @@ fn card(
             .on_hover_text("Opens this item.")
             .clicked()
         {
-            out.push(Msg::OpenItem(uid));
+            out.push(Msg::Browse(MsgBrowse::OpenItem(uid)));
         }
         ui.menu_button(format!("Move {title}"), |ui| {
             for s in STATUSES.iter().filter(|s| **s != status) {

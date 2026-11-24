@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! A whole wiki session through the worker with a fake model.
+use studyfrog_ui::effect::EffectAssistant;
+use studyfrog_ui::effect::EffectVault;
 
 use std::sync::Mutex;
 
@@ -56,23 +58,27 @@ fn the_worker_runs_a_whole_wiki_session_with_a_fake_model() {
     };
     let mut w = worker_with_host(Some(cfg.clone()), None, host);
     let now = 1_800_000_000_000_000_000;
-    execute(&mut w, Effect::OpenVault(vault.display().to_string()), now);
+    execute(
+        &mut w,
+        Effect::Vault(EffectVault::OpenVault(vault.display().to_string())),
+        now,
+    );
 
     let saved = execute(
         &mut w,
-        Effect::SaveConnection {
+        Effect::Assistant(EffectAssistant::SaveConnection {
             provider: local(),
             key: None,
-        },
+        }),
         now,
     );
     assert!(matches!(&saved[0], Msg::Agent(AgentMsg::Saved(Ok(c))) if c.providers.len() == 1));
     let prepared = execute(
         &mut w,
-        Effect::PrepareWiki {
+        Effect::Assistant(EffectAssistant::PrepareWiki {
             folders: vec!["deck".into()],
             pdf: None,
-        },
+        }),
         now,
     );
     let Msg::Agent(AgentMsg::WikiPrepared(Ok(ctx))) = &prepared[0] else {
@@ -82,7 +88,7 @@ fn the_worker_runs_a_whole_wiki_session_with_a_fake_model() {
     let uids: Vec<String> = ctx.items.iter().map(|i| i.uid.clone()).collect();
     let chat = execute(
         &mut w,
-        Effect::AgentChat {
+        Effect::Assistant(EffectAssistant::AgentChat {
             provider: local(),
             system: "s".into(),
             messages: vec![studyfrog_agent::provider::Message {
@@ -90,14 +96,18 @@ fn the_worker_runs_a_whole_wiki_session_with_a_fake_model() {
                 content: "go".into(),
             }],
             purpose: studyfrog_ui::agent_types::ChatPurpose::Wiki(uids, vec!["deck".into()]),
-        },
+        }),
         now,
     );
     let Msg::Agent(AgentMsg::WikiReplied(Ok(p))) = &chat[0] else {
         panic!("{:?}", chat[0])
     };
     assert_eq!((p.summary.as_str(), p.changes.len()), ("Made an index", 1));
-    let done = execute(&mut w, Effect::ApplyChanges(p.changes.clone()), now);
+    let done = execute(
+        &mut w,
+        Effect::Assistant(EffectAssistant::ApplyChanges(p.changes.clone())),
+        now,
+    );
     let Msg::Agent(AgentMsg::ProposalApplied(Ok(r))) = &done[0] else {
         panic!("{:?}", done[0])
     };

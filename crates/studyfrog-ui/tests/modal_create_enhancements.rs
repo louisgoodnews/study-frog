@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Integration tests for Milestone 4: Create Menu Due Date/Priority & Note Modal Expansion (R3 & R4).
+use studyfrog_ui::effect::EffectImport;
 
 mod common;
 
@@ -32,7 +33,7 @@ fn setting_priority_on_stack_creation_sets_choice_and_renders_in_ui() {
     );
     apply(&mut m, Msg::Modal(ModalMsg::SetPriority(Priority::Highest)));
     let fx = apply(&mut m, Msg::Modal(ModalMsg::Submit));
-    let [Effect::CreateItem { choices, kind, .. }] = &fx[..] else {
+    let [Effect::Import(EffectImport::CreateItem { choices, kind, .. })] = &fx[..] else {
         panic!("expected CreateItem effect: {fx:?}");
     };
     assert_eq!(*kind, NewKind::Stack);
@@ -67,7 +68,7 @@ fn setting_due_date_on_card_note_and_question_creation() {
             Msg::Modal(ModalMsg::Edit(Field::Due, "2026-12-31".into())),
         );
         let fx = apply(&mut m, Msg::Modal(ModalMsg::Submit));
-        let [Effect::CreateItem { due, kind: k, .. }] = &fx[..] else {
+        let [Effect::Import(EffectImport::CreateItem { due, kind: k, .. })] = &fx[..] else {
             panic!("expected CreateItem for {kind:?}: {fx:?}");
         };
         assert_eq!(*k, kind);

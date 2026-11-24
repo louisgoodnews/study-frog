@@ -1,4 +1,5 @@
 //! The tabs of the settings screen and the remembered tab, kept in `app.toml` (one file per profile). Pure.
+use crate::effect::EffectVault;
 
 use studyfrog_core::settings::AppSettings;
 
@@ -100,7 +101,7 @@ fn select(state: State, tab: SettingsTab) -> (State, Vec<Effect>) {
         settings_tab: Some(tab_key(tab).to_owned()),
         ..state.app.clone()
     };
-    let effects = vec![Effect::SaveAppSettings(app.clone())];
+    let effects = vec![Effect::Vault(EffectVault::SaveAppSettings(app.clone()))];
     (State { app, ..state }, effects)
 }
 
@@ -113,7 +114,7 @@ pub fn update(state: State, msg: SettingsTabMsg) -> (State, Vec<Effect>) {
                 slow_answer_notice_off: !on,
                 ..state.app.clone()
             };
-            let effects = vec![Effect::SaveAppSettings(app.clone())];
+            let effects = vec![Effect::Vault(EffectVault::SaveAppSettings(app.clone()))];
             (State { app, ..state }, effects)
         }
         SettingsTabMsg::Step(by) => {
@@ -131,7 +132,7 @@ pub fn set_track_views(state: State, on: bool) -> (State, Vec<Effect>) {
         views_untracked: !on,
         ..state.app.clone()
     };
-    let effects = vec![Effect::SaveAppSettings(app.clone())];
+    let effects = vec![Effect::Vault(EffectVault::SaveAppSettings(app.clone()))];
     (State { app, ..state }, effects)
 }
 
@@ -161,7 +162,10 @@ pub enum SrsMsg {
 /// Ask for the switch to be written, and keep the refreshed vault (or say why it failed).
 pub fn srs(state: State, msg: SrsMsg) -> (State, Vec<Effect>) {
     match msg {
-        SrsMsg::CalibratedStart(on) => (state, vec![Effect::SetCalibratedStart(on)]),
+        SrsMsg::CalibratedStart(on) => (
+            state,
+            vec![Effect::Vault(EffectVault::SetCalibratedStart(on))],
+        ),
         SrsMsg::CalibratedStartApplied(Ok(info)) => {
             let mut state = state;
             state.vault = Some(*info);

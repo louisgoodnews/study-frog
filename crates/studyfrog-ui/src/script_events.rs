@@ -1,5 +1,8 @@
 //! Lifecycle events (ADR 0013): what happened in an instance, derived from the messages it applies and
 //! from a probe of the state before and after. Pure; publishing is in `control_events`.
+use crate::msg::MsgEditor;
+use crate::msg::MsgImport;
+use crate::msg::MsgRehearsal;
 
 use serde_json::{Value, json};
 use studyfrog_core::run::{RunState, run_mode_name};
@@ -73,33 +76,37 @@ pub fn from_msg(msg: &Msg, state: &State) -> Vec<Lifecycle> {
             "item_created",
             json!({"uid": o.created.uid.map(ulid), "title": o.created.title, "path": o.created.path}),
         )],
-        Msg::Saved(Ok(_)) => state.editor.as_ref().map_or_else(Vec::new, |e| {
+        Msg::Editor(MsgEditor::Saved(Ok(_))) => state.editor.as_ref().map_or_else(Vec::new, |e| {
             vec![event(
                 "item_saved",
                 json!({"uid": ulid(e.uid), "title": e.form.title, "path": e.path}),
             )]
         }),
-        Msg::Edit(EditAction::ConfirmDelete) => state.editor.as_ref().map_or_else(Vec::new, |e| {
-            vec![event(
-                "item_deleted",
-                json!({"uid": ulid(e.uid), "title": e.form.title, "path": e.path}),
-            )]
-        }),
-        Msg::RunReady(Ok(run)) => vec![event(
+        Msg::Editor(MsgEditor::Edit(EditAction::ConfirmDelete)) => {
+            state.editor.as_ref().map_or_else(Vec::new, |e| {
+                vec![event(
+                    "item_deleted",
+                    json!({"uid": ulid(e.uid), "title": e.form.title, "path": e.path}),
+                )]
+            })
+        }
+        Msg::Rehearsal(MsgRehearsal::RunReady(Ok(run))) => vec![event(
             "rehearsal_started",
             json!({
                 "run": ulid(run.uid), "mode": run_mode_name(run.mode),
                 "items": run.queue.len(),
             }),
         )],
-        Msg::StepRecorded(Ok(())) => state.rehearse.run.as_ref().map_or_else(Vec::new, |r| {
-            vec![event(
-                "rehearsal_stepped",
-                json!({
-                    "run": ulid(r.session.run.uid), "events": r.events.len(),
-                }),
-            )]
-        }),
+        Msg::Rehearsal(MsgRehearsal::StepRecorded(Ok(()))) => {
+            state.rehearse.run.as_ref().map_or_else(Vec::new, |r| {
+                vec![event(
+                    "rehearsal_stepped",
+                    json!({
+                        "run": ulid(r.session.run.uid), "events": r.events.len(),
+                    }),
+                )]
+            })
+        }
         Msg::Exam(crate::exam_ui::ExamMsg::Graded(uid, Ok(res))) => vec![event(
             "exam_finished",
             json!({
@@ -110,7 +117,7 @@ pub fn from_msg(msg: &Msg, state: &State) -> Vec<Lifecycle> {
         Msg::Diary(crate::diary_msg::DiaryMsg::Saved(Ok(_))) => {
             vec![event("diary_entry_saved", json!({}))]
         }
-        Msg::Imported(Ok(outcome)) => vec![event(
+        Msg::Import(MsgImport::Imported(Ok(outcome))) => vec![event(
             "import_finished",
             json!({
                 "created": outcome.report.created,

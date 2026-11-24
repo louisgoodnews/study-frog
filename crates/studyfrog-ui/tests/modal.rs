@@ -1,5 +1,10 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The create dialog, the vault dialog and the first-launch toast (update logic).
+use studyfrog_ui::effect::EffectBrowse;
+use studyfrog_ui::effect::EffectImport;
+use studyfrog_ui::effect::EffectPlanner;
+use studyfrog_ui::effect::EffectReports;
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -47,7 +52,10 @@ fn the_dialog_starts_on_a_card_in_the_open_stack_or_on_a_stack_when_there_are_no
         (NewKind::Card, Some("french")),
         "the first stack when none is open"
     );
-    apply(&mut m, Msg::Select(Selection::Stack("maths".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("maths".into()))),
+    );
     modal(&mut m, ModalMsg::OpenCreate);
     assert_eq!(
         form(&m).parent.as_deref(),
@@ -117,7 +125,7 @@ fn submitting_sends_one_request_with_clean_values_and_a_second_press_waits() {
     let fx = modal(&mut m, ModalMsg::Submit);
     assert_eq!(
         fx,
-        [Effect::CreateItem {
+        [Effect::Import(EffectImport::CreateItem {
             kind: NewKind::Card,
             title: "Greeting".into(),
             text: "Bonjour?".into(),
@@ -127,7 +135,7 @@ fn submitting_sends_one_request_with_clean_values_and_a_second_press_waits() {
             due: None,
             also_in: None,
             choices: (Some(Priority::Medium), Some(Difficulty::Difficult)),
-        }]
+        })]
     );
     assert!(form(&m).busy);
     assert!(
@@ -149,7 +157,10 @@ fn a_finished_creation_closes_the_dialog_or_keeps_it_for_the_next_one() {
         let o = outcome("french/q.md", "Q?", &m);
         modal(&mut m, ModalMsg::Created(o))
     };
-    assert!(fx.contains(&Effect::LoadBoard) && fx.contains(&Effect::LoadSessions));
+    assert!(
+        fx.contains(&Effect::Planner(EffectPlanner::LoadBoard))
+            && fx.contains(&Effect::Planner(EffectPlanner::LoadSessions))
+    );
     let f = form(&m);
     assert_eq!(
         (f.text.as_str(), f.answer.as_str(), f.title.as_str(), f.busy),
@@ -206,15 +217,19 @@ fn a_new_stack_is_opened_and_a_refusal_keeps_the_form_with_its_reason() {
     assert_eq!(
         fx,
         [
-            Effect::LoadItems(Selection::Stack("french/verbs".into())),
-            Effect::LoadStatusCounts(Selection::Stack("french/verbs".into())),
-            Effect::LoadBoard,
-            Effect::LoadSessions,
+            Effect::Browse(EffectBrowse::LoadItems(Selection::Stack(
+                "french/verbs".into()
+            ))),
+            Effect::Browse(EffectBrowse::LoadStatusCounts(Selection::Stack(
+                "french/verbs".into()
+            ))),
+            Effect::Planner(EffectPlanner::LoadBoard),
+            Effect::Planner(EffectPlanner::LoadSessions),
             Effect::Library(studyfrog_ui::library_bulk::LibraryEffect::LoadSummary(
                 "french/verbs".into(),
                 0
             )),
-            Effect::BuildReports,
+            Effect::Reports(EffectReports::BuildReports),
         ]
     );
 }

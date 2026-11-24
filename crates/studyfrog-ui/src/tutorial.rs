@@ -1,5 +1,6 @@
 //! Guided tutorials as a pure state machine: each step opens the screen it describes and is done when
 //! the user has done what it asks, which is read from the state (a count grew since the step began).
+use crate::effect::EffectVault;
 
 use studyfrog_core::event::EventKind;
 use studyfrog_core::uid::Uid;
@@ -202,6 +203,6 @@ pub fn offered(state: &State) -> bool {
 pub fn answered(state: State) -> (State, Vec<Effect>) {
     let mut state = state;
     state.app.tutorial_offered = true;
-    let save = Effect::SaveAppSettings(state.app.clone());
+    let save = Effect::Vault(EffectVault::SaveAppSettings(state.app.clone()));
     (state, vec![save])
 }

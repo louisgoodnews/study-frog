@@ -1,5 +1,6 @@
 //! The end of an exam: the percentage, the grade badge, passed or not, and a review of every item with the
 //! written answer, the reference and the score (`docs/specs/exam-mode.md`, section 7).
+use crate::msg::MsgRehearsal;
 
 use eframe::egui::{self, RichText};
 use studyfrog_core::exam::{ExamResult, grade_badge, grade_words};
@@ -39,7 +40,7 @@ pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>)
                         .on_hover_text("Goes back to the setup of the run.")
                         .clicked()
                     {
-                        out.push(Msg::LeaveRun);
+                        out.push(Msg::Rehearsal(MsgRehearsal::LeaveRun));
                     }
                 });
             });

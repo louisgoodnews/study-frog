@@ -1,4 +1,5 @@
 //! Simple chat conversation with the connected model.
+use crate::effect::EffectAssistant;
 
 use studyfrog_agent::provider::{Message, Role};
 
@@ -35,12 +36,12 @@ pub fn send_chat_message(state: State) -> (State, Vec<Effect>) {
     });
     (
         state,
-        vec![Effect::AgentChat {
+        vec![Effect::Assistant(EffectAssistant::AgentChat {
             provider,
             system,
             messages,
             purpose: ChatPurpose::Chat,
-        }],
+        })],
     )
 }
 

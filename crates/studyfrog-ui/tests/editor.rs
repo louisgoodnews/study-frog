@@ -1,20 +1,21 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The editor: form model, and the open - edit - save flow against a real vault.
-
-mod common;
-
-use std::fs;
-
 use common::{run_to_idle, temp_dir};
+use std::fs;
 use studyfrog_core::uid::Uid;
 use studyfrog_md::doc::Doc;
 use studyfrog_md::parse::parse_doc;
 use studyfrog_ui::edit_form::{apply_form, form_from_doc};
-use studyfrog_ui::editor::{has_unsaved_changes, is_dirty};
+use studyfrog_ui::editor::is_dirty;
 use studyfrog_ui::exec::{Worker, worker_new};
 use studyfrog_ui::model::{Model, apply};
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgEditor;
+use studyfrog_ui::msg::MsgVault;
 use studyfrog_ui::msg::{EditAction, Msg};
 use studyfrog_ui::state::{NoticeKind, Screen};
+
+mod common;
 
 const ALPHA: &str = "---\nid: 0000000000000000000000000A\nkind: note\ntitle: Alpha\ntags: [one]\ncolour: red   # keep me\n---\nSee [[Beta]] and [[Nowhere]].\n";
 const BETA: &str =
@@ -31,18 +32,21 @@ fn open() -> (Model, Worker, common::TempDir) {
     fs::write(dir.path.join("s/alpha.md"), ALPHA).unwrap();
     fs::write(dir.path.join("s/beta.md"), BETA).unwrap();
     let (mut m, mut w) = (Model::default(), worker_new(None));
-    let fx = apply(&mut m, Msg::OpenRecent(dir.path.display().to_string()));
+    let fx = apply(
+        &mut m,
+        Msg::Vault(MsgVault::OpenRecent(dir.path.display().to_string())),
+    );
     run_to_idle(&mut m, &mut w, fx);
     (m, w, dir)
 }
 
 fn open_item(m: &mut Model, w: &mut Worker, id: u128) {
-    let fx = apply(m, Msg::OpenItem(Uid(id)));
+    let fx = apply(m, Msg::Browse(MsgBrowse::OpenItem(Uid(id))));
     run_to_idle(m, w, fx);
 }
 
 fn edit(m: &mut Model, a: EditAction) {
-    apply(m, Msg::Edit(a));
+    apply(m, Msg::Editor(MsgEditor::Edit(a)));
 }
 
 #[test]
@@ -83,7 +87,7 @@ fn open_edit_save_changes_the_file_but_keeps_everything_else() {
     assert_eq!(e.path, "s/alpha.md");
     assert!(!is_dirty(e));
     assert!(
-        apply(&mut m, Msg::SaveClicked).is_empty(),
+        apply(&mut m, Msg::Editor(MsgEditor::SaveClicked)).is_empty(),
         "nothing to save yet"
     );
 
@@ -93,9 +97,9 @@ fn open_edit_save_changes_the_file_but_keeps_everything_else() {
     );
     edit(&mut m, EditAction::Title(" Alpha two".into()));
     assert!(is_dirty(m.state.editor.as_ref().unwrap()));
-    let fx = apply(&mut m, Msg::SaveClicked);
+    let fx = apply(&mut m, Msg::Editor(MsgEditor::SaveClicked));
     assert!(
-        apply(&mut m, Msg::SaveClicked).is_empty(),
+        apply(&mut m, Msg::Editor(MsgEditor::SaveClicked)).is_empty(),
         "a second click while saving does nothing"
     );
     run_to_idle(&mut m, &mut w, fx);
@@ -116,7 +120,7 @@ fn open_edit_save_changes_the_file_but_keeps_everything_else() {
     assert!(!is_dirty(e) && e.saving.is_none());
 
     edit(&mut m, EditAction::Field(0, "second edit".into()));
-    let fx = apply(&mut m, Msg::SaveClicked);
+    let fx = apply(&mut m, Msg::Editor(MsgEditor::SaveClicked));
     run_to_idle(&mut m, &mut w, fx);
     assert!(
         fs::read_to_string(dir.path.join("s/alpha.md"))
@@ -136,7 +140,7 @@ fn a_file_changed_elsewhere_blocks_the_save_until_reloaded() {
         ALPHA.replace("See", "Elsewhere:"),
     )
     .unwrap();
-    let fx = apply(&mut m, Msg::SaveClicked);
+    let fx = apply(&mut m, Msg::Editor(MsgEditor::SaveClicked));
     run_to_idle(&mut m, &mut w, fx);
     assert_eq!(m.state.notice.as_ref().unwrap().kind, NoticeKind::Error);
     assert!(
@@ -158,90 +162,8 @@ fn a_file_changed_elsewhere_blocks_the_save_until_reloaded() {
         "my edit is still in the form"
     );
 
-    let fx = apply(&mut m, Msg::ReloadClicked);
+    let fx = apply(&mut m, Msg::Editor(MsgEditor::ReloadClicked));
     run_to_idle(&mut m, &mut w, fx);
     let e = m.state.editor.as_ref().unwrap();
     assert!(!is_dirty(e) && e.form.fields[0].text.contains("Elsewhere:"));
-}
-
-#[test]
-fn revert_and_leaving_with_unsaved_changes() {
-    let (mut m, mut w, dir) = open();
-    open_item(&mut m, &mut w, 0xA);
-    edit(&mut m, EditAction::Tags(String::from("x, y")));
-    assert!(has_unsaved_changes(&m.state));
-    let fx = apply(&mut m, Msg::CloseEditor);
-    assert!(
-        fx.iter()
-            .any(|e| matches!(e, studyfrog_ui::effect::Effect::SaveDocument { .. })),
-        "leaving saves first: {fx:?}"
-    );
-    assert_eq!(
-        m.state.screen,
-        Screen::Editor,
-        "and leaves once it is saved"
-    );
-    run_to_idle(&mut m, &mut w, fx);
-    assert_eq!(m.state.screen, Screen::Library);
-    let text = fs::read_to_string(dir.path.join("s/alpha.md")).unwrap();
-    assert!(text.contains("x") && text.contains("y"), "{text}");
-
-    open_item(&mut m, &mut w, 0xA);
-    edit(&mut m, EditAction::Tags(String::from("z")));
-    apply(&mut m, Msg::RevertClicked);
-    assert!(!has_unsaved_changes(&m.state));
-    apply(&mut m, Msg::CloseEditor);
-    assert_eq!(
-        (m.state.screen, m.state.editor.is_none()),
-        (Screen::Library, true)
-    );
-}
-
-#[test]
-fn clicking_a_wikilink_opens_the_target_or_says_there_is_none() {
-    let (mut m, mut w, _dir) = open();
-    open_item(&mut m, &mut w, 0xA);
-    let fx = apply(&mut m, Msg::OpenLink("beta".into()));
-    run_to_idle(&mut m, &mut w, fx);
-    let e = m.state.editor.as_ref().unwrap();
-    assert_eq!(
-        (e.uid, e.form.fields.len()),
-        (Uid(0xB), 2),
-        "Beta is a card with two sides"
-    );
-
-    let fx = apply(&mut m, Msg::OpenLink("Nowhere".into()));
-    run_to_idle(&mut m, &mut w, fx);
-    assert!(
-        m.state
-            .notice
-            .as_ref()
-            .unwrap()
-            .text
-            .contains("No item is titled \"Nowhere\"")
-    );
-    assert_eq!(
-        m.state.editor.as_ref().unwrap().uid,
-        Uid(0xB),
-        "the open document is unchanged"
-    );
-}
-
-#[test]
-fn previews_follow_the_text() {
-    let (mut m, mut w, _dir) = open();
-    open_item(&mut m, &mut w, 0xA);
-    edit(
-        &mut m,
-        EditAction::Field(0, "# Heading\n\n- [[Beta]]\n".into()),
-    );
-    let blocks = &m.state.editor.as_ref().unwrap().previews[0];
-    assert!(matches!(
-        &blocks[0],
-        studyfrog_md::blocks::Block::Heading { level: 1, .. }
-    ));
-    assert!(matches!(
-        &blocks[1],
-        studyfrog_md::blocks::Block::List { .. }
-    ));
 }

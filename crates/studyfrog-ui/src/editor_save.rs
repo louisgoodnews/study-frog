@@ -4,6 +4,7 @@
 //! than text changed, or at the latest [`SAVE_AFTER_MS`] after the first unsaved edit. A pause alone saves
 //! nothing. At most one save runs; edits made meanwhile are saved right after it. Leaving the editor, opening
 //! another item and exiting save first and then carry on ([`flush_before`]).
+use crate::effect::EffectEditor;
 
 use crate::edit_form::apply_form;
 use crate::editor::{is_dirty, notice};
@@ -55,11 +56,11 @@ pub fn save(state: State) -> (State, Vec<Effect>) {
     }
     match apply_form(&e.doc, &e.form) {
         Ok(doc) => {
-            let effect = Effect::SaveDocument {
+            let effect = Effect::Editor(EffectEditor::SaveDocument {
                 path: e.path.clone(),
                 doc: doc.clone(),
                 hash: e.hash,
-            };
+            });
             let mut state = state;
             if let Some(e) = &mut state.editor {
                 e.saving = Some((doc, e.form.clone()));

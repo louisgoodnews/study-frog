@@ -1,5 +1,6 @@
 //! Checking a case-study answer: the keyword check at once, and the local model's check when one is
 //! selected (STORY-0200). Pure: the effect asks for the model, and its reply comes back as a message.
+use crate::effect::EffectAssistant;
 
 use studyfrog_agent::provider::{Message, Role, is_local};
 use studyfrog_agent::rubric_eval::{case_system, fallback_evaluate, json_span, parse_model_report};
@@ -59,12 +60,12 @@ pub(super) fn submit(state: State) -> (State, Vec<Effect>) {
                 role: Role::User,
                 content: text,
             }];
-            let effect = Effect::AgentChat {
+            let effect = Effect::Assistant(EffectAssistant::AgentChat {
                 provider: p,
                 system,
                 messages,
                 purpose: ChatPurpose::Case,
-            };
+            });
             let cs = CaseUi {
                 pending: true,
                 ..base

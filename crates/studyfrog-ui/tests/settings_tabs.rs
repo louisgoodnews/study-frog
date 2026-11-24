@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The tabs of the settings screen: one tab at a time, remembered, reachable from the keyboard.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 
@@ -33,7 +34,7 @@ fn choosing_a_tab_is_remembered_in_the_app_settings_and_unknown_keys_fall_back()
         &mut m,
         Msg::SettingsTab(SettingsTabMsg::Select(SettingsTab::Data)),
     );
-    let [Effect::SaveAppSettings(app)] = &fx[..] else {
+    let [Effect::Vault(EffectVault::SaveAppSettings(app))] = &fx[..] else {
         panic!("{fx:?}")
     };
     assert_eq!(app.settings_tab.as_deref(), Some("data"));

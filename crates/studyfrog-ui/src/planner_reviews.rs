@@ -1,4 +1,6 @@
 //! The planned reviews on the calendar: loading them, moving an entry to another day (dragged or by date), and undo. Pure.
+use crate::effect::EffectVault;
+use crate::msg::MsgBrowse;
 
 use studyfrog_calendar::review_plan::PlanEntry;
 use studyfrog_core::civil::{date_from_days, date_to_days, format_date, parse_date};
@@ -173,7 +175,8 @@ fn open_stack(state: State, stack: Option<Uid>) -> (State, Vec<Effect>) {
     });
     let selection = folder.map_or(Selection::Inbox, Selection::Stack);
     let (state, mut effects) = crate::nav::navigate(state, Screen::Library);
-    let (state, more) = crate::browse::update(state, crate::msg::Msg::Select(selection));
+    let (state, more) =
+        crate::browse::update(state, crate::msg::Msg::Browse(MsgBrowse::Select(selection)));
     effects.extend(more);
     (state, effects)
 }
@@ -224,7 +227,7 @@ fn show(state: State, on: bool) -> (State, Vec<Effect>) {
         calendar_reviews_off: !on,
         ..state.app.clone()
     };
-    let mut effects = vec![Effect::SaveAppSettings(app.clone())];
+    let mut effects = vec![Effect::Vault(EffectVault::SaveAppSettings(app.clone()))];
     let mut state = State { app, ..state };
     if on {
         effects.extend(reload(&state));

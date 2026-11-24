@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! PDFs are named by their file name; the title inside the file is added only when it says something.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -59,8 +61,11 @@ fn row(path: &str, pages: usize, title: &str) -> PdfRow {
 #[test]
 fn two_files_with_the_same_placeholder_title_are_told_apart_by_name() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Library));
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Library)));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     m.state.app.stack_tabs = vec!["french:list".into()];
     m.state.pdf_library.rows = vec![
         row("french/Vorlesung 1.pdf", 48, "PowerPoint-Präsentation"),

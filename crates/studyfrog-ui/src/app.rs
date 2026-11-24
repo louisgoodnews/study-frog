@@ -1,4 +1,5 @@
 //! The eframe application: glue between the model, the worker and the window.
+use crate::effect::EffectVault;
 
 use eframe::egui;
 
@@ -75,7 +76,7 @@ pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> Stud
         runner,
     );
     let runtime = spawn(ctx, host);
-    send_effect(&runtime, Effect::LoadAppSettings);
+    send_effect(&runtime, Effect::Vault(EffectVault::LoadAppSettings));
     StudyFrogApp {
         model,
         runtime,

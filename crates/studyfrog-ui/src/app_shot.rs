@@ -1,5 +1,8 @@
 //! `--screenshot FILE [--screen NAME] [--size WxH]`: open the window, go to a screen, save a picture of it as a
 //! PNG and exit. For looking at the real rendering without a person at the keyboard.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgRehearsal;
+use crate::msg::MsgVault;
 
 use std::path::PathBuf;
 
@@ -86,7 +89,7 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
         return fx;
     }
     if let Some(which) = name.strip_prefix("memory:") {
-        let mut fx = apply(model, Msg::Navigate(Screen::Rehearse));
+        let mut fx = apply(model, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
         model.state.browser.selection = crate::state::Selection::Stack(which.to_owned());
         fx.extend(apply(
             model,
@@ -102,7 +105,7 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
     }
     if let Some(word) = name.strip_prefix("prompts:") {
         use studyfrog_service::prompts_meta::{CATEGORIES, category_name};
-        let mut fx = apply(model, Msg::Navigate(Screen::Prompts));
+        let mut fx = apply(model, Msg::Vault(MsgVault::Navigate(Screen::Prompts)));
         let c = CATEGORIES
             .iter()
             .copied()
@@ -112,7 +115,7 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
         return fx;
     }
     if let Some(which) = name.strip_prefix("achievements:") {
-        let mut fx = apply(model, Msg::Navigate(Screen::Achievements));
+        let mut fx = apply(model, Msg::Vault(MsgVault::Navigate(Screen::Achievements)));
         let stacks = model
             .state
             .vault
@@ -130,10 +133,10 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
         return fx;
     }
     if let Some(folder) = name.strip_prefix("stack:") {
-        let mut fx = apply(model, Msg::Navigate(Screen::Library));
+        let mut fx = apply(model, Msg::Vault(MsgVault::Navigate(Screen::Library)));
         fx.extend(apply(
             model,
-            Msg::Select(Selection::Stack(folder.to_owned())),
+            Msg::Browse(MsgBrowse::Select(Selection::Stack(folder.to_owned()))),
         ));
         return fx;
     }
@@ -141,13 +144,13 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
         .strip_prefix("item:")
         .and_then(studyfrog_md::ulid::parse_ulid)
     {
-        return apply(model, Msg::OpenItem(uid));
+        return apply(model, Msg::Browse(MsgBrowse::OpenItem(uid)));
     }
     if let Some(tab) = name
         .strip_prefix("reports:")
         .and_then(crate::explorer_ui::tab_named)
     {
-        let mut fx = apply(model, Msg::Navigate(Screen::Reports));
+        let mut fx = apply(model, Msg::Vault(MsgVault::Navigate(Screen::Reports)));
         fx.extend(apply(
             model,
             Msg::Explorer(crate::explorer_ui::ExplorerMsg::Tab(tab)),
@@ -160,7 +163,9 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
     if name == "create" {
         return apply(model, Msg::Modal(crate::modal_types::ModalMsg::OpenCreate));
     }
-    screen_named(name).map_or_else(Vec::new, |s| apply(model, Msg::Navigate(s)))
+    screen_named(name).map_or_else(Vec::new, |s| {
+        apply(model, Msg::Vault(MsgVault::Navigate(s)))
+    })
 }
 
 pub(crate) fn save(path: &std::path::Path, image: &egui::ColorImage) -> Result<(), String> {
@@ -187,7 +192,7 @@ pub fn step(shot: &mut Shot, model: &mut Model, ui: &egui::Ui) -> Vec<crate::eff
     if shot.frames == SETTLE + START
         && matches!(name, "run" | "run-answer" | "exam" | "exam-result")
     {
-        effects = apply(model, Msg::StartRunClicked);
+        effects = apply(model, Msg::Rehearsal(MsgRehearsal::StartRunClicked));
     }
     if shot.frames == SETTLE + START {
         effects.extend(crate::app_shot_recall::later(model, name));

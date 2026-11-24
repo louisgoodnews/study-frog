@@ -1,6 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! STORY-0096 through the real worker: assigning keys after a confirmation, finding items by key in
 //! the library and in the top bar, the key column and the key badge, and undoing the assignment.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -41,7 +43,11 @@ fn key_of(m: &Model, title: &str) -> Option<String> {
 #[test]
 fn keys_are_assigned_only_after_confirming() {
     let (vault, mut m, mut w) = opened("keys-flow");
-    send(&mut m, &mut w, Msg::Navigate(Screen::Library));
+    send(
+        &mut m,
+        &mut w,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
     assert_eq!(
         keyless_count(&m.state),
         5,
@@ -92,7 +98,11 @@ fn assigned(
     mut w: studyfrog_ui::exec::Worker,
 ) -> (Model, studyfrog_ui::exec::Worker) {
     send(&mut m, &mut w, bulk(BulkMsg::AssignKeys));
-    send(&mut m, &mut w, Msg::Navigate(Screen::Library));
+    send(
+        &mut m,
+        &mut w,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
     assert_eq!(keyless_count(&m.state), 0);
     (m, w)
 }
@@ -102,13 +112,21 @@ fn items_are_found_by_key_and_assigning_can_be_undone() {
     let (vault, m, w) = opened("keys-find");
     let before = std::fs::read_to_string(vault.path.join("loose.md")).unwrap();
     let (mut m, mut w) = assigned(m, w);
-    send(&mut m, &mut w, Msg::SearchEdited("flashcard_2".into()));
+    send(
+        &mut m,
+        &mut w,
+        Msg::Browse(MsgBrowse::SearchEdited("flashcard_2".into())),
+    );
     assert_eq!(
         shown(&m),
         ["B"],
         "an exact key in the library search finds its item"
     );
-    send(&mut m, &mut w, Msg::SearchEdited(String::new()));
+    send(
+        &mut m,
+        &mut w,
+        Msg::Browse(MsgBrowse::SearchEdited(String::new())),
+    );
     send(
         &mut m,
         &mut w,
@@ -129,11 +147,15 @@ fn items_are_found_by_key_and_assigning_can_be_undone() {
 #[test]
 fn the_library_offers_assign_keys_and_asks_first() {
     let (_vault, mut m, mut w) = opened("keys-view");
-    send(&mut m, &mut w, Msg::Navigate(Screen::Library));
     send(
         &mut m,
         &mut w,
-        Msg::Select(studyfrog_ui::state::Selection::Inbox),
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
+    send(
+        &mut m,
+        &mut w,
+        Msg::Browse(MsgBrowse::Select(studyfrog_ui::state::Selection::Inbox)),
     );
     let mut h = harness(m);
     h.run_steps(2);
@@ -159,9 +181,13 @@ fn the_library_offers_assign_keys_and_asks_first() {
 #[test]
 fn the_item_page_shows_the_key_with_a_copy_button() {
     let (_vault, mut m, mut w) = opened("keys-page");
-    send(&mut m, &mut w, Msg::Navigate(Screen::Library));
+    send(
+        &mut m,
+        &mut w,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
     send(&mut m, &mut w, bulk(BulkMsg::AssignKeys));
-    send(&mut m, &mut w, Msg::OpenItem(Uid(11)));
+    send(&mut m, &mut w, Msg::Browse(MsgBrowse::OpenItem(Uid(11))));
     assert_eq!(m.state.screen, Screen::Editor);
     let mut h = harness(m);
     h.run_steps(2);

@@ -1,4 +1,5 @@
 //! Floating burger navigation menu prototype (STORY-0147).
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, Pos2, RichText, Sense, vec2};
 
@@ -136,7 +137,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                                 }
                                 ui.horizontal(|ui| {
                                     if ui.selectable_label(active, text).clicked() {
-                                        out.push(Msg::Navigate(screen));
+                                        out.push(Msg::Vault(MsgVault::Navigate(screen)));
                                         is_open = false;
                                         ui.data_mut(|d| d.insert_temp(popup_id, false));
                                     }

@@ -1,4 +1,6 @@
 //! `rehearse setup`: the messages that fill in the run setup the way the form would.
+use crate::msg::MsgRehearsal;
+use crate::msg::MsgVault;
 
 use crate::control_cmd::SetupArgs;
 use crate::control_plan::resolve_stack;
@@ -11,14 +13,23 @@ use crate::state::{Screen, State};
 pub fn setup_msgs(state: &State, args: &SetupArgs) -> Result<Vec<Msg>, String> {
     let preset = args.preset.unwrap_or(Preset::Spaced);
     let mut msgs = vec![
-        Msg::Navigate(Screen::Rehearse),
-        Msg::Setup(SetupEdit::Preset(preset)),
+        Msg::Vault(MsgVault::Navigate(Screen::Rehearse)),
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Preset(preset))),
     ];
-    msgs.extend(args.mode.map(|m| Msg::Setup(SetupEdit::Mode(m))));
-    msgs.extend(args.limit.clone().map(|l| Msg::Setup(SetupEdit::Limit(l))));
+    msgs.extend(
+        args.mode
+            .map(|m| Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Mode(m)))),
+    );
+    msgs.extend(
+        args.limit
+            .clone()
+            .map(|l| Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Limit(l)))),
+    );
     for folder in &args.stacks {
         let uid = resolve_stack(state, folder)?;
-        msgs.push(Msg::Setup(SetupEdit::Stack(uid, true)));
+        msgs.push(Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Stack(
+            uid, true,
+        ))));
     }
     Ok(msgs)
 }

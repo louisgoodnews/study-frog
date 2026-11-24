@@ -1,7 +1,13 @@
 //! Update logic of a rehearsal run. The pure engine (`step`) is called right here; the shell only
 //! supplies the time (`State::now`) and executes the effects that save progress.
+use crate::effect::EffectRehearsal;
+use crate::effect::EffectReports;
+use crate::msg::MsgRehearsal;
 
+mod status;
 mod timing;
+
+pub use status::{awaiting_rating, awaiting_reveal, is_over};
 
 use studyfrog_core::run::{Run, RunState};
 use studyfrog_core::settings::AnswerEngine;
@@ -29,18 +35,31 @@ pub(crate) fn error(state: State, text: impl Into<String>) -> (State, Vec<Effect
 /// Handle the run messages.
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
     match msg {
-        Msg::StartRunClicked => start_clicked(state),
-        Msg::RunReady(result) => run_ready(state, result),
-        Msg::RunAction(action) => act(state, action),
-        Msg::AnswerEdited(text) => with_run(state, |r| RunView { answer: text, ..r }),
-        Msg::ItemLoaded(uid, result) => item_loaded(state, uid, result),
-        Msg::AnswerScored(uid, result) => crate::run_results::answer_scored(state, uid, result),
-        Msg::ApplySuggestion { item, expected, to } => {
-            (state, vec![Effect::Rerate { item, expected, to }])
+        Msg::Rehearsal(MsgRehearsal::StartRunClicked) => start_clicked(state),
+        Msg::Rehearsal(MsgRehearsal::RunReady(result)) => run_ready(state, result),
+        Msg::Rehearsal(MsgRehearsal::RunAction(action)) => act(state, action),
+        Msg::Rehearsal(MsgRehearsal::AnswerEdited(text)) => {
+            with_run(state, |r| RunView { answer: text, ..r })
         }
-        Msg::Rerated(uid, result) => crate::run_results::rerated(state, uid, result),
-        Msg::StepRecorded(Err(e)) => error(state, format!("Could not save your progress: {e}")),
-        Msg::LeaveRun => leave(state),
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(uid, result)) => item_loaded(state, uid, result),
+        Msg::Rehearsal(MsgRehearsal::AnswerScored(uid, result)) => {
+            crate::run_results::answer_scored(state, uid, result)
+        }
+        Msg::Rehearsal(MsgRehearsal::ApplySuggestion { item, expected, to }) => (
+            state,
+            vec![Effect::Rehearsal(EffectRehearsal::Rerate {
+                item,
+                expected,
+                to,
+            })],
+        ),
+        Msg::Rehearsal(MsgRehearsal::Rerated(uid, result)) => {
+            crate::run_results::rerated(state, uid, result)
+        }
+        Msg::Rehearsal(MsgRehearsal::StepRecorded(Err(e))) => {
+            error(state, format!("Could not save your progress: {e}"))
+        }
+        Msg::Rehearsal(MsgRehearsal::LeaveRun) => leave(state),
         _ => (state, Vec::new()),
     }
 }
@@ -58,10 +77,10 @@ fn start_clicked(state: State) -> (State, Vec<Effect>) {
     let form = &state.rehearse.form;
     match plan_from_form(form, 0) {
         Ok(plan) => {
-            let effect = Effect::StartRun {
+            let effect = Effect::Rehearsal(EffectRehearsal::StartRun {
                 plan,
                 mode: form.mode,
-            };
+            });
             let rehearse = Rehearse {
                 starting: true,
                 ..state.rehearse.clone()
@@ -144,7 +163,7 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
         }
         effects.extend(prefetch(&mut run));
         if is_over(&run) {
-            effects.push(Effect::CheckAchievements);
+            effects.push(Effect::Reports(EffectReports::CheckAchievements));
             if crate::exam_ui::is_exam(&run) {
                 effects.extend(crate::exam_ui::load_rest(&mut run));
                 effects.extend(crate::exam_ui::grade_when_ready(&mut run));
@@ -155,7 +174,7 @@ pub(crate) fn act(state: State, action: Action) -> (State, Vec<Effect>) {
         }
         let mut ctx = step_context(&run.session);
         ctx.timing = rated_item.and_then(|item| rating_timing(&run, item, (dwell, judged)));
-        effects.push(Effect::RecordStep { ctx, out });
+        effects.push(Effect::Rehearsal(EffectRehearsal::RecordStep { ctx, out }));
     }
     state.rehearse.run = Some(run);
     (state, effects)
@@ -174,7 +193,7 @@ fn prefetch(run: &mut RunView) -> Vec<Effect> {
     upcoming
         .into_iter()
         .filter(|uid| run.requested.insert(*uid))
-        .map(Effect::LoadItem)
+        .map(|u| Effect::Rehearsal(EffectRehearsal::LoadItem(u)))
         .collect()
 }
 
@@ -215,22 +234,4 @@ fn leave(state: State) -> (State, Vec<Effect>) {
         }
         _ => (state, Vec::new()),
     }
-}
-
-/// True once the run has finished or been aborted.
-pub fn is_over(run: &RunView) -> bool {
-    matches!(
-        run.session.run.state,
-        RunState::Finished | RunState::Aborted
-    )
-}
-
-/// True while the current item is on screen and can be answered or skipped.
-pub fn awaiting_reveal(run: &RunView) -> bool {
-    run.session.run.state == RunState::Running && run.session.phase == ItemPhase::Shown
-}
-
-/// True while the answer is revealed and a rating is expected.
-pub fn awaiting_rating(run: &RunView) -> bool {
-    run.session.run.state == RunState::Running && run.session.phase == ItemPhase::Revealed
 }

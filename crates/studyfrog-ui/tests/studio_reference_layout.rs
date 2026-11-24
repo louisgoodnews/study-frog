@@ -2,6 +2,7 @@
 //! The FrogScript reference open beside the ScriptStudio editor, at the window sizes the app is used
 //! at (BUG-0020): the editor keeps a usable width, the reference sits beside it, and its categories,
 //! topics and cookbook buttons are laid out inside the window.
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -24,7 +25,7 @@ const SIZES: [(f32, f32); 3] = [(960.0, 640.0), (1280.0, 800.0), (1600.0, 900.0)
 const EDITOR_MIN_WIDTH: f32 = 300.0;
 
 fn console_with_reference(mut m: Model, w: f32, h: f32) -> Harness<'static, App> {
-    apply(&mut m, Msg::Navigate(Screen::Console));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Console)));
     apply(&mut m, Msg::Console(ConsoleMsg::StudioToggleExpanded));
     apply(&mut m, Msg::Console(ConsoleMsg::Wiki(WikiMsg::Toggle)));
     let mut h = Harness::builder()

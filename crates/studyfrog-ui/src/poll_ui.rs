@@ -1,4 +1,6 @@
 //! Checking the vault for changes while the app is open. Pure.
+use crate::effect::EffectEditor;
+use crate::effect::EffectVault;
 
 use crate::effect::Effect;
 use crate::state::{Notice, NoticeKind, Screen, State, VaultInfo};
@@ -18,7 +20,7 @@ pub fn tick(state: State) -> (State, Vec<Effect>) {
                 polling: true,
                 ..state
             },
-            vec![Effect::PollVault],
+            vec![Effect::Vault(EffectVault::PollVault)],
         )
     } else {
         (state, Vec::new())
@@ -43,7 +45,7 @@ pub fn vault_polled(
                 ..state
             };
             if state.screen == Screen::Graph {
-                effects.push(Effect::LoadGraph);
+                effects.push(Effect::Editor(EffectEditor::LoadGraph));
             }
             if state.screen != Screen::Rehearse {
                 return (state, effects);

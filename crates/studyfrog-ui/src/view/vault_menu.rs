@@ -1,4 +1,5 @@
 //! Overhauled vault switcher menu (STORY-0138): active vault card, recent vaults, and clear actions.
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, RichText};
 
@@ -85,7 +86,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             let width = ui.available_width();
             let row = egui::Button::selectable(false, &label).min_size(egui::vec2(width, 28.0));
             if ui.add(row).on_hover_text(path.as_str()).clicked() {
-                out.push(Msg::OpenRecent(path.clone()));
+                out.push(Msg::Vault(MsgVault::OpenRecent(path.clone())));
                 close(out);
             }
         }
@@ -103,7 +104,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .on_hover_text("Pick a vault folder to open it.")
         .clicked()
     {
-        out.push(Msg::CloseVault);
+        out.push(Msg::Vault(MsgVault::CloseVault));
         close(out);
     }
 
@@ -115,7 +116,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .on_hover_text("Opens a dialog to pick a folder.")
         .clicked()
     {
-        out.push(Msg::BrowseVaultClicked);
+        out.push(Msg::Vault(MsgVault::BrowseVaultClicked));
         close(out);
     }
 }

@@ -1,6 +1,7 @@
 //! The plans of the screens that had only `nav` (achievements, graph, assistant, settings, match,
 //! folders, the PDF viewer's open) and of `stack delete`. Each opens its screen, then makes the
 //! change; `stack delete` asks and confirms the way the folders screen does.
+use crate::msg::MsgVault;
 
 use studyfrog_md::ulid::format_ulid;
 
@@ -18,7 +19,7 @@ use crate::pdf_types::PdfMsg;
 use crate::state::{Screen, State};
 
 fn open(screen: Screen) -> Vec<Msg> {
-    vec![Msg::Navigate(screen)]
+    vec![Msg::Vault(MsgVault::Navigate(screen))]
 }
 
 /// The achievements filter; a stack's filter is by its key (its uid as text).

@@ -1,4 +1,5 @@
 //! The reports screen's update logic. Pure.
+use crate::effect::EffectReports;
 
 use studyfrog_service::reports::ReportBundle;
 
@@ -56,7 +57,7 @@ pub fn retention_applied(
                 text: "The desired retention was changed; the reports are computed again."
                     .to_owned(),
             });
-            (state, vec![Effect::BuildReports])
+            (state, vec![Effect::Reports(EffectReports::BuildReports)])
         }
         Err(e) => {
             state.notice = Some(Notice {

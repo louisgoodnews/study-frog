@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The FrogScript reference beside ScriptStudio (STORY-0171): its state, and the console screen with
 //! the panel open.
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -68,7 +69,7 @@ fn every_lifecycle_event_kind_has_an_entry_in_its_category() {
 #[test]
 fn the_console_screen_shows_the_reference_when_it_is_open() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Console));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Console)));
     apply(&mut m, Msg::Console(ConsoleMsg::StudioToggleExpanded));
     wiki(&mut m, WikiMsg::Toggle);
     let mut h = harness(m);
@@ -88,7 +89,7 @@ fn the_console_screen_shows_the_reference_when_it_is_open() {
 fn the_cookbook_offers_every_recipe_and_runs_the_read_only_ones() {
     use studyfrog_script::cookbook::RECIPES;
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Console));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Console)));
     apply(&mut m, Msg::Console(ConsoleMsg::StudioToggleExpanded));
     wiki(&mut m, WikiMsg::Toggle);
     let mut h = harness(m);

@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! STORY-0114 in the note editor: the text column keeps to the reading measure, and the details stay beside it.
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -28,14 +29,14 @@ fn editing() -> Model {
     let doc = parse_doc(NOTE).unwrap();
     apply(
         &mut m,
-        Msg::DocumentLoaded(
+        Msg::Editor(MsgEditor::DocumentLoaded(
             Uid(0xA),
             Ok(LoadedDoc {
                 path: "lernen/zellmembran.md".into(),
                 doc,
                 hash: 1,
             }),
-        ),
+        )),
     );
     assert_eq!(m.state.screen, Screen::Editor);
     m

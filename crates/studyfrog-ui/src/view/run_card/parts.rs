@@ -1,5 +1,6 @@
 //! Parts of the rehearsal card: the reveal and mark controls and the source link.
 use super::*;
+use crate::msg::MsgRehearsal;
 
 pub(super) fn mark_row(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let chosen = crate::review::current_mark(run);
@@ -39,7 +40,7 @@ pub(super) fn reveal_controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Ms
     let answering = is_item_typed(run) && !is_case_item(run);
     if answering {
         if let Some(text) = text_field(ui, "Your answer", &run.answer, "type your answer", 3) {
-            out.push(Msg::AnswerEdited(text));
+            out.push(Msg::Rehearsal(MsgRehearsal::AnswerEdited(text)));
         }
         let ready = !run.answer.trim().is_empty();
         if ui
@@ -109,7 +110,7 @@ pub(super) fn case_controls(
         "explain why this choice",
         4,
     ) {
-        out.push(Msg::AnswerEdited(text));
+        out.push(Msg::Rehearsal(MsgRehearsal::AnswerEdited(text)));
     }
     let ready = !run.answer.trim().is_empty();
     let check = ui.add_enabled_ui(ready, |ui| {
@@ -118,7 +119,7 @@ pub(super) fn case_controls(
     });
     if check.inner.clicked() {
         out.push(Msg::Case(crate::setup::case::CaseMsg::RunCheck));
-        out.push(Msg::RunAction(Action::Flip));
+        out.push(Msg::Rehearsal(MsgRehearsal::RunAction(Action::Flip)));
     }
     ui.add_space(4.0);
 }

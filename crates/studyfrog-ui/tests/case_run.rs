@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The case study inside a run (STORY-0199): the suggested rating follows the check, and a wrong choice
 //! never suggests more than Hard.
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 
@@ -69,11 +70,16 @@ fn checking_a_case_in_a_run_asks_for_its_score_to_be_recorded() {
         answer: "Expected: Short screen".into(),
         ..ItemContent::default()
     };
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(content))),
+    );
     apply(&mut m, Msg::Case(CaseMsg::RunPick(0, true)));
     apply(
         &mut m,
-        Msg::AnswerEdited("The short screen addresses scoring speed for busy staff.".to_owned()),
+        Msg::Rehearsal(MsgRehearsal::AnswerEdited(
+            "The short screen addresses scoring speed for busy staff.".to_owned(),
+        )),
     );
     let effects = apply(&mut m, Msg::Case(CaseMsg::RunCheck));
     assert!(

@@ -1,5 +1,6 @@
 //! Step 2 of the run setup: preset, mode, order, size and what happens to the schedule. The rarer
 //! filters sit under "More options".
+use crate::msg::MsgRehearsal;
 
 use eframe::egui;
 use studyfrog_core::plan::{Order, ScheduleEffect, StateFilter};
@@ -42,7 +43,7 @@ pub const EXAM_RULES: &str = "Exam: every card and question once, answered in wr
      graded at the end (60 % to pass, A+ / 1+ from 95 %). Notes are left out.";
 
 fn edit(out: &mut Vec<Msg>, e: SetupEdit) {
-    out.push(Msg::Setup(e));
+    out.push(Msg::Rehearsal(MsgRehearsal::Setup(e)));
 }
 
 /// The step.

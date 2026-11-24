@@ -1,4 +1,5 @@
 //! The Prompts tab: ready-made instructions for an AI, to copy or save, that make it produce files StudyFrog imports.
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, RichText};
 use studyfrog_service::prompts::{Prompt, PromptSource, prompt_with};
@@ -106,7 +107,9 @@ pub fn moved_link(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .on_hover_text("Opens the prompts screen.")
         .clicked()
     {
-        out.push(Msg::Navigate(crate::state::Screen::Prompts));
+        out.push(Msg::Vault(MsgVault::Navigate(
+            crate::state::Screen::Prompts,
+        )));
     }
 }
 

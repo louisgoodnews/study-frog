@@ -1,4 +1,5 @@
 //! The page of a stack: breadcrumb, title, status and actions on top, then its tabs.
+use crate::msg::MsgBrowse;
 
 mod more;
 use self::more::more_actions;
@@ -40,7 +41,7 @@ fn breadcrumb(stacks: &[StackRow], stack: &StackRow, ui: &mut egui::Ui, out: &mu
             .on_hover_text("Shows the items of every stack.")
             .clicked()
         {
-            out.push(Msg::Select(Selection::Nothing));
+            out.push(Msg::Browse(MsgBrowse::Select(Selection::Nothing)));
         }
         for a in ancestors(stacks, stack) {
             ui.label("/");
@@ -49,7 +50,9 @@ fn breadcrumb(stacks: &[StackRow], stack: &StackRow, ui: &mut egui::Ui, out: &mu
                 .on_hover_text("Opens this stack.")
                 .clicked()
             {
-                out.push(Msg::Select(Selection::Stack(a.folder.clone())));
+                out.push(Msg::Browse(MsgBrowse::Select(Selection::Stack(
+                    a.folder.clone(),
+                ))));
             }
         }
     });

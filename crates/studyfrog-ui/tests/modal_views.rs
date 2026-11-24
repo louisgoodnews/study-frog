@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The create dialog, the vault dialog, the toast and the welcome page, drawn headless.
+use studyfrog_ui::effect::EffectImport;
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -88,7 +91,7 @@ fn typing_and_pressing_create_sends_the_request() {
     h.get_by_label("Create").click();
     h.run();
     let sent = h.state().1.iter().any(|e| {
-        matches!(e, Effect::CreateItem { kind: NewKind::Card, text, answer, parent, .. }
+        matches!(e, Effect::Import(EffectImport::CreateItem { kind: NewKind::Card, text, answer, parent, .. })
         if text == "Bonjour?" && answer == "Hello" && parent.as_deref() == Some("french"))
     });
     assert!(sent, "{:?}", h.state().1);
@@ -131,10 +134,10 @@ fn the_welcome_page_greets_instead_of_asking_for_a_path_and_the_toast_opens_the_
     let mut m = Model::default();
     apply(
         &mut m,
-        Msg::Started {
+        Msg::Vault(MsgVault::Started {
             app: AppSettings::default(),
             error: None,
-        },
+        }),
     );
     let mut h = harness(m);
     h.run();
@@ -163,10 +166,10 @@ fn a_toast_can_be_dismissed_without_opening_anything() {
     let mut m = Model::default();
     apply(
         &mut m,
-        Msg::Started {
+        Msg::Vault(MsgVault::Started {
             app: AppSettings::default(),
             error: None,
-        },
+        }),
     );
     let mut h = harness(m);
     h.run();
@@ -185,7 +188,9 @@ fn the_library_shows_nested_stacks_as_a_tree_with_the_inner_ones_under_their_par
     m.state.app.stack_tabs = vec!["french:list".into()];
     apply(
         &mut m,
-        Msg::Select(studyfrog_ui::state::Selection::Stack("french".into())),
+        Msg::Browse(MsgBrowse::Select(studyfrog_ui::state::Selection::Stack(
+            "french".into(),
+        ))),
     );
     let mut h = harness(m);
     h.run();

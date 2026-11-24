@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The reading-speed test and its use as the baseline of the review.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgRehearsal;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -41,14 +44,16 @@ fn reading_the_text_in_a_plausible_time_gives_a_speed_that_can_be_kept() {
     let effects = test(&mut m, 41.0, ReadingTestMsg::Save);
     assert_eq!(m.state.app.reading_wpm, Some(words * 2));
     assert!(
-        matches!(&effects[..], [Effect::SaveAppSettings(a)] if a.reading_wpm == Some(words * 2))
+        matches!(&effects[..], [Effect::Vault(EffectVault::SaveAppSettings(a))] if a.reading_wpm == Some(words * 2))
     );
     assert_eq!(m.state.reading_test.phase, TestPhase::Idle);
     assert!(m.state.notice.as_ref().unwrap().text.contains("saved"));
 
     let effects = test(&mut m, 50.0, ReadingTestMsg::Reset);
     assert_eq!(m.state.app.reading_wpm, None);
-    assert!(matches!(&effects[..], [Effect::SaveAppSettings(a)] if a.reading_wpm.is_none()));
+    assert!(
+        matches!(&effects[..], [Effect::Vault(EffectVault::SaveAppSettings(a))] if a.reading_wpm.is_none())
+    );
 }
 
 #[test]
@@ -78,7 +83,7 @@ fn an_implausible_time_is_not_kept_and_stray_messages_do_nothing() {
 #[test]
 fn the_settings_screen_walks_through_the_test() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Settings));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Settings)));
     m.state.app.settings_tab = Some("rehearsal".into());
     let mut h = harness(m);
     h.run();
@@ -106,7 +111,7 @@ fn the_settings_screen_walks_through_the_test() {
         h.state()
             .1
             .iter()
-            .any(|e| matches!(e, Effect::SaveAppSettings(a) if a.reading_wpm == Some(wpm as u32)))
+            .any(|e| matches!(e, Effect::Vault(EffectVault::SaveAppSettings(a)) if a.reading_wpm == Some(wpm as u32)))
     );
     assert!(
         h.query_by_label(&format!("{wpm} words per minute (measured)"))
@@ -127,7 +132,7 @@ fn a_run_uses_the_speed_measured_when_it_started() {
         state: RunState::Idle,
         started_at: None,
     };
-    apply(&mut m, Msg::RunReady(Ok(run)));
+    apply(&mut m, Msg::Rehearsal(MsgRehearsal::RunReady(Ok(run))));
     assert_eq!(
         m.state
             .rehearse
@@ -144,7 +149,7 @@ fn a_run_uses_the_speed_measured_when_it_started() {
 fn the_answer_comparison_choice_is_kept_and_the_thresholds_are_explained() {
     use studyfrog_core::settings::AnswerEngine;
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Settings));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Settings)));
     m.state.app.settings_tab = Some("answers".into());
     let mut h = harness(m);
     h.run();
@@ -162,6 +167,6 @@ fn the_answer_comparison_choice_is_kept_and_the_thresholds_are_explained() {
     h.run();
     assert_eq!(h.state().0.state.app.answer_engine, AnswerEngine::Words);
     assert!(h.state().1.iter().any(
-        |e| matches!(e, Effect::SaveAppSettings(a) if a.answer_engine == AnswerEngine::Words)
+        |e| matches!(e, Effect::Vault(EffectVault::SaveAppSettings(a)) if a.answer_engine == AnswerEngine::Words)
     ));
 }

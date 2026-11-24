@@ -1,5 +1,6 @@
 //! The Backlog tab: "Up next" and "Not yet planned" with the count per status, and items that move between them by dragging
 //! or by a button.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, CornerRadius, Frame, Id, Margin, Stroke};
 use studyfrog_core::status::{STATUSES, status_label};
@@ -74,7 +75,7 @@ fn column(
                     .on_hover_text("Opens this item.")
                     .clicked()
                 {
-                    out.push(Msg::OpenItem(item.uid));
+                    out.push(Msg::Browse(MsgBrowse::OpenItem(item.uid)));
                 }
                 let (label, target) = if up_next {
                     (format!("Move {name} to Not yet planned"), false)

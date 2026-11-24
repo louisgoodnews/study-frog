@@ -1,5 +1,6 @@
 //! The answer part of the exam card: one answer field and "Submit and lock answer". No show-answer, skip,
 //! marks or ratings (`docs/specs/exam-mode.md`, section 7).
+use crate::msg::MsgRehearsal;
 
 use eframe::egui::{self, RichText};
 use studyfrog_rehearsal::case_study::CaseStudyItem;
@@ -50,7 +51,7 @@ pub fn controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     if let Some(text) = text_field(ui, "Your answer", &run.answer, "write your answer", 4) {
-        out.push(Msg::AnswerEdited(text));
+        out.push(Msg::Rehearsal(MsgRehearsal::AnswerEdited(text)));
     }
     let ready = !run.answer.trim().is_empty();
     ui.add_space(4.0);
@@ -61,7 +62,9 @@ pub fn controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             })
             .inner;
         if submit.clicked() {
-            out.push(Msg::RunAction(Action::SubmitAnswer(run.answer.clone())));
+            out.push(Msg::Rehearsal(MsgRehearsal::RunAction(
+                Action::SubmitAnswer(run.answer.clone()),
+            )));
         }
         let done = answers(run).len();
         ui.weak(format!("{done} of {} answered", run.session.queue.len()));

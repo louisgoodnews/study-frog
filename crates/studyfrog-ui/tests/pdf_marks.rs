@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Highlights and notes in the viewer, written to the file next to the PDF.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 #[path = "../../studyfrog-pdf/tests/common/mod.rs"]
@@ -25,7 +26,11 @@ fn viewer(label: &str) -> (common::TempDir, Model, Worker) {
     let mut model = Model::default();
     let mut worker = worker_new(None);
     let path = dir.path.display().to_string();
-    run_to_idle(&mut model, &mut worker, vec![Effect::OpenVault(path)]);
+    run_to_idle(
+        &mut model,
+        &mut worker,
+        vec![Effect::Vault(EffectVault::OpenVault(path))],
+    );
     send(&mut model, &mut worker, PdfMsg::Open("a.pdf".into(), 1));
     (dir, model, worker)
 }
@@ -124,7 +129,9 @@ fn a_damaged_notes_file_gives_a_notice_and_does_not_stop_the_viewer() {
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     send(&mut model, &mut worker, PdfMsg::Open("a.pdf".into(), 0));
     let notice = model.state.notice.as_ref().unwrap();

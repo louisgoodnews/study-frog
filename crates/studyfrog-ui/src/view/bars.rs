@@ -1,4 +1,6 @@
 //! The status bar.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, Panel};
 
@@ -21,14 +23,14 @@ pub fn status(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                         .on_hover_text("Opens the item this notice is about.")
                         .clicked()
                 {
-                    out.push(Msg::OpenItem(*uid));
+                    out.push(Msg::Browse(MsgBrowse::OpenItem(*uid)));
                 }
                 if ui
                     .button("Dismiss")
                     .on_hover_text("Hides this message.")
                     .clicked()
                 {
-                    out.push(Msg::DismissNotice);
+                    out.push(Msg::Vault(MsgVault::DismissNotice));
                 }
             }
             None => {

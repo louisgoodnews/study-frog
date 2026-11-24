@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The sidebar, menus, notifications, global search and Create menu (update logic).
+use studyfrog_ui::effect::EffectBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -87,7 +89,7 @@ fn every_new_notice_is_kept_once_and_the_list_is_capped() {
             format!("Search failed: n{}", MAX_NOTIFICATIONS + 4)
         )
     );
-    apply(&mut m, Msg::Tick);
+    apply(&mut m, Msg::Vault(MsgVault::Tick));
     assert_eq!(
         m.state.chrome.notifications.len(),
         MAX_NOTIFICATIONS,
@@ -102,7 +104,7 @@ fn searching_asks_for_matches_and_ignores_stale_answers() {
     assert_eq!(
         chrome(&mut m, ChromeMsg::SearchEdited(" bon ".into())),
         [
-            Effect::SearchItems("bon".into()),
+            Effect::Browse(EffectBrowse::SearchItems("bon".into())),
             Effect::Pdf(studyfrog_ui::pdf_types::PdfEffect::Search("bon".into()))
         ]
     );

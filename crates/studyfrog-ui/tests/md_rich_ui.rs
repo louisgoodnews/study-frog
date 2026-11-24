@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Tables, underline, colour and the table of contents in the preview and in the cards of a run
 //! (TASK-0197, 0215, 0216).
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 
@@ -66,7 +67,10 @@ fn card(prompt: &str, answer: &str) -> egui_kittest::Harness<'static, common::vi
         is_note: false,
         comments: Vec::new(),
     };
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(content))),
+    );
     let mut h = harness(m);
     h.run_steps(2);
     h

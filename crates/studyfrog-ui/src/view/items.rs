@@ -1,4 +1,5 @@
 //! The items of the selected stack (or the inbox), with a title filter and the new-card form.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, RichText};
 use studyfrog_core::civil::format_date;
@@ -143,7 +144,7 @@ pub(super) fn due_row(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .on_hover_text("Opens the stack's settings to change them.")
             .clicked()
         {
-            out.push(Msg::OpenItem(stack.uid));
+            out.push(Msg::Browse(MsgBrowse::OpenItem(stack.uid)));
         }
     });
 }
@@ -170,7 +171,9 @@ pub(super) fn child_stacks(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>)
                 .on_hover_text("Opens this sub-stack.")
                 .clicked()
             {
-                out.push(Msg::Select(Selection::Stack(c.folder.clone())));
+                out.push(Msg::Browse(MsgBrowse::Select(Selection::Stack(
+                    c.folder.clone(),
+                ))));
             }
         }
     });

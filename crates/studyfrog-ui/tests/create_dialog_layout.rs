@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The Create dialog laid out like Jira's: stack and type at the top, resizable editors, priority and difficulty.
+use studyfrog_ui::effect::EffectImport;
 
 mod common;
 
@@ -45,7 +46,7 @@ fn the_dialog_starts_with_the_defaults_and_sends_what_was_chosen() {
         Msg::Modal(ModalMsg::SetDifficulty(Difficulty::Easy)),
     );
     let fx = apply(&mut m, Msg::Modal(ModalMsg::Submit));
-    let [Effect::CreateItem { choices, .. }] = &fx[..] else {
+    let [Effect::Import(EffectImport::CreateItem { choices, .. })] = &fx[..] else {
         panic!("{fx:?}")
     };
     assert_eq!(*choices, (Some(Priority::Highest), Some(Difficulty::Easy)));

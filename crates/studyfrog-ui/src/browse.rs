@@ -1,4 +1,7 @@
 //! Update logic of the stack browser: selection, search and the create forms. Pure.
+use crate::effect::EffectBrowse;
+use crate::effect::EffectImport;
+use crate::msg::MsgBrowse;
 
 use crate::effect::Effect;
 use crate::msg::{DraftField, Msg};
@@ -16,10 +19,10 @@ pub fn reload(selection: &Selection) -> Vec<Effect> {
     match selection {
         Selection::Nothing => Vec::new(),
         Selection::Stack(_) => vec![
-            Effect::LoadItems(selection.clone()),
-            Effect::LoadStatusCounts(selection.clone()),
+            Effect::Browse(EffectBrowse::LoadItems(selection.clone())),
+            Effect::Browse(EffectBrowse::LoadStatusCounts(selection.clone())),
         ],
-        other => vec![Effect::LoadItems(other.clone())],
+        other => vec![Effect::Browse(EffectBrowse::LoadItems(other.clone()))],
     }
 }
 
@@ -42,19 +45,23 @@ pub fn filter_items<'a>(items: &'a [ItemRow], query: &str) -> Vec<&'a ItemRow> {
 /// Handle the browser's messages; anything else is returned unchanged.
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
     match msg {
-        Msg::Select(sel) => select(state, sel),
-        Msg::SearchEdited(text) => with_browser(state, |b| Browser { search: text, ..b }),
-        Msg::ItemsLoaded(result) => items_loaded(state, result),
-        Msg::StatusCountsLoaded(Ok(status_counts)) => {
+        Msg::Browse(MsgBrowse::Select(sel)) => select(state, sel),
+        Msg::Browse(MsgBrowse::SearchEdited(text)) => {
+            with_browser(state, |b| Browser { search: text, ..b })
+        }
+        Msg::Browse(MsgBrowse::ItemsLoaded(result)) => items_loaded(state, result),
+        Msg::Browse(MsgBrowse::StatusCountsLoaded(Ok(status_counts))) => {
             with_browser(state, |b| Browser { status_counts, ..b })
         }
-        Msg::StatusCountsLoaded(Err(_)) => with_browser(state, |b| Browser {
+        Msg::Browse(MsgBrowse::StatusCountsLoaded(Err(_))) => with_browser(state, |b| Browser {
             status_counts: Vec::new(),
             ..b
         }),
-        Msg::DraftEdited(field, text) => with_browser(state, |b| edit_draft(b, field, text)),
-        Msg::AddCardClicked => add_card(state),
-        Msg::Created(result) => created(state, result),
+        Msg::Browse(MsgBrowse::DraftEdited(field, text)) => {
+            with_browser(state, |b| edit_draft(b, field, text))
+        }
+        Msg::Browse(MsgBrowse::AddCardClicked) => add_card(state),
+        Msg::Browse(MsgBrowse::Created(result)) => created(state, result),
         _ => (state, Vec::new()),
     }
 }
@@ -129,12 +136,12 @@ fn add_card(state: State) -> (State, Vec<Effect>) {
             Vec::new(),
         );
     }
-    let effect = Effect::CreateCard {
+    let effect = Effect::Import(EffectImport::CreateCard {
         folder: folder.clone(),
         title: d.title.clone(),
         front: d.front.clone(),
         back: d.back.clone(),
-    };
+    });
     (
         State {
             notice: None,

@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The library table on screen: headings that sort, the count, the column menu, and ten thousand rows.
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -95,7 +96,10 @@ fn an_empty_list_says_why() {
     empty.run_steps(2);
     assert!(empty.query_by_label("No items here yet.").is_some());
     let mut m = model_with(5);
-    apply(&mut m, Msg::SearchEdited("nothing like this".into()));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::SearchEdited("nothing like this".into())),
+    );
     let mut none = harness(m);
     none.run_steps(2);
     assert!(

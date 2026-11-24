@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The import and export dialog: entry points, the export mode question, the preview, duplicates, a cancel, and the files written.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -31,11 +33,15 @@ fn scratch(label: &str) -> std::path::PathBuf {
 #[test]
 fn the_dialog_opens_from_the_stack_page_the_create_dialog_and_settings() {
     let (_v, mut model, mut worker) = opened("transfer-open");
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
     send(
         &mut model,
         &mut worker,
-        Msg::Select(Selection::Stack("french".into())),
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
     );
     let mut h = harness(model);
     h.run_steps(4);
@@ -62,7 +68,11 @@ fn the_dialog_opens_from_the_stack_page_the_create_dialog_and_settings() {
 
     let (_v3, mut m3, mut w3) = opened("transfer-open3");
     m3.state.app.settings_tab = Some("data".into());
-    send(&mut m3, &mut w3, Msg::Navigate(Screen::Settings));
+    send(
+        &mut m3,
+        &mut w3,
+        Msg::Vault(MsgVault::Navigate(Screen::Settings)),
+    );
     let mut h = harness(m3);
     h.run_steps(4);
     assert!(h.query_by_label("Export…").is_some() && h.query_by_label("Import…").is_some());

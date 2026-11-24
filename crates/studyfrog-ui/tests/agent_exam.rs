@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The exam of the assistant screen.
+use studyfrog_ui::effect::EffectAssistant;
 
 mod common;
 
@@ -46,10 +47,10 @@ fn an_exam_asks_waits_for_answers_and_records_verdicts_only_on_request() {
     agent(&mut m, AgentMsg::ExamCount("2".into()));
     assert_eq!(
         agent(&mut m, AgentMsg::StartExam),
-        [Effect::PrepareExam {
+        [Effect::Assistant(EffectAssistant::PrepareExam {
             folders: vec!["french".into()],
             count: 2
-        }]
+        })]
     );
     let items = vec![studyfrog_agent::exam::ExamItem {
         uid: "A1".into(),
@@ -58,14 +59,17 @@ fn an_exam_asks_waits_for_answers_and_records_verdicts_only_on_request() {
     }];
     let fx = agent(&mut m, AgentMsg::ExamPrepared(Ok(items)));
     assert!(
-        matches!(&fx[..], [Effect::AgentChat { .. }]),
+        matches!(
+            &fx[..],
+            [Effect::Assistant(EffectAssistant::AgentChat { .. })]
+        ),
         "the opening turn starts the exam"
     );
     agent(&mut m, AgentMsg::ExamReplied(Ok("Question 1: Q?".into())));
     agent(&mut m, AgentMsg::ExamInput("my answer".into()));
     let fx = agent(&mut m, AgentMsg::ExamSend);
     assert!(
-        matches!(&fx[..], [Effect::AgentChat { messages, .. }] if messages.len() == 3 && messages[2].content == "my answer")
+        matches!(&fx[..], [Effect::Assistant(EffectAssistant::AgentChat { messages, .. })] if messages.len() == 3 && messages[2].content == "my answer")
     );
     agent(
         &mut m,
@@ -90,7 +94,7 @@ fn an_exam_asks_waits_for_answers_and_records_verdicts_only_on_request() {
         "nothing is recorded by itself"
     );
     let fx = agent(&mut m, AgentMsg::RecordExam);
-    assert!(matches!(&fx[..], [Effect::RecordExam(r)] if r.len() == 1));
+    assert!(matches!(&fx[..], [Effect::Assistant(EffectAssistant::RecordExam(r))] if r.len() == 1));
     agent(&mut m, AgentMsg::ExamRecorded(Ok(1)));
     assert!(agent(&mut m, AgentMsg::RecordExam).is_empty(), "only once");
 }

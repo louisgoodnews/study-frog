@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Dragging a board card to another column with the pointer.
+use studyfrog_ui::effect::EffectPlanner;
 
 mod common;
 
@@ -53,11 +54,13 @@ fn dragging_a_card_onto_another_column_moves_it_there() {
     let moved = h.state().1.iter().any(|e| {
         matches!(
             e,
-            Effect::BoardCommand(studyfrog_board::ops::BoardOp::Move {
-                card: Uid(100),
-                to: Uid(22),
-                ..
-            })
+            Effect::Planner(EffectPlanner::BoardCommand(
+                studyfrog_board::ops::BoardOp::Move {
+                    card: Uid(100),
+                    to: Uid(22),
+                    ..
+                }
+            ))
         )
     });
     assert!(

@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 //! Tests for the simple chat interface in Assistant.
+use studyfrog_ui::effect::EffectAssistant;
 
 mod common;
 
@@ -59,10 +60,10 @@ fn assistant_chat_interface_renders_and_handles_chat_flow() {
     let asked = fx.iter().any(|e| {
         matches!(
             e,
-            Effect::AgentChat {
+            Effect::Assistant(EffectAssistant::AgentChat {
                 messages,
                 ..
-            } if messages.last().map(|m| m.content.as_str()) == Some("Explain spaced repetition")
+            }) if messages.last().map(|m| m.content.as_str()) == Some("Explain spaced repetition")
         )
     });
     assert!(asked, "ChatSend emits AgentChat effect");

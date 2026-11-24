@@ -1,5 +1,6 @@
 //! Adding a picture to a text area: choose the file, copy it into the vault, put the Markdown for it at
 //! the end of the text. Pure.
+use crate::effect::EffectImport;
 
 use crate::effect::Effect;
 use crate::images::{append_line, image_markdown};
@@ -20,7 +21,7 @@ pub type Added = Result<Option<String>, String>;
 
 /// The user asked to add a picture.
 pub fn pick(state: State, target: ImageTarget) -> (State, Vec<Effect>) {
-    (state, vec![Effect::AddImage(target)])
+    (state, vec![Effect::Import(EffectImport::AddImage(target))])
 }
 
 fn insert_into(text: &str, rel: &str) -> String {

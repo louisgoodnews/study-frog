@@ -1,6 +1,7 @@
 //! Expandable card preview popovers for canvas nodes referencing vault items.
 //!
 //! Follows Invariant P1: zero inherent impl blocks; all logic in free functions.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, RichText};
 use studyfrog_md::ulid::parse_ulid;
@@ -47,7 +48,7 @@ pub fn draw_preview(ctx: &egui::Context, preview: &CardPreviewState, out: &mut V
                         .on_hover_text("Opens this in the Markdown editor.")
                         .clicked()
                 {
-                    out.push(Msg::OpenItem(uid));
+                    out.push(Msg::Browse(MsgBrowse::OpenItem(uid)));
                     out.push(Msg::Canvas(CanvasMsg::ClosePreview));
                 }
                 if ui.button("Close").on_hover_text("Closes this.").clicked() {

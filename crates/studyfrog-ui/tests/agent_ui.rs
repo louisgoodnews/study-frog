@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The assistant screen: update logic, views, and a whole wiki session and exam through the worker
 //! with a fake model.
+use studyfrog_ui::effect::EffectAssistant;
 
 mod common;
 
@@ -100,7 +101,7 @@ fn adding_a_connection_is_checked_and_a_protocol_fills_in_its_usual_address() {
     assert!(m.state.agent.error.as_ref().unwrap().contains("API key"));
     agent(&mut m, AgentMsg::Form(FormEdit::Key(" sk-1 ".into())));
     let fx = agent(&mut m, AgentMsg::AddConnection);
-    let [Effect::SaveConnection { provider, key }] = &fx[..] else {
+    let [Effect::Assistant(EffectAssistant::SaveConnection { provider, key })] = &fx[..] else {
         panic!("{fx:?}")
     };
     assert_eq!(
@@ -135,10 +136,10 @@ fn a_wiki_request_needs_a_connection_stacks_and_permission_and_a_remote_one_asks
     let fx = agent(&mut m, AgentMsg::PrepareWiki);
     assert_eq!(
         fx,
-        [Effect::PrepareWiki {
+        [Effect::Assistant(EffectAssistant::PrepareWiki {
             folders: vec!["french".into()],
             pdf: None
-        }]
+        })]
     );
     let ctx = studyfrog_service::agent_vault::WikiContext {
         stacks: vec![("french".into(), "French".into())],
@@ -151,7 +152,10 @@ fn a_wiki_request_needs_a_connection_stacks_and_permission_and_a_remote_one_asks
     );
     assert!(m.state.agent.pending.is_some());
     let fx = agent(&mut m, AgentMsg::SendWiki);
-    assert!(matches!(&fx[..], [Effect::AgentChat { .. }]));
+    assert!(matches!(
+        &fx[..],
+        [Effect::Assistant(EffectAssistant::AgentChat { .. })]
+    ));
     assert!(m.state.agent.busy && m.state.agent.pending.is_none());
 }
 
@@ -164,7 +168,13 @@ fn a_local_model_is_asked_without_a_second_click_and_proposals_are_reviewed_then
         ..Default::default()
     };
     let fx = agent(&mut m, AgentMsg::WikiPrepared(Ok(Box::new(ctx))));
-    assert!(matches!(&fx[..], [Effect::AgentChat { .. }]), "{fx:?}");
+    assert!(
+        matches!(
+            &fx[..],
+            [Effect::Assistant(EffectAssistant::AgentChat { .. })]
+        ),
+        "{fx:?}"
+    );
     let proposal = studyfrog_agent::wiki::Proposal {
         summary: "Index".into(),
         changes: vec![
@@ -204,7 +214,7 @@ fn a_local_model_is_asked_without_a_second_click_and_proposals_are_reviewed_then
     h.run_steps(2);
     let fx = h.state().1.clone();
     let applied = fx.iter().find_map(|e| match e {
-        Effect::ApplyChanges(c) => Some(c.len()),
+        Effect::Assistant(EffectAssistant::ApplyChanges(c)) => Some(c.len()),
         _ => None,
     });
     assert_eq!(

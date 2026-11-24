@@ -1,5 +1,7 @@
 //! The Relations tab of the item details notebook: primary stack info, outbound wikilinks,
 //! and inbound backlinks.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgEditor;
 
 use eframe::egui;
 use studyfrog_md::blocks::{Block, Link, Span};
@@ -62,7 +64,7 @@ fn linked_from(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .on_hover_text("Opens this linked item.")
                     .clicked()
                 {
-                    out.push(Msg::OpenItem(item.uid));
+                    out.push(Msg::Browse(MsgBrowse::OpenItem(item.uid)));
                 }
             });
         }
@@ -82,7 +84,7 @@ fn links(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         for t in targets {
             if ui.link(&t).on_hover_text("Opens this link.").clicked() {
-                out.push(Msg::OpenLink(t));
+                out.push(Msg::Editor(MsgEditor::OpenLink(t)));
             }
         }
     });

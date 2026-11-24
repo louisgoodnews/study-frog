@@ -2,6 +2,7 @@
 //! only when the tool says it only reads and the user trusts its server; every other call waits
 //! for "Allow". The result, or why the call was not run, goes back to the model. Pure: each step
 //! takes the state and gives it back changed.
+use crate::effect::EffectAssistant;
 
 use studyfrog_agent::mcp_client::{needs_approval, server_refusal};
 use studyfrog_agent::mcp_client_chat::{MAX_TOOL_ROUNDS, result_message, tools_block};
@@ -43,12 +44,12 @@ fn continue_with(
     state.agent.mcp.rounds += 1;
     (
         state,
-        vec![Effect::AgentChat {
+        vec![Effect::Assistant(EffectAssistant::AgentChat {
             provider,
             system,
             messages,
             purpose,
-        }],
+        })],
     )
 }
 

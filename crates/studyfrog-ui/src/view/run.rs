@@ -1,5 +1,6 @@
 //! The rehearsal screen: prompt and timer only, keyboard first. Space reveals, 1-4 rate, S skips,
 //! P pauses, Esc stops. Shortcuts are off while a text field has the keyboard.
+use crate::msg::MsgRehearsal;
 
 use eframe::egui::{self, Key, RichText};
 use studyfrog_core::run::{RunMode, RunState};
@@ -15,7 +16,7 @@ use crate::view::kit;
 use crate::view::run_card::{MARKS, RATINGS, item_scroll, paused};
 
 fn act(out: &mut Vec<Msg>, action: Action) {
-    out.push(Msg::RunAction(action));
+    out.push(Msg::Rehearsal(MsgRehearsal::RunAction(action)));
 }
 
 /// The live run, or its summary once it is over.

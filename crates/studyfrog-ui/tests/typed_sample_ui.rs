@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 //! Tests for random typed answer sampling in setup and rehearsal.
+use studyfrog_ui::msg::MsgRehearsal;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -36,9 +38,12 @@ fn setup_form_typed_sample_validation_and_plan() {
 #[test]
 fn setup_screen_shows_typed_sampling_options_in_answer_mode() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
     m.state.rehearse.step = SetupStep::How;
-    apply(&mut m, Msg::Setup(SetupEdit::Mode(RunMode::Answer)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Mode(RunMode::Answer))),
+    );
 
     let mut h = harness(m);
     h.run_steps(4);
@@ -66,9 +71,9 @@ fn rehearsal_excludes_notes_from_typing_and_shows_flip_controls() {
         started_at: None,
     };
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
     m.state.now = 0.0;
-    apply(&mut m, Msg::RunReady(Ok(run)));
+    apply(&mut m, Msg::Rehearsal(MsgRehearsal::RunReady(Ok(run))));
     let note_content = ItemContent {
         case: None,
         title: "Note Title".into(),
@@ -82,7 +87,10 @@ fn rehearsal_excludes_notes_from_typing_and_shows_flip_controls() {
         is_note: true,
         comments: Vec::new(),
     };
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(note_content)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(note_content))),
+    );
 
     let mut h = harness(m);
     h.run_steps(4);
@@ -105,9 +113,9 @@ fn rehearsal_card_view_shows_typed_input_when_sampled() {
         started_at: None,
     };
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
     m.state.now = 0.0;
-    apply(&mut m, Msg::RunReady(Ok(run)));
+    apply(&mut m, Msg::Rehearsal(MsgRehearsal::RunReady(Ok(run))));
     let card_content = ItemContent {
         case: None,
         title: "Card Title".into(),
@@ -121,7 +129,10 @@ fn rehearsal_card_view_shows_typed_input_when_sampled() {
         is_note: false,
         comments: Vec::new(),
     };
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(card_content)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(card_content))),
+    );
 
     let mut h = harness(m);
     h.run_steps(4);

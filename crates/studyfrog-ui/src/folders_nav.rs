@@ -1,4 +1,5 @@
 //! Keyboard navigation, selection and entry opening for Folders view.
+use crate::effect::EffectEditor;
 
 use crate::effect::Effect;
 use crate::folders_tree::tree_visible_rows;
@@ -19,7 +20,7 @@ pub fn open_entry(state: &State, path: &str) -> Vec<Effect> {
             .iter()
             .find(|i| i.row.path.as_str() == path)
     {
-        return vec![Effect::LoadDocument(item.uid)];
+        return vec![Effect::Editor(EffectEditor::LoadDocument(item.uid))];
     }
     Vec::new()
 }

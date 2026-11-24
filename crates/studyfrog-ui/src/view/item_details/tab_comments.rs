@@ -1,4 +1,5 @@
 //! The Comments tab of the item details notebook: view and manage timestamped comments (STORY-0135).
+use crate::msg::MsgEditor;
 
 use eframe::egui;
 use studyfrog_core::comment::{ItemComment, new_comment};
@@ -41,7 +42,9 @@ fn comment_card(c: &ItemComment, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .on_hover_text("Delete comment")
                     .clicked()
                 {
-                    out.push(Msg::Edit(EditAction::DeleteComment(c.id.clone())));
+                    out.push(Msg::Editor(MsgEditor::Edit(EditAction::DeleteComment(
+                        c.id.clone(),
+                    ))));
                 }
             });
         });
@@ -78,7 +81,9 @@ fn new_comment_input(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .unwrap_or(0);
             let cid = format!("c_{}", now);
             let comment = new_comment(cid, "user", now, draft.trim());
-            out.push(Msg::Edit(EditAction::AddComment(comment)));
+            out.push(Msg::Editor(MsgEditor::Edit(EditAction::AddComment(
+                comment,
+            ))));
             draft.clear();
         }
     });

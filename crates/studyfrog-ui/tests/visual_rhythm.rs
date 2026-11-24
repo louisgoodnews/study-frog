@@ -2,6 +2,8 @@
 //! STORY-0115: the spacing rhythm obeys the rule of halves at every density (tokens, egui's style and the drawn
 //! Settings page), controls are drawn by fill without outlines unless high contrast is on, and every screen shows at
 //! most one accent-filled primary action.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -93,7 +95,7 @@ fn controls_have_no_outline_unless_high_contrast_is_on() {
 fn the_settings_page_keeps_siblings_closer_than_padding_and_padding_closer_than_groups() {
     let mut m = open_model();
     m.state.toasts.clear();
-    apply(&mut m, Msg::Navigate(Screen::Settings));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Settings)));
     apply(
         &mut m,
         Msg::SettingsTab(SettingsTabMsg::Select(SettingsTab::Appearance)),
@@ -149,11 +151,14 @@ fn every_screen_has_at_most_one_accent_filled_primary_action() {
     for s in screens {
         let mut m = open_model();
         m.state.toasts.clear();
-        apply(&mut m, Msg::Navigate(s));
+        apply(&mut m, Msg::Vault(MsgVault::Navigate(s)));
         assert!(count_on(m) <= 1, "{s:?} shows more than one primary action");
     }
     let mut stack = open_model();
-    apply(&mut stack, Msg::Select(Selection::Stack("fr".into())));
+    apply(
+        &mut stack,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("fr".into()))),
+    );
     assert!(count_on(stack) <= 1, "the stack page");
     assert!(count_on(running_model(RunMode::Flip)) <= 1, "a run");
     assert!(count_on(running_model(RunMode::Answer)) <= 1, "a typed run");

@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Appearance and start-up settings in the state: stored and saved at once, apart per setting.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -19,7 +21,7 @@ fn set(m: &mut Model, a: AppearanceMsg) -> Vec<Effect> {
 
 fn saves(fx: &[Effect]) -> usize {
     fx.iter()
-        .filter(|e| matches!(e, Effect::SaveAppSettings(_)))
+        .filter(|e| matches!(e, Effect::Vault(EffectVault::SaveAppSettings(_))))
         .count()
 }
 
@@ -163,9 +165,13 @@ fn the_start_screen_follows_the_setting_and_the_last_screen_is_remembered() {
 
     let (_v, mut m, mut w) = opened("appearance-last");
     set(&mut m, AppearanceMsg::Start(StartScreen::Last));
-    send(&mut m, &mut w, Msg::Navigate(Screen::Board));
+    send(
+        &mut m,
+        &mut w,
+        Msg::Vault(MsgVault::Navigate(Screen::Board)),
+    );
     assert_eq!(m.state.app.appearance.last_screen.as_deref(), Some("board"));
-    let fx = apply(&mut m, Msg::Navigate(Screen::Reports));
+    let fx = apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Reports)));
     assert_eq!(saves(&fx), 1, "the new last screen is saved");
     assert_eq!(
         m.state.app.appearance.last_screen.as_deref(),
@@ -179,12 +185,18 @@ fn a_vault_opens_on_the_chosen_screen_and_the_sidebar_starts_folded_when_asked()
     m.state.app.appearance.start = StartScreen::Library;
     m.state.app.appearance.sidebar_folded = true;
     let app = m.state.app.clone();
-    apply(&mut m, Msg::Started { app, error: None });
+    apply(&mut m, Msg::Vault(MsgVault::Started { app, error: None }));
     assert!(m.state.chrome.sidebar_hidden, "folded at start");
     m.state.app.tutorial_offered = true;
-    apply(&mut m, Msg::VaultOpened(Ok(common::views::info())));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::VaultOpened(Ok(common::views::info()))),
+    );
     assert_eq!(m.state.screen, Screen::Library);
     m.state.app.appearance.start = StartScreen::Home;
-    apply(&mut m, Msg::VaultOpened(Ok(common::views::info())));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::VaultOpened(Ok(common::views::info()))),
+    );
     assert_eq!(m.state.screen, Screen::Home);
 }

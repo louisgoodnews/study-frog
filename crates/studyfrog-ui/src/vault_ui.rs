@@ -1,5 +1,6 @@
 //! Opening a vault and the first screen: reading the saved settings, the vault dialog's invitation, opening a path and
 //! what the vault's opening shows. Pure.
+use crate::effect::EffectVault;
 
 use studyfrog_core::settings::with_opened_vault;
 
@@ -73,7 +74,7 @@ pub(crate) fn open(state: State, path: String) -> (State, Vec<Effect>) {
             notice: None,
             ..state
         },
-        vec![Effect::OpenVault(path)],
+        vec![Effect::Vault(EffectVault::OpenVault(path))],
     )
 }
 
@@ -98,9 +99,9 @@ pub(crate) fn vault_opened(
             };
             let (state, go) = crate::appearance_ui::go_start(state);
             let mut effects = vec![
-                Effect::SaveAppSettings(state.app.clone()),
-                Effect::LoadHome,
-                Effect::LoadSubjects,
+                Effect::Vault(EffectVault::SaveAppSettings(state.app.clone())),
+                Effect::Vault(EffectVault::LoadHome),
+                Effect::Vault(EffectVault::LoadSubjects),
                 Effect::Folders(crate::folders_types::FolderEffect::Scan),
                 crate::pdf_library_ui::load(),
             ];

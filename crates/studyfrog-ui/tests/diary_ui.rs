@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! UI tests for the Diary screen.
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -49,7 +50,7 @@ fn sample_entry(
 #[test]
 fn navigation_to_diary() {
     let mut m = open_model();
-    let fx = apply(&mut m, Msg::Navigate(Screen::Diary));
+    let fx = apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Diary)));
     assert_eq!(m.state.screen, Screen::Diary);
     assert!(
         fx.iter()
@@ -63,7 +64,7 @@ fn navigation_to_diary() {
 #[test]
 fn calendar_date_selection() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Diary));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Diary)));
     apply(
         &mut m,
         Msg::Diary(DiaryMsg::SetViewMode(DiaryViewMode::MonthCalendar)),
@@ -141,7 +142,7 @@ fn filtering_by_stack_and_rating() {
 #[test]
 fn editing_an_entry() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Diary));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Diary)));
 
     let edit_date = Date {
         year: 2026,

@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Marking items while rehearsing and the review after the run.
+use studyfrog_ui::effect::EffectRehearsal;
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 
@@ -26,7 +29,7 @@ fn marking_is_recorded_replaced_by_the_latest_mark_and_forgotten_for_the_next_it
     assert_eq!(mark_of(&m), None);
     let effects = act(&mut m, 0.5, Action::Mark(Difficulty::Difficult));
     let saved = effects.iter().any(|e| {
-        matches!(e, Effect::RecordStep { out, .. }
+        matches!(e, Effect::Rehearsal(EffectRehearsal::RecordStep { out, .. })
         if out.events.iter().any(|ev| ev.kind == EventKind::ItemMarked(Difficulty::Difficult)))
     });
     assert!(saved, "the mark is saved with the run: {effects:?}");
@@ -110,15 +113,15 @@ fn applying_asks_to_replace_the_rating_and_the_screen_confirms_it() {
     h.get_by_label("Change the rating of Numbers to Easy")
         .click();
     h.run();
-    let want = Effect::Rerate {
+    let want = Effect::Rehearsal(EffectRehearsal::Rerate {
         item: Uid(1),
         expected: Rating::Good,
         to: Rating::Easy,
-    };
+    });
     assert!(h.state().1.contains(&want), "{:?}", h.state().1);
 
     let (model, _) = h.state_mut();
-    apply(model, Msg::Rerated(Uid(1), Ok(())));
+    apply(model, Msg::Rehearsal(MsgRehearsal::Rerated(Uid(1), Ok(()))));
     h.run();
     assert!(h.query_by_label("Changed to Easy.").is_some());
     assert!(
@@ -157,20 +160,20 @@ fn the_executor_refuses_to_change_a_review_that_does_not_exist() {
     let mut worker = worker_new(None);
     execute(
         &mut worker,
-        Effect::OpenVault(vault.path.display().to_string()),
+        Effect::Vault(EffectVault::OpenVault(vault.path.display().to_string())),
         NOW_NS,
     );
     let msgs = execute(
         &mut worker,
-        Effect::Rerate {
+        Effect::Rehearsal(EffectRehearsal::Rerate {
             item: Uid(10),
             expected: Rating::Good,
             to: Rating::Easy,
-        },
+        }),
         NOW_NS,
     );
     assert!(
-        matches!(&msgs[0], Msg::Rerated(Uid(10), Err(e)) if e.contains("changed")),
+        matches!(&msgs[0], Msg::Rehearsal(MsgRehearsal::Rerated(Uid(10), Err(e))) if e.contains("changed")),
         "{:?}",
         msgs[0]
     );

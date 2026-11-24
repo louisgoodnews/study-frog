@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 //! Tests for the expanded application lifecycle event bus (STORY-0151).
+use studyfrog_ui::msg::MsgEditor;
+use studyfrog_ui::msg::MsgRehearsal;
 
 use studyfrog_core::meta::Meta;
 use studyfrog_core::run::{Run, RunMode, RunState};
@@ -81,7 +83,10 @@ fn item_deleted_event_is_raised_on_confirm_delete() {
         ..Default::default()
     };
 
-    let events = from_msg(&Msg::Edit(EditAction::ConfirmDelete), &state);
+    let events = from_msg(
+        &Msg::Editor(MsgEditor::Edit(EditAction::ConfirmDelete)),
+        &state,
+    );
     assert_eq!(events.len(), 1);
     assert_eq!(events[0].kind, "item_deleted");
     assert_eq!(events[0].data["title"], "Stale Card");
@@ -100,7 +105,7 @@ fn rehearsal_started_and_stepped_events_are_raised() {
         started_at: None,
     };
 
-    let events = from_msg(&Msg::RunReady(Ok(run)), &state);
+    let events = from_msg(&Msg::Rehearsal(MsgRehearsal::RunReady(Ok(run))), &state);
     assert_eq!(events.len(), 1);
     assert_eq!(events[0].kind, "rehearsal_started");
     assert_eq!(events[0].data["mode"], "flip");

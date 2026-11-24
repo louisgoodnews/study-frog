@@ -1,5 +1,6 @@
 //! The stacks an item belongs to: its primary stack and the stacks that reference it,
 //! with add and remove, and the schedule, due date and familiarity of each (ADR 0011, TASK-0213).
+use crate::msg::MsgEditor;
 
 use eframe::egui::{self, RichText, Role, WidgetInfo};
 use studyfrog_core::civil::{date_from_days, format_date};
@@ -90,7 +91,9 @@ pub fn card(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .on_hover_text("Removes this item from the stack; the item itself is kept.");
                 r.widget_info(|| WidgetInfo::labeled(Role::Button, true, remove_label.clone()));
                 if r.clicked() {
-                    out.push(Msg::Edit(EditAction::RemoveReference(id.clone())));
+                    out.push(Msg::Editor(MsgEditor::Edit(EditAction::RemoveReference(
+                        id.clone(),
+                    ))));
                 }
             });
             ui.weak(format!(
@@ -130,7 +133,9 @@ fn add_menu(
                 .on_hover_text("Adds this item to this stack.");
             r.widget_info(|| WidgetInfo::labeled(Role::Button, true, label.clone()));
             if r.clicked() {
-                out.push(Msg::Edit(EditAction::AddReference(format_ulid(s.uid))));
+                out.push(Msg::Editor(MsgEditor::Edit(EditAction::AddReference(
+                    format_ulid(s.uid),
+                ))));
                 ui.close();
             }
         }

@@ -1,5 +1,6 @@
 //! The window chrome: the sidebar, the top-bar menus, the global search and the notification list.
 //! Pure: no egui, no I/O.
+use crate::effect::EffectBrowse;
 
 use studyfrog_store::overview::ItemRow;
 
@@ -143,7 +144,7 @@ fn search_edited(state: State, text: String) -> (State, Vec<Effect>) {
         Vec::new()
     } else {
         vec![
-            Effect::SearchItems(query.clone()),
+            Effect::Browse(EffectBrowse::SearchItems(query.clone())),
             Effect::Pdf(PdfEffect::Search(query)),
         ]
     };

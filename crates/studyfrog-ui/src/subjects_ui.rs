@@ -1,4 +1,5 @@
 //! The teachers and subjects of the vault, edited on the settings screen. Pure.
+use crate::effect::EffectVault;
 
 use studyfrog_config::subjects::{Subject, SubjectBook, book_problem, without_unknown_teachers};
 
@@ -60,7 +61,7 @@ fn changed(state: State, book: SubjectBook, keep: SubjectsState) -> (State, Vec<
     let subjects = SubjectsState { ..keep };
     (
         State { subjects, ..state },
-        vec![Effect::SaveSubjects(book)],
+        vec![Effect::Vault(EffectVault::SaveSubjects(book))],
     )
 }
 

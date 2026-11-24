@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! STORY-0116: Zen mode hides the sidebar and the status bar (shortcut, button, automatically in runs), rehearsal
 //! targets are at least 36 pt tall, and showing the answer does not move the card's header.
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -55,7 +56,10 @@ fn zen_comes_on_by_itself_in_a_run_when_chosen_and_can_be_left() {
     assert!(studyfrog_ui::zen::active(&m.state), "on during the run");
     apply(&mut m, Msg::Chrome(ChromeMsg::ToggleZen));
     assert!(!studyfrog_ui::zen::active(&m.state), "left by hand");
-    apply(&mut m, Msg::Navigate(studyfrog_ui::state::Screen::Home));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::Navigate(studyfrog_ui::state::Screen::Home)),
+    );
     apply(&mut m, Msg::Chrome(ChromeMsg::ToggleZen));
     assert!(studyfrog_ui::zen::active(&m.state), "on by hand anywhere");
 }

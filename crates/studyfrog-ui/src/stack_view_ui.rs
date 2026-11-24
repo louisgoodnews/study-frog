@@ -1,5 +1,8 @@
 //! The page of a stack: its tabs (the last one is remembered per stack), the Summary read when its tab opens, and the status
 //! chip of the header. Pure.
+use crate::effect::EffectPlanner;
+use crate::effect::EffectReports;
+use crate::effect::EffectVault;
 
 use studyfrog_core::status::Status;
 use studyfrog_core::uid::Uid;
@@ -68,7 +71,7 @@ fn select(state: State, tab: StackTab) -> (State, Vec<Effect>) {
         return (state, Vec::new());
     };
     let app = remembered(&state.app, &folder, tab);
-    let effects = vec![Effect::SaveAppSettings(app.clone())];
+    let effects = vec![Effect::Vault(EffectVault::SaveAppSettings(app.clone()))];
     (State { app, ..state }, effects)
 }
 
@@ -226,9 +229,11 @@ pub fn sync_data(state: State) -> (State, Vec<Effect>) {
     };
     let tab = tab_of(&state.app, &folder);
     let effects = match tab {
-        StackTab::Calendar if !state.planner.loaded => vec![Effect::LoadSessions],
+        StackTab::Calendar if !state.planner.loaded => {
+            vec![Effect::Planner(EffectPlanner::LoadSessions)]
+        }
         StackTab::Reports | StackTab::Summary if state.reports.is_none() => {
-            vec![Effect::BuildReports]
+            vec![Effect::Reports(EffectReports::BuildReports)]
         }
         _ => Vec::new(),
     };

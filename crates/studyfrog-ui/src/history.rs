@@ -1,6 +1,7 @@
 //! Where the user has been: screens, stacks and items, with Back, Forward and a list to jump to any of them, like a
 //! browser's history. A place is noted after every update that changed where the user is, so no screen has to
 //! remember to report. Pure; kept for the session (a new vault starts a new history).
+use crate::msg::MsgBrowse;
 
 use studyfrog_core::uid::Uid;
 
@@ -178,11 +179,13 @@ fn go(state: State, index: usize) -> (State, Vec<Effect>) {
         Place::Screen(screen) => crate::nav::navigate(state, screen),
         Place::Stack(folder) => {
             let (mut state, effects) = crate::nav::navigate(state, Screen::Library);
-            state.replay = Some(Box::new(Msg::Select(Selection::Stack(folder))));
+            state.replay = Some(Box::new(Msg::Browse(MsgBrowse::Select(Selection::Stack(
+                folder,
+            )))));
             (state, effects)
         }
         Place::Item(uid) => {
-            state.replay = Some(Box::new(Msg::OpenItem(uid)));
+            state.replay = Some(Box::new(Msg::Browse(MsgBrowse::OpenItem(uid))));
             (state, Vec::new())
         }
     }

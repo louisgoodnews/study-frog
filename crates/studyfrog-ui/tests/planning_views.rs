@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The calendar and board screens, headless, including the accessibility audit.
+use studyfrog_ui::effect::EffectPlanner;
 
 mod common;
 
@@ -103,13 +104,21 @@ fn the_day_panel_offers_edit_delete_skip_and_rehearse() {
     h.run();
     h.get_by_label("Skip French drills today").click();
     h.run();
-    assert!(h.state().1.contains(&Effect::CancelOccurrence(
-        Uid(7),
-        date_new(2026, 10, 12).unwrap()
-    )));
+    assert!(
+        h.state()
+            .1
+            .contains(&Effect::Planner(EffectPlanner::CancelOccurrence(
+                Uid(7),
+                date_new(2026, 10, 12).unwrap()
+            )))
+    );
     h.get_by_label("Delete French drills").click();
     h.run();
-    assert!(h.state().1.contains(&Effect::DeleteSession(Uid(7))));
+    assert!(
+        h.state()
+            .1
+            .contains(&Effect::Planner(EffectPlanner::DeleteSession(Uid(7))))
+    );
     h.get_by_label("Start rehearsal for French drills").click();
     h.run();
     assert_eq!(h.state().0.state.screen, Screen::Rehearse);
@@ -130,7 +139,7 @@ fn the_session_form_sends_a_session_to_be_saved() {
     h.get_by_label("Save entry").click();
     h.run();
     let saved = h.state().1.iter().find_map(|e| match e {
-        Effect::SaveSession(s) => Some(s.clone()),
+        Effect::Planner(EffectPlanner::SaveSession(s)) => Some(s.clone()),
         _ => None,
     });
     let s = saved.expect("a SaveSession effect");
@@ -168,7 +177,11 @@ fn board_buttons_send_the_same_commands_a_drag_would() {
     h.get_by_label("Edit Write").click();
     h.run();
     let effects = &h.state().1;
-    assert!(effects.iter().any(|e| matches!(e, Effect::BoardCommand(_))));
+    assert!(
+        effects
+            .iter()
+            .any(|e| matches!(e, Effect::Planner(EffectPlanner::BoardCommand(_))))
+    );
     assert!(
         h.state().0.state.kanban.edit.is_some(),
         "Edit opens the card editor"

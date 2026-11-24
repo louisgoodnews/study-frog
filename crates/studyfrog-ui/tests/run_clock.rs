@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Pacing in the run setup and the clock on the rehearsal screen: presets, warnings, the end of a countdown, count up.
+use studyfrog_ui::effect::EffectRehearsal;
+use studyfrog_ui::msg::MsgRehearsal;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -22,7 +25,7 @@ use studyfrog_ui::setup_pacing::{PacingEdit, PacingKind};
 use studyfrog_ui::state::Screen;
 
 fn pacing(m: &mut Model, e: PacingEdit) {
-    apply(m, Msg::Setup(SetupEdit::Pacing(e)));
+    apply(m, Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Pacing(e))));
 }
 
 fn running(p: Pacing) -> Model {
@@ -37,9 +40,9 @@ fn running(p: Pacing) -> Model {
         started_at: None,
     };
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
     m.state.now = 0.0;
-    apply(&mut m, Msg::RunReady(Ok(run)));
+    apply(&mut m, Msg::Rehearsal(MsgRehearsal::RunReady(Ok(run))));
     for (uid, prompt, answer) in [(1, "Capital of France?", "Paris"), (2, "7 x 8?", "56")] {
         let content = ItemContent {
             case: None,
@@ -54,7 +57,10 @@ fn running(p: Pacing) -> Model {
             is_note: false,
             comments: Vec::new(),
         };
-        apply(&mut m, Msg::ItemLoaded(Uid(uid), Ok(content)));
+        apply(
+            &mut m,
+            Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(uid), Ok(content))),
+        );
     }
     m
 }
@@ -89,8 +95,11 @@ fn the_setup_builds_the_pacing_of_the_plan_and_refuses_a_bad_countdown() {
 #[test]
 fn the_how_step_offers_the_modes_and_the_presets_and_a_custom_time() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
-    apply(&mut m, Msg::SetupStep(SetupStep::How));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::SetupStep(SetupStep::How)),
+    );
     let mut h = harness(m);
     h.run_steps(4);
     for t in ["No clock", "Countdown", "Count up"] {
@@ -141,23 +150,29 @@ fn a_countdown_shows_the_time_left_warns_in_text_and_ends_by_itself_without_rati
 
     let mut m = running(Pacing::Countdown(120));
     m.state.now = 10.0;
-    apply(&mut m, Msg::RunAction(Action::Flip));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::Flip)),
+    );
     m.state.now = 119.0;
     assert!(
-        apply(&mut m, Msg::Tick)
+        apply(&mut m, Msg::Vault(MsgVault::Tick))
             .iter()
-            .all(|e| !matches!(e, Effect::RecordStep { .. })),
+            .all(|e| !matches!(e, Effect::Rehearsal(EffectRehearsal::RecordStep { .. }))),
         "time is not up yet"
     );
     m.state.now = 120.5;
-    let fx = apply(&mut m, Msg::Tick);
+    let fx = apply(&mut m, Msg::Vault(MsgVault::Tick));
     let run = m.state.rehearse.run.as_ref().unwrap();
     assert_eq!(
         run.session.run.state,
         RunState::Finished,
         "the tick ended the run"
     );
-    assert!(fx.iter().any(|e| matches!(e, Effect::RecordStep { .. })));
+    assert!(
+        fx.iter()
+            .any(|e| matches!(e, Effect::Rehearsal(EffectRehearsal::RecordStep { .. })))
+    );
     assert!(
         run.events
             .iter()
@@ -169,9 +184,13 @@ fn a_countdown_shows_the_time_left_warns_in_text_and_ends_by_itself_without_rati
             .any(|e| format!("{:?}", e.kind).contains("Rated")),
         "the item on screen was not rated"
     );
-    let late = apply(&mut m, Msg::RunAction(Action::Rate(Rating::Good)));
+    let late = apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::Rate(Rating::Good))),
+    );
     assert!(
-        late.iter().all(|e| !matches!(e, Effect::RecordStep { .. })),
+        late.iter()
+            .all(|e| !matches!(e, Effect::Rehearsal(EffectRehearsal::RecordStep { .. }))),
         "no rating after the end"
     );
 }
@@ -182,7 +201,10 @@ fn a_count_up_shows_the_time_used_and_a_free_run_shows_no_clock_and_a_pause_stop
     m.state.now = 65.0;
     assert_eq!(clock(&m), Some(("Time used 01:05".into(), None)));
     assert_eq!(clock(&running(Pacing::Free)), None);
-    apply(&mut m, Msg::RunAction(Action::Pause));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::Pause)),
+    );
     m.state.now = 500.0;
     assert_eq!(
         clock(&m).unwrap().0,
@@ -196,11 +218,17 @@ fn a_count_up_shows_the_time_used_and_a_free_run_shows_no_clock_and_a_pause_stop
 fn the_review_after_a_countdown_says_the_planned_and_the_used_time() {
     let mut m = running(Pacing::Countdown(120));
     m.state.now = 10.0;
-    apply(&mut m, Msg::RunAction(Action::Flip));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::Flip)),
+    );
     m.state.now = 20.0;
-    apply(&mut m, Msg::RunAction(Action::Rate(Rating::Good)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::Rate(Rating::Good))),
+    );
     m.state.now = 121.0;
-    apply(&mut m, Msg::Tick);
+    apply(&mut m, Msg::Vault(MsgVault::Tick));
     assert_eq!(
         m.state.rehearse.run.as_ref().unwrap().session.run.state,
         RunState::Finished

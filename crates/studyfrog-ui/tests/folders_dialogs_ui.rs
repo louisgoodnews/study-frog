@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Headless UI tests for Folders dialogs: new folder popover, move confirmation, and delete confirmation (TASK-0204).
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -14,7 +15,7 @@ use studyfrog_ui::state::Screen;
 #[test]
 fn folders_dialogs_new_folder_and_cross_stack_confirmation() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Folders));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Folders)));
 
     // 1. New Folder Popover
     m.state.folders.new_folder = Some(NewFolderForm {

@@ -1,4 +1,6 @@
 //! The link graph screen: state and update logic. Pure; the layout engine is `studyfrog-graph`.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgGraph;
 
 use studyfrog_core::uid::Uid;
 use studyfrog_graph::layout::{Layout, layout_new, layout_step};
@@ -106,20 +108,30 @@ fn error(state: State, text: String) -> (State, Vec<Effect>) {
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
     let mut state = state;
     match msg {
-        Msg::GraphLoaded(Ok(graph)) => {
+        Msg::Graph(MsgGraph::GraphLoaded(Ok(graph))) => {
             let unchanged = state.graph.as_ref().is_some_and(|g| g.graph == graph);
             if !unchanged {
                 state.graph = Some(graph_state(graph, 1, state.graph.as_ref()));
             }
             (state, Vec::new())
         }
-        Msg::GraphLoaded(Err(e)) => error(state, format!("Could not load the graph: {e}")),
-        Msg::GraphFrame { width, height } => (frame(state, width, height), Vec::new()),
-        Msg::GraphPan(dx, dy) => (with_graph(state, |g| pan(g, dx, dy)), Vec::new()),
-        Msg::GraphZoom(factor) => (with_graph(state, |g| zoom(g, factor)), Vec::new()),
-        Msg::GraphHover(node) => (with_graph(state, |g| g.hovered = node), Vec::new()),
-        Msg::GraphRestart => (with_graph(state, restart), Vec::new()),
-        Msg::GraphClick(i) => click(state, i),
+        Msg::Graph(MsgGraph::GraphLoaded(Err(e))) => {
+            error(state, format!("Could not load the graph: {e}"))
+        }
+        Msg::Graph(MsgGraph::GraphFrame { width, height }) => {
+            (frame(state, width, height), Vec::new())
+        }
+        Msg::Graph(MsgGraph::GraphPan(dx, dy)) => {
+            (with_graph(state, |g| pan(g, dx, dy)), Vec::new())
+        }
+        Msg::Graph(MsgGraph::GraphZoom(factor)) => {
+            (with_graph(state, |g| zoom(g, factor)), Vec::new())
+        }
+        Msg::Graph(MsgGraph::GraphHover(node)) => {
+            (with_graph(state, |g| g.hovered = node), Vec::new())
+        }
+        Msg::Graph(MsgGraph::GraphRestart) => (with_graph(state, restart), Vec::new()),
+        Msg::Graph(MsgGraph::GraphClick(i)) => click(state, i),
         _ => (state, Vec::new()),
     }
 }
@@ -180,7 +192,7 @@ fn click(state: State, index: usize) -> (State, Vec<Effect>) {
         .and_then(|g| g.graph.nodes.get(index))
         .map(|n| n.uid);
     match uid {
-        Some(uid) => crate::editor::update(state, Msg::OpenItem(uid)),
+        Some(uid) => crate::editor::update(state, Msg::Browse(MsgBrowse::OpenItem(uid))),
         None => (state, Vec::new()),
     }
 }

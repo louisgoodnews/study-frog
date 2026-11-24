@@ -1,4 +1,6 @@
 //! The help screen: search and the page tree on the left, the page on the right.
+use crate::msg::MsgEditor;
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, RichText, ScrollArea, TextEdit};
 use studyfrog_service::help::{Hit, PAGES, PageRef, SECTIONS, title_of, user_title};
@@ -92,7 +94,7 @@ fn tree(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .clicked()
     {
         out.push(Msg::Console(ConsoleMsg::Wiki(WikiMsg::Show)));
-        out.push(Msg::Navigate(Screen::Console));
+        out.push(Msg::Vault(MsgVault::Navigate(Screen::Console)));
     }
     ui.add_space(6.0);
     for (section, name) in SECTIONS {
@@ -125,7 +127,7 @@ fn tree(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         {
             let on = crate::agent_types::AgentMsg::UseHelpPages(true);
             out.push(Msg::Agent(on));
-            out.push(Msg::Navigate(Screen::Agent));
+            out.push(Msg::Vault(MsgVault::Navigate(Screen::Agent)));
         }
     }
     ui.add_space(6.0);
@@ -239,7 +241,7 @@ fn page(state: &State, help: &HelpState, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
     let mut links = Vec::new();
     crate::view::preview::draw_blocks(ui, &help.blocks, &mut links);
     out.extend(links.into_iter().map(|m| match m {
-        Msg::OpenLink(target) => Msg::Help(HelpMsg::Link(target)),
+        Msg::Editor(MsgEditor::OpenLink(target)) => Msg::Help(HelpMsg::Link(target)),
         other => other,
     }));
 }

@@ -1,4 +1,8 @@
 //! Performing the document and graph effects: reading, saving and resolving links, and the link graph.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgEditor;
+use crate::msg::MsgGraph;
+use crate::msg::MsgVault;
 
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
@@ -14,8 +18,14 @@ use crate::subjects_ui::SubjectsMsg;
 /// Read a document for editing.
 pub fn load_document_msg(w: &Worker, uid: Uid) -> Msg {
     match &w.session {
-        Some(s) => Msg::DocumentLoaded(uid, load_document(s, uid).map_err(|e| e.to_string())),
-        None => Msg::DocumentLoaded(uid, Err("no vault is open".to_owned())),
+        Some(s) => Msg::Editor(MsgEditor::DocumentLoaded(
+            uid,
+            load_document(s, uid).map_err(|e| e.to_string()),
+        )),
+        None => Msg::Editor(MsgEditor::DocumentLoaded(
+            uid,
+            Err("no vault is open".to_owned()),
+        )),
     }
 }
 
@@ -70,11 +80,11 @@ pub fn append_rehearsal_comment_msg(
 /// Write an edited document if the file is unchanged since it was loaded.
 pub fn save_document_msg(w: &mut Worker, path: &str, doc: &Doc, hash: u64, now_ns: i64) -> Msg {
     let Some(s) = &mut w.session else {
-        return Msg::Saved(Err("no vault is open".to_owned()));
+        return Msg::Editor(MsgEditor::Saved(Err("no vault is open".to_owned())));
     };
-    Msg::Saved(
+    Msg::Editor(MsgEditor::Saved(
         save_document(s, path, doc, hash, UnixMs(now_ns / 1_000_000)).map_err(|e| e.to_string()),
-    )
+    ))
 }
 
 /// Find the item a wikilink points to.
@@ -83,16 +93,16 @@ pub fn resolve_link_msg(w: &Worker, target: String) -> Msg {
         Some(s) => resolve_link(s, &target).map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
     };
-    Msg::LinkResolved(target, result)
+    Msg::Editor(MsgEditor::LinkResolved(target, result))
 }
 
 /// Read the link graph from the index.
 pub fn load_graph_msg(w: &Worker) -> Msg {
     match &w.session {
-        Some(s) => Msg::GraphLoaded(
+        Some(s) => Msg::Graph(MsgGraph::GraphLoaded(
             studyfrog_store::overview::load_link_graph(&s.conn).map_err(|e| e.to_string()),
-        ),
-        None => Msg::GraphLoaded(Err("no vault is open".to_owned())),
+        )),
+        None => Msg::Graph(MsgGraph::GraphLoaded(Err("no vault is open".to_owned()))),
     }
 }
 
@@ -103,7 +113,7 @@ pub fn backlinks(w: &Worker, uid: Uid, title: &str) -> Msg {
             .map_err(|e| e.to_string()),
         None => Ok(Vec::new()),
     };
-    Msg::BacklinksLoaded(uid, result)
+    Msg::Browse(MsgBrowse::BacklinksLoaded(uid, result))
 }
 
 /// The links to an item and its familiarity over time.
@@ -115,7 +125,10 @@ pub fn item_extras(w: &Worker, uid: Uid, title: &str, now_ns: i64) -> Vec<Msg> {
             .map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
     };
-    vec![backlinks(w, uid, title), Msg::FamCurveLoaded(uid, curve)]
+    vec![
+        backlinks(w, uid, title),
+        Msg::Browse(MsgBrowse::FamCurveLoaded(uid, curve)),
+    ]
 }
 
 /// Read the subjects book, or store a changed one and read it back.
@@ -136,7 +149,9 @@ pub fn subjects(w: &Worker, change: Option<studyfrog_config::subjects::SubjectBo
 /// Check the open vault for changed files.
 pub fn poll(w: &mut Worker, now_ns: i64) -> Msg {
     match &mut w.session {
-        Some(session) => Msg::VaultPolled(poll_vault(session, now_ns).map_err(|e| e.to_string())),
-        None => Msg::VaultPolled(Ok(None)),
+        Some(session) => Msg::Vault(MsgVault::VaultPolled(
+            poll_vault(session, now_ns).map_err(|e| e.to_string()),
+        )),
+        None => Msg::Vault(MsgVault::VaultPolled(Ok(None))),
     }
 }

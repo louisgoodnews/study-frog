@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The run setup as three steps: what, how, review.
+use studyfrog_ui::effect::EffectRehearsal;
+use studyfrog_ui::msg::MsgRehearsal;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -14,8 +17,8 @@ use studyfrog_ui::state::Screen;
 
 fn setup_model() -> studyfrog_ui::model::Model {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
-    apply(&mut m, Msg::PreviewReady(Ok(7)));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
+    apply(&mut m, Msg::Rehearsal(MsgRehearsal::PreviewReady(Ok(7))));
     m
 }
 
@@ -73,9 +76,18 @@ fn next_and_back_walk_the_steps_and_the_step_bar_jumps() {
 fn a_preset_keeps_what_was_chosen_in_the_first_step() {
     let mut m = setup_model();
     let uid = m.state.vault.as_ref().unwrap().overview.stacks[0].uid;
-    apply(&mut m, Msg::Setup(SetupEdit::Stacks(vec![uid], true)));
-    apply(&mut m, Msg::Setup(SetupEdit::Tags("verbs".into())));
-    apply(&mut m, Msg::Setup(SetupEdit::Preset(Preset::Hardest)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Stacks(vec![uid], true))),
+    );
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Tags("verbs".into()))),
+    );
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Preset(Preset::Hardest))),
+    );
     let f = &m.state.rehearse.form;
     assert_eq!((f.stacks.clone(), f.tags.as_str()), (vec![uid], "verbs"));
 }
@@ -87,8 +99,14 @@ fn the_review_names_the_chosen_stack_and_the_plain_defaults() {
         let s = &m.state.vault.as_ref().unwrap().overview.stacks[0];
         (s.uid, s.title.clone())
     };
-    apply(&mut m, Msg::Setup(SetupEdit::Stacks(vec![uid], true)));
-    apply(&mut m, Msg::SetupStep(SetupStep::Review));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Stacks(vec![uid], true))),
+    );
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::SetupStep(SetupStep::Review)),
+    );
     let mut h = harness(m);
     h.run();
     assert!(h.query_by_label_contains(&title).is_some());
@@ -102,16 +120,22 @@ fn the_review_names_the_chosen_stack_and_the_plain_defaults() {
 #[test]
 fn shuffling_a_spaced_run_keeps_it_updating_the_schedule() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
-    let fx = apply(&mut m, Msg::Setup(SetupEdit::Shuffle(true)));
-    let [Effect::PreviewQueue { plan, .. }] = &fx[..] else {
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
+    let fx = apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Shuffle(true))),
+    );
+    let [Effect::Rehearsal(EffectRehearsal::PreviewQueue { plan, .. })] = &fx[..] else {
         panic!("{fx:?}")
     };
     assert_eq!(
         (plan.order, plan.shuffle, plan.effect),
         (Order::Due, true, ScheduleEffect::UpdateSchedule)
     );
-    apply(&mut m, Msg::Setup(SetupEdit::Preset(Preset::Hardest)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Preset(Preset::Hardest))),
+    );
     assert!(
         !m.state.rehearse.form.shuffle,
         "a preset starts from its own plan"
@@ -121,14 +145,20 @@ fn shuffling_a_spaced_run_keeps_it_updating_the_schedule() {
 #[test]
 fn the_how_step_offers_least_familiar_first_and_a_familiarity_filter_that_reaches_the_plan() {
     let mut m = setup_model();
-    apply(&mut m, Msg::SetupStep(SetupStep::How));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::SetupStep(SetupStep::How)),
+    );
     let mut h = harness(m);
     h.run_steps(4);
     assert!(h.query_by_label("Least familiar first").is_some());
     h.get_by_label("Least familiar first").click();
     h.run_steps(2);
     assert_eq!(h.state().0.state.rehearse.form.order, Order::LeastFamiliar);
-    apply(&mut h.state_mut().0, Msg::Setup(SetupEdit::FamOn(true)));
+    apply(
+        &mut h.state_mut().0,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::FamOn(true))),
+    );
     h.run_steps(2);
     assert_all_named(&h, "setup how with familiarity");
     let plan =

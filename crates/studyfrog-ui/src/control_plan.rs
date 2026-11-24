@@ -1,5 +1,9 @@
 //! What each control command does, as the messages a user's clicks would send. Pure: a command and
 //! the state give phases; the driver applies one, lets the background work finish, then the next.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgEditor;
+use crate::msg::MsgRehearsal;
+use crate::msg::MsgVault;
 
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::Action;
@@ -23,6 +27,8 @@ pub mod homework;
 pub mod panels;
 pub mod screens;
 pub mod search;
+mod stacks;
+use stacks::{rehearse, stack};
 
 /// Phases of messages; background work settles between phases.
 pub type Plan = Vec<Vec<Msg>>;
@@ -98,23 +104,26 @@ fn edit_action(target: &EditTarget, value: &str) -> EditAction {
 }
 
 fn on_page(uid: Uid, then: Vec<EditAction>) -> Plan {
-    let mut second: Vec<Msg> = then.into_iter().map(Msg::Edit).collect();
-    second.push(Msg::SaveClicked);
-    vec![vec![Msg::OpenItem(uid)], second]
+    let mut second: Vec<Msg> = then
+        .into_iter()
+        .map(|e| Msg::Editor(MsgEditor::Edit(e)))
+        .collect();
+    second.push(Msg::Editor(MsgEditor::SaveClicked));
+    vec![vec![Msg::Browse(MsgBrowse::OpenItem(uid))], second]
 }
 
 fn item(state: &State, cmd: &ItemCmd) -> Result<Plan, String> {
     let uid = |name: &str| resolve_item(state, name);
     Ok(match cmd {
         ItemCmd::Create(a) => return create(state, a),
-        ItemCmd::Open(name) => vec![vec![Msg::OpenItem(uid(name)?)]],
+        ItemCmd::Open(name) => vec![vec![Msg::Browse(MsgBrowse::OpenItem(uid(name)?))]],
         ItemCmd::Edit(name, target, value) => on_page(uid(name)?, vec![edit_action(target, value)]),
         ItemCmd::Color(name, color) => on_page(uid(name)?, vec![EditAction::Color(color.clone())]),
         ItemCmd::Delete(name) => vec![
-            vec![Msg::OpenItem(uid(name)?)],
+            vec![Msg::Browse(MsgBrowse::OpenItem(uid(name)?))],
             vec![
-                Msg::Edit(EditAction::AskDelete(true)),
-                Msg::Edit(EditAction::ConfirmDelete),
+                Msg::Editor(MsgEditor::Edit(EditAction::AskDelete(true))),
+                Msg::Editor(MsgEditor::Edit(EditAction::ConfirmDelete)),
             ],
         ],
         ItemCmd::Move(name, folder) => {
@@ -130,69 +139,11 @@ fn item(state: &State, cmd: &ItemCmd) -> Result<Plan, String> {
 
 fn open_stack(folder: &str) -> Vec<Msg> {
     vec![
-        Msg::Navigate(Screen::Library),
-        Msg::Select(Selection::Stack(folder.trim_matches('/').to_owned())),
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+        Msg::Browse(MsgBrowse::Select(Selection::Stack(
+            folder.trim_matches('/').to_owned(),
+        ))),
     ]
-}
-
-fn stack(state: &State, cmd: &StackCmd) -> Result<Plan, String> {
-    Ok(match cmd {
-        StackCmd::Create(title, parent) => {
-            let args = NewItemArgs {
-                kind: NewKind::Stack,
-                title: title.clone(),
-                text: String::new(),
-                answer: String::new(),
-                tags: String::new(),
-                stack: parent.clone(),
-            };
-            return create(state, &args);
-        }
-        StackCmd::Open(folder) | StackCmd::Settings(folder) => {
-            resolve_stack(state, folder)?;
-            vec![open_stack(folder)]
-        }
-        StackCmd::Delete(folder) => return panels::stack_delete(state, folder),
-        StackCmd::Move(folder, into) => {
-            resolve_stack(state, folder)?;
-            if !into.is_empty() {
-                resolve_stack(state, into)?;
-            }
-            let m = crate::stack_view_ui::StackViewMsg::MoveStack(folder.clone(), into.clone());
-            vec![vec![Msg::Library(LibraryMsg::Stack(m))]]
-        }
-    })
-}
-
-fn rehearse(state: &State, cmd: &RehearseCmd) -> Result<Plan, String> {
-    crate::control_exam::check(state, cmd)?;
-    let act = |a| vec![vec![Msg::RunAction(a)]];
-    Ok(match cmd {
-        RehearseCmd::Setup(args) => vec![crate::control_setup::setup_msgs(state, args)?],
-        RehearseCmd::Start => vec![vec![Msg::Navigate(Screen::Rehearse), Msg::StartRunClicked]],
-        RehearseCmd::Flip => act(Action::Flip),
-        RehearseCmd::Answer(text) => vec![vec![
-            Msg::AnswerEdited(text.clone()),
-            Msg::RunAction(Action::SubmitAnswer(text.clone())),
-        ]],
-        RehearseCmd::Rate(r) => act(Action::Rate(*r)),
-        RehearseCmd::Mark(d) => act(Action::Mark(*d)),
-        RehearseCmd::Skip => act(Action::Skip),
-        RehearseCmd::Pause => act(Action::Pause),
-        RehearseCmd::Resume => act(Action::Resume),
-        RehearseCmd::Stop => act(Action::Abort),
-        RehearseCmd::Leave | RehearseCmd::Finish => vec![vec![Msg::LeaveRun]],
-        RehearseCmd::Type(text) => vec![vec![Msg::AnswerEdited(text.clone())]],
-        RehearseCmd::Submit => {
-            let text = state
-                .rehearse
-                .run
-                .as_ref()
-                .map(|r| r.answer.clone())
-                .unwrap_or_default();
-            act(Action::SubmitAnswer(text))
-        }
-    })
 }
 
 fn transfer(m: TransferMsg) -> Msg {
@@ -203,19 +154,19 @@ fn transfer(m: TransferMsg) -> Msg {
 pub fn plan_for(state: &State, cmd: &Command) -> Result<Plan, String> {
     let one = |m: Msg| Ok(vec![vec![m]]);
     match cmd {
-        Command::Nav(screen) => one(Msg::Navigate(*screen)),
+        Command::Nav(screen) => one(Msg::Vault(MsgVault::Navigate(*screen))),
         Command::Back => one(Msg::Chrome(ChromeMsg::History(HistoryMsg::Back))),
         Command::Forward => one(Msg::Chrome(ChromeMsg::History(HistoryMsg::Forward))),
-        Command::VaultOpen(path) => one(Msg::OpenRecent(path.clone())),
-        Command::VaultClose => one(Msg::CloseVault),
+        Command::VaultOpen(path) => one(Msg::Vault(MsgVault::OpenRecent(path.clone()))),
+        Command::VaultClose => one(Msg::Vault(MsgVault::CloseVault)),
         Command::Item(c) => item(state, c),
         Command::Stack(c) => stack(state, c),
         Command::Homework(c) => homework::plan(state, c),
         Command::Appearance(m) => one(Msg::Appearance(*m)),
         Command::Rehearse(c) => rehearse(state, c),
         Command::Query(text) => Ok(vec![vec![
-            Msg::Navigate(Screen::Library),
-            Msg::Select(Selection::Nothing),
+            Msg::Vault(MsgVault::Navigate(Screen::Library)),
+            Msg::Browse(MsgBrowse::Select(Selection::Nothing)),
             Msg::Library(LibraryMsg::Search(crate::library_search::SearchMsg::Mode(
                 true,
             ))),
@@ -240,7 +191,7 @@ pub fn plan_for(state: &State, cmd: &Command) -> Result<Plan, String> {
         Command::PdfFind(file, text) => files::pdf_find(file, text),
         Command::Calendar(c) => calendar::plan(c),
         Command::Screens(c) => panels::plan(state, c),
-        Command::Dismiss => one(Msg::DismissNotice),
+        Command::Dismiss => one(Msg::Vault(MsgVault::DismissNotice)),
         Command::CloseModal => Ok(vec![vec![
             Msg::Modal(ModalMsg::Close),
             Msg::Modal(ModalMsg::Discard),

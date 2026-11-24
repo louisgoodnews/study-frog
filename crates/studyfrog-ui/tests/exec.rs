@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The executor and update together, against a real vault and a real config directory.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -28,7 +30,11 @@ fn startup_reopens_the_remembered_vault_and_lands_on_home() {
     let mut worker = worker_new(Some(cfg.path.clone()));
     let mut model = Model::default();
 
-    run_to_idle(&mut model, &mut worker, vec![Effect::LoadAppSettings]);
+    run_to_idle(
+        &mut model,
+        &mut worker,
+        vec![Effect::Vault(EffectVault::LoadAppSettings)],
+    );
 
     let s = &model.state;
     assert_eq!(s.screen, Screen::Home);
@@ -60,7 +66,7 @@ fn a_first_run_without_settings_stays_on_the_welcome_screen() {
     run_to_idle(
         &mut model,
         &mut worker_new(Some(cfg.path.join("none"))),
-        vec![Effect::LoadAppSettings],
+        vec![Effect::Vault(EffectVault::LoadAppSettings)],
     );
     assert_eq!(
         (model.state.screen, model.state.vault.is_none()),
@@ -78,9 +84,11 @@ fn opening_a_missing_folder_reports_it_and_a_real_one_works_afterwards() {
 
     apply(
         &mut model,
-        Msg::PathEdited(vault.path.join("nope").display().to_string()),
+        Msg::Vault(MsgVault::PathEdited(
+            vault.path.join("nope").display().to_string(),
+        )),
     );
-    let fx = apply(&mut model, Msg::OpenVaultClicked);
+    let fx = apply(&mut model, Msg::Vault(MsgVault::OpenVaultClicked));
     run_to_idle(&mut model, &mut worker, fx);
     assert_eq!(model.state.screen, Screen::Welcome);
     assert_eq!(model.state.notice.as_ref().unwrap().kind, NoticeKind::Error);
@@ -96,9 +104,9 @@ fn opening_a_missing_folder_reports_it_and_a_real_one_works_afterwards() {
 
     apply(
         &mut model,
-        Msg::PathEdited(vault.path.display().to_string()),
+        Msg::Vault(MsgVault::PathEdited(vault.path.display().to_string())),
     );
-    let fx = apply(&mut model, Msg::OpenVaultClicked);
+    let fx = apply(&mut model, Msg::Vault(MsgVault::OpenVaultClicked));
     run_to_idle(&mut model, &mut worker, fx);
     assert_eq!(model.state.screen, Screen::Home);
     assert_eq!(model.state.app.recent, [vault.path.display().to_string()]);
@@ -111,13 +119,13 @@ fn ticks_pick_up_new_files_and_settings_changes_without_reopening() {
     let mut model = Model::default();
     let fx = apply(
         &mut model,
-        Msg::OpenRecent(vault.path.display().to_string()),
+        Msg::Vault(MsgVault::OpenRecent(vault.path.display().to_string())),
     );
     run_to_idle(&mut model, &mut worker, fx);
     let inbox = |m: &Model| m.state.vault.as_ref().unwrap().overview.inbox_items;
     assert_eq!(inbox(&model), 1);
 
-    let fx = apply(&mut model, Msg::Tick);
+    let fx = apply(&mut model, Msg::Vault(MsgVault::Tick));
     run_to_idle(&mut model, &mut worker, fx);
     assert!(
         !model.state.polling,
@@ -134,7 +142,7 @@ fn ticks_pick_up_new_files_and_settings_changes_without_reopening() {
         "[srs]\nscheduler = \"sm2\"\n",
     )
     .unwrap();
-    let fx = apply(&mut model, Msg::Tick);
+    let fx = apply(&mut model, Msg::Vault(MsgVault::Tick));
     run_to_idle(&mut model, &mut worker, fx);
     let v = model.state.vault.as_ref().unwrap();
     assert_eq!(v.overview.inbox_items, 2);
@@ -156,7 +164,7 @@ fn an_invalid_studyfrog_toml_does_not_stop_the_vault_from_opening() {
     let mut model = Model::default();
     let fx = apply(
         &mut model,
-        Msg::OpenRecent(vault.path.display().to_string()),
+        Msg::Vault(MsgVault::OpenRecent(vault.path.display().to_string())),
     );
     run_to_idle(&mut model, &mut worker_new(None), fx);
     let v = model.state.vault.as_ref().unwrap();

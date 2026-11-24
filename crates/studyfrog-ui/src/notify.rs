@@ -1,5 +1,7 @@
 //! The notification center: the bell's list as records the user can read, delete and filter, kept in the vault's
 //! database so they survive a restart. Pure: the clock is `state.wall_ms`, storage is an effect.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgVault;
 
 use studyfrog_core::civil::{Date, days_between, format_date, utc_to_local};
 use studyfrog_core::time::UnixMs;
@@ -222,8 +224,8 @@ fn open(state: State, id: u64) -> (State, Vec<Effect>) {
     let (mut state, effects) = update(state, NotifyMsg::MarkRead(id, true));
     state.chrome.menu = state.chrome.menu.filter(|m| *m != Menu::Notifications);
     let follow = match target {
-        Some(NotifyTarget::Screen(s)) => Some(Msg::Navigate(s)),
-        Some(NotifyTarget::Item(uid)) => Some(Msg::OpenItem(uid)),
+        Some(NotifyTarget::Screen(s)) => Some(Msg::Vault(MsgVault::Navigate(s))),
+        Some(NotifyTarget::Item(uid)) => Some(Msg::Browse(MsgBrowse::OpenItem(uid))),
         None => None,
     };
     if let Some(msg) = follow {

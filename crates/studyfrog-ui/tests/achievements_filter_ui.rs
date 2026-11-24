@@ -1,5 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The achievements filter, their grouping, and the summary on a stack's page.
+use studyfrog_ui::effect::EffectReports;
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgReports;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -51,7 +55,10 @@ fn loaded() -> Model {
         entries: entries(),
         ..AchievementReport::default()
     };
-    apply(&mut m, Msg::AchievementsChecked(Ok(report)));
+    apply(
+        &mut m,
+        Msg::Reports(MsgReports::AchievementsChecked(Ok(report))),
+    );
     m
 }
 
@@ -118,8 +125,11 @@ fn the_pills_set_the_filter_and_the_list_follows_it() {
 #[test]
 fn a_stack_page_shows_its_summary_and_the_link_opens_its_achievements() {
     let mut m = loaded();
-    apply(&mut m, Msg::Navigate(Screen::Library));
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Library)));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     let mut h = harness(m);
     h.run_steps(4);
     h.get_by_label("1 / 2 achievements unlocked").click();
@@ -135,15 +145,21 @@ fn a_stack_page_shows_its_summary_and_the_link_opens_its_achievements() {
 #[test]
 fn the_report_is_asked_for_once_when_a_stack_page_needs_it() {
     let mut m = open_model();
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     let first = apply(&mut m, Msg::Achievements(AchievementsMsg::Wanted));
-    assert_eq!(first, [Effect::CheckAchievements]);
+    assert_eq!(first, [Effect::Reports(EffectReports::CheckAchievements)]);
     let second = apply(&mut m, Msg::Achievements(AchievementsMsg::Wanted));
     assert!(second.is_empty(), "asked for once");
     let mut h = harness(m);
     h.run_steps(4);
     assert!(
-        h.state().1.iter().all(|e| *e != Effect::CheckAchievements),
+        h.state()
+            .1
+            .iter()
+            .all(|e| *e != Effect::Reports(EffectReports::CheckAchievements)),
         "the page does not ask again while the report is on its way"
     );
 }

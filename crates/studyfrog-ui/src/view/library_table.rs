@@ -1,4 +1,5 @@
 //! The table of items under the search bar: sortable columns, a count and rows that are only built when they scroll into view.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, Align, Id, Layout, RichText, Role, WidgetInfo};
 use egui_extras::{Column as Col, TableBuilder};
@@ -184,7 +185,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                                             .on_hover_text("Opens this item.")
                                             .clicked()
                                         {
-                                            out.push(Msg::OpenItem(item.uid));
+                                            out.push(Msg::Browse(MsgBrowse::OpenItem(item.uid)));
                                         }
                                         if let Selection::Stack(folder) = &state.browser.selection
                                             && !item

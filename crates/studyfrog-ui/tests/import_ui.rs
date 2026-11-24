@@ -1,5 +1,10 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Importing cards and making them with a registered card type.
+use studyfrog_ui::effect::EffectBrowse;
+use studyfrog_ui::effect::EffectImport;
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgImport;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -14,9 +19,12 @@ use studyfrog_ui::state::NoticeKind;
 #[test]
 fn the_card_type_and_the_import_path_drive_the_right_effects() {
     let mut m = model_in_stack();
-    apply(&mut m, Msg::CardTypeChosen(Some("twice".into())));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::CardTypeChosen(Some("twice".into()))),
+    );
     assert!(
-        apply(&mut m, Msg::AddCardClicked).is_empty(),
+        apply(&mut m, Msg::Browse(MsgBrowse::AddCardClicked)).is_empty(),
         "no source text yet"
     );
     assert!(
@@ -27,36 +35,45 @@ fn the_card_type_and_the_import_path_drive_the_right_effects() {
             .text
             .contains("text to make cards from")
     );
-    apply(&mut m, Msg::DraftEdited(DraftField::Front, "word".into()));
-    let fx = apply(&mut m, Msg::AddCardClicked);
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::DraftEdited(DraftField::Front, "word".into())),
+    );
+    let fx = apply(&mut m, Msg::Browse(MsgBrowse::AddCardClicked));
     assert_eq!(
         fx,
-        [Effect::CreateFromType {
+        [Effect::Import(EffectImport::CreateFromType {
             folder: "french".into(),
             type_id: "twice".into(),
             source: "word".into()
-        }]
+        })]
     );
-    apply(&mut m, Msg::CardTypeChosen(None));
+    apply(&mut m, Msg::Vault(MsgVault::CardTypeChosen(None)));
     assert!(m.state.browser.card_type.is_none());
 
-    assert!(apply(&mut m, Msg::ImportClicked).is_empty(), "no file yet");
-    assert_eq!(
-        apply(&mut m, Msg::BrowseImportClicked),
-        [Effect::PickImportFile]
+    assert!(
+        apply(&mut m, Msg::Import(MsgImport::ImportClicked)).is_empty(),
+        "no file yet"
     );
-    apply(&mut m, Msg::ImportFilePicked(None));
+    assert_eq!(
+        apply(&mut m, Msg::Import(MsgImport::BrowseImportClicked)),
+        [Effect::Import(EffectImport::PickImportFile)]
+    );
+    apply(&mut m, Msg::Import(MsgImport::ImportFilePicked(None)));
     assert!(
         m.state.browser.import_path.is_empty(),
         "cancelling changes nothing"
     );
-    apply(&mut m, Msg::ImportFilePicked(Some("/tmp/deck.csv".into())));
+    apply(
+        &mut m,
+        Msg::Import(MsgImport::ImportFilePicked(Some("/tmp/deck.csv".into()))),
+    );
     assert_eq!(
-        apply(&mut m, Msg::ImportClicked),
-        [Effect::ImportFile {
+        apply(&mut m, Msg::Import(MsgImport::ImportClicked)),
+        [Effect::Import(EffectImport::ImportFile {
             folder: "french".into(),
             path: "/tmp/deck.csv".into()
-        }]
+        })]
     );
 }
 
@@ -73,10 +90,13 @@ fn the_outcome_is_reported_and_the_stack_is_reloaded() {
             skipped: vec!["card 2: bad".into()],
         },
     };
-    let fx = apply(&mut m, Msg::Imported(Ok(ok)));
+    let fx = apply(&mut m, Msg::Import(MsgImport::Imported(Ok(ok))));
     assert!(matches!(
         &fx[..],
-        [Effect::LoadItems(_), Effect::LoadStatusCounts(_)]
+        [
+            Effect::Browse(EffectBrowse::LoadItems(_)),
+            Effect::Browse(EffectBrowse::LoadStatusCounts(_))
+        ]
     ));
     let n = m.state.notice.clone().unwrap();
     assert_eq!(n.kind, NoticeKind::Info);
@@ -91,12 +111,12 @@ fn the_outcome_is_reported_and_the_stack_is_reloaded() {
             skipped: vec!["card 1: bad".into()],
         },
     };
-    apply(&mut m, Msg::Imported(Ok(none)));
+    apply(&mut m, Msg::Import(MsgImport::Imported(Ok(none))));
     assert_eq!(
         m.state.notice.as_ref().unwrap().kind,
         NoticeKind::Error,
         "nothing created is an error"
     );
-    apply(&mut m, Msg::Imported(Err("boom".into())));
+    apply(&mut m, Msg::Import(MsgImport::Imported(Err("boom".into()))));
     assert!(m.state.notice.as_ref().unwrap().text.contains("boom"));
 }

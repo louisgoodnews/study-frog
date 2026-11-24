@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! PDF pages as extra reading for the assistant.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 #[path = "../../studyfrog-pdf/tests/common/mod.rs"]
@@ -33,7 +35,9 @@ fn the_viewer_hands_pages_to_the_assistant_which_reads_them_and_says_so() {
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     studyfrog_service::pdfs::index_pdfs_fully(worker.session.as_mut().unwrap(), NOW_NS).unwrap();
     let fx = apply(
@@ -53,7 +57,7 @@ fn the_viewer_hands_pages_to_the_assistant_which_reads_them_and_says_so() {
         Some(("bio/three.pdf".to_owned(), 1, 2))
     );
     assert_eq!(model.state.agent.tab, AgentTab::Wiki);
-    apply(&mut model, Msg::Navigate(Screen::Agent));
+    apply(&mut model, Msg::Vault(MsgVault::Navigate(Screen::Agent)));
     apply(&mut model, Msg::Agent(AgentMsg::Folder("bio".into(), true)));
     let mut h = common::views::harness(model);
     h.run_steps(2);

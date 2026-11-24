@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Stress tests for details notebook schedule tab interactions and countdown formatting.
+use studyfrog_ui::effect::EffectPlanner;
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -32,7 +34,10 @@ fn stack_with_deadline(due: Date) -> Model {
         doc,
         hash: 1,
     };
-    apply(&mut m, Msg::DocumentLoaded(Uid(1), Ok(ld)));
+    apply(
+        &mut m,
+        Msg::Editor(MsgEditor::DocumentLoaded(Uid(1), Ok(ld))),
+    );
     let session = Session {
         id: Uid(100),
         title: "Due: Math Stack".into(),
@@ -97,7 +102,7 @@ fn schedule_reminders_and_clear_mutations() {
         .1
         .iter()
         .find_map(|e| match e {
-            Effect::SaveSession(s) => Some(s.clone()),
+            Effect::Planner(EffectPlanner::SaveSession(s)) => Some(s.clone()),
             _ => None,
         })
         .expect("SaveSession effect expected after clicking reminder");
@@ -120,7 +125,7 @@ fn schedule_reminders_and_clear_mutations() {
         .1
         .iter()
         .find_map(|e| match e {
-            Effect::SaveSession(s) => Some(s.clone()),
+            Effect::Planner(EffectPlanner::SaveSession(s)) => Some(s.clone()),
             _ => None,
         })
         .expect("SaveSession effect expected after removing reminder");
@@ -136,7 +141,7 @@ fn schedule_reminders_and_clear_mutations() {
         .1
         .iter()
         .find_map(|e| match e {
-            Effect::DeleteSession(id) => Some(*id),
+            Effect::Planner(EffectPlanner::DeleteSession(id)) => Some(*id),
             _ => None,
         })
         .expect("DeleteSession effect expected after clear");

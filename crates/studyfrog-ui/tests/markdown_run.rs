@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Markdown in the rehearsal card: the text is formatted, not shown with its markers.
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 
@@ -27,7 +28,10 @@ fn the_prompt_and_the_answer_are_drawn_as_markdown() {
         is_note: false,
         comments: Vec::new(),
     };
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(content))),
+    );
     let mut h = harness(m);
     h.run_steps(2);
     assert!(

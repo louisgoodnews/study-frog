@@ -1,6 +1,7 @@
 //! The plans of the calendar commands. The screen is opened first so its data is read; then the view,
 //! the month and the selected day are set, or the reminders are read without marking them shown. A new
 //! session is made the way a user makes one: the planner's New form, its fields, then Save.
+use crate::msg::MsgVault;
 
 use studyfrog_core::civil::{Date, format_date, format_minute};
 
@@ -13,7 +14,7 @@ use crate::state::Screen;
 
 /// The steps of a `calendar` command.
 pub fn plan(cmd: &CalendarCmd) -> Result<Plan, String> {
-    let open = vec![Msg::Navigate(Screen::Calendar)];
+    let open = vec![Msg::Vault(MsgVault::Navigate(Screen::Calendar))];
     Ok(match cmd {
         CalendarCmd::Show => vec![open],
         CalendarCmd::View(mode) => vec![open, vec![Msg::Plan(PlanMsg::SetViewMode(*mode))]],

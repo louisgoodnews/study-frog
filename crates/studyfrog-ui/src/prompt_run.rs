@@ -3,6 +3,7 @@
 //! The steps: choose a prompt and a file, read the file here on this computer, show exactly what would be sent,
 //! send it only after the user presses Send, show the answer, import the CSV in it through the import preview and,
 //! if the preview finds problems, send the problems back the same way (shown first, sent after Send).
+use crate::effect::EffectAssistant;
 
 use studyfrog_agent::provider::{Message, Role, is_local, may_send};
 use studyfrog_service::prompts::{
@@ -116,12 +117,12 @@ fn send(state: State) -> (State, Vec<Effect>) {
     let mut state = state;
     let run = &mut state.prompt_run;
     (run.convo, run.outgoing, run.busy, run.error) = (messages.clone(), None, true, None);
-    let effect = Effect::AgentChat {
+    let effect = Effect::Assistant(EffectAssistant::AgentChat {
         provider,
         system: SYSTEM.to_owned(),
         messages,
         purpose: ChatPurpose::Prompt,
-    };
+    });
     (state, vec![effect])
 }
 

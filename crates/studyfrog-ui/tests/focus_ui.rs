@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The focus timer in the top bar, across screens, its completion card and its record (STORY-0112).
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -55,7 +56,7 @@ fn the_timer_keeps_running_on_every_screen() {
     ];
     let mut m = running();
     for screen in screens {
-        apply(&mut m, Msg::Navigate(screen));
+        apply(&mut m, Msg::Vault(MsgVault::Navigate(screen)));
         let mut h = harness(m);
         h.run_steps(1);
         let shown = h.query_all_by_label_contains("Focus 2").count();
@@ -64,9 +65,9 @@ fn the_timer_keeps_running_on_every_screen() {
     }
     let mut m = running();
     for screen in screens {
-        apply(&mut m, Msg::Navigate(screen));
+        apply(&mut m, Msg::Vault(MsgVault::Navigate(screen)));
         m.state.now += 60.0;
-        apply(&mut m, Msg::Tick);
+        apply(&mut m, Msg::Vault(MsgVault::Tick));
     }
     assert!(m.state.recall.focus.since.is_some(), "still running");
     apply(&mut m, msg(FocusMsg::Pause));
@@ -79,7 +80,7 @@ fn a_finished_block_is_recorded_and_offers_the_break_and_the_diary() {
     let mut m = running();
     m.state.now += 1500.0;
     m.state.wall_ms += 1_500_000;
-    let fx = apply(&mut m, Msg::Tick);
+    let fx = apply(&mut m, Msg::Vault(MsgVault::Tick));
     let logged = fx.iter().any(|e| {
         matches!(e,
         Effect::Library(LibraryEffect::Recall(RecallEffect::LogFocus(d)))
@@ -106,7 +107,7 @@ fn a_finished_block_is_recorded_and_offers_the_break_and_the_diary() {
     );
     let mut m = running();
     m.state.now += 1500.0;
-    apply(&mut m, Msg::Tick);
+    apply(&mut m, Msg::Vault(MsgVault::Tick));
     apply(&mut m, msg(FocusMsg::StartBreak));
     assert!(m.state.recall.focus.done.is_none());
     assert!(m.state.recall.focus.since.is_some(), "the break runs");
@@ -125,7 +126,7 @@ fn the_worker_records_the_block_and_says_so() {
     send(&mut m, &mut w, msg(FocusMsg::Start));
     m.state.now = 1500.0;
     m.state.wall_ms += 1_500_000;
-    send(&mut m, &mut w, Msg::Tick);
+    send(&mut m, &mut w, Msg::Vault(MsgVault::Tick));
     let text = m.state.recall.focus.recorded.clone().unwrap();
     assert!(text.starts_with("Focus block of 25 min recorded"), "{text}");
 }

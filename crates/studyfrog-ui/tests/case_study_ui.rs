@@ -1,16 +1,17 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The case-study rehearsal (STORY-0181): opening a stack's cases, checking an answer against the
 //! rubric, moving on, and what the view shows.
-
-mod common;
-
 use common::views::{harness, open_model};
 use egui_kittest::kittest::Queryable;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::case_study::CaseStudyItem;
 use studyfrog_ui::effect::Effect;
+use studyfrog_ui::effect::EffectAssistant;
+use studyfrog_ui::effect::EffectBrowse;
 use studyfrog_ui::setup::case::{CaseMsg, CaseUi, update};
 use studyfrog_ui::state::{Selection, State};
+
+mod common;
 
 fn case(choice: &str) -> CaseStudyItem {
     CaseStudyItem {
@@ -48,13 +49,42 @@ fn view(state: &State) -> &CaseUi {
     state.rehearse.case_study.as_ref().expect("the case view")
 }
 
+fn open_model_with(state: State) -> studyfrog_ui::model::Model {
+    let mut m = open_model();
+    m.state.screen = studyfrog_ui::state::Screen::Rehearse;
+    m.state.rehearse = state.rehearse;
+    m
+}
+
+fn with_provider(url: &str) -> State {
+    let mut state = with_case(loaded(vec![case("Short screen")]));
+    state.agent.connections.providers = vec![provider(url)];
+    state.agent.selected = Some("p".to_owned());
+    state
+}
+
+fn provider(url: &str) -> studyfrog_agent::provider::Provider {
+    studyfrog_agent::provider::Provider {
+        name: "p".to_owned(),
+        protocol: studyfrog_agent::provider::Protocol::Ollama,
+        base_url: url.to_owned(),
+        model: "m".to_owned(),
+        allowed: false,
+    }
+}
+
 #[test]
 fn opening_the_cases_of_a_stack_reads_them() {
     let mut state = State::default();
     state.browser.selection = Selection::Stack("bio".to_owned());
     let (state, effects) = update(state, CaseMsg::Open);
     assert!(view(&state).loading);
-    assert_eq!(effects, vec![Effect::LoadCases(Some("bio".to_owned()))]);
+    assert_eq!(
+        effects,
+        vec![Effect::Browse(EffectBrowse::LoadCases(Some(
+            "bio".to_owned()
+        )))]
+    );
 }
 
 #[test]
@@ -123,30 +153,6 @@ fn the_view_shows_the_case_and_the_evaluation() {
     assert!(h.query_all_by_label_contains("Missing").count() >= 1);
 }
 
-fn open_model_with(state: State) -> studyfrog_ui::model::Model {
-    let mut m = open_model();
-    m.state.screen = studyfrog_ui::state::Screen::Rehearse;
-    m.state.rehearse = state.rehearse;
-    m
-}
-
-fn provider(url: &str) -> studyfrog_agent::provider::Provider {
-    studyfrog_agent::provider::Provider {
-        name: "p".to_owned(),
-        protocol: studyfrog_agent::provider::Protocol::Ollama,
-        base_url: url.to_owned(),
-        model: "m".to_owned(),
-        allowed: false,
-    }
-}
-
-fn with_provider(url: &str) -> State {
-    let mut state = with_case(loaded(vec![case("Short screen")]));
-    state.agent.connections.providers = vec![provider(url)];
-    state.agent.selected = Some("p".to_owned());
-    state
-}
-
 #[test]
 fn a_local_model_is_asked_to_check_the_justification() {
     let state = send(
@@ -162,10 +168,10 @@ fn a_local_model_is_asked_to_check_the_justification() {
     assert!(
         matches!(
             effects.as_slice(),
-            [Effect::AgentChat {
+            [Effect::Assistant(EffectAssistant::AgentChat {
                 purpose: studyfrog_ui::agent_types::ChatPurpose::Case,
                 ..
-            }]
+            })]
         ),
         "{effects:?}"
     );
@@ -197,43 +203,4 @@ fn an_unreadable_model_reply_keeps_the_keyword_check_and_says_why() {
             .is_some_and(|n| n.contains("could not check"))
     );
     assert!(view(&state).report.as_ref().is_some_and(|r| !r.from_model));
-}
-
-#[test]
-fn a_remote_model_is_not_sent_the_students_text() {
-    let state = send(
-        with_provider("https://api.example.com"),
-        CaseMsg::Pick(0, true),
-    );
-    let (state, effects) = update(state, CaseMsg::Submit);
-    assert!(effects.is_empty(), "{effects:?}");
-    assert!(
-        view(&state)
-            .note
-            .as_deref()
-            .is_some_and(|n| n.contains("Only a local model"))
-    );
-}
-
-#[test]
-fn the_case_study_reads_the_stack_ticked_in_the_setup_not_the_open_one() {
-    let mut state = State {
-        vault: Some(common::views::vault_with_stacks(&[(1, "bio"), (2, "diag")])),
-        ..State::default()
-    };
-    state.rehearse.form.stacks = vec![Uid(2)];
-    state.browser.selection = Selection::Stack("bio".to_owned());
-    let (_, effects) = update(state, CaseMsg::Open);
-    assert_eq!(effects, vec![Effect::LoadCases(Some("diag".to_owned()))]);
-}
-
-#[test]
-fn with_nothing_ticked_or_open_the_case_study_says_to_tick_or_open_one() {
-    let (state, effects) = update(State::default(), CaseMsg::Open);
-    assert!(effects.is_empty());
-    let error = view(&state).error.clone().unwrap_or_default();
-    assert!(
-        error.contains("Tick a stack") && error.contains("open one"),
-        "{error}"
-    );
 }

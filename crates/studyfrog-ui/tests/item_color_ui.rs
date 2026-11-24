@@ -1,6 +1,10 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! STORY-0097, STORY-0123 through the real worker and the harness: picking a colour in the Properties
 //! tab, saving it to the file, the library row, and the rehearsal card's colour in both phases.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgEditor;
+use studyfrog_ui::msg::MsgRehearsal;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -19,7 +23,7 @@ use studyfrog_ui::state::Screen;
 #[test]
 fn the_properties_tab_offers_the_palette_none_a_picker_and_a_code() {
     let (_vault, mut m, mut w) = opened("color-tab");
-    send(&mut m, &mut w, Msg::OpenItem(Uid(11)));
+    send(&mut m, &mut w, Msg::Browse(MsgBrowse::OpenItem(Uid(11))));
     let mut h = harness(m);
     h.run_steps(2);
     for name in [
@@ -41,26 +45,34 @@ fn the_properties_tab_offers_the_palette_none_a_picker_and_a_code() {
 #[test]
 fn a_chosen_colour_is_saved_to_the_file_and_shown_in_the_library() {
     let (vault, mut m, mut w) = opened("color-save");
-    send(&mut m, &mut w, Msg::OpenItem(Uid(11)));
+    send(&mut m, &mut w, Msg::Browse(MsgBrowse::OpenItem(Uid(11))));
     send(
         &mut m,
         &mut w,
-        Msg::Edit(EditAction::Color(Some("#4a90e2".into()))),
+        Msg::Editor(MsgEditor::Edit(EditAction::Color(Some("#4a90e2".into())))),
     );
-    send(&mut m, &mut w, Msg::SaveClicked);
+    send(&mut m, &mut w, Msg::Editor(MsgEditor::SaveClicked));
     let text = std::fs::read_to_string(vault.path.join("french/b.md")).unwrap();
     assert!(text.contains("color: \"#4A90E2\""), "{text}");
-    send(&mut m, &mut w, Msg::Edit(EditAction::Color(None)));
-    send(&mut m, &mut w, Msg::SaveClicked);
+    send(
+        &mut m,
+        &mut w,
+        Msg::Editor(MsgEditor::Edit(EditAction::Color(None))),
+    );
+    send(&mut m, &mut w, Msg::Editor(MsgEditor::SaveClicked));
     let text = std::fs::read_to_string(vault.path.join("french/b.md")).unwrap();
     assert!(!text.contains("color:"), "None removes it: {text}");
     send(
         &mut m,
         &mut w,
-        Msg::Edit(EditAction::Color(Some("amber".into()))),
+        Msg::Editor(MsgEditor::Edit(EditAction::Color(Some("amber".into())))),
     );
-    send(&mut m, &mut w, Msg::SaveClicked);
-    send(&mut m, &mut w, Msg::Navigate(Screen::Library));
+    send(&mut m, &mut w, Msg::Editor(MsgEditor::SaveClicked));
+    send(
+        &mut m,
+        &mut w,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
     let b = m
         .state
         .library
@@ -94,7 +106,10 @@ fn the_rehearsal_card_takes_the_colour_of_the_item_on_show_in_both_phases() {
         Some("teal"),
         "after the reveal"
     );
-    apply(&mut m, Msg::RunAction(Action::Pause));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::Pause)),
+    );
     assert_eq!(
         run_color(m.state.rehearse.run.as_ref().unwrap()),
         None,

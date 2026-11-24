@@ -1,5 +1,6 @@
 //! Exam mode in the window (`docs/specs/exam-mode.md`): the answers given, the scores as they arrive, grading
 //! once every answer has its score, and the result. Pure: the worker grades (`exec_exam`).
+use crate::effect::EffectRehearsal;
 
 use std::collections::HashSet;
 
@@ -158,6 +159,6 @@ pub fn load_rest(run: &mut RunView) -> Vec<Effect> {
     let rest: Vec<Uid> = run.session.queue.clone();
     rest.into_iter()
         .filter(|uid| run.requested.insert(*uid))
-        .map(Effect::LoadItem)
+        .map(|u| Effect::Rehearsal(EffectRehearsal::LoadItem(u)))
         .collect()
 }

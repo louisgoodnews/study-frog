@@ -1,5 +1,6 @@
 #![allow(dead_code, unused_imports, clippy::unwrap_used, clippy::expect_used)] // shared test helpers
 //! An exam on screen (Paris / 7x8) and the messages that play it.
+use studyfrog_ui::msg::MsgRehearsal;
 
 use studyfrog_core::exam::{ExamGrade, ExamResult};
 use studyfrog_core::review::Rating;
@@ -20,8 +21,11 @@ pub fn exam_model() -> Model {
 }
 
 pub fn submit(m: &mut Model, text: &str) -> Vec<Effect> {
-    apply(m, Msg::AnswerEdited(text.into()));
-    apply(m, Msg::RunAction(Action::SubmitAnswer(text.into())))
+    apply(m, Msg::Rehearsal(MsgRehearsal::AnswerEdited(text.into())));
+    apply(
+        m,
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::SubmitAnswer(text.into()))),
+    )
 }
 
 pub fn scored(value: f32) -> Scored {
@@ -64,9 +68,15 @@ pub fn result(percent: f32, grade: ExamGrade) -> ExamResult {
 pub fn graded_model() -> Model {
     let mut m = exam_model();
     submit(&mut m, "Paris");
-    apply(&mut m, Msg::AnswerScored(Uid(1), Ok(scored(1.0))));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::AnswerScored(Uid(1), Ok(scored(1.0)))),
+    );
     submit(&mut m, "54");
-    apply(&mut m, Msg::AnswerScored(Uid(2), Ok(scored(0.65))));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::AnswerScored(Uid(2), Ok(scored(0.65)))),
+    );
     let graded = Ok(result(82.5, ExamGrade::BPlus));
     apply(&mut m, Msg::Exam(ExamMsg::Graded(Uid(100), graded)));
     m

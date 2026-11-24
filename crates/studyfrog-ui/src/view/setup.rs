@@ -1,5 +1,6 @@
 //! The run setup as three steps: choose what to rehearse, configure how, review and begin. The
 //! step bar lets anyone jump to any step; the Next and Back buttons are the guided route.
+use crate::msg::MsgRehearsal;
 
 use eframe::egui::{self, RichText};
 
@@ -16,7 +17,7 @@ const STEPS: [(SetupStep, &str, &str); 3] = [
 ];
 
 fn go(out: &mut Vec<Msg>, step: SetupStep) {
-    out.push(Msg::SetupStep(step));
+    out.push(Msg::Rehearsal(MsgRehearsal::SetupStep(step)));
 }
 
 /// The whole screen: the steps scroll, the Back and Next buttons stay in view.
@@ -219,7 +220,7 @@ fn start_button(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         )
         .on_hover_text("Starts the run with these settings.");
     if response.clicked() {
-        out.push(Msg::StartRunClicked);
+        out.push(Msg::Rehearsal(MsgRehearsal::StartRunClicked));
     }
     if state.rehearse.starting {
         ui.spinner();

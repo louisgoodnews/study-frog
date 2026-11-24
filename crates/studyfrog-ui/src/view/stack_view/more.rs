@@ -1,5 +1,7 @@
 //! The stack page's overflow menu and its move submenu.
 use super::*;
+use crate::msg::MsgBrowse;
+use crate::msg::MsgVault;
 
 pub(super) fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.menu_button("More actions", |ui| {
@@ -8,7 +10,7 @@ pub(super) fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, o
             .on_hover_text("Plays a memory game with the cards of this stack, with the timing chosen in Rehearse.")
             .clicked()
         {
-            out.push(Msg::Navigate(crate::state::Screen::Rehearse));
+            out.push(Msg::Vault(MsgVault::Navigate(crate::state::Screen::Rehearse)));
             out.push(Msg::Memory(crate::setup::memory::MemoryMsg::StartStack(
                 stack.folder.clone(),
             )));
@@ -23,7 +25,7 @@ pub(super) fn more_actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, o
             .on_hover_text("Shows the details of this item.")
             .clicked()
         {
-            out.push(Msg::OpenItem(stack.uid));
+            out.push(Msg::Browse(MsgBrowse::OpenItem(stack.uid)));
             ui.close();
         }
         if ui

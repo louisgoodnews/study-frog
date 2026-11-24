@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 //! Headless egui_kittest suite for the mock exam item format selection modal (STORY-0207).
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -20,7 +21,7 @@ use studyfrog_ui::state::{Screen, Selection};
 fn setup_rehearse() -> studyfrog_ui::model::Model {
     let mut m = open_model();
     m.state.browser.selection = Selection::Stack("french".to_owned());
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
     m
 }
 

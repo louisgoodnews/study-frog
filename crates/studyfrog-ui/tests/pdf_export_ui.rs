@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used, clippy::cognitive_complexity)] // tests may panic on failure
 //! Headless UI acceptance tests for TASK-0231: Export to PDF in the application.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -22,11 +24,15 @@ fn export_msg(m: PdfExportMsg) -> Msg {
 #[test]
 fn pdf_export_offered_on_stack_page_and_export_screen() {
     let (_v, mut model, mut worker) = opened("pdf-export-open");
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
     send(
         &mut model,
         &mut worker,
-        Msg::Select(Selection::Stack("french".into())),
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
     );
 
     // 1. Offered on the stack page under "More actions"
@@ -71,8 +77,16 @@ fn pdf_export_offered_on_stack_page_and_export_screen() {
 #[test]
 fn pdf_export_offered_on_bulk_bar_and_item_page() {
     let (_v, mut model, mut worker) = opened("pdf-export-bulk");
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
-    send(&mut model, &mut worker, Msg::Select(Selection::Nothing));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Browse(MsgBrowse::Select(Selection::Nothing)),
+    );
 
     // 1. Offered on bulk bar when items are selected
     let uids = model
@@ -97,9 +111,13 @@ fn pdf_export_offered_on_bulk_bar_and_item_page() {
 
     // 2. Offered on item page toolbar under "More actions"
     let (_v2, mut m2, mut w2) = opened("pdf-export-item");
-    send(&mut m2, &mut w2, Msg::Navigate(Screen::Library));
+    send(
+        &mut m2,
+        &mut w2,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
     let item_uid = m2.state.library.items[0].uid;
-    send(&mut m2, &mut w2, Msg::OpenItem(item_uid));
+    send(&mut m2, &mut w2, Msg::Browse(MsgBrowse::OpenItem(item_uid)));
     let mut h2 = harness(m2);
     h2.run_steps(4);
     h2.get_by_label("More actions").click();
@@ -118,7 +136,11 @@ fn pdf_export_offered_on_bulk_bar_and_item_page() {
 #[test]
 fn pdf_export_dialog_options_preview_and_accessible_names() {
     let (_v, mut model, mut worker) = opened("pdf-export-options");
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
     apply(
         &mut model,
         export_msg(PdfExportMsg::Open(ExportTarget::Stack("french".into()))),

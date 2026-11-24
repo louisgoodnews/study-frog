@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 //! Tests for floating burger menu research prototype.
+use studyfrog_ui::msg::MsgVault;
 
 use studyfrog_core::settings::vault_settings_default;
 use studyfrog_ui::msg::Msg;
@@ -11,7 +12,7 @@ fn burger_menu_screens_navigate() {
     let mut state = State::default();
     assert_eq!(state.screen, Screen::Welcome);
 
-    let (state_help, _) = update(state.clone(), Msg::Navigate(Screen::Help));
+    let (state_help, _) = update(state.clone(), Msg::Vault(MsgVault::Navigate(Screen::Help)));
     assert_eq!(state_help.screen, Screen::Help);
 
     // When a vault is open, all screens navigate
@@ -23,9 +24,15 @@ fn burger_menu_screens_navigate() {
         settings_error: None,
     });
 
-    let (state_cal, _) = update(state.clone(), Msg::Navigate(Screen::Calendar));
+    let (state_cal, _) = update(
+        state.clone(),
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     assert_eq!(state_cal.screen, Screen::Calendar);
 
-    let (state_console, _) = update(state.clone(), Msg::Navigate(Screen::Console));
+    let (state_console, _) = update(
+        state.clone(),
+        Msg::Vault(MsgVault::Navigate(Screen::Console)),
+    );
     assert_eq!(state_console.screen, Screen::Console);
 }

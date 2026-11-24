@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! TASK-0207: a standard prompt through the assistant: shown before it is sent, sent only after Send, the answer
 //! imported through the preview, the problems sent back the same way.
+use studyfrog_ui::effect::EffectAssistant;
 
 mod common;
 
@@ -65,9 +66,9 @@ fn the_prompt_and_the_file_are_shown_and_only_a_press_of_send_sends_them() {
 
     let fx = run(&mut m, PromptRunMsg::Send);
     let [
-        Effect::AgentChat {
+        Effect::Assistant(EffectAssistant::AgentChat {
             messages, purpose, ..
-        },
+        }),
     ] = fx.as_slice()
     else {
         panic!("{fx:?}")
@@ -150,7 +151,8 @@ fn the_answer_is_imported_through_the_preview_and_its_problems_go_back_after_sen
 
     let fx = run(&mut m, PromptRunMsg::AskToFix);
     assert!(
-        fx.iter().all(|e| !matches!(e, Effect::AgentChat { .. })),
+        fx.iter()
+            .all(|e| !matches!(e, Effect::Assistant(EffectAssistant::AgentChat { .. }))),
         "shown first, not sent"
     );
     let out = m.state.prompt_run.outgoing.clone().unwrap();
@@ -163,7 +165,10 @@ fn the_answer_is_imported_through_the_preview_and_its_problems_go_back_after_sen
     );
     assert_eq!(m.state.screen, Screen::Agent);
     let fx = run(&mut m, PromptRunMsg::Send);
-    assert!(matches!(fx.as_slice(), [Effect::AgentChat { .. }]));
+    assert!(matches!(
+        fx.as_slice(),
+        [Effect::Assistant(EffectAssistant::AgentChat { .. })]
+    ));
 }
 
 #[test]

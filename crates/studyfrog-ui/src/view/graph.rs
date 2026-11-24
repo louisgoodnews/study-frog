@@ -1,4 +1,6 @@
 //! The link graph canvas: nodes and edges drawn from the screen positions computed in `update`.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgGraph;
 
 use eframe::egui::{self, Color32, Pos2, Sense, Stroke};
 use studyfrog_core::plan::ItemKind;
@@ -44,7 +46,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .on_hover_text("Lays out the page again.")
             .clicked()
         {
-            out.push(Msg::GraphRestart);
+            out.push(Msg::Graph(MsgGraph::GraphRestart));
         }
         ui.weak("Drag to pan, scroll to zoom, click an item to open it.");
     });
@@ -66,18 +68,18 @@ fn canvas(g: &GraphState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         egui::vec2(ui.available_width(), height),
         Sense::click_and_drag(),
     );
-    out.push(Msg::GraphFrame {
+    out.push(Msg::Graph(MsgGraph::GraphFrame {
         width: rect.width(),
         height: rect.height(),
-    });
+    }));
     if response.dragged() {
         let d = response.drag_delta();
-        out.push(Msg::GraphPan(d.x, d.y));
+        out.push(Msg::Graph(MsgGraph::GraphPan(d.x, d.y)));
     }
     if response.hovered() {
         let scroll = ui.input(|i| i.smooth_scroll_delta.y);
         if scroll != 0.0 {
-            out.push(Msg::GraphZoom((scroll * 0.002).exp()));
+            out.push(Msg::Graph(MsgGraph::GraphZoom((scroll * 0.002).exp())));
         }
     }
     let center = rect.center();
@@ -85,12 +87,12 @@ fn canvas(g: &GraphState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .hover_pos()
         .and_then(|p| nearest(&g.sx, &g.sy, p.x - center.x, p.y - center.y, PICK_RADIUS));
     if hover != g.hovered {
-        out.push(Msg::GraphHover(hover));
+        out.push(Msg::Graph(MsgGraph::GraphHover(hover)));
     }
     if response.clicked()
         && let Some(i) = hover
     {
-        out.push(Msg::GraphClick(i));
+        out.push(Msg::Graph(MsgGraph::GraphClick(i)));
     }
     paint(g, ui, rect);
     if !g.settled {
@@ -159,7 +161,7 @@ fn item_list(g: &GraphState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                         .on_hover_text("Opens this item.")
                         .clicked()
                     {
-                        out.push(Msg::OpenItem(node.uid));
+                        out.push(Msg::Browse(MsgBrowse::OpenItem(node.uid)));
                     }
                 }
                 if g.graph.nodes.len() > LIST_LIMIT {

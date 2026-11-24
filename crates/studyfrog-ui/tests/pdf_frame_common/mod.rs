@@ -1,6 +1,7 @@
 #![allow(dead_code, unused_imports, clippy::unwrap_used, clippy::expect_used)] // shared test helpers
 //! A 500-page PDF open in the viewer, driven frame by frame through a bare `egui::Context`
 //! (STORY-0085): real input events, real layout and tessellation, the real worker for pictures.
+use studyfrog_ui::effect::EffectVault;
 
 #[path = "../../../studyfrog-pdf/tests/common/mod.rs"]
 mod pdfmake;
@@ -62,7 +63,7 @@ pub fn open_big(label: &str) -> Frames {
     let mut model = Model::default();
     model.state.app.tutorial_offered = true;
     let mut worker = worker_new(None);
-    let open = Effect::OpenVault(dir.path.display().to_string());
+    let open = Effect::Vault(EffectVault::OpenVault(dir.path.display().to_string()));
     run_to_idle(&mut model, &mut worker, vec![open]);
     let mut f = Frames {
         dir,

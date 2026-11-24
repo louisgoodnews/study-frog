@@ -1,6 +1,13 @@
 //! What the worker writes to the application log besides notices (STORY-0122): every effect that
 //! failed, import and export outcomes with their diagnostics and warnings, and effects that took
 //! long. Pure: the lines are chosen here and written by `exec_log`.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgEditor;
+use crate::msg::MsgGraph;
+use crate::msg::MsgImport;
+use crate::msg::MsgRehearsal;
+use crate::msg::MsgReports;
+use crate::msg::MsgVault;
 
 use std::fmt::Write as _;
 
@@ -49,30 +56,47 @@ pub fn effect_label(effect: &Effect) -> String {
         .find(|ch: char| !(ch.is_alphanumeric() || ch == '(' || ch == '_'))
         .unwrap_or(c.text.len());
     let parts = c.text[..end].split('(');
-    let names: Vec<&str> = parts
+    let mut names: Vec<&str> = parts
         .take_while(|p| p.starts_with(|ch: char| ch.is_ascii_uppercase()))
         .collect();
+    // The per-area wrappers (`Vault(OpenVault)`) are not part of the name: it stays the variant's own.
+    if names.len() > 1 && AREA_WRAPPERS.contains(&names[0]) {
+        names.remove(0);
+    }
     names.join(".")
 }
+
+/// The per-area wrapper variants of [`Effect`] (see `effect.rs`).
+const AREA_WRAPPERS: [&str; 9] = [
+    "Vault",
+    "Import",
+    "Backup",
+    "Browse",
+    "Editor",
+    "Rehearsal",
+    "Planner",
+    "Assistant",
+    "Reports",
+];
 
 /// The error a message carries, for the messages that answer an effect with a `Result`.
 fn problem_of(msg: &Msg) -> Option<&str> {
     let e = match msg {
-        Msg::Imported(Err(e))
-        | Msg::VaultOpened(Err(e))
-        | Msg::VaultPolled(Err(e))
-        | Msg::AppSettingsSaved(Err(e))
-        | Msg::ItemsLoaded(Err(e))
-        | Msg::Created(Err(e))
-        | Msg::RunReady(Err(e))
-        | Msg::ItemLoaded(_, Err(e))
-        | Msg::Rerated(_, Err(e))
-        | Msg::StepRecorded(Err(e))
-        | Msg::DocumentLoaded(_, Err(e))
-        | Msg::Saved(Err(e))
-        | Msg::GraphLoaded(Err(e))
-        | Msg::ReportsBuilt(Err(e))
-        | Msg::AchievementsChecked(Err(e))
+        Msg::Import(MsgImport::Imported(Err(e)))
+        | Msg::Vault(MsgVault::VaultOpened(Err(e)))
+        | Msg::Vault(MsgVault::VaultPolled(Err(e)))
+        | Msg::Vault(MsgVault::AppSettingsSaved(Err(e)))
+        | Msg::Browse(MsgBrowse::ItemsLoaded(Err(e)))
+        | Msg::Browse(MsgBrowse::Created(Err(e)))
+        | Msg::Rehearsal(MsgRehearsal::RunReady(Err(e)))
+        | Msg::Rehearsal(MsgRehearsal::ItemLoaded(_, Err(e)))
+        | Msg::Rehearsal(MsgRehearsal::Rerated(_, Err(e)))
+        | Msg::Rehearsal(MsgRehearsal::StepRecorded(Err(e)))
+        | Msg::Editor(MsgEditor::DocumentLoaded(_, Err(e)))
+        | Msg::Editor(MsgEditor::Saved(Err(e)))
+        | Msg::Graph(MsgGraph::GraphLoaded(Err(e)))
+        | Msg::Reports(MsgReports::ReportsBuilt(Err(e)))
+        | Msg::Reports(MsgReports::AchievementsChecked(Err(e)))
         | Msg::Pdf(
             PdfMsg::Opened(_, Err(e))
             | PdfMsg::Rendered(_, _, Err(e))
@@ -97,7 +121,7 @@ fn transfer_lines(msg: &Msg, out: &mut Vec<(LogLevel, String)>) {
         }
     };
     match msg {
-        Msg::Imported(Ok(o)) => {
+        Msg::Import(MsgImport::Imported(Ok(o))) => {
             let r = &o.report;
             push(
                 LogLevel::Info,
@@ -157,6 +181,8 @@ pub fn worker_events(label: &str, msgs: &[Msg], took_ms: u128) -> Vec<(LogLevel,
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::effect::EffectVault;
+    use crate::msg::MsgVault;
 
     fn transfer(m: TransferMsg) -> Msg {
         Msg::Library(LibraryMsg::Transfer(m))
@@ -164,7 +190,7 @@ mod tests {
 
     #[test]
     fn an_effect_is_named_by_its_variants_without_its_data() {
-        let big = Effect::OpenVault("x".repeat(10_000));
+        let big = Effect::Vault(EffectVault::OpenVault("x".repeat(10_000)));
         assert_eq!(effect_label(&big), "OpenVault");
         let csv = Effect::Library(crate::library_bulk::LibraryEffect::Transfer(
             crate::transfer_types::TransferJob::ReportCsv(true),
@@ -174,7 +200,9 @@ mod tests {
 
     #[test]
     fn failures_exports_and_slow_effects_become_lines_and_quiet_ones_none() {
-        let failed = [Msg::VaultOpened(Err("no such folder".into()))];
+        let failed = [Msg::Vault(MsgVault::VaultOpened(Err(
+            "no such folder".into()
+        )))];
         let lines = worker_events("OpenVault", &failed, 5);
         assert_eq!(
             lines,
@@ -197,7 +225,7 @@ mod tests {
         let slow = worker_events("Pdf.Render", &[], SLOW_MS + 1);
         assert_eq!(slow[0].0, LogLevel::Warn);
         assert!(slow[0].1.contains("took"));
-        assert!(worker_events("LoadLibrary", &[Msg::Tick], 3).is_empty());
+        assert!(worker_events("LoadLibrary", &[Msg::Vault(MsgVault::Tick)], 3).is_empty());
     }
 
     #[test]

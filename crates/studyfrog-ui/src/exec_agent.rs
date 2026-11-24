@@ -1,4 +1,5 @@
 //! Performing the assistant's effects: connections, questions to a model, proposals and exams.
+use crate::effect::EffectAssistant;
 
 use std::path::{Path, PathBuf};
 
@@ -192,18 +193,24 @@ pub fn record(w: &mut Worker, results: &[ExamResult], now_ns: i64) -> Msg {
 /// Perform one of the assistant's effects.
 pub fn run(w: &mut Worker, effect: Effect, now_ns: i64) -> Msg {
     match effect {
-        Effect::LoadAgent => load(w),
-        Effect::SaveConnection { provider, key } => save(w, provider, key),
-        Effect::PrepareWiki { folders, pdf } => prepare_wiki(w, &folders, pdf.as_ref()),
-        Effect::AgentChat {
+        Effect::Assistant(EffectAssistant::LoadAgent) => load(w),
+        Effect::Assistant(EffectAssistant::SaveConnection { provider, key }) => {
+            save(w, provider, key)
+        }
+        Effect::Assistant(EffectAssistant::PrepareWiki { folders, pdf }) => {
+            prepare_wiki(w, &folders, pdf.as_ref())
+        }
+        Effect::Assistant(EffectAssistant::AgentChat {
             provider,
             system,
             messages,
             purpose,
-        } => chat(w, (provider, system, messages), purpose, now_ns),
-        Effect::ApplyChanges(changes) => apply(w, &changes, now_ns),
-        Effect::PrepareExam { folders, count } => prepare_exam(w, &folders, count),
-        Effect::RecordExam(results) => record(w, &results, now_ns),
+        }) => chat(w, (provider, system, messages), purpose, now_ns),
+        Effect::Assistant(EffectAssistant::ApplyChanges(changes)) => apply(w, &changes, now_ns),
+        Effect::Assistant(EffectAssistant::PrepareExam { folders, count }) => {
+            prepare_exam(w, &folders, count)
+        }
+        Effect::Assistant(EffectAssistant::RecordExam(results)) => record(w, &results, now_ns),
         other => agent(AgentMsg::Saved(Err(format!(
             "not an assistant effect: {other:?}"
         )))),

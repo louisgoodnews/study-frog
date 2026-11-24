@@ -1,4 +1,7 @@
 //! Importing cards and making them from a registered card type: update logic. Pure.
+use crate::effect::EffectImport;
+use crate::msg::MsgImport;
+use crate::msg::MsgVault;
 
 use studyfrog_service::import::ImportReport;
 
@@ -49,11 +52,11 @@ pub fn add_from_type(state: State) -> (State, Vec<Effect>) {
     if source.trim().is_empty() {
         return failed(state, "Write the text to make cards from first.");
     }
-    let effect = Effect::CreateFromType {
+    let effect = Effect::Import(EffectImport::CreateFromType {
         folder,
         type_id,
         source,
-    };
+    });
     (
         State {
             notice: None,
@@ -76,7 +79,7 @@ fn import_clicked(state: State) -> (State, Vec<Effect>) {
             notice: None,
             ..state
         },
-        vec![Effect::ImportFile { folder, path }],
+        vec![Effect::Import(EffectImport::ImportFile { folder, path })],
     )
 }
 
@@ -129,21 +132,23 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
         (State { browser, ..state }, Vec::new())
     };
     match msg {
-        Msg::CardTypeChosen(id) => with(state, &|b| Browser {
+        Msg::Vault(MsgVault::CardTypeChosen(id)) => with(state, &|b| Browser {
             card_type: id.clone(),
             ..b
         }),
-        Msg::ImportPathEdited(path) => with(state, &|b| Browser {
+        Msg::Import(MsgImport::ImportPathEdited(path)) => with(state, &|b| Browser {
             import_path: path.clone(),
             ..b
         }),
-        Msg::BrowseImportClicked => (state, vec![Effect::PickImportFile]),
-        Msg::ImportFilePicked(Some(path)) => with(state, &|b| Browser {
+        Msg::Import(MsgImport::BrowseImportClicked) => {
+            (state, vec![Effect::Import(EffectImport::PickImportFile)])
+        }
+        Msg::Import(MsgImport::ImportFilePicked(Some(path))) => with(state, &|b| Browser {
             import_path: path.clone(),
             ..b
         }),
-        Msg::ImportClicked => import_clicked(state),
-        Msg::Imported(result) => imported(state, result),
+        Msg::Import(MsgImport::ImportClicked) => import_clicked(state),
+        Msg::Import(MsgImport::Imported(result)) => imported(state, result),
         _ => (state, Vec::new()),
     }
 }

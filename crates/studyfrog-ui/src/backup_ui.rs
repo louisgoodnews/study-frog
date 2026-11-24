@@ -1,4 +1,6 @@
 //! Backing up and restoring on the settings screen. Pure.
+use crate::effect::EffectBackup;
+use crate::effect::EffectVault;
 
 use studyfrog_config::backup::Manifest;
 
@@ -92,7 +94,10 @@ pub fn update(state: State, msg: BackupMsg) -> (State, Vec<Effect>) {
         BackupMsg::Start => {
             let keys = state.backup.include_keys;
             let (state, _) = with(state, |b| BackupState { busy: true, ..b });
-            (state, vec![Effect::Backup { include_keys: keys }])
+            (
+                state,
+                vec![Effect::Backup(EffectBackup::Backup { include_keys: keys })],
+            )
         }
         BackupMsg::Done(Ok(last)) => with(state, |b| BackupState {
             busy: false,
@@ -100,7 +105,7 @@ pub fn update(state: State, msg: BackupMsg) -> (State, Vec<Effect>) {
             ..b
         }),
         BackupMsg::Done(Err(e)) => failed(state, "The backup failed", e),
-        BackupMsg::Choose => (state, vec![Effect::ChooseBackup]),
+        BackupMsg::Choose => (state, vec![Effect::Backup(EffectBackup::ChooseBackup)]),
         BackupMsg::Chosen(Ok(chosen)) => with(state, |b| BackupState {
             chosen: chosen.or(b.chosen),
             ..b
@@ -108,10 +113,10 @@ pub fn update(state: State, msg: BackupMsg) -> (State, Vec<Effect>) {
         BackupMsg::Chosen(Err(e)) => failed(state, "That is not a usable backup", e),
         BackupMsg::Restore => match (&state.backup.chosen, state.backup.busy) {
             (Some(c), false) => {
-                let effect = Effect::Restore {
+                let effect = Effect::Backup(EffectBackup::Restore {
                     archive: c.path.clone(),
                     with_settings: state.backup.restore_settings,
-                };
+                });
                 let (state, _) = with(state, |b| BackupState { busy: true, ..b });
                 (state, vec![effect])
             }
@@ -125,7 +130,7 @@ pub fn update(state: State, msg: BackupMsg) -> (State, Vec<Effect>) {
                 last: Some(format!("Restored into {folder}")),
                 ..b
             });
-            (state, vec![Effect::OpenVault(folder)])
+            (state, vec![Effect::Vault(EffectVault::OpenVault(folder))])
         }
         BackupMsg::Restored(Err(e)) => failed(state, "The restore failed", e),
     }

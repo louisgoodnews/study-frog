@@ -1,5 +1,10 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The achievements screen and the moments that check them.
+use studyfrog_ui::effect::EffectReports;
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgRehearsal;
+use studyfrog_ui::msg::MsgReports;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -61,9 +66,12 @@ fn report() -> AchievementReport {
 #[test]
 fn opening_the_screen_checks_and_new_unlocks_are_announced() {
     let mut m = open_model();
-    let effects = apply(&mut m, Msg::Navigate(Screen::Achievements));
-    assert_eq!(effects, [Effect::CheckAchievements]);
-    apply(&mut m, Msg::AchievementsChecked(Ok(report())));
+    let effects = apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Achievements)));
+    assert_eq!(effects, [Effect::Reports(EffectReports::CheckAchievements)]);
+    apply(
+        &mut m,
+        Msg::Reports(MsgReports::AchievementsChecked(Ok(report()))),
+    );
     let n = m.state.notice.clone().unwrap();
     assert_eq!(
         (n.kind, n.text.as_str()),
@@ -74,10 +82,16 @@ fn opening_the_screen_checks_and_new_unlocks_are_announced() {
     let mut quiet = report();
     quiet.new.clear();
     m.state.notice = None;
-    apply(&mut m, Msg::AchievementsChecked(Ok(quiet)));
+    apply(
+        &mut m,
+        Msg::Reports(MsgReports::AchievementsChecked(Ok(quiet))),
+    );
     assert!(m.state.notice.is_none(), "nothing new, nothing announced");
 
-    apply(&mut m, Msg::AchievementsChecked(Err("disk".into())));
+    apply(
+        &mut m,
+        Msg::Reports(MsgReports::AchievementsChecked(Err("disk".into()))),
+    );
     assert_eq!(m.state.notice.as_ref().unwrap().kind, NoticeKind::Error);
     assert!(m.state.achievements.is_some(), "the last report stays");
 }
@@ -103,14 +117,20 @@ fn a_stack_unlock_names_its_stack() {
 fn the_end_of_a_run_checks_achievements() {
     let mut m = running_model(RunMode::Flip);
     m.state.now = 3.0;
-    let effects = apply(&mut m, Msg::RunAction(Action::Abort));
-    assert!(effects.contains(&Effect::CheckAchievements), "{effects:?}");
-    let mid = apply(
-        &mut running_model(RunMode::Flip),
-        Msg::RunAction(Action::Flip),
+    let effects = apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::Abort)),
     );
     assert!(
-        !mid.contains(&Effect::CheckAchievements),
+        effects.contains(&Effect::Reports(EffectReports::CheckAchievements)),
+        "{effects:?}"
+    );
+    let mid = apply(
+        &mut running_model(RunMode::Flip),
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::Flip)),
+    );
+    assert!(
+        !mid.contains(&Effect::Reports(EffectReports::CheckAchievements)),
         "not during the run"
     );
 }
@@ -119,7 +139,10 @@ fn the_end_of_a_run_checks_achievements() {
 fn the_screen_groups_unlocked_and_in_progress_achievements() {
     let mut m = open_model();
     m.state.screen = Screen::Achievements;
-    apply(&mut m, Msg::AchievementsChecked(Ok(report())));
+    apply(
+        &mut m,
+        Msg::Reports(MsgReports::AchievementsChecked(Ok(report()))),
+    );
     let mut h = harness(m);
     h.run();
     for text in [
@@ -143,11 +166,15 @@ fn the_executor_measures_a_real_vault() {
     let mut worker = worker_new(None);
     execute(
         &mut worker,
-        Effect::OpenVault(vault.path.display().to_string()),
+        Effect::Vault(EffectVault::OpenVault(vault.path.display().to_string())),
         NOW_NS,
     );
-    let msgs = execute(&mut worker, Effect::CheckAchievements, NOW_NS);
-    let Msg::AchievementsChecked(Ok(r)) = &msgs[0] else {
+    let msgs = execute(
+        &mut worker,
+        Effect::Reports(EffectReports::CheckAchievements),
+        NOW_NS,
+    );
+    let Msg::Reports(MsgReports::AchievementsChecked(Ok(r))) = &msgs[0] else {
         panic!("{:?}", msgs[0])
     };
     assert!(

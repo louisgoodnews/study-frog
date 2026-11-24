@@ -1,4 +1,5 @@
 //! The two working parts of the assistant screen: proposals for the vault and exams.
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, RichText};
 use studyfrog_agent::provider::{host_of, is_local};
@@ -206,7 +207,7 @@ fn help_scope(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .on_hover_text("Opens the help page about this.")
             .clicked()
         {
-            out.push(Msg::Navigate(crate::state::Screen::Help));
+            out.push(Msg::Vault(MsgVault::Navigate(crate::state::Screen::Help)));
         }
     });
 }

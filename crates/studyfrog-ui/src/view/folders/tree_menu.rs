@@ -1,4 +1,6 @@
 //! Context menu actions for folders and files.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, Role, WidgetInfo};
 
@@ -69,8 +71,10 @@ fn draw_folder_menu(row: &VisibleRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .clone()
         .widget_info(|| WidgetInfo::labeled(Role::Button, true, "Show in Items"));
     if show_items.clicked() {
-        out.push(Msg::Navigate(Screen::Library));
-        out.push(Msg::Select(Selection::Stack(row.rel_path.clone())));
+        out.push(Msg::Vault(MsgVault::Navigate(Screen::Library)));
+        out.push(Msg::Browse(MsgBrowse::Select(Selection::Stack(
+            row.rel_path.clone(),
+        ))));
         ui.close();
     }
 

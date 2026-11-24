@@ -1,4 +1,5 @@
 //! The settings screen: tabs by domain, with the effective settings (read-only), the reading-speed test and more.
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, Grid, Key};
 use studyfrog_core::scheduler::scheduler_name;
@@ -89,7 +90,7 @@ fn view_tracking(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .checkbox(&mut on, "Record how long I look at items")
         .changed()
     {
-        out.push(Msg::SetTrackViews(on));
+        out.push(Msg::Vault(MsgVault::SetTrackViews(on)));
     }
     ui.weak("Used to tell how familiar you are with an item. Only the time and the item are stored, on this computer, and they are part of backups.");
 }
@@ -196,7 +197,7 @@ fn answer_comparison(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .selectable_label(state.app.answer_engine == engine, label)
                 .clicked()
             {
-                out.push(Msg::SetAnswerEngine(engine));
+                out.push(Msg::Vault(MsgVault::SetAnswerEngine(engine)));
             }
         }
     });

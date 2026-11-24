@@ -1,5 +1,8 @@
 //! Performing effects. No egui here: the runtime thread and the tests both call [`execute`].
 //! The use cases themselves live in `studyfrog-service`; this only turns results into messages.
+use crate::effect::EffectAssistant;
+use crate::msg::MsgRehearsal;
+use crate::msg::MsgVault;
 
 use std::path::PathBuf;
 
@@ -9,7 +12,6 @@ use studyfrog_rehearsal::queue::candidate::budget_unlimited;
 use studyfrog_service::queue::{NewRun, preview_queue};
 use studyfrog_service::session::{VaultSession, current_settings, open_vault};
 use studyfrog_service::timezone::local_day_window;
-use studyfrog_service::track::create_card_tracked;
 use studyfrog_slm::models::Opened;
 
 use studyfrog_ext::types::Registry;
@@ -22,9 +24,7 @@ use studyfrog_store::overview::search_items;
 use crate::chrome::{ChromeMsg, MAX_RESULTS};
 use crate::effect::Effect;
 use crate::msg::Msg;
-use crate::{
-    exec_agent, exec_backup, exec_doc, exec_import, exec_pdf, exec_plan, exec_profile, exec_run,
-};
+use crate::{exec_agent, exec_doc, exec_pdf, exec_plan, exec_run};
 
 /// Executor state: where per-user settings live and which vault is open.
 pub struct Worker {
@@ -60,112 +60,45 @@ pub struct Worker {
 
 pub use crate::exec_worker::{worker_new, worker_with_host};
 
+mod areas;
 mod mock;
 
 /// Perform one effect and report what happened. `now_ns` is the current Unix time in nanoseconds.
 pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
     let msg = match effect {
-        Effect::LoadAppSettings => return exec_profile::startup(w),
-        Effect::CreateProfile(name) => exec_profile::create(w, &name),
-        Effect::SwitchProfile(name) => exec_profile::switch(w, &name),
-        Effect::DeleteProfile(name) => exec_profile::delete(w, &name),
-        Effect::PickImportFile => exec_import::pick_file(w),
-        Effect::ImportFile { folder, path } => exec_import::import_file(w, &folder, &path, now_ns),
-        Effect::CreateFromType {
-            folder,
-            type_id,
-            source,
-        } => exec_import::from_card_type(w, &folder, &type_id, &source, now_ns),
-        Effect::PickVaultFolder => Msg::VaultFolderPicked(
-            w.folder_picker
-                .and_then(|pick| pick())
-                .map(|p| p.display().to_string()),
-        ),
-        Effect::OpenVault(path) => open(w, &path),
-        Effect::PollVault => exec_doc::poll(w, now_ns),
-        Effect::CheckReminders => exec_plan::reminders(w, now_ns),
-        Effect::PeekReminders => exec_plan::peek_reminders(w, now_ns),
-        Effect::SaveAppSettings(settings) => save_settings(w, &settings),
-        Effect::LoadItems(selection) => crate::exec_items::items(w, &selection),
-        Effect::RecordView(v) => return crate::exec_items::record_view(w, v, now_ns),
-        Effect::LoadLibrary => crate::exec_items::library(w, now_ns),
+        Effect::Vault(e) => return areas::vault(w, e, now_ns),
+        Effect::Backup(e) => return areas::backup(w, e, now_ns),
+        Effect::Import(e) => return areas::import(w, e, now_ns),
+        Effect::Browse(e) => return areas::browse(w, e, now_ns),
+        Effect::Editor(e) => return areas::editor(w, e, now_ns),
+        Effect::Rehearsal(e) => return areas::rehearsal(w, e, now_ns),
+        Effect::Planner(e) => return areas::planner(w, e, now_ns),
+        Effect::Reports(e) => return areas::reports(w, e, now_ns),
         Effect::Library(e) => crate::exec_library::run(w, e, now_ns),
         Effect::StackMark(e) => return crate::exec_mark::execute(w, e, now_ns),
         Effect::Folders(e) => return crate::exec_folders::execute(w, e, now_ns),
         Effect::Notifications(op) => return crate::exec_items::notifications(w, op, now_ns),
-        Effect::LoadStatusCounts(selection) => crate::exec_items::counts(w, &selection),
         Effect::Answer(crate::run_state::AnswerEffect::Record { run, item, scored }) => {
             crate::exec_run::record_case(w, run, item, &scored, now_ns)
         }
         Effect::MockExam(e) => mock::run(w, e, now_ns),
         Effect::Learn(e) => crate::exec_learn::run(w, e, now_ns),
         Effect::Console(e) => console::run(w, e, now_ns),
-        Effect::LoadCases(folder) => crate::exec_library::load_cases(w, folder),
-        Effect::SetCalibratedStart(on) => crate::exec_library::set_calibrated_start(w, on),
-        Effect::MemoryDeck(folder) => crate::exec_items::memory_deck(w, folder),
-        Effect::PreviewQueue { plan, mode } => preview(w, plan, mode, now_ns),
-        Effect::StartRun { plan, mode } => exec_run::start(w, plan, mode, now_ns),
-        Effect::LoadGraph => exec_doc::load_graph_msg(w),
-        Effect::LoadSessions => return exec_plan::load_sessions(w, now_ns),
         Effect::LoadHomework => return crate::exec_homework::load(w, now_ns),
         Effect::Homework(e) => crate::exec_homework::execute(w, e, now_ns),
         Effect::Reviews(e) => exec_plan::reviews_effect(w, e, now_ns),
-        Effect::SaveSession(s) => exec_plan::save(w, s, now_ns),
-        Effect::DeleteSession(id) => exec_plan::delete(w, id),
-        Effect::CancelOccurrence(id, date) => exec_plan::skip(w, id, date),
-        Effect::SaveTimetable(entry) => exec_plan::save_timetable(w, entry, now_ns),
-        Effect::DeleteTimetable(id) => exec_plan::delete_timetable(w, id),
-        Effect::SearchItems(query) => search(w, query),
         Effect::Help(e) => crate::exec_help::run(w, e),
         Effect::Prompts(e) => crate::exec_prompts::run(w, e),
         Effect::Diary(e) => return crate::exec_diary::execute(w, e, now_ns),
-        Effect::LoadHome => exec_run::home(w, now_ns),
         Effect::Agent(e) => crate::exec_mcp::run(w, e, now_ns),
-        e @ (Effect::LoadAgent
-        | Effect::SaveConnection { .. }
-        | Effect::PrepareWiki { .. }
-        | Effect::AgentChat { .. }
-        | Effect::ApplyChanges(_)
-        | Effect::PrepareExam { .. }
-        | Effect::RecordExam(_)) => exec_agent::run(w, e, now_ns),
-        Effect::Backup { include_keys } => exec_backup::backup(w, include_keys, now_ns),
-        Effect::ChooseBackup => exec_backup::choose(w),
-        Effect::Restore {
-            archive,
-            with_settings,
-        } => exec_backup::restore(w, &archive, with_settings),
-        Effect::AddImage(target) => exec_import::add_image(w, target),
-        Effect::LoadSubjects => exec_doc::subjects(w, None),
-        Effect::SaveSubjects(book) => exec_doc::subjects(w, Some(book)),
-        Effect::LoadBacklinks(uid, title) => return exec_doc::item_extras(w, uid, &title, now_ns),
-        Effect::CreateItem {
-            kind,
-            title,
-            text,
-            answer,
-            tags,
-            parent,
-            also_in,
-            due,
-            choices,
-        } => exec_import::create_item(
-            w,
-            kind,
-            [&title, &text, &answer],
-            (&tags, parent.as_deref(), also_in.as_deref(), due.as_ref()),
-            choices,
-            now_ns,
-        ),
+        e @ (Effect::Assistant(EffectAssistant::LoadAgent)
+        | Effect::Assistant(EffectAssistant::SaveConnection { .. })
+        | Effect::Assistant(EffectAssistant::PrepareWiki { .. })
+        | Effect::Assistant(EffectAssistant::AgentChat { .. })
+        | Effect::Assistant(EffectAssistant::ApplyChanges(_))
+        | Effect::Assistant(EffectAssistant::PrepareExam { .. })
+        | Effect::Assistant(EffectAssistant::RecordExam(_))) => exec_agent::run(w, e, now_ns),
         Effect::Pdf(e) => exec_pdf::run(w, e, now_ns),
-        Effect::BuildReports => exec_run::reports(w, now_ns),
-        Effect::Explore { scope, period } => exec_run::explorer(w, (scope, period), now_ns),
-        Effect::CheckAchievements => exec_run::achievements(w, now_ns),
-        Effect::LoadBoard => exec_plan::load_board(w, now_ns),
-        Effect::BoardCommand(op) => exec_plan::board_command(w, &op, now_ns),
-        Effect::LoadDocument(uid) => exec_doc::load_document_msg(w, uid),
-        Effect::SaveDocument { path, doc, hash } => {
-            exec_doc::save_document_msg(w, &path, &doc, hash, now_ns)
-        }
         Effect::RehearsalEdit(crate::rehearsal_edit::RehearsalEditEffect::Load(uid)) => {
             exec_doc::load_rehearsal_doc_msg(w, uid)
         }
@@ -179,9 +112,6 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             uid,
             comment,
         )) => exec_doc::append_rehearsal_comment_msg(w, uid, comment, now_ns),
-        Effect::ResolveLink(target) => exec_doc::resolve_link_msg(w, target),
-        Effect::Rerate { item, expected, to } => exec_run::rerate(w, item, expected, to),
-        Effect::LoadItem(uid) => exec_run::load_item(w, uid),
         Effect::Exam(e) => crate::exec_exam::execute(w, e, now_ns),
         Effect::Answer(crate::run_state::AnswerEffect::Score {
             run,
@@ -189,15 +119,6 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             answer,
             words_only,
         }) => exec_run::score(w, (run, item), &answer, words_only, now_ns),
-        Effect::RecordStep { ctx, out } => exec_run::record(w, &ctx, &out, now_ns),
-        Effect::CreateCard {
-            folder,
-            title,
-            front,
-            back,
-        } => exec_import::create(w, now_ns, |s, i| {
-            create_card_tracked(s, (&folder, &title, &front, &back), i)
-        }),
     };
     vec![msg]
 }
@@ -207,23 +128,25 @@ fn save_settings(w: &Worker, settings: &AppSettings) -> Msg {
         Some(dir) => write_app_settings(dir, settings).map_err(|e| e.to_string()),
         None => Ok(()),
     };
-    Msg::AppSettingsSaved(result)
+    Msg::Vault(MsgVault::AppSettingsSaved(result))
 }
 
 fn open(w: &mut Worker, path: &str) -> Msg {
     match open_vault(path) {
         Ok((session, info)) => {
             w.session = Some(session);
-            Msg::VaultOpened(Ok(info))
+            Msg::Vault(MsgVault::VaultOpened(Ok(info)))
         }
-        Err(e) => Msg::VaultOpened(Err(e.to_string())),
+        Err(e) => Msg::Vault(MsgVault::VaultOpened(Err(e.to_string()))),
     }
 }
 
 /// Count the items a run would contain. Daily limits count from the start of the local day.
 fn preview(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
     let Some(session) = &w.session else {
-        return Msg::PreviewReady(Err("no vault is open".to_owned()));
+        return Msg::Rehearsal(MsgRehearsal::PreviewReady(Err(
+            "no vault is open".to_owned()
+        )));
     };
     let now_ms = now_ns / 1_000_000;
     let day = local_day_window(UnixMs(now_ms));
@@ -235,9 +158,9 @@ fn preview(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
         day,
         global_budget: budget_unlimited(),
     };
-    Msg::PreviewReady(
+    Msg::Rehearsal(MsgRehearsal::PreviewReady(
         preview_queue(&session.conn, req, &current_settings(session)).map_err(|e| e.to_string()),
-    )
+    ))
 }
 
 /// Find items by title for the global search.

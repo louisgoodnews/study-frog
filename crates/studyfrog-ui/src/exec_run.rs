@@ -1,4 +1,6 @@
 //! Effects of a rehearsal run: create it, load item content, save steps.
+use crate::msg::MsgRehearsal;
+use crate::msg::MsgReports;
 
 use studyfrog_core::plan::RunPlan;
 use studyfrog_core::review::Rating;
@@ -31,7 +33,7 @@ fn millis(now_ns: i64) -> i64 {
 /// Create and store a run.
 pub fn start(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
     let Some(session) = &w.session else {
-        return Msg::RunReady(Err("no vault is open".to_owned()));
+        return Msg::Rehearsal(MsgRehearsal::RunReady(Err("no vault is open".to_owned())));
     };
     let now_ms = millis(now_ns);
     let result = fresh_id_source(u64::try_from(now_ms).unwrap_or(0)).and_then(|ids| {
@@ -44,7 +46,7 @@ pub fn start(w: &Worker, plan: RunPlan, mode: RunMode, now_ns: i64) -> Msg {
             ids,
         )
     });
-    Msg::RunReady(result.map_err(|e| e.to_string()))
+    Msg::Rehearsal(MsgRehearsal::RunReady(result.map_err(|e| e.to_string())))
 }
 
 /// Start a practice run of exactly `items`.
@@ -63,28 +65,35 @@ pub fn drill(
             ids,
         )
     });
-    Msg::RunReady(result.map_err(|e| e.to_string()))
+    Msg::Rehearsal(MsgRehearsal::RunReady(result.map_err(|e| e.to_string())))
 }
 
 /// Read an item's content.
 pub fn load_item(w: &Worker, uid: Uid) -> Msg {
     match &w.session {
-        Some(session) => Msg::ItemLoaded(
+        Some(session) => Msg::Rehearsal(MsgRehearsal::ItemLoaded(
             uid,
             load_item_content(session, uid).map_err(|e| e.to_string()),
-        ),
-        None => Msg::ItemLoaded(uid, Err("no vault is open".to_owned())),
+        )),
+        None => Msg::Rehearsal(MsgRehearsal::ItemLoaded(
+            uid,
+            Err("no vault is open".to_owned()),
+        )),
     }
 }
 
 /// Save one engine step.
 pub fn record(w: &mut Worker, ctx: &StepContext, out: &StepOutput, now_ns: i64) -> Msg {
     let Some(session) = &mut w.session else {
-        return Msg::StepRecorded(Err("no vault is open".to_owned()));
+        return Msg::Rehearsal(MsgRehearsal::StepRecorded(Err(
+            "no vault is open".to_owned()
+        )));
     };
     let vault = current_settings(session);
     let result = record_step(&mut session.conn, ctx, out, UnixMs(millis(now_ns)), &vault);
-    Msg::StepRecorded(result.map_err(|e| e.to_string()))
+    Msg::Rehearsal(MsgRehearsal::StepRecorded(
+        result.map_err(|e| e.to_string()),
+    ))
 }
 
 /// Compare a typed answer with the item's reference (offline, with the built-in lexical runtime).
@@ -118,7 +127,7 @@ pub fn score(
         }
         None => Err("no vault is open".to_owned()),
     };
-    Msg::AnswerScored(uid, result)
+    Msg::Rehearsal(MsgRehearsal::AnswerScored(uid, result))
 }
 
 /// Store the comparison with its run; a failure is noted in the engine text, never hidden.
@@ -138,7 +147,7 @@ pub fn rerate(w: &mut Worker, item: Uid, expected: Rating, to: Rating) -> Msg {
         Some(session) => rerate_latest(session, item, expected, to).map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
     };
-    Msg::Rerated(item, result)
+    Msg::Rehearsal(MsgRehearsal::Rerated(item, result))
 }
 
 /// Measure the achievements at the current local time.
@@ -150,7 +159,7 @@ pub fn achievements(w: &mut Worker, now_ns: i64) -> Msg {
         }
         None => Err("no vault is open".to_owned()),
     };
-    Msg::AchievementsChecked(result)
+    Msg::Reports(MsgReports::AchievementsChecked(result))
 }
 
 /// Compute the reports at the current local time.
@@ -162,7 +171,7 @@ pub fn reports(w: &Worker, now_ns: i64) -> Msg {
             .map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
     };
-    Msg::ReportsBuilt(result)
+    Msg::Reports(MsgReports::ReportsBuilt(result))
 }
 
 /// Read the home screen's numbers at the current local time.

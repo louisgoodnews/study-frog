@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! UI tests for Diary Settings and effects.
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -18,7 +19,7 @@ use studyfrog_ui::state::Screen;
 #[test]
 fn save_and_delete_entry_effects() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Diary));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Diary)));
     apply(
         &mut m,
         Msg::Diary(DiaryMsg::NewEntry(Date {
@@ -58,7 +59,7 @@ fn settings_toggle_and_home_hint() {
     assert!(m.state.diary.hint_dismissed);
 
     // Settings screen Diary tab
-    apply(&mut m, Msg::Navigate(Screen::Settings));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Settings)));
     apply(
         &mut m,
         Msg::SettingsTab(SettingsTabMsg::Select(SettingsTab::Diary)),

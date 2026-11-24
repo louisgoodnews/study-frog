@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The help screen's logic: the page for each screen, links, back, search and the user's pages.
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -66,7 +67,11 @@ fn help_opens_without_a_vault_at_the_page_of_the_screen_and_returns() {
 #[test]
 fn links_open_pages_back_goes_back_and_leave_returns_to_the_screen() {
     let (_v, mut m, mut w) = opened("help-links");
-    send(&mut m, &mut w, Msg::Navigate(Screen::Calendar));
+    send(
+        &mut m,
+        &mut w,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     send(&mut m, &mut w, Msg::Help(HelpMsg::ForScreen));
     assert_eq!(m.state.help.page, Some(supplied("calendar")));
     assert_eq!(m.state.help.came_from, Some(Screen::Calendar));
@@ -165,7 +170,10 @@ fn the_assistant_reads_the_user_pages_only_when_asked_and_shows_them_before_send
     use studyfrog_service::agent_vault::WikiContext;
     use studyfrog_ui::agent_types::AgentMsg;
     let mut m = Model::default();
-    apply(&mut m, Msg::VaultOpened(Ok(common::views::info())));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::VaultOpened(Ok(common::views::info()))),
+    );
     let page = studyfrog_service::help::UserPage {
         file: "Mine".into(),
         text: "# Mine".into(),
@@ -179,6 +187,6 @@ fn the_assistant_reads_the_user_pages_only_when_asked_and_shows_them_before_send
     let pending = m.state.agent.pending.clone().unwrap();
     assert_eq!(pending.items.len(), 1);
     assert_eq!(pending.items[0].uid, "help:Mine");
-    let fx = apply(&mut m, Msg::Navigate(Screen::Agent));
+    let fx = apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Agent)));
     assert!(fx.contains(&Effect::Help(HelpEffect::Load)), "read fresh");
 }

@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The memory game from the rehearse setup: it plays the stack ticked in the What step (BUG-0024),
 //! names the stack when it has too few cards, replays its own stack, and a timeout shows the cards.
+use studyfrog_ui::effect::EffectBrowse;
 
 mod common;
 
@@ -52,7 +53,9 @@ fn the_memory_game_plays_the_stack_ticked_in_the_setup() {
     state.browser.selection = Selection::Stack("bio".to_owned());
     let (_, effects) = send(state, MemoryMsg::Start);
     assert!(
-        effects.contains(&Effect::MemoryDeck(Some("diag".to_owned()))),
+        effects.contains(&Effect::Browse(EffectBrowse::MemoryDeck(Some(
+            "diag".to_owned()
+        )))),
         "{effects:?}"
     );
 }
@@ -61,7 +64,9 @@ fn the_memory_game_plays_the_stack_ticked_in_the_setup() {
 fn the_stack_page_game_still_plays_its_own_stack_over_a_ticked_one() {
     let (_, effects) = send(with_diag_ticked(), MemoryMsg::StartStack("bio".to_owned()));
     assert!(
-        effects.contains(&Effect::MemoryDeck(Some("bio".to_owned()))),
+        effects.contains(&Effect::Browse(EffectBrowse::MemoryDeck(Some(
+            "bio".to_owned()
+        )))),
         "{effects:?}"
     );
 }
@@ -82,7 +87,9 @@ fn play_again_replays_the_same_stack_not_the_current_pick() {
     state.browser.selection = Selection::Stack("bio".to_owned());
     let (_, effects) = send(state, MemoryMsg::Again);
     assert!(
-        effects.contains(&Effect::MemoryDeck(Some("diag".to_owned()))),
+        effects.contains(&Effect::Browse(EffectBrowse::MemoryDeck(Some(
+            "diag".to_owned()
+        )))),
         "{effects:?}"
     );
 }

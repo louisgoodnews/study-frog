@@ -1,5 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The navigation history: places are noted as the user moves, Back, Forward and a jump return to them.
+use studyfrog_ui::effect::EffectEditor;
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgEditor;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -24,10 +28,13 @@ fn places(m: &Model) -> Vec<Place> {
 #[test]
 fn places_are_noted_in_order_and_repeats_are_not() {
     let mut m = open_model(); // opens the vault (Home) and goes to the Library
-    apply(&mut m, Msg::Navigate(Screen::Calendar));
-    apply(&mut m, Msg::Navigate(Screen::Calendar));
-    apply(&mut m, Msg::Navigate(Screen::Library));
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Calendar)));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Calendar)));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Library)));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     assert_eq!(
         places(&m),
         [
@@ -45,9 +52,12 @@ fn places_are_noted_in_order_and_repeats_are_not() {
 #[test]
 fn back_and_forward_walk_the_places_without_adding_new_ones() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Calendar));
-    apply(&mut m, Msg::Navigate(Screen::Library));
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Calendar)));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Library)));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     let before = places(&m); // Home, Library, Calendar, Library, French
     go(&mut m, HistoryMsg::Back);
     assert_eq!(m.state.screen, Screen::Library);
@@ -70,11 +80,11 @@ fn back_and_forward_walk_the_places_without_adding_new_ones() {
 #[test]
 fn going_somewhere_new_after_back_drops_the_places_ahead() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Calendar));
-    apply(&mut m, Msg::Navigate(Screen::Board));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Calendar)));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Board)));
     go(&mut m, HistoryMsg::Back);
     go(&mut m, HistoryMsg::Back);
-    apply(&mut m, Msg::Navigate(Screen::Reports));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Reports)));
     assert_eq!(
         places(&m),
         [
@@ -89,8 +99,8 @@ fn going_somewhere_new_after_back_drops_the_places_ahead() {
 #[test]
 fn a_jump_goes_straight_to_a_place_and_only_fifty_are_kept() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Calendar));
-    apply(&mut m, Msg::Navigate(Screen::Board));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Calendar)));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Board)));
     go(&mut m, HistoryMsg::Go(0));
     assert_eq!((m.state.screen, m.state.history.at), (Screen::Home, 0));
     go(&mut m, HistoryMsg::Go(99));
@@ -101,7 +111,7 @@ fn a_jump_goes_straight_to_a_place_and_only_fifty_are_kept() {
         } else {
             Screen::Calendar
         };
-        apply(&mut m, Msg::Navigate(screen));
+        apply(&mut m, Msg::Vault(MsgVault::Navigate(screen)));
     }
     assert_eq!(m.state.history.entries.len(), MAX);
     assert_eq!(m.state.history.at, MAX - 1);
@@ -110,11 +120,11 @@ fn a_jump_goes_straight_to_a_place_and_only_fifty_are_kept() {
 #[test]
 fn a_new_vault_starts_a_new_history() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Calendar));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Calendar)));
     assert!(m.state.history.entries.len() >= 3);
     let mut other = common::views::info();
     other.root = "/v/other".into();
-    apply(&mut m, Msg::VaultOpened(Ok(other)));
+    apply(&mut m, Msg::Vault(MsgVault::VaultOpened(Ok(other))));
     assert_eq!(places(&m), [Place::Screen(Screen::Home)]);
 }
 
@@ -122,23 +132,31 @@ fn a_new_vault_starts_a_new_history() {
 fn items_are_remembered_with_their_titles_and_reopened_and_unsaved_changes_are_saved_before_leaving()
  {
     let (_v, mut m, mut w) = opened("history-items");
-    send(&mut m, &mut w, Msg::OpenItem(Uid(12)));
+    send(&mut m, &mut w, Msg::Browse(MsgBrowse::OpenItem(Uid(12))));
     let item = Place::Item(Uid(12));
     assert_eq!(places(&m).last(), Some(&item));
     assert_eq!(label(&m.state, &item), "Item: C");
-    send(&mut m, &mut w, Msg::Navigate(Screen::Calendar));
+    send(
+        &mut m,
+        &mut w,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     let fx = go(&mut m, HistoryMsg::Back);
     common::run_to_idle(&mut m, &mut w, fx);
     assert_eq!(m.state.screen, Screen::Editor, "the item is open again");
     let n = places(&m).len();
     apply(
         &mut m,
-        Msg::Edit(studyfrog_ui::msg::EditAction::Title("changed".into())),
+        Msg::Editor(MsgEditor::Edit(studyfrog_ui::msg::EditAction::Title(
+            "changed".into(),
+        ))),
     );
     let fx = go(&mut m, HistoryMsg::Go(0));
     assert!(
-        fx.iter()
-            .any(|e| matches!(e, studyfrog_ui::effect::Effect::SaveDocument { .. })),
+        fx.iter().any(|e| matches!(
+            e,
+            studyfrog_ui::effect::Effect::Editor(EffectEditor::SaveDocument { .. })
+        )),
         "the changes are saved first"
     );
     assert_eq!(m.state.screen, Screen::Editor, "and the jump waits for it");
@@ -151,7 +169,7 @@ fn items_are_remembered_with_their_titles_and_reopened_and_unsaved_changes_are_s
 fn the_bar_has_back_forward_and_a_history_list_that_jumps() {
     let mut m = open_model();
     m.state.toasts.clear();
-    apply(&mut m, Msg::Navigate(Screen::Calendar));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Calendar)));
     let mut h = harness(m);
     h.run();
     assert!(h.query_by_label("Forward (Alt+Right)").is_some());
@@ -178,7 +196,7 @@ fn alt_left_and_alt_right_go_back_and_forward() {
     use eframe::egui::{Key, Modifiers};
     let mut m = open_model();
     m.state.toasts.clear();
-    apply(&mut m, Msg::Navigate(Screen::Calendar));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Calendar)));
     let mut h = harness(m);
     h.run();
     h.key_press_modifiers(Modifiers::ALT, Key::ArrowLeft);

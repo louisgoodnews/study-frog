@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! STORY-0114 drawn: prose on a help page and in a rehearsal card never runs wider than the reading measure.
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 
@@ -66,7 +67,10 @@ fn a_long_answer_in_a_run_keeps_to_about_one_and_a_half_measures() {
         is_note: false,
         comments: Vec::new(),
     };
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(content))),
+    );
     let mut h = harness(m);
     h.set_size(eframe::egui::vec2(1600.0, 900.0));
     h.run();

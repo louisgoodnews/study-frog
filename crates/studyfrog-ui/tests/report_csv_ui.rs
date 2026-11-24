@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Exporting the reports as CSV: the button, and the file the worker writes into the vault.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 
@@ -39,7 +40,7 @@ fn the_worker_writes_the_csv_into_the_exports_folder_of_the_vault() {
     let mut worker = worker_new(None);
     execute(
         &mut worker,
-        Effect::OpenVault(vault.path.display().to_string()),
+        Effect::Vault(EffectVault::OpenVault(vault.path.display().to_string())),
         NOW_NS,
     );
     let job = Effect::Library(LibraryEffect::Transfer(TransferJob::ReportCsv(false)));
@@ -98,7 +99,7 @@ fn save_to_asks_for_a_folder_and_writes_the_stacks_and_totals_there() {
     assert!(h.state().1.contains(&to));
     let vault = sample_vault("report-csv-to");
     let mut worker = worker_new(None);
-    let open = Effect::OpenVault(vault.path.display().to_string());
+    let open = Effect::Vault(EffectVault::OpenVault(vault.path.display().to_string()));
     execute(&mut worker, open, NOW_NS);
     worker.folder_picker = Some(chosen_folder);
     let msgs = execute(&mut worker, to.clone(), NOW_NS);

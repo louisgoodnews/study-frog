@@ -1,4 +1,7 @@
 //! The Import dialog: cards from a card type an extension registered, and from a file with a registered importer.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgImport;
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, RichText, vec2};
 
@@ -27,7 +30,9 @@ fn card_types(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         for (id, name, _) in &state.extensions.card_types {
             let on = chosen.as_deref() == Some(id);
             if ui.selectable_label(on, name).clicked() {
-                out.push(Msg::CardTypeChosen((!on).then(|| id.clone())));
+                out.push(Msg::Vault(MsgVault::CardTypeChosen(
+                    (!on).then(|| id.clone()),
+                )));
             }
         }
     });
@@ -40,7 +45,7 @@ fn card_types(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.weak(hint);
     ui.add_space(4.0);
     if let Some(text) = text_field(ui, "Source text", &state.browser.draft.front, "", 4) {
-        out.push(Msg::DraftEdited(DraftField::Front, text));
+        out.push(Msg::Browse(MsgBrowse::DraftEdited(DraftField::Front, text)));
     }
     ui.add_space(6.0);
     if ui
@@ -48,7 +53,7 @@ fn card_types(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .on_hover_text("Makes cards from the text.")
         .clicked()
     {
-        out.push(Msg::AddCardClicked);
+        out.push(Msg::Browse(MsgBrowse::AddCardClicked));
     }
 }
 
@@ -68,7 +73,7 @@ fn from_file(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         "/path/to/cards.csv or .tsv",
         1,
     ) {
-        out.push(Msg::ImportPathEdited(text));
+        out.push(Msg::Import(MsgImport::ImportPathEdited(text)));
     }
     ui.add_space(6.0);
     ui.horizontal(|ui| {
@@ -77,7 +82,7 @@ fn from_file(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .on_hover_text("Opens a dialog to pick a file or folder.")
             .clicked()
         {
-            out.push(Msg::BrowseImportClicked);
+            out.push(Msg::Import(MsgImport::BrowseImportClicked));
         }
         ui.add_space(6.0);
         if ui
@@ -85,7 +90,7 @@ fn from_file(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .on_hover_text("Imports the cards from the file.")
             .clicked()
         {
-            out.push(Msg::ImportClicked);
+            out.push(Msg::Import(MsgImport::ImportClicked));
         }
     });
 }

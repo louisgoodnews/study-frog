@@ -1,5 +1,6 @@
 //! Setting or changing a stack's due date: it opens the calendar form on the stack's deadline entry
 //! (or on a new one), so the date picker and the reminders are the same as anywhere else. Pure.
+use crate::effect::EffectPlanner;
 
 use studyfrog_calendar::session::{EventKind, Session};
 use studyfrog_core::civil::{Date, add_days};
@@ -67,7 +68,10 @@ pub fn set_due_date(
             reminders.dedup();
             session.start.date = d;
             session.reminders = reminders;
-            (state, vec![Effect::SaveSession(session)])
+            (
+                state,
+                vec![Effect::Planner(EffectPlanner::SaveSession(session))],
+            )
         }
         (None, Some(d)) => {
             if reminders.is_empty() {
@@ -97,9 +101,15 @@ pub fn set_due_date(
                 kind: EventKind::Deadline,
                 reminders,
             };
-            (state, vec![Effect::SaveSession(session)])
+            (
+                state,
+                vec![Effect::Planner(EffectPlanner::SaveSession(session))],
+            )
         }
-        (Some(entry), None) => (state, vec![Effect::DeleteSession(entry.id)]),
+        (Some(entry), None) => (
+            state,
+            vec![Effect::Planner(EffectPlanner::DeleteSession(entry.id))],
+        ),
         (None, None) => (state, Vec::new()),
     }
 }

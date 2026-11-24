@@ -1,4 +1,5 @@
 //! Results of work done for a run after the fact: answer comparisons and changed ratings. Pure.
+use crate::effect::EffectReports;
 
 use studyfrog_rehearsal::session::current_item;
 
@@ -70,7 +71,10 @@ pub fn rerated(
                 r.applied.insert(uid);
                 r
             });
-            (state, vec![Effect::CheckAchievements])
+            (
+                state,
+                vec![Effect::Reports(EffectReports::CheckAchievements)],
+            )
         }
         Err(e) => error(state, format!("Could not change the rating: {e}")),
     }

@@ -3,6 +3,7 @@
 //! A visit starts when an item opens on the item page and ends when another item, another screen or no
 //! item is shown. Time counts only while the user is active: once nothing has been touched for
 //! [`IDLE_SECS`], the clock stops until the next input. Visits shorter than [`MIN_VIEW_MS`] are dropped.
+use crate::effect::EffectRehearsal;
 
 use studyfrog_core::uid::Uid;
 use studyfrog_core::views::ViewKind;
@@ -106,19 +107,19 @@ fn recorded(t: &ViewTracker) -> Vec<Effect> {
     if active_ms < MIN_VIEW_MS {
         return Vec::new();
     }
-    let mut out = vec![Effect::RecordView(ViewRecord {
+    let mut out = vec![Effect::Rehearsal(EffectRehearsal::RecordView(ViewRecord {
         item: t.uid,
         kind: ViewKind::View,
         active_ms,
         expected_ms: t.expected_ms,
-    })];
+    }))];
     if t.edited {
-        out.push(Effect::RecordView(ViewRecord {
+        out.push(Effect::Rehearsal(EffectRehearsal::RecordView(ViewRecord {
             item: t.uid,
             kind: ViewKind::Edit,
             active_ms,
             expected_ms: t.expected_ms,
-        }));
+        })));
     }
     out
 }

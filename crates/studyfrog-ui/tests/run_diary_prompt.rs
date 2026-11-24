@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 //! Tests for TASK-0173: Post-rehearsal diary prompt on the run summary screen.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -147,13 +149,13 @@ fn submitting_creates_diary_entry_linking_run_and_items() {
     let mut worker = worker_new(None);
     let msgs = execute(
         &mut worker,
-        Effect::OpenVault(dir.path.to_string_lossy().into()),
+        Effect::Vault(EffectVault::OpenVault(dir.path.to_string_lossy().into())),
         1000,
     );
-    assert!(
-        msgs.iter()
-            .any(|m| matches!(m, studyfrog_ui::msg::Msg::VaultOpened(Ok(_))))
-    );
+    assert!(msgs.iter().any(|m| matches!(
+        m,
+        studyfrog_ui::msg::Msg::Vault(MsgVault::VaultOpened(Ok(_)))
+    )));
 
     let save_msgs = execute(
         &mut worker,

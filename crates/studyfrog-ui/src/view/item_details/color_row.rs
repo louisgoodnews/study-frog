@@ -1,5 +1,6 @@
 //! The Color row of the Properties tab (STORY-0097, STORY-0123): None, the palette swatches, a
 //! colour picker and a `#RRGGBB` field for any other colour.
+use crate::msg::MsgEditor;
 
 use eframe::egui::{self, Button, Role, Stroke, WidgetInfo, vec2};
 use studyfrog_core::item_color::{PALETTE, color_hex, color_rgb, normalize_color};
@@ -10,7 +11,7 @@ use crate::msg::{EditAction, Msg};
 use crate::theme::palette_of;
 
 fn set(out: &mut Vec<Msg>, color: Option<String>) {
-    out.push(Msg::Edit(EditAction::Color(color)));
+    out.push(Msg::Editor(MsgEditor::Edit(EditAction::Color(color))));
 }
 
 /// One palette colour as a round swatch, ringed when chosen, named "Color: Sage" for screen readers.

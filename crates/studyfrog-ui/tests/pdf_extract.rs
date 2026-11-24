@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Notes made from PDF text, and the way back from the note to the page.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 #[path = "../../studyfrog-pdf/tests/common/mod.rs"]
@@ -32,7 +34,9 @@ fn viewer(label: &str) -> (common::TempDir, Model, Worker) {
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     send(
         &mut model,
@@ -125,14 +129,14 @@ fn an_item_made_from_a_pdf_page_links_back_to_it() {
     .unwrap();
     apply(
         &mut m,
-        Msg::DocumentLoaded(
+        Msg::Editor(MsgEditor::DocumentLoaded(
             Uid(0xA),
             Ok(LoadedDoc {
                 path: "s/n.md".into(),
                 doc,
                 hash: 1,
             }),
-        ),
+        )),
     );
     let mut h = harness(m);
     h.run_steps(2);

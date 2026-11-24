@@ -1,4 +1,5 @@
 //! Month calendar view of diary entries.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, RichText, Role, WidgetInfo, vec2};
 use studyfrog_core::civil::{Date, Weekday, format_date, month_grid};
@@ -176,7 +177,7 @@ fn day_entries_pane(state: &State, date: Date, ui: &mut egui::Ui, out: &mut Vec<
                         )
                     });
                     if open_btn.clicked() {
-                        out.push(Msg::OpenItem(entry.uid));
+                        out.push(Msg::Browse(MsgBrowse::OpenItem(entry.uid)));
                     }
 
                     let edit_btn = ui.button("Edit").on_hover_text("Opens this for editing.");

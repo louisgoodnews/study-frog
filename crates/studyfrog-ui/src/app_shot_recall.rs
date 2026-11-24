@@ -1,6 +1,9 @@
 //! Screens of the active-recall workflows for `--screenshot` (EPIC-035): `extract:<ULID>` (a note's page with
 //! its sync preview open), `focus` (the timer running on the home screen) and `focus-done` (a finished
 //! work block with its card). Also the memory game's demo screens (`memory-demo`, `memory-won`).
+use crate::msg::MsgBrowse;
+use crate::msg::MsgRehearsal;
+use crate::msg::MsgVault;
 
 pub mod mock;
 
@@ -23,7 +26,7 @@ pub fn setup(model: &mut Model, name: &str) -> Option<Vec<Effect>> {
     }
     let uid = studyfrog_md::ulid::parse_ulid(uid)?;
     match kind {
-        "extract" => Some(apply(model, Msg::OpenItem(uid))),
+        "extract" => Some(apply(model, Msg::Browse(MsgBrowse::OpenItem(uid)))),
         _ => None,
     }
 }
@@ -56,7 +59,7 @@ pub fn play(model: &mut Model, name: &str) -> Vec<Effect> {
     });
     if name == "run-answer" && ready {
         let flip = studyfrog_rehearsal::input::Action::Flip;
-        return apply(model, Msg::RunAction(flip));
+        return apply(model, Msg::Rehearsal(MsgRehearsal::RunAction(flip)));
     }
     Vec::new()
 }
@@ -69,7 +72,10 @@ fn focus(model: &mut Model, finished: bool) -> Vec<Effect> {
         .as_ref()
         .and_then(|v| v.overview.stacks.first());
     let stack = first.map(|s| s.folder.clone());
-    let mut fx = apply(model, Msg::Navigate(crate::state::Screen::Home));
+    let mut fx = apply(
+        model,
+        Msg::Vault(MsgVault::Navigate(crate::state::Screen::Home)),
+    );
     fx.extend(apply(model, msg(FocusMsg::Stack(stack.clone()))));
     fx.extend(apply(model, msg(FocusMsg::Start)));
     let f = &mut model.state.recall.focus;

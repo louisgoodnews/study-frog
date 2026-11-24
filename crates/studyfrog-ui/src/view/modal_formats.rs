@@ -1,4 +1,5 @@
 //! "Which files can I import?": every importer with the layout it expects, an example and a button to save it.
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, RichText};
 use studyfrog_service::xfer_adapters::{ADAPTERS, OBSIDIAN_LAYOUT};
@@ -63,7 +64,7 @@ fn prompt_buttons(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         {
             out.push(Msg::Agent(AgentMsg::Tab(AgentTab::Prompts)));
             out.push(Msg::Modal(ModalMsg::Close));
-            out.push(Msg::Navigate(Screen::Agent));
+            out.push(Msg::Vault(MsgVault::Navigate(Screen::Agent)));
         }
     });
 }

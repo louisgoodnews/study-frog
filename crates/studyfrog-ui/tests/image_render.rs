@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used, clippy::disallowed_methods)] // tests may panic; they wait for the loader thread
 //! A picture in a note really loads (with the app's image loaders installed) and one outside the
 //! vault is only named.
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -22,14 +23,14 @@ fn note_with(root: &str, text: &str) -> Model {
     .unwrap();
     apply(
         &mut m,
-        Msg::DocumentLoaded(
+        Msg::Editor(MsgEditor::DocumentLoaded(
             Uid(0xA),
             Ok(LoadedDoc {
                 path: "s/n.md".into(),
                 doc,
                 hash: 1,
             }),
-        ),
+        )),
     );
     m
 }

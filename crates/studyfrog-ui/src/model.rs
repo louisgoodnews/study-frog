@@ -1,5 +1,6 @@
 //! The model the app owns: state plus the frame bookkeeping, and the frame function that ties the
 //! views to `update`. No threads here, so tests can drive it frame by frame.
+use crate::msg::MsgVault;
 
 use std::time::Duration;
 
@@ -47,7 +48,7 @@ pub fn frame(model: &mut Model, ui: &mut egui::Ui) -> Vec<Effect> {
         &model.state,
     ));
     if ui.input(|i| !i.events.is_empty() || i.pointer.is_moving() || i.pointer.any_down()) {
-        msgs.push(Msg::Activity);
+        msgs.push(Msg::Vault(MsgVault::Activity));
     }
     let window = crate::window_watch::watch(
         &mut model.window_seen,
@@ -58,7 +59,7 @@ pub fn frame(model: &mut Model, ui: &mut egui::Ui) -> Vec<Effect> {
     msgs.extend(window.map(Msg::Appearance));
     if now - model.last_tick >= TICK_SECONDS {
         model.last_tick = now;
-        msgs.push(Msg::Tick);
+        msgs.push(Msg::Vault(MsgVault::Tick));
     }
     ui.ctx()
         .request_repaint_after(Duration::from_secs_f64(TICK_SECONDS));

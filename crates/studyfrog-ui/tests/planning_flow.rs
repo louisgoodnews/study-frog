@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The calendar and the board through update and the real executor, against a real vault.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -22,7 +24,11 @@ fn plan(model: &mut Model, worker: &mut Worker, m: PlanMsg) {
 #[test]
 fn a_session_is_planned_repeats_is_skipped_edited_and_deleted() {
     let (_vault, mut model, mut worker) = opened("cal");
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Calendar));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     let today = model.state.planner.today;
     assert!(model.state.planner.loaded && model.state.planner.sessions.is_empty());
     assert_eq!(model.state.planner.selected, today);
@@ -70,8 +76,16 @@ fn a_session_is_planned_repeats_is_skipped_edited_and_deleted() {
     let path = model.state.vault.as_ref().unwrap().root.clone();
     let mut again = worker_new(None);
     let mut fresh = Model::default();
-    run_to_idle(&mut fresh, &mut again, vec![Effect::OpenVault(path)]);
-    send(&mut fresh, &mut again, Msg::Navigate(Screen::Calendar));
+    run_to_idle(
+        &mut fresh,
+        &mut again,
+        vec![Effect::Vault(EffectVault::OpenVault(path))],
+    );
+    send(
+        &mut fresh,
+        &mut again,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     assert_eq!(fresh.state.planner.sessions.len(), 1);
 
     plan(&mut model, &mut worker, PlanMsg::Delete(id));
@@ -81,7 +95,11 @@ fn a_session_is_planned_repeats_is_skipped_edited_and_deleted() {
 #[test]
 fn a_bad_form_is_explained_and_nothing_is_stored() {
     let (_vault, mut model, mut worker) = opened("cal-bad");
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Calendar));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     plan(&mut model, &mut worker, PlanMsg::New);
     plan(
         &mut model,
@@ -114,7 +132,11 @@ fn a_bad_form_is_explained_and_nothing_is_stored() {
 #[test]
 fn starting_a_rehearsal_from_a_session_filters_to_its_stack() {
     let (_vault, mut model, mut worker) = opened("cal-run");
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Calendar));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     plan(&mut model, &mut worker, PlanMsg::New);
     plan(
         &mut model,

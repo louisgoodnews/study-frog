@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! STORY-0196: the rating button that matches an item's previous rating shows the difficulty it stood for,
 //! in its colour and with its word; an item with no previous rating shows no mark.
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 
@@ -34,7 +35,10 @@ fn the_previous_rating_shows_its_difficulty_on_the_matching_button() {
     let mut m = running_model(RunMode::Flip);
     apply(
         &mut m,
-        Msg::ItemLoaded(Uid(1), Ok(content(Some(Rating::Hard)))),
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(
+            Uid(1),
+            Ok(content(Some(Rating::Hard))),
+        )),
     );
     let mut h = harness(m);
     h.set_size(eframe::egui::vec2(1280.0, 800.0));
@@ -52,7 +56,10 @@ fn the_previous_rating_shows_its_difficulty_on_the_matching_button() {
 #[test]
 fn an_item_without_a_previous_rating_shows_no_mark() {
     let mut m = running_model(RunMode::Flip);
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content(None))));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(content(None)))),
+    );
     let mut h = harness(m);
     h.set_size(eframe::egui::vec2(1280.0, 800.0));
     h.run();
@@ -68,7 +75,10 @@ fn the_previous_mark_keeps_the_buttons_level_and_the_hints_on_screen() {
     let mut m = running_model(RunMode::Flip);
     apply(
         &mut m,
-        Msg::ItemLoaded(Uid(1), Ok(content(Some(Rating::Good)))),
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(
+            Uid(1),
+            Ok(content(Some(Rating::Good))),
+        )),
     );
     let mut h = harness(m);
     h.set_size(eframe::egui::vec2(1280.0, 800.0));

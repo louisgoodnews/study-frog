@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The search bar: Standard fields, the query box, errors, suggestions and the way between them.
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -45,7 +46,10 @@ fn standard_fields_narrow_the_list_together() {
     send(&mut m, SearchMsg::Status(Some(Status::Done)));
     assert_eq!(shown(&m), 0);
     send(&mut m, SearchMsg::Status(None));
-    apply(&mut m, Msg::SearchEdited("Item 7".into()));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::SearchEdited("Item 7".into())),
+    );
     assert_eq!(
         shown(&m),
         1,
@@ -81,7 +85,7 @@ fn query_mode_narrows_shows_errors_and_keeps_the_last_result() {
 #[test]
 fn standard_becomes_a_query_and_back() {
     let mut m = model();
-    apply(&mut m, Msg::SearchEdited("Item".into()));
+    apply(&mut m, Msg::Browse(MsgBrowse::SearchEdited("Item".into())));
     send(&mut m, SearchMsg::Kind(Some(ItemKind::Note)));
     send(&mut m, SearchMsg::Mode(true));
     let text = m.state.library.search.query.clone();

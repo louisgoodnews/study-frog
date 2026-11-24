@@ -1,4 +1,5 @@
 //! A stack's achievement summary on its page: how many are unlocked, linking to them.
+use crate::msg::MsgVault;
 
 use eframe::egui;
 use studyfrog_core::uid::Uid;
@@ -31,6 +32,6 @@ pub fn badge(state: &State, stack: Uid, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         out.push(Msg::Achievements(AchievementsMsg::Filter(Filter::Stack(
             key,
         ))));
-        out.push(Msg::Navigate(Screen::Achievements));
+        out.push(Msg::Vault(MsgVault::Navigate(Screen::Achievements)));
     }
 }

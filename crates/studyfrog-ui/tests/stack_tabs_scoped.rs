@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The Board, Calendar and Reports tabs of a stack show only its data; the tab bar folds the rest into More.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -28,7 +30,10 @@ fn item(n: u128, title: &str, status: Status, chain: &[&str]) -> LibraryItem {
 fn model(tab: &str) -> Model {
     let mut m = open_model();
     m.state.app.stack_tabs = vec![format!("french:{tab}")];
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     m
 }
 
@@ -94,11 +99,15 @@ fn the_calendar_tab_shows_only_the_stacks_sessions() {
 fn the_reports_tab_reads_the_reports_and_shows_the_stacks_familiarity() {
     let (_v, mut model, mut worker) = opened("stack-reports");
     model.state.app.stack_tabs = vec!["french:reports".into()];
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
     send(
         &mut model,
         &mut worker,
-        Msg::Select(Selection::Stack("french".into())),
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
     );
     assert!(
         model.state.reports.is_some(),

@@ -2,6 +2,7 @@
 //! justification, and the evaluation. The keyword check runs at once; a local model, when one is
 //! selected, checks the justification too and replaces that result when it answers. The rules are in
 //! `studyfrog-rehearsal::case_study`, the scoring in `studyfrog-agent::rubric_eval`. Pure.
+use crate::effect::EffectBrowse;
 
 use studyfrog_agent::rubric_eval::EvalReport;
 use studyfrog_core::uid::Uid;
@@ -142,7 +143,10 @@ fn open(state: State) -> (State, Vec<Effect>) {
         loading: true,
         ..CaseUi::default()
     };
-    (with_case(state, Some(cs)), vec![Effect::LoadCases(folder)])
+    (
+        with_case(state, Some(cs)),
+        vec![Effect::Browse(EffectBrowse::LoadCases(folder))],
+    )
 }
 
 fn loaded(cs: CaseUi, result: Result<Vec<(Uid, CaseStudyItem)>, String>) -> CaseUi {

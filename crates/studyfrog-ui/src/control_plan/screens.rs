@@ -1,6 +1,7 @@
 //! The plans of the board, diary and reports commands. Each opens its screen first (the screen loads
 //! its data in the background), then makes the clicks: a card's column and title, a new entry's
 //! fields and its save, the report tab.
+use crate::msg::MsgVault;
 
 use crate::control_cmd::Command;
 use crate::control_cmd::board::BoardCmd;
@@ -13,7 +14,7 @@ use crate::msg::Msg;
 use crate::state::Screen;
 
 fn open(screen: Screen) -> Vec<Msg> {
-    vec![Msg::Navigate(screen)]
+    vec![Msg::Vault(MsgVault::Navigate(screen))]
 }
 
 fn board(cmd: &BoardCmd) -> Result<Plan, String> {

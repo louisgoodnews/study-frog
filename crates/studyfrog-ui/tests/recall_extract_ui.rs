@@ -1,6 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! "Extract / Sync cards" on a note's page (STORY-0110): the button, the preview and the sync with the
 //! real worker.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -35,7 +38,10 @@ fn editing() -> Model {
         doc: parse_doc(&note_text()).unwrap(),
         hash: 1,
     };
-    apply(&mut m, Msg::DocumentLoaded(Uid(5), Ok(loaded)));
+    apply(
+        &mut m,
+        Msg::Editor(MsgEditor::DocumentLoaded(Uid(5), Ok(loaded))),
+    );
     m
 }
 
@@ -76,8 +82,12 @@ fn the_preview_lists_new_items_and_the_sync_writes_them_once() {
     let mut m = Model::default();
     m.state.app.tutorial_offered = true;
     let path = dir.path.display().to_string();
-    run_to_idle(&mut m, &mut w, vec![Effect::OpenVault(path)]);
-    send(&mut m, &mut w, Msg::OpenItem(Uid(5)));
+    run_to_idle(
+        &mut m,
+        &mut w,
+        vec![Effect::Vault(EffectVault::OpenVault(path))],
+    );
+    send(&mut m, &mut w, Msg::Browse(MsgBrowse::OpenItem(Uid(5))));
     let preview = RecallMsg::ExtractPreview(Uid(5), BODY.into());
     send(&mut m, &mut w, Msg::Recall(preview.clone()));
     let plan = m.state.recall.extract.plan.clone().expect("planned");

@@ -1,4 +1,5 @@
 //! The pacing choice of the run setup: no clock, a countdown with presets and a custom time, or a count up.
+use crate::msg::MsgRehearsal;
 
 use eframe::egui;
 
@@ -8,7 +9,7 @@ use crate::setup_pacing::{PRESET_MINUTES, PacingEdit, PacingKind};
 use crate::view::widgets::text_field;
 
 fn edit(out: &mut Vec<Msg>, e: PacingEdit) {
-    out.push(Msg::Setup(SetupEdit::Pacing(e)));
+    out.push(Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Pacing(e))));
 }
 
 /// The section.

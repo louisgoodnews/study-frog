@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Familiarity on the item page, read through the real worker.
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -28,7 +29,11 @@ fn the_item_page_shows_the_value_its_drivers_and_the_curve() {
         };
         insert_review_timed(conn, &r, None).unwrap();
     }
-    send(&mut model, &mut worker, Msg::OpenItem(Uid(10)));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Browse(MsgBrowse::OpenItem(Uid(10))),
+    );
     let curve = model
         .state
         .editor
@@ -48,7 +53,7 @@ fn the_item_page_shows_the_value_its_drivers_and_the_curve() {
     assert_all_named(&h, "item page with familiarity");
 
     let (_v2, mut m2, mut w2) = opened("fam-none");
-    send(&mut m2, &mut w2, Msg::OpenItem(Uid(11)));
+    send(&mut m2, &mut w2, Msg::Browse(MsgBrowse::OpenItem(Uid(11))));
     let mut h = harness(m2);
     h.run_steps(4);
     h.get_by_label("Learning").click();

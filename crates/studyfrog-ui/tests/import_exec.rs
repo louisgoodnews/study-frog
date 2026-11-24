@@ -1,5 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Importing and making cards through the executor and the library screen.
+use studyfrog_ui::effect::EffectImport;
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgImport;
 
 mod common;
 
@@ -28,7 +32,7 @@ fn worker_with_registry() -> (TempDir, Worker) {
     );
     execute(
         &mut w,
-        Effect::OpenVault(vault.path.display().to_string()),
+        Effect::Vault(EffectVault::OpenVault(vault.path.display().to_string())),
         NOW_NS,
     );
     (vault, w)
@@ -42,13 +46,13 @@ fn the_executor_imports_a_file_with_the_importer_for_its_extension() {
     fs::write(&good, "Hola,Hello\nAdios,Bye\n").unwrap();
     let msgs = execute(
         &mut w,
-        Effect::ImportFile {
+        Effect::Import(EffectImport::ImportFile {
             folder: "french".into(),
             path: good.display().to_string(),
-        },
+        }),
         NOW_NS,
     );
-    let Msg::Imported(Ok(out)) = &msgs[0] else {
+    let Msg::Import(MsgImport::Imported(Ok(out))) = &msgs[0] else {
         panic!("{:?}", msgs[0])
     };
     assert_eq!(out.report.created, 2);
@@ -61,14 +65,14 @@ fn the_executor_imports_a_file_with_the_importer_for_its_extension() {
     fs::write(&broken, "fine,ok\nno comma here\n").unwrap();
     let msgs = execute(
         &mut w,
-        Effect::ImportFile {
+        Effect::Import(EffectImport::ImportFile {
             folder: "french".into(),
             path: broken.display().to_string(),
-        },
+        }),
         NOW_NS,
     );
     assert!(
-        matches!(&msgs[0], Msg::Imported(Err(e)) if e.contains("Comma lines") && e.contains("line 2")),
+        matches!(&msgs[0], Msg::Import(MsgImport::Imported(Err(e))) if e.contains("Comma lines") && e.contains("line 2")),
         "{:?}",
         msgs[0]
     );
@@ -77,47 +81,51 @@ fn the_executor_imports_a_file_with_the_importer_for_its_extension() {
     fs::write(&other, "x").unwrap();
     let msgs = execute(
         &mut w,
-        Effect::ImportFile {
+        Effect::Import(EffectImport::ImportFile {
             folder: "french".into(),
             path: other.display().to_string(),
-        },
+        }),
         NOW_NS,
     );
     assert!(
-        matches!(&msgs[0], Msg::Imported(Err(e)) if e.contains("known: csv")),
+        matches!(&msgs[0], Msg::Import(MsgImport::Imported(Err(e))) if e.contains("known: csv")),
         "{:?}",
         msgs[0]
     );
     let msgs = execute(
         &mut w,
-        Effect::ImportFile {
+        Effect::Import(EffectImport::ImportFile {
             folder: "french".into(),
             path: "/nonexistent/deck.csv".into(),
-        },
+        }),
         NOW_NS,
     );
-    assert!(matches!(&msgs[0], Msg::Imported(Err(_))));
+    assert!(matches!(&msgs[0], Msg::Import(MsgImport::Imported(Err(_)))));
 }
 
 #[test]
 fn the_executor_expands_a_card_type_and_explains_its_refusals() {
     let (_vault, mut w) = worker_with_registry();
-    let make = |source: &str, type_id: &str| Effect::CreateFromType {
-        folder: "french".into(),
-        type_id: type_id.into(),
-        source: source.into(),
+    let make = |source: &str, type_id: &str| {
+        Effect::Import(EffectImport::CreateFromType {
+            folder: "french".into(),
+            type_id: type_id.into(),
+            source: source.into(),
+        })
     };
     let msgs = execute(&mut w, make("bonjour", "twice"), NOW_NS);
-    let Msg::Imported(Ok(out)) = &msgs[0] else {
+    let Msg::Import(MsgImport::Imported(Ok(out))) = &msgs[0] else {
         panic!("{:?}", msgs[0])
     };
     assert_eq!(out.report.created, 2);
     let msgs = execute(&mut w, make("no!", "twice"), NOW_NS);
     assert!(
-        matches!(&msgs[0], Msg::Imported(Err(e)) if e.contains("Two cards") && e.contains("exclamation"))
+        matches!(&msgs[0], Msg::Import(MsgImport::Imported(Err(e))) if e.contains("Two cards") && e.contains("exclamation"))
     );
     let msgs = execute(&mut w, make("x", "missing"), NOW_NS);
-    assert!(matches!(&msgs[0], Msg::Imported(Err(e)) if e.contains("not available")));
+    assert!(
+        matches!(&msgs[0], Msg::Import(MsgImport::Imported(Err(e))) if e.contains("not available"))
+    );
 }
 
 #[test]
@@ -155,7 +163,10 @@ fn the_import_dialog_offers_card_types_and_files_only_when_extensions_exist() {
     assert!(h.query_by_label("Add cards").is_some());
 
     let mut plain = open_model();
-    apply(&mut plain, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut plain,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     let mut h = harness(plain);
     h.run();
     assert!(

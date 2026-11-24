@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Enter and Backspace in lists: the pure edits, the real editor, and the preview's list markers.
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -88,14 +89,14 @@ fn editing(body_marker: &str) -> Model {
     let doc = parse_doc(&text).unwrap();
     apply(
         &mut m,
-        Msg::DocumentLoaded(
+        Msg::Editor(MsgEditor::DocumentLoaded(
             Uid(0xA),
             Ok(LoadedDoc {
                 path: "s/alpha.md".into(),
                 doc,
                 hash: 1,
             }),
-        ),
+        )),
     );
     m
 }

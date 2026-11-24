@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Notifications are kept in the vault's database: they survive closing the app and reopening the vault.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 
@@ -14,7 +15,11 @@ use studyfrog_ui::notify::NotifyMsg;
 fn start(cfg: &std::path::Path) -> (Model, studyfrog_ui::exec::Worker) {
     let mut worker = worker_new(Some(cfg.to_path_buf()));
     let mut model = Model::default();
-    run_to_idle(&mut model, &mut worker, vec![Effect::LoadAppSettings]);
+    run_to_idle(
+        &mut model,
+        &mut worker,
+        vec![Effect::Vault(EffectVault::LoadAppSettings)],
+    );
     (model, worker)
 }
 

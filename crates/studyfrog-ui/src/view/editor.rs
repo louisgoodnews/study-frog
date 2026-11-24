@@ -1,5 +1,6 @@
 //! The item page: the title and the text areas in the main column, the details in a side column. It
 //! is the same page for a note, a card, a question and a stack.
+use crate::msg::MsgEditor;
 
 use eframe::egui::{self, RichText, TextEdit};
 
@@ -98,7 +99,7 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .on_hover_text("Closes the editor and goes back to the list.")
             .clicked()
         {
-            out.push(Msg::CloseEditor);
+            out.push(Msg::Editor(MsgEditor::CloseEditor));
         }
         key_pill(e, ui);
         ui.label(RichText::new(&e.path).color(palette_of(ui).text_weak));
@@ -123,7 +124,7 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .on_hover_text("Discards the unsaved changes and returns to the saved text.")
                     .clicked()
                 {
-                    out.push(Msg::RevertClicked);
+                    out.push(Msg::Editor(MsgEditor::RevertClicked));
                     ui.close();
                 }
                 if ui
@@ -131,7 +132,7 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .on_hover_text("Replaces the text with the file as it is on disk.")
                     .clicked()
                 {
-                    out.push(Msg::ReloadClicked);
+                    out.push(Msg::Editor(MsgEditor::ReloadClicked));
                     ui.close();
                 }
                 if ui
@@ -152,7 +153,7 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                         .on_hover_text("Deletes this item after you confirm.")
                         .clicked()
                 {
-                    out.push(Msg::Edit(EditAction::AskDelete(true)));
+                    out.push(Msg::Editor(MsgEditor::Edit(EditAction::AskDelete(true))));
                     ui.close();
                 }
             })
@@ -164,7 +165,7 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .on_hover_text("Keeps your version and drops the one on disk.")
                     .clicked()
             {
-                out.push(Msg::KeepMineClicked);
+                out.push(Msg::Editor(MsgEditor::KeepMineClicked));
             }
         });
     });
@@ -181,7 +182,7 @@ fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .font(crate::typo::font(ui, crate::typo::Tier::Heading))
             .desired_width(f32::INFINITY);
         if ui.add(edit).labelled_by(title.id).changed() {
-            out.push(Msg::Edit(EditAction::Title(text)));
+            out.push(Msg::Editor(MsgEditor::Edit(EditAction::Title(text))));
         }
     });
     ui.add_space(8.0);
@@ -201,7 +202,7 @@ fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             Some(ImageTarget::Item(i)),
             out,
         ) {
-            out.push(Msg::Edit(EditAction::Field(i, t)));
+            out.push(Msg::Editor(MsgEditor::Edit(EditAction::Field(i, t))));
         }
         ui.add_space(10.0);
         if i == 0 {

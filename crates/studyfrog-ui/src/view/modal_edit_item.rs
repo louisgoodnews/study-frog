@@ -1,4 +1,5 @@
 //! In-rehearsal edit dialog: quick edits for prompt, answer, title, and tags.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, Align, Layout, RichText};
 use studyfrog_service::create_more::NewKind;
@@ -88,7 +89,7 @@ fn header(f: &EditCardModal, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             {
                 let uid = f.uid;
                 send(out, RehearsalEditMsg::Close);
-                out.push(Msg::OpenItem(uid));
+                out.push(Msg::Browse(MsgBrowse::OpenItem(uid)));
             }
         });
     });

@@ -1,6 +1,7 @@
 //! A Markdown editor: a toolbar of formatting buttons, and the text shown as Write, Split (the text, with
 //! its rendering under it) or Preview. The text is stored by the caller; the mode and the parsed preview live in
 //! egui's memory, so the preview is parsed only when the text changes.
+use crate::msg::MsgImport;
 
 mod blocks;
 mod keys;
@@ -135,7 +136,7 @@ pub fn md_editor(
         if done.2
             && let Some(target) = image
         {
-            out.push(Msg::PickImage(target));
+            out.push(Msg::Import(MsgImport::PickImage(target)));
         }
     }
     resize_grip(ui, (name, height_id), height);

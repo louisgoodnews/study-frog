@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Headless acceptance tests for TASK-0213: References in the interface.
+use studyfrog_ui::effect::EffectImport;
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -59,10 +61,10 @@ fn the_create_dialog_offers_an_also_in_choice_and_passes_it_to_create_effect() {
     let fx = apply(&mut h.state_mut().0, Msg::Modal(ModalMsg::Submit));
     assert!(matches!(
         &fx[..],
-        [Effect::CreateItem {
+        [Effect::Import(EffectImport::CreateItem {
             also_in: Some(s),
             ..
-        }] if s == "maths"
+        })] if s == "maths"
     ));
 }
 
@@ -78,14 +80,14 @@ fn the_item_page_shows_primary_and_referenced_stacks_with_add_and_remove() {
     let doc = parse_doc(CARD_WITH_REFS).unwrap();
     apply(
         &mut m,
-        Msg::DocumentLoaded(
+        Msg::Editor(MsgEditor::DocumentLoaded(
             Uid(0xA),
             Ok(LoadedDoc {
                 path: "french/vocab.md".into(),
                 doc,
                 hash: 1,
             }),
-        ),
+        )),
     );
 
     let mut h = harness(m);
@@ -99,9 +101,9 @@ fn the_item_page_shows_primary_and_referenced_stacks_with_add_and_remove() {
     // Remove reference action
     apply(
         &mut h.state_mut().0,
-        Msg::Edit(EditAction::RemoveReference(
+        Msg::Editor(MsgEditor::Edit(EditAction::RemoveReference(
             "00000000000000000000000002".into(),
-        )),
+        ))),
     );
     assert!(
         h.state()
@@ -118,9 +120,9 @@ fn the_item_page_shows_primary_and_referenced_stacks_with_add_and_remove() {
     // Add reference action
     apply(
         &mut h.state_mut().0,
-        Msg::Edit(EditAction::AddReference(
+        Msg::Editor(MsgEditor::Edit(EditAction::AddReference(
             "00000000000000000000000002".into(),
-        )),
+        ))),
     );
     assert_eq!(
         h.state()

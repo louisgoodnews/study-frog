@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used, clippy::disallowed_methods)] // tests may panic; they wait for the loader thread
 //! The image occlusion editor on a card's page and the masked picture in a run, with real pictures (STORY-0109).
+use studyfrog_ui::msg::MsgEditor;
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 
@@ -49,7 +51,10 @@ fn card_page(root: &str) -> Model {
         doc,
         hash: 1,
     };
-    apply(&mut m, Msg::DocumentLoaded(Uid(0xA), Ok(loaded)));
+    apply(
+        &mut m,
+        Msg::Editor(MsgEditor::DocumentLoaded(Uid(0xA), Ok(loaded))),
+    );
     m
 }
 
@@ -192,7 +197,10 @@ fn occluded_run(root: &str, mode: RunMode) -> Model {
         is_note: false,
         comments: Vec::new(),
     };
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(content))),
+    );
     m
 }
 

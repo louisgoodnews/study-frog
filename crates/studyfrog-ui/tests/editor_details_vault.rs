@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used, clippy::cognitive_complexity)] // tests may panic on failure
 //! Empirical persistence test for Milestone 3: Stack Due Date through real Worker & SQLite vault.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -20,12 +22,20 @@ use studyfrog_ui::state::Screen;
 fn test_stack_due_date_real_vault_persistence_lifecycle() {
     let (_vault, mut model, mut worker) = opened("m3-due-vault");
     // Ensure planner sessions are loaded
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Calendar));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     assert!(model.state.planner.loaded);
     assert!(model.state.planner.sessions.is_empty());
 
     // Switch to editor
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Editor));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Editor)),
+    );
     assert_eq!(model.state.screen, Screen::Editor);
 
     let stack_uid = Uid(1);
@@ -66,9 +76,13 @@ fn test_stack_due_date_real_vault_persistence_lifecycle() {
     run_to_idle(
         &mut model_2,
         &mut worker_2,
-        vec![Effect::OpenVault(vault_root.clone())],
+        vec![Effect::Vault(EffectVault::OpenVault(vault_root.clone()))],
     );
-    send(&mut model_2, &mut worker_2, Msg::Navigate(Screen::Calendar));
+    send(
+        &mut model_2,
+        &mut worker_2,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     assert_eq!(model_2.state.planner.sessions.len(), 1);
     let reloaded = &model_2.state.planner.sessions[0];
     assert_eq!(reloaded.id, persisted_id);
@@ -103,9 +117,13 @@ fn test_stack_due_date_real_vault_persistence_lifecycle() {
     run_to_idle(
         &mut model_3,
         &mut worker_3,
-        vec![Effect::OpenVault(vault_root.clone())],
+        vec![Effect::Vault(EffectVault::OpenVault(vault_root.clone()))],
     );
-    send(&mut model_3, &mut worker_3, Msg::Navigate(Screen::Calendar));
+    send(
+        &mut model_3,
+        &mut worker_3,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     let reloaded_3 = &model_3.state.planner.sessions[0];
     assert_eq!(reloaded_3.id, persisted_id);
     assert_eq!(reloaded_3.start.date, due_2);
@@ -130,8 +148,12 @@ fn test_stack_due_date_real_vault_persistence_lifecycle() {
     run_to_idle(
         &mut model_4,
         &mut worker_4,
-        vec![Effect::OpenVault(vault_root)],
+        vec![Effect::Vault(EffectVault::OpenVault(vault_root))],
     );
-    send(&mut model_4, &mut worker_4, Msg::Navigate(Screen::Calendar));
+    send(
+        &mut model_4,
+        &mut worker_4,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     assert!(model_4.state.planner.sessions.is_empty());
 }

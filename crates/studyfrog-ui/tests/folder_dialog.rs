@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Choosing the vault folder with the native dialog (a fake picker stands in for it).
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -27,16 +29,26 @@ fn the_choose_folder_button_asks_for_the_dialog_and_a_chosen_folder_is_opened() 
     h.run();
     h.get_by_label("Choose folder…").click();
     h.run();
-    assert!(h.state().1.contains(&Effect::PickVaultFolder));
+    assert!(
+        h.state()
+            .1
+            .contains(&Effect::Vault(EffectVault::PickVaultFolder))
+    );
 
     let mut m = Model::default();
-    let fx = apply(&mut m, Msg::VaultFolderPicked(Some("/v/notes".into())));
+    let fx = apply(
+        &mut m,
+        Msg::Vault(MsgVault::VaultFolderPicked(Some("/v/notes".into()))),
+    );
     assert_eq!(m.state.path_input, "/v/notes");
-    assert_eq!(fx, [Effect::OpenVault("/v/notes".into())]);
+    assert_eq!(
+        fx,
+        [Effect::Vault(EffectVault::OpenVault("/v/notes".into()))]
+    );
 
     let mut m = Model::default();
     assert!(
-        apply(&mut m, Msg::VaultFolderPicked(None)).is_empty(),
+        apply(&mut m, Msg::Vault(MsgVault::VaultFolderPicked(None))).is_empty(),
         "cancelling does nothing"
     );
     assert!(m.state.path_input.is_empty());
@@ -56,8 +68,14 @@ fn the_executor_uses_the_hosts_dialog_and_copes_without_one() {
         },
     );
     assert_eq!(
-        execute(&mut with, Effect::PickVaultFolder, NOW_NS),
-        [Msg::VaultFolderPicked(Some("/chosen/folder".into()))]
+        execute(
+            &mut with,
+            Effect::Vault(EffectVault::PickVaultFolder),
+            NOW_NS
+        ),
+        [Msg::Vault(MsgVault::VaultFolderPicked(Some(
+            "/chosen/folder".into()
+        )))]
     );
     let mut cancelled = worker_with_host(
         None,
@@ -68,12 +86,20 @@ fn the_executor_uses_the_hosts_dialog_and_copes_without_one() {
         },
     );
     assert_eq!(
-        execute(&mut cancelled, Effect::PickVaultFolder, NOW_NS),
-        [Msg::VaultFolderPicked(None)]
+        execute(
+            &mut cancelled,
+            Effect::Vault(EffectVault::PickVaultFolder),
+            NOW_NS
+        ),
+        [Msg::Vault(MsgVault::VaultFolderPicked(None))]
     );
     let mut without = worker_new(None);
     assert_eq!(
-        execute(&mut without, Effect::PickVaultFolder, NOW_NS),
-        [Msg::VaultFolderPicked(None)]
+        execute(
+            &mut without,
+            Effect::Vault(EffectVault::PickVaultFolder),
+            NOW_NS
+        ),
+        [Msg::Vault(MsgVault::VaultFolderPicked(None))]
     );
 }

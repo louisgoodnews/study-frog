@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The workload-versus-retention curve and "Apply recommended retention" (STORY-0106).
+use studyfrog_ui::effect::EffectReports;
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -57,7 +59,10 @@ fn the_workload_tab_shows_the_curve_and_applies_the_recommendation_to_the_vault(
 fn a_stack_reports_tab_applies_to_its_own_settings() {
     let mut m = open_model();
     m.state.app.stack_tabs = vec!["french:reports".into()];
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     let mut h = harness(with_reports(m));
     h.run_steps(4);
     assert!(
@@ -89,7 +94,7 @@ fn the_result_refreshes_the_vault_and_the_reports_or_reports_the_failure() {
         &mut m,
         Msg::Explorer(ExplorerMsg::RetentionApplied(Ok(Box::new(info)))),
     );
-    assert_eq!(fx, [Effect::BuildReports]);
+    assert_eq!(fx, [Effect::Reports(EffectReports::BuildReports)]);
     assert_eq!(m.state.notice.as_ref().unwrap().kind, NoticeKind::Info);
     let fx = apply(
         &mut m,

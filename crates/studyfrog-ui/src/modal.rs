@@ -1,4 +1,6 @@
 //! The modal dialogs (create an item, open a vault) and the toasts that can open them. Pure.
+use crate::effect::EffectImport;
+use crate::effect::EffectPlanner;
 
 use studyfrog_service::create_more::NewKind;
 
@@ -44,7 +46,7 @@ fn submit(state: State) -> (State, Vec<Effect>) {
         });
         return (state, vec![effect]);
     }
-    let effect = Effect::CreateItem {
+    let effect = Effect::Import(EffectImport::CreateItem {
         kind: form.kind,
         title: form.title.trim().to_owned(),
         text: form.text.clone(),
@@ -57,7 +59,7 @@ fn submit(state: State) -> (State, Vec<Effect>) {
             Some(form.priority),
             (form.kind != NewKind::Stack).then_some(form.difficulty),
         ),
-    };
+    });
     let (state, _) = with_form(state, |f| CreateForm {
         busy: true,
         error: None,
@@ -120,7 +122,10 @@ fn created(state: State, result: Result<Box<CreateOutcome>, String>) -> (State, 
                 state.screen = Screen::Library;
             }
             let mut effects = reload(&state.browser.selection);
-            effects.extend([Effect::LoadBoard, Effect::LoadSessions]);
+            effects.extend([
+                Effect::Planner(EffectPlanner::LoadBoard),
+                Effect::Planner(EffectPlanner::LoadSessions),
+            ]);
             (state, effects)
         }
     }

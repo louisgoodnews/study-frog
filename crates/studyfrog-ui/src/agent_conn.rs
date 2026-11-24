@@ -1,4 +1,5 @@
 //! The connections part of the assistant screen: reading, the form and adding one. Pure.
+use crate::effect::EffectAssistant;
 
 use studyfrog_agent::provider::{Provider, default_base_url, default_models, is_local};
 use studyfrog_agent::settings::provider_problem;
@@ -73,7 +74,13 @@ pub(crate) fn add_connection(state: State) -> (State, Vec<Effect>) {
     }
     let key = Some(f.key.trim().to_owned()).filter(|k| !k.is_empty());
     let (state, _) = with(state, |a| AgentState { error: None, ..a });
-    (state, vec![Effect::SaveConnection { provider: p, key }])
+    (
+        state,
+        vec![Effect::Assistant(EffectAssistant::SaveConnection {
+            provider: p,
+            key,
+        })],
+    )
 }
 
 /// The accepted changes of a proposal.

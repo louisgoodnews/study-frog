@@ -1,4 +1,5 @@
 //! The sidebar: grouped screen navigation with visual breathing room.
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, Panel, RichText};
 
@@ -97,7 +98,7 @@ fn groups(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .min_size(egui::vec2(width, 26.0));
             let hover = crate::view::tips::for_name(label);
             if ui.add(button).on_hover_text(hover).clicked() {
-                out.push(Msg::Navigate(screen));
+                out.push(Msg::Vault(MsgVault::Navigate(screen)));
             }
         }
     }

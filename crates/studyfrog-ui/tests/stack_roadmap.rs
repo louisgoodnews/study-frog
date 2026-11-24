@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The Roadmap tab: rows, bars, the axis, zoom, and 1000 rows inside the budget.
+use studyfrog_ui::effect::EffectEditor;
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -35,7 +37,10 @@ fn model(items: Vec<LibraryItem>) -> Model {
     verbs.parent = Some("french".into());
     v.overview.stacks.insert(1, verbs);
     apply(&mut m, Msg::Library(LibraryMsg::Loaded(Ok(items))));
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     m
 }
 
@@ -99,10 +104,10 @@ fn the_tab_names_every_bar_zooms_and_opens_what_is_clicked() {
     h.get_by_label_contains("Item Bonjour").click();
     h.run_steps(3);
     assert!(
-        h.state()
-            .1
-            .iter()
-            .any(|e| matches!(e, studyfrog_ui::effect::Effect::LoadDocument(_))),
+        h.state().1.iter().any(|e| matches!(
+            e,
+            studyfrog_ui::effect::Effect::Editor(EffectEditor::LoadDocument(_))
+        )),
         "{:?}",
         h.state().1
     );

@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 //! Integration tests for calendar views and timetable updates.
+use studyfrog_ui::effect::EffectPlanner;
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -116,14 +119,20 @@ fn timetable_form_open_and_save_flow() {
         state,
         studyfrog_ui::msg::Msg::Plan(PlanMsg::SaveTimetable(entry.clone())),
     );
-    assert_eq!(fx, vec![Effect::SaveTimetable(entry)]);
+    assert_eq!(
+        fx,
+        vec![Effect::Planner(EffectPlanner::SaveTimetable(entry))]
+    );
 
     // Delete timetable entry
     let (_, fx_del) = update(
         state,
         studyfrog_ui::msg::Msg::Plan(PlanMsg::DeleteTimetable(Uid(10))),
     );
-    assert_eq!(fx_del, vec![Effect::DeleteTimetable(Uid(10))]);
+    assert_eq!(
+        fx_del,
+        vec![Effect::Planner(EffectPlanner::DeleteTimetable(Uid(10)))]
+    );
 }
 
 fn statistik_lecture() -> TimetableEntry {
@@ -153,11 +162,15 @@ fn stored_lectures_are_listed_after_a_restart() {
     let mut model = Model::default();
     model.state.app.tutorial_offered = true;
     let mut worker = worker_new(None);
-    run_to_idle(&mut model, &mut worker, vec![Effect::OpenVault(path)]);
+    run_to_idle(
+        &mut model,
+        &mut worker,
+        vec![Effect::Vault(EffectVault::OpenVault(path))],
+    );
     send(
         &mut model,
         &mut worker,
-        studyfrog_ui::msg::Msg::Navigate(Screen::Calendar),
+        studyfrog_ui::msg::Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
     );
 
     assert_eq!(model.state.planner.timetable, vec![statistik_lecture()]);
@@ -175,11 +188,15 @@ fn the_homework_screen_gets_the_timetable_beside_its_items() {
     let mut model = Model::default();
     model.state.app.tutorial_offered = true;
     let mut worker = worker_new(None);
-    run_to_idle(&mut model, &mut worker, vec![Effect::OpenVault(path)]);
+    run_to_idle(
+        &mut model,
+        &mut worker,
+        vec![Effect::Vault(EffectVault::OpenVault(path))],
+    );
     send(
         &mut model,
         &mut worker,
-        studyfrog_ui::msg::Msg::Navigate(Screen::Homework),
+        studyfrog_ui::msg::Msg::Vault(MsgVault::Navigate(Screen::Homework)),
     );
     assert_eq!(model.state.planner.timetable, vec![statistik_lecture()]);
 }

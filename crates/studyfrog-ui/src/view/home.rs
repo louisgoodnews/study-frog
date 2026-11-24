@@ -1,5 +1,7 @@
 //! The home screen: what is due now, what is coming up, and what happened recently. The three columns
 //! stretch to the window so nothing important hides below the fold and no part sits empty.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, RichText};
 use studyfrog_core::count::counted;
@@ -114,7 +116,7 @@ fn hero(h: &HomeSummary, items: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .on_hover_text("Starts a different drill.")
                     .clicked()
                 {
-                    out.push(Msg::Navigate(Screen::Rehearse));
+                    out.push(Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
                 }
             });
         });
@@ -153,7 +155,7 @@ fn due_column(h: &HomeSummary, fill: f32, ui: &mut egui::Ui, out: &mut Vec<Msg>)
                     .on_hover_text("Opens this item.")
                     .clicked()
                 {
-                    out.push(Msg::OpenItem(i.uid));
+                    out.push(Msg::Browse(MsgBrowse::OpenItem(i.uid)));
                 }
                 if let Some(due) = i.due {
                     ui.label(

@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Headless UI and interaction tests for the Folders file explorer view (TASK-0204).
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -111,7 +112,7 @@ fn folders_navigation_from_sidebar_and_accessible_names() {
 #[test]
 fn folders_tree_renders_badges_and_strips_markdown_extension() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Folders));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Folders)));
     m.state.folders.entries = sample_entries();
     m.state.folders.expanded.insert("french".into());
     m.state.folders.expanded.insert("assets".into());
@@ -137,7 +138,7 @@ fn folders_tree_renders_badges_and_strips_markdown_extension() {
 #[test]
 fn folders_toolbar_expand_collapse_and_sort() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Folders));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Folders)));
     m.state.folders.entries = sample_entries();
 
     let mut h = harness(m);
@@ -165,7 +166,7 @@ fn folders_toolbar_expand_collapse_and_sort() {
 #[test]
 fn folders_keyboard_navigation_and_rename() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Folders));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Folders)));
     m.state.folders.entries = sample_entries();
     m.state.folders.expanded.insert("french".into());
 

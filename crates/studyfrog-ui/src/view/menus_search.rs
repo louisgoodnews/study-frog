@@ -1,4 +1,5 @@
 //! The top-bar search: the field, its matches, and Create and Import beside it.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, Align, Key, Layout, Rect, Role, TextEdit, WidgetInfo};
 use studyfrog_core::plan::item_kind_name;
@@ -32,7 +33,7 @@ pub fn search_results(state: &State, ui: &mut egui::Ui, field: Rect, out: &mut V
                     .on_hover_text("Opens this stack.")
                     .clicked()
             {
-                out.push(Msg::OpenItem(s.uid));
+                out.push(Msg::Browse(MsgBrowse::OpenItem(s.uid)));
                 out.push(Msg::Chrome(ChromeMsg::SearchClear));
             }
             let none = state.chrome.results.is_empty() && state.chrome.pdf_results.is_empty();
@@ -45,7 +46,7 @@ pub fn search_results(state: &State, ui: &mut egui::Ui, field: Rect, out: &mut V
                     .on_hover_text("Opens this search result.")
                     .clicked()
                 {
-                    out.push(Msg::OpenItem(item.uid));
+                    out.push(Msg::Browse(MsgBrowse::OpenItem(item.uid)));
                     out.push(Msg::Chrome(ChromeMsg::SearchClear));
                 }
             }
@@ -144,7 +145,7 @@ fn search_field(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, width: f32
     let enter = field.lost_focus() && ui.input(|i| i.key_pressed(Key::Enter));
     let stack = crate::item_look::stack_by_key(state, &state.chrome.search).map(|s| s.uid);
     if let (true, Some(uid)) = (enter, stack.or(state.chrome.results.first().map(|r| r.uid))) {
-        out.push(Msg::OpenItem(uid));
+        out.push(Msg::Browse(MsgBrowse::OpenItem(uid)));
         out.push(Msg::Chrome(ChromeMsg::SearchClear));
     }
     search_results(state, ui, field.rect, out);

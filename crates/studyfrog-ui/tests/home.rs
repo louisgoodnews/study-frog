@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The home screen: its update logic and its view, headless.
+use studyfrog_ui::effect::EffectEditor;
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -78,7 +81,7 @@ fn summary(ready: usize) -> HomeSummary {
 
 fn home_model(ready: usize) -> Model {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Home));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Home)));
     apply(
         &mut m,
         Msg::Home(HomeMsg::Loaded(Ok(Box::new(summary(ready))))),
@@ -89,8 +92,8 @@ fn home_model(ready: usize) -> Model {
 #[test]
 fn going_home_asks_for_the_summary_and_a_failure_keeps_the_last_numbers() {
     let mut m = open_model();
-    let fx = apply(&mut m, Msg::Navigate(Screen::Home));
-    assert!(fx.contains(&Effect::LoadHome));
+    let fx = apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Home)));
+    assert!(fx.contains(&Effect::Vault(EffectVault::LoadHome)));
     apply(&mut m, Msg::Home(HomeMsg::Loaded(Ok(Box::new(summary(3))))));
     apply(&mut m, Msg::Home(HomeMsg::Loaded(Err("disk".into()))));
     assert_eq!(m.state.home.as_ref().unwrap().ready_today, 3);
@@ -144,7 +147,11 @@ fn the_buttons_start_a_run_or_open_the_setup_for_one_stack() {
     h.run();
     h.get_by_label("Bonjour").click();
     h.run();
-    assert!(h.state().1.contains(&Effect::LoadDocument(Uid(7))));
+    assert!(
+        h.state()
+            .1
+            .contains(&Effect::Editor(EffectEditor::LoadDocument(Uid(7))))
+    );
 }
 
 #[test]
@@ -164,7 +171,9 @@ fn the_needs_attention_card_lists_the_items_with_their_reasons_and_opens_one() {
     h.get_by_label("Subjonctif").click();
     h.run_steps(4);
     assert!(
-        h.state().1.contains(&Effect::LoadDocument(Uid(33))),
+        h.state()
+            .1
+            .contains(&Effect::Editor(EffectEditor::LoadDocument(Uid(33)))),
         "{:?}",
         h.state().1
     );
@@ -226,7 +235,7 @@ fn a_streak_of_one_day_reads_in_the_singular() {
     let mut s = summary(3);
     s.streak_days = 1;
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Home));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Home)));
     apply(&mut m, Msg::Home(HomeMsg::Loaded(Ok(Box::new(s)))));
     let mut h = harness(m);
     h.run();

@@ -1,4 +1,5 @@
 //! Entry editor form with ratings, links, minutes, and Markdown reflections.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, RichText, Role, TextEdit, WidgetInfo};
 use studyfrog_core::civil::format_date;
@@ -174,7 +175,7 @@ fn bottom_actions(
                 WidgetInfo::labeled(Role::Button, true, "Open in full Markdown editor")
             });
             if open_btn.clicked() {
-                out.push(Msg::OpenItem(uid));
+                out.push(Msg::Browse(MsgBrowse::OpenItem(uid)));
             }
 
             if pending == Some(uid) {

@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! User profiles: the menu, the update logic and the worker with real files.
+use studyfrog_ui::effect::EffectBackup;
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -37,7 +40,7 @@ fn creating_checks_the_name_and_switching_closes_the_vault_and_opens_the_profile
     apply(&mut m, Msg::Profile(ProfileMsg::Draft("Work".into())));
     assert_eq!(
         apply(&mut m, Msg::Profile(ProfileMsg::Create)),
-        [Effect::CreateProfile("Work".into())]
+        [Effect::Backup(EffectBackup::CreateProfile("Work".into()))]
     );
     assert!(
         apply(&mut m, Msg::Profile(ProfileMsg::Switch("Default".into()))).is_empty(),
@@ -45,7 +48,7 @@ fn creating_checks_the_name_and_switching_closes_the_vault_and_opens_the_profile
     );
     assert_eq!(
         apply(&mut m, Msg::Profile(ProfileMsg::Switch("School".into()))),
-        [Effect::SwitchProfile("School".into())]
+        [Effect::Backup(EffectBackup::SwitchProfile("School".into()))]
     );
 
     let school = Profiles {
@@ -63,10 +66,10 @@ fn creating_checks_the_name_and_switching_closes_the_vault_and_opens_the_profile
     assert_eq!(m.state.profiles.list.current, "School");
     assert!(
         m.state.vault.is_none() && m.state.screen == Screen::Welcome
-            || fx.contains(&Effect::OpenVault("/v/school".into()))
+            || fx.contains(&Effect::Vault(EffectVault::OpenVault("/v/school".into())))
     );
     assert!(
-        fx.contains(&Effect::OpenVault("/v/school".into())),
+        fx.contains(&Effect::Vault(EffectVault::OpenVault("/v/school".into()))),
         "{fx:?}"
     );
 }
@@ -84,7 +87,7 @@ fn deleting_needs_a_second_click_and_failures_are_reported() {
     apply(&mut m, Msg::Profile(ProfileMsg::AskDelete("School".into())));
     assert_eq!(
         apply(&mut m, Msg::Profile(ProfileMsg::ConfirmDelete)),
-        [Effect::DeleteProfile("School".into())]
+        [Effect::Backup(EffectBackup::DeleteProfile("School".into()))]
     );
     apply(&mut m, Msg::Profile(ProfileMsg::Changed(Err("no".into()))));
     assert!(m.state.notice.as_ref().unwrap().text.contains("no"));
@@ -117,7 +120,9 @@ fn the_profile_menu_lists_profiles_and_has_no_vault_path() {
     assert!(
         h.state()
             .1
-            .contains(&Effect::SwitchProfile("School".into()))
+            .contains(&Effect::Backup(EffectBackup::SwitchProfile(
+                "School".into()
+            )))
     );
     assert_all_named(&h, "profile menu");
 }
@@ -135,12 +140,16 @@ fn root(label: &str) -> std::path::PathBuf {
 fn the_worker_starts_with_the_profile_in_use_and_gives_a_new_one_its_own_folder() {
     let root = root("make");
     let mut w = worker_new(Some(root.clone()));
-    let start = execute(&mut w, Effect::LoadAppSettings, 0);
+    let start = execute(&mut w, Effect::Vault(EffectVault::LoadAppSettings), 0);
     assert!(matches!(&start[0], Msg::Profile(ProfileMsg::Loaded(p)) if p.current == "Default"));
     assert!(
-        matches!(&start[1], Msg::Started { app, .. } if app.vault.as_deref() == Some("/v/default"))
+        matches!(&start[1], Msg::Vault(MsgVault::Started { app, .. }) if app.vault.as_deref() == Some("/v/default"))
     );
-    let made = execute(&mut w, Effect::CreateProfile("Exam prep".into()), 0);
+    let made = execute(
+        &mut w,
+        Effect::Backup(EffectBackup::CreateProfile("Exam prep".into())),
+        0,
+    );
     let Msg::Profile(ProfileMsg::Changed(Ok(both))) = &made[0] else {
         panic!("{:?}", made[0])
     };
@@ -153,7 +162,11 @@ fn the_worker_starts_with_the_profile_in_use_and_gives_a_new_one_its_own_folder(
         w.config_dir.as_deref(),
         Some(root.join("profiles/exam-prep").as_path())
     );
-    let back = execute(&mut w, Effect::SwitchProfile("Default".into()), 0);
+    let back = execute(
+        &mut w,
+        Effect::Backup(EffectBackup::SwitchProfile("Default".into())),
+        0,
+    );
     let Msg::Profile(ProfileMsg::Changed(Ok(both))) = &back[0] else {
         panic!("{:?}", back[0])
     };
@@ -170,23 +183,43 @@ fn the_worker_starts_with_the_profile_in_use_and_gives_a_new_one_its_own_folder(
 fn the_worker_refuses_unknown_and_protected_profiles_and_deletes_the_rest() {
     let root = root("drop");
     let mut w = worker_new(Some(root.clone()));
-    execute(&mut w, Effect::LoadAppSettings, 0);
-    execute(&mut w, Effect::CreateProfile("Exam prep".into()), 0);
-    execute(&mut w, Effect::SwitchProfile("Default".into()), 0);
-    let bad = execute(&mut w, Effect::SwitchProfile("Ghost".into()), 0);
+    execute(&mut w, Effect::Vault(EffectVault::LoadAppSettings), 0);
+    execute(
+        &mut w,
+        Effect::Backup(EffectBackup::CreateProfile("Exam prep".into())),
+        0,
+    );
+    execute(
+        &mut w,
+        Effect::Backup(EffectBackup::SwitchProfile("Default".into())),
+        0,
+    );
+    let bad = execute(
+        &mut w,
+        Effect::Backup(EffectBackup::SwitchProfile("Ghost".into())),
+        0,
+    );
     assert!(
         matches!(&bad[0], Msg::Profile(ProfileMsg::Changed(Err(e))) if e.contains("no profile"))
     );
-    let protected = execute(&mut w, Effect::DeleteProfile("Default".into()), 0);
+    let protected = execute(
+        &mut w,
+        Effect::Backup(EffectBackup::DeleteProfile("Default".into())),
+        0,
+    );
     assert!(matches!(
         &protected[0],
         Msg::Profile(ProfileMsg::Changed(Err(_)))
     ));
-    let gone = execute(&mut w, Effect::DeleteProfile("Exam prep".into()), 0);
+    let gone = execute(
+        &mut w,
+        Effect::Backup(EffectBackup::DeleteProfile("Exam prep".into())),
+        0,
+    );
     assert!(matches!(&gone[0], Msg::Profile(ProfileMsg::Changed(Ok(_)))));
     assert!(!root.join("profiles/exam-prep").exists());
     let mut again = worker_new(Some(root.clone()));
-    let start = execute(&mut again, Effect::LoadAppSettings, 0);
+    let start = execute(&mut again, Effect::Vault(EffectVault::LoadAppSettings), 0);
     assert!(matches!(&start[0], Msg::Profile(ProfileMsg::Loaded(p)) if p.names == ["Default"]));
     let _ = std::fs::remove_dir_all(&root);
 }

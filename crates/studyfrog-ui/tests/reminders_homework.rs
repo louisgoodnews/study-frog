@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Homework deadline reminders arriving while the app is open (STORY-0166).
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -28,19 +29,25 @@ fn homework_deadlines_become_toasts_and_notifications_too() {
     assert_eq!(homework_text(&r), "Essay 2 (due in 2 h, 2026-12-02 09:00)");
     let mut m = open_model();
     let before = m.state.chrome.notifications.len();
-    apply(&mut m, Msg::RemindersDue(Ok(DueAll::default())));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::RemindersDue(Ok(DueAll::default()))),
+    );
     assert!(m.state.toasts.is_empty());
     let homework = vec![r];
     apply(
         &mut m,
-        Msg::RemindersDue(Ok(DueAll {
+        Msg::Vault(MsgVault::RemindersDue(Ok(DueAll {
             sessions: Vec::new(),
             homework,
-        })),
+        }))),
     );
     assert_eq!(m.state.toasts.len(), 1);
     assert_eq!(m.state.chrome.notifications.len() - before, 1);
-    apply(&mut m, Msg::RemindersDue(Err("disk".into())));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::RemindersDue(Err("disk".into()))),
+    );
     assert!(m.state.notice.unwrap().text.contains("disk"));
 }
 

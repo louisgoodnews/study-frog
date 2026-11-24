@@ -1,5 +1,6 @@
 //! The board screen: state and update logic. Pure; every change is a [`BoardOp`] that the executor
 //! applies through the service, so the rules (WIP limits, ordering) live in `studyfrog-board`.
+use crate::effect::EffectPlanner;
 
 use studyfrog_board::model::{Board, MoveMode, find_card};
 use studyfrog_board::ops::BoardOp;
@@ -36,7 +37,10 @@ fn with(state: State, kanban: Kanban) -> (State, Vec<Effect>) {
 }
 
 fn command(state: State, op: BoardOp) -> (State, Vec<Effect>) {
-    (state, vec![Effect::BoardCommand(op)])
+    (
+        state,
+        vec![Effect::Planner(EffectPlanner::BoardCommand(op))],
+    )
 }
 
 fn loaded(state: State, result: Result<Board, String>) -> (State, Vec<Effect>) {

@@ -1,5 +1,6 @@
 #![allow(dead_code, clippy::unwrap_used, clippy::expect_used)] // shared test helpers
 //! A run that was played and ended, for the review tests.
+use studyfrog_ui::msg::MsgRehearsal;
 
 use studyfrog_core::event::Difficulty;
 use studyfrog_core::review::Rating;
@@ -18,7 +19,7 @@ pub const TWENTY_WORDS: &str = "one two three four five six seven eight nine ten
 
 pub fn act(m: &mut Model, now: f64, action: Action) -> Vec<Effect> {
     m.state.now = now;
-    apply(m, Msg::RunAction(action))
+    apply(m, Msg::Rehearsal(MsgRehearsal::RunAction(action)))
 }
 
 pub fn mark_of(m: &Model) -> Option<Difficulty> {
@@ -50,7 +51,10 @@ pub fn finished_run_marked(
         is_note: false,
         comments: Vec::new(),
     };
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(content))),
+    );
     act(&mut m, 0.5, Action::Mark(mark));
     act(&mut m, 1.0, Action::Flip);
     act(&mut m, 1.0 + read_s, Action::Rate(rating));

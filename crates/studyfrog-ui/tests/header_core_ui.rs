@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! STORY-0170: the stack page and the item editor show at most three buttons in their header rows, the
 //! overflow menu ("More actions") counted among them. The rest of the actions are one click further.
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -52,14 +53,14 @@ fn editing_note() -> Model {
     .unwrap();
     apply(
         &mut m,
-        Msg::DocumentLoaded(
+        Msg::Editor(MsgEditor::DocumentLoaded(
             Uid(0xA),
             Ok(LoadedDoc {
                 path: "lernen/zellmembran.md".into(),
                 doc,
                 hash: 1,
             }),
-        ),
+        )),
     );
     m
 }

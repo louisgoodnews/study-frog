@@ -1,5 +1,6 @@
 //! User profiles: each has its own settings (recent vaults, reading speed) and keys. Switching closes
 //! the vault and opens the profile's own last vault. Pure.
+use crate::effect::EffectBackup;
 
 use studyfrog_config::profiles::{Profiles, name_problem};
 use studyfrog_core::settings::AppSettings;
@@ -61,11 +62,17 @@ pub fn update(state: State, msg: ProfileMsg) -> (State, Vec<Effect>) {
             let name = state.profiles.draft.trim().to_owned();
             match name_problem(&name, &state.profiles.list.names) {
                 Some(why) => failed(state, why),
-                None => (state, vec![Effect::CreateProfile(name)]),
+                None => (
+                    state,
+                    vec![Effect::Backup(EffectBackup::CreateProfile(name))],
+                ),
             }
         }
         ProfileMsg::Switch(name) if name == state.profiles.list.current => (state, Vec::new()),
-        ProfileMsg::Switch(name) => (state, vec![Effect::SwitchProfile(name)]),
+        ProfileMsg::Switch(name) => (
+            state,
+            vec![Effect::Backup(EffectBackup::SwitchProfile(name))],
+        ),
         ProfileMsg::AskDelete(name) => with(state, |p| ProfileState {
             confirm_delete: Some(name),
             ..p
@@ -80,7 +87,10 @@ pub fn update(state: State, msg: ProfileMsg) -> (State, Vec<Effect>) {
                     confirm_delete: None,
                     ..p
                 });
-                (state, vec![Effect::DeleteProfile(name)])
+                (
+                    state,
+                    vec![Effect::Backup(EffectBackup::DeleteProfile(name))],
+                )
             }
             None => (state, Vec::new()),
         },

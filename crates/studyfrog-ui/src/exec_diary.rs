@@ -1,4 +1,5 @@
 //! Execution of diary side effects against the filesystem and SQLite index.
+use crate::msg::MsgVault;
 
 use std::fs;
 
@@ -66,7 +67,9 @@ fn load_entries_msg(w: &Worker) -> Msg {
 
 fn save_entry(w: &mut Worker, draft: DiaryEditDraft, now_ns: i64) -> Vec<Msg> {
     let Some(session) = &mut w.session else {
-        return vec![Msg::Navigate(crate::state::Screen::Welcome)];
+        return vec![Msg::Vault(MsgVault::Navigate(
+            crate::state::Screen::Welcome,
+        ))];
     };
     let now_ms = (now_ns / 1_000_000).max(0) as u64;
     let uid = match draft.uid {

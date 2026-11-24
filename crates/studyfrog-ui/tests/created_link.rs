@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! TASK-0199: the notice after Create opens the new item, and so does its entry in the notification list.
+use studyfrog_ui::effect::EffectEditor;
 
 mod common;
 
@@ -58,7 +59,7 @@ fn the_created_notice_links_to_the_new_item_and_the_list_keeps_the_link() {
         &mut m,
         Msg::Chrome(ChromeMsg::Notify(NotifyMsg::Open(n.id))),
     );
-    assert!(fx.contains(&Effect::LoadDocument(UID)));
+    assert!(fx.contains(&Effect::Editor(EffectEditor::LoadDocument(UID))));
 }
 
 #[test]

@@ -2,6 +2,8 @@
 //! [--no-control-socket]`: a headless instance driven by control requests, one per line on standard
 //! input, answered on standard output; it also serves `run/control.sock` for `studyfrog ctl`.
 //! Diagnostics go to standard error only.
+use crate::effect::EffectVault;
+use crate::msg::MsgVault;
 
 use std::io::{self, BufReader};
 use std::path::PathBuf;
@@ -99,11 +101,11 @@ pub fn engine_new(
         clock,
         events,
     };
-    settle(&mut e, vec![Effect::LoadAppSettings]);
+    settle(&mut e, vec![Effect::Vault(EffectVault::LoadAppSettings)]);
     e.model.state.app.tutorial_offered = true;
     let path = vault.or_else(|| e.model.state.app.vault.clone());
     if let Some(path) = path {
-        run_phase(&mut e, vec![Msg::OpenRecent(path)]);
+        run_phase(&mut e, vec![Msg::Vault(MsgVault::OpenRecent(path))]);
     }
     e
 }

@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The first-launch toast and the vault dialog (update logic).
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -23,10 +25,10 @@ fn the_first_launch_shows_a_toast_instead_of_asking_for_a_path_and_clicking_it_o
     let mut m = Model::default();
     apply(
         &mut m,
-        Msg::Started {
+        Msg::Vault(MsgVault::Started {
             app: AppSettings::default(),
             error: None,
-        },
+        }),
     );
     assert_eq!(m.state.toasts.len(), 1);
     assert_eq!(m.state.toasts[0].action, ToastAction::OpenVaultDialog);
@@ -42,10 +44,10 @@ fn the_first_launch_shows_a_toast_instead_of_asking_for_a_path_and_clicking_it_o
     let mut dismissed = Model::default();
     apply(
         &mut dismissed,
-        Msg::Started {
+        Msg::Vault(MsgVault::Started {
             app: AppSettings::default(),
             error: None,
-        },
+        }),
     );
     modal(&mut dismissed, ModalMsg::ToastDismissed(0));
     assert!(dismissed.state.toasts.is_empty() && dismissed.state.modal.is_none());
@@ -60,12 +62,18 @@ fn the_first_launch_shows_a_toast_instead_of_asking_for_a_path_and_clicking_it_o
         recent: vec!["/v/notes".into()],
         ..AppSettings::default()
     };
-    let fx = apply(&mut returning, Msg::Started { app, error: None });
+    let fx = apply(
+        &mut returning,
+        Msg::Vault(MsgVault::Started { app, error: None }),
+    );
     assert!(
         returning.state.toasts.is_empty(),
         "a known vault is simply opened"
     );
-    assert_eq!(fx, [Effect::OpenVault("/v/notes".into())]);
+    assert_eq!(
+        fx,
+        [Effect::Vault(EffectVault::OpenVault("/v/notes".into()))]
+    );
 }
 
 #[test]
@@ -73,16 +81,19 @@ fn opening_a_vault_closes_the_dialog_and_clears_the_toasts() {
     let mut m = Model::default();
     apply(
         &mut m,
-        Msg::Started {
+        Msg::Vault(MsgVault::Started {
             app: AppSettings {
                 tutorial_offered: true,
                 ..AppSettings::default()
             },
             error: None,
-        },
+        }),
     );
     modal(&mut m, ModalMsg::OpenVault);
-    apply(&mut m, Msg::VaultOpened(Ok(common::views::info())));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::VaultOpened(Ok(common::views::info()))),
+    );
     assert!(m.state.modal.is_none() && m.state.toasts.is_empty());
     assert_eq!(m.state.screen, Screen::Home);
 }

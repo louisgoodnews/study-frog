@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The browser's real widgets, headless.
+use studyfrog_ui::effect::EffectBrowse;
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -25,11 +27,17 @@ fn item(n: u128, title: &str) -> ItemRow {
 
 fn stack_open() -> studyfrog_ui::model::Model {
     let mut m = open_model();
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     m.state.app.stack_tabs = vec!["french:list".into()];
     apply(
         &mut m,
-        Msg::ItemsLoaded(Ok(vec![item(1, "Bonjour"), item(2, "Au revoir")])),
+        Msg::Browse(MsgBrowse::ItemsLoaded(Ok(vec![
+            item(1, "Bonjour"),
+            item(2, "Au revoir"),
+        ]))),
     );
     let rows = vec![lib_item(1, "Bonjour"), lib_item(2, "Au revoir")];
     apply(
@@ -48,7 +56,9 @@ fn clicking_a_stack_selects_it_and_asks_for_its_items() {
     assert!(
         h.state()
             .1
-            .contains(&Effect::LoadItems(Selection::Stack("maths".into())))
+            .contains(&Effect::Browse(EffectBrowse::LoadItems(Selection::Stack(
+                "maths".into()
+            ))))
     );
     assert_eq!(
         h.state().0.state.browser.selection,
@@ -109,7 +119,7 @@ fn the_new_stack_button_opens_the_dialog_for_a_stack() {
 #[test]
 fn the_inbox_keeps_the_stack_list_available() {
     let mut m = open_model();
-    apply(&mut m, Msg::Select(Selection::Inbox));
+    apply(&mut m, Msg::Browse(MsgBrowse::Select(Selection::Inbox)));
     let mut h = harness(m);
     h.run();
     assert!(

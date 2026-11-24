@@ -1,5 +1,6 @@
 #![allow(dead_code, clippy::unwrap_used, clippy::expect_used)] // shared test helpers
 //! Driving the UI through update and the real executor.
+use studyfrog_ui::effect::EffectVault;
 
 use studyfrog_ui::effect::Effect;
 use studyfrog_ui::exec::{Worker, worker_new};
@@ -16,7 +17,11 @@ pub fn opened(label: &str) -> (TempDir, Model, Worker) {
     let mut model = Model::default();
     model.state.app.tutorial_offered = true;
     let path = vault.path.display().to_string();
-    run_to_idle(&mut model, &mut worker, vec![Effect::OpenVault(path)]);
+    run_to_idle(
+        &mut model,
+        &mut worker,
+        vec![Effect::Vault(EffectVault::OpenVault(path))],
+    );
     assert!(model.state.vault.is_some());
     (vault, model, worker)
 }

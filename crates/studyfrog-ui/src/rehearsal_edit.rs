@@ -1,5 +1,6 @@
 //! In-rehearsal quick card/item editing.
 //! Pauses the run, loads document front-matter, and updates item content on save.
+use crate::effect::EffectRehearsal;
 
 use studyfrog_core::uid::Uid;
 use studyfrog_md::doc::Doc;
@@ -214,7 +215,10 @@ fn edit_saved(mut state: State, res: Result<Uid, String>) -> (State, Vec<Effect>
                 kind: NoticeKind::Info,
                 text: "Item updated".to_owned(),
             });
-            (state, vec![Effect::LoadItem(uid)])
+            (
+                state,
+                vec![Effect::Rehearsal(EffectRehearsal::LoadItem(uid))],
+            )
         }
         Err(e) => {
             if let Some(Modal::EditItem(ref mut m)) = state.modal {

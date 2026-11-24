@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! A rating carries how long the answer was on screen and how long it should take to read, for familiarity.
+use studyfrog_ui::effect::EffectRehearsal;
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 
@@ -13,14 +15,16 @@ use studyfrog_ui::msg::Msg;
 
 fn timing_of(fx: &[Effect]) -> Option<(u32, u32)> {
     fx.iter().find_map(|e| match e {
-        Effect::RecordStep { ctx, .. } => ctx.timing.map(|t| (t.answer_ms, t.expected_ms)),
+        Effect::Rehearsal(EffectRehearsal::RecordStep { ctx, .. }) => {
+            ctx.timing.map(|t| (t.answer_ms, t.expected_ms))
+        }
         _ => None,
     })
 }
 
 fn go(m: &mut Model, at: f64, action: Action) -> Vec<Effect> {
     m.state.now = at;
-    apply(m, Msg::RunAction(action))
+    apply(m, Msg::Rehearsal(MsgRehearsal::RunAction(action)))
 }
 
 #[test]

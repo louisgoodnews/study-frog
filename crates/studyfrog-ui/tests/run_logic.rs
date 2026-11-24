@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! A rehearsal run: pure update logic, and the whole flow against a real vault and database.
+use studyfrog_ui::effect::EffectRehearsal;
+use studyfrog_ui::msg::MsgRehearsal;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -32,12 +35,15 @@ fn ready(label: &str, preset: Preset) -> (Model, Worker, common::TempDir) {
     let (mut model, mut worker) = (Model::default(), worker_new(None));
     let fx = apply(
         &mut model,
-        Msg::OpenRecent(vault.path.display().to_string()),
+        Msg::Vault(MsgVault::OpenRecent(vault.path.display().to_string())),
     );
     run_to_idle(&mut model, &mut worker, fx);
-    let fx = apply(&mut model, Msg::Navigate(Screen::Rehearse));
+    let fx = apply(&mut model, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
     run_to_idle(&mut model, &mut worker, fx);
-    let fx = apply(&mut model, Msg::Setup(SetupEdit::Preset(preset)));
+    let fx = apply(
+        &mut model,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Preset(preset))),
+    );
     run_to_idle(&mut model, &mut worker, fx);
     (model, worker, vault)
 }
@@ -45,14 +51,17 @@ fn ready(label: &str, preset: Preset) -> (Model, Worker, common::TempDir) {
 /// Press a key at engine time `now` (seconds on the shell clock) and settle the effects.
 fn press(model: &mut Model, worker: &mut Worker, now: f64, action: Action) {
     model.state.now = now;
-    let fx = apply(model, Msg::RunAction(action));
+    let fx = apply(model, Msg::Rehearsal(MsgRehearsal::RunAction(action)));
     run_to_idle(model, worker, fx);
 }
 
 fn start(model: &mut Model, worker: &mut Worker) {
     model.state.now = 100.0;
-    let fx = apply(model, Msg::StartRunClicked);
-    assert!(matches!(&fx[..], [Effect::StartRun { .. }]));
+    let fx = apply(model, Msg::Rehearsal(MsgRehearsal::StartRunClicked));
+    assert!(matches!(
+        &fx[..],
+        [Effect::Rehearsal(EffectRehearsal::StartRun { .. })]
+    ));
     run_to_idle(model, worker, fx);
 }
 
@@ -162,10 +171,16 @@ fn stopping_aborts_the_run_and_leaving_returns_to_setup_with_a_fresh_count() {
         1
     );
 
-    let fx = apply(&mut m, Msg::LeaveRun);
-    assert!(m.state.rehearse.run.is_none() && matches!(&fx[..], [Effect::PreviewQueue { .. }]));
+    let fx = apply(&mut m, Msg::Rehearsal(MsgRehearsal::LeaveRun));
     assert!(
-        apply(&mut m, Msg::LeaveRun).is_empty(),
+        m.state.rehearse.run.is_none()
+            && matches!(
+                &fx[..],
+                [Effect::Rehearsal(EffectRehearsal::PreviewQueue { .. })]
+            )
+    );
+    assert!(
+        apply(&mut m, Msg::Rehearsal(MsgRehearsal::LeaveRun)).is_empty(),
         "nothing to leave any more"
     );
 }
@@ -173,18 +188,24 @@ fn stopping_aborts_the_run_and_leaving_returns_to_setup_with_a_fresh_count() {
 #[test]
 fn a_run_cannot_be_started_twice_or_with_an_invalid_form_or_no_items() {
     let (mut m, mut w, _vault) = ready("guard", Preset::Spaced);
-    apply(&mut m, Msg::Setup(SetupEdit::Limit("x".into())));
-    let fx = apply(&mut m, Msg::StartRunClicked);
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Limit("x".into()))),
+    );
+    let fx = apply(&mut m, Msg::Rehearsal(MsgRehearsal::StartRunClicked));
     assert!(
         fx.iter().all(|e| matches!(e, Effect::Notifications(_))),
         "an invalid form does not start: {fx:?}"
     );
     assert!(m.state.notice.as_ref().unwrap().text.contains("limit"));
-    let fx = apply(&mut m, Msg::Setup(SetupEdit::Limit("".into())));
+    let fx = apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Limit("".into()))),
+    );
     run_to_idle(&mut m, &mut w, fx);
     start(&mut m, &mut w);
     assert!(
-        apply(&mut m, Msg::StartRunClicked).is_empty(),
+        apply(&mut m, Msg::Rehearsal(MsgRehearsal::StartRunClicked)).is_empty(),
         "a run is already on screen"
     );
 }

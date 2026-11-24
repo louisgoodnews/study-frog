@@ -1,5 +1,6 @@
 //! The Summary tab of a stack: four cards, the status ring, priorities, types, the activity feed and the sub-stacks.
 //! Every chart carries its numbers as text, so nothing depends on seeing a colour.
+use crate::msg::MsgBrowse;
 
 use std::f32::consts::TAU;
 
@@ -129,7 +130,7 @@ fn feed(s: &StackSummary, now_ms: i64, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .on_hover_text("Opens this item.")
                 .clicked()
             {
-                out.push(Msg::OpenItem(a.uid));
+                out.push(Msg::Browse(MsgBrowse::OpenItem(a.uid)));
             }
             ui.weak(format!("{} {}", what(a), super::home::ago(now_ms, a.at_ms)));
         });
@@ -143,7 +144,9 @@ fn substack(sub: &SubStack, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .on_hover_text("Opens this sub-stack.")
             .clicked()
         {
-            out.push(Msg::Select(Selection::Stack(sub.folder.clone())));
+            out.push(Msg::Browse(MsgBrowse::Select(Selection::Stack(
+                sub.folder.clone(),
+            ))));
         }
         let familiarity = sub
             .percent

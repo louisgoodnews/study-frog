@@ -1,4 +1,5 @@
 //! The library screen: stack list on the left, overview or the selected stack on the right.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, Panel, RichText};
 use studyfrog_core::scheduler::{Scheduler, scheduler_name};
@@ -68,7 +69,7 @@ fn stack_list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     ui.add_space(14.0 * depth(&vault.overview.stacks, s) as f32);
                     let row = egui::Button::selectable(*current == target, &s.title).truncate();
                     if ui.add(row).on_hover_text(&s.title).clicked() {
-                        out.push(Msg::Select(target));
+                        out.push(Msg::Browse(MsgBrowse::Select(target)));
                     }
                 });
             });
@@ -87,16 +88,16 @@ fn stack_list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .selectable_label(*current == Selection::Inbox, format!("Inbox ({inbox})"))
             .clicked()
     {
-        out.push(Msg::Select(Selection::Inbox));
+        out.push(Msg::Browse(MsgBrowse::Select(Selection::Inbox)));
     }
     let all = *current == Selection::Nothing && !state.library.show_overview;
     if ui.selectable_label(all, "All items").clicked() {
-        out.push(Msg::Select(Selection::Nothing));
+        out.push(Msg::Browse(MsgBrowse::Select(Selection::Nothing)));
         out.push(Msg::Library(LibraryMsg::Overview(false)));
     }
     let overview = *current == Selection::Nothing && state.library.show_overview;
     if ui.selectable_label(overview, "Overview").clicked() {
-        out.push(Msg::Select(Selection::Nothing));
+        out.push(Msg::Browse(MsgBrowse::Select(Selection::Nothing)));
         out.push(Msg::Library(LibraryMsg::Overview(true)));
     }
     ui.separator();
@@ -154,7 +155,9 @@ fn stack_cards(o: &VaultOverview, default: Scheduler, ui: &mut egui::Ui, out: &m
                 let (_, dropped) =
                     col.dnd_drop_zone::<studyfrog_core::uid::Uid, ()>(egui::Frame::new(), |ui| {
                         if kit::card_button(ui, &id, |ui| stack_card(o, s, default, ui)) {
-                            out.push(Msg::Select(Selection::Stack(s.folder.clone())));
+                            out.push(Msg::Browse(MsgBrowse::Select(Selection::Stack(
+                                s.folder.clone(),
+                            ))));
                         }
                     });
                 if let Some(uid) = dropped {

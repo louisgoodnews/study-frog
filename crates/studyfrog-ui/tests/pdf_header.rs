@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The PDF viewer header: Previous, Next and More stay in it at 1280 by 800 (three buttons), and More holds the rest.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 #[path = "../../studyfrog-pdf/tests/common/mod.rs"]
@@ -21,7 +22,11 @@ fn open_with_pdf(label: &str) -> (common::TempDir, Model, Worker) {
     let mut model = Model::default();
     let mut worker = worker_new(None);
     let path = dir.path.display().to_string();
-    run_to_idle(&mut model, &mut worker, vec![Effect::OpenVault(path)]);
+    run_to_idle(
+        &mut model,
+        &mut worker,
+        vec![Effect::Vault(EffectVault::OpenVault(path))],
+    );
     (dir, model, worker)
 }
 

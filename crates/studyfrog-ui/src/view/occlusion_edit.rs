@@ -1,6 +1,7 @@
 //! The image occlusion editor on a card's page (STORY-0109): drag on the picture to draw a mask, drag a
 //! mask to move it, drag its corner to resize it, click it to select it and give it a label or delete it.
 //! Each finished gesture is one edit of the card, saved like any other.
+use crate::msg::MsgEditor;
 
 use eframe::egui::{self, Id, Pos2, RichText};
 use studyfrog_md::doc::Doc;
@@ -12,7 +13,7 @@ use crate::occlusion_ui::{Gesture, finish, preview, relabel, remove, start};
 use crate::view::occlusion_paint::{paint_mask, picture, screen_rect};
 
 fn set(out: &mut Vec<Msg>, o: Option<Occlusion>) {
-    out.push(Msg::Edit(EditAction::Occlusion(o)));
+    out.push(Msg::Editor(MsgEditor::Edit(EditAction::Occlusion(o))));
 }
 
 fn unit(frame: egui::Rect, p: Pos2) -> (f32, f32) {

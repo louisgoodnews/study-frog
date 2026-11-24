@@ -1,4 +1,5 @@
 //! The toolbar of an editor: the mode switch, the formatting buttons and the picture button.
+use crate::msg::MsgImport;
 
 use eframe::egui::{self, Id, Role, TextEdit, WidgetInfo, text::CCursor, text::CCursorRange};
 
@@ -116,7 +117,7 @@ pub(super) fn toolbar(
                 WidgetInfo::labeled(Role::Button, true, format!("Add a picture to {name}"))
             });
             if r.on_hover_text("Add a picture from a file").clicked() {
-                out.push(Msg::PickImage(target));
+                out.push(Msg::Import(MsgImport::PickImage(target)));
             }
         }
     });

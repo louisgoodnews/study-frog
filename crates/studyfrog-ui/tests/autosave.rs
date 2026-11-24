@@ -1,5 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! TASK-0200: the editor saves by itself, token by token, and before anything that leaves it.
+use studyfrog_ui::effect::EffectEditor;
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgEditor;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -27,16 +31,22 @@ fn open() -> (Model, Worker, common::TempDir) {
     fs::write(dir.path.join("s/alpha.md"), ALPHA).unwrap();
     fs::write(dir.path.join("s/beta.md"), BETA).unwrap();
     let (mut m, mut w) = (Model::default(), worker_new(None));
-    let fx = apply(&mut m, Msg::OpenRecent(dir.path.display().to_string()));
+    let fx = apply(
+        &mut m,
+        Msg::Vault(MsgVault::OpenRecent(dir.path.display().to_string())),
+    );
     run_to_idle(&mut m, &mut w, fx);
     m.state.wall_ms = T0;
-    let fx = apply(&mut m, Msg::OpenItem(Uid(0xA)));
+    let fx = apply(&mut m, Msg::Browse(MsgBrowse::OpenItem(Uid(0xA))));
     run_to_idle(&mut m, &mut w, fx);
     (m, w, dir)
 }
 
 fn type_text(m: &mut Model, text: &str) -> Vec<Effect> {
-    apply(m, Msg::Edit(EditAction::Field(0, text.into())))
+    apply(
+        m,
+        Msg::Editor(MsgEditor::Edit(EditAction::Field(0, text.into()))),
+    )
 }
 
 fn on_disk(dir: &common::TempDir) -> String {
@@ -50,7 +60,7 @@ fn saved_toasts(m: &Model) -> Vec<String> {
 
 fn saves(fx: &[Effect]) -> usize {
     fx.iter()
-        .filter(|e| matches!(e, Effect::SaveDocument { .. }))
+        .filter(|e| matches!(e, Effect::Editor(EffectEditor::SaveDocument { .. })))
         .count()
 }
 
@@ -88,13 +98,13 @@ fn text_without_a_whitespace_is_saved_after_five_seconds_and_a_pause_alone_saves
     type_text(&mut m, "body wor");
     m.state.wall_ms = T0 + SAVE_AFTER_MS - 1;
     assert_eq!(
-        saves(&apply(&mut m, Msg::Tick)),
+        saves(&apply(&mut m, Msg::Vault(MsgVault::Tick))),
         0,
         "a short pause does not save"
     );
     assert!(!on_disk(&dir).contains("wor"));
     m.state.wall_ms = T0 + SAVE_AFTER_MS;
-    let fx = apply(&mut m, Msg::Tick);
+    let fx = apply(&mut m, Msg::Vault(MsgVault::Tick));
     assert_eq!(saves(&fx), 1);
     run_to_idle(&mut m, &mut w, fx);
     assert!(on_disk(&dir).contains("body wor"));
@@ -118,7 +128,7 @@ fn only_one_save_runs_and_what_is_typed_meanwhile_is_saved_right_after() {
 fn leaving_the_editor_or_opening_another_item_saves_first() {
     let (mut m, mut w, dir) = open();
     type_text(&mut m, "kept");
-    let fx = apply(&mut m, Msg::CloseEditor);
+    let fx = apply(&mut m, Msg::Editor(MsgEditor::CloseEditor));
     assert_eq!(saves(&fx), 1);
     assert_eq!(
         m.state.screen,
@@ -129,10 +139,10 @@ fn leaving_the_editor_or_opening_another_item_saves_first() {
     assert!(on_disk(&dir).contains("kept"));
     assert_eq!(m.state.screen, Screen::Library);
 
-    let fx = apply(&mut m, Msg::OpenItem(Uid(0xA)));
+    let fx = apply(&mut m, Msg::Browse(MsgBrowse::OpenItem(Uid(0xA))));
     run_to_idle(&mut m, &mut w, fx);
     type_text(&mut m, "again");
-    let fx = apply(&mut m, Msg::OpenItem(Uid(0xB)));
+    let fx = apply(&mut m, Msg::Browse(MsgBrowse::OpenItem(Uid(0xB))));
     run_to_idle(&mut m, &mut w, fx);
     assert!(on_disk(&dir).contains("again"));
     assert_eq!(m.state.editor.as_ref().unwrap().uid, Uid(0xB));
@@ -149,11 +159,11 @@ fn a_file_changed_elsewhere_is_never_overwritten_until_the_user_chooses() {
     assert!(on_disk(&dir).contains("theirs"));
     m.state.wall_ms = T0 + 10 * SAVE_AFTER_MS;
     assert_eq!(
-        saves(&apply(&mut m, Msg::Tick)),
+        saves(&apply(&mut m, Msg::Vault(MsgVault::Tick))),
         0,
         "no retry on a conflict"
     );
-    let fx = apply(&mut m, Msg::CloseEditor);
+    let fx = apply(&mut m, Msg::Editor(MsgEditor::CloseEditor));
     assert_eq!(saves(&fx), 0);
     assert_eq!(
         m.state.screen,
@@ -161,7 +171,7 @@ fn a_file_changed_elsewhere_is_never_overwritten_until_the_user_chooses() {
         "it stays so nothing is lost"
     );
 
-    let fx = apply(&mut m, Msg::KeepMineClicked);
+    let fx = apply(&mut m, Msg::Editor(MsgEditor::KeepMineClicked));
     run_to_idle(&mut m, &mut w, fx);
     assert!(on_disk(&dir).contains("mine"));
     let e = m.state.editor.as_ref().unwrap();
@@ -177,7 +187,11 @@ fn a_failed_save_is_shown_and_retried_after_the_limit() {
     let e = m.state.editor.as_ref().unwrap();
     assert!(e.fail.is_some() && !e.conflict && is_dirty(e));
     m.state.wall_ms = T0 + SAVE_AFTER_MS;
-    assert_eq!(saves(&apply(&mut m, Msg::Tick)), 1, "it tries again");
+    assert_eq!(
+        saves(&apply(&mut m, Msg::Vault(MsgVault::Tick))),
+        1,
+        "it tries again"
+    );
 }
 
 #[test]
@@ -188,20 +202,20 @@ fn leaving_after_a_save_raises_one_toast_that_goes_away_by_itself() {
     let fx = type_text(&mut m, "one two ");
     run_to_idle(&mut m, &mut w, fx);
     assert!(saved_toasts(&m).is_empty(), "no toast for each auto-save");
-    let fx = apply(&mut m, Msg::CloseEditor);
+    let fx = apply(&mut m, Msg::Editor(MsgEditor::CloseEditor));
     run_to_idle(&mut m, &mut w, fx);
     assert_eq!(saved_toasts(&m), vec!["Saved Alpha".to_owned()]);
-    apply(&mut m, Msg::Tick);
+    apply(&mut m, Msg::Vault(MsgVault::Tick));
     assert_eq!(saved_toasts(&m).len(), 1, "still there right away");
     m.state.wall_ms += studyfrog_ui::editor_leave::TOAST_MS + 1;
-    apply(&mut m, Msg::Tick);
+    apply(&mut m, Msg::Vault(MsgVault::Tick));
     assert!(saved_toasts(&m).is_empty());
 }
 
 #[test]
 fn leaving_without_a_save_raises_no_toast() {
     let (mut m, mut w, _dir) = open();
-    let fx = apply(&mut m, Msg::CloseEditor);
+    let fx = apply(&mut m, Msg::Editor(MsgEditor::CloseEditor));
     run_to_idle(&mut m, &mut w, fx);
     assert!(saved_toasts(&m).is_empty());
 }

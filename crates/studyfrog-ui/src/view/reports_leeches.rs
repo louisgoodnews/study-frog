@@ -1,5 +1,6 @@
 //! The Leeches tab of the reports, and the same lists on a stack's Reports tab: items that keep failing with the
 //! reasons, and pairs that seem to interfere, each with actions to open, rewrite, pause or drill (STORY-0104).
+use crate::msg::MsgBrowse;
 
 use eframe::egui;
 use studyfrog_report::leech::LeechReason;
@@ -42,7 +43,7 @@ fn leech_row(r: &LeechRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .on_hover_text("Opens this item.")
                 .clicked()
             {
-                out.push(Msg::OpenItem(r.uid));
+                out.push(Msg::Browse(MsgBrowse::OpenItem(r.uid)));
             }
             let why: Vec<&str> = r.leech.reasons.iter().map(|x| reason(*x)).collect();
             ui.label(format!("- {}", why.join("; ")));
@@ -54,7 +55,7 @@ fn leech_row(r: &LeechRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .on_hover_text("Opens this for editing, or splits it.")
                 .clicked()
             {
-                out.push(Msg::OpenItem(r.uid));
+                out.push(Msg::Browse(MsgBrowse::OpenItem(r.uid)));
             }
             if ui
                 .button(format!("Pause {}", r.title))
@@ -80,11 +81,11 @@ fn pair_row(p: &PairRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.set_width(ui.available_width());
         ui.horizontal_wrapped(|ui| {
             if ui.link(&p.a.1).on_hover_text("Opens this item.").clicked() {
-                out.push(Msg::OpenItem(p.a.0));
+                out.push(Msg::Browse(MsgBrowse::OpenItem(p.a.0)));
             }
             ui.label("and");
             if ui.link(&p.b.1).on_hover_text("Opens this item.").clicked() {
-                out.push(Msg::OpenItem(p.b.0));
+                out.push(Msg::Browse(MsgBrowse::OpenItem(p.b.0)));
             }
         });
         let mut why = vec![format!(

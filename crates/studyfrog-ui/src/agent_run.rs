@@ -1,5 +1,6 @@
 //! Sending a wiki request, reading its answer and running an exam: the steps of the assistant screen
 //! that talk to a model. Pure.
+use crate::effect::EffectAssistant;
 
 use studyfrog_agent::exam::{exam_system, parse_results, without_results};
 use studyfrog_agent::provider::{Message, Role, is_local};
@@ -60,7 +61,7 @@ pub(crate) fn send_wiki(state: State) -> (State, Vec<Effect>) {
     });
     (
         state,
-        vec![Effect::AgentChat {
+        vec![Effect::Assistant(EffectAssistant::AgentChat {
             provider: p,
             system,
             messages,
@@ -68,7 +69,7 @@ pub(crate) fn send_wiki(state: State) -> (State, Vec<Effect>) {
                 pending.items.iter().map(|i| i.uid.clone()).collect(),
                 pending.stacks.iter().map(|s| s.0.clone()).collect(),
             ),
-        }],
+        })],
     )
 }
 
@@ -118,7 +119,13 @@ pub(crate) fn start_exam(state: State) -> (State, Vec<Effect>) {
                 exam: ExamState::default(),
                 ..a
             });
-            (state, vec![Effect::PrepareExam { folders, count }])
+            (
+                state,
+                vec![Effect::Assistant(EffectAssistant::PrepareExam {
+                    folders,
+                    count,
+                })],
+            )
         }
     }
 }
@@ -139,12 +146,12 @@ pub(crate) fn chat(state: State, messages: Vec<Message>) -> (State, Vec<Effect>)
     });
     (
         state,
-        vec![Effect::AgentChat {
+        vec![Effect::Assistant(EffectAssistant::AgentChat {
             provider: p,
             system,
             messages,
             purpose: ChatPurpose::Exam,
-        }],
+        })],
     )
 }
 

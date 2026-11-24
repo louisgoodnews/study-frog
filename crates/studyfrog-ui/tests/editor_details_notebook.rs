@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Integration tests for the details view tabbed notebook and stack due date editing.
+use studyfrog_ui::effect::EffectPlanner;
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -43,14 +45,14 @@ fn editing_note() -> Model {
     let doc = parse_doc(NOTE).unwrap();
     apply(
         &mut m,
-        Msg::DocumentLoaded(
+        Msg::Editor(MsgEditor::DocumentLoaded(
             Uid(0xA),
             Ok(LoadedDoc {
                 path: "french/alpha.md".into(),
                 doc,
                 hash: 1,
             }),
-        ),
+        )),
     );
     assert_eq!(m.state.screen, Screen::Editor);
     m
@@ -61,14 +63,14 @@ fn editing_stack() -> Model {
     let doc = parse_doc(STACK).unwrap();
     apply(
         &mut m,
-        Msg::DocumentLoaded(
+        Msg::Editor(MsgEditor::DocumentLoaded(
             Uid(0x1),
             Ok(LoadedDoc {
                 path: "french/_stack.md".into(),
                 doc,
                 hash: 2,
             }),
-        ),
+        )),
     );
     assert_eq!(m.state.screen, Screen::Editor);
     m
@@ -156,7 +158,7 @@ fn stack_notebook_tabs_and_inline_due_date_editing() {
         .1
         .iter()
         .find_map(|e| match e {
-            Effect::SaveSession(s) => Some(s.clone()),
+            Effect::Planner(EffectPlanner::SaveSession(s)) => Some(s.clone()),
             _ => None,
         })
         .expect("expected Effect::SaveSession when setting stack due date");
@@ -183,7 +185,7 @@ fn stack_notebook_tabs_and_inline_due_date_editing() {
         .1
         .iter()
         .find_map(|e| match e {
-            Effect::DeleteSession(id) => Some(*id),
+            Effect::Planner(EffectPlanner::DeleteSession(id)) => Some(*id),
             _ => None,
         })
         .expect("expected Effect::DeleteSession when clearing stack due date");
@@ -209,7 +211,7 @@ fn stack_due_date_text_field_editing() {
         .1
         .iter()
         .find_map(|e| match e {
-            Effect::SaveSession(s) => Some(s.clone()),
+            Effect::Planner(EffectPlanner::SaveSession(s)) => Some(s.clone()),
             _ => None,
         })
         .expect("expected SaveSession after typing date");

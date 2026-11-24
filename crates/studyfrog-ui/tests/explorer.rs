@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The performance explorer on the reports screen.
+use studyfrog_ui::effect::EffectEditor;
+use studyfrog_ui::effect::EffectReports;
 
 mod common;
 
@@ -107,17 +109,25 @@ fn clicking_a_row_or_a_crumb_or_a_period_asks_for_the_numbers() {
     h.run_steps(2);
     h.get_all_by_label("French").last().unwrap().click();
     h.run_steps(2);
-    assert!(h.state().1.contains(&Effect::Explore {
-        scope: Scope::Stack("french".into()),
-        period: Period::All
-    }));
+    assert!(
+        h.state()
+            .1
+            .contains(&Effect::Reports(EffectReports::Explore {
+                scope: Scope::Stack("french".into()),
+                period: Period::All
+            }))
+    );
     h.get_by_label("Period: Last 30 days").click();
     h.run_steps(2);
     assert_eq!(h.state().0.state.explorer.period, Period::Days(30));
-    assert!(h.state().1.contains(&Effect::Explore {
-        scope: Scope::Stack("french".into()),
-        period: Period::Days(30)
-    }));
+    assert!(
+        h.state()
+            .1
+            .contains(&Effect::Reports(EffectReports::Explore {
+                scope: Scope::Stack("french".into()),
+                period: Period::Days(30)
+            }))
+    );
 }
 
 #[test]
@@ -128,7 +138,11 @@ fn an_item_shows_its_reviews_and_a_way_to_open_it() {
     assert!(h.query_all_by_label_contains("Good").count() >= 1);
     h.get_by_label("Open the item").click();
     h.run_steps(2);
-    assert!(h.state().1.contains(&Effect::LoadDocument(Uid(5))));
+    assert!(
+        h.state()
+            .1
+            .contains(&Effect::Editor(EffectEditor::LoadDocument(Uid(5))))
+    );
 }
 
 #[test]

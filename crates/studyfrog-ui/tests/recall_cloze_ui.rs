@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Cloze cards in a run and the cloze button of the editor (STORY-0108).
+use studyfrog_ui::msg::MsgEditor;
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 
@@ -31,7 +33,10 @@ fn with_gap(mode: RunMode) -> Model {
         is_note: false,
         comments: Vec::new(),
     };
-    apply(&mut m, Msg::ItemLoaded(Uid(1), Ok(content)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::ItemLoaded(Uid(1), Ok(content))),
+    );
     m
 }
 
@@ -75,7 +80,10 @@ fn the_cloze_button_wraps_the_text_in_a_gap() {
         doc: parse_doc(card).unwrap(),
         hash: 1,
     };
-    apply(&mut m, Msg::DocumentLoaded(Uid(0xA), Ok(loaded)));
+    apply(
+        &mut m,
+        Msg::Editor(MsgEditor::DocumentLoaded(Uid(0xA), Ok(loaded))),
+    );
     let mut h = harness(m);
     h.run_steps(2);
     let tip = "Cloze: hide the selection as a gap (Ctrl+Shift+C; with Alt the same number)";
@@ -86,7 +94,10 @@ fn the_cloze_button_wraps_the_text_in_a_gap() {
     let mut m = std::mem::take(&mut h.state_mut().0);
     apply(
         &mut m,
-        Msg::Edit(EditAction::Field(0, "{{c1::The}} sun".into())),
+        Msg::Editor(MsgEditor::Edit(EditAction::Field(
+            0,
+            "{{c1::The}} sun".into(),
+        ))),
     );
     let mut h = harness(m);
     h.run_steps(3);
@@ -106,7 +117,10 @@ fn ctrl_shift_c_makes_a_gap_and_with_alt_keeps_the_number() {
         doc: parse_doc(card).unwrap(),
         hash: 1,
     };
-    apply(&mut m, Msg::DocumentLoaded(Uid(0xA), Ok(loaded)));
+    apply(
+        &mut m,
+        Msg::Editor(MsgEditor::DocumentLoaded(Uid(0xA), Ok(loaded))),
+    );
     let mut h = harness(m);
     h.run_steps(2);
     h.get_by_label("Front").focus();

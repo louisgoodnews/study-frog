@@ -1,6 +1,7 @@
 #![allow(dead_code, unused_imports, clippy::unwrap_used, clippy::expect_used)] // shared test helpers
 //! Helpers for the control protocol tests: a headless engine on a sample vault, and in-memory
 //! connections to it.
+use studyfrog_ui::msg::MsgVault;
 
 pub use std::io::{Cursor, Write};
 pub use std::path::{Path, PathBuf};
@@ -58,7 +59,12 @@ pub fn engine(vault: &Path, logs: &Path, policy: ControlPolicy) -> Engine {
         clock: ticking(),
         events: None,
     };
-    run_phase(&mut e, vec![Msg::OpenRecent(vault.display().to_string())]);
+    run_phase(
+        &mut e,
+        vec![Msg::Vault(MsgVault::OpenRecent(
+            vault.display().to_string(),
+        ))],
+    );
     assert!(e.model.state.vault.is_some());
     e
 }

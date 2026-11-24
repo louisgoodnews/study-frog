@@ -1,4 +1,5 @@
 //! The performance explorer on the reports screen: what is shown and how it changes. Pure.
+use crate::effect::EffectReports;
 
 use studyfrog_service::explore::{Explorer, Period, Scope};
 
@@ -105,16 +106,16 @@ fn ask(state: State, scope: Scope, period: Period) -> (State, Vec<Effect>) {
     };
     (
         State { explorer, ..state },
-        vec![Effect::Explore { scope, period }],
+        vec![Effect::Reports(EffectReports::Explore { scope, period })],
     )
 }
 
 /// The effect that refreshes the explorer with its current scope and period.
 pub fn refresh(state: &State) -> Effect {
-    Effect::Explore {
+    Effect::Reports(EffectReports::Explore {
         scope: state.explorer.scope.clone(),
         period: state.explorer.period,
-    }
+    })
 }
 
 /// Handle the explorer's messages.

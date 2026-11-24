@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Accessibility audit of the PDF screens: every control is named, the page is described and its
 //! text is available.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 #[path = "../../studyfrog-pdf/tests/common/mod.rs"]
@@ -34,7 +35,9 @@ fn viewer(label: &str) -> (common::TempDir, Model, Worker) {
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     studyfrog_service::pdfs::index_pdfs_fully(worker.session.as_mut().unwrap(), NOW_NS).unwrap();
     send(

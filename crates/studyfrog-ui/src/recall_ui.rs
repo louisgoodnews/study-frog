@@ -1,5 +1,6 @@
 //! The active-recall workflows in the window (EPIC-035): routing their messages. Pure; edits the
 //! owned state in place to keep the frames small.
+use crate::msg::MsgBrowse;
 
 use crate::effect::Effect;
 use crate::library_bulk::LibraryEffect;
@@ -120,7 +121,7 @@ fn occlusion_made(state: &mut State, r: Made) -> Vec<Effect> {
             let text = format!("Made {}: draw its masks on the picture.", created.title);
             notice(state, NoticeKind::Info, text);
             if let Some(uid) = created.uid {
-                state.replay = Some(Box::new(crate::msg::Msg::OpenItem(uid)));
+                state.replay = Some(Box::new(crate::msg::Msg::Browse(MsgBrowse::OpenItem(uid))));
             }
         }
         Err(e) => notice(

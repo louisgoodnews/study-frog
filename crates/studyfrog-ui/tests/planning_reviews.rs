@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The reviews the schedule planned, on the calendar: reading, dragging, moving by date, undo and the setting.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -80,10 +82,9 @@ fn the_calendar_asks_for_the_grid_and_the_setting_turns_it_off() {
 
     apply(&mut m, review(ReviewMsg::Loaded(Ok(vec![entry(3, 4)]))));
     let fx = apply(&mut m, review(ReviewMsg::Show(false)));
-    assert!(
-        fx.iter()
-            .any(|e| matches!(e, Effect::SaveAppSettings(s) if s.calendar_reviews_off))
-    );
+    assert!(fx.iter().any(
+        |e| matches!(e, Effect::Vault(EffectVault::SaveAppSettings(s)) if s.calendar_reviews_off)
+    ));
     assert!(m.state.planner.reviews.is_empty());
     assert!(
         !apply(&mut m, Msg::Plan(PlanMsg::Today))
@@ -198,7 +199,11 @@ fn through_the_worker_a_drop_changes_the_due_date_only_and_undo_restores_it() {
     for id in [10, 11] {
         save_mem_state(conn, Uid(id), &mem(now_ms + 3 * 86_400_000)).unwrap();
     }
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Calendar));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Calendar)),
+    );
     let p = &model.state.planner;
     let entry = p
         .reviews

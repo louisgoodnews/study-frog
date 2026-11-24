@@ -63,11 +63,16 @@ mod flow {
     use studyfrog_service::create_more::NewKind;
     use studyfrog_service::document::LoadedDoc;
     use studyfrog_ui::effect::Effect;
+    use studyfrog_ui::effect::EffectImport;
+    use studyfrog_ui::effect::EffectVault;
     use studyfrog_ui::exec::{execute, worker_new};
     use studyfrog_ui::image_ui::ImageTarget;
     use studyfrog_ui::modal::{Field, Modal, ModalMsg};
     use studyfrog_ui::model::{Model, apply};
     use studyfrog_ui::msg::Msg;
+    use studyfrog_ui::msg::MsgEditor;
+    use studyfrog_ui::msg::MsgImport;
+    use studyfrog_ui::msg::MsgVault;
 
     fn editing() -> Model {
         let mut m = Model::default();
@@ -80,8 +85,11 @@ mod flow {
             doc,
             hash: 1,
         };
-        apply(&mut m, Msg::VaultOpened(Ok(info())));
-        apply(&mut m, Msg::DocumentLoaded(Uid(0xA), Ok(loaded)));
+        apply(&mut m, Msg::Vault(MsgVault::VaultOpened(Ok(info()))));
+        apply(
+            &mut m,
+            Msg::Editor(MsgEditor::DocumentLoaded(Uid(0xA), Ok(loaded))),
+        );
         m
     }
 
@@ -99,11 +107,20 @@ mod flow {
     #[test]
     fn a_finished_picture_goes_at_the_end_of_the_text_area_and_marks_the_page_changed() {
         let mut m = editing();
-        let fx = apply(&mut m, Msg::PickImage(ImageTarget::Item(0)));
-        assert_eq!(fx, [Effect::AddImage(ImageTarget::Item(0))]);
+        let fx = apply(
+            &mut m,
+            Msg::Import(MsgImport::PickImage(ImageTarget::Item(0))),
+        );
+        assert_eq!(
+            fx,
+            [Effect::Import(EffectImport::AddImage(ImageTarget::Item(0)))]
+        );
         apply(
             &mut m,
-            Msg::ImageAdded(ImageTarget::Item(0), Ok(Some("assets/map-1.png".into()))),
+            Msg::Import(MsgImport::ImageAdded(
+                ImageTarget::Item(0),
+                Ok(Some("assets/map-1.png".into())),
+            )),
         );
         let e = m.state.editor.as_ref().unwrap();
         assert_eq!(
@@ -111,7 +128,10 @@ mod flow {
             "Hello\n\n![map-1](assets/map-1.png)\n"
         );
         assert!(studyfrog_ui::editor::is_dirty(e));
-        apply(&mut m, Msg::ImageAdded(ImageTarget::Item(0), Ok(None)));
+        apply(
+            &mut m,
+            Msg::Import(MsgImport::ImageAdded(ImageTarget::Item(0), Ok(None))),
+        );
         assert_eq!(
             m.state.editor.as_ref().unwrap().form.fields[0]
                 .text
@@ -122,7 +142,10 @@ mod flow {
         );
         apply(
             &mut m,
-            Msg::ImageAdded(ImageTarget::Item(0), Err("too big".into())),
+            Msg::Import(MsgImport::ImageAdded(
+                ImageTarget::Item(0),
+                Err("too big".into()),
+            )),
         );
         assert!(m.state.notice.as_ref().unwrap().text.contains("too big"));
     }
@@ -134,10 +157,10 @@ mod flow {
         apply(&mut m, Msg::Modal(ModalMsg::SetKind(NewKind::Card)));
         apply(
             &mut m,
-            Msg::ImageAdded(
+            Msg::Import(MsgImport::ImageAdded(
                 ImageTarget::Create(Field::Answer),
                 Ok(Some("assets/a.png".into())),
-            ),
+            )),
         );
         let Some(Modal::Create(f)) = &m.state.modal else {
             panic!()
@@ -170,15 +193,15 @@ mod flow {
         w.file_picker = Some(picker);
         execute(
             &mut w,
-            Effect::OpenVault(vault.display().to_string()),
+            Effect::Vault(EffectVault::OpenVault(vault.display().to_string())),
             1_800_000_000_000_000_000,
         );
         let msgs = execute(
             &mut w,
-            Effect::AddImage(ImageTarget::Item(0)),
+            Effect::Import(EffectImport::AddImage(ImageTarget::Item(0))),
             1_800_000_000_000_000_000,
         );
-        let Msg::ImageAdded(_, Ok(Some(rel))) = &msgs[0] else {
+        let Msg::Import(MsgImport::ImageAdded(_, Ok(Some(rel)))) = &msgs[0] else {
             panic!("{:?}", msgs[0])
         };
         assert!(rel.starts_with("assets/pic-") && vault.join(rel).is_file());

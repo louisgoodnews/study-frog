@@ -1,5 +1,7 @@
 //! Setup screen state and its update logic. The form itself is in [`crate::setup_form`].
 //! Pure: no egui, no I/O.
+use crate::effect::EffectRehearsal;
+use crate::msg::MsgRehearsal;
 
 use crate::effect::Effect;
 use crate::msg::Msg;
@@ -79,10 +81,10 @@ pub fn refresh_preview(state: State) -> (State, Vec<Effect>) {
     let form = &state.rehearse.form;
     match plan_from_form(form, 0) {
         Ok(plan) => {
-            let effect = Effect::PreviewQueue {
+            let effect = Effect::Rehearsal(EffectRehearsal::PreviewQueue {
                 plan,
                 mode: form.mode,
-            };
+            });
             let rehearse = Rehearse {
                 preview: Preview::Counting,
                 ..state.rehearse.clone()
@@ -102,7 +104,7 @@ pub fn refresh_preview(state: State) -> (State, Vec<Effect>) {
 /// Handle the setup messages.
 pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
     match msg {
-        Msg::Setup(edit) => {
+        Msg::Rehearsal(MsgRehearsal::Setup(edit)) => {
             let form = apply_edit(state.rehearse.form.clone(), edit);
             refresh_preview(State {
                 rehearse: Rehearse {
@@ -112,7 +114,7 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
                 ..state
             })
         }
-        Msg::SetupStep(step) => (
+        Msg::Rehearsal(MsgRehearsal::SetupStep(step)) => (
             State {
                 rehearse: Rehearse {
                     step,
@@ -122,7 +124,7 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
             },
             Vec::new(),
         ),
-        Msg::PreviewReady(result) => {
+        Msg::Rehearsal(MsgRehearsal::PreviewReady(result)) => {
             let preview = match result {
                 Ok(n) => Preview::Count(n),
                 Err(e) => Preview::Failed(e),

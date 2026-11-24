@@ -1,4 +1,5 @@
 //! The inside of the rehearsal card: the prompt, the answer, the marks and the rating buttons.
+use crate::msg::MsgRehearsal;
 
 mod parts;
 use self::parts::{
@@ -34,7 +35,7 @@ pub(crate) const MARKS: [(Difficulty, &str, Key); 3] = [
 ];
 
 fn act(out: &mut Vec<Msg>, action: Action) {
-    out.push(Msg::RunAction(action));
+    out.push(Msg::Rehearsal(MsgRehearsal::RunAction(action)));
 }
 
 pub(crate) fn paused(ui: &mut egui::Ui, out: &mut Vec<Msg>) {

@@ -1,4 +1,6 @@
 //! The dialogs: create an item (see `modal_create`), import, and choose the vault.
+use crate::msg::MsgEditor;
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, Align, Layout, RichText};
 
@@ -85,7 +87,7 @@ fn vault(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             "/path/to/your/vault",
             1,
         ) {
-            out.push(Msg::PathEdited(t));
+            out.push(Msg::Vault(MsgVault::PathEdited(t)));
         }
         ui.add_space(6.0);
         ui.horizontal(|ui| {
@@ -95,7 +97,7 @@ fn vault(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .on_hover_text("Opens a dialog to pick a folder for the vault.")
                 .clicked()
             {
-                out.push(Msg::BrowseVaultClicked);
+                out.push(Msg::Vault(MsgVault::BrowseVaultClicked));
             }
 
             if ui
@@ -108,7 +110,7 @@ fn vault(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .on_hover_text("Opens the vault in the folder you typed.")
                 .clicked()
             {
-                out.push(Msg::OpenVaultClicked);
+                out.push(Msg::Vault(MsgVault::OpenVaultClicked));
             }
 
             if state.opening {
@@ -137,7 +139,7 @@ fn vault(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     .on_hover_text("Opens this recent vault.")
                     .clicked()
                 {
-                    out.push(Msg::OpenRecent(path.clone()));
+                    out.push(Msg::Vault(MsgVault::OpenRecent(path.clone())));
                 }
             }
         });
@@ -166,7 +168,9 @@ fn delete_item_dialog(title: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .clicked()
         {
             send(out, ModalMsg::Close);
-            out.push(Msg::Edit(crate::msg::EditAction::ConfirmDelete));
+            out.push(Msg::Editor(MsgEditor::Edit(
+                crate::msg::EditAction::ConfirmDelete,
+            )));
         }
         if ui
             .button("Cancel")

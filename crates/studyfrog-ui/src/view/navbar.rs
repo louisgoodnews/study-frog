@@ -1,5 +1,6 @@
 //! The top bar: sidebar toggle and vault switcher, brand, global search and Create, and the
 //! notification, help, settings and profile buttons on the right. Menus open under their button.
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, Align, Layout, Panel, Rect, RichText, vec2};
 
@@ -128,7 +129,7 @@ fn brand_cluster(
     let brand =
         ui.add(egui::Label::new(RichText::new("StudyFrog").strong()).sense(egui::Sense::click()));
     if state.vault.is_some() && brand.clicked() {
-        out.push(Msg::Navigate(Screen::Home));
+        out.push(Msg::Vault(MsgVault::Navigate(Screen::Home)));
     }
     if let Some(vault) = &state.vault {
         let name = vault_label(&vault.root);
@@ -195,7 +196,7 @@ fn right_cluster(
     )
     .clicked()
     {
-        out.push(Msg::Navigate(Screen::Settings));
+        out.push(Msg::Vault(MsgVault::Navigate(Screen::Settings)));
     }
     help_button(state, ui, out);
     super::zen::button(state, ui, out);

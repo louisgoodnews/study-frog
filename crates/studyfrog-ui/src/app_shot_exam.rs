@@ -1,5 +1,7 @@
 //! The exam screens for `--screenshot`: the setup with Exam chosen, a running exam with a draft answer, and an
 //! exam answered to the end (one item a frame: the reference for every other item, a wrong answer otherwise).
+use crate::msg::MsgRehearsal;
+use crate::msg::MsgVault;
 
 use studyfrog_core::run::RunMode;
 use studyfrog_rehearsal::input::Action;
@@ -15,10 +17,12 @@ use crate::state::Screen;
 /// Rehearse, everything in order, Exam, on the "How" step.
 pub fn setup(model: &mut Model) -> Vec<Effect> {
     [
-        Msg::Navigate(Screen::Rehearse),
-        Msg::Setup(SetupEdit::Preset(Preset::EverythingInOrder)),
-        Msg::Setup(SetupEdit::Mode(RunMode::Exam)),
-        Msg::SetupStep(SetupStep::How),
+        Msg::Vault(MsgVault::Navigate(Screen::Rehearse)),
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Preset(
+            Preset::EverythingInOrder,
+        ))),
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Mode(RunMode::Exam))),
+        Msg::Rehearsal(MsgRehearsal::SetupStep(SetupStep::How)),
     ]
     .into_iter()
     .flat_map(|m| apply(model, m))
@@ -41,8 +45,13 @@ pub fn play(model: &mut Model, name: &str) -> Vec<Effect> {
         "I do not remember".to_owned()
     };
     match name {
-        "exam" if run.answer.is_empty() => apply(model, Msg::AnswerEdited(text)),
-        "exam-result" => apply(model, Msg::RunAction(Action::SubmitAnswer(text))),
+        "exam" if run.answer.is_empty() => {
+            apply(model, Msg::Rehearsal(MsgRehearsal::AnswerEdited(text)))
+        }
+        "exam-result" => apply(
+            model,
+            Msg::Rehearsal(MsgRehearsal::RunAction(Action::SubmitAnswer(text))),
+        ),
         _ => Vec::new(),
     }
 }

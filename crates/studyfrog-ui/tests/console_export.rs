@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The Console's output controls (STORY-0152): the search rule, the time on each entry, and the export of the
 //! transcript to the vault's log file.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 
@@ -47,7 +48,7 @@ fn the_export_writes_the_transcript_to_the_vault_log() {
     let mut w = worker_with_host(None, None, Host::default());
     execute(
         &mut w,
-        Effect::OpenVault(vault.path.display().to_string()),
+        Effect::Vault(EffectVault::OpenVault(vault.path.display().to_string())),
         NOW_NS,
     );
     let out = execute(

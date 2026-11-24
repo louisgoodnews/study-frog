@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Rearranging a PDF into a new file from the viewer.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 #[path = "../../studyfrog-pdf/tests/common/mod.rs"]
@@ -26,7 +27,9 @@ fn viewer(label: &str) -> (common::TempDir, Model, Worker) {
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     send(&mut model, &mut worker, PdfMsg::Open("a.pdf".into(), 0));
     send(&mut model, &mut worker, PdfMsg::Arrange(ArrangeMsg::Start));

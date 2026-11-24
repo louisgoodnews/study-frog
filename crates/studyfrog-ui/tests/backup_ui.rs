@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The backup section of the settings screen, and the worker doing a real backup and restore.
+use studyfrog_ui::effect::EffectBackup;
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 
@@ -55,7 +57,10 @@ fn the_buttons_ask_for_a_backup_and_a_chosen_backup_can_be_restored_or_dropped()
     );
     apply(&mut m, Msg::Backup(BackupMsg::IncludeKeys(true)));
     let fx = apply(&mut m, Msg::Backup(BackupMsg::Start));
-    assert_eq!(fx, [Effect::Backup { include_keys: true }]);
+    assert_eq!(
+        fx,
+        [Effect::Backup(EffectBackup::Backup { include_keys: true })]
+    );
     assert!(
         apply(&mut m, Msg::Backup(BackupMsg::Start)).is_empty(),
         "one at a time"
@@ -74,7 +79,7 @@ fn the_buttons_ask_for_a_backup_and_a_chosen_backup_can_be_restored_or_dropped()
 
     assert_eq!(
         apply(&mut m, Msg::Backup(BackupMsg::Choose)),
-        [Effect::ChooseBackup]
+        [Effect::Backup(EffectBackup::ChooseBackup)]
     );
     apply(
         &mut m,
@@ -87,10 +92,10 @@ fn the_buttons_ask_for_a_backup_and_a_chosen_backup_can_be_restored_or_dropped()
     let fx = apply(&mut m, Msg::Backup(BackupMsg::Restore));
     assert_eq!(
         fx,
-        [Effect::Restore {
+        [Effect::Backup(EffectBackup::Restore {
             archive: "/b/x.tar".into(),
             with_settings: true
-        }]
+        })]
     );
     let fx = apply(
         &mut m,
@@ -98,7 +103,7 @@ fn the_buttons_ask_for_a_backup_and_a_chosen_backup_can_be_restored_or_dropped()
     );
     assert_eq!(
         fx,
-        [Effect::OpenVault("/new/vault".into())],
+        [Effect::Vault(EffectVault::OpenVault("/new/vault".into()))],
         "the restored vault is opened"
     );
     assert!(m.state.backup.chosen.is_none());
@@ -169,19 +174,23 @@ fn the_worker_backs_up_a_real_vault_and_restores_it_elsewhere() {
     w.folder_picker = Some(pick_folder);
     w.file_picker = Some(pick_file);
     let now = 1_800_000_000_000_000_000;
-    execute(&mut w, Effect::OpenVault(vault.display().to_string()), now);
+    execute(
+        &mut w,
+        Effect::Vault(EffectVault::OpenVault(vault.display().to_string())),
+        now,
+    );
     let done = execute(
         &mut w,
-        Effect::Backup {
+        Effect::Backup(EffectBackup::Backup {
             include_keys: false,
-        },
+        }),
         now,
     );
     let Msg::Backup(BackupMsg::Done(Ok(Some(text)))) = &done[0] else {
         panic!("{:?}", done[0])
     };
     assert!(text.contains("1 files"), "{text}");
-    let chosen = execute(&mut w, Effect::ChooseBackup, now);
+    let chosen = execute(&mut w, Effect::Backup(EffectBackup::ChooseBackup), now);
     let Msg::Backup(BackupMsg::Chosen(Ok(Some(c)))) = &chosen[0] else {
         panic!("{:?}", chosen[0])
     };
@@ -200,7 +209,11 @@ fn a_fresh_install_can_restore_a_backup_from_the_welcome_page() {
     assert!(h.query_by_label("Restore from a backup…").is_some());
     h.get_by_label("Restore from a backup…").click();
     h.run_steps(2);
-    assert!(h.state().1.contains(&Effect::ChooseBackup));
+    assert!(
+        h.state()
+            .1
+            .contains(&Effect::Backup(EffectBackup::ChooseBackup))
+    );
     let mut m = Model::default();
     apply(
         &mut m,

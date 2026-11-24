@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The Sub-stacks tab: the tree, folding, opening a sub-stack and the empty state.
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -27,7 +28,10 @@ fn sub(folder: &str, title: &str, depth: usize, due: Option<i64>) -> SubStack {
 fn model(tree: Vec<SubStack>) -> Model {
     let mut m = open_model();
     m.state.app.stack_tabs = vec!["french:substacks".into()];
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     let summary = StackSummary {
         completed: 0,
         updated: 0,

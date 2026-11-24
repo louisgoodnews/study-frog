@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (13) | Ready (0) | In progress (0/3) | Review (2) | Blocked (3) | Done (607) |
+| Backlog (13) | Ready (0) | In progress (0/3) | Review (2) | Blocked (3) | Done (608) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -343,6 +343,7 @@
 |  |  |  |  |  | [TASK-0290](docs/issues/tasks/TASK-0290-classroom-turn-orchestrator-and-service-use-cases.md) Classroom turn orchestrator and service use cases in studyfrog-service (2) |
 |  |  |  |  |  | [TASK-0291](docs/issues/tasks/TASK-0291-solo-and-group-task-assignment-and-collaboration.md) Solo and group task assignment generator and group collaboration turns (2) |
 |  |  |  |  |  | [TASK-0292](docs/issues/tasks/TASK-0292-task-turn-in-and-teacher-grading-pipeline.md) Task turn-in workflow and teacher grading pipeline with structured feedback (3) |
+|  |  |  |  |  | [TASK-0296](docs/issues/tasks/TASK-0296-split-ui-msg-and-effect-into-per-area-enums.md) Split the UI Msg and Effect enums into per-area sub-enums (2) |
 
 ## Stories
 
@@ -557,7 +558,7 @@
 | [STORY-0208](docs/issues/stories/STORY-0208-classroom-session-domain-model-and-local-persistence.md) Classroom session domain model and local storage persistence (5) | done | 2/2 |
 | [STORY-0209](docs/issues/stories/STORY-0209-ai-teacher-and-simulated-student-lecture-orchestration.md) AI teacher and simulated student lecture orchestration (local and remote models) (5) | done | 2/2 |
 | [STORY-0210](docs/issues/stories/STORY-0210-individual-and-group-task-assignments-turn-in-and-grading.md) Individual and group task assignments, turn-in workflow, and automated grading (5) | done | 2/2 |
-| [STORY-0211](docs/issues/stories/STORY-0211-classroom-chat-ui-session-browser-and-assignment-workspace.md) Classroom-chat UI, session browser, and assignment submission workspace (5) | backlog | 0/3 |
+| [STORY-0211](docs/issues/stories/STORY-0211-classroom-chat-ui-session-browser-and-assignment-workspace.md) Classroom-chat UI, session browser, and assignment submission workspace (5) | backlog | 1/4 |
 
 ## Epics
 

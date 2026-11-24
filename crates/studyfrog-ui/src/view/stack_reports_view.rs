@@ -1,4 +1,6 @@
 //! The Reports tab of a stack: its familiarity and the items it knows least, from the same report as the global screen.
+use crate::msg::MsgBrowse;
+use crate::msg::MsgVault;
 
 use crate::msg::Msg;
 use crate::state::{Screen, State};
@@ -30,7 +32,7 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
                 .on_hover_text("Opens this item.")
                 .clicked()
             {
-                out.push(Msg::OpenItem(row.uid));
+                out.push(Msg::Browse(MsgBrowse::OpenItem(row.uid)));
             }
             ui.weak(format!("{} % - {}", row.percent, row.drivers));
         });
@@ -59,6 +61,6 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         .on_hover_text("Opens every report.")
         .clicked()
     {
-        out.push(Msg::Navigate(Screen::Reports));
+        out.push(Msg::Vault(MsgVault::Navigate(Screen::Reports)));
     }
 }

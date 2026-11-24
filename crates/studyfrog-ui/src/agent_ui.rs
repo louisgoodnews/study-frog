@@ -1,4 +1,5 @@
 //! The assistant screen's update logic: connections, wiki proposals and exams. Pure.
+use crate::effect::EffectAssistant;
 
 use studyfrog_agent::exam::exam_opening;
 use studyfrog_agent::provider::{Message, Provider, Role, may_send};
@@ -112,7 +113,13 @@ pub fn update(state: State, msg: AgentMsg) -> (State, Vec<Effect>) {
                     error: None,
                     ..a
                 });
-                (state, vec![Effect::PrepareWiki { folders, pdf }])
+                (
+                    state,
+                    vec![Effect::Assistant(EffectAssistant::PrepareWiki {
+                        folders,
+                        pdf,
+                    })],
+                )
             }
         },
         AgentMsg::WikiPrepared(r) => {
@@ -139,7 +146,10 @@ pub fn update(state: State, msg: AgentMsg) -> (State, Vec<Effect>) {
         {
             Some(changes) => {
                 let (state, _) = with(state, |a| AgentState { busy: true, ..a });
-                (state, vec![Effect::ApplyChanges(changes)])
+                (
+                    state,
+                    vec![Effect::Assistant(EffectAssistant::ApplyChanges(changes))],
+                )
             }
             None => fail(state, "Accept at least one change first.".to_owned()),
         },
@@ -199,7 +209,10 @@ pub fn update(state: State, msg: AgentMsg) -> (State, Vec<Effect>) {
         }
         AgentMsg::ExamReplied(r) => crate::agent_run::exam_replied(state, r),
         AgentMsg::RecordExam => match state.agent.exam.results.clone() {
-            Some(r) if state.agent.exam.recorded.is_none() => (state, vec![Effect::RecordExam(r)]),
+            Some(r) if state.agent.exam.recorded.is_none() => (
+                state,
+                vec![Effect::Assistant(EffectAssistant::RecordExam(r))],
+            ),
             _ => (state, Vec::new()),
         },
         AgentMsg::ExamRecorded(Err(e)) => fail(state, e),

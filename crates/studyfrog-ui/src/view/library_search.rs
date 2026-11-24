@@ -1,4 +1,5 @@
 //! The search bar above the library table: Standard fields or a query box with its errors and suggestions.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, RichText};
 use studyfrog_core::plan::ItemKind;
@@ -98,7 +99,7 @@ fn standard(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         &state.browser.search,
         width,
     ) {
-        out.push(Msg::SearchEdited(text));
+        out.push(Msg::Browse(MsgBrowse::SearchEdited(text)));
     }
     let kinds = [ItemKind::Note, ItemKind::Card, ItemKind::Question].map(|k| (k, kind_label(k)));
     if let Some(k) = choice(ui, "Type", s.kind, &kinds) {

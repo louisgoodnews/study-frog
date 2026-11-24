@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The first-run tutorial: offered once, each step opens its screen and is done when the user did it.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -20,7 +22,7 @@ fn tutorial(m: &mut Model, t: TutorialMsg) -> Vec<Effect> {
 #[test]
 fn the_tour_is_offered_on_home_until_the_user_answers() {
     let mut m = Model::default();
-    apply(&mut m, Msg::VaultOpened(Ok(info())));
+    apply(&mut m, Msg::Vault(MsgVault::VaultOpened(Ok(info()))));
     assert!(!m.state.app.tutorial_offered);
     assert!(studyfrog_ui::tutorial::offered(&m.state), "the card shows");
     assert!(
@@ -30,11 +32,12 @@ fn the_tour_is_offered_on_home_until_the_user_answers() {
     let fx = apply(&mut m, Msg::Modal(ModalMsg::TourDecline));
     assert!(m.state.app.tutorial_offered);
     assert!(
-        fx.iter()
-            .any(|e| matches!(e, Effect::SaveAppSettings(a) if a.tutorial_offered)),
+        fx.iter().any(
+            |e| matches!(e, Effect::Vault(EffectVault::SaveAppSettings(a)) if a.tutorial_offered)
+        ),
         "remembered across restarts"
     );
-    apply(&mut m, Msg::VaultOpened(Ok(info())));
+    apply(&mut m, Msg::Vault(MsgVault::VaultOpened(Ok(info()))));
     assert!(
         !studyfrog_ui::tutorial::offered(&m.state),
         "declined stays declined"
@@ -44,7 +47,7 @@ fn the_tour_is_offered_on_home_until_the_user_answers() {
 #[test]
 fn each_step_opens_its_screen_and_is_done_when_the_user_did_it() {
     let mut m = Model::default();
-    apply(&mut m, Msg::VaultOpened(Ok(info())));
+    apply(&mut m, Msg::Vault(MsgVault::VaultOpened(Ok(info()))));
     apply(&mut m, Msg::Modal(ModalMsg::TourStart));
     let t = m.state.help.tutorial.clone().unwrap();
     assert_eq!((t.step, t.done), (0, false));
@@ -52,7 +55,10 @@ fn each_step_opens_its_screen_and_is_done_when_the_user_did_it() {
 
     let mut more = info();
     more.overview.stacks.push(stack("Latin", "latin", 0, 0));
-    apply(&mut m, Msg::VaultPolled(Ok(Some(more.clone()))));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::VaultPolled(Ok(Some(more.clone())))),
+    );
     assert!(
         m.state.help.tutorial.as_ref().unwrap().done,
         "a stack was made"
@@ -62,7 +68,7 @@ fn each_step_opens_its_screen_and_is_done_when_the_user_did_it() {
     let t = m.state.help.tutorial.clone().unwrap();
     assert_eq!((t.step, t.done), (1, false));
     more.overview.stacks[2].cards = 1;
-    apply(&mut m, Msg::VaultPolled(Ok(Some(more))));
+    apply(&mut m, Msg::Vault(MsgVault::VaultPolled(Ok(Some(more)))));
     assert!(
         m.state.help.tutorial.as_ref().unwrap().done,
         "a card was made"
@@ -70,7 +76,7 @@ fn each_step_opens_its_screen_and_is_done_when_the_user_did_it() {
 
     tutorial(&mut m, TutorialMsg::Next);
     assert_eq!(m.state.screen, Screen::Rehearse);
-    apply(&mut m, Msg::Navigate(Screen::Home));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Home)));
     tutorial(&mut m, TutorialMsg::Show);
     assert_eq!(m.state.screen, Screen::Rehearse, "show me where");
     tutorial(&mut m, TutorialMsg::Stop);

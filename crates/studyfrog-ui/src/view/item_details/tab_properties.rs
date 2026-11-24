@@ -1,5 +1,6 @@
 //! The Properties tab of the item details notebook: kind, tags, subjects, priority, difficulty,
 //! status, PDF source link, and metadata timestamps.
+use crate::msg::MsgEditor;
 
 use eframe::egui::{self, RichText, Role, WidgetInfo};
 use studyfrog_core::event::{Difficulty, difficulty_name};
@@ -40,7 +41,7 @@ pub fn draw(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             crate::view::editor::key_badge(e, ui);
         });
         if let Some(t) = text_field(ui, "Tags (comma separated)", &e.form.tags, "", 1) {
-            out.push(Msg::Edit(EditAction::Tags(t)));
+            out.push(Msg::Editor(MsgEditor::Edit(EditAction::Tags(t))));
         }
         parent_stack_row(state, e, ui, out);
         subject_rows(state, e, ui, out);
@@ -74,7 +75,10 @@ fn subject_rows(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>
             for s in &book.subjects {
                 if chip(ui, e.form.subjects.contains(&s.name), ("Subject", &s.name)) {
                     let on = !e.form.subjects.contains(&s.name);
-                    out.push(Msg::Edit(EditAction::Subject(s.name.clone(), on)));
+                    out.push(Msg::Editor(MsgEditor::Edit(EditAction::Subject(
+                        s.name.clone(),
+                        on,
+                    ))));
                 }
             }
         });
@@ -106,7 +110,7 @@ fn priority_row(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.label("Priority");
     ui.horizontal_wrapped(|ui| {
         if chip(ui, e.form.priority.is_none(), ("Priority", "inherit")) {
-            out.push(Msg::Edit(EditAction::Priority(None)));
+            out.push(Msg::Editor(MsgEditor::Edit(EditAction::Priority(None))));
         }
         for p in PRIORITIES {
             if chip(
@@ -114,7 +118,7 @@ fn priority_row(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 e.form.priority == Some(p),
                 ("Priority", priority_name(p)),
             ) {
-                out.push(Msg::Edit(EditAction::Priority(Some(p))));
+                out.push(Msg::Editor(MsgEditor::Edit(EditAction::Priority(Some(p)))));
             }
         }
     });
@@ -130,7 +134,7 @@ fn status_row(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         .find(|i| i.path == e.path)
         .map(|i| i.status);
     if let Some(choice) = crate::view::status_ui::status_menu(ui, e.form.status, derived) {
-        out.push(Msg::Edit(EditAction::Status(choice)));
+        out.push(Msg::Editor(MsgEditor::Edit(EditAction::Status(choice))));
     }
 }
 
@@ -138,7 +142,7 @@ fn difficulty_row(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.label("Difficulty");
     ui.horizontal_wrapped(|ui| {
         if chip(ui, e.form.difficulty.is_none(), ("Difficulty", "inherit")) {
-            out.push(Msg::Edit(EditAction::Difficulty(None)));
+            out.push(Msg::Editor(MsgEditor::Edit(EditAction::Difficulty(None))));
         }
         for d in [Difficulty::Easy, Difficulty::Medium, Difficulty::Difficult] {
             if chip(
@@ -146,7 +150,9 @@ fn difficulty_row(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 e.form.difficulty == Some(d),
                 ("Difficulty", difficulty_name(d)),
             ) {
-                out.push(Msg::Edit(EditAction::Difficulty(Some(d))));
+                out.push(Msg::Editor(MsgEditor::Edit(EditAction::Difficulty(Some(
+                    d,
+                )))));
             }
         }
     });

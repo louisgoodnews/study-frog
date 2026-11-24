@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The red Exit button: leaving at once, or after the editor's unsaved changes are saved.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -24,10 +26,16 @@ fn exit_leaves_at_once_when_nothing_is_unsaved() {
 #[test]
 fn exit_saves_unsaved_changes_first_and_then_leaves() {
     let (_v, mut m, mut w) = common::flow::opened("quit");
-    common::flow::send(&mut m, &mut w, Msg::OpenItem(studyfrog_core::uid::Uid(12)));
+    common::flow::send(
+        &mut m,
+        &mut w,
+        Msg::Browse(MsgBrowse::OpenItem(studyfrog_core::uid::Uid(12))),
+    );
     apply(
         &mut m,
-        Msg::Edit(studyfrog_ui::msg::EditAction::Title("changed".into())),
+        Msg::Editor(MsgEditor::Edit(studyfrog_ui::msg::EditAction::Title(
+            "changed".into(),
+        ))),
     );
     assert!(studyfrog_ui::editor::has_unsaved_changes(&m.state));
     let fx = apply(&mut m, Msg::Chrome(ChromeMsg::Quit(QuitMsg::Ask)));

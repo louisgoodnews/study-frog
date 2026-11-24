@@ -1,4 +1,5 @@
 //! Helper operations for the planner state (STORY-0141, STORY-0142).
+use crate::effect::EffectPlanner;
 
 use studyfrog_calendar::recurrence::occurrences_all;
 use studyfrog_calendar::session::Session;
@@ -131,7 +132,7 @@ pub fn save(state: State) -> (State, Vec<Effect>) {
         return (state, Vec::new());
     };
     match session_from_form(form) {
-        Ok(s) => (state, vec![Effect::SaveSession(s)]),
+        Ok(s) => (state, vec![Effect::Planner(EffectPlanner::SaveSession(s))]),
         Err(e) => {
             let planner = Planner {
                 form_error: Some(e),
@@ -148,7 +149,10 @@ pub fn save_timetable(state: State) -> (State, Vec<Effect>) {
         return (state, Vec::new());
     };
     match timetable_from_form(form) {
-        Ok(entry) => (state, vec![Effect::SaveTimetable(entry)]),
+        Ok(entry) => (
+            state,
+            vec![Effect::Planner(EffectPlanner::SaveTimetable(entry))],
+        ),
         Err(e) => {
             let planner = Planner {
                 timetable_error: Some(e),

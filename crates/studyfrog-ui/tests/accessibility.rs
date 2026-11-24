@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Accessibility audit of every screen through the AccessKit tree.
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -39,7 +40,7 @@ fn every_control_on_every_screen_has_an_accessible_name() {
         Screen::Diary,
     ] {
         let mut m = open_model();
-        apply(&mut m, Msg::Navigate(screen));
+        apply(&mut m, Msg::Vault(MsgVault::Navigate(screen)));
         m.state.notice = Some(studyfrog_ui::state::Notice {
             kind: NoticeKind::Error,
             text: "x".into(),

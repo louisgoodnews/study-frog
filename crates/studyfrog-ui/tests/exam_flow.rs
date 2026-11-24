@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! TASK-0238 and TASK-0240: Exam in the setup, a whole exam through the real worker, and the Runs report.
+use studyfrog_ui::effect::EffectReports;
+use studyfrog_ui::msg::MsgRehearsal;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -38,8 +41,11 @@ fn the_setup_offers_exam_with_its_rules_and_an_exam_plan_never_schedules() {
     );
 
     let mut m = common::views::open_model();
-    apply(&mut m, Msg::Navigate(Screen::Rehearse));
-    apply(&mut m, Msg::SetupStep(SetupStep::How));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::SetupStep(SetupStep::How)),
+    );
     let mut h = harness(m);
     h.run_steps(2);
     h.get_by_label("Exam").click();
@@ -63,22 +69,40 @@ fn the_setup_offers_exam_with_its_rules_and_an_exam_plan_never_schedules() {
 #[test]
 fn a_whole_exam_runs_through_the_worker_and_lands_in_the_runs_report() {
     let (_vault, mut m, mut w) = opened("exam-flow");
-    send(&mut m, &mut w, Msg::Navigate(Screen::Rehearse));
     send(
         &mut m,
         &mut w,
-        Msg::Setup(SetupEdit::Preset(Preset::EverythingInOrder)),
+        Msg::Vault(MsgVault::Navigate(Screen::Rehearse)),
     );
-    send(&mut m, &mut w, Msg::Setup(SetupEdit::Mode(RunMode::Exam)));
-    send(&mut m, &mut w, Msg::StartRunClicked);
+    send(
+        &mut m,
+        &mut w,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Preset(
+            Preset::EverythingInOrder,
+        ))),
+    );
+    send(
+        &mut m,
+        &mut w,
+        Msg::Rehearsal(MsgRehearsal::Setup(SetupEdit::Mode(RunMode::Exam))),
+    );
+    send(
+        &mut m,
+        &mut w,
+        Msg::Rehearsal(MsgRehearsal::StartRunClicked),
+    );
     let queue = m.state.rehearse.run.as_ref().unwrap().session.queue.len();
     assert_eq!(queue, 2, "the two cards; the notes are left out");
     for text in ["a", "something else entirely"] {
-        send(&mut m, &mut w, Msg::AnswerEdited(text.into()));
         send(
             &mut m,
             &mut w,
-            Msg::RunAction(Action::SubmitAnswer(text.into())),
+            Msg::Rehearsal(MsgRehearsal::AnswerEdited(text.into())),
+        );
+        send(
+            &mut m,
+            &mut w,
+            Msg::Rehearsal(MsgRehearsal::RunAction(Action::SubmitAnswer(text.into()))),
         );
     }
     let run = m.state.rehearse.run.as_ref().unwrap();
@@ -89,10 +113,14 @@ fn a_whole_exam_runs_through_the_worker_and_lands_in_the_runs_report() {
         (50.0, ExamGrade::F, false)
     );
 
-    run_to_idle(&mut m, &mut w, vec![Effect::BuildReports]);
+    run_to_idle(
+        &mut m,
+        &mut w,
+        vec![Effect::Reports(EffectReports::BuildReports)],
+    );
     let row = &m.state.reports.as_ref().unwrap().runs[0];
     assert_eq!((row.mode, row.exam.clone()), (RunMode::Exam, Some(result)));
-    send(&mut m, &mut w, Msg::LeaveRun);
+    send(&mut m, &mut w, Msg::Rehearsal(MsgRehearsal::LeaveRun));
     m.state.screen = Screen::Reports;
     m.state.explorer.tab = ReportTab::Runs;
     let mut h = harness(m);
@@ -109,8 +137,14 @@ fn a_whole_exam_runs_through_the_worker_and_lands_in_the_runs_report() {
 fn the_result_screen_says_grading_until_every_answer_is_compared() {
     let mut m = common::views::running_model(RunMode::Exam);
     for text in ["Paris", "56"] {
-        apply(&mut m, Msg::AnswerEdited(text.into()));
-        apply(&mut m, Msg::RunAction(Action::SubmitAnswer(text.into())));
+        apply(
+            &mut m,
+            Msg::Rehearsal(MsgRehearsal::AnswerEdited(text.into())),
+        );
+        apply(
+            &mut m,
+            Msg::Rehearsal(MsgRehearsal::RunAction(Action::SubmitAnswer(text.into()))),
+        );
     }
     let mut h = harness(m);
     h.run_steps(3);

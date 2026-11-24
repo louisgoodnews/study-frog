@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! TASK-0206: the Prompts tab lists the prompts, saves one or all of them, and the import dialog points to it.
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -26,7 +27,7 @@ fn pick() -> Option<PathBuf> {
 
 fn on_the_tab() -> Model {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Prompts));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Prompts)));
     m
 }
 
@@ -165,7 +166,7 @@ fn a_picked_option_replaces_the_one_before_and_goes_with_save() {
 fn the_assistant_tab_points_to_the_screen_and_the_screen_is_in_the_sidebar() {
     let mut m = open_model();
     apply(&mut m, Msg::Agent(AgentMsg::Tab(AgentTab::Prompts)));
-    apply(&mut m, Msg::Navigate(Screen::Agent));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Agent)));
     let mut h = harness(m);
     h.run_steps(4);
     assert!(h.query_by_label("Open Prompts").is_some());

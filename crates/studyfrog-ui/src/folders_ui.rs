@@ -1,4 +1,6 @@
 //! Pure update logic for the Folders view.
+use crate::effect::EffectBrowse;
+use crate::effect::EffectEditor;
 
 pub use crate::folders_nav::{handle_key, open_entry, selected_parent};
 pub use crate::folders_tree::{compare_entries, entries_from_vault, tree_visible_rows};
@@ -210,7 +212,7 @@ pub fn update(mut state: State, msg: FoldersMsg) -> (State, Vec<Effect>) {
             {
                 let uid = item.uid;
                 let (state, mut fx) = crate::nav::navigate(state, crate::state::Screen::Editor);
-                fx.push(Effect::LoadDocument(uid));
+                fx.push(Effect::Editor(EffectEditor::LoadDocument(uid)));
                 return (state, fx);
             }
             (state, Vec::new())
@@ -223,7 +225,10 @@ pub fn update(mut state: State, msg: FoldersMsg) -> (State, Vec<Effect>) {
             state.vault = Some(info);
             (
                 state,
-                vec![Effect::Folders(FolderEffect::Scan), Effect::LoadLibrary],
+                vec![
+                    Effect::Folders(FolderEffect::Scan),
+                    Effect::Browse(EffectBrowse::LoadLibrary),
+                ],
             )
         }
         FoldersMsg::OpDone(Err(e)) => {

@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Cards and questions from highlighted passages.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 #[path = "../../studyfrog-pdf/tests/common/mod.rs"]
@@ -37,7 +38,9 @@ fn a_highlight_becomes_a_card_and_a_selection_a_question_each_with_the_page_as_s
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     send(
         &mut model,

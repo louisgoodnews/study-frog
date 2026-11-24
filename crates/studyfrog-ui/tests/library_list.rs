@@ -1,5 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The library list's logic: loading, the stack and the search, sorting and the columns.
+use studyfrog_ui::effect::EffectBrowse;
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -53,23 +57,27 @@ fn shown(m: &Model) -> Vec<String> {
 #[test]
 fn the_rows_are_asked_for_when_the_library_opens_and_after_changes() {
     let mut m = Model::default();
-    let fx = apply(&mut m, Msg::VaultOpened(Ok(common::views::info())));
+    let fx = apply(
+        &mut m,
+        Msg::Vault(MsgVault::VaultOpened(Ok(common::views::info()))),
+    );
     assert!(
-        !fx.contains(&Effect::LoadLibrary),
+        !fx.contains(&Effect::Browse(EffectBrowse::LoadLibrary)),
         "the library is not on screen yet"
     );
-    let fx = apply(&mut m, Msg::Navigate(Screen::Library));
+    let fx = apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Library)));
     assert!(
-        fx.contains(&Effect::LoadLibrary),
+        fx.contains(&Effect::Browse(EffectBrowse::LoadLibrary)),
         "opening the library reads the rows"
     );
     assert!(
-        !apply(&mut m, Msg::Tick).contains(&Effect::LoadLibrary),
+        !apply(&mut m, Msg::Vault(MsgVault::Tick))
+            .contains(&Effect::Browse(EffectBrowse::LoadLibrary)),
         "and only once"
     );
-    let fx = apply(&mut m, Msg::ItemsLoaded(Ok(Vec::new())));
+    let fx = apply(&mut m, Msg::Browse(MsgBrowse::ItemsLoaded(Ok(Vec::new()))));
     assert!(
-        fx.contains(&Effect::LoadLibrary),
+        fx.contains(&Effect::Browse(EffectBrowse::LoadLibrary)),
         "a change of the items reads them again"
     );
 }
@@ -83,15 +91,21 @@ fn the_stack_decides_what_is_listed_and_a_stack_includes_the_stacks_below_it() {
         "all items, in path order"
     );
     assert_eq!(m.state.library.scope_total, 4);
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     assert_eq!(
         shown(&m),
         ["Bonjour", "Etre"],
         "the stack and the one below it"
     );
-    apply(&mut m, Msg::Select(Selection::Stack("french/verbs".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french/verbs".into()))),
+    );
     assert_eq!(shown(&m), ["Etre"]);
-    apply(&mut m, Msg::Select(Selection::Inbox));
+    apply(&mut m, Msg::Browse(MsgBrowse::Select(Selection::Inbox)));
     assert_eq!(shown(&m), ["Loose"]);
     assert_eq!(m.state.library.scope_total, 1);
 }
@@ -99,15 +113,15 @@ fn the_stack_decides_what_is_listed_and_a_stack_includes_the_stacks_below_it() {
 #[test]
 fn the_search_narrows_the_list_by_title_and_the_count_says_how_many_of_how_many() {
     let mut m = loaded();
-    apply(&mut m, Msg::SearchEdited("PRIM".into()));
+    apply(&mut m, Msg::Browse(MsgBrowse::SearchEdited("PRIM".into())));
     assert_eq!(shown(&m), ["Primes"]);
     assert_eq!(
         (m.state.library.shown.len(), m.state.library.scope_total),
         (1, 4)
     );
-    apply(&mut m, Msg::SearchEdited("zzz".into()));
+    apply(&mut m, Msg::Browse(MsgBrowse::SearchEdited("zzz".into())));
     assert!(shown(&m).is_empty());
-    apply(&mut m, Msg::SearchEdited(String::new()));
+    apply(&mut m, Msg::Browse(MsgBrowse::SearchEdited(String::new())));
     assert_eq!(shown(&m).len(), 4);
 }
 
@@ -162,7 +176,7 @@ fn columns_are_shown_or_hidden_in_a_fixed_order_the_title_stays_and_the_choice_i
         Msg::Library(LibraryMsg::ToggleColumn(Column::Familiarity)),
     );
     assert!(m.state.library.columns.contains(&Column::Familiarity));
-    let [Effect::SaveAppSettings(app)] = &fx[..] else {
+    let [Effect::Vault(EffectVault::SaveAppSettings(app))] = &fx[..] else {
         panic!("{fx:?}")
     };
     assert_eq!(
@@ -202,7 +216,7 @@ fn stored_columns_read_back_ignoring_unknown_words_and_starting_with_the_title()
         library_columns: Some("title,path".into()),
         ..Default::default()
     };
-    apply(&mut m, Msg::Started { app, error: None });
+    apply(&mut m, Msg::Vault(MsgVault::Started { app, error: None }));
     assert_eq!(m.state.library.columns, [Column::Title, Column::Path]);
 }
 

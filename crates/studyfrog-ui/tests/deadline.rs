@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Setting and changing a stack's due date from the library.
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -17,7 +18,10 @@ fn model(with_deadline: bool) -> Model {
     let mut m = open_model();
     let stack = m.state.vault.as_ref().unwrap().overview.stacks[0].clone();
     m.state.app.stack_tabs = vec![format!("{}:list", stack.folder)];
-    apply(&mut m, Msg::Select(Selection::Stack(stack.folder)));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack(stack.folder))),
+    );
     let sessions = if with_deadline {
         vec![Session {
             id: Uid(77),

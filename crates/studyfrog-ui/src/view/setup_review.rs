@@ -1,4 +1,5 @@
 //! Step 3 of the run setup: the choices in words, each with a way back to change it.
+use crate::msg::MsgRehearsal;
 
 use eframe::egui::{self, RichText};
 use studyfrog_core::plan::{Order, ScheduleEffect, StateFilter};
@@ -99,7 +100,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                         .on_hover_text("Changes this.")
                         .clicked()
                     {
-                        out.push(Msg::SetupStep(back));
+                        out.push(Msg::Rehearsal(MsgRehearsal::SetupStep(back)));
                     }
                 });
             });

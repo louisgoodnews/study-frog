@@ -1,6 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! An occlusion card made from a picture (as the PDF viewer's saved pictures offer) through the real worker,
 //! opened on its page, its masks saved to the file (STORY-0109).
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -62,7 +64,9 @@ fn a_picture_becomes_a_card_whose_page_opens_and_whose_masks_are_saved() {
     run_to_idle(
         &mut m,
         &mut w,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     let make = RecallMsg::OcclusionCard("bio".into(), "assets/heart.png".into());
     send(&mut m, &mut w, Msg::Recall(make));
@@ -83,9 +87,9 @@ fn a_picture_becomes_a_card_whose_page_opens_and_whose_masks_are_saved() {
     send(
         &mut m,
         &mut w,
-        Msg::Edit(EditAction::Occlusion(Some(o.clone()))),
+        Msg::Editor(MsgEditor::Edit(EditAction::Occlusion(Some(o.clone())))),
     );
-    send(&mut m, &mut w, Msg::SaveClicked);
+    send(&mut m, &mut w, Msg::Editor(MsgEditor::SaveClicked));
     let path = dir.path.join(&m.state.editor.as_ref().unwrap().path);
     let text = std::fs::read_to_string(path).unwrap();
     let saved = occlusion_of(&studyfrog_md::parse::parse_doc(&text).unwrap()).unwrap();
@@ -118,7 +122,9 @@ fn a_picture_saved_from_a_pdf_offers_an_occlusion_card() {
     run_to_idle(
         &mut m,
         &mut w,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     let open = studyfrog_ui::pdf_types::PdfMsg::Open("bio/three.pdf".into(), 0);
     send(&mut m, &mut w, Msg::Pdf(open));

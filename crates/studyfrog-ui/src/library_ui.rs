@@ -1,4 +1,8 @@
 //! The library list: the rows of the vault, the columns shown, the sort and what the current stack and search let through. Pure.
+use crate::effect::EffectBrowse;
+use crate::effect::EffectVault;
+use crate::msg::MsgBrowse;
+use crate::msg::MsgVault;
 
 use studyfrog_core::query::Order;
 use studyfrog_core::query_eval::{Row, run_filtered};
@@ -115,10 +119,10 @@ pub fn wants_reload(msg: &crate::msg::Msg) -> bool {
     use crate::msg::Msg;
     matches!(
         msg,
-        Msg::ItemsLoaded(_)
-            | Msg::VaultOpened(Ok(_))
-            | Msg::Navigate(crate::state::Screen::Library)
-            | Msg::Created(Ok(_))
+        Msg::Browse(MsgBrowse::ItemsLoaded(_))
+            | Msg::Vault(MsgVault::VaultOpened(Ok(_)))
+            | Msg::Vault(MsgVault::Navigate(crate::state::Screen::Library))
+            | Msg::Browse(MsgBrowse::Created(Ok(_)))
     )
 }
 
@@ -151,7 +155,7 @@ pub fn update(state: State, msg: LibraryMsg) -> (State, Vec<Effect>) {
                 library_columns: Some(columns_to_text(&state.library.columns)),
                 ..state.app.clone()
             };
-            let effects = vec![Effect::SaveAppSettings(app.clone())];
+            let effects = vec![Effect::Vault(EffectVault::SaveAppSettings(app.clone()))];
             state.app = app;
             return (state, effects);
         }
@@ -198,7 +202,7 @@ pub fn sync(state: State, reload: bool) -> (State, Vec<Effect>) {
     if state.library.stale && state.vault.is_some() && state.screen == crate::state::Screen::Library
     {
         state.library.stale = false;
-        effects.push(Effect::LoadLibrary);
+        effects.push(Effect::Browse(EffectBrowse::LoadLibrary));
         effects.push(Effect::Library(
             crate::library_bulk::LibraryEffect::LoadFilters,
         ));

@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Pages that are only pictures are said to have no text, in the viewer and in notes.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 #[path = "../../studyfrog-pdf/tests/common/mod.rs"]
@@ -31,7 +32,9 @@ fn a_scanned_pdf_is_flagged_in_the_viewer_and_its_note_says_why_there_is_no_text
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     studyfrog_service::pdfs::index_pdfs_fully(worker.session.as_mut().unwrap(), NOW_NS).unwrap();
     let fx = apply(&mut model, Msg::Pdf(PdfMsg::Open("bio/scan.pdf".into(), 0)));
@@ -68,7 +71,9 @@ fn pictures_and_snapshots_are_saved_and_can_be_put_into_the_note() {
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     let mut send = |model: &mut Model, m: PdfMsg| {
         let fx = apply(model, Msg::Pdf(m));

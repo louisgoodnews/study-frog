@@ -1,4 +1,5 @@
 //! The Sub-stacks tab: the stacks inside this one as a tree that folds, each with status, progress, due date and familiarity.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, Id};
 use studyfrog_core::civil::{date_from_days, format_date};
@@ -49,7 +50,9 @@ fn row(tree: &[SubStack], i: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             .on_hover_text("Opens this sub-stack.")
             .clicked()
         {
-            out.push(Msg::Select(Selection::Stack(sub.folder.clone())));
+            out.push(Msg::Browse(MsgBrowse::Select(Selection::Stack(
+                sub.folder.clone(),
+            ))));
         }
         ui.weak(line(sub));
     });

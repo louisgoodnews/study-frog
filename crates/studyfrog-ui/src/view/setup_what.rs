@@ -1,4 +1,5 @@
 //! Step 1 of the run setup: which stacks, kinds and tags.
+use crate::msg::MsgRehearsal;
 
 use eframe::egui::{self, RichText};
 use studyfrog_core::plan::ItemKind;
@@ -17,7 +18,7 @@ const KINDS: [(ItemKind, &str); 3] = [
 ];
 
 fn edit(out: &mut Vec<Msg>, e: SetupEdit) {
-    out.push(Msg::Setup(e));
+    out.push(Msg::Rehearsal(MsgRehearsal::Setup(e)));
 }
 
 /// Whether `folder` is somewhere inside `outer`.

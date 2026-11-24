@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! TASK-0198: macros typed in the text turn into Markdown at the closing brace.
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -162,7 +163,10 @@ fn editing() -> studyfrog_ui::model::Model {
         doc,
         hash: 1,
     };
-    apply(&mut m, Msg::DocumentLoaded(Uid(0xA), Ok(loaded)));
+    apply(
+        &mut m,
+        Msg::Editor(MsgEditor::DocumentLoaded(Uid(0xA), Ok(loaded))),
+    );
     assert_eq!(m.state.screen, Screen::Editor);
     m
 }

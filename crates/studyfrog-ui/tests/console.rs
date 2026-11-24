@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The Console screen (STORY-0133): the transcript and history, the screen in the egui harness, and
 //! its link to a headless instance (answers, served logs and lifecycle events come back as entries).
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 mod control_common;
@@ -94,7 +95,7 @@ fn script_stdout_and_stderr_each_get_their_own_stream_entry() {
 #[test]
 fn the_screen_shows_the_transcript_and_sends_what_is_typed() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Console));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Console)));
     apply(
         &mut m,
         Msg::Console(ConsoleMsg::Line(

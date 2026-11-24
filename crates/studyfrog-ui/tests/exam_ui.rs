@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! TASK-0238 and TASK-0239: the exam run screen keeps its rules and the result screen shows the grade.
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 mod exam_common;
@@ -79,13 +80,16 @@ fn a_submitted_answer_is_locked_scored_and_the_next_item_follows() {
         "the field is cleared for the next item"
     );
     for a in [Action::Flip, Action::Skip, Action::Rate(Rating::Easy)] {
-        apply(&mut m, Msg::RunAction(a));
+        apply(&mut m, Msg::Rehearsal(MsgRehearsal::RunAction(a)));
     }
     assert_eq!(
         current_item(&m.state.rehearse.run.as_ref().unwrap().session),
         Some(Uid(2))
     );
-    apply(&mut m, Msg::AnswerScored(Uid(1), Ok(scored(0.9))));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::AnswerScored(Uid(1), Ok(scored(0.9)))),
+    );
     assert!(
         m.state
             .rehearse
@@ -113,19 +117,25 @@ fn grading_starts_once_when_the_last_answer_has_its_score() {
         "not before every answer is compared"
     );
     assert_eq!(
-        grade_effects(&apply(&mut m, Msg::AnswerScored(Uid(2), Ok(scored(1.0))))),
+        grade_effects(&apply(
+            &mut m,
+            Msg::Rehearsal(MsgRehearsal::AnswerScored(Uid(2), Ok(scored(1.0))))
+        )),
         0
     );
     assert_eq!(
         grade_effects(&apply(
             &mut m,
-            Msg::AnswerScored(Uid(1), Err("broken".into()))
+            Msg::Rehearsal(MsgRehearsal::AnswerScored(Uid(1), Err("broken".into())))
         )),
         1,
         "a failed comparison counts 0"
     );
     assert_eq!(
-        grade_effects(&apply(&mut m, Msg::AnswerScored(Uid(1), Ok(scored(1.0))))),
+        grade_effects(&apply(
+            &mut m,
+            Msg::Rehearsal(MsgRehearsal::AnswerScored(Uid(1), Ok(scored(1.0))))
+        )),
         0,
         "only once"
     );
@@ -170,10 +180,16 @@ fn the_result_screen_shows_percent_grade_pass_and_the_review() {
 fn a_stopped_exam_is_not_graded() {
     let mut m = exam_model();
     submit(&mut m, "Paris");
-    let effects = apply(&mut m, Msg::RunAction(Action::Abort));
+    let effects = apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::Abort)),
+    );
     assert_eq!(grade_effects(&effects), 0);
     assert_eq!(
-        grade_effects(&apply(&mut m, Msg::AnswerScored(Uid(1), Ok(scored(1.0))))),
+        grade_effects(&apply(
+            &mut m,
+            Msg::Rehearsal(MsgRehearsal::AnswerScored(Uid(1), Ok(scored(1.0))))
+        )),
         0
     );
     let mut h = harness(m);

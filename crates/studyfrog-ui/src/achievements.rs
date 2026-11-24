@@ -1,4 +1,5 @@
 //! The achievements screen's update logic. Pure.
+use crate::effect::EffectReports;
 
 use studyfrog_core::achievement::Metric;
 use studyfrog_service::achievements::{AchievementReport, Entry};
@@ -42,7 +43,7 @@ pub fn update(state: State, msg: AchievementsMsg) -> (State, Vec<Effect>) {
                 achievements_wanted: true,
                 ..state
             },
-            vec![Effect::CheckAchievements],
+            vec![Effect::Reports(EffectReports::CheckAchievements)],
         ),
         AchievementsMsg::Wanted => (state, Vec::new()),
     }

@@ -2,6 +2,9 @@
 //! The assistant as an MCP client in the application: tool servers registered and discovered on the
 //! Connections tab, and tool calls during an exam with a fake model and a fake local tool server
 //! (a shell script): changing tools wait for "Allow", trusted read-only tools run at once.
+use studyfrog_ui::effect::EffectAssistant;
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -70,7 +73,9 @@ fn ready(label: &str) -> (Model, Worker, common::TempDir) {
     let mut worker = worker_with_host(Some(cfg.path.clone()), None, host);
     let mut model = Model::default();
     model.state.app.tutorial_offered = true;
-    let open = vec![Effect::OpenVault(vault.path.display().to_string())];
+    let open = vec![Effect::Vault(EffectVault::OpenVault(
+        vault.path.display().to_string(),
+    ))];
     run_to_idle(&mut model, &mut worker, open);
     let local = Provider {
         name: "Local".into(),
@@ -82,12 +87,16 @@ fn ready(label: &str) -> (Model, Worker, common::TempDir) {
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::SaveConnection {
+        vec![Effect::Assistant(EffectAssistant::SaveConnection {
             provider: local,
             key: None,
-        }],
+        })],
     );
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Agent));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Agent)),
+    );
     send(
         &mut model,
         &mut worker,

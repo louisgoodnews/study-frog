@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The quiet line when an answer takes far longer than the run's usual (STORY-0103).
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgRehearsal;
 
 mod common;
 
@@ -18,7 +20,10 @@ use studyfrog_ui::msg::Msg;
 fn revealed_after(last_ms: u32) -> studyfrog_ui::model::Model {
     let mut m = running_model(RunMode::Flip);
     m.state.now = 1.0;
-    apply(&mut m, Msg::RunAction(Action::Flip));
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::RunAction(Action::Flip)),
+    );
     let run = m.state.rehearse.run.as_mut().unwrap();
     let flip = |item: u128, ms: u32| Latency {
         item: Uid(item),
@@ -60,7 +65,9 @@ fn the_line_can_be_switched_off_from_the_run_and_from_the_settings() {
         &mut m,
         Msg::SettingsTab(SettingsTabMsg::SlowAnswerNotice(false)),
     );
-    assert!(matches!(&fx[..], [Effect::SaveAppSettings(s)] if s.slow_answer_notice_off));
+    assert!(
+        matches!(&fx[..], [Effect::Vault(EffectVault::SaveAppSettings(s))] if s.slow_answer_notice_off)
+    );
     apply(
         &mut m,
         Msg::SettingsTab(SettingsTabMsg::SlowAnswerNotice(true)),

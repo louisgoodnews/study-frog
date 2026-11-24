@@ -1,6 +1,7 @@
 //! What the window shows before a vault is open. Choosing the vault is not the first thing asked:
 //! an in-app notification (see `toast`) invites the user to set it up, and this page has the same
 //! door.
+use crate::msg::MsgVault;
 
 use eframe::egui;
 
@@ -47,7 +48,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 .add_enabled(!state.opening, egui::Button::new(path.as_str())).on_hover_text("Opens this recent vault.")
                 .clicked()
             {
-                out.push(Msg::OpenRecent(path.clone()));
+                out.push(Msg::Vault(MsgVault::OpenRecent(path.clone())));
             }
         }
     }

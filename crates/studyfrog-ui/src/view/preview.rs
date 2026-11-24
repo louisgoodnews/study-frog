@@ -1,4 +1,5 @@
 //! Drawing the preview blocks. The blocks are parsed once when the text changes, never per frame.
+use crate::msg::MsgEditor;
 
 use eframe::egui::{self, Align, Layout, RichText, vec2};
 use studyfrog_md::blocks::{Block, Link, ListItem, Span};
@@ -14,7 +15,7 @@ pub struct WideProse;
 /// How much wider the rehearsal card's prose is than the reading measure (about 110 characters a line).
 pub const RUN_PROSE_SHARE: f32 = 1.4;
 
-/// Draw `blocks`; clicking a wikilink pushes [`Msg::OpenLink`].
+/// Draw `blocks`; clicking a wikilink pushes [`Msg::Editor(MsgEditor::OpenLink)`].
 pub fn draw_blocks(ui: &mut egui::Ui, blocks: &[Block], out: &mut Vec<Msg>) {
     let toc = if blocks.iter().any(|b| matches!(b, Block::Toc)) {
         rich::headings(blocks)
@@ -178,7 +179,7 @@ pub(super) fn spans_line(
                         .on_hover_text(format!("Open \"{target}\""))
                         .clicked()
                     {
-                        out.push(Msg::OpenLink(target.clone()));
+                        out.push(Msg::Editor(MsgEditor::OpenLink(target.clone())));
                     }
                 }
                 Some(Link::Url(url)) => match crate::pdf_link::pdf_target(url) {

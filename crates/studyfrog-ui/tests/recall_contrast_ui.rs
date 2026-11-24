@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The contrastive drill (STORY-0111): opened from a confused pair or 2-4 selected items, matched, compared
 //! side by side and kept as hints or a comparison note.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 
@@ -203,7 +204,9 @@ fn the_worker_loads_the_items_and_writes_the_hints() {
     run_to_idle(
         &mut m,
         &mut w,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     send(
         &mut m,

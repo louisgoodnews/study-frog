@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Appearance settings shown at once on the running application, from the keyboard and from the Settings tab.
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -91,7 +92,7 @@ fn the_appearance_tab_offers_every_setting_with_names_and_a_click_changes_it() {
     let mut m = open_model();
     m.state.toasts.clear();
     m.state.app.settings_tab = Some("appearance".into());
-    apply(&mut m, Msg::Navigate(Screen::Settings));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Settings)));
     // Tall enough for every group, so no control is below the fold.
     let mut h = egui_kittest::Harness::builder()
         .with_size(egui::vec2(1000.0, 2200.0))

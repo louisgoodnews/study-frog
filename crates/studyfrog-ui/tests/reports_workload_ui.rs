@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The Workload tab, its choices, and the exam pacer on the stack page (STORY-0105).
+use studyfrog_ui::effect::EffectReports;
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -89,15 +91,23 @@ fn the_horizon_and_the_unit_can_be_changed() {
 fn the_stack_page_asks_for_the_reports_and_shows_its_exam_pacer() {
     let mut m = open_model();
     m.state.app.stack_tabs = vec!["french:summary".into()];
-    let fx = apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    let fx = apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     assert!(
-        fx.contains(&studyfrog_ui::effect::Effect::BuildReports),
+        fx.contains(&studyfrog_ui::effect::Effect::Reports(
+            EffectReports::BuildReports
+        )),
         "{fx:?}"
     );
     // Opening the Summary builds the reports for its pacer; the Reports tab shows the same card.
     let mut m = open_model();
     m.state.app.stack_tabs = vec!["french:reports".into()];
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     let mut h = harness(with_reports(m));
     h.run_steps(4);
     for text in PACER {

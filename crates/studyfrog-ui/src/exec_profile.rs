@@ -1,5 +1,6 @@
 //! Performing the profile effects. The worker's `config_dir` is the folder of the profile in use;
 //! `root_config` is the folder above all profiles.
+use crate::msg::MsgVault;
 
 use std::fs;
 
@@ -16,10 +17,10 @@ use crate::profile_ui::ProfileMsg;
 /// The profiles, then the settings of the one in use: what the application needs at start-up.
 pub fn startup(w: &mut Worker) -> Vec<Msg> {
     let Some(root) = w.root_config.clone() else {
-        return vec![Msg::Started {
+        return vec![Msg::Vault(MsgVault::Started {
             app: AppSettings::default(),
             error: None,
-        }];
+        })];
     };
     let (profiles, error) = match read_profiles(&root) {
         Ok(p) => (p, None),
@@ -33,10 +34,10 @@ pub fn startup(w: &mut Worker) -> Vec<Msg> {
     };
     vec![
         Msg::Profile(ProfileMsg::Loaded(profiles)),
-        Msg::Started {
+        Msg::Vault(MsgVault::Started {
             app,
             error: error.or(app_error),
-        },
+        }),
     ]
 }
 

@@ -1,5 +1,6 @@
 //! The Roadmap tab: rows with status and bars on a time axis with a line for today, scrolling both ways. Only the rows in
 //! view are built; each bar is a button that opens its stack or item and says its dates in text.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, Align2, Rect, Role, Sense, Stroke, WidgetInfo, pos2, vec2};
 use studyfrog_core::civil::{date_from_days, format_date};
@@ -137,8 +138,10 @@ pub fn draw(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
                 hit.widget_info(|| WidgetInfo::labeled(Role::Button, true, name.clone()));
                 if hit.clicked() {
                     match (&r.folder, r.uid) {
-                        (Some(f), _) => out.push(Msg::Select(Selection::Stack(f.clone()))),
-                        (None, Some(u)) => out.push(Msg::OpenItem(u)),
+                        (Some(f), _) => {
+                            out.push(Msg::Browse(MsgBrowse::Select(Selection::Stack(f.clone()))))
+                        }
+                        (None, Some(u)) => out.push(Msg::Browse(MsgBrowse::OpenItem(u))),
                         _ => {}
                     }
                 }

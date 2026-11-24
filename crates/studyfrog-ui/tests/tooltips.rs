@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Hover tooltips (STORY-0169): every icon button explains itself, and shortcuts are shown where
 //! the app has them.
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -74,7 +75,7 @@ fn hovering_a_text_button_shows_its_explanation() {
     use studyfrog_ui::msg::Msg;
     use studyfrog_ui::state::Screen;
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Library));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Library)));
     let mut h = harness(m);
     h.run_steps(3);
     h.get_by_label("Columns").hover();
@@ -103,7 +104,7 @@ fn a_click_hides_the_tooltip_so_it_never_stays_over_the_control() {
     use studyfrog_ui::state::Screen;
     const EXPLAIN: &str = "Shows or hides the columns of the list.";
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Library));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Library)));
     let mut h = harness(m);
     h.run_steps(3);
     h.get_by_label("Columns").hover();

@@ -1,5 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! PDFs in the library, on the home page, in links and in the create dialog.
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgEditor;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 #[path = "../../studyfrog-pdf/tests/common/mod.rs"]
@@ -40,7 +44,9 @@ fn vault(label: &str) -> (common::TempDir, Model, Worker) {
     run_to_idle(
         &mut model,
         &mut worker,
-        vec![Effect::OpenVault(dir.path.display().to_string())],
+        vec![Effect::Vault(EffectVault::OpenVault(
+            dir.path.display().to_string(),
+        ))],
     );
     studyfrog_service::pdfs::index_pdfs_fully(worker.session.as_mut().unwrap(), NOW_NS).unwrap();
     (dir, model, worker)
@@ -118,8 +124,11 @@ fn the_library_lists_pdfs_adds_one_by_the_file_dialog_and_renames_with_rewriting
 fn the_stack_page_shows_its_pdfs_with_page_counts_and_the_home_page_lists_them() {
     let (_d, mut model, mut worker) = vault("views");
     lib(&mut model, &mut worker, LibraryMsg::Load);
-    apply(&mut model, Msg::Navigate(Screen::Library));
-    apply(&mut model, Msg::Select(Selection::Stack("bio".into())));
+    apply(&mut model, Msg::Vault(MsgVault::Navigate(Screen::Library)));
+    apply(
+        &mut model,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("bio".into()))),
+    );
     model.state.app.stack_tabs = vec!["bio:list".into()];
     let mut h = common::views::harness(model);
     h.run_steps(2);
@@ -163,7 +172,7 @@ fn markdown_links_to_pdf_pages_are_recognised_and_web_links_are_not() {
 #[test]
 fn the_home_page_lists_recent_pdfs() {
     let (_d, mut model, mut worker) = vault("home");
-    let fx = apply(&mut model, Msg::Navigate(Screen::Home));
+    let fx = apply(&mut model, Msg::Vault(MsgVault::Navigate(Screen::Home)));
     run_to_idle(&mut model, &mut worker, fx);
     let mut h = common::views::harness(model);
     h.run_steps(2);
@@ -183,14 +192,14 @@ fn a_pdf_link_in_a_note_opens_the_viewer_at_that_page() {
     .unwrap();
     apply(
         &mut m,
-        Msg::DocumentLoaded(
+        Msg::Editor(MsgEditor::DocumentLoaded(
             Uid(0xA),
             Ok(LoadedDoc {
                 path: "s/n.md".into(),
                 doc,
                 hash: 1,
             }),
-        ),
+        )),
     );
     let mut h = harness(m);
     h.run_steps(2);

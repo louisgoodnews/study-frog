@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The Goals tab: read when it opens, edited in place, saved into the stack's file.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -19,11 +21,15 @@ fn stack(m: StackViewMsg) -> Msg {
 fn goals_are_read_edited_saved_to_the_stack_file_and_read_again() {
     let (vault, mut model, mut worker) = opened("goals");
     model.state.app.stack_tabs = vec!["french:goals".into()];
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
     send(
         &mut model,
         &mut worker,
-        Msg::Select(Selection::Stack("french".into())),
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
     );
     let g = model
         .state
@@ -57,7 +63,7 @@ fn goals_are_read_edited_saved_to_the_stack_file_and_read_again() {
     assert_eq!(model.state.notice.as_ref().unwrap().text, "Goals saved.");
 
     model.state.library.stack_view.goals = None;
-    send(&mut model, &mut worker, Msg::Tick);
+    send(&mut model, &mut worker, Msg::Vault(MsgVault::Tick));
     assert_eq!(
         model.state.library.stack_view.goals.unwrap().saved,
         "- pass the exam\n- [ ] 100 verbs"
@@ -68,11 +74,15 @@ fn goals_are_read_edited_saved_to_the_stack_file_and_read_again() {
 fn the_tab_shows_an_editor_and_a_save_button_that_wakes_up_with_changes() {
     let (_vault, mut model, mut worker) = opened("goals-view");
     model.state.app.stack_tabs = vec!["french:goals".into()];
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
     send(
         &mut model,
         &mut worker,
-        Msg::Select(Selection::Stack("french".into())),
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
     );
     let mut h = harness(model);
     h.run_steps(5);

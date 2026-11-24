@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Stress tests for details notebook tab taxonomy and switching invariants.
+use studyfrog_ui::msg::MsgEditor;
 
 mod common;
 
@@ -51,7 +52,7 @@ fn load_item(m: &mut Model, uid: Uid, path: &str, raw: &str) {
         doc,
         hash: 1,
     };
-    apply(m, Msg::DocumentLoaded(uid, Ok(ld)));
+    apply(m, Msg::Editor(MsgEditor::DocumentLoaded(uid, Ok(ld))));
 }
 
 #[test]

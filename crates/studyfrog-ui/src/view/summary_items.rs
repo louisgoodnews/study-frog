@@ -1,4 +1,5 @@
 //! One card of the run review: how the item went and what the program suggests.
+use crate::msg::MsgRehearsal;
 
 use eframe::egui::{self, RichText};
 use studyfrog_core::review::Rating;
@@ -82,10 +83,10 @@ fn suggestion(
         .on_hover_text("Changes the rating of this item.")
         .clicked()
     {
-        out.push(Msg::ApplySuggestion {
+        out.push(Msg::Rehearsal(MsgRehearsal::ApplySuggestion {
             item: row.item,
             expected: rated,
             to: s.rating,
-        });
+        }));
     }
 }

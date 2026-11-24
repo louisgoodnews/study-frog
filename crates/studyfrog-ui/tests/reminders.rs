@@ -1,5 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Reminders arriving, the due date in the create dialog, and the calendar entry form.
+use studyfrog_ui::effect::EffectImport;
+use studyfrog_ui::effect::EffectPlanner;
+use studyfrog_ui::effect::EffectVault;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -33,15 +37,15 @@ fn the_calendar_is_checked_on_the_first_tick_and_then_every_so_often() {
     let mut m = open_model();
     let mut checks = Vec::new();
     for tick in 0..=CHECK_EVERY {
-        let fx = apply(&mut m, Msg::Tick);
-        if fx.contains(&Effect::CheckReminders) {
+        let fx = apply(&mut m, Msg::Vault(MsgVault::Tick));
+        if fx.contains(&Effect::Vault(EffectVault::CheckReminders)) {
             checks.push(tick);
         }
-        apply(&mut m, Msg::VaultPolled(Ok(None)));
+        apply(&mut m, Msg::Vault(MsgVault::VaultPolled(Ok(None))));
     }
     assert_eq!(checks, [0, CHECK_EVERY]);
     assert!(
-        apply(&mut Model::default(), Msg::Tick).is_empty(),
+        apply(&mut Model::default(), Msg::Vault(MsgVault::Tick)).is_empty(),
         "no vault, no check"
     );
 }
@@ -49,16 +53,22 @@ fn the_calendar_is_checked_on_the_first_tick_and_then_every_so_often() {
 #[test]
 fn due_reminders_become_toasts_and_notifications_and_a_click_opens_the_calendar() {
     let mut m = open_model();
-    assert!(apply(&mut m, Msg::RemindersDue(Ok(DueAll::default()))).is_empty());
+    assert!(
+        apply(
+            &mut m,
+            Msg::Vault(MsgVault::RemindersDue(Ok(DueAll::default())))
+        )
+        .is_empty()
+    );
     assert!(m.state.toasts.is_empty());
     let before = m.state.chrome.notifications.len();
     let sessions = vec![due(1440), due(60)];
     apply(
         &mut m,
-        Msg::RemindersDue(Ok(DueAll {
+        Msg::Vault(MsgVault::RemindersDue(Ok(DueAll {
             sessions,
             homework: Vec::new(),
-        })),
+        }))),
     );
     assert_eq!(m.state.toasts.len(), 2);
     assert_eq!(
@@ -72,8 +82,11 @@ fn due_reminders_become_toasts_and_notifications_and_a_click_opens_the_calendar(
     );
     let fx = apply(&mut m, Msg::Modal(ModalMsg::ToastClicked(0)));
     assert_eq!(m.state.screen, Screen::Calendar);
-    assert!(fx.contains(&Effect::LoadSessions));
-    apply(&mut m, Msg::RemindersDue(Err("disk".into())));
+    assert!(fx.contains(&Effect::Planner(EffectPlanner::LoadSessions)));
+    apply(
+        &mut m,
+        Msg::Vault(MsgVault::RemindersDue(Err("disk".into()))),
+    );
     assert!(m.state.notice.unwrap().text.contains("disk"));
 }
 
@@ -97,9 +110,9 @@ fn a_stack_due_date_travels_with_the_create_request() {
     apply(&mut m, Msg::Modal(ModalMsg::ToggleReminder(1440))); // the default one goes off
     let fx = apply(&mut m, Msg::Modal(ModalMsg::Submit));
     let [
-        Effect::CreateItem {
+        Effect::Import(EffectImport::CreateItem {
             kind, due: Some(d), ..
-        },
+        }),
     ] = &fx[..]
     else {
         panic!("{fx:?}")
@@ -129,7 +142,10 @@ fn a_wrong_date_is_refused_and_no_date_means_no_deadline() {
         Msg::Modal(ModalMsg::Edit(Field::Due, String::new())),
     );
     let fx = apply(&mut m, Msg::Modal(ModalMsg::Submit));
-    assert!(matches!(&fx[..], [Effect::CreateItem { due: None, .. }]));
+    assert!(matches!(
+        &fx[..],
+        [Effect::Import(EffectImport::CreateItem { due: None, .. })]
+    ));
 }
 
 #[test]
@@ -156,7 +172,7 @@ fn the_create_dialog_offers_a_due_date_and_reminders_for_a_stack_only() {
 #[test]
 fn the_calendar_form_chooses_a_kind_and_reminders() {
     let mut m = open_model();
-    apply(&mut m, Msg::Navigate(Screen::Calendar));
+    apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Calendar)));
     apply(
         &mut m,
         Msg::Plan(PlanMsg::Loaded(Ok((

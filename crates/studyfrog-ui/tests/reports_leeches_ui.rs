@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The Leeches tab and its actions (STORY-0104).
+use studyfrog_ui::msg::MsgBrowse;
 
 mod common;
 
@@ -73,7 +74,7 @@ fn the_actions_open_pause_and_drill() {
     assert!(again.is_empty(), "one run at a time");
     assert!(m.state.notice.is_some());
     let mut m = on_leeches();
-    let fx = apply(&mut m, Msg::OpenItem(Uid(7)));
+    let fx = apply(&mut m, Msg::Browse(MsgBrowse::OpenItem(Uid(7))));
     assert!(!fx.is_empty(), "opening the item loads it");
 }
 
@@ -95,7 +96,9 @@ fn a_stacks_reports_tab_lists_only_its_own_leeches_and_pairs() {
     m.state.app.stack_tabs = vec!["french:reports".into()];
     apply(
         &mut m,
-        Msg::Select(studyfrog_ui::state::Selection::Stack("french".into())),
+        Msg::Browse(MsgBrowse::Select(studyfrog_ui::state::Selection::Stack(
+            "french".into(),
+        ))),
     );
     let mut b = bundle();
     b.analytics = Box::new(analytics());

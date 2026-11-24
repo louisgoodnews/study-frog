@@ -1,5 +1,6 @@
 //! Reminders arriving while the app is open, for calendar entries and homework deadlines alike: a
 //! toast each, and a line in the notification list. Pure.
+use crate::effect::EffectVault;
 
 use studyfrog_calendar::homework_reminders::DueHomeworkReminder;
 use studyfrog_calendar::reminders::{DueAll, DueReminder};
@@ -66,7 +67,7 @@ pub fn tick(state: State) -> (State, Vec<Effect>) {
     (
         state,
         if due_now {
-            vec![Effect::CheckReminders]
+            vec![Effect::Vault(EffectVault::CheckReminders)]
         } else {
             Vec::new()
         },

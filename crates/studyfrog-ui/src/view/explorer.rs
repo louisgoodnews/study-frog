@@ -1,4 +1,5 @@
 //! The performance explorer: where the user is in the vault, how it went, and what is one level down.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, RichText, Role, WidgetInfo};
 use studyfrog_core::plan::item_kind_name;
@@ -112,7 +113,7 @@ fn item_history(e: &Explorer, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .on_hover_text("Opens this item in the editor.")
         .clicked()
     {
-        out.push(Msg::OpenItem(*uid));
+        out.push(Msg::Browse(MsgBrowse::OpenItem(*uid)));
     }
     kit::section(ui, "Every review");
     kit::card(ui, |ui| {

@@ -1,5 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Selecting rows, bulk edits through the real worker, undo, and saved filters.
+use studyfrog_ui::msg::MsgBrowse;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -39,7 +41,10 @@ fn selecting_deleting_with_a_question_and_pruning_after_a_load() {
     apply(&mut m, bulk(BulkMsg::Select(rows[1].uid, false)));
     apply(&mut m, bulk(BulkMsg::SelectAll(true)));
     assert_eq!(m.state.library.selected.len(), 4);
-    apply(&mut m, Msg::SearchEdited("Item 3".into()));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::SearchEdited("Item 3".into())),
+    );
     apply(&mut m, bulk(BulkMsg::SelectAll(true)));
     assert_eq!(
         m.state.library.selected.len(),
@@ -105,7 +110,11 @@ fn the_bar_appears_with_a_selection_and_every_control_is_named() {
 #[test]
 fn a_bulk_edit_through_the_worker_changes_files_and_can_be_undone() {
     let (_vault, mut model, mut worker) = opened("bulk");
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
     let all = titles(&model);
     assert!(all.len() >= 3, "{all:?}");
     send(&mut model, &mut worker, bulk(BulkMsg::SelectAll(true)));
@@ -145,7 +154,11 @@ fn a_bulk_edit_through_the_worker_changes_files_and_can_be_undone() {
 #[test]
 fn saved_filters_are_saved_listed_reopened_and_removed() {
     let (vault, mut model, mut worker) = opened("filters");
-    send(&mut model, &mut worker, Msg::Navigate(Screen::Library));
+    send(
+        &mut model,
+        &mut worker,
+        Msg::Vault(MsgVault::Navigate(Screen::Library)),
+    );
     assert!(model.state.library.filters.is_empty());
 
     send(

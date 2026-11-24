@@ -1,6 +1,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! Starting a custom learn-mode run from the app (STORY-0198): the editor saves a mode, and its start runs the
 //! saved copy as a practice-only run that the run view takes over.
+use studyfrog_ui::effect::EffectVault;
 
 mod common;
 
@@ -47,7 +48,9 @@ fn a_saved_mode_starts_as_a_practice_only_run() {
     let mut w = worker_with_host(None, None, Host::default());
     execute(
         &mut w,
-        Effect::OpenVault(vault.path.to_string_lossy().into_owned()),
+        Effect::Vault(EffectVault::OpenVault(
+            vault.path.to_string_lossy().into_owned(),
+        )),
         NOW_NS,
     );
 
@@ -85,7 +88,9 @@ fn starting_a_mode_that_is_not_saved_is_refused() {
     let mut w = worker_with_host(None, None, Host::default());
     execute(
         &mut w,
-        Effect::OpenVault(vault.path.to_string_lossy().into_owned()),
+        Effect::Vault(EffectVault::OpenVault(
+            vault.path.to_string_lossy().into_owned(),
+        )),
         NOW_NS,
     );
     let out = execute(

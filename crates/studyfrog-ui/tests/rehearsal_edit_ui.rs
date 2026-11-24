@@ -1,4 +1,5 @@
 //! Tests for in-rehearsal item editing.
+use studyfrog_ui::effect::EffectRehearsal;
 
 use studyfrog_core::uid::Uid;
 use studyfrog_md::doc::Doc;
@@ -95,7 +96,10 @@ fn rehearsal_edit_flow_saves_and_reloads() {
     let (state, effects) =
         studyfrog_ui::update::update(state, Msg::RehearsalEdit(RehearsalEditMsg::Saved(Ok(uid))));
     assert!(state.modal.is_none());
-    assert_eq!(effects, vec![Effect::LoadItem(uid)]);
+    assert_eq!(
+        effects,
+        vec![Effect::Rehearsal(EffectRehearsal::LoadItem(uid))]
+    );
     assert!(
         state
             .notice

@@ -1,5 +1,6 @@
 #![allow(dead_code, clippy::unwrap_used, clippy::expect_used)] // shared test helpers
 //! Two small extensions defined in the tests, so the UI tests do not depend on the example crate.
+use studyfrog_ui::msg::MsgBrowse;
 
 use studyfrog_ext::registry::{register_card_type, register_importer, registry_new};
 use studyfrog_ext::types::{CardType, Faces, ImportedCard, Importer, Registry};
@@ -69,6 +70,9 @@ pub fn registry() -> Registry {
 pub fn model_in_stack() -> studyfrog_ui::model::Model {
     let mut m = open_model();
     m.state.extensions = extensions_of(&registry());
-    apply(&mut m, Msg::Select(Selection::Stack("french".into())));
+    apply(
+        &mut m,
+        Msg::Browse(MsgBrowse::Select(Selection::Stack("french".into()))),
+    );
     m
 }

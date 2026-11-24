@@ -1,5 +1,8 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The notification center's lists: filters, days, what a click opens and what is stored.
+use studyfrog_ui::effect::EffectEditor;
+use studyfrog_ui::effect::EffectPlanner;
+use studyfrog_ui::msg::MsgVault;
 
 mod common;
 
@@ -117,7 +120,7 @@ fn opening_a_notification_with_a_target_goes_there_marks_it_read_and_closes_the_
     assert_eq!(m.state.chrome.menu, None);
     assert!(m.state.chrome.notifications[0].read);
     assert!(
-        fx.contains(&Effect::LoadSessions)
+        fx.contains(&Effect::Planner(EffectPlanner::LoadSessions))
             && fx.contains(&Effect::Notifications(NotifyEffect::SetRead(id, true)))
     );
 
@@ -125,7 +128,10 @@ fn opening_a_notification_with_a_target_goes_there_marks_it_read_and_closes_the_
     let second = m.state.chrome.notifications[1].id;
     m.state.chrome.notifications[1].target = Some(NotifyTarget::Item(Uid(0xA)));
     let fx = mine(&mut m, NotifyMsg::Open(second));
-    assert!(fx.contains(&Effect::LoadDocument(Uid(0xA))), "{fx:?}");
+    assert!(
+        fx.contains(&Effect::Editor(EffectEditor::LoadDocument(Uid(0xA)))),
+        "{fx:?}"
+    );
 }
 
 #[test]
@@ -150,13 +156,16 @@ fn stored_records_read_back_with_their_targets_and_unknown_ones_are_ignored() {
 fn a_notification_list_belongs_to_its_vault() {
     let mut m = loaded();
     raise(&mut m, "mine");
-    let fx = apply(&mut m, Msg::CloseVault);
+    let fx = apply(&mut m, Msg::Vault(MsgVault::CloseVault));
     assert!(
         m.state.chrome.notifications.is_empty(),
         "leaving the vault leaves its list"
     );
     assert!(adds(&fx).is_empty());
-    let fx = apply(&mut m, Msg::VaultOpened(Ok(common::views::info())));
+    let fx = apply(
+        &mut m,
+        Msg::Vault(MsgVault::VaultOpened(Ok(common::views::info()))),
+    );
     assert!(
         fx.contains(&Effect::Notifications(NotifyEffect::Load)),
         "the next vault's list is asked for"

@@ -1,5 +1,6 @@
 //! The reading-speed test: read a fixed text, say when done, keep the measured speed. Pure; time
 //! enters only through `State::now`.
+use crate::effect::EffectVault;
 
 use studyfrog_core::settings::{AnswerEngine, AppSettings};
 use studyfrog_rehearsal::reading::{DEFAULT_WPM, measured_wpm, word_count};
@@ -75,7 +76,7 @@ fn store(state: State, wpm: Option<u32>, text: String) -> (State, Vec<Effect>) {
         kind: NoticeKind::Info,
         text,
     });
-    let effects = vec![Effect::SaveAppSettings(app.clone())];
+    let effects = vec![Effect::Vault(EffectVault::SaveAppSettings(app.clone()))];
     let state = State {
         app,
         notice,
@@ -119,6 +120,6 @@ pub fn set_answer_engine(state: State, engine: AnswerEngine) -> (State, Vec<Effe
         answer_engine: engine,
         ..state.app.clone()
     };
-    let effects = vec![Effect::SaveAppSettings(app.clone())];
+    let effects = vec![Effect::Vault(EffectVault::SaveAppSettings(app.clone()))];
     (State { app, ..state }, effects)
 }

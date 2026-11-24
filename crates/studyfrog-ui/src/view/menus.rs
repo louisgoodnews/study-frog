@@ -1,4 +1,5 @@
 //! What the top-bar menus contain, and the search results under the search field.
+use crate::msg::MsgVault;
 
 use eframe::egui::{self, Rect};
 
@@ -113,7 +114,7 @@ fn profile(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, narrow: bool) {
         .on_hover_text("Closes the vault.")
         .clicked()
     {
-        out.push(Msg::CloseVault);
+        out.push(Msg::Vault(MsgVault::CloseVault));
         close(out);
     }
 }

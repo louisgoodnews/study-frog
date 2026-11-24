@@ -1,4 +1,5 @@
 //! List view of diary entries with stack and rating filters.
+use crate::msg::MsgBrowse;
 
 use eframe::egui::{self, RichText, Role, TextEdit, WidgetInfo};
 use studyfrog_core::civil::format_date;
@@ -79,7 +80,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                                 )
                             });
                             if open_btn.clicked() {
-                                out.push(Msg::OpenItem(entry.uid));
+                                out.push(Msg::Browse(MsgBrowse::OpenItem(entry.uid)));
                             }
 
                             let edit_btn =

@@ -1,4 +1,6 @@
 //! The calendar screen: state and update logic (STORY-0141, STORY-0142).
+use crate::effect::EffectPlanner;
+use crate::effect::EffectVault;
 
 use studyfrog_calendar::homework::HomeworkItem;
 use studyfrog_calendar::session::{Occurrence, Session};
@@ -134,7 +136,7 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
             },
         ),
         PlanMsg::HomeworkLoaded(Err(e)) => failed(state, e),
-        PlanMsg::PeekDue => (state, vec![Effect::PeekReminders]),
+        PlanMsg::PeekDue => (state, vec![Effect::Vault(EffectVault::PeekReminders)]),
         PlanMsg::DuePeeked(Ok(due)) => with(
             state,
             Planner {
@@ -166,7 +168,10 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
             },
         ),
         PlanMsg::SaveTimetable(_) => save_timetable(state),
-        PlanMsg::DeleteTimetable(id) => (state, vec![Effect::DeleteTimetable(id)]),
+        PlanMsg::DeleteTimetable(id) => (
+            state,
+            vec![Effect::Planner(EffectPlanner::DeleteTimetable(id))],
+        ),
         PlanMsg::TimetableChanged(Ok(timetable)) => {
             let planner = Planner {
                 timetable,
@@ -174,7 +179,10 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
                 timetable_error: None,
                 ..p
             };
-            (State { planner, ..state }, vec![Effect::LoadSessions])
+            (
+                State { planner, ..state },
+                vec![Effect::Planner(EffectPlanner::LoadSessions)],
+            )
         }
         PlanMsg::TimetableChanged(Err(e)) => failed(state, e),
         PlanMsg::Month(delta) => with(state, shift_month(p, delta)),
@@ -220,8 +228,14 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
             with(state, Planner { form, ..p })
         }
         PlanMsg::Save => save(state),
-        PlanMsg::Delete(id) => (state, vec![Effect::DeleteSession(id)]),
-        PlanMsg::Skip(id, date) => (state, vec![Effect::CancelOccurrence(id, date)]),
+        PlanMsg::Delete(id) => (
+            state,
+            vec![Effect::Planner(EffectPlanner::DeleteSession(id))],
+        ),
+        PlanMsg::Skip(id, date) => (
+            state,
+            vec![Effect::Planner(EffectPlanner::CancelOccurrence(id, date))],
+        ),
         PlanMsg::Changed(result) => changed(state, result),
         PlanMsg::Rehearse(id) => crate::planner_rehearse::rehearse(state, id),
         PlanMsg::Memory(stack) => crate::planner_rehearse::memory(state, stack),

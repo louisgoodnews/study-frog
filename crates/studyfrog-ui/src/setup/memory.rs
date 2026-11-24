@@ -1,6 +1,8 @@
 //! Memory mode on the rehearse screen: the game's state and its pure update. The engine
 //! ([`studyfrog_rehearsal::memory`]) decides the rules; this module keeps the session on screen,
 //! starts it from the open stack with the chosen timing, and feeds it the clock. No egui, no I/O.
+use crate::effect::EffectBrowse;
+use crate::effect::EffectVault;
 
 use studyfrog_core::settings::{memory_best_of, with_memory_best};
 use studyfrog_rehearsal::memory::{MemoryOutcome, MemorySession, flip_tile, tick_memory_timer};
@@ -169,7 +171,7 @@ fn start(state: State, source: StackSource) -> (State, Vec<Effect>) {
     };
     (
         with_memory(state, Some(memory)),
-        vec![Effect::MemoryDeck(stack_arg)],
+        vec![Effect::Browse(EffectBrowse::MemoryDeck(stack_arg))],
     )
 }
 
@@ -215,7 +217,7 @@ fn put(state: State, memory: MemoryUi, session: MemorySession) -> (State, Vec<Ef
         just_completed = true;
         let vault = state.app.vault.clone().unwrap_or_default();
         app = with_memory_best(&state.app, &vault, &memory.stack, elapsed_ms);
-        effects.push(Effect::SaveAppSettings(app.clone()));
+        effects.push(Effect::Vault(EffectVault::SaveAppSettings(app.clone())));
     }
     // The summary opens once, when the game is completed; later frames must not reopen it.
     let modal = just_completed
