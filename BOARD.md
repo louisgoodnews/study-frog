@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (7) | Ready (0) | In progress (0/3) | Review (2) | Blocked (3) | Done (614) |
+| Backlog (7) | Ready (0) | In progress (2/3) | Review (2) | Blocked (1) | Done (614) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -552,9 +552,9 @@
 | [STORY-0198](docs/issues/stories/STORY-0198-visual-node-based-editor-for-learn-modes.md) Visual node-based editor for learn modes (8) | done | 0/0 |
 | [STORY-0199](docs/issues/stories/STORY-0199-case-studies-in-the-rehearsal-run-queue.md) Case studies in the rehearsal run queue (5) | done | 0/0 |
 | [STORY-0200](docs/issues/stories/STORY-0200-local-model-scoring-of-case-study-justifications.md) Local-model scoring of case-study justifications, with the rubric prompt template (3) | done | 0/0 |
-| [STORY-0201](docs/issues/stories/STORY-0201-reference-runs-on-the-owners-machine-with-identity-recorded.md) Reference runs on the owner's machine, with the machine's identity recorded (5) | blocked | 1/3 |
+| [STORY-0201](docs/issues/stories/STORY-0201-reference-runs-on-the-owners-machine-with-identity-recorded.md) Reference runs on the owner's machine, with the machine's identity recorded (5) | in_progress | 1/3 |
 | [STORY-0202](docs/issues/stories/STORY-0202-regression-rule-compare-two-runs-flag-only-real-large-changes.md) Regression rule: compare two runs and flag only real, large changes (5) | review | 2/3 |
-| [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines on the owner's machine (2) | blocked | 0/0 |
+| [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines on the owner's machine (2) | in_progress | 0/0 |
 | [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time of the rehearsal card, reports and console measured in the running window (5) | backlog | 0/2 |
 | [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Allocations in the render loops, counted with dhat, and a profile of the slowest screen (3) | backlog | 1/2 |
 | [STORY-0206](docs/issues/stories/STORY-0206-ollama-setup-assistant-with-hardware-audit-and-model-suggestions.md) Ollama setup assistant: hardware audit, live Ollama status and model suggestions that fit this machine (5) | done | 0/0 |

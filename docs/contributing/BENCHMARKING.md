@@ -21,6 +21,37 @@ Rules: commit baselines with `--save-baseline`; PRs touching a hot path report t
 introduce `smallvec`/`ahash`/`bumpalo` only with a before/after number in the commit message.
 Allocation counting is not automated: a counting global allocator needs `unsafe`, which is forbidden workspace-wide. Use `dhat` (heap profiling) when a profile points at the allocator.
 
+## Reference run on the 1.0.0 reference machine (2026-11-24, TASK-0278, STORY-0201, STORY-0203)
+Machine (ADR 0014 names it the reference machine; identity in `docs/benchmarks/reference-1.0.0/machine.txt`): Intel Core
+i5-10210U @ 1.60 GHz, 8 logical CPUs, Linux 7.3.5, rustc 1.99.1, commit `ec88f3e`. Hygiene not met: governor `powersave`,
+turbo enabled, SMT on, 14 processes above 10% CPU, two uncommitted files. Run: `scripts/bench-reference.sh homebox-ref <out> 5`
+(each case 5 invocations, 10 when the spread of the 5 exceeds 5%). The 27 medians are in `docs/benchmarks/reference-1.0.0/*.ns`.
+
+| Bench | Median | Spread (runs) | Budget | Status |
+|---|---|---|---|---|
+| `fsrs_schedule_100k` | 4.86 ms | 2.1% (5) | < 10 ms | within |
+| `sm2_schedule_100k` | 1.07 ms | 2.3% (5) | n/a | |
+| `vault_10k` scan + parse | 235 ms | 4.9% (5) | n/a | |
+| `vault_10k` cold reindex | 847 ms | 1.5% (5) | < 3 s | within |
+| `vault_10k` warm reindex | 77.2 ms | 29.6% (10) | n/a | noisy |
+| `graph_5k` layout step | 7.00 ms | 2.6% (5) | < 8 ms | within, close to the limit |
+| `graph_5k` projection | 2.0 us | 13.3% (10) | n/a | |
+| rehearsal, 1000 items (2001 steps) | 72.9 us (about 36 ns per step) | 60.3% (10) | < 10 us per step | within |
+| rehearsal queue 10k spaced / shuffled / hardest / lowest | 0.89 / 0.11 / 1.10 / 0.86 ms | 3.4 / 10.0 / 9.1 / 18.5% | n/a | |
+| reports: retention / latency / backtest (103k reviews) | 0.70 / 2.13 / 11.0 ms | 3.1 / 3.6 / 16.2% | < 50 ms | within |
+| reports: familiarity (10k items) | 8.65 ms | 1.9% (5) | < 20 ms | within |
+| analytics: survival / chronotype / fatigue / leeches / confusion | 12.2 / 6.0 / 6.3 / 1.4 / 5.6 ms | 2.4 / 4.4 / 27.9 / 45.4 / 39.8% | < 50 ms | within |
+| analytics: forecast, 5,000 cards, 365 days, 16 futures | 39.6 ms | 3.5% (5) | < 50 ms | within |
+| analytics: CMRR, 5,000 cards, 12 targets, 180 days | **84.8 ms** | 1.8% (5) | < 50 ms | **over budget on this machine** |
+| `pdf_500_pages` info / all text / one page's words / render 1x | 3.3 ms / 653 ms / 92 ms / 9.4 ms | 3.9 / 41.8 / 3.4 / 9.4% | < 50 ms / < 2 s / < 100 ms / < 50 ms | within (words close to limit) |
+| `slm_lexical_30` | 21.6 us | 4.7% (5) | semantic p95 < 150 ms (not run here) | n/a |
+
+Spread rule (EPIC-067): 12 of 27 cases are still above 5% after the run (the 12 were extended to 10 invocations): `analytics_leeches` 45.4%,
+`rehearsal_run_1000` 60.3%, `pdf_all_text` 41.8%, `analytics_confusion` 39.8%, `vault_warm_reindex` 29.6%, `analytics_fatigue` 27.9%,
+`report_backtest` 16.2%, `rehearsal_queue_lowest` 18.5%, `graph_project` 13.3%, `rehearsal_queue_shuffled` 10.0%, `rehearsal_queue_hardest`
+9.1%, `pdf_render_1x` 9.4%. The rule does not hold on this machine yet. The budgets are not changed here: the CMRR miss and the noise
+are recorded for the owner's decision (STORY-0203). Interleaved paired runs (TASK-0279) are still open.
+
 ## Release 0.1.0 check (2026-10-31)
 Run on the same machine (i9-11900K), release profile, each crate's benchmark on its own at low priority (running
 `cargo bench --workspace` at once overloaded the machine). Every hot path is within its budget:

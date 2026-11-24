@@ -22,6 +22,10 @@ Profile on the owner's machine. `perf` is not installed in this container, so no
 - [ ] A profile is recorded here, naming the hot functions
 - [ ] Changes show before and after numbers in their commit
 
+## Attempt (2026-11-24)
+- `perf` is not installed on the reference machine (`which perf` is empty). No system package was installed.
+  The task stays in `backlog`.
+
 ## Design Notes
 - Profile before optimising (BENCHMARKING.md).
 

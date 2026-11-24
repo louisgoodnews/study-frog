@@ -2,7 +2,7 @@
 id: STORY-0201
 type: story
 title: "Reference runs on the owner's machine, with the machine's identity recorded"
-status: blocked
+status: in_progress
 epic: EPIC-067
 parents: ['EPIC-067']
 estimate: 5
@@ -27,7 +27,7 @@ between machines with no code change, so a result without its machine is not com
 - Interleaving two builds is a separate task, because it needs two built binaries.
 
 ## Acceptance Criteria
-- [ ] Each budgeted benchmark runs at least 5 times on the owner's machine, and every median is saved (the script is ready; the run needs that machine)
+- [x] Each budgeted benchmark runs at least 5 times on the reference machine (ADR 0014), and every median is saved (27 of 27, `docs/benchmarks/reference-1.0.0/`)
 - [x] Every saved result carries the machine identity, the commit and the hygiene state of its run (TASK-0277)
 - [x] A case whose 5 medians spread more than 5% is repeated to 10 runs (TASK-0278)
 - [ ] Two builds run interleaved, so the comparison is paired (TASK-0279)
@@ -41,7 +41,7 @@ between machines with no code change, so a result without its machine is not com
 
 ## Dependencies
 
-Blocked: The owner's local machine (reference runs); no machine is attached to this session.
+Unblocked by ADR 0014 (2026-11-24): this machine is the reference. The reference run is done; TASK-0279 remains.
 
 TASK-0277, TASK-0278, TASK-0279. The owner's machine for the reference runs (the blocker for the first and last
 acceptance criteria). STORY-0202 uses the output.

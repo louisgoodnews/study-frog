@@ -1,0 +1,13 @@
+machine=homebox-ref
+cpu_model=Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz
+logical_cpus=8
+kernel=7.3.5-arch1-1
+rustc=rustc 1.99.1 (58cf8f9c3 2026-10-13)
+commit=ec88f3e
+tree_dirty_files=2
+governor=powersave
+boost=enabled
+smt=on
+load_1m=3.01
+busy_processes_over_10pct=14
+utc=2026-11-24T18:08:02Z

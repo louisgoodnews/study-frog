@@ -27,7 +27,7 @@ commas work. Change lines (`change: time: [-1.2% ...]`) are skipped.
 - [x] Each budgeted case runs N times (default 5) and each median goes to `<out>/<case>.ns`
 - [x] A case whose runs spread more than 5% is extended to 10 runs
 - [x] One case run here: 5 runs spread 9.8%, extended to 10; machine.txt written
-- [ ] Run on the owner's machine for every budgeted case, with the saved baselines
+- [x] Run on the reference machine (ADR 0014) for every budgeted case, 27 of 27 (2026-11-24, `docs/benchmarks/reference-1.0.0/`)
 
 ## Design Notes
 - Not done: interleaving of two builds (TASK-0279). This script repeats one build; the paired comparison needs TASK-0279.
@@ -38,7 +38,17 @@ commas work. Change lines (`change: time: [-1.2% ...]`) are skipped.
   end of the output. After the fix: `bench-reference.sh container-verify <dir> 5 fsrs_schedule_100k` gave 5 runs with
   spread 37.9%, extended to 10 runs, median 28.0 ms, spread 46.6%, and wrote machine.txt. The container is not a
   reference machine (powersave governor, other processes busy), so these numbers do not match the 4.23 ms above.
-- Criteria 1 to 3 hold. Criterion 4 (the owner's machine) is still open, so the task stays in `review`.
+- Criteria 1 to 4 hold (criterion 4 on the reference machine, ADR 0014). The spread rule does not hold (see the reference run below), so the task stays in `review`.
+
+## Reference run (2026-11-24, this machine, ADR 0014)
+- Machine identity: `docs/benchmarks/reference-1.0.0/machine.txt` (Intel Core i5-10210U @ 1.60 GHz, 8 logical CPUs,
+  Linux 7.3.5, rustc 1.99.1, commit ec88f3e). Hygiene not met: governor powersave, turbo enabled, 14 processes above 10% CPU.
+- `scripts/bench-reference.sh homebox-ref target/bench-ref-1 5` ran all 27 budgeted cases. Medians and spreads are in
+  BENCHMARKING.md, section "Reference run on the 1.0.0 reference machine".
+- Spread rule: the script extended 12 cases to 10 runs as specified. After 10 runs 12 cases still spread more than 5%
+  (up to 60%). The rule does not hold on this machine, so the task stays in `review`. Repeating the same run does not
+  change a noise floor of this size; the noise source is the machine's state (powersave, busy processes), and interleaved
+  runs (TASK-0279) are the next step.
 
 ## Dependencies
 STORY-0201. TASK-0279 for the paired comparison. The owner's machine for the final run (blocks STORY-0203).

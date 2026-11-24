@@ -2,7 +2,7 @@
 id: STORY-0203
 type: story
 title: "Provisional budgets replaced by measured baselines on the owner's machine"
-status: blocked
+status: in_progress
 epic: EPIC-067
 parents: ['EPIC-067']
 estimate: 2
@@ -25,6 +25,16 @@ budget or the baseline table in BENCHMARKING.md, and record the machine identity
 - [ ] Each provisional budget is either supported by the owner's baseline or changed in the document, with the reason
 - [ ] The baselines are recorded per machine, with the machine identity of each run
 - [ ] The spread that sets the 5% floor is measured on the owner's machine (EPIC-067 Open Questions)
+
+## Progress (2026-11-24, reference machine per ADR 0014)
+- The reference run (STORY-0201) is done. Each budget was read against its median in BENCHMARKING.md, section
+  "Reference run on the 1.0.0 reference machine". Within budget: FSRS 100k, cold reindex, graph layout step (close to 8 ms),
+  rehearsal per step, reports, analytics except CMRR, PDF, familiarity.
+- Over budget here: analytics CMRR, 5,000 cards, 12 targets, 180 days: 84.8 ms against a budget of under 50 ms. No budget
+  changed: this is the owner's decision (the number may be the machine or the code).
+- Spread: the 5% floor is not met by 12 of 27 cases even after 10 runs. The idle-spread measurement (10 back-to-back runs,
+  EPIC-067 Open Questions) is not done.
+- Criteria 1 and 3 stay open. Criterion 2 (per-machine baseline with identity) holds for this machine only.
 
 ## Design Notes
 - This story is left open on purpose. No budget number is changed without the owner's measurement, and this
