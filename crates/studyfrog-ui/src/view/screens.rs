@@ -42,5 +42,6 @@ pub fn draw_screen(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         Screen::Console => super::console::draw(state, ui, out),
         Screen::Canvas => super::canvas::draw(state, ui, out),
         Screen::Match => super::match_grid::draw(state, ui, out),
+        Screen::Classroom => super::classroom::draw(state, ui, out),
     }
 }

@@ -44,6 +44,7 @@ pub fn screen_by_name(name: &str) -> Option<Screen> {
         "help" => Screen::Help,
         "canvas" => Screen::Canvas,
         "match" => Screen::Match,
+        "classroom" => Screen::Classroom,
         _ => return None,
     })
 }

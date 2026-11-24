@@ -21,6 +21,7 @@ const GROUPS: &[Group] = &[
             (Screen::Library, "Items"),
             (Screen::Rehearse, "Rehearse"),
             (Screen::Match, "Match"),
+            (Screen::Classroom, "Classroom"),
         ],
     },
     Group {

@@ -76,4 +76,6 @@ pub enum Effect {
     Diary(crate::diary_types::DiaryEffect),
     /// Operations for editing items during rehearsal.
     RehearsalEdit(crate::rehearsal_edit::RehearsalEditEffect),
+    /// A classroom turn or session change, run through the service.
+    Classroom(crate::classroom_types::ClassroomEffect),
 }

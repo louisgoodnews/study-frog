@@ -1,5 +1,8 @@
 //! `--screenshot FILE [--screen NAME] [--size WxH]`: open the window, go to a screen, save a picture of it as a
 //! PNG and exit. For looking at the real rendering without a person at the keyboard.
+pub mod exam;
+pub mod pdf;
+pub mod recall;
 use crate::msg::MsgBrowse;
 use crate::msg::MsgRehearsal;
 use crate::msg::MsgVault;
@@ -63,6 +66,7 @@ fn screen_named(name: &str) -> Option<Screen> {
         "graph" => Screen::Graph,
         "canvas" => Screen::Canvas,
         "match" => Screen::Match,
+        "classroom" => Screen::Classroom,
         "run" | "run-answer" | "run-long" | "learn-editor" => Screen::Rehearse,
         "script-jobs" | "studio-code" => Screen::Console,
         _ => return None,
@@ -71,21 +75,21 @@ fn screen_named(name: &str) -> Option<Screen> {
 
 fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
     if name == "run-long" {
-        return crate::app_shot_recall::mock::long_run(model);
+        return self::recall::mock::long_run(model);
     }
     if name == "studio-code" {
-        crate::app_shot_recall::mock::studio_code_demo(model);
+        self::recall::mock::studio_code_demo(model);
         return Vec::new();
     }
     if name == "script-jobs" {
-        crate::app_shot_recall::mock::script_jobs_demo(model);
+        self::recall::mock::script_jobs_demo(model);
         return Vec::new();
     }
     if name == "learn-editor" {
-        crate::app_shot_recall::mock::learn_editor_demo(model);
+        self::recall::mock::learn_editor_demo(model);
         return Vec::new();
     }
-    if let Some(fx) = crate::app_shot_recall::memory_setup(model, name) {
+    if let Some(fx) = self::recall::memory_setup(model, name) {
         return fx;
     }
     if let Some(which) = name.strip_prefix("memory:") {
@@ -97,10 +101,10 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
         ));
         return fx;
     }
-    if let Some(fx) = crate::app_shot_recall::setup(model, name) {
+    if let Some(fx) = self::recall::setup(model, name) {
         return fx;
     }
-    if let Some(fx) = crate::app_shot_pdf::setup(model, name) {
+    if let Some(fx) = self::pdf::setup(model, name) {
         return fx;
     }
     if let Some(word) = name.strip_prefix("prompts:") {
@@ -158,7 +162,7 @@ fn go(model: &mut Model, name: &str) -> Vec<crate::effect::Effect> {
         return fx;
     }
     if name.starts_with("exam") {
-        return crate::app_shot_exam::setup(model);
+        return self::exam::setup(model);
     }
     if name == "create" {
         return apply(model, Msg::Modal(crate::modal_types::ModalMsg::OpenCreate));
@@ -195,13 +199,13 @@ pub fn step(shot: &mut Shot, model: &mut Model, ui: &egui::Ui) -> Vec<crate::eff
         effects = apply(model, Msg::Rehearsal(MsgRehearsal::StartRunClicked));
     }
     if shot.frames == SETTLE + START {
-        effects.extend(crate::app_shot_recall::later(model, name));
+        effects.extend(self::recall::later(model, name));
     }
     if shot.frames > SETTLE + START && shot.frames < SETTLE + DRAW - 8 {
-        effects.extend(crate::app_shot_exam::play(model, name));
-        effects.extend(crate::app_shot_recall::play(model, name));
+        effects.extend(self::exam::play(model, name));
+        effects.extend(self::recall::play(model, name));
     }
-    if shot.frames == SETTLE + DRAW && crate::app_shot_pdf::waiting(model, shot.waited) {
+    if shot.frames == SETTLE + DRAW && self::pdf::waiting(model, shot.waited) {
         shot.frames -= 1; // the PDF's pictures are still being drawn by the worker
         shot.waited += 1;
     } else if shot.frames == SETTLE + DRAW {

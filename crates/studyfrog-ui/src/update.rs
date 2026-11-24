@@ -86,6 +86,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Backup(m) => crate::backup_ui::update(state, m),
         Msg::Profile(m) => crate::profile_ui::update(state, m),
         Msg::Agent(m) => crate::agent_ui::update(state, m),
+        Msg::Classroom(m) => crate::classroom_ui::update(state, m),
         Msg::Prompts(m) => crate::prompts_ui::update(state, m),
         Msg::Pdf(m) => crate::pdf_ui::update(state, m),
         Msg::Diary(m) => crate::diary_ui::update_diary(state, m),

@@ -107,5 +107,7 @@ pub enum Msg {
     Canvas(crate::canvas_types::CanvasMsg),
     /// Match Mode tile pairing recall drill (EPIC-053).
     Match(crate::match_ui::MatchMsg),
+    /// A message of the classroom screen.
+    Classroom(crate::classroom_types::ClassroomMsg),
 }
 pub use crate::{edit_form::EditAction, state::DraftField};
