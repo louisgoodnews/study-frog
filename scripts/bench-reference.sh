@@ -64,9 +64,11 @@ studyfrog-slm|compare|score a 30-word answer, lexical|slm_lexical_30
 # Lines of the form "change: time: [-1.2% ...]" have no units and are skipped.
 run_once() {
     local pkg="$1" bench="$2" id="$3" tag="$4"
+    # awk must read to the end: exiting at the first match closes the pipe while cargo still writes
+    # ("Found N outliers" follows the time line), which made pipefail fail the run at random.
     cargo bench -q -p "$pkg" --bench "$bench" -- --exact "$id" --save-baseline "$tag" 2>/dev/null |
         awk '
-            index($0, "time:") && index($0, "[") {
+            !found && index($0, "time:") && index($0, "[") {
                 s = $0; sub(/.*\[/, "", s); sub(/\].*/, "", s)
                 n = split(s, f, " ")
                 if (n == 6 && f[3] ~ /^[0-9.]+$/) {
@@ -75,7 +77,7 @@ run_once() {
                     else if (u == "ms") m = 1e6
                     else if (u == "s") m = 1e9
                     else if (u == "us" || u == "µs") m = 1e3
-                    if (m > 0) { printf "%.6f\n", f[3] * m; found = 1; exit }
+                    if (m > 0) { printf "%.6f\n", f[3] * m; found = 1 }
                 }
             }
             END { if (!found) exit 1 }'

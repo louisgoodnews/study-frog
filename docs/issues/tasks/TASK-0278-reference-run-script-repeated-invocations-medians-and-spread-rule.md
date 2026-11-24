@@ -33,6 +33,12 @@ commas work. Change lines (`change: time: [-1.2% ...]`) are skipped.
 - Not done: interleaving of two builds (TASK-0279). This script repeats one build; the paired comparison needs TASK-0279.
 - The container used here is not a reference machine. The 9.8% spread there is the container's noise, not a result.
 - Measured here, for the record: fsrs_schedule_100k median over 10 runs 4.23 ms (criterion's default sample count per run).
+- Verification (this session): the first re-run failed at run 2 with "no median". Cause: the awk filter exited at the
+  `time:` line while cargo still printed "Found N outliers", so pipefail failed the run at random. Fixed by reading to the
+  end of the output. After the fix: `bench-reference.sh container-verify <dir> 5 fsrs_schedule_100k` gave 5 runs with
+  spread 37.9%, extended to 10 runs, median 28.0 ms, spread 46.6%, and wrote machine.txt. The container is not a
+  reference machine (powersave governor, other processes busy), so these numbers do not match the 4.23 ms above.
+- Criteria 1 to 3 hold. Criterion 4 (the owner's machine) is still open, so the task stays in `review`.
 
 ## Dependencies
 STORY-0201. TASK-0279 for the paired comparison. The owner's machine for the final run (blocks STORY-0203).
