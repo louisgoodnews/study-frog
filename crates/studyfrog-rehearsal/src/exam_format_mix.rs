@@ -90,8 +90,7 @@ pub fn resolved_mix_total(mix: &ExamFormatMix) -> usize {
             .formats
             .iter()
             .filter(|a| a.enabled)
-            .map(|a| a.value)
-            .sum(),
+            .fold(0usize, |acc, a| acc.saturating_add(a.value)),
         MixMode::Weights => mix.total_questions,
     }
 }
@@ -124,16 +123,16 @@ pub fn validate_format_mix(mix: &ExamFormatMix) -> Result<(), String> {
     }
     match mix.mode {
         MixMode::Counts => {
-            let sum: usize = mix
+            let sum: u128 = mix
                 .formats
                 .iter()
                 .filter(|a| a.enabled)
-                .map(|a| a.value)
+                .map(|a| a.value as u128)
                 .sum();
             if sum == 0 {
                 return Err("Set at least 1 question across the selected formats.".to_owned());
             }
-            if sum > MAX_EXAM_QUESTIONS {
+            if sum > MAX_EXAM_QUESTIONS as u128 {
                 return Err(format!(
                     "Total questions must be at most {MAX_EXAM_QUESTIONS}."
                 ));
@@ -148,11 +147,11 @@ pub fn validate_format_mix(mix: &ExamFormatMix) -> Result<(), String> {
             if mix.formats.iter().any(|a| a.enabled && a.value == 0) {
                 return Err("Every enabled format needs a weight of at least 1.".to_owned());
             }
-            let wsum: usize = mix
+            let wsum: u128 = mix
                 .formats
                 .iter()
                 .filter(|a| a.enabled)
-                .map(|a| a.value)
+                .map(|a| a.value as u128)
                 .sum();
             if wsum == 0 {
                 return Err("Set a positive weight for at least one format.".to_owned());
@@ -180,11 +179,11 @@ pub fn resolve_format_plan(mix: &ExamFormatMix) -> Result<FormatPlan, String> {
         .filter(|(_, a)| a.enabled)
         .map(|(i, a)| (i, a.value))
         .collect();
-    let wsum: usize = enabled.iter().map(|(_, w)| *w).sum();
-    let mut rems: Vec<(usize, usize)> = Vec::with_capacity(enabled.len());
+    let wsum: u128 = enabled.iter().map(|&(_, w)| w as u128).sum();
+    let mut rems: Vec<(usize, u128)> = Vec::with_capacity(enabled.len());
     for &(i, w) in &enabled {
-        let num = w * total;
-        plan.counts[i] = num / wsum;
+        let num = (w as u128) * (total as u128);
+        plan.counts[i] = (num / wsum) as usize;
         rems.push((i, num % wsum));
     }
     rems.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));

@@ -63,3 +63,30 @@ pub fn make_gap_question(topic: &str, source: &str) -> Option<GeneratedQuestion>
         gap_answers,
     })
 }
+
+/// Extract numeric `[k]` blank placeholders in left-to-right order.
+fn gap_markers(prompt: &str) -> Vec<usize> {
+    let mut out = Vec::new();
+    let mut rest = prompt;
+    while let Some(open) = rest.find('[') {
+        rest = &rest[open + 1..];
+        let Some(close) = rest.find(']') else {
+            break;
+        };
+        let inside = &rest[..close];
+        if !inside.is_empty() && inside.bytes().all(|b| b.is_ascii_digit()) {
+            out.push(inside.parse::<usize>().unwrap_or(usize::MAX));
+            rest = &rest[close + 1..];
+        } else if let Some(inner) = inside.find('[') {
+            rest = &rest[inner..];
+        } else {
+            rest = &rest[close + 1..];
+        }
+    }
+    out
+}
+
+/// Whether `prompt` contains `[1]`..`[expected]` in order with no extra or missing numbered blanks.
+pub(crate) fn valid_gap_markers(prompt: &str, expected: usize) -> bool {
+    expected > 0 && gap_markers(prompt).into_iter().eq(1..=expected)
+}

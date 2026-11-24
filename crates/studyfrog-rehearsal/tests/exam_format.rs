@@ -120,3 +120,33 @@ fn wire_name_round_trip_and_legacy_aliases() {
         Some(ExamItemFormat::CaseScenario)
     );
 }
+
+#[test]
+fn extreme_weights_resolve_without_overflow_and_large_counts_fail_cleanly() {
+    let mut mix = default_format_mix();
+    mix.total_questions = MAX_EXAM_QUESTIONS;
+    for a in &mut mix.formats {
+        a.enabled = true;
+        a.value = 1;
+    }
+    mix.formats[0].value = usize::MAX / 2;
+
+    assert_eq!(validate_format_mix(&mix), Ok(()));
+    let plan = resolve_format_plan(&mix).unwrap();
+    assert_eq!(plan_total(&plan), MAX_EXAM_QUESTIONS);
+    for fmt in ALL_EXAM_FORMATS {
+        assert!(plan_count(&plan, fmt) >= 1, "missing {fmt:?}");
+    }
+
+    mix.formats[1].value = usize::MAX / 2;
+    mix.formats[2].value = usize::MAX / 2;
+    assert_eq!(validate_format_mix(&mix), Ok(()));
+    let multi = resolve_format_plan(&mix).unwrap();
+    assert_eq!(plan_total(&multi), MAX_EXAM_QUESTIONS);
+
+    let mut counts = default_format_mix();
+    counts.mode = MixMode::Counts;
+    counts.formats[0].value = usize::MAX;
+    counts.formats[1].value = 1;
+    assert!(validate_format_mix(&counts).is_err());
+}

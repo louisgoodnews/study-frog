@@ -4,6 +4,7 @@
 use std::collections::HashSet;
 
 use crate::curriculum::{Chunk, significant_words};
+use crate::curriculum_gaps::valid_gap_markers;
 pub use crate::curriculum_templates::{material, templates};
 pub use crate::exam_format::{ExamItemFormat, FormatPlan, legacy_plan as plan};
 use crate::exam_format::{plan_count, section_heading, section_order};
@@ -176,8 +177,10 @@ fn accept_format(q: &GeneratedQuestion, prompt: &str) -> Result<(), String> {
             if q.gap_answers.iter().any(|a| a.trim().is_empty()) {
                 return Err("gap answers must not be empty".to_owned());
             }
-            if prompt.contains("{{c") || !prompt.contains('[') || !prompt.contains(']') {
-                return Err("fill-in-the-gaps prompt must contain [1] blanks".to_owned());
+            if prompt.contains("{{c") || !valid_gap_markers(prompt, q.gap_answers.len()) {
+                return Err(
+                    "fill-in-the-gaps prompt blanks must match gap answers [1]..[n]".to_owned(),
+                );
             }
         }
         _ => {}

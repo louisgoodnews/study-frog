@@ -152,3 +152,50 @@ fn generate_with_mix_accepts_grounded_select_items_from_model() {
     assert_eq!(g.keys[0].correct_indices, vec![0]);
     assert_eq!(g.exam.sections[0].questions[0].options.len(), 2);
 }
+
+#[test]
+fn generate_with_mix_rejects_mismatched_fill_in_gaps_blank_counts() {
+    let mut mix = default_format_mix();
+    mix.mode = MixMode::Counts;
+    for a in &mut mix.formats {
+        a.enabled = false;
+        a.value = 0;
+    }
+    mix.formats[format_index(ExamItemFormat::FillInGaps)].enabled = true;
+    mix.formats[format_index(ExamItemFormat::FillInGaps)].value = 1;
+
+    let reply = json(
+        r#"{"kind": "fill_in_gaps", "prompt": "Reliabilität means [1] over [2] testing.", "gaps": ["consistency"], "sample_answer": "consistency of measurement over repeated testing occasions", "points": 2}, {"kind": "fill_in_gaps", "prompt": "Reliabilität means [foo] over repeated testing.", "gaps": ["consistency"], "sample_answer": "consistency of measurement over repeated testing occasions", "points": 2}"#,
+    );
+    let mut ask = |_: &str, _: &str| Ok(reply.clone());
+    let g =
+        generate_with_mix(&chunks_of_markdown(NOTES), &mix, "Bad gaps", Some(&mut ask)).unwrap();
+    assert_eq!(g.from_model, 0);
+    assert!(g.rejected.iter().any(|r| r.contains("[1]..[n]")));
+}
+
+#[test]
+fn generate_with_mix_counts_only_kept_model_questions_in_from_model() {
+    let mut mix = default_format_mix();
+    mix.mode = MixMode::Counts;
+    for a in &mut mix.formats {
+        a.enabled = false;
+        a.value = 0;
+    }
+    mix.formats[format_index(ExamItemFormat::OpenQuestion)].enabled = true;
+    mix.formats[format_index(ExamItemFormat::OpenQuestion)].value = 1;
+    mix.formats[format_index(ExamItemFormat::FillInGaps)].enabled = true;
+    mix.formats[format_index(ExamItemFormat::FillInGaps)].value = 1;
+
+    let q1 = r#"{"kind": "open_question", "prompt": "What does the reliability coefficient compare?", "sample_answer": "True score variance with observed score variance.", "rubric": ["variances"], "points": 2}"#;
+    let q2 = r#"{"kind": "open_question", "prompt": "What is Reliabilität over repeated testing?", "sample_answer": "Consistency of measurement over repeated testing occasions.", "rubric": ["consistency"], "points": 2}"#;
+    let q3 = r#"{"kind": "open_question", "prompt": "What does Validität measure in testing?", "sample_answer": "The degree to which a test measures what it claims to measure.", "rubric": ["validity"], "points": 2}"#;
+    let reply = json(&format!("{q1}, {q2}, {q3}"));
+    let mut ask = |_: &str, _: &str| Ok(reply.clone());
+    let g = generate_with_mix(&chunks_of_markdown(NOTES), &mix, "Trimmed", Some(&mut ask)).unwrap();
+
+    assert_eq!(g.keys.len(), 2);
+    assert_eq!(g.from_model, 1);
+    assert_eq!(g.from_templates, 1);
+    assert_eq!(g.from_model + g.from_templates, g.keys.len());
+}

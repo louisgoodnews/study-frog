@@ -84,8 +84,8 @@ pub fn generate_with_plan(
             }
         }
     }
-    let from_model = accepted.len();
     let mut chosen = balance(accepted, want);
+    let from_model = chosen.len();
     let missing = missing_plan(want, &chosen);
     let fills = templates(chunks, missing);
     let from_templates = fills.len();

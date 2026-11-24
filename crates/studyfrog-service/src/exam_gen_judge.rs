@@ -61,12 +61,7 @@ fn build_gap_question(raw: RawQuestion, topic: &str) -> GeneratedQuestion {
         masked.push_str(&raw.prompt[last..]);
         (masked, answers, hints)
     } else {
-        let answers: Vec<String> = raw
-            .gaps
-            .into_iter()
-            .map(|g| g.trim().to_owned())
-            .filter(|g| !g.is_empty())
-            .collect();
+        let answers: Vec<String> = raw.gaps.into_iter().map(|g| g.trim().to_owned()).collect();
         let hints = vec![None; answers.len()];
         (raw.prompt, answers, hints)
     };

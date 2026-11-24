@@ -102,6 +102,42 @@ fn select_and_gap_questions_validate_format_invariants() {
         )
     };
     assert_eq!(accept(&good_cloze, &notes()), Ok(()));
+
+    let extra_blank = GeneratedQuestion {
+        format: ExamItemFormat::FillInGaps,
+        gap_hints: vec![None],
+        gap_answers: vec!["consistency".to_owned()],
+        ..gen_open(
+            "Reliabilität",
+            "Reliabilität means [1] of [2] measurement.",
+            "consistency of measurement",
+        )
+    };
+    assert!(accept(&extra_blank, &notes()).is_err());
+
+    let non_numeric_blank = GeneratedQuestion {
+        format: ExamItemFormat::FillInGaps,
+        gap_hints: vec![None],
+        gap_answers: vec!["consistency".to_owned()],
+        ..gen_open(
+            "Reliabilität",
+            "Reliabilität means [foo] of measurement.",
+            "consistency of measurement",
+        )
+    };
+    assert!(accept(&non_numeric_blank, &notes()).is_err());
+
+    let bracket_text_with_valid_blank = GeneratedQuestion {
+        format: ExamItemFormat::FillInGaps,
+        gap_hints: vec![None],
+        gap_answers: vec!["consistency".to_owned()],
+        ..gen_open(
+            "Reliabilität",
+            "[note] Reliabilität means [1] of measurement.",
+            "consistency of measurement",
+        )
+    };
+    assert_eq!(accept(&bracket_text_with_valid_blank, &notes()), Ok(()));
 }
 
 #[test]
