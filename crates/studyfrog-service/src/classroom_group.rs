@@ -41,6 +41,35 @@ pub fn group_contributions(
     Ok(out)
 }
 
+/// The user writes `text` to the thread of `group`, then each simulated teammate answers in roster order,
+/// as in [`group_contributions`]. The user is the session's user, who must be a member of the group. The
+/// user's message is stored before any teammate is asked. Refused before any model call when the user is
+/// not in this group, the text is blank, or the group has turned in.
+pub fn group_message(
+    lecture: &Lecture<'_>,
+    model: &mut Model<'_>,
+    at: UnixMs,
+    assignment: Uid,
+    group: usize,
+    text: &str,
+) -> Result<Vec<String>, ServiceError> {
+    check_consent(lecture.provider)?;
+    let mut session = load(lecture)?;
+    let members = group_work(&session, assignment, group)?.members;
+    let user = session
+        .participants
+        .iter()
+        .position(|p| matches!(p, Participant::User { .. }))
+        .filter(|u| members.contains(u))
+        .ok_or_else(|| {
+            ServiceError::Invalid(
+                "only the user, as a member of this group, can write to its thread".to_owned(),
+            )
+        })?;
+    store_turn(lecture, &mut session, user, at, text)?;
+    group_contributions(lecture, model, at, assignment, group)
+}
+
 /// One teammate's contribution: asked from the thread as it is now, then stored.
 fn contribute(
     lecture: &Lecture<'_>,

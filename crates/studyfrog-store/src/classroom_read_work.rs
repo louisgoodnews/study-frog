@@ -1,7 +1,7 @@
 //! Reads the submissions and grades of a classroom session (the read side of `classroom_write`).
 
 use rusqlite::Connection;
-use studyfrog_core::classroom::{GradeReport, Owner, Submission};
+use studyfrog_core::classroom::{CriterionMark, GradeReport, Owner, Submission};
 use studyfrog_core::time::UnixMs;
 
 use crate::classroom_read::{index_of, query_all};
@@ -61,7 +61,12 @@ pub(crate) fn read_submissions(
             ))
         },
     )?;
-    rows.into_iter().map(submission_of).collect()
+    let mut submissions = rows
+        .into_iter()
+        .map(submission_of)
+        .collect::<Result<Vec<_>, _>>()?;
+    attach_marks(conn, key, &mut submissions)?;
+    Ok(submissions)
 }
 
 fn submission_of(row: RawSubmission) -> Result<Submission, StoreError> {
@@ -71,8 +76,53 @@ fn submission_of(row: RawSubmission) -> Result<Submission, StoreError> {
         owner: owner_of(&kind, idx)?,
         text,
         submitted_at: UnixMs(at),
-        grade: grade_of(points, max, feedback, graded_at),
+        grade: grade_of(points, max, feedback, graded_at, Vec::new()),
     })
+}
+
+/// A rubric mark row: the assignment and owner it belongs to, and the mark.
+type RawMark = (String, String, i64, String, bool, bool, String);
+
+/// Fills in the rubric marks of every graded submission, in rubric order.
+fn attach_marks(
+    conn: &Connection,
+    key: &str,
+    submissions: &mut [Submission],
+) -> Result<(), StoreError> {
+    let rows: Vec<RawMark> = query_all(
+        conn,
+        "SELECT assignment_uid, owner_kind, owner_idx, criterion, met, checked, feedback
+         FROM classroom_grade_criterion WHERE session_uid = ?1 ORDER BY seq",
+        [key],
+        |r| {
+            Ok((
+                r.get(0)?,
+                r.get(1)?,
+                r.get(2)?,
+                r.get(3)?,
+                r.get(4)?,
+                r.get(5)?,
+                r.get(6)?,
+            ))
+        },
+    )?;
+    for (assignment, kind, idx, criterion, met, checked, feedback) in rows {
+        let (assignment, owner) = (uid_of(&assignment)?, owner_of(&kind, idx)?);
+        let mark = CriterionMark {
+            criterion,
+            met,
+            checked,
+            feedback,
+        };
+        if let Some(grade) = submissions
+            .iter_mut()
+            .find(|s| s.assignment == assignment && s.owner == owner)
+            .and_then(|s| s.grade.as_mut())
+        {
+            grade.criteria.push(mark);
+        }
+    }
+    Ok(())
 }
 
 fn grade_of(
@@ -80,6 +130,7 @@ fn grade_of(
     max: Option<u32>,
     feedback: Option<String>,
     graded_at: Option<i64>,
+    criteria: Vec<CriterionMark>,
 ) -> Option<GradeReport> {
     match (points, max, feedback, graded_at) {
         (Some(points), Some(max), Some(feedback), Some(at)) => Some(GradeReport {
@@ -87,6 +138,7 @@ fn grade_of(
             max,
             feedback,
             graded_at: UnixMs(at),
+            criteria,
         }),
         _ => None,
     }

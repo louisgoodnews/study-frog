@@ -21,6 +21,7 @@ pub mod canvas_ui;
 pub mod chrome;
 pub mod classroom_types;
 pub mod classroom_ui;
+pub mod classroom_work_ui;
 pub mod cli;
 pub mod color_science;
 pub mod console_link;

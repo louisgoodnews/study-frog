@@ -2,7 +2,7 @@
 //! `classroom_ui`, the worker side in `exec_classroom`, and the drawing in `view/classroom*`.
 
 use studyfrog_agent::provider::Provider;
-use studyfrog_core::classroom::{ClassroomSession, Participant, SourceRef};
+use studyfrog_core::classroom::{ClassroomSession, Owner, Participant, SourceRef};
 use studyfrog_core::uid::Uid;
 use studyfrog_service::classroom_task::Assignees;
 
@@ -25,6 +25,12 @@ pub struct ClassroomState {
     pub busy: bool,
     /// What went wrong last, shown above the controls.
     pub error: Option<String>,
+    /// The assignment open in the task drawer, if one is.
+    pub open_task: Option<Uid>,
+    /// The answer being drafted for each assignment, not yet turned in.
+    pub drafts: Vec<(Uid, String)>,
+    /// The composer text for the open task's group thread.
+    pub group_input: String,
 }
 
 /// A message of the Classroom screen.
@@ -50,6 +56,20 @@ pub enum ClassroomMsg {
     Say,
     /// The teacher sets one task for the user.
     AssignTask,
+    /// The teacher sets one group task for everyone: the students are split into groups of two.
+    AssignGroups,
+    /// Opens the task with this id in the drawer, or closes the drawer.
+    OpenTask(Option<Uid>),
+    /// The answer being drafted for the open task was edited.
+    DraftEdit(String),
+    /// The group composer text was edited.
+    GroupInput(String),
+    /// The group composer's message is sent to the open group task's thread.
+    SendGroup,
+    /// The drafted answer for the open task is turned in and locked.
+    TurnIn,
+    /// The teacher grades the user's turned-in answer to the open task.
+    AskGrade,
     /// Back to the session form.
     Leave,
     /// A worker effect finished: the session as stored now, and what went wrong if anything.
@@ -110,5 +130,42 @@ pub enum ClassroomEffect {
         provider: Provider,
         /// Who the task is for.
         assignees: Assignees,
+    },
+    /// The user writes to their group's thread and the simulated teammates answer.
+    GroupMessage {
+        /// The session.
+        id: Uid,
+        /// The model.
+        provider: Provider,
+        /// The group task.
+        assignment: Uid,
+        /// Index of the group in the task's rosters.
+        group: usize,
+        /// What the user wrote.
+        text: String,
+    },
+    /// The user turns in an answer for their own work. No model is called.
+    TurnIn {
+        /// The session.
+        id: Uid,
+        /// The model, used only to build the lecture context; no call is made.
+        provider: Provider,
+        /// The task.
+        assignment: Uid,
+        /// Participant index of the user.
+        submitter: usize,
+        /// The answer as drafted.
+        text: String,
+    },
+    /// The teacher grades a turned-in answer.
+    Grade {
+        /// The session.
+        id: Uid,
+        /// The model.
+        provider: Provider,
+        /// The task.
+        assignment: Uid,
+        /// Whose answer is graded.
+        owner: Owner,
     },
 }

@@ -42,7 +42,7 @@ fn count(conn: &Connection, table: &str) -> i64 {
 fn migration_32_creates_the_classroom_tables() {
     let mut conn = open_memory().unwrap();
     migrated(&mut conn);
-    assert_eq!(schema_version(&conn).unwrap(), 33);
+    assert_eq!(schema_version(&conn).unwrap(), 34);
     for table in ["classroom_session", "classroom_grade", "classroom_rubric"]
         .into_iter()
         .chain(CHILD_TABLES)

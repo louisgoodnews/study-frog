@@ -2,7 +2,7 @@
 id: TASK-0294
 type: task
 title: "Assignments panel, group collaboration drawer, turn-in form, and grade view"
-status: backlog
+status: done
 epic: EPIC-068
 parents: ['STORY-0211']
 estimate: 3
@@ -23,9 +23,9 @@ Build the assignment and grading UI components inside the Classroom screen (`stu
 - Graded result view showing score, per-criterion feedback, and teacher comments.
 
 ## Acceptance Criteria
-- [ ] An assignments panel lists active and completed solo and group tasks with status badges (`assigned`, `submitted`, `graded`) and assignee/group rosters
-- [ ] For group tasks, users can exchange messages with simulated groupmates and draft the shared submission before clicking Turn in
-- [ ] Graded tasks display the teacher's score, grade, rubric breakdown, and narrative feedback clearly in the UI
+- [x] An assignments panel lists active and completed solo and group tasks with status badges (`assigned`, `submitted`, `graded`) and assignee/group rosters
+- [x] For group tasks, users can exchange messages with simulated groupmates and draft the shared submission before clicking Turn in
+- [x] Graded tasks display the teacher's score, grade, rubric breakdown, and narrative feedback clearly in the UI
 
 ## Design Notes
 - Ensure all buttons and inputs have clear accessible labels so `ui tree` and keyboard navigation work cleanly.

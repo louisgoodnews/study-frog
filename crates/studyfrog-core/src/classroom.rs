@@ -87,6 +87,19 @@ pub enum Owner {
     Group(usize),
 }
 
+/// The teacher's judgement of one rubric point of a submission.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CriterionMark {
+    /// The rubric point, as written on the assignment.
+    pub criterion: String,
+    /// Whether the answer makes the point.
+    pub met: bool,
+    /// Whether the point could be tested at all; an unchecked point is neither met nor missing.
+    pub checked: bool,
+    /// One sentence for the student; may be empty.
+    pub feedback: String,
+}
+
 /// The grade of one submission, out of `max` points.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct GradeReport {
@@ -98,6 +111,8 @@ pub struct GradeReport {
     pub feedback: String,
     /// When the grade was recorded.
     pub graded_at: UnixMs,
+    /// One mark per rubric point, in rubric order; may be empty for a grade with no breakdown.
+    pub criteria: Vec<CriterionMark>,
 }
 
 /// A turned-in answer. It exists only after turn-in, so it is locked from the start; grading

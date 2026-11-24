@@ -1,8 +1,8 @@
 //! A sample classroom session shared by the classroom store tests.
 
 use studyfrog_core::classroom::{
-    Assignment, AssignmentKind, ChatTurn, ClassroomSession, GradeReport, GroupRoster, Owner,
-    Participant, SourceKind, SourceRef, Submission,
+    Assignment, AssignmentKind, ChatTurn, ClassroomSession, CriterionMark, GradeReport,
+    GroupRoster, Owner, Participant, SourceKind, SourceRef, Submission,
 };
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
@@ -105,6 +105,20 @@ pub fn sample(id: u128, title: &str, created: i64) -> ClassroomSession {
                     max: 10,
                     feedback: name("Good structure."),
                     graded_at: UnixMs(6_000),
+                    criteria: vec![
+                        CriterionMark {
+                            criterion: name("Names the cell wall"),
+                            met: true,
+                            checked: true,
+                            feedback: name("Clear."),
+                        },
+                        CriterionMark {
+                            criterion: name("Explains osmosis"),
+                            met: false,
+                            checked: false,
+                            feedback: String::new(),
+                        },
+                    ],
                 }),
             },
             Submission {

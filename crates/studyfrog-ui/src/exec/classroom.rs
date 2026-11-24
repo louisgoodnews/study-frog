@@ -7,7 +7,10 @@ use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_service::agent::Ask;
 use studyfrog_service::classroom_context::Lecture;
+use studyfrog_service::classroom_grade::grade_submission;
+use studyfrog_service::classroom_group::group_message;
 use studyfrog_service::classroom_model::{Model, provider_model};
+use studyfrog_service::classroom_submit::turn_in as submit_answer;
 use studyfrog_service::classroom_task::assign_task;
 use studyfrog_service::classroom_turns::{
     advance_segment, simulated_question, start_session, user_message,
@@ -86,7 +89,63 @@ fn perform(
                 assign_task(l, m, ids, assignees).map(|_| ())
             }),
         ),
+        ClassroomEffect::GroupMessage {
+            id,
+            provider,
+            assignment,
+            group,
+            text,
+        } => (
+            Some(id),
+            turn(w, id, &provider, now_ms, |l, m, at| {
+                group_message(l, m, at, assignment, group, &text).map(|_| ())
+            }),
+        ),
+        ClassroomEffect::TurnIn {
+            id,
+            provider,
+            assignment,
+            submitter,
+            text,
+        } => (
+            Some(id),
+            turn_in(
+                &Lecture {
+                    vault,
+                    provider: &provider,
+                    id,
+                },
+                now_ms,
+                assignment,
+                submitter,
+                &text,
+            ),
+        ),
+        ClassroomEffect::Grade {
+            id,
+            provider,
+            assignment,
+            owner,
+        } => (
+            Some(id),
+            turn(w, id, &provider, now_ms, |l, m, at| {
+                grade_submission(l, m, at, assignment, owner).map(|_| ())
+            }),
+        ),
     }
+}
+
+/// Stores a turned-in answer. No model is called, so this works in a build without a network.
+fn turn_in(
+    lecture: &Lecture<'_>,
+    now_ms: i64,
+    assignment: Uid,
+    submitter: usize,
+    text: &str,
+) -> Result<(), String> {
+    submit_answer(lecture, UnixMs(now_ms), assignment, submitter, text)
+        .map(|_| ())
+        .map_err(|e| e.to_string())
 }
 
 /// Creates the session. Its id is known only once it is stored.

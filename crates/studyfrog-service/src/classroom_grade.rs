@@ -8,7 +8,7 @@ use studyfrog_agent::lecture_grade::{
 };
 use studyfrog_agent::provider::may_send;
 use studyfrog_core::classroom::{
-    Assignment, ClassroomError, ClassroomSession, GradeReport, Owner, Submission,
+    Assignment, ClassroomError, ClassroomSession, CriterionMark, GradeReport, Owner, Submission,
 };
 use studyfrog_core::classroom_ops::participant_name;
 use studyfrog_core::classroom_work::{check_owner, record_grade};
@@ -39,6 +39,7 @@ pub fn grade_submission(
         max: GRADE_MAX,
         feedback: grade.summary.clone(),
         graded_at: at,
+        criteria: marks_of(&grade),
     };
     record_grade(&mut session, assignment, owner, report).map_err(classroom_error)?;
     persist(lecture, &session)?;
@@ -72,6 +73,20 @@ fn ungraded(
         return Err(classroom_error(ClassroomError::AlreadyGraded));
     }
     Ok(answer)
+}
+
+/// The rubric marks of a grade, in rubric order, as the session stores them.
+fn marks_of(grade: &Grade) -> Vec<CriterionMark> {
+    grade
+        .criteria
+        .iter()
+        .map(|c| CriterionMark {
+            criterion: c.criterion.clone(),
+            met: c.met,
+            checked: c.checked,
+            feedback: c.feedback.clone(),
+        })
+        .collect()
 }
 
 fn teacher_name(session: &ClassroomSession) -> &str {

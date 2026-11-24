@@ -1,9 +1,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used, dead_code)] // shared test helpers
 //! Helpers for the Classroom screen tests: a started session, a chat harness and a fake local model.
 
-use crate::common::TempDir;
 use crate::common::flow::{opened, send};
 use crate::common::views::App;
+use crate::common::{TempDir, temp_dir};
 use eframe::egui;
 use egui_kittest::Harness;
 use studyfrog_agent::provider::{HttpRequest, HttpResponse, Protocol, Provider};
@@ -97,4 +97,53 @@ pub fn sized(m: Model, w: f32, h: f32) -> Harness<'static, App> {
 
 pub fn asked(h: &Harness<'static, App>, want: impl Fn(&Effect) -> bool) -> bool {
     h.state().1.iter().any(want)
+}
+
+/// A worker that can reach the fake local model, with a config folder for it.
+pub fn online(w: &mut Worker) -> TempDir {
+    let cfg = temp_dir("classroom-work-cfg");
+    w.config_dir = Some(cfg.path.clone());
+    w.transport = Some(teacher_reply);
+    cfg
+}
+
+/// The id of the assignment added last.
+pub fn last_task(m: &Model) -> Uid {
+    m.state
+        .classroom
+        .session
+        .as_ref()
+        .unwrap()
+        .assignments
+        .last()
+        .unwrap()
+        .id
+}
+
+/// The teacher sets a solo task for the user (participant 1) through the worker.
+pub fn solo_task(m: &mut Model, w: &mut Worker) -> Uid {
+    send(m, w, Msg::Classroom(ClassroomMsg::AssignTask));
+    last_task(m)
+}
+
+/// The teacher sets group work through the worker; the user is in one group.
+pub fn group_task(m: &mut Model, w: &mut Worker) -> Uid {
+    send(m, w, Msg::Classroom(ClassroomMsg::AssignGroups));
+    last_task(m)
+}
+
+pub fn open(m: &mut Model, w: &mut Worker, id: Uid) {
+    send(m, w, Msg::Classroom(ClassroomMsg::OpenTask(Some(id))));
+}
+
+pub fn stored_turns(m: &Model) -> Vec<(usize, String)> {
+    m.state
+        .classroom
+        .session
+        .as_ref()
+        .unwrap()
+        .turns
+        .iter()
+        .map(|t| (t.speaker, t.text.clone()))
+        .collect()
 }

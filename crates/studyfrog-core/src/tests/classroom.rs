@@ -56,6 +56,7 @@ pub(super) fn grade(points: u32, max: u32) -> GradeReport {
         max,
         feedback: "ok".into(),
         graded_at: UnixMs(9),
+        criteria: Vec::new(),
     }
 }
 

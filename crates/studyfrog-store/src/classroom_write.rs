@@ -2,8 +2,8 @@
 
 use rusqlite::{Connection, params};
 use studyfrog_core::classroom::{
-    Assignment, AssignmentKind, ChatTurn, ClassroomSession, GroupRoster, Owner, Participant,
-    SourceKind, SourceRef, Submission,
+    Assignment, AssignmentKind, ChatTurn, ClassroomSession, CriterionMark, GroupRoster, Owner,
+    Participant, SourceKind, SourceRef, Submission,
 };
 use studyfrog_md::ulid::format_ulid;
 
@@ -179,7 +179,27 @@ fn write_submissions(
                 params![uid, a_uid, kind, db_int(idx), g.points, g.max, g.feedback, g.graded_at.0],
             )
             .map_err(sql_err)?;
+            write_criteria(conn, uid, &a_uid, (kind, idx), &g.criteria)?;
         }
+    }
+    Ok(())
+}
+
+/// The rubric marks of one grade, in rubric order.
+fn write_criteria(
+    conn: &Connection,
+    uid: &str,
+    a_uid: &str,
+    owner: (&str, usize),
+    criteria: &[CriterionMark],
+) -> Result<(), StoreError> {
+    for (seq, c) in criteria.iter().enumerate() {
+        conn.execute(
+            "INSERT INTO classroom_grade_criterion (session_uid, assignment_uid, owner_kind, owner_idx, seq, criterion, met, checked, feedback)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+            params![uid, a_uid, owner.0, db_int(owner.1), db_int(seq), c.criterion, c.met, c.checked, c.feedback],
+        )
+        .map_err(sql_err)?;
     }
     Ok(())
 }

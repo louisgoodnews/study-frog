@@ -29,4 +29,5 @@ fn export_renders_transcript_assignments_submissions_and_grades() {
     assert!(md.contains("Grade: 8/10. Good structure."));
     assert!(md.contains("### Project: Group 1"));
     assert!(md.contains("Not graded yet."));
+    assert!(md.ends_with('\n') && !md.ends_with("\n\n"));
 }

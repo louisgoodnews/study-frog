@@ -10,7 +10,9 @@ use studyfrog_agent::provider::{Protocol, Provider};
 use studyfrog_core::classroom::{Participant, SourceKind, SourceRef};
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
+use studyfrog_service::classroom_context::Lecture;
 use studyfrog_service::classroom_material::pdf_source_uid;
+use studyfrog_service::classroom_task::{Assignees, assign_task};
 use studyfrog_service::classroom_turns::start_session;
 use studyfrog_service::create::IdSource;
 use studyfrog_service::pdf_export::{ExportTarget, default_pdf_export_options, export_pdf};
@@ -159,4 +161,39 @@ pub fn fake(
 
 pub fn stored(s: &VaultSession, id: Uid) -> studyfrog_core::classroom::ClassroomSession {
     load_session(&s.conn, id).unwrap().unwrap()
+}
+
+pub fn task_json(mode: &str) -> String {
+    format!(
+        r#"{{"title": "Cell walls", "prompt": "Say what a cell wall does.", "mode": "{mode}", "rubric": ["Names the function"]}}"#
+    )
+}
+
+/// A fake model that logs each prompt and numbers its replies: "Idea 1.", "Idea 2.", ...
+pub fn numbered(
+    log: &RefCell<Vec<String>>,
+) -> impl FnMut(&[PromptMessage]) -> Result<String, String> + '_ {
+    move |messages| {
+        let n = log.borrow().len() + 1;
+        log.borrow_mut()
+            .push(format!("{}\n{}", messages[0].content, messages[1].content));
+        Ok(format!("Idea {n}."))
+    }
+}
+
+/// A session with one group task for Ada, Ben and the user (group 0) and a group-less solo task.
+pub fn with_group_task(s: &VaultSession, id: Uid) -> Uid {
+    let p = local();
+    let lecture = Lecture {
+        vault: s,
+        provider: &p,
+        id,
+    };
+    let reply = task_json("group");
+    let mut model = |_: &[PromptMessage]| -> Result<String, String> { Ok(reply.clone()) };
+    let ids = IdSource {
+        now_ms: 1_000,
+        random: [4; 10],
+    };
+    assign_task(&lecture, &mut model, ids, Assignees::Groups { size: 2 }).unwrap()
 }

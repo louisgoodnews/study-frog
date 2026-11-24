@@ -22,41 +22,6 @@ use studyfrog_service::create::IdSource;
 use studyfrog_service::session::{ServiceError, VaultSession};
 use studyfrog_store::classroom_store::update_session;
 
-fn task_json(mode: &str) -> String {
-    format!(
-        r#"{{"title": "Cell walls", "prompt": "Say what a cell wall does.", "mode": "{mode}", "rubric": ["Names the function"]}}"#
-    )
-}
-
-/// A fake model that logs each prompt and numbers its replies: "Idea 1.", "Idea 2.", ...
-fn numbered(
-    log: &RefCell<Vec<String>>,
-) -> impl FnMut(&[PromptMessage]) -> Result<String, String> + '_ {
-    move |messages| {
-        let n = log.borrow().len() + 1;
-        log.borrow_mut()
-            .push(format!("{}\n{}", messages[0].content, messages[1].content));
-        Ok(format!("Idea {n}."))
-    }
-}
-
-/// A session with one group task for Ada, Ben and the user (group 0) and a group-less solo task.
-fn with_group_task(s: &VaultSession, id: Uid) -> Uid {
-    let p = local();
-    let lecture = Lecture {
-        vault: s,
-        provider: &p,
-        id,
-    };
-    let reply = task_json("group");
-    let mut model = |_: &[PromptMessage]| -> Result<String, String> { Ok(reply.clone()) };
-    let ids = IdSource {
-        now_ms: 1_000,
-        random: [4; 10],
-    };
-    assign_task(&lecture, &mut model, ids, Assignees::Groups { size: 2 }).unwrap()
-}
-
 fn say(s: &VaultSession, id: Uid, speaker: usize, text: &str) {
     let mut session = stored(s, id);
     append_turn(&mut session, speaker, AT, text).unwrap();
@@ -140,6 +105,7 @@ fn a_group_that_turned_in_gets_no_more_contributions_and_its_answer_stays_locked
         max: 1,
         feedback: "ok".to_owned(),
         graded_at: UnixMs(9),
+        criteria: Vec::new(),
     };
     assert_eq!(
         record_grade(&mut session, task, Owner::Participant(1), grade),

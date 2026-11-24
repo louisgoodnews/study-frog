@@ -21,7 +21,7 @@ pub fn render_session_markdown(s: &ClassroomSession) -> String {
     push_assignments(&mut lines, s);
     push_submissions(&mut lines, s);
     let mut out = lines.join("\n");
-    while out.ends_with("\n\n") {
+    while out.ends_with('\n') {
         out.pop();
     }
     out.push('\n');

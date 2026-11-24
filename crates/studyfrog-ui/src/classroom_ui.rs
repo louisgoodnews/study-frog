@@ -64,6 +64,13 @@ fn apply(state: &mut State, msg: ClassroomMsg) -> Vec<Effect> {
                 assignees: Assignees::Solo(user),
             })
         }),
+        ClassroomMsg::OpenTask(_)
+        | ClassroomMsg::DraftEdit(_)
+        | ClassroomMsg::GroupInput(_)
+        | ClassroomMsg::SendGroup
+        | ClassroomMsg::TurnIn
+        | ClassroomMsg::AskGrade
+        | ClassroomMsg::AssignGroups => crate::classroom_work_ui::apply(state, msg),
         ClassroomMsg::Leave => {
             if !state.classroom.busy {
                 state.classroom.session = None;
@@ -163,7 +170,7 @@ fn say(state: &mut State) -> Vec<Effect> {
 }
 
 /// Runs a turn on the session on screen, unless one is already running.
-fn turn(
+pub(crate) fn turn(
     state: &mut State,
     build: impl FnOnce(&ClassroomSession, Provider) -> Result<ClassroomEffect, String>,
 ) -> Vec<Effect> {
@@ -174,7 +181,7 @@ fn turn(
     finish_request(state, outcome)
 }
 
-fn turn_effect(
+pub(crate) fn turn_effect(
     state: &State,
     build: impl FnOnce(&ClassroomSession, Provider) -> Result<ClassroomEffect, String>,
 ) -> Result<ClassroomEffect, String> {
@@ -187,7 +194,10 @@ fn turn_effect(
 }
 
 /// Sets the busy flag and asks for the effect when it was built, or records why it was not.
-fn finish_request(state: &mut State, outcome: Result<ClassroomEffect, String>) -> Vec<Effect> {
+pub(crate) fn finish_request(
+    state: &mut State,
+    outcome: Result<ClassroomEffect, String>,
+) -> Vec<Effect> {
     match outcome {
         Ok(effect) => {
             state.classroom.busy = true;
