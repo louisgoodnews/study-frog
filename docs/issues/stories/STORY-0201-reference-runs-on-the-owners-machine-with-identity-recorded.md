@@ -27,7 +27,7 @@ between machines with no code change, so a result without its machine is not com
 - Interleaving two builds is a separate task, because it needs two built binaries.
 
 ## Acceptance Criteria
-- [x] Each budgeted benchmark runs at least 5 times on the reference machine (ADR 0014), and every median is saved (27 of 27, `docs/benchmarks/reference-1.0.0/`)
+- [x] Each budgeted benchmark runs at least 5 times on the reference machine (ADR 0014), and every median is saved (28 of 28, `docs/benchmarks/reference-1.0.0/`)
 - [x] Every saved result carries the machine identity, the commit and the hygiene state of its run (TASK-0277)
 - [x] A case whose 5 medians spread more than 5% is repeated to 10 runs (TASK-0278)
 - [ ] Two builds run interleaved, so the comparison is paired (TASK-0279)

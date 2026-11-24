@@ -25,7 +25,7 @@ Allocation counting is not automated: a counting global allocator needs `unsafe`
 Machine (ADR 0014 names it the reference machine; identity in `docs/benchmarks/reference-1.0.0/machine.txt`): Intel Core
 i5-10210U @ 1.60 GHz, 8 logical CPUs, Linux 7.3.5, rustc 1.99.1, commit `ec88f3e`. Hygiene not met: governor `powersave`,
 turbo enabled, SMT on, 14 processes above 10% CPU, two uncommitted files. Run: `scripts/bench-reference.sh homebox-ref <out> 5`
-(each case 5 invocations, 10 when the spread of the 5 exceeds 5%). The 27 medians are in `docs/benchmarks/reference-1.0.0/*.ns`.
+(each case 5 invocations, 10 when the spread of the 5 exceeds 5%). The 28 medians are in `docs/benchmarks/reference-1.0.0/*.ns`.
 
 | Bench | Median | Spread (runs) | Budget | Status |
 |---|---|---|---|---|
@@ -46,11 +46,26 @@ turbo enabled, SMT on, 14 processes above 10% CPU, two uncommitted files. Run: `
 | `pdf_500_pages` info / all text / one page's words / render 1x | 3.3 ms / 653 ms / 92 ms / 9.4 ms | 3.9 / 41.8 / 3.4 / 9.4% | < 50 ms / < 2 s / < 100 ms / < 50 ms | within (words close to limit) |
 | `slm_lexical_30` | 21.6 us | 4.7% (5) | semantic p95 < 150 ms (not run here) | n/a |
 
-Spread rule (EPIC-067): 12 of 27 cases are still above 5% after the run (the 12 were extended to 10 invocations): `analytics_leeches` 45.4%,
+Spread rule (EPIC-067): 12 of 28 cases are still above 5% after the run (the 12 were extended to 10 invocations): `analytics_leeches` 45.4%,
 `rehearsal_run_1000` 60.3%, `pdf_all_text` 41.8%, `analytics_confusion` 39.8%, `vault_warm_reindex` 29.6%, `analytics_fatigue` 27.9%,
 `report_backtest` 16.2%, `rehearsal_queue_lowest` 18.5%, `graph_project` 13.3%, `rehearsal_queue_shuffled` 10.0%, `rehearsal_queue_hardest`
 9.1%, `pdf_render_1x` 9.4%. The rule does not hold on this machine yet. The budgets are not changed here: the CMRR miss and the noise
 are recorded for the owner's decision (STORY-0203). Interleaved paired runs (TASK-0279) are still open.
+
+## Release 1.0.0 check (2026-11-24, TASK-0282, STORY-0202)
+Steps (RELEASING step 3, and the regression check before a tag): (1) `cargo bench --workspace` on the reference machine, idle;
+(2) `scripts/bench-reference.sh <label> <out> 5` on the release commit; (3) `scripts/bench-compare.sh <baseline.ns> <new.ns>` for each
+case; a `regression` verdict blocks the tag unless the owner accepts it in writing.
+
+- `cargo bench --workspace` (commit 76461b6, one busy process): the figures agree with the reference run of the same code
+  (`docs/benchmarks/reference-1.0.0/`): FSRS 100k 4.46 ms, SM-2 1.03 ms, graph layout step 6.14 ms, PDF info 3.2 ms, cold reindex 822 ms,
+  warm reindex 67 ms, rehearsal run-through 52 us, reports retention 0.60 ms, latency 1.85 ms, familiarity 7.9 ms, CMRR 71 ms (over the
+  50 ms budget, as before). No baseline table row changed.
+- Release reference run (`docs/benchmarks/release-1.0.0/`, same code, machine state changed after a container restart: 1 busy process,
+  load 1.1, against 14 busy processes in the first run): `bench-compare` gives `regression` for 16 of 28 cases with effect sizes of 17%
+  to 238% (for example `pdf_info` 3.1x, `pdf_render_1x` 3.4x), and `no-change` for 12. The code under test did not change between the two
+  runs, so the verdict is not a code regression, but it is not explained either. Verdict: **regression, not accepted**. The tag is held
+  until the owner accepts it in writing or a repeat run clears it.
 
 ## Release 0.1.0 check (2026-10-31)
 Run on the same machine (i9-11900K), release profile, each crate's benchmark on its own at low priority (running

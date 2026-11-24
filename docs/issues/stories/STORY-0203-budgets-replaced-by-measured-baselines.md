@@ -32,7 +32,7 @@ budget or the baseline table in BENCHMARKING.md, and record the machine identity
   rehearsal per step, reports, analytics except CMRR, PDF, familiarity.
 - Over budget here: analytics CMRR, 5,000 cards, 12 targets, 180 days: 84.8 ms against a budget of under 50 ms. No budget
   changed: this is the owner's decision (the number may be the machine or the code).
-- Spread: the 5% floor is not met by 12 of 27 cases even after 10 runs. The idle-spread measurement (10 back-to-back runs,
+- Spread: the 5% floor is not met by 12 of 28 cases even after 10 runs. The idle-spread measurement (10 back-to-back runs,
   EPIC-067 Open Questions) is not done.
 - Criteria 1 and 3 stay open. Criterion 2 (per-machine baseline with identity) holds for this machine only.
 

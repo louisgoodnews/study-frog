@@ -64,18 +64,18 @@ Read the [Known limits](#known-limits) before relying on a feature. Several part
 ## Verification
 
 - `scripts/check.sh` passes on the release commit: formatting, repo-lint, strict clippy (`-D warnings`), the full workspace test suite (2232 tests, no failures), the 250-line file limit, layering, the no-inherent-impl scan, issue front matter and the board.
-- Packaging: `scripts/package-appimage.sh` builds the release binary and the tarball, each tarball with a SHA-256 file. The AppImage could not be packed on the build machine (a system tool was missing); the tarball is verified by checksum and the packaged binary starts headless. See `docs/RELEASE_AUDIT_1.0.0.md`.
+- Packaging: `scripts/package-appimage.sh` builds the release binary and the tarball, each tarball with a SHA-256 file. The AppImage and the tarball are both built, each with a SHA-256 file; the AppImage was started on a desktop and opened a vault (see Install). See `docs/RELEASE_AUDIT_1.0.0.md`.
 
 ## Known limits
 
 - **Not tagged or published.** The `v1.0.0` tag, the GitHub release and the uploaded artifacts wait for the owner.
-- **Owner's-machine checks not done.** The reference benchmark runs and the measured baselines (EPIC-067, STORY-0201, STORY-0203) need the owner's machine. Until they are run, the performance budgets in `docs/contributing/BENCHMARKING.md` are provisional.
+- **Benchmark release check open.** The reference run of 28 cases ran on the reference machine (`docs/benchmarks/reference-1.0.0/`). Twelve cases still spread more than 5%, and the second release run (`docs/benchmarks/release-1.0.0/`) gave a `regression` verdict with unchanged code. The owner must accept it in writing or a repeat run must clear it (see `docs/contributing/BENCHMARKING.md`). Analytics CMRR (71 to 85 ms) is over its 50 ms budget on this machine; no budget was changed.
 - **Window checks still open.** Several stories are built and tested headless but were not yet clicked through in a running window: STORY-0150, STORY-0151 and STORY-0152 (remaining criteria in ScriptStudio and the console), STORY-0177, STORY-0192 and STORY-0194 (focus, calendar movement and reminder peek), STORY-0186 and STORY-0187 (the mock exam view), and STORY-0198 (a custom run and its report).
 - **Model grading is not measured.** The local-model grading of case justifications (STORY-0180, STORY-0200), mock exam answers (STORY-0187) and the generated exam questions (STORY-0186) was tested with a fake model. No real language model was run for this release, and small local models are unmeasured. Without a model, the keyword check grades, and the result says so.
 - **Some milestone work is still in review.** Of the 23 stories of the v1.0.0 roadmap (STORY-0165 to STORY-0187), 7 are done and 16 are in review. EPIC-058 (FrogScript wiki) and EPIC-065 are in the backlog as epics, although their stories are in review. The board shows the status of each item.
 - **No Altklausur lab screen.** Mock exams are started from the rehearse setup; the dedicated lab screen is not built.
-- **Heavy release tests not run.** The model-dependent release tests (`cargo test --release -p studyfrog-candle`) need an installed language model and were not run for this release.
-- **AppImage not yet packed or checked.** The AppImage for this release has not been built: packing needs `desktop-file-validate`, which the build machine lacks. It has also not been started on a real desktop session with a vault open (RELEASING.md step 6). The tarball is built and verified by checksum.
+- **Heavy release tests skipped.** `cargo test --release -p studyfrog-candle` runs, but every model test skips: the all-MiniLM-L6-v2 model is not installed on the build machine.
+- **Desktop start checked on one machine.** The AppImage was started on a Wayland desktop and opened a scratch vault. Owner window checks (section 3) are still open. The tarball is built and verified by checksum.
 - Linux on x86_64 only. It needs OpenGL and X11 or Wayland from the system.
 
 ## Install
@@ -84,7 +84,7 @@ StudyFrog is for Linux on x86_64. It requires OpenGL, and X11 or Wayland, from y
 
 ### AppImage
 
-The AppImage is added to the release once it is packed (see Known limits).
+SHA-256 `9962517dc3518245d676d180e89274b4b277f3442b0a1bdb8ec3ff7d62c532ef`.
 
 ```sh
 sha256sum -c StudyFrog-1.0.0-x86_64.AppImage.sha256

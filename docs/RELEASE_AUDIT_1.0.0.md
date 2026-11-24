@@ -81,3 +81,35 @@ These are not `in_progress` or `blocked`, but they decide whether the roadmap's 
 8. **Board header:** section 4.
 
 Priority list: the v1.0.0 release item (`priority-list.md`, milestone 14.5) is not ticked, because the owner has not verified it.
+
+## 8. Release run of 2026-11-24 (ADR 0014)
+
+Machine: the reference machine (ADR 0014), Intel Core i5-10210U @ 1.60 GHz, 8 logical CPUs, Linux 7.3.5, rustc 1.99.1.
+Disk: `/home` had 72 GB free after the release run. `cargo clean` was run once at the start; the build cache was kept.
+
+| Step | Result | Notes |
+|---|---|---|
+| 0. Perf branch merged | pass | `e849799` (TASK-0278 script fix) and `49f49f2` (TASK-0285 dhat budgets) cherry-picked as `918833f` and `78c9413`. The `alloc_reports` and `alloc_console` tests used message paths from before the merge and were corrected in `78c9413`. |
+| 1. Perf items | see below | TASK-0278 review, STORY-0201 in progress, STORY-0203 in progress, TASK-0286 backlog, TASK-0282 review |
+| 2. Heavy candle tests | ran, skipped | `cargo test --release -p studyfrog-candle -- --nocapture` passed with every heavy test skipped: `no model`. The tests load all-MiniLM-L6-v2 from `~/.local/share/studyfrog/models/`, which is not installed. The Ollama model `qwen2.5:1.5b` is a generative model and the candle tests cannot use it. Not run: the semantic latency and accuracy tests (`minilm.rs`), and the calibration test with a real model. |
+| 3. Benchmarks | pass, verdict pending | `cargo bench --workspace` ran to completion at commit 76461b6. The reference run (`docs/benchmarks/reference-1.0.0/`) was taken before the container restart. A second reference run (`docs/benchmarks/release-1.0.0/`) gave a `regression` verdict for 16 of 28 cases with unchanged code (see BENCHMARKING.md, "Release 1.0.0 check"). The owner must accept the verdict in writing or a repeat run must clear it. |
+| 4. Changelog | done | `## [Unreleased]` is empty and `## [1.0.0] - 2026-11-24` holds the release entries. A second heading `## [1.0.0] - 2026-11-22` (earlier candidate) remains below it; the owner should decide whether to retitle it. |
+| 5. Release notes | updated | Known limits and Install now match the run (see the commit `chore(release): 1.0.0`). |
+| 6. Package | pass | `scripts/package-appimage.sh` built the AppImage and tarball; `desktop-file-validate` is at `/usr/bin`. |
+| 6. Desktop start | pass (with a caveat) | The AppImage was started on `DISPLAY=:0` (Wayland session, `WAYLAND_DISPLAY=wayland-0`). The control socket answered, and `ctl vault open` on a scratch vault (`vault-check`, in the session scratch directory, not the user's vault) made the vault root the open vault, on the home screen. Caveat: the AppImageLauncher on this machine moved the AppImage into `~/Anwendungen` on its first run and back again. The file was restored byte-identical and its hash checked after each move. Its desktop-file integration is left as the launcher made it. |
+| Gate | pass | `scripts/check.sh` exit 0 on the docs tree after the benchmark commit (run 4). The final-tree run is recorded in section 8.1. |
+
+Checksums (`sha256sum`):
+
+| Artifact | SHA-256 |
+|---|---|
+| `target/appimage/StudyFrog-1.0.0-x86_64.AppImage` | `9962517dc3518245d676d180e89274b4b277f3442b0a1bdb8ec3ff7d62c532ef` |
+| `target/appimage/StudyFrog-1.0.0-x86_64.tar.gz` | `64ccd3ee9756c0bc5cf11b145847cbea7a5bb427c77c667c8938400f19563420` |
+
+These were produced before the container restart. The AppImage was restored and verified after it; the tarball was not rebuilt.
+
+Benchmark comparison of the two reference runs (`scripts/bench-compare.sh`): 16 `regression`, 12 `no-change`. The `cargo bench --workspace` numbers agree with the first reference run, so the second script run is the outlier. The regression verdict is not accepted.
+
+### 8.1 Tag decision
+
+The v1.0.0 tag is **not pushed**. Authority item 3 requires the benchmark run to have passed, and the release check verdict is `regression`. The owner must accept the verdict in writing, or a repeat run must clear it, before the tag. Also still open: the window checks in section 3 and the heavy candle tests with a model.
