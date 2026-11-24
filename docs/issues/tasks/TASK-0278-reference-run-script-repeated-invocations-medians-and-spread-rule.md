@@ -50,6 +50,11 @@ commas work. Change lines (`change: time: [-1.2% ...]`) are skipped.
   change a noise floor of this size; the noise source is the machine's state (powersave, busy processes), and interleaved
   runs (TASK-0279) are the next step.
 
+## Repeat runs (2026-11-24, owner decision)
+- Run 3 and run 4 on the reference machine: after 10 runs, 6 cases (run 3) and 5 cases (run 4) still spread more than 5%
+  (run 4: `pdf_render_1x` 13.2%, `pdf_info` 9.2%, `rehearsal_queue_lowest` 9.9%, `rehearsal_queue_shuffled` 7.4%,
+  `graph_project` 6.9%). The spread rule does not hold, so the task stays in `review`.
+
 ## Dependencies
 STORY-0201. TASK-0279 for the paired comparison. The owner's machine for the final run (blocks STORY-0203).
 

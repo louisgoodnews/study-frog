@@ -110,6 +110,10 @@ These were produced before the container restart. The AppImage was restored and 
 
 Benchmark comparison of the two reference runs (`scripts/bench-compare.sh`): 16 `regression`, 12 `no-change`. The `cargo bench --workspace` numbers agree with the first reference run, so the second script run is the outlier. The regression verdict is not accepted.
 
+### 8.0 Repeat runs (owner decision)
+Runs 3 and 4 (`docs/benchmarks/repeat-1.0.0/`) agree with run 2 (no-change on all 28 cases). Against run 1 they give regression
+for 16 to 17 cases, so the regression persists. The spread rule still fails for 5 cases in run 4.
+
 ### 8.1 Tag decision
 
-The v1.0.0 tag is **not pushed**. Authority item 3 requires the benchmark run to have passed, and the release check verdict is `regression`. The owner must accept the verdict in writing, or a repeat run must clear it, before the tag. Also still open: the window checks in section 3 and the heavy candle tests with a model.
+The v1.0.0 tag is **not pushed** and not created (owner instruction, repeat runs 3 and 4 do not clear the regression). Authority item 3 requires the benchmark run to have passed, and the release check verdict is `regression`. The owner must accept the verdict in writing, or a repeat run must clear it, before the tag. Also still open: the window checks in section 3 and the heavy candle tests with a model.

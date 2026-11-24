@@ -30,6 +30,10 @@ Document the step and where its output goes. The step is run by the owner, on th
 - Per the criterion above the regression verdict blocks the tag until the owner accepts it in writing or a repeat run
   clears it. The task stays in `review`; the owner's decision is pending.
 
+## Repeat runs (2026-11-24, owner decision)
+- Runs 3 and 4 (`docs/benchmarks/repeat-1.0.0/`) agree with run 2 (no-change on all 28 cases) and with each other. Against
+  run 1 they give regression for 16 to 17 cases. The regression persists after repeated runs, so the tag is not made.
+
 ## Design Notes
 - BENCHMARKING.md's budget numbers are not changed here (STORY-0203).
 

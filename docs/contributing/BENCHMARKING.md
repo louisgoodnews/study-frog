@@ -67,6 +67,17 @@ case; a `regression` verdict blocks the tag unless the owner accepts it in writi
   runs, so the verdict is not a code regression, but it is not explained either. Verdict: **regression, not accepted**. The tag is held
   until the owner accepts it in writing or a repeat run clears it.
 
+### Repeat runs (owner decision, 2026-11-24)
+Two more full reference runs were taken on the same commit (5b8d8d8 code, `docs/benchmarks/repeat-1.0.0/`):
+- Run 3 and run 4 agree with each other: `bench-compare` gives `no-change` for all 28 cases, including every case against run 2.
+  Runs 2 to 4 were taken after the container restart, and the machine is now steady at that level.
+- Against run 1 (taken before the restart, 14 busy processes) run 4 gives `regression` for 17 of 28 cases (effect +16% to +35%
+  typically, `pdf_info` +209%, `pdf_render_1x` +227%) and `no-change` for 11. The `cargo bench --workspace` figures also match
+  runs 2 to 4, not run 1. Cause is not established: the machine state changed, and the code under test did not.
+- Spread rule after 10 runs (run 4): 5 cases still above 5% (`pdf_render_1x` 13.2%, `pdf_info` 9.2%, `rehearsal_queue_lowest` 9.9%,
+  `rehearsal_queue_shuffled` 7.4%, `graph_project` 6.9%). Run 3 had 6 such cases. The rule does not hold yet.
+- Verdict: the regressions against run 1 persist after repeated runs. The tag is not made (owner instruction).
+
 ## Release 0.1.0 check (2026-10-31)
 Run on the same machine (i9-11900K), release profile, each crate's benchmark on its own at low priority (running
 `cargo bench --workspace` at once overloaded the machine). Every hot path is within its budget:
