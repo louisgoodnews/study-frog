@@ -4,14 +4,14 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (8) | Ready (0) | In progress (0/3) | Review (2) | Blocked (3) | Done (613) |
+| Backlog (7) | Ready (0) | In progress (0/3) | Review (2) | Blocked (3) | Done (614) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  |  |  |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
 | [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
 | [TASK-0284](docs/issues/tasks/TASK-0284-scripted-screens-on-a-10k-vault-for-the-frame-time-run.md) Scripted visit of the rehearsal card, reports and console on a 10k-note vault (2) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
-| [TASK-0285](docs/issues/tasks/TASK-0285-dhat-allocation-counts-for-the-render-loops.md) dhat allocation counts for the rehearsal card, reports and console loops (2) |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
-| [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
+| [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
+|  |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
 |  |  |  |  |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
 |  |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
 |  |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
@@ -337,6 +337,7 @@
 |  |  |  |  |  | [TASK-0277](docs/issues/tasks/TASK-0277-machine-identity-and-hygiene-report-for-a-benchmark-run.md) Machine identity and hygiene report for a benchmark run (1) |
 |  |  |  |  |  | [TASK-0280](docs/issues/tasks/TASK-0280-pure-regression-rule-with-bootstrap-interval-and-unit-tests.md) Pure regression rule with a bootstrap interval, and its unit tests (3) |
 |  |  |  |  |  | [TASK-0281](docs/issues/tasks/TASK-0281-bench-compare-command-and-wrapper-script.md) bench-compare command, wrapper script, and the repo-lint tests in the gate (1) |
+|  |  |  |  |  | [TASK-0285](docs/issues/tasks/TASK-0285-dhat-allocation-counts-for-the-render-loops.md) dhat allocation counts for the rehearsal card, reports and console loops (2) |
 |  |  |  |  |  | [TASK-0287](docs/issues/tasks/TASK-0287-classroom-domain-types-and-state-transitions.md) Classroom domain types and pure state transitions in studyfrog-core (2) |
 |  |  |  |  |  | [TASK-0288](docs/issues/tasks/TASK-0288-sqlite-schema-and-local-classroom-session-store.md) SQLite schema migration and local classroom session store in studyfrog-store (3) |
 |  |  |  |  |  | [TASK-0289](docs/issues/tasks/TASK-0289-lecture-grounding-context-budgeting-and-persona-prompts.md) Lecture grounding, context budgeting, and persona prompt builders in studyfrog-agent (3) |
@@ -555,7 +556,7 @@
 | [STORY-0202](docs/issues/stories/STORY-0202-regression-rule-compare-two-runs-flag-only-real-large-changes.md) Regression rule: compare two runs and flag only real, large changes (5) | review | 2/3 |
 | [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines on the owner's machine (2) | blocked | 0/0 |
 | [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time of the rehearsal card, reports and console measured in the running window (5) | backlog | 0/2 |
-| [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Allocations in the render loops, counted with dhat, and a profile of the slowest screen (3) | backlog | 0/2 |
+| [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Allocations in the render loops, counted with dhat, and a profile of the slowest screen (3) | backlog | 1/2 |
 | [STORY-0206](docs/issues/stories/STORY-0206-ollama-setup-assistant-with-hardware-audit-and-model-suggestions.md) Ollama setup assistant: hardware audit, live Ollama status and model suggestions that fit this machine (5) | done | 0/0 |
 | [STORY-0207](docs/issues/stories/STORY-0207-exam-generation-item-format-selection-modal.md) Interactive modal to choose item formats during mock exam generation (5) | done | 0/0 |
 | [STORY-0208](docs/issues/stories/STORY-0208-classroom-session-domain-model-and-local-persistence.md) Classroom session domain model and local storage persistence (5) | done | 2/2 |

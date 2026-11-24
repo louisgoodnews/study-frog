@@ -5403,6 +5403,7 @@ dependencies = [
 name = "studyfrog-ui"
 version = "1.0.0"
 dependencies = [
+ "dhat",
  "eframe",
  "egui_extras",
  "egui_kittest",

@@ -36,6 +36,7 @@ rusqlite.workspace = true
 
 [dev-dependencies]
 egui_kittest.workspace = true
+dhat.workspace = true
 proptest.workspace = true
 lopdf.workspace = true
 rusqlite.workspace = true
