@@ -81,6 +81,16 @@ pub fn people() -> Vec<Participant> {
     ]
 }
 
+/// The teacher, three simulated students (Ada, Ben, Dan) and the user (Cleo), with Dan last. Students
+/// split into groups of two as [Ada, Ben] and [Cleo, Dan], so the user's group is group 1.
+pub fn four_students() -> Vec<Participant> {
+    let mut out = people();
+    out.push(Participant::SimulatedStudent {
+        name: "Dan".to_owned(),
+    });
+    out
+}
+
 /// Stack Bio, note Folien and the lecture PDF, in that order.
 pub fn sources() -> Vec<SourceRef> {
     vec![

@@ -2,7 +2,7 @@
 id: TASK-0292
 type: task
 title: "Task turn-in workflow and teacher grading pipeline with structured feedback"
-status: backlog
+status: done
 epic: EPIC-068
 parents: ['STORY-0210']
 estimate: 3
@@ -23,9 +23,9 @@ Build submission and grading use cases in `studyfrog-agent` and `studyfrog-servi
 - Fallback lexical/rubric scorer so turn-in never leaves a submission ungradable if the model times out or returns malformed JSON.
 
 ## Acceptance Criteria
-- [ ] Submitting a solo or group task locks the submission in local storage and optionally records simulated peers' submissions
-- [ ] The teacher grades submitted work against the task rubric via local or remote model, returning numeric score, grade label, per-criterion notes, and summary feedback
-- [ ] A deterministic keyword/rubric fallback grades submissions if the model call fails, and integration tests verify both model and fallback paths
+- [x] Submitting a solo or group task locks the submission in local storage and optionally records simulated peers' submissions
+- [x] The teacher grades submitted work against the task rubric via local or remote model, returning numeric score, grade label, per-criterion notes, and summary feedback
+- [x] A deterministic keyword/rubric fallback grades submissions if the model call fails, and integration tests verify both model and fallback paths
 
 ## Design Notes
 - Align grading output structure with existing `studyfrog-agent::exam_grade` / `rubric_eval` patterns.

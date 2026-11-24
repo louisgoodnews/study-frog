@@ -159,7 +159,7 @@ pub fn record_grade(
 }
 
 /// Checks that an owner exists for an assignment's kind.
-fn check_owner(assignment: &Assignment, owner: Owner) -> Result<(), ClassroomError> {
+pub fn check_owner(assignment: &Assignment, owner: Owner) -> Result<(), ClassroomError> {
     match (&assignment.kind, owner) {
         (AssignmentKind::Solo { assignee }, Owner::Participant(p)) if *assignee == p => Ok(()),
         (AssignmentKind::Group { groups }, Owner::Group(g)) => {

@@ -5,7 +5,9 @@
 use studyfrog_agent::lecture_budget::{chars_for_tokens, pack};
 use studyfrog_agent::lecture_prompt::Line;
 use studyfrog_agent::lecture_student::{PRESET_PERSONAS, Persona};
-use studyfrog_core::classroom::{ClassroomError, ClassroomSession, Participant};
+use studyfrog_core::classroom::{
+    Assignment, ClassroomError, ClassroomSession, Owner, Participant, Submission,
+};
 use studyfrog_core::classroom_ops::participant_name;
 use studyfrog_core::uid::Uid;
 use studyfrog_store::classroom_store::{load_session, update_session};
@@ -62,6 +64,27 @@ pub fn classroom_error(e: ClassroomError) -> ServiceError {
 /// A model that cannot be reached or refuses is reported as an I/O failure.
 pub fn model_error(e: String) -> ServiceError {
     ServiceError::Io(e)
+}
+
+/// The assignment with this id, or an error when the session has none.
+pub fn find_assignment(session: &ClassroomSession, id: Uid) -> Result<&Assignment, ServiceError> {
+    session
+        .assignments
+        .iter()
+        .find(|a| a.id == id)
+        .ok_or_else(|| classroom_error(ClassroomError::UnknownAssignment(id)))
+}
+
+/// The turned-in answer of `owner` for `assignment`, if there is one.
+pub fn submission_of(
+    session: &ClassroomSession,
+    assignment: Uid,
+    owner: Owner,
+) -> Option<&Submission> {
+    session
+        .submissions
+        .iter()
+        .find(|s| s.assignment == assignment && s.owner == owner)
 }
 
 /// The index of the first teacher, if any.
