@@ -8,7 +8,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Added
+- Confirmed model downloads: a plan (title, source host, file sizes and pinned SHA-256) for the MiniLM model and the catalog's GGUF models, and a fetch that asks for confirmation before it contacts anything, keeps verified files and removes a file whose digest is wrong (TASK-0298, STORY-0212).
 - The first-run setup wizard's steps (vault, local model, remote provider, MiniLM, summary), skipping, revisiting and what is done, as a pure model in `studyfrog-config` (TASK-0297, STORY-0212).
+
+### Fixed
+- The GGUF catalog's digests and sizes for Qwen2.5-1.5B and Llama-3.2-1B were wrong, and the Llama digest was that of an empty file; SmolLM2 pointed at a file the repository does not have, so it is now the Q8_0 file that exists (TASK-0298).
 
 ## [1.0.0] - 2026-11-24
 

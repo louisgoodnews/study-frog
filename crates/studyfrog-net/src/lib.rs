@@ -4,6 +4,8 @@
 pub mod http_req;
 pub mod mcp_http;
 pub mod model_download;
+pub mod model_fetch;
+pub mod model_plan;
 pub mod sidecar_client;
 
 use std::io::ErrorKind;

@@ -241,6 +241,7 @@ where
     if let Some(expected) = expected_sha256 {
         let ok = verify_file_sha256(dest, expected).map_err(|e| format!("checksum error: {e}"))?;
         if !ok {
+            let _ = fs::remove_file(dest);
             return Err(format!("checksum mismatch for {dest:?}"));
         }
     }

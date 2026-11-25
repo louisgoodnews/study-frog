@@ -196,6 +196,5 @@ fn test_download_resumable_checksum_mismatch() {
     server.join().unwrap();
     assert!(res.is_err());
     assert!(res.unwrap_err().contains("checksum mismatch"));
-
-    let _ = fs::remove_file(dest);
+    assert!(!dest.exists(), "a file with the wrong digest is removed");
 }
