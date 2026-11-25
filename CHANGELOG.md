@@ -8,6 +8,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Changed
+- Welcome, Folders, the item editor, the PDF viewer and the Homework planner in the redesign style: gradient headlines, redesign cards and the rail highlight, with the same controls and behaviour (STORY-0232 to STORY-0236, EPIC-073).
+- The Match grid, the Prompts screen, the Console and FrogCanvas in the redesign style: gradient headlines, cards for the tiles, the command bar, the output and the zoom controls, with the same controls and behaviour (STORY-0237 to STORY-0240, EPIC-073).
+- The mock exam setup, exam view and exam result, and the first-run setup wizard, in the redesign style: gradient headlines and cards, with the same controls and grading (STORY-0241, STORY-0242, EPIC-073).
 - The gradient's second colour moved to hue 325 so it stays distinct from the Pink accent; the colour spec in docs/specs/ui-colour-and-type.md is updated (EPIC-073).
 - The default accent is violet (Purple) instead of Blue; the other accents stay selectable (EPIC-073).
 - Settings and help in the redesign style: the settings tabs and the help tree and pages use the card, rail and gradient headline styles, with the same content (STORY-0227, EPIC-070).
@@ -24,6 +27,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - Home in the redesign style: a gradient headline card with the next due item and its action, a statistic ring for today's reviews, and card lists without the empty tall boxes (STORY-0214, EPIC-070).
 
 ### Added
+- The first-run setup wizard's local-model step offers a confirmed download of the top suggested Ollama model that fits this computer: its size and source are shown, it starts only on a click, a failure shows Try again, and Ollama checks the digests (STORY-0212, EPIC-069).
 - A `choice_grading` app setting (all-or-nothing by default, Zapechelnyuk, or count-based partial credit) chooses how choice items earn credit in rehearsal; the grade line names the rule and the credit, and some credit suggests Hard. Zapechelnyuk gives full credit when every correct option is chosen and no wrong one; this is an owner-decided deviation from the published 1/k rule (STORY-0231, EPIC-072).
 - `studyfrog-log` (levels, a process-wide minimum level and sink, a ring of the 512 most recent records, a size-rotating file sink, `log_*!` macros) and `studyfrog-debug` (timers, checkpoints, dumps, checks, counters, `debug_dump!`), both written in-house with no external crates (STORY-0219, EPIC-071).
 - Visual tokens for the redesign (cards, the navigation rail, the stat ring, the gradient headline card, avatars and badges), derived from the palette and checked against the APCA targets in all 24 palettes (STORY-0213, EPIC-070).

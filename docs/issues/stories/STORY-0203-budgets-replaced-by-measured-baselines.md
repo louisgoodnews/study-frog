@@ -43,6 +43,7 @@ budget or the baseline table in BENCHMARKING.md, and record the machine identity
 
 ## Dependencies
 - Blocked 2026-11-25: the analytics CMRR case runs at 71 to 85 ms against its 50 ms budget. The owner has to decide whether to raise the budget or accept the cost; no budget was changed.
+- Decided 2026-11-25 by the owner: the cost is accepted. The analytics CMRR case (71 to 85 ms) stays over its 50 ms budget and the budget is not raised. This clears that blocker only; the reference runs of STORY-0201 still block this story.
 Blocked on the owner's machine: the reference runs of STORY-0201 (TASK-0278 and TASK-0279), and the spread
 measurement in EPIC-067 Open Questions. Unblocks when those runs exist.
 
