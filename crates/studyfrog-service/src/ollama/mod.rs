@@ -10,4 +10,5 @@ pub mod catalog;
 pub mod client;
 pub mod fit;
 pub mod guide;
+pub mod pull;
 pub mod run;

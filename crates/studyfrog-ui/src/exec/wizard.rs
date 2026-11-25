@@ -3,6 +3,8 @@
 
 use studyfrog_slm::models::{MODEL_FILES, MODEL_NAME, missing_files};
 
+use studyfrog_service::ollama::pull::{pull_outcome, pull_request};
+
 use crate::exec::Worker;
 use crate::msg::Msg;
 use crate::view::wizard::types::{Probe, WizardEffect, WizardMsg};
@@ -12,6 +14,7 @@ pub fn run(w: &Worker, effect: WizardEffect) -> Vec<Msg> {
     let msg = match effect {
         WizardEffect::Probe => probe(w),
         WizardEffect::FetchMinilm => fetch(w),
+        WizardEffect::PullModel(name) => pull(w, &name),
     };
     vec![Msg::Wizard(msg)]
 }
@@ -44,4 +47,15 @@ fn fetch(w: &Worker) -> WizardMsg {
     };
     studyfrog_log::log_info!("ui.wizard", "MiniLM download ended, ok={}", result.is_ok());
     WizardMsg::Fetched(result)
+}
+
+/// Ask the local Ollama service to pull `name` (one request; the answer comes when it has finished).
+fn pull(w: &Worker, name: &str) -> WizardMsg {
+    let _timer = studyfrog_debug::timed("ui.wizard", "model download");
+    let result = match w.transport {
+        Some(transport) => transport(&pull_request(name)).and_then(|answer| pull_outcome(&answer)),
+        None => Err("This build cannot reach the network.".to_owned()),
+    };
+    studyfrog_log::log_info!("ui.wizard", "model download ended, ok={}", result.is_ok());
+    WizardMsg::Pulled(result)
 }

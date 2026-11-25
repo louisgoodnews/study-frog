@@ -32,6 +32,9 @@ fn local(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         RichText::new("Ollama runs a language model on this computer. Nothing is downloaded, installed or started until you press one of its buttons, and the models run only here.")
             .color(palette_of(ui).text_weak),
     );
+    kit::section(ui, "Suggested model (optional)");
+    crate::view::wizard::pull_view::draw(state, ui, out);
+    ui.add_space(8.0);
     crate::view::agent::ollama::panel(state, ui, out);
 }
 
@@ -145,6 +148,6 @@ fn status_color(ui: &egui::Ui, status: Status) -> Color32 {
 }
 
 /// A size as the models are listed, in megabytes with one decimal.
-fn size_text(bytes: u64) -> String {
+pub fn size_text(bytes: u64) -> String {
     format!("{:.1} MB", bytes as f64 / 1_000_000.0)
 }

@@ -7,6 +7,7 @@ use crate::agent_types::ollama::OllamaMsg;
 use crate::effect::{Effect, EffectAssistant};
 use crate::state::State;
 use crate::view::wizard::installed::installed_of;
+use crate::view::wizard::pull;
 use crate::view::wizard::types::{Probe, WizardEffect, WizardMsg, flow_of, name_of};
 
 /// Advance the wizard by one message.
@@ -24,6 +25,8 @@ pub fn update(state: State, msg: WizardMsg) -> (State, Vec<Effect>) {
         WizardMsg::ConfirmMinilm => confirm_minilm(state),
         WizardMsg::Probed(probe) => probed(state, probe),
         WizardMsg::Fetched(result) => fetched(state, result),
+        WizardMsg::ConfirmPull => pull::confirm_pull(state),
+        WizardMsg::Pulled(result) => pull::pulled(state, result),
     }
 }
 

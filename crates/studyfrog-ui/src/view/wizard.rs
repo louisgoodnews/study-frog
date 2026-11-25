@@ -2,6 +2,8 @@
 //! buttons. It replaces the central panel while it is open. The steps' bodies are in `wizard/steps.rs`.
 
 pub mod installed;
+pub mod pull;
+pub mod pull_view;
 pub mod steps;
 pub mod types;
 pub mod update;

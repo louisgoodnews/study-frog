@@ -20,6 +20,10 @@ pub struct WizardState {
     pub downloading: bool,
     /// Why the last MiniLM download failed.
     pub download_error: Option<String>,
+    /// The suggested Ollama model is being pulled now (STORY-0212).
+    pub pulling: bool,
+    /// Why the last Ollama pull failed.
+    pub pull_error: Option<String>,
 }
 
 /// The wizard's messages: moves between steps, the MiniLM click, and the answers of the effects.
@@ -43,6 +47,10 @@ pub enum WizardMsg {
     Probed(Probe),
     /// The MiniLM download ended: Ok, or why it did not.
     Fetched(Result<(), String>),
+    /// The user clicked the download of the suggested Ollama model.
+    ConfirmPull,
+    /// The Ollama pull ended: Ok, or why it did not.
+    Pulled(Result<(), String>),
 }
 
 /// What the probe found: the MiniLM files on disk and the plan the host gives.
@@ -55,12 +63,14 @@ pub struct Probe {
 }
 
 /// Work the wizard asks the worker for.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum WizardEffect {
     /// Read the MiniLM files and the download plan.
     Probe,
     /// Download MiniLM. Sent only after the user's click.
     FetchMinilm,
+    /// Pull this model into the local Ollama service. Sent only after the user's click.
+    PullModel(String),
 }
 
 /// The flow the wizard is on, or the first optional step when it has not been opened.
