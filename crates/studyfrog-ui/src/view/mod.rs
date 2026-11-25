@@ -48,6 +48,7 @@ mod explorer_charts;
 pub mod extract_panel;
 pub mod focus_bar;
 pub mod folders;
+mod gradient_panel;
 mod graph;
 mod help;
 mod help_edit;

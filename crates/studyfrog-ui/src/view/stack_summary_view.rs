@@ -26,7 +26,7 @@ fn cards(s: &StackSummary, ui: &mut egui::Ui) {
     ];
     ui.columns(figures.len(), |cols| {
         for (col, (n, caption)) in cols.iter_mut().zip(&figures) {
-            kit::card(col, |ui| {
+            crate::view::home_hero::card(col, |ui| {
                 ui.set_width(ui.available_width());
                 kit::stat(ui, &n.to_string(), caption)
             });

@@ -12,7 +12,8 @@ use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::stack_view_ui::{StackTab, StackViewMsg, TABS, tab_of};
 use crate::state::{Selection, State};
-use crate::view::kit;
+use crate::theme::palette_of;
+use crate::theme::style::style_of;
 use crate::view::status_ui::status_menu;
 
 fn send(out: &mut Vec<Msg>, m: StackViewMsg) {
@@ -58,6 +59,30 @@ fn breadcrumb(stacks: &[StackRow], stack: &StackRow, ui: &mut egui::Ui, out: &mu
     });
 }
 
+/// The stack's headline: its title and the one primary action, Start rehearsal, on the gradient (EPIC-070).
+fn headline(stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    crate::view::gradient_panel::panel(ui, HEADER_HEIGHT, |ui, s| {
+        ui.label(
+            RichText::new(&stack.title)
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong()
+                .color(s.gradient_text),
+        );
+        ui.add_space(10.0);
+        let start = egui::Button::new(RichText::new("Start rehearsal").color(s.gradient[0]))
+            .fill(s.gradient_text)
+            .min_size(egui::vec2(0.0, crate::theme::MIN_TARGET));
+        if ui
+            .add(start)
+            .on_hover_text("Starts a rehearsal with the current settings.")
+            .clicked()
+        {
+            out.push(Msg::Home(HomeMsg::RehearseStack(stack.folder.clone())));
+        }
+    });
+}
+
+/// The secondary actions under the headline: New item and the More menu.
 fn actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal_wrapped(|ui| {
         if ui
@@ -67,15 +92,11 @@ fn actions(state: &State, stack: &StackRow, ui: &mut egui::Ui, out: &mut Vec<Msg
         {
             out.push(Msg::Modal(ModalMsg::OpenCreate));
         }
-        if kit::primary_button(ui, "Start rehearsal")
-            .on_hover_text("Starts a rehearsal with the current settings.")
-            .clicked()
-        {
-            out.push(Msg::Home(HomeMsg::RehearseStack(stack.folder.clone())));
-        }
         more_actions(state, stack, ui, out);
     });
 }
+
+const HEADER_HEIGHT: f32 = 120.0;
 
 const TAB_WIDTH: f32 = 84.0;
 const MORE_WIDTH: f32 = 70.0;
@@ -98,9 +119,19 @@ fn shown_tabs(width: f32, current: StackTab) -> Vec<StackTab> {
 fn tab_bar(state: &State, folder: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let current = tab_of(&state.app, folder);
     let shown = shown_tabs(ui.available_width(), current);
+    let s = style_of(&palette_of(ui));
     ui.horizontal(|ui| {
         for (tab, _, label) in TABS.iter().filter(|(t, _, _)| shown.contains(t)) {
-            if ui.selectable_label(*tab == current, *label).clicked() {
+            let selected = *tab == current;
+            let p = palette_of(ui);
+            let text = if selected { p.accent } else { p.text };
+            let fill = if selected { s.rail_active } else { s.rail };
+            let button = egui::Button::new(RichText::new(*label).color(text)).fill(fill);
+            if ui
+                .add(button)
+                .on_hover_text("Shows this tab of the stack.")
+                .clicked()
+            {
                 send(out, StackViewMsg::Select(*tab));
             }
         }
@@ -145,11 +176,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .auto_shrink([false, false])
         .show(ui, |ui| {
             breadcrumb(&vault.overview.stacks, stack, ui, out);
-            ui.label(
-                RichText::new(&stack.title)
-                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                    .strong(),
-            );
+            headline(stack, ui, out);
+            ui.add_space(12.0);
             actions(state, stack, ui, out);
             crate::view::status_ui::summary(ui, &state.browser.status_counts);
             crate::view::stack_achievements::badge(state, stack.uid, ui, out);

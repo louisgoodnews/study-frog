@@ -1,7 +1,7 @@
 //! The Home headline and statistic ring in the redesign style (EPIC-070, STORY-0214). The same figures and the same
 //! actions as before; only the drawing changes.
 
-use eframe::egui::{self, Align, Align2, FontId, Layout, RichText, Sense, Stroke, UiBuilder};
+use eframe::egui::{self, Align2, FontId, RichText, Sense, Stroke};
 use studyfrog_core::count::counted;
 use studyfrog_service::home::HomeSummary;
 
@@ -10,7 +10,7 @@ use crate::msg::{Msg, MsgVault};
 use crate::state::Screen;
 use crate::theme::style::{CARD_RADIUS, style_of};
 use crate::theme::{PAD_CARD, palette_of};
-use crate::view::{home_ring, kit};
+use crate::view::{gradient_panel, home_ring, kit};
 
 const HEADLINE_HEIGHT: f32 = 220.0;
 const RING_SIZE: f32 = 150.0;
@@ -38,7 +38,7 @@ pub(super) fn draw(h: &HomeSummary, items: usize, ui: &mut egui::Ui, out: &mut V
             ui.spacing_mut().item_spacing.x = gap;
             ui.vertical(|ui| {
                 ui.set_width(left);
-                headline(h, left, ui, out);
+                headline(h, ui, out);
             });
             ui.vertical(|ui| {
                 ui.set_width(right);
@@ -50,39 +50,26 @@ pub(super) fn draw(h: &HomeSummary, items: usize, ui: &mut egui::Ui, out: &mut V
     });
 }
 
-fn headline(h: &HomeSummary, width: f32, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let s = style_of(&palette_of(ui));
-    let (rect, _) = ui.allocate_exact_size(egui::vec2(width, HEADLINE_HEIGHT), Sense::hover());
-    ui.painter().add(egui::Shape::mesh(home_ring::gradient_mesh(
-        rect,
-        s.gradient[0],
-        s.gradient[1],
-    )));
-    let inner = rect.shrink(PAD_CARD);
-    ui.scope_builder(
-        UiBuilder::new()
-            .max_rect(inner)
-            .layout(Layout::top_down(Align::LEFT)),
-        |ui| {
-            ui.label(RichText::new("Up next").small().color(s.gradient_text));
-            let title = h
-                .due_items
-                .first()
-                .map_or("Nothing due right now".to_owned(), |i| i.title.clone());
-            ui.label(
-                RichText::new(title)
-                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                    .strong()
-                    .color(s.gradient_text),
-            );
-            ui.label(
-                RichText::new(format!("{} items ready for today", h.ready_today))
-                    .color(s.gradient_text),
-            );
-            ui.add_space(10.0);
-            headline_action(h, s.gradient_text, s.gradient[0], ui, out);
-        },
-    );
+fn headline(h: &HomeSummary, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    gradient_panel::panel(ui, HEADLINE_HEIGHT, |ui, s| {
+        ui.label(RichText::new("Up next").small().color(s.gradient_text));
+        let title = h
+            .due_items
+            .first()
+            .map_or("Nothing due right now".to_owned(), |i| i.title.clone());
+        ui.label(
+            RichText::new(title)
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong()
+                .color(s.gradient_text),
+        );
+        ui.label(
+            RichText::new(format!("{} items ready for today", h.ready_today))
+                .color(s.gradient_text),
+        );
+        ui.add_space(10.0);
+        headline_action(h, s.gradient_text, s.gradient[0], ui, out);
+    });
 }
 
 /// The one action of the headline, in the same words and with the same messages as before.

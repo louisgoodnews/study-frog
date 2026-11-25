@@ -2,7 +2,7 @@
 id: EPIC-070
 type: epic
 title: "UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark)"
-status: backlog
+status: in_progress
 parents: []
 labels: [m14, ui, docs]
 acceptance_criteria:
