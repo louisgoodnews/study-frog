@@ -2,7 +2,6 @@
 //! the state give phases; the driver applies one, lets the background work finish, then the next.
 use crate::msg::MsgBrowse;
 use crate::msg::MsgEditor;
-use crate::msg::MsgRehearsal;
 use crate::msg::MsgVault;
 
 use studyfrog_core::uid::Uid;

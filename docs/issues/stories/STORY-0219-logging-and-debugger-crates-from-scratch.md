@@ -2,7 +2,7 @@
 id: STORY-0219
 type: story
 title: "In-house logging and debugger crates (studyfrog-log, studyfrog-debug), written from scratch"
-status: review
+status: done
 epic: EPIC-071
 parents: ['EPIC-071']
 estimate: 5
@@ -32,10 +32,10 @@ story.
 - Tests in each crate's `tests/` folder. They are written, not run: the owner runs them.
 
 ## Acceptance Criteria
-- [ ] studyfrog-log API as described above, with no external crate
-- [ ] studyfrog-debug API as described above, built on studyfrog-log
-- [ ] No inherent `impl` block; every file at most 250 lines; `scripts/check-deps.sh` allows the two crates' dependencies
-- [ ] Unit tests for level ordering and filtering, the ring cap, record quoting, `check` and `counts` written
+- [x] studyfrog-log API as described above, with no external crate
+- [x] studyfrog-debug API as described above, built on studyfrog-log
+- [x] No inherent `impl` block; every file at most 250 lines; `scripts/check-deps.sh` allows the two crates' dependencies
+- [x] Unit tests for level ordering and filtering, the ring cap, record quoting, `check` and `counts` written
 
 ## Design Notes
 - Build versus buy (P10): `log`, `tracing` and similar crates were considered. They solve a wider problem (subscribers,
@@ -67,3 +67,6 @@ story.
 Written 2026-11-25 without building: no `cargo build`, `check`, `test`, `clippy` or compiler was run. Testing is pending;
 the owner runs `scripts/check.sh` and the crate tests. `scripts/board.sh` has not been run, so `BOARD.md` is not
 regenerated.
+
+## Verification note
+Verified 2026-11-25 by a verification pass against the code and tests: every acceptance criterion is met (studyfrog-log and studyfrog-debug tests pass; studyfrog-md choice tests pass).

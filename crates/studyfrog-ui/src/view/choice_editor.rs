@@ -25,7 +25,7 @@ fn edit(out: &mut Vec<Msg>, action: EditAction) {
 
 /// The egui memory key for one of the panel's states, per item.
 fn key(e: &Editor, what: &str) -> egui::Id {
-    egui::Id::new(("choice-editor", e.path.as_str(), what))
+    egui::Id::unique(("choice-editor", e.path.as_str(), what))
 }
 
 /// What a refused change says, for the answer type it would break.

@@ -10,16 +10,21 @@ mod tests;
 /// What a question is answered with. Open text is the default and has no option lines.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum AnswerType {
+    /// Open text: the answer is typed and checked by comparison (the default).
     #[default]
     Open,
+    /// Single choice: exactly one correct option.
     Single,
+    /// Multiple select: two or more correct options.
     Multiple,
 }
 
 /// One option of the list: its text and whether it is correct.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Row {
+    /// The option's text.
     pub text: String,
+    /// Whether the option is correct.
     pub correct: bool,
 }
 

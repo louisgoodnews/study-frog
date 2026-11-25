@@ -2,7 +2,7 @@
 id: STORY-0220
 type: story
 title: "Choice item syntax: options in Markdown, parsed into single-choice or multiple-select items"
-status: review
+status: done
 epic: EPIC-072
 parents: ['EPIC-072']
 estimate: 3
@@ -21,10 +21,10 @@ EPIC-072 needs items to say which options exist and which are correct, in a form
 Add a pure parser in studyfrog-md for choice blocks, and the data type that carries them. Keep it independent of the UI.
 
 ## Acceptance Criteria
-- [ ] Parses options and the prompt
-- [ ] Single versus multiple decided by the number of correct options
-- [ ] Reports a missing correct option
-- [ ] Tests for each case
+- [x] Parses options and the prompt
+- [x] Single versus multiple decided by the number of correct options
+- [x] Reports a missing correct option
+- [x] Tests for each case
 
 ## Design Notes
 Syntax as in EPIC-072. Use the existing studyfrog-md list parsing where possible.
@@ -34,3 +34,6 @@ Syntax as in EPIC-072. Use the existing studyfrog-md list parsing where possible
 
 ## Open Questions
 None.
+
+## Verification note
+Verified 2026-11-25 by a verification pass against the code and tests: every acceptance criterion is met (studyfrog-log and studyfrog-debug tests pass; studyfrog-md choice tests pass).
