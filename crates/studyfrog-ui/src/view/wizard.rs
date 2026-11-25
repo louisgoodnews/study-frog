@@ -56,8 +56,10 @@ fn headline(ui: &mut egui::Ui, s: Style) {
     );
     ui.add(
         egui::Label::new(
-            RichText::new("Each step is optional. Skip any of them. Settings runs this setup again.")
-                .color(s.gradient_text),
+            RichText::new(
+                "Each step is optional. Skip any of them. Settings runs this setup again.",
+            )
+            .color(s.gradient_text),
         )
         .wrap(),
     );

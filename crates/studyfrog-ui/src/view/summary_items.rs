@@ -33,7 +33,8 @@ pub fn card(run: &RunView, row: &ReviewRow, updates: bool, ui: &mut egui::Ui, ou
                 }
             }
             if let Some((pct, v)) = row.answer_match {
-                kit::pill(ui, &format!("{pct} % ({})", verdict_label(v)), p.accent);
+                let colour = crate::view::summary::verdict_color(&p, v);
+                kit::pill(ui, &format!("{pct} % ({})", verdict_label(v)), colour);
             }
         });
         if let (Some(s), Some(rated)) = (row.suggestion, row.rated) {

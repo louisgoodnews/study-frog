@@ -11,12 +11,24 @@ use crate::view::{gradient_panel, home_hero};
 /// The height of the headline panel, in points.
 const HEADLINE_HEIGHT: f32 = 64.0;
 
+/// The hint shown while no canvas is open (the text the screen always had).
+const EMPTY_HINT: &str = "FrogCanvas not initialized. Select a stack with a canvas to begin.";
+
 /// The headline and the counts on the gradient panel, then the zoom controls in a card.
 pub(super) fn draw(canvas: &CanvasState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let counts = counts_text(canvas);
     gradient_panel::panel(ui, HEADLINE_HEIGHT, |ui, s| headline(&counts, ui, s));
     ui.add_space(8.0);
     home_hero::card(ui, |ui| zoom_row(canvas, ui, out));
+}
+
+/// The same headline with no counts, and the hint for opening a canvas in a card (no canvas is open yet).
+pub(super) fn draw_empty(ui: &mut egui::Ui) {
+    gradient_panel::panel(ui, HEADLINE_HEIGHT, |ui, s| headline("", ui, s));
+    ui.add_space(8.0);
+    home_hero::card(ui, |ui| {
+        ui.label(EMPTY_HINT);
+    });
 }
 
 fn headline(counts: &str, ui: &mut egui::Ui, s: Style) {

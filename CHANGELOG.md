@@ -35,6 +35,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The first-run setup wizard's steps (vault, local model, remote provider, MiniLM, summary), skipping, revisiting and what is done, as a pure model in `studyfrog-config` (TASK-0297, STORY-0212).
 
 ### Fixed
+- Fixed: a failed exam or rehearsal grade and its per-item marks are shown in the danger colour (they were green); the Canvas empty state uses the redesign headline and card (STORY-0240, STORY-0241).
 - The GGUF catalog's digests and sizes for Qwen2.5-1.5B and Llama-3.2-1B were wrong, and the Llama digest was that of an empty file; SmolLM2 pointed at a file the repository does not have, so it is now the Q8_0 file that exists (TASK-0298).
 
 ## [1.0.0] - 2026-11-24

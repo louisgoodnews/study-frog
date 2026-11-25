@@ -40,6 +40,15 @@ pub(crate) fn verdict_label(v: Verdict) -> &'static str {
     }
 }
 
+/// The colour of a verdict: success for correct, warning for partly right, danger for not quite.
+pub(crate) fn verdict_color(p: &crate::theme::Palette, v: Verdict) -> egui::Color32 {
+    match v {
+        Verdict::Correct => p.success,
+        Verdict::Partial => p.warning,
+        Verdict::Incorrect => p.danger,
+    }
+}
+
 pub(crate) fn rating_text(r: Option<Rating>) -> &'static str {
     r.map_or("-", rating_name)
 }

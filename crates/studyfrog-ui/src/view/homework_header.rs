@@ -36,7 +36,11 @@ fn summary(state: &State, now: Option<LocalTime>) -> String {
     let ui_state = &state.planner.homework_ui;
     let filter = tab_filter(ui_state.tab, ui_state.subject);
     let count = planner_order(&state.planner.homework, &filter, now).len();
-    format!("{}: {}", tab_name(ui_state.tab), counted(count, "item", "items"))
+    format!(
+        "{}: {}",
+        tab_name(ui_state.tab),
+        counted(count, "item", "items")
+    )
 }
 
 /// The title and the summary of the tab in view, on the gradient panel.

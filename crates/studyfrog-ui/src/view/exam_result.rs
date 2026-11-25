@@ -102,7 +102,7 @@ fn result_banner(r: &ExamResult, ui: &mut egui::Ui) {
             RichText::new(grade_badge(r.grade))
                 .size(crate::typo::size(ui, crate::typo::Tier::Heading))
                 .strong()
-                .color(p.accent),
+                .color(if r.passed { p.success } else { p.danger }),
         );
         ui.add_space(16.0);
         let (text, color) = if r.passed {
@@ -156,10 +156,11 @@ fn score_pill(run: &RunView, item: Uid, ui: &mut egui::Ui) {
     let p = palette_of(ui);
     if let Some(s) = run.scores.get(&item) {
         let pct = (s.score.value * 100.0).round();
+        let colour = crate::view::summary::verdict_color(&p, s.score.verdict);
         kit::pill(
             ui,
             &format!("{pct:.0} % ({})", verdict_label(s.score.verdict)),
-            p.accent,
+            colour,
         );
     } else if run.exam.unscored.contains(&item) {
         kit::pill(ui, "could not be compared (0 %)", p.danger);

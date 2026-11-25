@@ -23,7 +23,7 @@ use crate::view::canvas_preview::draw_preview;
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = palette_of(ui);
     let Some(canvas) = &state.canvas else {
-        ui.label("FrogCanvas not initialized. Select a stack with a canvas to begin.");
+        canvas_header::draw_empty(ui);
         return;
     };
 
