@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Changed
+- The rehearsal card has a thin gradient band across its top, and the result header sits on the gradient panel (STORY-0217, EPIC-070).
 - The rehearsal setup headline on the gradient panel and the result header on the gradient panel, with the card view kept plain and its radius taken from the redesign token (STORY-0217, EPIC-070).
 - The library overview's headline (All stacks and the count) on the gradient panel, with the stack cards below it (STORY-0216, EPIC-070).
 - The window opens maximised (filling the screen) when no size was asked for and no size is remembered; a remembered size still wins.

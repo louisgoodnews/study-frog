@@ -28,3 +28,18 @@ pub(super) fn panel(ui: &mut egui::Ui, height: f32, add: impl FnOnce(&mut egui::
         )),
     );
 }
+
+/// A thin gradient band across the top of a card (EPIC-070, STORY-0217): decoration only, never behind text.
+pub(super) fn band(ui: &mut egui::Ui) {
+    let s = style_of(&palette_of(ui));
+    let width = ui.available_width();
+    let (rect, _) = ui.allocate_exact_size(egui::vec2(width, BAND_HEIGHT), egui::Sense::hover());
+    ui.painter().add(Shape::mesh(home_ring::gradient_mesh(
+        rect,
+        s.gradient[0],
+        s.gradient[1],
+    )));
+}
+
+/// The height of the card band, in points.
+const BAND_HEIGHT: f32 = 4.0;

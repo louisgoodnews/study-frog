@@ -48,6 +48,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 let colors = crate::item_look::card_colors(&p, ui.visuals().dark_mode, color);
                 kit::card_with(ui, colors, |ui| {
                     ui.set_width(ui.available_width());
+                    crate::view::gradient_panel::band(ui);
                     if run.session.run.state == RunState::Paused {
                         paused(ui, out);
                     } else {
