@@ -149,6 +149,9 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::Vault(MsgVault::SetAnswerEngine(engine)) => {
             crate::reading_test::set_answer_engine(state, engine)
         }
+        Msg::Vault(MsgVault::SetChoiceGrading(scheme)) => {
+            crate::reading_test::set_choice_grading(state, scheme)
+        }
         Msg::ReadingTest(m) => crate::reading_test::update(state, m),
         Msg::SettingsTab(m) => crate::app_settings_ui::update(state, m),
         Msg::Vault(MsgVault::Activity) => crate::view_time::activity(state),

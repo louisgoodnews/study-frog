@@ -1,5 +1,6 @@
 //! Scoring a typed answer, a case check or a choice, and storing the score with its run.
 
+use studyfrog_core::choice_grading::ChoiceGrading;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_service::choice::grade_choice_answer;
@@ -58,14 +59,25 @@ pub fn answer(w: &mut Worker, effect: AnswerEffect, now_ns: i64) -> Msg {
             words_only,
         } => score(w, (run, item), &answer, words_only, now_ns),
         AnswerEffect::Record { run, item, scored } => record_case(w, run, item, &scored, now_ns),
-        AnswerEffect::Choice { run, item, picked } => choice(w, (run, item), &picked, now_ns),
+        AnswerEffect::Choice {
+            run,
+            item,
+            picked,
+            scheme,
+        } => choice(w, (run, item), &picked, scheme, now_ns),
     }
 }
 
 /// Grade a choice answer with the service's rules and store it like a typed answer's score (STORY-0222).
-pub fn choice(w: &mut Worker, (run, uid): (Uid, Uid), picked: &[bool], now_ns: i64) -> Msg {
+pub fn choice(
+    w: &mut Worker,
+    (run, uid): (Uid, Uid),
+    picked: &[bool],
+    scheme: ChoiceGrading,
+    now_ns: i64,
+) -> Msg {
     let result = match &w.session {
-        Some(session) => grade_choice_answer(session, uid, picked)
+        Some(session) => grade_choice_answer(session, uid, picked, scheme)
             .map(|graded| remember(session, run, uid, graded.scored, now_ns))
             .map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),

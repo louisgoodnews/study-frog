@@ -1,6 +1,9 @@
 //! `app.toml`: per-user application settings, outside any vault.
 
 use serde::Deserialize;
+use studyfrog_core::choice_grading::{
+    ChoiceGrading, choice_grading_from_name, choice_grading_name,
+};
 use studyfrog_core::settings::{
     AnswerEngine, AppSettings, MAX_READING_WPM as MAX_WPM, MIN_READING_WPM as MIN_WPM, MemoryBest,
     ReadingTuning, answer_engine_from_name, answer_engine_name,
@@ -28,6 +31,7 @@ struct RawApp {
     recent: Vec<String>,
     reading_wpm: Option<u32>,
     answer_engine: Option<String>,
+    choice_grading: Option<String>,
     reading_fast_percent: Option<u32>,
     reading_slow_percent: Option<u32>,
     reading_min_words: Option<u32>,
@@ -82,6 +86,17 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
             )
         })?,
     };
+    let choice_grading = match raw.choice_grading.as_deref() {
+        None => ChoiceGrading::default(),
+        Some(name) => choice_grading_from_name(name).ok_or_else(|| {
+            config_error(
+                line_of_key(text, "choice_grading"),
+                format!(
+                    "choice_grading must be \"all-or-nothing\", \"zapechelnyuk\" or \"count-partial\", not \"{name}\""
+                ),
+            )
+        })?,
+    };
     let reading = ReadingTuning {
         fast_percent: in_range(
             text,
@@ -104,6 +119,7 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
         recent: raw.recent,
         reading_wpm: raw.reading_wpm,
         answer_engine,
+        choice_grading,
         settings_tab: raw.settings_tab,
         views_untracked: raw.track_views == Some(false),
         library_columns: raw.library_columns,
@@ -124,6 +140,15 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
     })
 }
 
+/// The `choice_grading` line, empty for the default scheme (STORY-0231).
+fn choice_grading_line(g: ChoiceGrading) -> String {
+    if g == ChoiceGrading::default() {
+        String::new()
+    } else {
+        format!("choice_grading = \"{}\"\n", choice_grading_name(g))
+    }
+}
+
 /// Render settings as `app.toml`.
 pub fn render_app_settings(s: &AppSettings) -> String {
     let mut out = String::from("# StudyFrog application settings (this machine and user).\n");
@@ -134,6 +159,7 @@ pub fn render_app_settings(s: &AppSettings) -> String {
         let items: Vec<String> = s.recent.iter().map(|p| toml_string(p)).collect();
         out.push_str(&format!("recent = [{}]\n", items.join(", ")));
     }
+    out.push_str(&choice_grading_line(s.choice_grading));
     if s.answer_engine != AnswerEngine::default() {
         out.push_str(&format!(
             "answer_engine = \"{}\"\n",

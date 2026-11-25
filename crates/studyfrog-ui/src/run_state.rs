@@ -128,5 +128,7 @@ pub enum AnswerEffect {
         item: studyfrog_core::uid::Uid,
         /// One flag per option, in the order written.
         picked: Vec<bool>,
+        /// The grading scheme the settings choose (STORY-0231).
+        scheme: studyfrog_core::choice_grading::ChoiceGrading,
     },
 }

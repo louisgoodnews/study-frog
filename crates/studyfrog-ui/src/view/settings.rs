@@ -228,6 +228,7 @@ fn answer_comparison(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         });
         ui.weak("A high match means similar wording or meaning, not that the facts are right.");
+        crate::view::settings_choice::grading_row(state, ui, out);
         let p =
             studyfrog_rehearsal::reading::reading_params(state.app.reading_wpm, &state.app.reading);
         ui.label(format!(

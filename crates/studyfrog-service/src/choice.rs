@@ -2,12 +2,13 @@
 //! prompt (`studyfrog-md`), the grade from the mock exam's rules (`studyfrog-rehearsal`), and the
 //! suggested rating from the verdict, as a typed answer's is.
 
+use studyfrog_core::choice_grading::{ChoiceGrading, choice_grading_label, choice_grading_name};
 use studyfrog_core::uid::Uid;
 use studyfrog_md::choice::{
     ChoiceBlock, correct_count, correct_indices, is_multiple, parse_choice,
 };
 use studyfrog_md::doc::Doc;
-use studyfrog_rehearsal::choice_grade::{ChoiceGrade, ChoiceKey, grade_choice};
+use studyfrog_rehearsal::choice_grade::{ChoiceGrade, ChoiceKey, grade_choice_with};
 use studyfrog_slm::rating::suggested_rating;
 use studyfrog_slm::score::{Score, Verdict};
 
@@ -24,14 +25,20 @@ pub struct ChoiceScored {
     pub scored: Scored,
 }
 
-/// Grade `picked` (one flag per option, in option order) for item `uid`.
+/// The engine text of a choice answer's score; its rule is named in brackets.
+pub const CHOICE_ENGINE: &str = "choice";
+
+/// Grade `picked` (one flag per option, in option order) for item `uid` under `scheme` (STORY-0231).
 ///
 /// A card's choice block is its front; a question's is its prompt. Returns an error when the item
-/// is not a card or question, or when its prompt is not a usable choice block.
+/// is not a card or question, or when its prompt is not a usable choice block. The score is the
+/// credited fraction; full credit is Correct (suggests Good), some credit Partial (Hard), none
+/// Incorrect (Again).
 pub fn grade_choice_answer(
     session: &VaultSession,
     uid: Uid,
     picked: &[bool],
+    scheme: ChoiceGrading,
 ) -> Result<ChoiceScored, ServiceError> {
     let doc = load_doc(session, uid)?;
     let block = choice_block(&doc, uid)?;
@@ -39,7 +46,7 @@ pub fn grade_choice_answer(
         options: block.options.iter().map(|o| o.text.clone()).collect(),
         correct_indices: correct_indices(&block),
     };
-    let grade = grade_timed(&key, picked).ok_or_else(|| {
+    let grade = grade_timed(&key, picked, scheme).ok_or_else(|| {
         ServiceError::Invalid("the choice block has no correct option".to_owned())
     })?;
     let mode = if grade.multiple { "multiple" } else { "single" };
@@ -48,24 +55,41 @@ pub fn grade_choice_answer(
         "choice answer graded for {:?}",
         uid;
         correct = grade.correct,
+        fraction = grade.fraction,
+        scheme = choice_grading_name(scheme),
         mode = mode
     );
-    let verdict = if grade.correct {
-        Verdict::Correct
-    } else {
-        Verdict::Incorrect
-    };
+    let verdict = verdict_of(grade.fraction);
     let score = Score {
-        value: if grade.correct { 1.0 } else { 0.0 },
+        value: grade.fraction,
         verdict,
         rubric_hits: Vec::new(),
     };
     let scored = Scored {
         score,
         rating: suggested_rating(verdict),
-        engine: "choice".to_owned(),
+        engine: format!("{CHOICE_ENGINE} ({} rule)", choice_grading_label(scheme)),
     };
     Ok(ChoiceScored { grade, scored })
+}
+
+/// The verdict of a credited fraction: full credit is Correct, some is Partial, none Incorrect.
+fn verdict_of(fraction: f32) -> Verdict {
+    if fraction >= 1.0 {
+        Verdict::Correct
+    } else if fraction > 0.0 {
+        Verdict::Partial
+    } else {
+        Verdict::Incorrect
+    }
+}
+
+/// The rule named in a choice score's engine text, as in "Zapechelnyuk rule"; `None` for other engines.
+pub fn choice_rule_text(engine: &str) -> Option<&str> {
+    engine
+        .strip_prefix(CHOICE_ENGINE)?
+        .strip_prefix(" (")?
+        .strip_suffix(')')
 }
 
 /// The choice block of a card (its front) or a question (its prompt), logged when it is parsed.
@@ -104,8 +128,8 @@ fn choice_block(doc: &Doc, uid: Uid) -> Result<ChoiceBlock, ServiceError> {
     Ok(block)
 }
 
-/// [`grade_choice`] timed at Debug level.
-fn grade_timed(key: &ChoiceKey, picked: &[bool]) -> Option<ChoiceGrade> {
+/// [`grade_choice_with`] timed at Debug level.
+fn grade_timed(key: &ChoiceKey, picked: &[bool], scheme: ChoiceGrading) -> Option<ChoiceGrade> {
     let _timer = studyfrog_debug::timed("choice", "grade");
-    grade_choice(key, picked)
+    grade_choice_with(key, picked, scheme)
 }

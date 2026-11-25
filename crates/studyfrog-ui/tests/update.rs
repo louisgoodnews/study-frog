@@ -46,6 +46,7 @@ fn starting_with_a_remembered_vault_opens_it() {
         recent: vec!["/v/notes".into()],
         reading_wpm: None,
         answer_engine: Default::default(),
+        choice_grading: Default::default(),
         reading: Default::default(),
         settings_tab: None,
         views_untracked: false,

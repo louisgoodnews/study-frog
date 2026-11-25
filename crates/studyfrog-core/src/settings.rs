@@ -1,6 +1,7 @@
 //! Settings as plain data. They are read from TOML files (`studyfrog.toml` at the vault root and
 //! `_stack.toml` in a stack folder) by `studyfrog-config`, never from Markdown front-matter.
 
+use crate::choice_grading::ChoiceGrading;
 use crate::scheduler::Scheduler;
 
 /// Per-stack settings from `_stack.toml`. Every field is optional: `None` means "use the vault default".
@@ -110,6 +111,8 @@ pub struct AppSettings {
     pub answer_engine: AnswerEngine,
     /// Thresholds for the reading-speed suggestions.
     pub reading: ReadingTuning,
+    /// How choice items (single choice and multiple select) earn credit (STORY-0231).
+    pub choice_grading: ChoiceGrading,
     /// The tab of the settings screen shown last (a stable key such as `rehearsal`).
     pub settings_tab: Option<String>,
     /// Do not record how long items are viewed (the default is to record it).

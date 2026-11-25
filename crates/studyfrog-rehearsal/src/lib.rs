@@ -2,6 +2,7 @@
 
 pub mod case_study;
 pub mod choice_grade;
+pub mod choice_scheme;
 pub mod clock;
 pub mod curriculum;
 pub mod curriculum_build;

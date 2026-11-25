@@ -163,6 +163,7 @@ fn submit(state: State, uid: Uid, block: &ChoiceBlock, picked: &[bool]) -> (Stat
         mode = mode
     );
     let run = state.rehearse.run.as_ref().map(|r| r.session.run.uid);
+    let scheme = state.app.choice_grading;
     let (state, mut effects) = act(state, Action::SubmitAnswer(grade.given));
     // The engine's text comparison is not the choice verdict: the service grades the picks instead.
     effects.retain(|e| !matches!(e, Effect::Answer(AnswerEffect::Score { .. })));
@@ -174,6 +175,7 @@ fn submit(state: State, uid: Uid, block: &ChoiceBlock, picked: &[bool]) -> (Stat
             run,
             item: uid,
             picked: picked.to_vec(),
+            scheme,
         }));
     }
     (state, effects)

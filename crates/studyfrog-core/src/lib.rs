@@ -3,6 +3,7 @@
 pub mod achievement;
 pub mod appearance;
 pub mod arena;
+pub mod choice_grading;
 pub mod civil;
 pub mod classroom;
 pub mod classroom_ops;

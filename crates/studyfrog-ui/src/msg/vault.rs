@@ -43,6 +43,8 @@ pub enum MsgVault {
     AppSettingsSaved(Result<(), String>),
     /// The answer-comparison choice on the settings screen changed.
     SetAnswerEngine(AnswerEngine),
+    /// The grading scheme for choice items on the settings screen changed (STORY-0231).
+    SetChoiceGrading(studyfrog_core::choice_grading::ChoiceGrading),
     /// The user touched the keyboard, the mouse or the screen.
     Activity,
     /// Recording how long items are viewed was switched on or off.

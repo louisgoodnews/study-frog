@@ -1,7 +1,11 @@
 //! Choice answers in rehearsal, graded with the mock exam's rules (STORY-0221). A thin adapter:
-//! it builds the exam's answer key and answer, then calls `exam_answer::grade_objective`. It holds
-//! no scoring of its own. Pure.
+//! it builds the exam's answer key and answer, then calls `exam_answer::grade_objective` for the
+//! all-or-nothing `correct` flag. The partial fractions of the other schemes come from
+//! `choice_scheme` (STORY-0231). Pure.
 
+use studyfrog_core::choice_grading::ChoiceGrading;
+
+use crate::choice_scheme::credited_fraction;
 use crate::curriculum_build::AnswerKey;
 use crate::exam_answer::{ExamAnswer, format_answer_text, format_expected_text, grade_objective};
 use crate::exam_format::ExamItemFormat;
@@ -16,7 +20,7 @@ pub struct ChoiceKey {
 }
 
 /// The outcome of one graded choice answer.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ChoiceGrade {
     /// True when the chosen options are exactly the correct ones (all-or-nothing).
     pub correct: bool,
@@ -26,9 +30,11 @@ pub struct ChoiceGrade {
     pub expected: String,
     /// The chosen options, rendered as the mock exam renders them. This is the text to record.
     pub given: String,
+    /// The fraction of the maximum credited under the scheme, 0 to 1 (STORY-0231).
+    pub fraction: f32,
 }
 
-/// Grade `picked` (one flag per option, in option order) against `key`.
+/// Grade `picked` (one flag per option, in option order) against `key`, all-or-nothing.
 ///
 /// Single choice uses `SingleSelect`, where exactly one chosen option must be the correct one.
 /// Multiple select uses `MultipleSelect` with the points equal to the correct count, so the
@@ -36,6 +42,16 @@ pub struct ChoiceGrade {
 /// and no wrong one: all-or-nothing, as EPIC-072 asks. Returns `None` when the key has no
 /// correct option.
 pub fn grade_choice(key: &ChoiceKey, picked: &[bool]) -> Option<ChoiceGrade> {
+    grade_choice_with(key, picked, ChoiceGrading::AllOrNothing)
+}
+
+/// [`grade_choice`] with the credited fraction under `scheme` (STORY-0231). The `correct` flag and
+/// the texts are the same under every scheme; only `fraction` differs.
+pub fn grade_choice_with(
+    key: &ChoiceKey,
+    picked: &[bool],
+    scheme: ChoiceGrading,
+) -> Option<ChoiceGrade> {
     let format = choice_format(key)?;
     let possible = key.correct_indices.len() as u32;
     let answer = exam_answer(format, picked);
@@ -53,7 +69,15 @@ pub fn grade_choice(key: &ChoiceKey, picked: &[bool]) -> Option<ChoiceGrade> {
         multiple: format == ExamItemFormat::MultipleSelect,
         expected: format_expected_text(&answer_key, &key.options),
         given: format_answer_text(&answer, &key.options),
+        fraction: credited_fraction(scheme, picked, &correct_flags(key)),
     })
+}
+
+/// The correct options as one flag per option, in option order.
+fn correct_flags(key: &ChoiceKey) -> Vec<bool> {
+    (0..key.options.len())
+        .map(|i| key.correct_indices.contains(&i))
+        .collect()
 }
 
 /// The exam format for a key: one correct option is single select, more is multiple select.

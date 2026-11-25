@@ -2,6 +2,7 @@
 //! enters only through `State::now`.
 use crate::effect::EffectVault;
 
+use studyfrog_core::choice_grading::ChoiceGrading;
 use studyfrog_core::settings::{AnswerEngine, AppSettings};
 use studyfrog_rehearsal::reading::{DEFAULT_WPM, measured_wpm, word_count};
 
@@ -118,6 +119,16 @@ pub fn update(state: State, msg: ReadingTestMsg) -> (State, Vec<Effect>) {
 pub fn set_answer_engine(state: State, engine: AnswerEngine) -> (State, Vec<Effect>) {
     let app = AppSettings {
         answer_engine: engine,
+        ..state.app.clone()
+    };
+    let effects = vec![Effect::Vault(EffectVault::SaveAppSettings(app.clone()))];
+    (State { app, ..state }, effects)
+}
+
+/// Remember how choice items earn credit (STORY-0231).
+pub fn set_choice_grading(state: State, scheme: ChoiceGrading) -> (State, Vec<Effect>) {
+    let app = AppSettings {
+        choice_grading: scheme,
         ..state.app.clone()
     };
     let effects = vec![Effect::Vault(EffectVault::SaveAppSettings(app.clone()))];

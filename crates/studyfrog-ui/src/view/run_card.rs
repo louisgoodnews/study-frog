@@ -209,6 +209,9 @@ fn rating_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn score_line(scored: &crate::run_state::Scored, ui: &mut egui::Ui) {
     use studyfrog_slm::score::Verdict;
+    if crate::view::grade_line::choice_line(scored, ui) {
+        return;
+    }
     let verdict = match scored.score.verdict {
         Verdict::Correct => "Correct",
         Verdict::Partial => "Partly right",
