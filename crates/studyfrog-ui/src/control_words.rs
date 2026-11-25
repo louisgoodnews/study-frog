@@ -5,7 +5,7 @@ use studyfrog_core::review::Rating;
 use studyfrog_core::run::RunMode;
 
 use crate::control_cmd::{Command, ExportArgs, LogsQuery, RehearseCmd, SetupArgs};
-use crate::control_words_items::{flag, item, need, split_flags, stack};
+use crate::control_words_items::{flag, item, need, numbers, split_flags, stack};
 
 pub mod appearance;
 pub mod board;
@@ -122,6 +122,7 @@ fn rehearse(words: &[String]) -> Result<RehearseCmd, String> {
         "leave" => RehearseCmd::Leave,
         "type" => RehearseCmd::Type(words[1..].join(" ")),
         "submit" => RehearseCmd::Submit,
+        "choose" => RehearseCmd::Choose(numbers(&words[1..])?),
         "finish" => RehearseCmd::Finish,
         other => return Err(format!("unknown rehearse step {other:?}")),
     })

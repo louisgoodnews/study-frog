@@ -1,6 +1,7 @@
 //! The inside of the rehearsal card: the prompt, the answer, the marks and the rating buttons.
 use crate::msg::MsgRehearsal;
 
+pub(crate) mod choice;
 mod parts;
 use self::parts::{
     case_controls, case_result, last_time_line, mark_row, reveal_controls, source_link,
@@ -118,6 +119,12 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) -> bool
         .cloned()
         .unwrap_or_else(|| blocks_of(content));
     let heading = crate::typo::size(ui, crate::typo::Tier::Heading);
+    // A choice item shows its prompt above the options, not the list of options as Markdown.
+    let on_screen = choice::shown(run);
+    let prompt = match on_screen {
+        Some((_, block)) => studyfrog_md::blocks::parse_blocks(&block.prompt),
+        None => prompt,
+    };
     markdown(ui, &prompt, heading, None, out);
     if let Some(v) = &content.occlusion {
         let shown = awaiting_rating(run) && !crate::exam_ui::is_exam(run);
@@ -131,6 +138,10 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) -> bool
         }
         crate::view::exam_card::controls(run, ui, out);
         return false;
+    }
+    if let Some((uid, block)) = on_screen {
+        choice::options(run, uid, block, ui, out);
+        ui.add_space(8.0);
     }
     mark_row(run, ui, out);
     ui.add_space(12.0);

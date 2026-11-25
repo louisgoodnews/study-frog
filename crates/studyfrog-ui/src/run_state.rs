@@ -6,8 +6,11 @@ use studyfrog_core::event::{Latency, RunEvent};
 use studyfrog_core::uid::Uid;
 use studyfrog_md::blocks::{Block, parse_blocks};
 use studyfrog_rehearsal::reading::{ReadingParams, reading_params_default};
+use studyfrog_md::choice::ChoiceBlock;
 use studyfrog_rehearsal::session::Session;
 pub use studyfrog_service::compare::Scored;
+
+pub mod choice;
 pub use studyfrog_service::content::ItemContent;
 
 /// An item's prompt and answer as Markdown blocks.
@@ -55,6 +58,10 @@ pub struct RunView {
     pub comment_draft: String,
     /// The case study on screen, when the item is one: ticked options and the check.
     pub case_run: crate::setup::case::run::CaseRun,
+    /// The choice blocks of the loaded items that are choice items in an answer run (STORY-0222).
+    pub choices: HashMap<Uid, ChoiceBlock>,
+    /// The options picked on the current choice item.
+    pub choice: choice::ChoiceSelection,
 }
 
 /// A fresh view of a not-yet-started session.
@@ -77,6 +84,8 @@ pub fn run_view_new(session: Session, started_time: f64) -> RunView {
         show_comments: false,
         comment_draft: String::new(),
         case_run: Default::default(),
+        choices: HashMap::new(),
+        choice: Default::default(),
     }
 }
 
@@ -110,5 +119,14 @@ pub enum AnswerEffect {
         item: studyfrog_core::uid::Uid,
         /// The score and the rating it suggests.
         scored: Box<studyfrog_service::compare::Scored>,
+    },
+    /// Grade a choice answer with the service's rules and store it as a typed answer's score (STORY-0222).
+    Choice {
+        /// The run.
+        run: studyfrog_core::uid::Uid,
+        /// The choice item answered.
+        item: studyfrog_core::uid::Uid,
+        /// One flag per option, in the order written.
+        picked: Vec<bool>,
     },
 }

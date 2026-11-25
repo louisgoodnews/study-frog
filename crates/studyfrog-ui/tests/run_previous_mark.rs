@@ -26,6 +26,7 @@ fn content(previous: Option<Rating>) -> ItemContent {
         expected: None,
         occlusion: None,
         is_note: false,
+        answer_type: None,
         comments: Vec::new(),
     }
 }

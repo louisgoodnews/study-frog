@@ -70,6 +70,23 @@ fn target_named(word: &str) -> Result<EditTarget, String> {
     })
 }
 
+/// Option numbers (1-based) from words such as `1,3` or `1 3`.
+pub fn numbers(words: &[String]) -> Result<Vec<usize>, String> {
+    let list = words
+        .iter()
+        .flat_map(|w| w.split(','))
+        .filter(|s| !s.is_empty())
+        .map(|s| match s.parse::<usize>() {
+            Ok(n) if n >= 1 => Ok(n),
+            _ => Err(format!("option numbers start at 1, not {s:?}")),
+        })
+        .collect::<Result<Vec<usize>, String>>()?;
+    if list.is_empty() {
+        return Err("missing option number (rehearse choose 1,3)".to_owned());
+    }
+    Ok(list)
+}
+
 /// The words after `item`.
 pub fn item(words: &[String]) -> Result<ItemCmd, String> {
     let (flags, rest) = split_flags(words, &[])?;

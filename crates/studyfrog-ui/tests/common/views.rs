@@ -108,6 +108,7 @@ pub fn running_model(mode: studyfrog_core::run::RunMode) -> Model {
             expected: None,
             occlusion: None,
             is_note: false,
+            answer_type: None,
             comments: Vec::new(),
         };
         apply(

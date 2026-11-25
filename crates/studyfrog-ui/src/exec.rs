@@ -83,9 +83,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::StackMark(e) => return crate::exec_mark::execute(w, e, now_ns),
         Effect::Folders(e) => return crate::exec_folders::execute(w, e, now_ns),
         Effect::Notifications(op) => return crate::exec_items::notifications(w, op, now_ns),
-        Effect::Answer(crate::run_state::AnswerEffect::Record { run, item, scored }) => {
-            crate::exec_run::record_case(w, run, item, &scored, now_ns)
-        }
+        Effect::Answer(answer) => exec_run::answer(w, answer, now_ns),
         Effect::MockExam(e) => mock::run(w, e, now_ns),
         Effect::Learn(e) => crate::exec_learn::run(w, e, now_ns),
         Effect::Console(e) => console::run(w, e, now_ns),
@@ -120,12 +118,6 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             comment,
         )) => exec_doc::append_rehearsal_comment_msg(w, uid, comment, now_ns),
         Effect::Exam(e) => crate::exec_exam::execute(w, e, now_ns),
-        Effect::Answer(crate::run_state::AnswerEffect::Score {
-            run,
-            item,
-            answer,
-            words_only,
-        }) => exec_run::score(w, (run, item), &answer, words_only, now_ns),
     };
     vec![msg]
 }

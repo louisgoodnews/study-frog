@@ -6,12 +6,11 @@ use crate::msg::MsgRehearsal;
 use crate::msg::MsgVault;
 
 use studyfrog_core::uid::Uid;
-use studyfrog_rehearsal::input::Action;
 use studyfrog_service::bulk::BulkEdit;
 use studyfrog_service::create_more::NewKind;
 
 use crate::chrome::ChromeMsg;
-use crate::control_cmd::{Command, EditTarget, ItemCmd, NewItemArgs, RehearseCmd, StackCmd};
+use crate::control_cmd::{Command, EditTarget, ItemCmd, NewItemArgs, StackCmd};
 use crate::history::HistoryMsg;
 use crate::library_bulk::BulkMsg;
 use crate::library_ui::LibraryMsg;
@@ -27,8 +26,9 @@ pub mod homework;
 pub mod panels;
 pub mod screens;
 pub mod search;
+mod rehearse;
 mod stacks;
-use stacks::{rehearse, stack};
+use stacks::stack;
 
 /// Phases of messages; background work settles between phases.
 pub type Plan = Vec<Vec<Msg>>;
@@ -163,7 +163,7 @@ pub fn plan_for(state: &State, cmd: &Command) -> Result<Plan, String> {
         Command::Stack(c) => stack(state, c),
         Command::Homework(c) => homework::plan(state, c),
         Command::Appearance(m) => one(Msg::Appearance(*m)),
-        Command::Rehearse(c) => rehearse(state, c),
+        Command::Rehearse(c) => rehearse::plan(state, c),
         Command::Query(text) => Ok(vec![vec![
             Msg::Vault(MsgVault::Navigate(Screen::Library)),
             Msg::Browse(MsgBrowse::Select(Selection::Nothing)),

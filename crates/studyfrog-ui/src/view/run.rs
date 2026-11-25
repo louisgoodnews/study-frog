@@ -90,6 +90,7 @@ fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
     if crate::exam_ui::is_exam(run) {
         return exam_shortcuts(run, &pressed, out);
     }
+    crate::view::run_card::choice::keys(run, ui, out);
     let edit_pressed = ui.input(|i| {
         (i.key_pressed(Key::E) && (i.modifiers.command || i.modifiers.ctrl))
             || i.key_pressed(Key::F2)
@@ -99,7 +100,8 @@ fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
             crate::rehearsal_edit::RehearsalEditMsg::Open(uid),
         ));
     }
-    if awaiting_reveal(run) && pressed(Key::Space) {
+    let choosing = crate::view::run_card::choice::pending(run);
+    if awaiting_reveal(run) && pressed(Key::Space) && !choosing {
         act(out, Action::Flip);
     }
     if awaiting_reveal(run) && pressed(Key::S) {

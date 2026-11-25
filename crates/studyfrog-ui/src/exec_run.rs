@@ -24,7 +24,8 @@ use studyfrog_slm::models::{Opened, open_runtime};
 use crate::exec::Worker;
 use crate::home_ui::HomeMsg;
 use crate::msg::Msg;
-use crate::run_state::Scored;
+use crate::run_state::{AnswerEffect, Scored};
+use studyfrog_service::choice::grade_choice_answer;
 
 fn millis(now_ns: i64) -> i64 {
     now_ns / 1_000_000
@@ -128,6 +129,31 @@ pub fn score(
         None => Err("no vault is open".to_owned()),
     };
     Msg::Rehearsal(MsgRehearsal::AnswerScored(uid, result))
+}
+
+/// Run one answer effect: a typed answer's score, a case check's record or a choice's grade.
+pub fn answer(w: &mut Worker, effect: AnswerEffect, now_ns: i64) -> Msg {
+    match effect {
+        AnswerEffect::Score {
+            run,
+            item,
+            answer,
+            words_only,
+        } => score(w, (run, item), &answer, words_only, now_ns),
+        AnswerEffect::Record { run, item, scored } => record_case(w, run, item, &scored, now_ns),
+        AnswerEffect::Choice { run, item, picked } => choice(w, (run, item), &picked, now_ns),
+    }
+}
+
+/// Grade a choice answer with the service's rules and store it like a typed answer's score (STORY-0222).
+pub fn choice(w: &mut Worker, (run, uid): (Uid, Uid), picked: &[bool], now_ns: i64) -> Msg {
+    let result = match &w.session {
+        Some(session) => grade_choice_answer(session, uid, picked)
+            .map(|graded| remember(session, run, uid, graded.scored, now_ns))
+            .map_err(|e| e.to_string()),
+        None => Err("no vault is open".to_owned()),
+    };
+    Msg::AnswerScored(uid, result)
 }
 
 /// Store the comparison with its run; a failure is noted in the engine text, never hidden.

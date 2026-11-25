@@ -65,6 +65,7 @@ fn a_long_answer_in_a_run_keeps_to_about_one_and_a_half_measures() {
         expected: None,
         occlusion: None,
         is_note: false,
+        answer_type: None,
         comments: Vec::new(),
     };
     apply(

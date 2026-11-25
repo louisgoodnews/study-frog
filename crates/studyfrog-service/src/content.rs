@@ -36,6 +36,8 @@ pub struct ItemContent {
     pub comments: Vec<studyfrog_core::comment::ItemComment>,
     /// The case study the question is, with its options, decision and rubric (STORY-0199).
     pub case: Option<Box<studyfrog_rehearsal::case_study::CaseStudyItem>>,
+    /// The front-matter `answer_type` (`open`, `single` or `multiple`) of a choice item, if it has one.
+    pub answer_type: Option<String>,
 }
 
 fn content_of(doc: &Doc) -> ItemContent {
@@ -55,6 +57,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             case: None,
             is_note: false,
             comments,
+            answer_type: None,
         },
         Doc::Question(q) => ItemContent {
             title,
@@ -68,6 +71,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             case: None,
             is_note: false,
             comments,
+            answer_type: None,
         },
         Doc::Note(n) => ItemContent {
             prompt: title.clone(),
@@ -81,6 +85,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             case: None,
             is_note: true,
             comments,
+            answer_type: None,
         },
         Doc::Stack(s) => ItemContent {
             prompt: title.clone(),
@@ -94,6 +99,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             case: None,
             is_note: true,
             comments,
+            answer_type: None,
         },
         Doc::Diary(d) => ItemContent {
             prompt: title.clone(),
@@ -107,6 +113,7 @@ fn content_of(doc: &Doc) -> ItemContent {
             case: None,
             is_note: true,
             comments,
+            answer_type: None,
         },
     }
 }
@@ -129,6 +136,7 @@ pub fn load_item_content(session: &VaultSession, uid: Uid) -> Result<ItemContent
         let content = ItemContent {
             previous,
             source: studyfrog_md::extra::extra_value(&doc, "source"),
+            answer_type: studyfrog_md::extra::extra_value(&doc, "answer_type"),
             color: studyfrog_md::extra::extra_value(&doc, studyfrog_core::item_color::COLOR_FIELD)
                 .and_then(|c| studyfrog_core::item_color::normalize_color(&c)),
             ..content_of(&doc)

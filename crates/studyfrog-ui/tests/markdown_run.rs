@@ -26,6 +26,7 @@ fn the_prompt_and_the_answer_are_drawn_as_markdown() {
         expected: None,
         occlusion: None,
         is_note: false,
+        answer_type: None,
         comments: Vec::new(),
     };
     apply(

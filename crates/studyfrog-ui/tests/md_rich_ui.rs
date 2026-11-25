@@ -65,6 +65,7 @@ fn card(prompt: &str, answer: &str) -> egui_kittest::Harness<'static, common::vi
         expected: None,
         occlusion: None,
         is_note: false,
+        answer_type: None,
         comments: Vec::new(),
     };
     apply(

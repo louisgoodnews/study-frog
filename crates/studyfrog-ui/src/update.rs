@@ -164,6 +164,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         Msg::RehearsalEdit(m) => crate::rehearsal_edit::update(state, m),
         Msg::Canvas(m) => crate::canvas_ui::update(state, m),
         Msg::Match(m) => crate::match_ui::update(state, m),
+        Msg::Rehearsal(MsgRehearsal::Choice(m)) => crate::run_update::choice::update(state, m),
         run @ (Msg::Rehearsal(MsgRehearsal::StartRunClicked)
         | Msg::Rehearsal(MsgRehearsal::RunReady(_))
         | Msg::Rehearsal(MsgRehearsal::RunAction(_))

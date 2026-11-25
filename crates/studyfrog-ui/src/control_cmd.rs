@@ -193,8 +193,10 @@ pub enum RehearseCmd {
     Leave,
     /// Write the answer field without submitting it.
     Type(String),
-    /// Submit (and in an exam lock) what the answer field holds.
+    /// Submit (and in an exam lock) what the answer field holds; on a choice item, the picked options.
     Submit,
+    /// Pick the options with these 1-based numbers on a choice item (`rehearse choose 1,3`).
+    Choose(Vec<usize>),
     /// Leave a finished exam's result for the setup; refused while the exam is running.
     Finish,
 }

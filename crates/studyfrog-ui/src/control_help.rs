@@ -129,6 +129,11 @@ pub const COMMANDS: &[Row] = &[
         "RunAction(Mark)",
         "write",
     ),
+    (
+        "rehearse choose <n>[,<n>...]",
+        "Msg::RunChoice(Set) on a choice item; the picks are checked, then rehearse submit grades them",
+        "write",
+    ),
     ("rehearse leave", "Msg::LeaveRun", "read"),
     (
         "rehearse type <text> | rehearse submit",

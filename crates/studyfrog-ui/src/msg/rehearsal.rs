@@ -20,6 +20,8 @@ pub enum MsgRehearsal {
     RunReady(Result<Run, String>),
     /// The user did something in the run (key press or button).
     RunAction(Action),
+    /// A choice item's options were picked or submitted (STORY-0222).
+    Choice(crate::run_update::choice::ChoiceMsg),
     /// The answer field changed.
     AnswerEdited(String),
     /// An item's content was loaded.

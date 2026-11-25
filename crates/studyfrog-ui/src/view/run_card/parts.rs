@@ -37,7 +37,7 @@ pub(super) fn source_link(content: &ItemContent, ui: &mut egui::Ui, out: &mut Ve
 }
 
 pub(super) fn reveal_controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let answering = is_item_typed(run) && !is_case_item(run);
+    let answering = is_item_typed(run) && !is_case_item(run) && !super::choice::pending(run);
     if answering {
         if let Some(text) = text_field(ui, "Your answer", &run.answer, "type your answer", 3) {
             out.push(Msg::Rehearsal(MsgRehearsal::AnswerEdited(text)));

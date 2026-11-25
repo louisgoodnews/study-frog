@@ -49,6 +49,7 @@ pub fn finished_run_marked(
         expected: None,
         occlusion: None,
         is_note: false,
+        answer_type: None,
         comments: Vec::new(),
     };
     apply(
