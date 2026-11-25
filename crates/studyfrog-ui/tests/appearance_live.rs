@@ -66,7 +66,7 @@ fn a_change_shows_at_once_on_the_running_application_without_a_restart() {
         style_of(&h),
         (egui::ThemePreference::System, 1.0, 30.0, 15.0)
     );
-    assert_eq!(accent(&h), Accent::Blue);
+    assert_eq!(accent(&h), Accent::Purple);
 }
 
 #[test]
@@ -145,7 +145,7 @@ fn the_appearance_tab_offers_every_setting_with_names_and_a_click_changes_it() {
     );
     h.get_by_label("Restore the default appearance").click();
     h.run_steps(2);
-    assert_eq!(h.state().0.state.app.appearance.accent, Accent::Blue);
+    assert_eq!(h.state().0.state.app.appearance.accent, Accent::Purple);
 }
 
 #[test]

@@ -100,7 +100,7 @@ fn defaults_restore_the_look_but_keep_the_window_and_the_last_screen() {
     set(&mut m, AppearanceMsg::Window(w));
     set(&mut m, AppearanceMsg::Defaults);
     let a = &m.state.app.appearance;
-    assert_eq!((a.accent, a.zoom), (Accent::Blue, 100));
+    assert_eq!((a.accent, a.zoom), (Accent::Purple, 100));
     assert_eq!(
         (a.window, a.last_screen.as_deref()),
         (Some(w), Some("board"))
