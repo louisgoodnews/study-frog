@@ -31,3 +31,6 @@ Colours come from palette_of / style_of, never literals. Contrast targets are th
 
 ## Open Questions
 None.
+
+## Verification note
+Verified 2026-11-25: palette values in theme_tokens.rs; six accents with one lightness and chroma (test accents_and_status_colours_share_one_lightness_and_chroma); gradient violet to pink (accent start, ALT_HUE 325 stop); appearance_apca passes 6 of 6 tests. The default accent is violet (Purple), as decided in EPIC-073.
