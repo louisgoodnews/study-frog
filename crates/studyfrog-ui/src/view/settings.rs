@@ -43,11 +43,22 @@ pub fn sections_of(tab: SettingsTab) -> &'static [Section] {
     }
 }
 
+/// The tab last logged as shown, so the debug line is written when the tab changes only.
+static LAST_TAB: std::sync::Mutex<String> = std::sync::Mutex::new(String::new());
+
+fn log_tab_change(name: &str) {
+    let mut last = LAST_TAB.lock().unwrap_or_else(|e| e.into_inner());
+    if *last != name {
+        studyfrog_log::log_debug!("ui", "settings tab shown"; tab = name.to_owned());
+        *last = name.to_owned();
+    }
+}
+
 /// The settings screen: a tab bar and the groups of the chosen tab.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let _timer = studyfrog_debug::timed("ui", "settings draw");
     let tab = current_tab(&state.app);
-    studyfrog_log::log_debug!("ui", "settings tab shown"; tab = format!("{tab:?}"));
+    log_tab_change(&format!("{tab:?}"));
     screen_title::headline(ui, "Settings");
     ui.add_space(6.0);
     tab_bar(ui, tab, out);

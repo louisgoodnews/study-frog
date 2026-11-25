@@ -27,11 +27,22 @@ pub fn screen_name(screen: Screen) -> &'static str {
     }
 }
 
+/// The page last logged as shown, so the debug line is written when the page changes only.
+static LAST_PAGE: std::sync::Mutex<String> = std::sync::Mutex::new(String::new());
+
+fn log_page_change(page: &str) {
+    let mut last = LAST_PAGE.lock().unwrap_or_else(|e| e.into_inner());
+    if *last != page {
+        studyfrog_log::log_debug!("ui", "help page shown"; page = page.to_owned());
+        *last = page.to_owned();
+    }
+}
+
 /// The screen.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let _timer = studyfrog_debug::timed("ui", "help draw");
     let help = &state.help;
-    studyfrog_log::log_debug!("ui", "help page shown"; page = format!("{:?}", current(help)));
+    log_page_change(&format!("{:?}", current(help)));
     egui::Panel::left("help-tree")
         .resizable(false)
         .exact_size(TREE_WIDTH)

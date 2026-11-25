@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Changed
+- Settings and help in the redesign style: the settings tabs and the help tree and pages use the card, rail and gradient headline styles, with the same content (STORY-0227, EPIC-070).
 - Diary and Achievements in the redesign style: the diary entries and the achievements list use the card, badge and gradient headline styles, with the same content (STORY-0229, EPIC-070).
 - New violet-to-pink palette tokens for light and dark, with the six accents kept (STORY-0226, EPIC-073). Values are unverified until the APCA tests run in the test phase; the default accent is still Blue.
 - The rehearsal's Show answer and Skip buttons sit at the bottom centre of the card, below the item, for cards, questions and notes (STORY-0217, EPIC-070).
