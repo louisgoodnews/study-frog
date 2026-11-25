@@ -28,12 +28,12 @@ pub enum Density {
 /// The colour of selections, links and the main button.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Accent {
-    /// Blue (the default).
-    #[default]
+    /// Blue.
     Blue,
     /// Green.
     Green,
-    /// Purple.
+    /// Purple, violet (the default, STORY-0226 and EPIC-073).
+    #[default]
     Purple,
     /// Orange.
     Orange,
