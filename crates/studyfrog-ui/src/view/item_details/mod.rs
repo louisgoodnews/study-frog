@@ -15,7 +15,7 @@ use studyfrog_md::doc::Doc;
 use crate::editor::Editor;
 use crate::msg::Msg;
 use crate::state::State;
-use crate::view::kit;
+use crate::view::{gradient_panel, kit};
 
 /// The tabs of the item details notebook.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -102,6 +102,8 @@ pub(super) fn item_card<R>(
 
 /// The details view entry point for the item editor side column.
 pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    // The gradient band opens the details column (EPIC-073, STORY-0234); it is decoration only.
+    gradient_panel::band(ui);
     kit::section(ui, "Details");
     choice_view::draw(e, ui);
     let current = tab_bar(e, ui);

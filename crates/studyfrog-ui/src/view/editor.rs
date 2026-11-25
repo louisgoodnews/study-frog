@@ -9,15 +9,19 @@ use crate::image_ui::ImageTarget;
 use crate::msg::{EditAction, Msg};
 use crate::state::State;
 use crate::theme::palette_of;
-use crate::view::item_details;
 use crate::view::md_editor::{Mode, md_editor};
+use crate::view::{gradient_panel, home_hero, item_details};
 use studyfrog_md::doc::Doc;
 
 const SIDE_WIDTH: f32 = 300.0;
+/// The height of the title's gradient panel, in points (EPIC-073, STORY-0234).
+const HEADER_HEIGHT: f32 = 64.0;
 
 /// The whole screen.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(e) = &state.editor else { return };
+    studyfrog_log::log_debug!("ui", "editor shown");
+    let _timer = studyfrog_debug::timed("ui", "editor draw");
     toolbar(e, ui, out);
     crate::view::extract_panel::panel(state, e, ui, out);
     ui.add_space(6.0);
@@ -171,7 +175,32 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 }
 
+/// The item's title on the gradient panel (EPIC-073, STORY-0234). It shows the title as it is now; the field
+/// below is still the one that edits it.
+fn headline(e: &Editor, ui: &mut egui::Ui) {
+    let measure = crate::typo::measure(ui);
+    ui.scope(|ui| {
+        ui.set_max_width(measure);
+        gradient_panel::panel(ui, HEADER_HEIGHT, |ui, s| {
+            let shown = if e.form.title.trim().is_empty() {
+                "Untitled item"
+            } else {
+                e.form.title.as_str()
+            };
+            let size = crate::typo::size(ui, crate::typo::Tier::Heading);
+            ui.label(
+                RichText::new(shown)
+                    .size(size)
+                    .strong()
+                    .color(s.gradient_text),
+            );
+        });
+    });
+    ui.add_space(8.0);
+}
+
 fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    headline(e, ui);
     let title = ui.label(RichText::new("Title").color(palette_of(ui).text_weak));
     // The title is part of the text column, so it keeps to the same reading measure as the text.
     let measure = crate::typo::measure(ui);
@@ -194,14 +223,19 @@ fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         Mode::Split
     };
     for (i, f) in e.form.fields.iter().enumerate() {
-        if let Some(t) = md_editor(
-            ui,
-            f.label,
-            &f.text,
-            (f.rows, start),
-            Some(ImageTarget::Item(i)),
-            out,
-        ) {
+        // Each prompt or reference field is one redesign card; the text it returns is saved as before.
+        let mut edited = None;
+        home_hero::card(ui, |ui| {
+            edited = md_editor(
+                ui,
+                f.label,
+                &f.text,
+                (f.rows, start),
+                Some(ImageTarget::Item(i)),
+                out,
+            );
+        });
+        if let Some(t) = edited {
             out.push(Msg::Editor(MsgEditor::Edit(EditAction::Field(i, t))));
         }
         ui.add_space(10.0);

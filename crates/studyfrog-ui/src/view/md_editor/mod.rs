@@ -13,6 +13,7 @@ use eframe::egui::{self, TextEdit};
 use crate::image_ui::ImageTarget;
 use crate::msg::Msg;
 use crate::theme::palette_of;
+use crate::theme::style::{CARD_RADIUS, style_of};
 use crate::typo;
 use crate::view::preview::draw_blocks;
 use blocks::blocks_of;
@@ -106,9 +107,9 @@ pub fn md_editor(
     let rendered = |ui: &mut egui::Ui, shown: &str, out: &mut Vec<Msg>| {
         let cache = blocks_of(ui, id, shown);
         egui::Frame::new()
-            .fill(pal.surface)
+            .fill(style_of(&pal).card)
             .inner_margin(egui::Margin::same(8))
-            .corner_radius(6)
+            .corner_radius(CARD_RADIUS)
             .show(ui, |ui| {
                 ui.set_min_height(rows as f32 * 16.0);
                 ui.set_width(ui.available_width());
