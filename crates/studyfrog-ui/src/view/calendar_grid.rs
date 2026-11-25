@@ -44,15 +44,20 @@ pub fn kind_color(p: &Palette, kind: EventKind) -> Color32 {
     }
 }
 
+/// The shown month as words, such as "November 2026".
+pub(super) fn month_label(state: &State) -> String {
+    let m = state.planner.month;
+    format!("{} {}", MONTHS[usize::from(m.1) - 1], m.0)
+}
+
 pub fn month(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = &state.planner;
     ui.horizontal_wrapped(|ui| {
-        ui.label(
-            RichText::new("Calendar")
-                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                .strong(),
-        );
-        ui.add_space(12.0);
+        // The whole calendar shows its period on the headline; a stack's calendar shows it here.
+        if scope.is_some() {
+            ui.strong(month_label(state));
+            ui.add_space(12.0);
+        }
         if ui
             .button("Previous month")
             .on_hover_text("Goes to the month before this one.")
@@ -60,11 +65,6 @@ pub fn month(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec
         {
             plan(out, PlanMsg::Month(-1));
         }
-        ui.strong(format!(
-            "{} {}",
-            MONTHS[usize::from(p.month.1) - 1],
-            p.month.0
-        ));
         if ui
             .button("Next month")
             .on_hover_text("Goes to the month after this one.")

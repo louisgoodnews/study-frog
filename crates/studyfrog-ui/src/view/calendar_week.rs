@@ -13,7 +13,7 @@ use crate::plan_msg::PlanMsg;
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::calendar_grid::kind_color;
-use crate::view::kit;
+use crate::view::{home_hero, kit};
 
 const START_HOUR: u16 = 6;
 const END_HOUR: u16 = 22;
@@ -40,8 +40,12 @@ fn weekday_name(idx: usize) -> &'static str {
     }
 }
 
-/// Draw the 7-day hourly grid.
+/// Draw the 7-day hourly grid, framed as a redesign card.
 pub fn draw(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    home_hero::card(ui, |ui| grid(state, scope, ui, out));
+}
+
+fn grid(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = &state.planner;
     let pal = palette_of(ui);
     let days = week_days(p.selected);

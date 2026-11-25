@@ -12,7 +12,7 @@ use crate::plan_msg::PlanMsg;
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::timetable_form::TimetableForm;
-use crate::view::kit;
+use crate::view::{home_hero, kit};
 
 fn weekday_name(idx: u8) -> &'static str {
     match idx {
@@ -112,7 +112,7 @@ fn draw_entry_card(state: &State, entry: &TimetableEntry, ui: &mut egui::Ui, out
     );
     let stack_name = stack_title(state, entry.stack_uid);
 
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.horizontal(|ui| {
             kit::pill(ui, "Class", pal.accent);

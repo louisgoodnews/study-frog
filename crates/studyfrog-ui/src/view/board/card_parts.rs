@@ -5,17 +5,17 @@ pub(super) fn card_buttons(card: &Card, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let t = &card.title;
     let id = card.id;
     let buttons = [
-        (format!("Pull {t}"), BoardMsg::Pull(id)),
-        (format!("Push {t}"), BoardMsg::Push(id)),
-        (format!("Move {t} up"), BoardMsg::Shift(id, -1)),
-        (format!("Move {t} down"), BoardMsg::Shift(id, 1)),
-        (format!("Edit {t}"), BoardMsg::Open(id)),
-        (format!("Delete {t}"), BoardMsg::Remove(id)),
+        (format!("Pull {t}"), BoardMsg::Pull(id), "Moves the card to the previous column."),
+        (format!("Push {t}"), BoardMsg::Push(id), "Moves the card to the next column."),
+        (format!("Move {t} up"), BoardMsg::Shift(id, -1), "Moves the card one place up."),
+        (format!("Move {t} down"), BoardMsg::Shift(id, 1), "Moves the card one place down."),
+        (format!("Edit {t}"), BoardMsg::Open(id), "Opens this card for editing."),
+        (format!("Delete {t}"), BoardMsg::Remove(id), "Deletes this card from the board."),
     ];
-    for (label, msg) in buttons {
+    for (label, msg, tip) in buttons {
         if ui
             .small_button(label)
-            .on_hover_text("Moves the card to this column.")
+            .on_hover_text(tip)
             .clicked()
         {
             send(out, msg);

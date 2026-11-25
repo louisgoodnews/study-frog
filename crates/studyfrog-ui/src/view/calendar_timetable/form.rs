@@ -22,7 +22,7 @@ pub(super) fn draw_form(
         ui.add_space(4.0);
     }
 
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.horizontal(|ui| {
             ui.label("Course Title:");
             ui.text_edit_singleline(&mut draft.title);

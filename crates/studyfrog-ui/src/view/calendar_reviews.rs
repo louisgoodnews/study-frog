@@ -11,7 +11,7 @@ use crate::planner::PlanMsg;
 use crate::planner_reviews::ReviewMsg;
 use crate::state::State;
 use crate::theme::{palette_of, tint};
-use crate::view::{date_picker, kit};
+use crate::view::{date_picker, home_hero};
 
 /// A chip let go of: which entry, and where.
 pub struct Dropped {
@@ -158,7 +158,7 @@ pub fn resolve(dropped: &[Dropped], cells: &[(Date, Rect)], out: &mut Vec<Msg>) 
 
 fn entry_card(state: &State, e: &PlanEntry, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let title = title_of(state, e.stack);
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.label(line(state, e));
         ui.horizontal_wrapped(|ui| {

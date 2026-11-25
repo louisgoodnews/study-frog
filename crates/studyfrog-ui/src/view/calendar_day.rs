@@ -11,7 +11,7 @@ use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::calendar_grid::kind_color;
 use crate::view::homework_marks;
-use crate::view::kit;
+use crate::view::{home_hero, kit};
 
 const START_HOUR: u16 = 6;
 const END_HOUR: u16 = 22;
@@ -53,7 +53,7 @@ pub fn draw(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &mut Vec<
     let day_num = studyfrog_core::civil::date_to_days(p.selected);
     let day_reviews: Vec<_> = p.reviews.iter().filter(|r| r.day == day_num).collect();
     if !day_reviews.is_empty() {
-        kit::card(ui, |ui| {
+        home_hero::card(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label(RichText::new("Due Reviews:").strong());
                 let total_due: usize = day_reviews.iter().map(|r| r.items.len()).sum();
@@ -154,7 +154,7 @@ fn draw_day_card(
     let stack_info =
         stack_title(state, s.stack).map_or(String::new(), |t| format!(" · Stack: {t}"));
 
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.horizontal(|ui| {
             kit::pill(ui, event_kind_name(s.kind), kind_color(&pal, s.kind));

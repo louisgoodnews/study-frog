@@ -10,23 +10,30 @@ use studyfrog_core::uid::Uid;
 use crate::kanban::{BoardMsg, CardEdit};
 use crate::msg::Msg;
 use crate::state::State;
-use crate::theme::{palette_of, tint};
-use crate::view::kit;
+use crate::theme::palette_of;
+use crate::theme::style::CARD_RADIUS;
 use crate::view::widgets::text_field;
+use crate::view::{gradient_panel, home_hero, kit};
 
 const MIN_COLUMN_HEIGHT: f32 = 320.0;
+const HEADER_HEIGHT: f32 = 64.0;
 
 fn send(out: &mut Vec<Msg>, m: BoardMsg) {
     out.push(Msg::Board(m));
 }
 
-/// Heading, controls, the columns, and the card editor when a card is open.
+/// Headline, controls, the columns, and the card editor when a card is open.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.label(
-        RichText::new("Board")
-            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-            .strong(),
-    );
+    let _timer = studyfrog_debug::timed("ui", "board draw");
+    studyfrog_log::log_debug!("ui", "board view shown"; view = "board");
+    gradient_panel::panel(ui, HEADER_HEIGHT, |ui, s| {
+        ui.label(
+            RichText::new("Board")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong()
+                .color(s.gradient_text),
+        );
+    });
     ui.add_space(4.0);
     let k = &state.kanban;
     let Some(board) = &k.board else {
@@ -97,57 +104,57 @@ fn count_text(col: &Column) -> String {
     }
 }
 
+/// One column in a redesign card. The card is the drop zone; while a card is dragged, the zone gets the accent outline.
 fn column(state: &State, col: &Column, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let over = state
         .kanban
         .board
         .as_ref()
         .is_some_and(|b| over_limit(b).contains(&col.id));
-    let mut title = RichText::new(count_text(col)).strong();
-    if over {
-        title = title.color(ui.visuals().error_fg_color);
-    }
-    ui.label(title);
-    if over {
-        ui.colored_label(ui.visuals().error_fg_color, "Over the WIP limit");
-    }
-    let mut rects = Vec::new();
     let pal = palette_of(ui);
     let dragging = egui::DragAndDrop::has_payload_of_type::<Uid>(ui.ctx());
-    let fill = if dragging {
-        tint(pal.accent, 24)
-    } else {
-        pal.panel
-    };
-    let zone = Frame::new()
-        .fill(fill)
-        .stroke(Stroke::new(
-            1.0,
-            if dragging { pal.accent } else { pal.border },
-        ))
-        .corner_radius(CornerRadius::same(10))
-        .inner_margin(Margin::same(8));
-    let (_, dropped) = ui.dnd_drop_zone::<Uid, ()>(zone, |ui| {
-        ui.set_min_height(MIN_COLUMN_HEIGHT);
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
-        for card in &col.cards {
-            rects.push(card_view(state, card, ui, out).rect);
+        let mut title = RichText::new(count_text(col)).strong();
+        if over {
+            title = title.color(ui.visuals().error_fg_color);
+        }
+        ui.label(title);
+        if over {
+            ui.colored_label(ui.visuals().error_fg_color, "Over the WIP limit");
+        }
+        let mut rects = Vec::new();
+        let (zone, dropped) = ui.dnd_drop_zone::<Uid, ()>(Frame::new(), |ui| {
+            ui.set_min_height(MIN_COLUMN_HEIGHT);
+            ui.set_width(ui.available_width());
+            for card in &col.cards {
+                rects.push(card_view(state, card, ui, out).rect);
+            }
+        });
+        if dragging {
+            let outline = Stroke::new(1.0, pal.accent);
+            ui.painter().rect_stroke(
+                zone.response.rect,
+                CornerRadius::same(CARD_RADIUS),
+                outline,
+                egui::StrokeKind::Outside,
+            );
+        }
+        if let Some(card) = dropped {
+            let y = ui
+                .input(|i| i.pointer.interact_pos())
+                .map_or(f32::MAX, |p| p.y);
+            let index = rects.iter().filter(|r| r.center().y < y).count();
+            send(
+                out,
+                BoardMsg::Move {
+                    card: *card,
+                    to: col.id,
+                    index,
+                },
+            );
         }
     });
-    if let Some(card) = dropped {
-        let y = ui
-            .input(|i| i.pointer.interact_pos())
-            .map_or(f32::MAX, |p| p.y);
-        let index = rects.iter().filter(|r| r.center().y < y).count();
-        send(
-            out,
-            BoardMsg::Move {
-                card: *card,
-                to: col.id,
-                index,
-            },
-        );
-    }
 }
 
 fn stack_name(state: &State, uid: Option<Uid>) -> Option<String> {
