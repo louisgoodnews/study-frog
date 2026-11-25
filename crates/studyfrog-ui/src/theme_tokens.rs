@@ -20,7 +20,7 @@ pub const WARNING_HUE: f32 = 75.0;
 /// The hue of `danger`.
 pub const DANGER_HUE: f32 = 27.0;
 /// The hue of `alt` (the colour that is not the accent).
-pub const ALT_HUE: f32 = 350.0;
+pub const ALT_HUE: f32 = 325.0;
 
 /// The lightness, chroma and greys of one theme.
 #[derive(Debug, Clone, Copy, PartialEq)]

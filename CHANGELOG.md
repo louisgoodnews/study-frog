@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Changed
+- The gradient's second colour moved to hue 325 so it stays distinct from the Pink accent; the colour spec in docs/specs/ui-colour-and-type.md is updated (EPIC-073).
 - The default accent is violet (Purple) instead of Blue; the other accents stay selectable (EPIC-073).
 - Settings and help in the redesign style: the settings tabs and the help tree and pages use the card, rail and gradient headline styles, with the same content (STORY-0227, EPIC-070).
 - Diary and Achievements in the redesign style: the diary entries and the achievements list use the card, badge and gradient headline styles, with the same content (STORY-0229, EPIC-070).

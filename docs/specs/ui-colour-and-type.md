@@ -36,8 +36,9 @@ them out from a table, so drawing costs nothing extra.
 | on_accent | L 0.14 | L 0.00 | L 1.00 | L 1.00 |
 | accents and status colours | L 0.77, C 0.13 | L 0.85, C 0.12 | L 0.48, C 0.15 | L 0.42, C 0.16 |
 
-Greys have a slight cool hue (265°, chroma at most 0.014). The hues: blue 258°, green 150°, purple 300°, orange 55°,
-pink 355°, teal 195°; success 150°, warning 75°, danger 27°, alt 300°. All six accents and the four status colours of a
+Greys: the light theme is lavender (295°, chroma at most 0.014), the dark theme deep blue-grey (250°). The hues: blue 258°,
+green 150°, purple (violet, the default accent) 295°, orange 55°, pink 355°, teal 195°; success 150°, warning 75°, danger 27°,
+alt 325° (the gradient's second stop, 30° from both violet and pink so the gradient shows with any accent). Updated 2026-11-25. All six accents and the four status colours of a
 theme share one lightness; they share one chroma where sRGB can show it (teal and blue at a light theme's lightness
 cannot, so they get the most sRGB allows). Surfaces climb background, panel, surface in equal lightness steps
 (0.03 dark, 0.025 light, 0.05 dark high contrast, 0.03 light high contrast); the hover fill is at least one step away
