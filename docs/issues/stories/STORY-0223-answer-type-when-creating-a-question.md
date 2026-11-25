@@ -2,7 +2,7 @@
 id: STORY-0223
 type: story
 title: "Answer type when creating a question: open text, single choice or multiple select"
-status: ready
+status: review
 epic: EPIC-072
 parents: ['EPIC-072']
 estimate: 5

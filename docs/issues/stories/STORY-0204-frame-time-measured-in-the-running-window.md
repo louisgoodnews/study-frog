@@ -2,7 +2,7 @@
 id: STORY-0204
 type: story
 title: "Frame time of the rehearsal card, reports and console measured in the running window"
-status: backlog
+status: review
 epic: EPIC-067
 parents: ['EPIC-067']
 estimate: 5

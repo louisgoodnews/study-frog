@@ -2,7 +2,7 @@
 id: STORY-0225
 type: story
 title: "Split files over 250 lines and fix the rehearsal code hand-merged from the choice branch"
-status: ready
+status: review
 epic: EPIC-072
 parents: ['EPIC-072']
 estimate: 3

@@ -4,15 +4,15 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (14) | Ready (2) | In progress (2/3) | Review (6) | Blocked (3) | Done (620) |
+| Backlog (5) | Ready (0) | In progress (2/3) | Review (23) | Blocked (3) | Done (620) |
 | --- | --- | --- | --- | --- | --- |
-| [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
-| [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
-| [TASK-0284](docs/issues/tasks/TASK-0284-scripted-screens-on-a-10k-vault-for-the-frame-time-run.md) Scripted visit of the rehearsal card, reports and console on a 10k-note vault (2) |  |  |  |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
-| [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  |  |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
-| [TASK-0299](docs/issues/tasks/TASK-0299-first-run-wizard-screens-settings-and-control.md) Wizard screens after the vault, reopen from Settings, and wizard commands in the control protocol (5) |  |  |  |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
-|  |  |  |  |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
-|  |  |  |  |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
+|  |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
+|  |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
+|  |  |  | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  | [BUG-0003](docs/issues/bugs/BUG-0003-create-dialog-header-is-crowded-when-the-dialog-is-small.md) Create dialog header is crowded when the dialog is small (2) |
+|  |  |  | [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  | [BUG-0004](docs/issues/bugs/BUG-0004-the-streak-on-home-is-cramped.md) The streak on Home is cramped (2) |
+|  |  |  | [TASK-0284](docs/issues/tasks/TASK-0284-scripted-screens-on-a-10k-vault-for-the-frame-time-run.md) Scripted visit of the rehearsal card, reports and console on a 10k-note vault (2) |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
+|  |  |  | [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
+|  |  |  | [TASK-0299](docs/issues/tasks/TASK-0299-first-run-wizard-screens-settings-and-control.md) Wizard screens after the vault, reopen from Settings, and wizard commands in the control protocol (5) |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
 |  |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
 |  |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
 |  |  |  |  |  | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |
@@ -557,7 +557,7 @@
 | [STORY-0201](docs/issues/stories/STORY-0201-reference-runs-on-the-owners-machine-with-identity-recorded.md) Reference runs on the owner's machine, with the machine's identity recorded (5) | blocked | 1/3 |
 | [STORY-0202](docs/issues/stories/STORY-0202-regression-rule-compare-two-runs-flag-only-real-large-changes.md) Regression rule: compare two runs and flag only real, large changes (5) | review | 2/3 |
 | [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines on the owner's machine (2) | blocked | 0/0 |
-| [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time of the rehearsal card, reports and console measured in the running window (5) | backlog | 0/2 |
+| [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time of the rehearsal card, reports and console measured in the running window (5) | review | 0/2 |
 | [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Allocations in the render loops, counted with dhat, and a profile of the slowest screen (3) | backlog | 1/2 |
 | [STORY-0206](docs/issues/stories/STORY-0206-ollama-setup-assistant-with-hardware-audit-and-model-suggestions.md) Ollama setup assistant: hardware audit, live Ollama status and model suggestions that fit this machine (5) | done | 0/0 |
 | [STORY-0207](docs/issues/stories/STORY-0207-exam-generation-item-format-selection-modal.md) Interactive modal to choose item formats during mock exam generation (5) | done | 0/0 |
@@ -571,13 +571,19 @@
 | [STORY-0215](docs/issues/stories/STORY-0215-stack-page-in-the-redesign-style.md) Stack page in the redesign style: header, tab rail, summary cards and the ring (5) | done | 0/0 |
 | [STORY-0216](docs/issues/stories/STORY-0216-library-in-the-redesign-style.md) Library in the redesign style: headline, card lists and the rail (5) | done | 0/0 |
 | [STORY-0217](docs/issues/stories/STORY-0217-rehearsal-in-the-redesign-style.md) Rehearsal in the redesign style: setup, card view and result (5) | review | 0/0 |
-| [STORY-0218](docs/issues/stories/STORY-0218-reports-in-the-redesign-style.md) Reports in the redesign style: charts and figure cards (5) | backlog | 0/0 |
+| [STORY-0218](docs/issues/stories/STORY-0218-reports-in-the-redesign-style.md) Reports in the redesign style: charts and figure cards (5) | review | 0/0 |
 | [STORY-0219](docs/issues/stories/STORY-0219-logging-and-debugger-crates-from-scratch.md) In-house logging and debugger crates (studyfrog-log, studyfrog-debug), written from scratch (5) | review | 0/0 |
 | [STORY-0220](docs/issues/stories/STORY-0220-choice-item-syntax-and-parsing.md) Choice item syntax: options in Markdown, parsed into single-choice or multiple-select items (3) | review | 0/0 |
-| [STORY-0221](docs/issues/stories/STORY-0221-choice-grading-and-recording-in-rehearsal.md) Choice grading in rehearsal: reuse the mock exam rules and record the result like a typed answer (5) | backlog | 0/0 |
-| [STORY-0222](docs/issues/stories/STORY-0222-choice-rendering-keys-and-control-in-rehearsal.md) Choice rendering in the rehearsal card: options, number keys, submit, and the control protocol (5) | backlog | 0/0 |
-| [STORY-0223](docs/issues/stories/STORY-0223-answer-type-when-creating-a-question.md) Answer type when creating a question: open text, single choice or multiple select (5) | ready | 0/0 |
-| [STORY-0224](docs/issues/stories/STORY-0224-edit-and-view-choice-items.md) Edit and view choice items: options and correct answers in the editor and the item viewer (5) | ready | 0/0 |
+| [STORY-0221](docs/issues/stories/STORY-0221-choice-grading-and-recording-in-rehearsal.md) Choice grading in rehearsal: reuse the mock exam rules and record the result like a typed answer (5) | review | 0/0 |
+| [STORY-0222](docs/issues/stories/STORY-0222-choice-rendering-keys-and-control-in-rehearsal.md) Choice rendering in the rehearsal card: options, number keys, submit, and the control protocol (5) | review | 0/0 |
+| [STORY-0223](docs/issues/stories/STORY-0223-answer-type-when-creating-a-question.md) Answer type when creating a question: open text, single choice or multiple select (5) | review | 0/0 |
+| [STORY-0224](docs/issues/stories/STORY-0224-edit-and-view-choice-items.md) Edit and view choice items: options and correct answers in the editor and the item viewer (5) | review | 0/0 |
+| [STORY-0225](docs/issues/stories/STORY-0225-split-oversized-files-and-fix-merged-rehearsal-code.md) Split files over 250 lines and fix the rehearsal code hand-merged from the choice branch (3) | review | 0/0 |
+| [STORY-0226](docs/issues/stories/STORY-0226-violet-pink-palette-tokens.md) Violet to pink palette tokens for light and dark, all six accents kept (5) | review | 0/0 |
+| [STORY-0227](docs/issues/stories/STORY-0227-settings-and-help-in-the-redesign-style.md) Settings and Help in the redesign style (3) | review | 0/0 |
+| [STORY-0228](docs/issues/stories/STORY-0228-calendar-and-board-in-the-redesign-style.md) Calendar and Board in the redesign style (5) | review | 0/0 |
+| [STORY-0229](docs/issues/stories/STORY-0229-diary-and-achievements-in-the-redesign-style.md) Diary and Achievements in the redesign style (3) | review | 0/0 |
+| [STORY-0230](docs/issues/stories/STORY-0230-graph-assistant-and-classroom-in-the-redesign-style.md) Graph, Assistant and Classroom in the redesign style (5) | review | 0/0 |
 
 ## Epics
 
@@ -654,5 +660,5 @@
 | [EPIC-069](docs/issues/epics/EPIC-069-first-run-setup-wizard.md) First-run setup wizard: vault, local model (Ollama), remote provider and the MiniLM model | backlog | 0/1 |
 | [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark) | in_progress | 4/6 |
 | [EPIC-071](docs/issues/epics/EPIC-071-in-house-logging-and-debugging.md) In-house logging and debugging: studyfrog-log and studyfrog-debug, written without external crates | in_progress | 0/1 |
-| [EPIC-072](docs/issues/epics/EPIC-072-choice-questions-single-and-multiple-select.md) Choice questions in rehearsal: single choice and multiple select | backlog | 0/5 |
-| [EPIC-073](docs/issues/epics/EPIC-073-whole-app-redesign-with-a-new-theme.md) Whole-app redesign with a new theme: a new palette, applied to every screen | backlog | 0/0 |
+| [EPIC-072](docs/issues/epics/EPIC-072-choice-questions-single-and-multiple-select.md) Choice questions in rehearsal: single choice and multiple select | backlog | 0/6 |
+| [EPIC-073](docs/issues/epics/EPIC-073-whole-app-redesign-with-a-new-theme.md) Whole-app redesign with a new theme: a new palette, applied to every screen | backlog | 0/5 |

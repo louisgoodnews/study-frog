@@ -2,7 +2,7 @@
 id: STORY-0224
 type: story
 title: "Edit and view choice items: options and correct answers in the editor and the item viewer"
-status: ready
+status: review
 epic: EPIC-072
 parents: ['EPIC-072']
 estimate: 5

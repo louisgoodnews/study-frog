@@ -2,7 +2,7 @@
 id: STORY-0226
 type: story
 title: "Violet to pink palette tokens for light and dark, all six accents kept"
-status: ready
+status: review
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 5

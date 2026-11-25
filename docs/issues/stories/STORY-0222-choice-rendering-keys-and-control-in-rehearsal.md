@@ -2,7 +2,7 @@
 id: STORY-0222
 type: story
 title: "Choice rendering in the rehearsal card: options, number keys, submit, and the control protocol"
-status: backlog
+status: review
 epic: EPIC-072
 parents: ['EPIC-072']
 estimate: 5

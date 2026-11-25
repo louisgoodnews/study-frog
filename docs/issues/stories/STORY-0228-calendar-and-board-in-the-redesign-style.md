@@ -2,7 +2,7 @@
 id: STORY-0228
 type: story
 title: "Calendar and Board in the redesign style"
-status: ready
+status: review
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 5

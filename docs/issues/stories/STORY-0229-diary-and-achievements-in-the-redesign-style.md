@@ -2,7 +2,7 @@
 id: STORY-0229
 type: story
 title: "Diary and Achievements in the redesign style"
-status: ready
+status: review
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 3
