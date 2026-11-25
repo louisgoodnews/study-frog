@@ -180,8 +180,8 @@ pub fn run_with(options: RunOptions, host: Host) -> eframe::Result {
     )
 }
 
-/// The window to open: the size asked for, else the remembered one (when remembering is on and it can be read), else a
-/// default; the remembered place and maximised state go with it.
+/// The window to open: the size asked for, else the remembered one (when remembering is on and it can be read), else the
+/// screen (maximised); the remembered place and maximised state go with it.
 fn viewport_for(options: &RunOptions) -> egui::ViewportBuilder {
     let saved = crate::window_watch::saved_appearance();
     let remembered = options
@@ -205,11 +205,16 @@ fn viewport_for(options: &RunOptions) -> egui::ViewportBuilder {
     {
         view = view.with_icon(icon);
     }
-    if let Some(r) = remembered {
-        if let (Some(x), Some(y)) = (r.x, r.y) {
-            view = view.with_position([x as f32, y as f32]);
+    match remembered {
+        Some(r) => {
+            if let (Some(x), Some(y)) = (r.x, r.y) {
+                view = view.with_position([x as f32, y as f32]);
+            }
+            view = view.with_maximized(r.maximized);
         }
-        view = view.with_maximized(r.maximized);
+        // First start, or no size remembered: fill the screen, unless a size was asked for on the command line.
+        None if options.size.is_none() => view = view.with_maximized(true),
+        None => {}
     }
     view
 }

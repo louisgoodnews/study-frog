@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Changed
+- The window opens maximised (filling the screen) when no size was asked for and no size is remembered; a remembered size still wins.
 - The stack page in the redesign style: the title and Start rehearsal on a gradient header, the tabs with a rail highlight, and the Summary's figures as redesign cards (STORY-0215, EPIC-070).
 - Home in the redesign style: a gradient headline card with the next due item and its action, a statistic ring for today's reviews, and card lists without the empty tall boxes (STORY-0214, EPIC-070).
 
