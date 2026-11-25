@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (5) | Ready (1) | In progress (1/3) | Review (21) | Blocked (3) | Done (623) |
+| Backlog (5) | Ready (12) | In progress (1/3) | Review (21) | Blocked (3) | Done (623) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -585,6 +585,17 @@
 | [STORY-0229](docs/issues/stories/STORY-0229-diary-and-achievements-in-the-redesign-style.md) Diary and Achievements in the redesign style (3) | review | 0/0 |
 | [STORY-0230](docs/issues/stories/STORY-0230-graph-assistant-and-classroom-in-the-redesign-style.md) Graph, Assistant and Classroom in the redesign style (5) | review | 0/0 |
 | [STORY-0231](docs/issues/stories/STORY-0231-swappable-grading-for-choice-questions.md) Swappable grading for multiple choice and multiple select: all-or-nothing, Zapechelnyuk, or count-based partial credit (5) | ready | 0/0 |
+| [STORY-0232](docs/issues/stories/STORY-0232-welcome-vault-chooser-in-the-redesign-style.md) Welcome (vault chooser) in the redesign style (3) | ready | 0/0 |
+| [STORY-0233](docs/issues/stories/STORY-0233-folders-in-the-redesign-style.md) Folders in the redesign style (3) | ready | 0/0 |
+| [STORY-0234](docs/issues/stories/STORY-0234-item-editor-in-the-redesign-style.md) Item editor (Editor screen) in the redesign style (5) | ready | 0/0 |
+| [STORY-0235](docs/issues/stories/STORY-0235-pdf-viewer-in-the-redesign-style.md) PDF viewer in the redesign style (3) | ready | 0/0 |
+| [STORY-0236](docs/issues/stories/STORY-0236-homework-planner-in-the-redesign-style.md) Homework planner in the redesign style (3) | ready | 0/0 |
+| [STORY-0237](docs/issues/stories/STORY-0237-match-grid-in-the-redesign-style.md) Match grid in the redesign style (3) | ready | 0/0 |
+| [STORY-0238](docs/issues/stories/STORY-0238-prompt-library-in-the-redesign-style.md) Prompt library in the redesign style (3) | ready | 0/0 |
+| [STORY-0239](docs/issues/stories/STORY-0239-console-in-the-redesign-style.md) Console in the redesign style (3) | ready | 0/0 |
+| [STORY-0240](docs/issues/stories/STORY-0240-canvas-in-the-redesign-style.md) Canvas in the redesign style (3) | ready | 0/0 |
+| [STORY-0241](docs/issues/stories/STORY-0241-mock-exam-screens-in-the-redesign-style.md) Mock exam screens (setup, exam view, result) in the redesign style (5) | ready | 0/0 |
+| [STORY-0242](docs/issues/stories/STORY-0242-first-run-wizard-in-the-redesign-style.md) First-run wizard screens in the redesign style (3) | ready | 0/0 |
 
 ## Epics
 
@@ -662,4 +673,4 @@
 | [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark) | in_progress | 4/6 |
 | [EPIC-071](docs/issues/epics/EPIC-071-in-house-logging-and-debugging.md) In-house logging and debugging: studyfrog-log and studyfrog-debug, written without external crates | done | 1/1 |
 | [EPIC-072](docs/issues/epics/EPIC-072-choice-questions-single-and-multiple-select.md) Choice questions in rehearsal: single choice and multiple select | backlog | 1/7 |
-| [EPIC-073](docs/issues/epics/EPIC-073-whole-app-redesign-with-a-new-theme.md) Whole-app redesign with a new theme: a new palette, applied to every screen | backlog | 0/5 |
+| [EPIC-073](docs/issues/epics/EPIC-073-whole-app-redesign-with-a-new-theme.md) Whole-app redesign with a new theme: a new palette, applied to every screen | backlog | 0/16 |
