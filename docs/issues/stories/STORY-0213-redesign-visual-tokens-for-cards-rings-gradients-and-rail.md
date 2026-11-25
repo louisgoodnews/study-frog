@@ -2,7 +2,7 @@
 id: STORY-0213
 type: story
 title: "Redesign visual tokens: cards, stat rings, gradient headline cards, avatars and the navigation rail"
-status: backlog
+status: done
 epic: EPIC-070
 parents: ['EPIC-070']
 estimate: 5
@@ -23,10 +23,10 @@ Add the tokens to `theme.rs`, the spacing ones to `theme_space.rs`, and the cont
 calm UI spacing rules (`docs/specs/ui-calm.md`).
 
 ## Acceptance Criteria
-- [ ] Tokens for card, rail, ring, gradient card, avatar and badge in light and dark
-- [ ] Gradient fallbacks, and the contrast check covers every token that carries text
-- [ ] No raw colour literals outside `theme.rs`
-- [ ] Phone width with a 16 px gutter
+- [x] Tokens for card, rail, ring, gradient card, avatar and badge in light and dark
+- [x] Gradient fallbacks, and the contrast check covers every token that carries text
+- [x] No raw colour literals outside `theme.rs`
+- [x] Phone width with a 16 px gutter
 
 ## Design Notes
 Build the ring with the existing painter, not a new dependency (P10). Take the layout from the reference dashboards; take
@@ -37,3 +37,6 @@ no artwork.
 
 ## Open Questions
 None.
+
+## Verification note
+Done 2026-11-25. The tokens are in `crates/studyfrog-ui/src/theme/style.rs`, derived from the palette with `blend` in `theme.rs`. `crates/studyfrog-ui/tests/style_tokens.rs` checks the text on the gradient at both ends, the badge and rail text, the card outline and the ring against the APCA targets of `appearance_apca`, in all 24 palettes. `no_hardcoded_colours` passes. `scripts/check.sh` passed on the tree before this commit.

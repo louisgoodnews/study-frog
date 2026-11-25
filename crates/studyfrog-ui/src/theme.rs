@@ -5,6 +5,9 @@
 use eframe::egui::{self, Color32, CornerRadius, Id, Stroke, Visuals, style::WidgetVisuals};
 use std::sync::OnceLock;
 
+/// The redesign's visual tokens (STORY-0213): cards, rail, ring, gradient card, avatars and badges.
+pub mod style;
+
 use studyfrog_core::appearance::{ACCENT_LIST, Accent};
 
 /// The colours of one theme.
@@ -102,6 +105,17 @@ pub fn palette_of(ui: &egui::Ui) -> Palette {
 /// A colour with some of its opacity, for tinted backgrounds.
 pub fn tint(c: Color32, alpha: u8) -> Color32 {
     Color32::from_rgba_unmultiplied(c.r(), c.g(), c.b(), alpha)
+}
+
+/// `fg` drawn over `bg` at `alpha` (0 to 255), as an opaque colour: a tinted fill is measured as it is shown.
+pub fn blend(fg: Color32, alpha: u8, bg: Color32) -> Color32 {
+    let a = f32::from(alpha) / 255.0;
+    let mix = |f: u8, b: u8| (f32::from(f) * a + f32::from(b) * (1.0 - a)).round() as u8;
+    Color32::from_rgb(
+        mix(fg.r(), bg.r()),
+        mix(fg.g(), bg.g()),
+        mix(fg.b(), bg.b()),
+    )
 }
 
 /// Spacing tokens at the Comfortable density (STORY-0115): label to value, icon to text.
