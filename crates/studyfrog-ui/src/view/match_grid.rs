@@ -1,16 +1,33 @@
-//! 3x4 interactive match mode tile grid view and victory summary.
+//! Match mode in the redesign style (EPIC-073, STORY-0237): the gradient headline, the HUD row, and the 3x4
+//! interactive tile grid. The victory summary is in `match_victory`. The same controls, messages and matching
+//! rules as before; only the drawing changes.
 //!
 //! Complies with Invariant P1: zero inherent impl blocks; all logic in free functions.
 
 use eframe::egui::{self, Color32, CornerRadius, RichText, Sense, Stroke, Vec2};
-use studyfrog_rehearsal::match_mode::{
-    MatchModeSession, MatchTile, TileStatus, compute_match_score, format_match_time,
-};
+use studyfrog_rehearsal::match_mode::{MatchModeSession, MatchTile, TileStatus, format_match_time};
 
 use crate::match_ui::{MatchMsg, default_match_pairs};
 use crate::msg::Msg;
 use crate::state::State;
+use crate::theme::style::{CARD_RADIUS, Style, style_of};
 use crate::theme::{Palette, palette_of};
+use crate::view::{gradient_panel, match_victory};
+
+/// The height of the headline panel, in points.
+const HEADER_HEIGHT: f32 = 72.0;
+
+/// The gradient headline: the screen's title on the headline panel.
+fn headline(ui: &mut egui::Ui) {
+    gradient_panel::panel(ui, HEADER_HEIGHT, |ui, s| {
+        ui.label(
+            RichText::new("Match")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong()
+                .color(s.gradient_text),
+        );
+    });
+}
 
 fn draw_hud(session: &MatchModeSession, ui: &mut egui::Ui, out: &mut Vec<Msg>, p: &Palette) {
     ui.horizontal(|ui| {
@@ -59,9 +76,10 @@ fn draw_hud(session: &MatchModeSession, ui: &mut egui::Ui, out: &mut Vec<Msg>, p
     });
 }
 
-fn tile_visuals(status: TileStatus, p: &Palette) -> (Color32, Stroke, Color32) {
+/// The fill, outline and text colour of a tile in `status`. An idle tile is a redesign card.
+fn tile_visuals(status: TileStatus, p: &Palette, s: &Style) -> (Color32, Stroke, Color32) {
     match status {
-        TileStatus::Idle => (p.surface, Stroke::new(1.0, p.border), p.text),
+        TileStatus::Idle => (s.card, Stroke::new(1.0, s.card_edge), p.text),
         TileStatus::Selected => (
             crate::theme::tint(p.accent, 40),
             Stroke::new(2.5, p.accent),
@@ -76,13 +94,20 @@ fn tile_visuals(status: TileStatus, p: &Palette) -> (Color32, Stroke, Color32) {
     }
 }
 
-fn draw_tile(tile: &MatchTile, size: Vec2, ui: &mut egui::Ui, out: &mut Vec<Msg>, p: &Palette) {
+fn draw_tile(
+    tile: &MatchTile,
+    size: Vec2,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+    p: &Palette,
+    s: &Style,
+) {
     if tile.status == TileStatus::Matched {
         ui.allocate_exact_size(size, Sense::hover());
         return;
     }
 
-    let (bg, stroke, text_color) = tile_visuals(tile.status, p);
+    let (bg, stroke, text_color) = tile_visuals(tile.status, p, s);
     let (rect, resp) = ui.allocate_exact_size(size, Sense::click());
 
     let fill = if resp.hovered() && tile.status == TileStatus::Idle {
@@ -91,9 +116,10 @@ fn draw_tile(tile: &MatchTile, size: Vec2, ui: &mut egui::Ui, out: &mut Vec<Msg>
         bg
     };
 
-    ui.painter().rect_filled(rect, 8.0, fill);
+    let radius = CornerRadius::same(CARD_RADIUS);
+    ui.painter().rect_filled(rect, radius, fill);
     ui.painter()
-        .rect_stroke(rect, 8.0, stroke, egui::StrokeKind::Inside);
+        .rect_stroke(rect, radius, stroke, egui::StrokeKind::Inside);
 
     let text = RichText::new(&tile.text)
         .size(crate::typo::size(ui, crate::typo::Tier::Body))
@@ -115,7 +141,13 @@ fn draw_tile(tile: &MatchTile, size: Vec2, ui: &mut egui::Ui, out: &mut Vec<Msg>
     }
 }
 
-fn draw_tile_grid(session: &MatchModeSession, ui: &mut egui::Ui, out: &mut Vec<Msg>, p: &Palette) {
+fn draw_tile_grid(
+    session: &MatchModeSession,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+    p: &Palette,
+    s: &Style,
+) {
     let avail_width = ui.available_width();
     let col_width = ((avail_width - 32.0) / 3.0).clamp(90.0, 240.0);
     let row_height = 80.0;
@@ -126,7 +158,7 @@ fn draw_tile_grid(session: &MatchModeSession, ui: &mut egui::Ui, out: &mut Vec<M
             for col in 0..3 {
                 let idx = row * 3 + col;
                 if let Some(tile) = session.tiles.get(idx) {
-                    draw_tile(tile, tile_size, ui, out, p);
+                    draw_tile(tile, tile_size, ui, out, p, s);
                 }
             }
         });
@@ -134,75 +166,8 @@ fn draw_tile_grid(session: &MatchModeSession, ui: &mut egui::Ui, out: &mut Vec<M
     }
 }
 
-fn draw_victory_screen(
-    session: &MatchModeSession,
-    high_score: u32,
-    ui: &mut egui::Ui,
-    out: &mut Vec<Msg>,
-    p: &Palette,
-) {
-    ui.vertical_centered(|ui| {
-        ui.add_space(20.0);
-        ui.label(
-            RichText::new("Match Complete!")
-                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                .color(p.success)
-                .strong(),
-        );
-        ui.add_space(8.0);
-
-        let score = compute_match_score(session);
-        egui::Frame::new()
-            .fill(p.surface)
-            .stroke(Stroke::new(1.5, p.border))
-            .corner_radius(CornerRadius::same(12))
-            .inner_margin(egui::Margin::symmetric(32, 24))
-            .show(ui, |ui| {
-                ui.label(
-                    RichText::new(format!(
-                        "Final Time: {}",
-                        format_match_time(session.elapsed_ms)
-                    ))
-                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                    .strong(),
-                );
-                ui.add_space(8.0);
-                ui.label(
-                    RichText::new(format!("Score: {score} pts"))
-                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                        .color(p.accent)
-                        .strong(),
-                );
-                ui.add_space(12.0);
-                ui.label(format!("Best Streak: {}x", session.best_streak));
-                ui.label(format!("Mismatches: {}", session.mismatches));
-                if high_score > 0 {
-                    ui.label(format!("Session High Score: {high_score} pts"));
-                }
-            });
-
-        ui.add_space(20.0);
-        ui.horizontal(|ui| {
-            ui.add_space(ui.available_width() * 0.3);
-            if ui
-                .button("Play Again")
-                .on_hover_text("Starts the game again.")
-                .clicked()
-            {
-                out.push(Msg::Match(MatchMsg::Restart));
-            }
-            if ui
-                .button("Done")
-                .on_hover_text("Closes this when you have finished.")
-                .clicked()
-            {
-                out.push(Msg::Match(MatchMsg::Leave));
-            }
-        });
-    });
-}
-
-/// Draws the full match mode screen: HUD header, 3x4 grid, and victory modal.
+/// Draws the full match mode screen: the gradient headline, the HUD header, then the 3x4 grid or the victory
+/// summary.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let match_state = match state.match_state.as_ref() {
         Some(ms) => ms,
@@ -214,15 +179,18 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
     let session = &match_state.session;
     let pal = palette_of(ui);
+    let s = style_of(&pal);
 
     ui.ctx().request_repaint();
 
+    headline(ui);
+    ui.add_space(8.0);
     draw_hud(session, ui, out, &pal);
     ui.add_space(16.0);
 
     if session.completed {
-        draw_victory_screen(session, match_state.high_score, ui, out, &pal);
+        match_victory::draw(session, match_state.high_score, ui, out, &pal);
     } else {
-        draw_tile_grid(session, ui, out, &pal);
+        draw_tile_grid(session, ui, out, &pal, &s);
     }
 }

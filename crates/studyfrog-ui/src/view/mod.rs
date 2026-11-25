@@ -82,6 +82,7 @@ mod library_pdfs;
 pub mod library_search;
 pub mod library_table;
 pub mod match_grid;
+mod match_victory;
 mod math_view;
 mod md_editor;
 mod memory;
