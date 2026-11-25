@@ -2,7 +2,7 @@
 id: EPIC-071
 type: epic
 title: "In-house logging and debugging: studyfrog-log and studyfrog-debug, written without external crates"
-status: in_progress
+status: done
 parents: []
 labels: [m14, tooling]
 acceptance_criteria:
@@ -21,9 +21,9 @@ Two new crates. `studyfrog-log` is the logging API and has no studyfrog dependen
 dumps, checks and counters on it. Application wiring is not part of this epic's first story.
 
 ## Acceptance Criteria
-- [ ] `studyfrog-log` crate (STORY-0219)
-- [ ] `studyfrog-debug` crate (STORY-0219)
-- [ ] Both crates pass the project's structural gates (no inherent impl, line limits, dependency table)
+- [x] `studyfrog-log` crate (STORY-0219)
+- [x] `studyfrog-debug` crate (STORY-0219)
+- [x] Both crates pass the project's structural gates (no inherent impl, line limits, dependency table)
 
 ## Design Notes
 - The record format is one line: `<unix_ms> <LEVEL> <target> <message> key=value ...`, with quoting for values that need it.
@@ -36,3 +36,6 @@ dumps, checks and counters on it. Application wiring is not part of this epic's 
 
 ## Open Questions
 - Whether the application's log moves onto `studyfrog-log`, and when. Owner decision.
+
+## Verification note
+Done 2026-11-25: its only story, STORY-0219 (studyfrog-log and studyfrog-debug), is verified (tests pass; no external dependencies).

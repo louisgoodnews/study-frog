@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (5) | Ready (0) | In progress (2/3) | Review (21) | Blocked (3) | Done (622) |
+| Backlog (5) | Ready (0) | In progress (1/3) | Review (21) | Blocked (3) | Done (623) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -659,6 +659,6 @@
 | [EPIC-068](docs/issues/epics/EPIC-068-classroom-simulation-with-ai-teacher-and-students.md) Classroom simulation: AI-driven lectures, simulated students, group tasks, and graded submissions | done | 4/4 |
 | [EPIC-069](docs/issues/epics/EPIC-069-first-run-setup-wizard.md) First-run setup wizard: vault, local model (Ollama), remote provider and the MiniLM model | backlog | 0/1 |
 | [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark) | in_progress | 4/6 |
-| [EPIC-071](docs/issues/epics/EPIC-071-in-house-logging-and-debugging.md) In-house logging and debugging: studyfrog-log and studyfrog-debug, written without external crates | in_progress | 1/1 |
+| [EPIC-071](docs/issues/epics/EPIC-071-in-house-logging-and-debugging.md) In-house logging and debugging: studyfrog-log and studyfrog-debug, written without external crates | done | 1/1 |
 | [EPIC-072](docs/issues/epics/EPIC-072-choice-questions-single-and-multiple-select.md) Choice questions in rehearsal: single choice and multiple select | backlog | 1/6 |
 | [EPIC-073](docs/issues/epics/EPIC-073-whole-app-redesign-with-a-new-theme.md) Whole-app redesign with a new theme: a new palette, applied to every screen | backlog | 0/5 |
