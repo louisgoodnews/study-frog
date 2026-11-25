@@ -69,6 +69,7 @@ pub mod item_stacks;
 mod items;
 pub(crate) mod kit;
 mod kit_card;
+mod redesign_parts;
 pub mod learn_editor;
 mod library;
 pub mod library_bulk;

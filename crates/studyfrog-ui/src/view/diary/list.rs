@@ -10,6 +10,7 @@ use crate::diary_msg::DiaryMsg;
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
+use crate::view::{home_hero, redesign_parts};
 
 fn diary_msg(out: &mut Vec<Msg>, m: DiaryMsg) {
     out.push(Msg::Diary(m));
@@ -32,7 +33,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
     if filtered.is_empty() {
         ui.add_space(20.0);
-        crate::view::kit::card(ui, |ui| {
+        home_hero::card(ui, |ui| {
             ui.set_width(ui.available_width());
             ui.label(RichText::new("No diary entries match the filter.").color(p.text_weak));
             ui.add_space(8.0);
@@ -53,7 +54,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .auto_shrink([false, false])
         .show(ui, |ui| {
             for entry in filtered {
-                crate::view::kit::card(ui, |ui| {
+                home_hero::card(ui, |ui| {
                     ui.set_width(ui.available_width());
                     ui.horizontal(|ui| {
                         ui.heading(&entry.title);
@@ -63,10 +64,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                                 .color(p.accent),
                         );
                         if let Some(mins) = entry.study_minutes {
-                            crate::view::kit::pill(ui, &format!("{mins} min"), p.accent);
+                            redesign_parts::badge(ui, &format!("{mins} min"));
                         }
                         for s in &entry.stacks {
-                            crate::view::kit::pill(ui, s, p.text_weak);
+                            redesign_parts::badge(ui, s);
                         }
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                             let open_btn = ui
@@ -110,7 +111,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                                         format!("{k}: {t}")
                                     }
                                 };
-                                crate::view::kit::pill(ui, &text, p.alt);
+                                redesign_parts::badge(ui, &text);
                             }
                         });
                     }
@@ -148,7 +149,9 @@ fn filter_controls(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let stack_combo = egui::ComboBox::from_id_salt("diary-stack-filter")
             .selected_text(current_stack)
             .show_ui(ui, |ui| {
-                let all_btn = ui.selectable_label(state.diary.filter_stack.is_none(), "All");
+                let all_btn = ui
+                    .selectable_label(state.diary.filter_stack.is_none(), "All")
+                    .on_hover_text("Shows the entries of every stack.");
                 all_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "All stacks"));
                 if all_btn.clicked() {
                     diary_msg(out, DiaryMsg::SetFilterStack(None));
@@ -156,7 +159,8 @@ fn filter_controls(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 if let Some(vault) = &state.vault {
                     for s in &vault.overview.stacks {
                         let sel = state.diary.filter_stack.as_deref() == Some(&s.folder);
-                        let opt = ui.selectable_label(sel, &s.title);
+                        let tip = format!("Shows the entries of {}.", s.title);
+                        let opt = ui.selectable_label(sel, &s.title).on_hover_text(tip);
                         opt.widget_info(|| {
                             WidgetInfo::labeled(
                                 Role::Button,
@@ -184,15 +188,17 @@ fn filter_controls(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         let scale_combo = egui::ComboBox::from_id_salt("diary-scale-filter")
             .selected_text(scale_text)
             .show_ui(ui, |ui| {
-                let any_btn =
-                    ui.selectable_label(state.diary.filter_rating_scale.is_none(), "Any scale");
+                let any_btn = ui
+                    .selectable_label(state.diary.filter_rating_scale.is_none(), "Any scale")
+                    .on_hover_text("Shows the entries with any rating scale.");
                 any_btn.widget_info(|| WidgetInfo::labeled(Role::Button, true, "Any scale"));
                 if any_btn.clicked() {
                     diary_msg(out, DiaryMsg::SetFilterRating(None, None));
                 }
                 for &scale in &STANDARD_SCALES {
                     let sel = state.diary.filter_rating_scale.as_deref() == Some(scale);
-                    let opt = ui.selectable_label(sel, scale);
+                    let tip = format!("Shows the entries rated on {scale}.");
+                    let opt = ui.selectable_label(sel, scale).on_hover_text(tip);
                     opt.widget_info(|| {
                         WidgetInfo::labeled(Role::Button, true, format!("Filter scale {scale}"))
                     });
@@ -214,7 +220,8 @@ fn filter_controls(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.label("Min score:");
             for score in 1..=5 {
                 let sel = state.diary.filter_min_rating == Some(score);
-                let btn = ui.selectable_label(sel, format!("{score}+"));
+                let tip = format!("Shows the entries scoring {score} or more.");
+                let btn = ui.selectable_label(sel, format!("{score}+")).on_hover_text(tip);
                 btn.widget_info(|| {
                     WidgetInfo::labeled(Role::Button, true, format!("Minimum score of {score}"))
                 });

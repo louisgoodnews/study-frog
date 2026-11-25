@@ -9,6 +9,7 @@ use crate::diary_msg::DiaryMsg;
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
+use crate::view::{home_hero, redesign_parts};
 
 const MONTH_NAMES: [&str; 12] = [
     "January",
@@ -156,14 +157,14 @@ fn day_entries_pane(state: &State, date: Date, ui: &mut egui::Ui, out: &mut Vec<
     }
 
     for entry in day_entries {
-        crate::view::kit::card(ui, |ui| {
+        home_hero::card(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.strong(&entry.title);
                 if let Some(mins) = entry.study_minutes {
-                    crate::view::kit::pill(ui, &format!("{mins} min"), p.accent);
+                    redesign_parts::badge(ui, &format!("{mins} min"));
                 }
                 for s in &entry.stacks {
-                    crate::view::kit::pill(ui, s, p.text_weak);
+                    redesign_parts::badge(ui, s);
                 }
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     let open_btn = ui
@@ -198,7 +199,7 @@ fn day_entries_pane(state: &State, date: Date, ui: &mut egui::Ui, out: &mut Vec<
                             studyfrog_core::diary::RatingValue::Int(n) => format!("{k}: {n}/5"),
                             studyfrog_core::diary::RatingValue::Text(t) => format!("{k}: {t}"),
                         };
-                        crate::view::kit::pill(ui, &text, p.alt);
+                        redesign_parts::badge(ui, &text);
                     }
                 });
             }

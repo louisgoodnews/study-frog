@@ -9,6 +9,7 @@ use crate::diary_msg::DiaryMsg;
 use crate::msg::Msg;
 use crate::state::{Screen, State};
 use crate::theme::palette_of;
+use crate::view::home_hero;
 
 /// Draw the quiet "No diary entry yet today" hint on Home if enabled and needed.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
@@ -22,7 +23,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 
     let p = palette_of(ui);
-    crate::view::kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.horizontal(|ui| {
             ui.label(RichText::new("No diary entry yet today").color(p.text_weak));
