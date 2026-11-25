@@ -98,6 +98,7 @@ pub fn parse_app_settings(text: &str) -> Result<AppSettings, ConfigError> {
         min_words: in_range(text, "reading_min_words", raw.reading_min_words, 1..=200)?,
     };
     Ok(AppSettings {
+        first_run: false,
         reading,
         vault: raw.vault,
         recent: raw.recent,

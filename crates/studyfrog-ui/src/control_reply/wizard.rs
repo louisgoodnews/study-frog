@@ -22,7 +22,11 @@ pub fn status_json(state: &State) -> Result<Value, String> {
             })
         })
         .collect();
-    studyfrog_log::log_debug!("ui.control", "wizard status answered, open={}", state.wizard.open);
+    studyfrog_log::log_debug!(
+        "ui.control",
+        "wizard status answered, open={}",
+        state.wizard.open
+    );
     Ok(json!({
         "open": state.wizard.open,
         "current": name_of(flow::current(&current)),

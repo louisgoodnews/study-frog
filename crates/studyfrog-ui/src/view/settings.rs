@@ -228,14 +228,14 @@ fn answer_comparison(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             }
         });
         ui.weak("A high match means similar wording or meaning, not that the facts are right.");
-        let p = studyfrog_rehearsal::reading::reading_params(
-            state.app.reading_wpm,
-            &state.app.reading,
-        );
+        let p =
+            studyfrog_rehearsal::reading::reading_params(state.app.reading_wpm, &state.app.reading);
         ui.label(format!(
             "Reading suggestions: fast is under {} % of the expected time, slow is over {} %, answers under {} words are ignored.",
             p.fast_percent, p.slow_percent, p.min_words
         ));
-        ui.weak("Change reading_fast_percent, reading_slow_percent and reading_min_words in app.toml.");
+        ui.weak(
+            "Change reading_fast_percent, reading_slow_percent and reading_min_words in app.toml.",
+        );
     });
 }

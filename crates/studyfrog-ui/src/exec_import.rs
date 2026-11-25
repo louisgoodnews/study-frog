@@ -13,10 +13,10 @@ use studyfrog_service::session::{ServiceError, VaultInfo, VaultSession};
 use studyfrog_service::track::{DueDate, create_tracked, track_cards};
 
 use crate::exec::Worker;
-use crate::view::choice_body::{AnswerType, answer_type_name};
 use crate::import_ui::ImportOutcome;
 use crate::modal::{CreateOutcome, ModalMsg};
 use crate::msg::Msg;
+use crate::view::choice_body::{AnswerType, answer_type_name};
 
 fn ids(now_ns: i64) -> Result<IdSource, ServiceError> {
     fresh_id_source(u64::try_from(now_ns / 1_000_000).unwrap_or(0))

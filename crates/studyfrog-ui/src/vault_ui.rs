@@ -2,7 +2,7 @@
 //! what the vault's opening shows. Pure.
 use crate::effect::EffectVault;
 
-use studyfrog_core::settings::with_opened_vault;
+use studyfrog_core::settings::{AppSettings, with_opened_vault};
 
 use crate::effect::Effect;
 use crate::state::{Notice, NoticeKind, Screen, State, VaultInfo};
@@ -85,8 +85,11 @@ pub(crate) fn vault_opened(
     match result {
         Ok(info) => {
             // No vault remembered before means this is the first boot: the setup wizard starts after the vault (STORY-0212).
-            let first_boot = state.app.vault.is_none();
-            let app = with_opened_vault(&state.app, &info.root);
+            let first_boot = state.app.first_run;
+            let app = AppSettings {
+                first_run: false,
+                ..with_opened_vault(&state.app, &info.root)
+            };
             let state = State {
                 screen: Screen::Home,
                 home: None,

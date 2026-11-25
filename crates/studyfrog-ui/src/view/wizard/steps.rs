@@ -95,7 +95,11 @@ fn minilm(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         "Download"
     };
     if ui
-        .button(format!("{label} ({}, {})", size_text(total), plan.source_host))
+        .button(format!(
+            "{label} ({}, {})",
+            size_text(total),
+            plan.source_host
+        ))
         .on_hover_text("Starts the download. Nothing is contacted before this click.")
         .clicked()
     {

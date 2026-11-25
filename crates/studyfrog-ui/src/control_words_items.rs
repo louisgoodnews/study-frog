@@ -93,9 +93,8 @@ fn new_item(rest: &[&str], flags: &Flags<'_>) -> Result<NewItemArgs, String> {
     let kind = kind_named(need(rest, 1, "kind")?)?;
     let answer_type = match flag(flags, "answer-type") {
         None => AnswerType::Open,
-        Some(word) => answer_type_named(word).ok_or_else(|| {
-            format!("unknown answer type {word} (open, single, multiple)")
-        })?,
+        Some(word) => answer_type_named(word)
+            .ok_or_else(|| format!("unknown answer type {word} (open, single, multiple)"))?,
     };
     if answer_type != AnswerType::Open && kind != NewKind::Question {
         return Err("--answer-type applies to questions only".to_owned());

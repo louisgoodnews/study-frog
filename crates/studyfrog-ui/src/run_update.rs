@@ -4,8 +4,8 @@ use crate::effect::EffectRehearsal;
 use crate::effect::EffectReports;
 use crate::msg::MsgRehearsal;
 
-mod status;
 pub(crate) mod choice;
+mod status;
 mod timing;
 
 pub use status::{awaiting_rating, awaiting_reveal, is_over};

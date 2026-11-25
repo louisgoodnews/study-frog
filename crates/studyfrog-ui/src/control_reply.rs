@@ -20,12 +20,12 @@ pub mod homework;
 pub mod import;
 pub mod ollama;
 pub mod panels;
-pub mod wizard;
 pub mod pdf;
 pub mod report_tabs;
 pub mod reports;
 pub mod tooltip;
 pub mod ui;
+pub mod wizard;
 
 /// Rows a `query` answers with at most.
 pub const MAX_QUERY_ROWS: usize = 500;

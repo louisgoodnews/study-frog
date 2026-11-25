@@ -221,7 +221,9 @@ fn filter_controls(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             for score in 1..=5 {
                 let sel = state.diary.filter_min_rating == Some(score);
                 let tip = format!("Shows the entries scoring {score} or more.");
-                let btn = ui.selectable_label(sel, format!("{score}+")).on_hover_text(tip);
+                let btn = ui
+                    .selectable_label(sel, format!("{score}+"))
+                    .on_hover_text(tip);
                 btn.widget_info(|| {
                     WidgetInfo::labeled(Role::Button, true, format!("Minimum score of {score}"))
                 });

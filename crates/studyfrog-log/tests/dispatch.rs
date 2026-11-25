@@ -38,7 +38,12 @@ fn global_level_ring_and_macros_behave() {
     // The ring keeps at most RING_CAPACITY records, and recent(n) returns at most n.
     assert_eq!(RING_CAPACITY, 512);
     for i in 0..600 {
-        emit(Level::Error, "dispatch-ring", "tick", &[("i", i.to_string().as_str())]);
+        emit(
+            Level::Error,
+            "dispatch-ring",
+            "tick",
+            &[("i", i.to_string().as_str())],
+        );
     }
     assert!(recent(usize::MAX).len() <= RING_CAPACITY);
     assert!(recent(3).len() <= 3);

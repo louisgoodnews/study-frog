@@ -11,9 +11,9 @@ use crate::image_ui::ImageTarget;
 use crate::modal::{CreateForm, Field, ModalMsg};
 use crate::msg::Msg;
 use crate::state::State;
+use crate::view::choice_body::AnswerType;
 use crate::view::md_editor::{Mode, md_editor};
 use crate::view::widgets::text_field;
-use crate::view::choice_body::AnswerType;
 use crate::view::{kit, modal_answer_row, modal_fields};
 
 const KINDS: [(NewKind, &str); 4] = [

@@ -2,7 +2,8 @@
 
 use studyfrog_md::choice::{ChoiceError, correct_indices, is_multiple, parse_choice};
 
-const SINGLE: &str = "Which organelle makes ATP?\n- [ ] Ribosome\n- [x] Mitochondrion\n- [ ] Golgi apparatus\n";
+const SINGLE: &str =
+    "Which organelle makes ATP?\n- [ ] Ribosome\n- [x] Mitochondrion\n- [ ] Golgi apparatus\n";
 
 #[test]
 fn single_correct_option_is_single_choice() {
@@ -77,7 +78,10 @@ fn empty_option_is_reported() {
 #[test]
 fn text_after_the_list_is_reported() {
     let body = "Q?\n- [x] a\n- [ ] b\nand then more prose\n";
-    assert_eq!(parse_choice(body).unwrap_err(), ChoiceError::TextAfterOptions);
+    assert_eq!(
+        parse_choice(body).unwrap_err(),
+        ChoiceError::TextAfterOptions
+    );
 }
 
 #[test]
@@ -91,7 +95,10 @@ fn option_order_and_text_are_kept() {
     let body = "Order?\n- [ ] Zeta  with   spaces\n- [x] Alpha\n- [ ] Mid *emphasis*\n";
     let block = parse_choice(body).unwrap();
     let texts: Vec<&str> = block.options.iter().map(|o| o.text.as_str()).collect();
-    assert_eq!(texts, vec!["Zeta  with   spaces", "Alpha", "Mid *emphasis*"]);
+    assert_eq!(
+        texts,
+        vec!["Zeta  with   spaces", "Alpha", "Mid *emphasis*"]
+    );
     let flags: Vec<bool> = block.options.iter().map(|o| o.correct).collect();
     assert_eq!(flags, vec![false, true, false]);
 }

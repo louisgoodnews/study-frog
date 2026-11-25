@@ -82,7 +82,9 @@ fn control_stdio_answers_every_line_on_stdout_and_nothing_else() {
     assert_eq!(answers[1]["result"]["rows"][0]["title"], "Chat");
     assert_eq!(answers[4]["result"]["rehearse"]["run"]["answer"], "chat");
     assert_eq!(answers[5]["ok"], false);
-    assert!(String::from_utf8(done.stderr).unwrap().is_empty());
+    // Diagnostics may go to stderr (the log's default sink), but never as answers.
+    let stderr = String::from_utf8(done.stderr).unwrap();
+    assert!(stderr.lines().all(|l| !l.starts_with('{')), "{stderr}");
 }
 
 #[test]

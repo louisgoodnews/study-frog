@@ -58,6 +58,7 @@ fn the_first_launch_shows_a_toast_instead_of_asking_for_a_path_and_clicking_it_o
 
     let mut returning = Model::default();
     let app = AppSettings {
+        first_run: false,
         vault: Some("/v/notes".into()),
         recent: vec!["/v/notes".into()],
         ..AppSettings::default()
@@ -83,6 +84,7 @@ fn opening_a_vault_closes_the_dialog_and_clears_the_toasts() {
         &mut m,
         Msg::Vault(MsgVault::Started {
             app: AppSettings {
+                first_run: false,
                 tutorial_offered: true,
                 ..AppSettings::default()
             },

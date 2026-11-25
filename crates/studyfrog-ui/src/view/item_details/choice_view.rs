@@ -36,7 +36,11 @@ pub fn draw(e: &Editor, ui: &mut egui::Ui) {
                 ("wrong", p.text_weak)
             };
             ui.label(RichText::new(mark).color(color));
-            ui.label(RichText::new(&row.text).color(if row.correct { p.text } else { p.text_weak }));
+            ui.label(RichText::new(&row.text).color(if row.correct {
+                p.text
+            } else {
+                p.text_weak
+            }));
         });
     }
 }

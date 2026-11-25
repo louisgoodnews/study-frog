@@ -5,9 +5,9 @@ use super::*;
 use studyfrog_core::uid::Uid;
 use studyfrog_md::choice::{ChoiceBlock, is_multiple};
 
+use crate::msg::MsgRehearsal;
 use crate::run_state::choice::{can_submit, picked_for};
 use crate::run_update::choice::{ChoiceMsg, pending_block};
-use crate::msg::MsgRehearsal;
 
 /// Number keys 1 to 9, option 1 to 9.
 const NUMBER_KEYS: [Key; 9] = [

@@ -141,12 +141,7 @@ pub(crate) fn update(state: State, msg: ChoiceMsg) -> (State, Vec<Effect>) {
 }
 
 /// Grade the selection and send it through the typed-answer path; the service then records it.
-fn submit(
-    state: State,
-    uid: Uid,
-    block: &ChoiceBlock,
-    picked: &[bool],
-) -> (State, Vec<Effect>) {
+fn submit(state: State, uid: Uid, block: &ChoiceBlock, picked: &[bool]) -> (State, Vec<Effect>) {
     if !can_submit(picked) {
         studyfrog_log::log_warn!("choice", "submit requested with nothing chosen");
         return (state, Vec::new());

@@ -28,9 +28,16 @@ pub fn startup(w: &mut Worker) -> Vec<Msg> {
     };
     w.config_dir = Some(profile_dir(&root, &profiles.current));
     let dir = w.config_dir.clone().unwrap_or_default();
+    let first_run = !dir.join(studyfrog_config::app::APP_CONFIG_FILE).exists();
     let (app, app_error) = match read_app_settings(&dir) {
-        Ok(app) => (app, None),
-        Err(e) => (AppSettings::default(), Some(e.to_string())),
+        Ok(app) => (AppSettings { first_run, ..app }, None),
+        Err(e) => (
+            AppSettings {
+                first_run,
+                ..AppSettings::default()
+            },
+            Some(e.to_string()),
+        ),
     };
     vec![
         Msg::Profile(ProfileMsg::Loaded(profiles)),

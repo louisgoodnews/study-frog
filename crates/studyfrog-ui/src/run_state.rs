@@ -5,8 +5,8 @@ use std::collections::{HashMap, HashSet};
 use studyfrog_core::event::{Latency, RunEvent};
 use studyfrog_core::uid::Uid;
 use studyfrog_md::blocks::{Block, parse_blocks};
-use studyfrog_rehearsal::reading::{ReadingParams, reading_params_default};
 use studyfrog_md::choice::ChoiceBlock;
+use studyfrog_rehearsal::reading::{ReadingParams, reading_params_default};
 use studyfrog_rehearsal::session::Session;
 pub use studyfrog_service::compare::Scored;
 

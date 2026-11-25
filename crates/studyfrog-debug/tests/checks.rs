@@ -3,7 +3,11 @@ use studyfrog_debug::{check, count, counts, truncate_chars};
 #[test]
 fn check_returns_its_condition_and_never_panics() {
     assert!(check("debug-check", true, "fine"));
-    assert!(!check("debug-check", false, "expected to fail; this is logged at Error"));
+    assert!(!check(
+        "debug-check",
+        false,
+        "expected to fail; this is logged at Error"
+    ));
 }
 
 #[test]
@@ -39,5 +43,8 @@ fn long_dump_text_is_cut_to_exactly_the_limit_with_an_ellipsis() {
 #[test]
 fn short_text_and_characters_are_counted_not_bytes() {
     assert_eq!(truncate_chars("short", 2000), "short");
-    assert_eq!(truncate_chars("\u{e4}\u{e4}\u{e4}\u{e4}\u{e4}", 3), "\u{e4}\u{e4}\u{2026}");
+    assert_eq!(
+        truncate_chars("\u{e4}\u{e4}\u{e4}\u{e4}\u{e4}", 3),
+        "\u{e4}\u{e4}\u{2026}"
+    );
 }

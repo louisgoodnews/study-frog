@@ -32,6 +32,7 @@ fn the_executor_creates_nested_stacks_and_items_and_reports_refusals() {
             due: None,
             also_in: None,
             choices: (None, None),
+            answer_type: studyfrog_ui::view::choice_body::AnswerType::Open,
         })
     };
     let msgs = execute(

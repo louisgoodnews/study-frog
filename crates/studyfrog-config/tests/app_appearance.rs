@@ -34,6 +34,7 @@ fn custom() -> Appearance {
 #[test]
 fn every_setting_survives_a_write_and_a_read() {
     let s = AppSettings {
+        first_run: false,
         appearance: custom(),
         ..AppSettings::default()
     };

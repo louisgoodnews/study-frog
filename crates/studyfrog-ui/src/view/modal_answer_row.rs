@@ -7,7 +7,10 @@ use crate::msg::Msg;
 use crate::view::choice_body::{AnswerType, answer_type_label};
 
 const CHOICES: [(AnswerType, &str); 3] = [
-    (AnswerType::Open, "The answer is typed in the reference answer."),
+    (
+        AnswerType::Open,
+        "The answer is typed in the reference answer.",
+    ),
     (
         AnswerType::Single,
         "One option is correct. Each option is a line `- [ ] text` or `- [x] text`.",

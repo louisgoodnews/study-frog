@@ -9,8 +9,8 @@ use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::agent_wiki::{busy, scope, send};
-use crate::view::{home_hero, kit};
 use crate::view::widgets::text_field;
+use crate::view::{home_hero, kit};
 
 fn verdict_word(v: Verdict) -> &'static str {
     match v {

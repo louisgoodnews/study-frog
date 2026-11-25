@@ -32,11 +32,7 @@ studyfrog-graph.workspace = true
 studyfrog-service.workspace = true
 studyfrog-ext.workspace = true
 studyfrog-pdf.workspace = true
-studyfrog-log = { path = "../studyfrog-log" }
-studyfrog-debug = { path = "../studyfrog-debug" }
 studyfrog-script.workspace = true
-studyfrog-log = { path = "../studyfrog-log" }
-studyfrog-debug = { path = "../studyfrog-debug" }
 eframe.workspace = true
 rusqlite.workspace = true
 

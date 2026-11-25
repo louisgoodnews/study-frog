@@ -128,6 +128,9 @@ pub struct AppSettings {
     pub appearance: crate::appearance::Appearance,
     /// The best memory-game time of each stack in each vault (most recent first).
     pub memory_best: Vec<MemoryBest>,
+    /// True only at a real first start: no settings file existed when the app started. Not saved; it makes the setup
+    /// wizard start after the first vault is chosen (STORY-0212), and is cleared when a vault opens.
+    pub first_run: bool,
 }
 
 /// The most memory-game records kept.

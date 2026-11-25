@@ -7,7 +7,7 @@ pub mod home_hint;
 pub mod list;
 pub mod settings;
 
-use eframe::egui::{self, Role, RichText, WidgetInfo};
+use eframe::egui::{self, RichText, Role, WidgetInfo};
 
 use crate::diary_msg::DiaryMsg;
 use crate::diary_types::DiaryViewMode;

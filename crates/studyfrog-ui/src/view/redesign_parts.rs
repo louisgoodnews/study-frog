@@ -3,8 +3,8 @@
 
 use eframe::egui::{self, Align2, CornerRadius, Frame, Margin, Rect, RichText, Sense, vec2};
 
-use crate::theme::style::style_of;
 use crate::theme::palette_of;
+use crate::theme::style::style_of;
 
 /// The height of a progress bar, in points.
 const PROGRESS_HEIGHT: f32 = 24.0;

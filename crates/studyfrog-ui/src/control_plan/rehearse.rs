@@ -42,7 +42,9 @@ pub fn plan(state: &State, cmd: &RehearseCmd) -> Result<Plan, String> {
             )))]]
         }
         RehearseCmd::Submit if is_pending(state) => {
-            vec![vec![Msg::Rehearsal(MsgRehearsal::Choice(ChoiceMsg::Submit))]]
+            vec![vec![Msg::Rehearsal(MsgRehearsal::Choice(
+                ChoiceMsg::Submit,
+            ))]]
         }
         RehearseCmd::Submit => {
             let text = state

@@ -9,7 +9,10 @@ fn row(text: &str, correct: bool) -> Row {
 
 #[test]
 fn open_body_is_the_prompt_unchanged() {
-    assert_eq!(create_body("What is 2+2?", AnswerType::Open), "What is 2+2?");
+    assert_eq!(
+        create_body("What is 2+2?", AnswerType::Open),
+        "What is 2+2?"
+    );
 }
 
 #[test]

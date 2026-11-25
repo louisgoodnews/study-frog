@@ -158,7 +158,10 @@ fn fetched(mut state: State, result: Result<(), String>) -> (State, Vec<Effect>)
     state.wizard.downloading = false;
     match result {
         Ok(()) => {
-            studyfrog_log::log_info!("ui.wizard", "MiniLM download finished and its files checked");
+            studyfrog_log::log_info!(
+                "ui.wizard",
+                "MiniLM download finished and its files checked"
+            );
             state.wizard.download_error = None;
             (state, vec![Effect::Wizard(WizardEffect::Probe)])
         }

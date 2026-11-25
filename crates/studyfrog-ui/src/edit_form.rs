@@ -2,6 +2,7 @@
 //! Everything else in the file (unknown front-matter keys, ids, timestamps) is carried over by
 //! cloning the original document, so editing can never drop it. Pure.
 
+use crate::view::choice_body::{AnswerType, answer_type_name, stated_type};
 use studyfrog_core::event::{Difficulty, difficulty_from_name, difficulty_name};
 use studyfrog_core::item_color::{COLOR_FIELD, color_front_matter, normalize_color};
 use studyfrog_core::priority::{Priority, priority_from_name, priority_name};
@@ -11,7 +12,6 @@ use studyfrog_md::extra::{extra_value, with_extra};
 use studyfrog_md::names::{extra_names, with_extra_names};
 use studyfrog_md::refs::{references_of, with_references};
 use studyfrog_md::status::{status_of, with_status};
-use crate::view::choice_body::{AnswerType, answer_type_name, stated_type};
 
 /// One multi-line text area.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -222,7 +222,8 @@ pub fn apply_form(doc: &Doc, form: &EditForm) -> Result<Doc, String> {
         with_status(&out, form.status)
     };
     let out = if matches!(out, Doc::Question(_)) {
-        let stated = (form.answer_type != AnswerType::Open).then(|| answer_type_name(form.answer_type));
+        let stated =
+            (form.answer_type != AnswerType::Open).then(|| answer_type_name(form.answer_type));
         with_extra(&out, "answer_type", stated)
     } else {
         out

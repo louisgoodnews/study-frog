@@ -69,7 +69,10 @@ fn rotate(state: &mut FileState) -> io::Result<()> {
     } else {
         let _ = fs::remove_file(numbered(&state.path, state.keep));
         for index in (1..state.keep).rev() {
-            let _ = fs::rename(numbered(&state.path, index), numbered(&state.path, index + 1));
+            let _ = fs::rename(
+                numbered(&state.path, index),
+                numbered(&state.path, index + 1),
+            );
         }
         let _ = fs::rename(&state.path, numbered(&state.path, 1));
     }

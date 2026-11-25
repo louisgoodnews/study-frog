@@ -40,6 +40,7 @@ fn open_vault(path: &str) -> State {
 #[test]
 fn starting_with_a_remembered_vault_opens_it() {
     let app = AppSettings {
+        first_run: false,
         memory_best: Vec::new(),
         vault: Some("/v/notes".into()),
         recent: vec!["/v/notes".into()],

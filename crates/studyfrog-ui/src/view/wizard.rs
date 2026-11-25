@@ -43,7 +43,9 @@ pub fn reopen(_state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.weak("Runs the setup again: local model, remote provider, MiniLM and a summary. A download starts only after its click.");
     if ui
         .button("Run the setup again")
-        .on_hover_text("Opens the setup steps on this screen. Nothing changes until you act on a step.")
+        .on_hover_text(
+            "Opens the setup steps on this screen. Nothing changes until you act on a step.",
+        )
         .clicked()
     {
         out.push(Msg::Wizard(WizardMsg::Start));

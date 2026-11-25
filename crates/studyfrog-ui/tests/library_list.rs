@@ -213,6 +213,7 @@ fn stored_columns_read_back_ignoring_unknown_words_and_starting_with_the_title()
     assert_eq!(columns_from_text(&columns_to_text(&all)), all);
     let mut m = Model::default();
     let app = studyfrog_core::settings::AppSettings {
+        first_run: false,
         library_columns: Some("title,path".into()),
         ..Default::default()
     };

@@ -135,6 +135,7 @@ fn submitting_sends_one_request_with_clean_values_and_a_second_press_waits() {
             due: None,
             also_in: None,
             choices: (Some(Priority::Medium), Some(Difficulty::Difficult)),
+            answer_type: studyfrog_ui::view::choice_body::AnswerType::Open,
         })]
     );
     assert!(form(&m).busy);

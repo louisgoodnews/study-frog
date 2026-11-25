@@ -56,6 +56,7 @@ fn creating_checks_the_name_and_switching_closes_the_vault_and_opens_the_profile
         ..two()
     };
     let app = AppSettings {
+        first_run: false,
         vault: Some("/v/school".into()),
         ..AppSettings::default()
     };

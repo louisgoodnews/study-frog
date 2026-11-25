@@ -5245,6 +5245,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "studyfrog-debug"
+version = "1.0.0"
+dependencies = [
+ "studyfrog-log",
+]
+
+[[package]]
 name = "studyfrog-ext"
 version = "1.0.0"
 dependencies = [
@@ -5269,6 +5276,10 @@ dependencies = [
  "serde",
  "toml",
 ]
+
+[[package]]
+name = "studyfrog-log"
+version = "1.0.0"
 
 [[package]]
 name = "studyfrog-md"
@@ -5351,7 +5362,9 @@ dependencies = [
  "studyfrog-calendar",
  "studyfrog-config",
  "studyfrog-core",
+ "studyfrog-debug",
  "studyfrog-ext",
+ "studyfrog-log",
  "studyfrog-md",
  "studyfrog-pdf",
  "studyfrog-rehearsal",
@@ -5418,8 +5431,10 @@ dependencies = [
  "studyfrog-calendar",
  "studyfrog-config",
  "studyfrog-core",
+ "studyfrog-debug",
  "studyfrog-ext",
  "studyfrog-graph",
+ "studyfrog-log",
  "studyfrog-md",
  "studyfrog-pdf",
  "studyfrog-rehearsal",

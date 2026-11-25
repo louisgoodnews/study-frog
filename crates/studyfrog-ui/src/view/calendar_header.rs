@@ -51,7 +51,12 @@ pub(super) fn switcher(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             let active = p.view_mode == mode;
             let name = calendar_view_mode_name(mode);
             let tip = format!("Shows the calendar as {name}.");
-            if ui.selectable_label(active, name).on_hover_text(tip).clicked() && !active {
+            if ui
+                .selectable_label(active, name)
+                .on_hover_text(tip)
+                .clicked()
+                && !active
+            {
                 plan(out, PlanMsg::SetViewMode(mode));
             }
         }

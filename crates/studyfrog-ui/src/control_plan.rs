@@ -24,9 +24,9 @@ pub mod calendar;
 pub mod files;
 pub mod homework;
 pub mod panels;
+mod rehearse;
 pub mod screens;
 pub mod search;
-mod rehearse;
 mod stacks;
 use stacks::stack;
 

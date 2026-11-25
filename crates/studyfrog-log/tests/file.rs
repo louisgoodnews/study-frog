@@ -15,7 +15,8 @@ fn record(index: usize) -> Record {
 
 #[test]
 fn the_file_rotates_by_size_and_keeps_the_given_number_of_copies() {
-    let dir: PathBuf = std::env::temp_dir().join(format!("studyfrog-log-rotate-{}", std::process::id()));
+    let dir: PathBuf =
+        std::env::temp_dir().join(format!("studyfrog-log-rotate-{}", std::process::id()));
     let _ = fs::remove_dir_all(&dir);
     let path = dir.join("app.log");
 
@@ -30,8 +31,12 @@ fn the_file_rotates_by_size_and_keeps_the_given_number_of_copies() {
     assert!(dir.join("app.log.2").exists());
     assert!(!dir.join("app.log.3").exists());
     assert!(fs::metadata(&path).expect("current file").len() <= 120);
+    // The file rotates before a line that would overflow it, so the newest line is in `path`
+    // and copy 1 holds the line before it.
+    let current = fs::read_to_string(&path).expect("current file");
+    assert!(current.contains("number 9"), "{current}");
     let previous = fs::read_to_string(dir.join("app.log.1")).expect("copy 1");
-    assert!(previous.contains("number 9"), "{previous}");
+    assert!(previous.contains("number 8"), "{previous}");
 
     let _ = fs::remove_dir_all(&dir);
 }

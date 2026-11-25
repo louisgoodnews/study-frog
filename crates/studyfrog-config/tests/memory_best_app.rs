@@ -7,6 +7,7 @@ use studyfrog_core::settings::{AppSettings, MemoryBest};
 #[test]
 fn memory_records_survive_a_save_and_reload() {
     let settings = AppSettings {
+        first_run: false,
         vault: Some("/home/me/vault".to_owned()),
         memory_best: vec![
             MemoryBest {

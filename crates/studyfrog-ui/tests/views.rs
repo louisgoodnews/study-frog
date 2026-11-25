@@ -18,6 +18,7 @@ use studyfrog_ui::state::{NoticeKind, Screen};
 fn the_vault_dialog_opens_a_typed_path_and_the_welcome_page_lists_recent_vaults() {
     let mut model = Model::default();
     model.state.app = AppSettings {
+        first_run: false,
         memory_best: Vec::new(),
         vault: None,
         recent: vec!["/v/old".into()],

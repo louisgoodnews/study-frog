@@ -105,9 +105,17 @@ fn option_row(ui: &mut egui::Ui, i: usize, row: &Row, acts: &mut Vec<Act>) {
             acts.push(Act::Text(i, text));
         }
         let (label, color, hover) = if row.correct {
-            ("Correct", p.success, "Counts as a correct answer. Click to mark it wrong.")
+            (
+                "Correct",
+                p.success,
+                "Counts as a correct answer. Click to mark it wrong.",
+            )
         } else {
-            ("Wrong", p.text_weak, "Counts as a wrong answer. Click to mark it correct.")
+            (
+                "Wrong",
+                p.text_weak,
+                "Counts as a wrong answer. Click to mark it correct.",
+            )
         };
         if ui
             .button(RichText::new(label).color(color))
@@ -127,7 +135,14 @@ fn option_row(ui: &mut egui::Ui, i: usize, row: &Row, acts: &mut Vec<Act>) {
 }
 
 /// Applies the list's changes; a change that breaks the answer type is refused, a text change always applies.
-fn apply(e: &Editor, block_prompt: &str, rows: &[Row], acts: Vec<Act>, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+fn apply(
+    e: &Editor,
+    block_prompt: &str,
+    rows: &[Row],
+    acts: Vec<Act>,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+) {
     let mut next = rows.to_vec();
     let mut counts_changed = false;
     for act in acts {
@@ -161,7 +176,10 @@ fn apply(e: &Editor, block_prompt: &str, rows: &[Row], acts: Vec<Act>, ui: &mut 
         }
     }
     if counts_changed && !agrees(e.form.answer_type, &next) {
-        studyfrog_log::log_info!("ui.choice", "save refused: options do not agree with the answer type");
+        studyfrog_log::log_info!(
+            "ui.choice",
+            "save refused: options do not agree with the answer type"
+        );
         ui.data_mut(|d| d.insert_temp(key(e, "notice"), refusal(e.form.answer_type).to_owned()));
         return;
     }
@@ -195,7 +213,10 @@ pub fn panel(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             AnswerType::Single => "exactly one option must be correct",
             _ => "two or more options must be correct",
         };
-        ui.colored_label(p.warning, format!("The options do not match the answer type: {hint}."));
+        ui.colored_label(
+            p.warning,
+            format!("The options do not match the answer type: {hint}."),
+        );
     }
     if let Some(notice) = ui.data(|d| d.get_temp::<String>(key(e, "notice"))) {
         ui.colored_label(p.danger, notice);
