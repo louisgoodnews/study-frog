@@ -2,7 +2,7 @@
 id: STORY-0203
 type: story
 title: "Provisional budgets replaced by measured baselines on the owner's machine"
-status: in_progress
+status: blocked
 epic: EPIC-067
 parents: ['EPIC-067']
 estimate: 2
@@ -42,6 +42,7 @@ budget or the baseline table in BENCHMARKING.md, and record the machine identity
 - Only the numbers the owner's runs support may change. The budget table keeps its existing rows and provenance column.
 
 ## Dependencies
+- Blocked 2026-11-25: the analytics CMRR case runs at 71 to 85 ms against its 50 ms budget. The owner has to decide whether to raise the budget or accept the cost; no budget was changed.
 Blocked on the owner's machine: the reference runs of STORY-0201 (TASK-0278 and TASK-0279), and the spread
 measurement in EPIC-067 Open Questions. Unblocks when those runs exist.
 
