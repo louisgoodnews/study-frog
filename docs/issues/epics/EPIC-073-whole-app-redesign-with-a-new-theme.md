@@ -35,5 +35,9 @@ exam screens).
 ## Dependencies
 - EPIC-036 (contrast), EPIC-070 (redesign components), EPIC-027 (appearance).
 
+## Decisions (owner, 2026-11-25)
+- Direction: violet to pink as the identity. Violet is the default accent, pink the secondary gradient stop; the other accents stay selectable.
+- Accents: keep all six (blue, green, purple, orange, pink, teal); users keep their accent setting.
+
 ## Open Questions
-- Which palette: the owner's colours or a proposal from the agents for the owner to accept or change?
+- Exact OKLCH values for the new default violet, the pink stop and the neutrals (to be proposed and checked against the APCA tests in the test phase).
