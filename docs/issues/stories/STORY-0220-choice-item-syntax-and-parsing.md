@@ -2,7 +2,7 @@
 id: STORY-0220
 type: story
 title: "Choice item syntax: options in Markdown, parsed into single-choice or multiple-select items"
-status: in_progress
+status: review
 epic: EPIC-072
 parents: ['EPIC-072']
 estimate: 3
