@@ -83,7 +83,7 @@ fn overview(cal: &CalibrationReport, ui: &mut egui::Ui) {
 }
 
 fn metric_card(ui: &mut egui::Ui, title: &str, value: String) {
-    crate::view::kit::card(ui, |ui| {
+    crate::view::home_hero::card(ui, |ui| {
         ui.vertical(|ui| {
             ui.weak(title);
             ui.label(

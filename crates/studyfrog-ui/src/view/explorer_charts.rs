@@ -5,10 +5,11 @@ use studyfrog_report::explore::{DayPoint, Perf};
 
 use crate::theme::{palette_of, tint};
 use crate::view::explorer::{day_of, minutes, percent, seconds};
+use crate::view::home_hero;
 use crate::view::kit;
 
 pub(super) fn tiles(p: &Perf, ui: &mut egui::Ui) {
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.horizontal(|ui| {
             kit::stat(ui, &p.reviews.to_string(), "Reviews");
@@ -48,12 +49,22 @@ pub(super) fn ratings(p: &Perf, ui: &mut egui::Ui) {
             color: Some(colors[i]),
         })
         .collect();
-    kit::bar_rows(ui, "explorer-ratings", &rows);
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        kit::bar_rows(ui, "explorer-ratings", &rows);
+    });
 }
 
 /// Bars for the last days: the height is the number of reviews, the lower part the good ones.
 pub(super) fn chart(days: &[DayPoint], ui: &mut egui::Ui) {
     kit::section(ui, "Last 30 days");
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        plot(days, ui);
+    });
+}
+
+fn plot(days: &[DayPoint], ui: &mut egui::Ui) {
     let total: u32 = days.iter().map(|d| d.reviews).sum();
     let active = days.iter().filter(|d| d.reviews > 0).count();
     let (rect, response) = ui.allocate_exact_size(vec2(ui.available_width(), 90.0), Sense::hover());

@@ -65,7 +65,10 @@ fn tier(t: &TierCurve, i: usize, ui: &mut egui::Ui) {
             color: None,
         })
         .collect();
-    kit::bar_rows(ui, &format!("reports-tier-{i}"), &rows);
+    crate::view::home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        kit::bar_rows(ui, &format!("reports-tier-{i}"), &rows);
+    });
 }
 
 /// The section, under the retention by gap.

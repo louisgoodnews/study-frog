@@ -127,6 +127,7 @@ mod reports_cognitive;
 mod reports_cognitive_charts;
 mod reports_fam;
 mod reports_habits;
+mod reports_header;
 pub(crate) mod reports_leeches;
 mod reports_runs;
 mod reports_survival;

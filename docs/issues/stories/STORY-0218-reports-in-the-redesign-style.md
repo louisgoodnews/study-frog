@@ -2,7 +2,7 @@
 id: STORY-0218
 type: story
 title: "Reports in the redesign style: charts and figure cards"
-status: backlog
+status: review
 epic: EPIC-070
 parents: ['EPIC-070']
 estimate: 5

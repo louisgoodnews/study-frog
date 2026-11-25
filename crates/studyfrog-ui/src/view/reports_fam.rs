@@ -21,7 +21,10 @@ fn spread(r: &FamReport, ui: &mut egui::Ui) {
             color: None,
         })
         .collect();
-    crate::view::kit::bar_rows(ui, "fam-spread", &rows);
+    crate::view::home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        crate::view::kit::bar_rows(ui, "fam-spread", &rows);
+    });
     if r.unscored > 0 {
         ui.weak(format!("{} item(s) have no history yet.", r.unscored));
     }

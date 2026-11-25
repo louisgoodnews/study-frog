@@ -26,6 +26,7 @@ pub fn report_csv_file(w: &Worker, now_ns: i64, folder: Option<PathBuf>) -> Resu
     use studyfrog_core::civil::{date_from_days, format_date};
     use studyfrog_service::report_csv::{ReportCsvData, data_of, report_csv, report_csv_name};
     let session = w.session.as_ref().ok_or("no vault is open")?;
+    let _timer = studyfrog_debug::timed("reports", "csv export");
     let now = UnixMs(now_ns / 1_000_000);
     let bundle = build_reports_local(session, now).map_err(|e| e.to_string())?;
     let extras =
@@ -44,5 +45,6 @@ pub fn report_csv_file(w: &Worker, now_ns: i64, folder: Option<PathBuf>) -> Resu
         ..data_of(&bundle)
     };
     std::fs::write(&target, report_csv(&data)).map_err(|e| format!("{}: {e}", target.display()))?;
+    studyfrog_log::log_info!("reports", "CSV report written to {}", target.display());
     Ok(target.display().to_string())
 }

@@ -17,20 +17,23 @@ pub struct DetailRow {
 
 /// The rows as a grid.
 pub fn detail_rows(ui: &mut egui::Ui, id: &str, rows: &[DetailRow]) {
-    egui::Grid::new(id)
-        .num_columns(3)
-        .spacing([12.0, 6.0])
-        .show(ui, |ui| {
-            for r in rows {
-                ui.label(&r.label);
-                ui.add(
-                    egui::ProgressBar::new(r.fraction.clamp(0.0, 1.0))
-                        .desired_width(120.0)
-                        .desired_height(18.0)
-                        .text(RichText::new(&r.value)),
-                );
-                ui.label(&r.detail);
-                ui.end_row();
-            }
-        });
+    crate::view::home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        egui::Grid::new(id)
+            .num_columns(3)
+            .spacing([12.0, 6.0])
+            .show(ui, |ui| {
+                for r in rows {
+                    ui.label(&r.label);
+                    ui.add(
+                        egui::ProgressBar::new(r.fraction.clamp(0.0, 1.0))
+                            .desired_width(120.0)
+                            .desired_height(18.0)
+                            .text(RichText::new(&r.value)),
+                    );
+                    ui.label(&r.detail);
+                    ui.end_row();
+                }
+            });
+    });
 }

@@ -11,7 +11,7 @@ use crate::explorer_ui::ExplorerMsg;
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
-use crate::view::{explorer_charts, kit};
+use crate::view::{explorer_charts, home_hero, kit};
 
 const PERIODS: [(Period, &str); 3] = [
     (Period::All, "All time"),
@@ -116,7 +116,7 @@ fn item_history(e: &Explorer, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         out.push(Msg::Browse(MsgBrowse::OpenItem(*uid)));
     }
     kit::section(ui, "Every review");
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         if e.history.is_empty() {
             ui.weak("Not reviewed in this period.");
@@ -137,7 +137,7 @@ fn subjects(e: &Explorer, ui: &mut egui::Ui) {
     }
     ui.add_space(8.0);
     kit::section(ui, "By subject");
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         for (name, p) in &e.subjects {
             ui.horizontal(|ui| {
@@ -165,7 +165,7 @@ fn rows(e: &Explorer, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             "Inside"
         },
     );
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         for r in &e.rows {
             row(r, ui, out);

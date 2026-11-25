@@ -1,18 +1,18 @@
 //! The reports: retention by time since the last review, how long answers take, and the review
 //! load ahead. Every bar carries its numbers as text, so nothing depends on seeing the bar.
 
-use eframe::egui::{self, RichText};
+use eframe::egui;
 use studyfrog_core::event::{Difficulty, difficulty_name};
 use studyfrog_report::latency::{EDGES_MS, LatencyStats};
 use studyfrog_report::retention::{RetentionBucket, retention_rate};
 use studyfrog_service::reports::{BacktestReport, ReportBundle};
 
-use crate::explorer_ui::{ExplorerMsg, ReportTab};
-use crate::library_ui::LibraryMsg;
+use crate::explorer_ui::ReportTab;
 use crate::msg::Msg;
 use crate::state::State;
-use crate::transfer_ui::TransferMsg;
+use crate::view::home_hero;
 use crate::view::kit::{self, BarRow, READING_WIDTH};
+use crate::view::reports_header;
 
 fn seconds(ms: u32) -> String {
     format!("{:.1} s", f64::from(ms) / 1000.0)
@@ -43,57 +43,14 @@ fn day_label(i: usize) -> String {
     }
 }
 
-/// The tabs, then either the performance explorer or the three memory reports.
+/// The headline, the tabs, then either the performance explorer or the three memory reports.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.horizontal(|ui| {
-        ui.label(
-            RichText::new("Reports")
-                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                .strong(),
-        );
-        let button = egui::Button::new("Export as CSV");
-        let tip = "Write the reports as a CSV file into the exports folder of the vault.";
-        if ui
-            .add_enabled(state.vault.is_some(), button)
-            .on_hover_text(tip)
-            .clicked()
-        {
-            out.push(Msg::Library(LibraryMsg::Transfer(
-                TransferMsg::ExportReport(false),
-            )));
-        }
-        let pick = egui::Button::new("Save CSV to...");
-        let tip = "Choose a folder and write the reports there as a CSV file.";
-        if ui
-            .add_enabled(state.vault.is_some(), pick)
-            .on_hover_text(tip)
-            .clicked()
-        {
-            let to = TransferMsg::ExportReport(true);
-            out.push(Msg::Library(LibraryMsg::Transfer(to)));
-        }
-    });
+    reports_header::headline(state, ui, out);
     ui.add_space(4.0);
-    ui.horizontal_wrapped(|ui| {
-        for (tab, label) in [
-            (ReportTab::Performance, "Performance"),
-            (ReportTab::Memory, "Memory and forecast"),
-            (ReportTab::Familiarity, "Familiarity"),
-            (ReportTab::Calibration, "Self-assessment"),
-            (ReportTab::Cognitive, "Cognitive profile"),
-            (ReportTab::Runs, "Runs"),
-            (ReportTab::Habits, "Habits"),
-            (ReportTab::Leeches, "Leeches"),
-            (ReportTab::Workload, "Workload"),
-        ] {
-            if ui
-                .selectable_label(state.explorer.tab == tab, label)
-                .clicked()
-            {
-                out.push(Msg::Explorer(ExplorerMsg::Tab(tab)));
-            }
-        }
-    });
+    reports_header::tabs(state, ui, out);
+    let name = reports_header::tab_name(state.explorer.tab);
+    studyfrog_log::log_debug!("reports", "drawing the {} report", name);
+    let _timer = studyfrog_debug::timed("reports", name);
     match state.explorer.tab {
         ReportTab::Performance => crate::view::explorer::draw(state, ui, out),
         ReportTab::Memory => memory(state, ui),
@@ -146,7 +103,10 @@ fn retention(r: &ReportBundle, ui: &mut egui::Ui) {
             }
         })
         .collect();
-    kit::bar_rows(ui, "reports-retention", &rows);
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        kit::bar_rows(ui, "reports-retention", &rows);
+    });
 }
 
 fn stats_line(s: &LatencyStats) -> String {
@@ -180,7 +140,10 @@ fn latency(r: &ReportBundle, ui: &mut egui::Ui) {
             color: None,
         })
         .collect();
-    kit::bar_rows(ui, "reports-latency", &rows);
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        kit::bar_rows(ui, "reports-latency", &rows);
+    });
     for m in &r.by_mark {
         let name = m
             .mark
@@ -227,7 +190,10 @@ fn forecast(r: &ReportBundle, ui: &mut egui::Ui) {
             color: None,
         })
         .collect();
-    kit::bar_rows(ui, "reports-forecast", &rows);
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        kit::bar_rows(ui, "reports-forecast", &rows);
+    });
     for (week, chunk) in r.forecast.chunks(7).enumerate().skip(1) {
         let week_total: f32 = chunk.iter().sum();
         ui.label(format!(

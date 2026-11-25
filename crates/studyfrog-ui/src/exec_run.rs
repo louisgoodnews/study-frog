@@ -164,6 +164,7 @@ pub fn achievements(w: &mut Worker, now_ns: i64) -> Msg {
 
 /// Compute the reports at the current local time.
 pub fn reports(w: &Worker, now_ns: i64) -> Msg {
+    let _timer = studyfrog_debug::timed("reports", "build");
     let now = UnixMs(millis(now_ns));
     let result = match &w.session {
         Some(session) => build_reports_local(session, now)
@@ -171,6 +172,10 @@ pub fn reports(w: &Worker, now_ns: i64) -> Msg {
             .map_err(|e| e.to_string()),
         None => Err("no vault is open".to_owned()),
     };
+    match &result {
+        Ok(_) => studyfrog_log::log_debug!("reports", "reports built"),
+        Err(e) => studyfrog_log::log_warn!("reports", "reports not built: {}", e),
+    }
     Msg::Reports(MsgReports::ReportsBuilt(result))
 }
 
