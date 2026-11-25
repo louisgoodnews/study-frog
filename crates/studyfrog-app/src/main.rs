@@ -4,6 +4,7 @@
 //! `studyfrog --screenshot FILE [--screen NAME] [--size WxH] [--theme dark|light|system]` saves a PNG of a screen and exits (`home`, `library`,
 //! `rehearse`, `settings`, `help`, `calendar`, `board`, `reports`, `agent`, or `run`, or `stack:<folder>`, or
 //! `pdf:<path>[@<zoom>][+pages]`).
+//! `studyfrog --frame-times FILE` writes the frame time of each drawn frame to a CSV file on exit (off by default).
 //! `studyfrog --print-paths` lists where the application keeps its files, and
 //! `studyfrog logs [--tail N] [--follow] [--json]` shows its log, and
 //! `studyfrog --mcp [--vault PATH] [--mcp-allow-write] [--mcp-allow-destructive]` serves the vault to AI
@@ -44,6 +45,7 @@ fn options(args: &[String]) -> RunOptions {
         }),
         size: size(args),
         control: control_policy(args),
+        frame_times: value(args, "--frame-times").map(std::path::PathBuf::from),
     }
 }
 

@@ -1,6 +1,8 @@
 //! The eframe application: glue between the model, the worker and the window.
 use crate::effect::EffectVault;
 
+pub mod frame_times;
+
 use eframe::egui;
 
 use crate::effect::Effect;
@@ -25,6 +27,8 @@ pub struct StudyFrogApp {
     pub events: crate::control_events::EventBus,
     /// What the Console screen talks to.
     pub console: crate::console_link::ConsoleLink,
+    /// Frame-time capture, when `--frame-times` was given; `None` costs nothing per frame.
+    pub frame_times: Option<frame_times::Recorder>,
 }
 
 /// How the window is opened.
@@ -38,6 +42,8 @@ pub struct RunOptions {
     pub size: Option<(f32, f32)>,
     /// Serve the control protocol on `run/control.sock` with this policy (`None`: do not serve).
     pub control: Option<crate::control_cmd::ControlPolicy>,
+    /// Write a CSV of the frame times (`frame,screen,frame_us`) to this path on exit (`--frame-times`).
+    pub frame_times: Option<std::path::PathBuf>,
 }
 
 /// Create the app and ask the worker for the saved settings.
@@ -85,11 +91,13 @@ pub fn app_new_with(ctx: egui::Context, options: RunOptions, host: Host) -> Stud
         control,
         events,
         console,
+        frame_times: options.frame_times.map(frame_times::start),
     }
 }
 
 /// One frame: apply finished work, draw, hand new effects to the worker.
 pub fn app_ui(app: &mut StudyFrogApp, ui: &mut egui::Ui) {
+    let started = app.frame_times.is_some().then(std::time::Instant::now);
     let mut effects: Vec<Effect> = Vec::new();
     let mut idle = app
         .runtime
@@ -136,6 +144,11 @@ pub fn app_ui(app: &mut StudyFrogApp, ui: &mut egui::Ui) {
     if app.model.state.chrome.quit {
         ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
     }
+    if let (Some(rec), Some(started)) = (app.frame_times.as_mut(), started) {
+        let frame_us = u64::try_from(started.elapsed().as_micros()).unwrap_or(u64::MAX);
+        let screen = crate::control_state::screen_name(app.model.state.screen);
+        frame_times::push(rec, screen, frame_us);
+    }
 }
 
 /// With `--smoke-frames N`, ask the window to close once N frames were drawn.
@@ -153,6 +166,12 @@ fn close_after_smoke_frames(app: &mut StudyFrogApp, ui: &egui::Ui) {
 impl eframe::App for StudyFrogApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         app_ui(self, ui);
+    }
+
+    fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
+        if let Some(rec) = self.frame_times.take() {
+            frame_times::finish(rec);
+        }
     }
 }
 

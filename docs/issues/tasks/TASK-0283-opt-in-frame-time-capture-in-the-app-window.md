@@ -2,7 +2,7 @@
 id: TASK-0283
 type: task
 title: "Opt-in frame-time capture in the app window"
-status: backlog
+status: review
 epic: EPIC-067
 parents: ['STORY-0204']
 estimate: 3

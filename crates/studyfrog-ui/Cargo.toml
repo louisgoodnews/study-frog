@@ -12,6 +12,8 @@ workspace = true
 
 [dependencies]
 serde_json.workspace = true
+studyfrog-log = { path = "../studyfrog-log" }
+studyfrog-debug = { path = "../studyfrog-debug" }
 studyfrog-core.workspace = true
 studyfrog-md.workspace = true
 studyfrog-config.workspace = true
