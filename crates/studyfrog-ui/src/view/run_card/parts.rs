@@ -54,31 +54,44 @@ pub(super) fn reveal_controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Ms
         }
         ui.add_space(4.0);
     }
+}
+
+/// The reveal buttons: Show answer and Skip, centred on the card's width. The row's width is measured on one frame
+/// and used to centre it on the next.
+pub(super) fn reveal_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let answering = is_item_typed(run) && !is_case_item(run);
+    let id = ui.scope_id().with("reveal-row-width");
+    let measured: f32 = ui.data(|d| d.get_temp(id)).unwrap_or(0.0);
+    let offset = ((ui.available_width() - measured) / 2.0).max(0.0);
     ui.horizontal(|ui| {
-        let label = if answering {
-            "Show answer without answering (Space)"
-        } else {
-            "Show answer (Space)"
-        };
-        let show = if answering {
-            ui.button(label)
+        ui.add_space(offset);
+        let row = ui.scope(|ui| {
+            let label = if answering {
+                "Show answer without answering (Space)"
+            } else {
+                "Show answer (Space)"
+            };
+            let show = if answering {
+                ui.button(label)
+                    .on_hover_text(crate::view::tips::show_answer())
+            } else {
+                kit::primary_button(ui, label).on_hover_text(crate::view::tips::show_answer())
+            };
+            if show
                 .on_hover_text(crate::view::tips::show_answer())
-        } else {
-            kit::primary_button(ui, label).on_hover_text(crate::view::tips::show_answer())
-        };
-        if show
-            .on_hover_text(crate::view::tips::show_answer())
-            .clicked()
-        {
-            act(out, Action::Flip);
-        }
-        if ui
-            .button("Skip (S)")
-            .on_hover_text(crate::view::tips::skip())
-            .clicked()
-        {
-            act(out, Action::Skip);
-        }
+                .clicked()
+            {
+                act(out, Action::Flip);
+            }
+            if ui
+                .button("Skip (S)")
+                .on_hover_text(crate::view::tips::skip())
+                .clicked()
+            {
+                act(out, Action::Skip);
+            }
+        });
+        ui.data_mut(|d| d.insert_temp(id, row.response.rect.width()));
     });
 }
 

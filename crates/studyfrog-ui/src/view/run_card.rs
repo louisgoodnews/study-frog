@@ -96,6 +96,9 @@ pub(crate) fn item_scroll(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         .inner;
     if rating {
         rating_buttons(run, ui, out);
+    } else if awaiting_reveal(run) && !crate::exam_ui::is_exam(run) {
+        ui.add_space(8.0);
+        ui.vertical_centered(|ui| parts::reveal_buttons(run, ui, out));
     }
 }
 
