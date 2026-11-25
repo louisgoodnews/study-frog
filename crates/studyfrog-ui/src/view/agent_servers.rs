@@ -58,7 +58,7 @@ fn offered(d: &Discovered, ui: &mut egui::Ui) {
 
 fn server_card(state: &State, s: &McpServer, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let weak = palette_of(ui).text_weak;
-    kit::card(ui, |ui| {
+    crate::view::home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.horizontal(|ui| {
             ui.label(RichText::new(&s.name).strong());
@@ -147,7 +147,7 @@ pub fn approval(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(p) = &state.agent.mcp.approval else {
         return;
     };
-    kit::card(ui, |ui| {
+    crate::view::home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         let ask = format!(
             "Allow Assistant to run tool {} on server {}?",

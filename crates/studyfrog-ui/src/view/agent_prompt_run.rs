@@ -30,6 +30,7 @@ fn pickers(run: &PromptRun, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 let p = prompt_of(source);
                 if ui
                     .selectable_label(run.prompt == Some(source.id), p.title)
+                    .on_hover_text("Chooses this prompt to run with the assistant.")
                     .clicked()
                 {
                     send(out, PromptRunMsg::Choose(source.id));

@@ -95,7 +95,7 @@ fn pending(state: &State, p: &Pending, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             host_of(&p.base_url).to_owned()
         }
     });
-    kit::card(ui, |ui| {
+    crate::view::home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.label(
             RichText::new(format!(
@@ -143,7 +143,7 @@ fn review(r: &crate::agent_types::Reviewing, ui: &mut egui::Ui, out: &mut Vec<Ms
     }
     for (i, c) in r.proposal.changes.iter().enumerate() {
         let (title, text) = crate::view::agent_describe::describe(c);
-        kit::card(ui, |ui| {
+        crate::view::home_hero::card(ui, |ui| {
             ui.set_width(ui.available_width());
             let mut on = r.accepted.get(i).copied().unwrap_or(false);
             if ui

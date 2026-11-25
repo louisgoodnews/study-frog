@@ -10,7 +10,7 @@ use crate::classroom_types::{ClassroomMsg, SavedMsg, SavedSession};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
-use crate::view::kit;
+use crate::view::home_hero;
 
 const DAY_MS: i64 = 86_400_000;
 
@@ -21,7 +21,7 @@ fn send(out: &mut Vec<Msg>, m: SavedMsg) {
 /// The list of saved sessions, or a line saying there are none yet.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let c = &state.classroom;
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.label(RichText::new("Saved sessions").strong());
         ui.add_space(6.0);

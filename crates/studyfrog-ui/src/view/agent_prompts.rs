@@ -9,7 +9,6 @@ use crate::msg::Msg;
 use crate::prompt_run::PromptRunMsg;
 use crate::prompts_ui::{PromptsMsg, PromptsView, pick_refs, visible_prompts};
 use crate::theme::palette_of;
-use crate::view::kit;
 use crate::view::widgets::text_field;
 
 fn send(out: &mut Vec<Msg>, m: PromptsMsg) {
@@ -21,13 +20,18 @@ fn category_pills(view: &PromptsView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal_wrapped(|ui| {
         if ui
             .selectable_label(view.category.is_none(), "All")
+            .on_hover_text("Shows the prompts of every category.")
             .clicked()
         {
             send(out, PromptsMsg::Category(None));
         }
         for category in CATEGORIES {
             let here = view.category == Some(category);
-            if ui.selectable_label(here, category_name(category)).clicked() {
+            if ui
+                .selectable_label(here, category_name(category))
+                .on_hover_text("Shows the prompts of this category.")
+                .clicked()
+            {
                 send(out, PromptsMsg::Category(Some(category)));
             }
         }
@@ -42,7 +46,11 @@ fn options(view: &PromptsView, id: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
         ui.horizontal_wrapped(|ui| {
             ui.label(param.label);
             for (i, (name, _)) in param.options.iter().enumerate() {
-                if ui.selectable_label(i == at, *name).clicked() {
+                if ui
+                    .selectable_label(i == at, *name)
+                    .on_hover_text("Uses this value for the prompt.")
+                    .clicked()
+                {
                     send(out, PromptsMsg::Pick(param.key, i));
                 }
             }
@@ -52,7 +60,7 @@ fn options(view: &PromptsView, id: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) 
 
 fn entry(p: &Prompt, view: &PromptsView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let id = p.id;
-    kit::card(ui, |ui| {
+    crate::view::home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.label(RichText::new(&p.title).strong());
         ui.label(RichText::new(&p.summary).color(palette_of(ui).text_weak));

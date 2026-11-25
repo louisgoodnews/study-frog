@@ -1,20 +1,38 @@
 //! The Classroom screen (TASK-0293, TASK-0294): the session form until a session is started, then the
 //! lecture chat beside the assignments panel. Below the wide breakpoint the panel stacks under the chat.
 
-use eframe::egui;
+use eframe::egui::{self, RichText};
 
 use crate::msg::Msg;
 use crate::state::State;
+use crate::view::gradient_panel;
 
 /// The width from which the chat and the assignments panel sit side by side.
 const WIDE: f32 = 720.0;
+const HEADLINE_HEIGHT: f32 = 64.0;
 
-/// Draw the form or the chat, whichever the state calls for.
+/// Draw the form or the chat, whichever the state calls for, under the gradient headline.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let _timer = studyfrog_debug::timed("ui", "classroom draw");
+    studyfrog_log::log_debug!("ui", "classroom shown");
+    headline(ui);
+    ui.add_space(8.0);
     match state.classroom.session {
         None => setup_and_saved(state, ui, out),
         Some(_) => workspace(state, ui, out),
     }
+}
+
+/// The screen title on the gradient panel (EPIC-070).
+fn headline(ui: &mut egui::Ui) {
+    gradient_panel::panel(ui, HEADLINE_HEIGHT, |ui, s| {
+        ui.label(
+            RichText::new("Classroom")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong()
+                .color(s.gradient_text),
+        );
+    });
 }
 
 /// The session form, then the saved sessions below it, in one scrolling column.

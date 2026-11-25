@@ -10,7 +10,7 @@ use crate::classroom_ui::{MAX_STUDENTS, chosen_provider, is_chosen};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
-use crate::view::kit;
+use crate::view::home_hero;
 use studyfrog_agent::provider::is_local;
 
 fn send(out: &mut Vec<Msg>, m: ClassroomMsg) {
@@ -21,7 +21,7 @@ fn send(out: &mut Vec<Msg>, m: ClassroomMsg) {
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let c = &state.classroom;
     let pal = palette_of(ui);
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.label(RichText::new("New classroom session").strong());
         ui.add_space(6.0);
         title_row(ui, &c.title, out);
@@ -122,7 +122,11 @@ fn model_row(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     let kind = if is_local(p) { "local" } else { "remote" };
                     let label = format!("{} ({kind}, {})", p.name, p.model);
                     let selected = current.as_ref().is_some_and(|c| c.name == p.name);
-                    if ui.selectable_label(selected, label).clicked() {
+                    if ui
+                        .selectable_label(selected, label)
+                        .on_hover_text("Uses this model for the session.")
+                        .clicked()
+                    {
                         send(out, ClassroomMsg::ChooseProvider(p.name.clone()));
                     }
                 }

@@ -9,7 +9,7 @@ use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::agent_wiki::{busy, scope, send};
-use crate::view::kit;
+use crate::view::{home_hero, kit};
 use crate::view::widgets::text_field;
 
 fn verdict_word(v: Verdict) -> &'static str {
@@ -39,7 +39,7 @@ pub fn exam(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         busy(a, ui);
     });
     for m in a.exam.chat.iter().skip(1) {
-        kit::card(ui, |ui| {
+        home_hero::card(ui, |ui| {
             ui.set_width(ui.available_width());
             let who = if m.role == Role::User {
                 "You"

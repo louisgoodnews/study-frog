@@ -7,9 +7,12 @@ use crate::agent_types::{AgentMsg, AgentTab, ConnForm, FormEdit};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
+use crate::theme::style::style_of;
 use crate::view::widgets::text_field;
 pub(crate) mod ollama;
-use crate::view::{agent_wiki, kit};
+use crate::view::{agent_wiki, gradient_panel, home_hero, kit};
+
+const HEADLINE_HEIGHT: f32 = 64.0;
 
 fn send(out: &mut Vec<Msg>, m: AgentMsg) {
     out.push(Msg::Agent(m));
@@ -17,29 +20,15 @@ fn send(out: &mut Vec<Msg>, m: AgentMsg) {
 
 /// The whole screen.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let _timer = studyfrog_debug::timed("ui", "assistant draw");
+    studyfrog_log::log_debug!("ui", "assistant shown");
     let a = &state.agent;
     egui::ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
-            ui.label(
-                RichText::new("Assistant")
-                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                    .strong(),
-            );
-            ui.add_space(4.0);
-            ui.horizontal(|ui| {
-                for (tab, label) in [
-                    (AgentTab::Chat, "Chat"),
-                    (AgentTab::Connections, "Connections"),
-                    (AgentTab::Wiki, "Work the vault"),
-                    (AgentTab::Exam, "Exam me"),
-                    (AgentTab::Prompts, "Prompts"),
-                ] {
-                    if ui.selectable_label(a.tab == tab, label).clicked() {
-                        send(out, AgentMsg::Tab(tab));
-                    }
-                }
-            });
+            headline(ui);
+            ui.add_space(8.0);
+            tab_bar(state, ui, out);
             if let Some(e) = &a.error {
                 ui.colored_label(ui.visuals().error_fg_color, e);
             }
@@ -57,6 +46,46 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
 }
 
+/// The screen title on the gradient panel (EPIC-070).
+fn headline(ui: &mut egui::Ui) {
+    gradient_panel::panel(ui, HEADLINE_HEIGHT, |ui, s| {
+        ui.label(
+            RichText::new("Assistant")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong()
+                .color(s.gradient_text),
+        );
+    });
+}
+
+/// The five parts of the screen as buttons on the rail; the selected one carries the rail highlight.
+fn tab_bar(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let current = &state.agent.tab;
+    let p = palette_of(ui);
+    let s = style_of(&p);
+    ui.horizontal(|ui| {
+        for (tab, label) in [
+            (AgentTab::Chat, "Chat"),
+            (AgentTab::Connections, "Connections"),
+            (AgentTab::Wiki, "Work the vault"),
+            (AgentTab::Exam, "Exam me"),
+            (AgentTab::Prompts, "Prompts"),
+        ] {
+            let selected = *current == tab;
+            let text = if selected { p.accent } else { p.text };
+            let fill = if selected { s.rail_active } else { s.rail };
+            let button = egui::Button::new(RichText::new(label).color(text)).fill(fill);
+            if ui
+                .add(button)
+                .on_hover_text("Shows this part of the assistant.")
+                .clicked()
+            {
+                send(out, AgentMsg::Tab(tab));
+            }
+        }
+    });
+}
+
 /// The models that were connected, and the form for a new one.
 fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let a = &state.agent;
@@ -68,7 +97,7 @@ fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.colored_label(ui.visuals().error_fg_color, e);
     }
     for p in &a.connections.providers {
-        kit::card(ui, |ui| {
+        home_hero::card(ui, |ui| {
             ui.set_width(ui.available_width());
             let in_use = a.selected.as_deref() == Some(p.name.as_str());
             ui.horizontal(|ui| {
@@ -81,6 +110,7 @@ fn connections(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             ui.horizontal(|ui| {
                 if ui
                     .selectable_label(in_use, format!("Use {}", p.name))
+                    .on_hover_text("Uses this connection for the chat and the other parts.")
                     .clicked()
                 {
                     send(out, AgentMsg::Select(p.name.clone()));
@@ -129,7 +159,11 @@ fn suggested_models(f: &ConnForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal_wrapped(|ui| {
         ui.label("Suggested models:");
         for model in models {
-            if ui.selectable_label(f.model == *model, *model).clicked() {
+            if ui
+                .selectable_label(f.model == *model, *model)
+                .on_hover_text("Fills in the Model field with this model.")
+                .clicked()
+            {
                 send(out, AgentMsg::Form(FormEdit::Model((*model).to_owned())));
             }
         }
@@ -139,11 +173,13 @@ fn suggested_models(f: &ConnForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 fn new_connection(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let f = &state.agent.form;
     ui.add_space(8.0);
-    kit::group(ui, "New connection", |ui| {
+    home_hero::card(ui, |ui| {
+        ui.label(RichText::new("New connection").strong());
         ui.horizontal(|ui| {
             for p in PROTOCOLS {
                 if ui
                     .selectable_label(f.protocol == p, protocol_name(p))
+                    .on_hover_text("Chooses this kind of service for the new connection.")
                     .clicked()
                 {
                     send(out, AgentMsg::Form(FormEdit::Protocol(p)));

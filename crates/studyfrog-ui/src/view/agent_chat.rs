@@ -7,7 +7,7 @@ use crate::agent_types::{AgentMsg, AgentTab, selected_provider};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::{palette_of, tint};
-use crate::view::kit;
+use crate::view::{home_hero, kit};
 
 fn send(out: &mut Vec<Msg>, m: AgentMsg) {
     out.push(Msg::Agent(m));
@@ -21,7 +21,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
     let provider = selected_provider(a);
     if provider.is_none() {
-        kit::card(ui, |ui| {
+        home_hero::card(ui, |ui| {
             ui.label(RichText::new("No model is currently selected.").strong());
             ui.label(
                 RichText::new(

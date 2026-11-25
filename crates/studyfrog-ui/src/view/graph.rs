@@ -9,7 +9,9 @@ use studyfrog_graph::view::nearest;
 use crate::graph::GraphState;
 use crate::msg::Msg;
 use crate::state::State;
+use crate::view::{gradient_panel, home_hero};
 
+const HEADLINE_HEIGHT: f32 = 64.0;
 const NODE_RADIUS: f32 = 3.5;
 const PICK_RADIUS: f32 = 9.0;
 /// Titles are drawn next to nodes only when zoomed in this far (and for the hovered node).
@@ -26,29 +28,29 @@ fn kind_color(p: &crate::theme::Palette, kind: ItemKind) -> Color32 {
     }
 }
 
-/// Header, canvas and the accessible item list.
+/// The headline, the stats card, the canvas and the accessible item list.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.label(
-        egui::RichText::new("Link graph")
-            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-            .strong(),
-    );
-    ui.add_space(4.0);
+    let _timer = studyfrog_debug::timed("ui", "graph draw");
+    studyfrog_log::log_debug!("ui", "graph shown");
+    headline(ui);
+    ui.add_space(8.0);
     let Some(g) = &state.graph else {
         ui.label("Loading the graph…");
         return;
     };
     let (n, m) = (g.graph.nodes.len(), g.graph.edges.len());
-    ui.horizontal(|ui| {
-        ui.label(format!("{n} items, {m} links"));
-        if ui
-            .button("Re-run layout")
-            .on_hover_text("Lays out the page again.")
-            .clicked()
-        {
-            out.push(Msg::Graph(MsgGraph::GraphRestart));
-        }
-        ui.weak("Drag to pan, scroll to zoom, click an item to open it.");
+    home_hero::card(ui, |ui| {
+        ui.horizontal(|ui| {
+            ui.label(format!("{n} items, {m} links"));
+            if ui
+                .button("Re-run layout")
+                .on_hover_text("Lays out the page again.")
+                .clicked()
+            {
+                out.push(Msg::Graph(MsgGraph::GraphRestart));
+            }
+            ui.weak("Drag to pan, scroll to zoom, click an item to open it.");
+        });
     });
     if n == 0 {
         ui.label("There are no items yet.");
@@ -60,6 +62,18 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.label(format!("Pointing at: {}", g.graph.nodes[i].title));
     }
     item_list(g, ui, out);
+}
+
+/// The screen title on the gradient panel (EPIC-070).
+fn headline(ui: &mut egui::Ui) {
+    gradient_panel::panel(ui, HEADLINE_HEIGHT, |ui, s| {
+        ui.label(
+            egui::RichText::new("Link graph")
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                .strong()
+                .color(s.gradient_text),
+        );
+    });
 }
 
 fn canvas(g: &GraphState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {

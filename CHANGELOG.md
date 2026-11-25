@@ -11,6 +11,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - Settings and help in the redesign style: the settings tabs and the help tree and pages use the card, rail and gradient headline styles, with the same content (STORY-0227, EPIC-070).
 - Diary and Achievements in the redesign style: the diary entries and the achievements list use the card, badge and gradient headline styles, with the same content (STORY-0229, EPIC-070).
 - New violet-to-pink palette tokens for light and dark, with the six accents kept (STORY-0226, EPIC-073). Values are unverified until the APCA tests run in the test phase; the default accent is still Blue.
+- The Graph, Assistant and Classroom screens in the redesign style: a gradient headline for each title, framed panels as redesign cards, the Assistant's tabs on the rail highlight, and tooltips on the text buttons that lacked one (STORY-0230, EPIC-073).
 - The rehearsal's Show answer and Skip buttons sit at the bottom centre of the card, below the item, for cards, questions and notes (STORY-0217, EPIC-070).
 - The rehearsal card has a thin gradient band across its top, and the result header sits on the gradient panel (STORY-0217, EPIC-070).
 - The rehearsal setup headline on the gradient panel and the result header on the gradient panel, with the card view kept plain and its radius taken from the redesign token (STORY-0217, EPIC-070).

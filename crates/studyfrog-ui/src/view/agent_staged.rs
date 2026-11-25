@@ -24,7 +24,7 @@ pub fn staged(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     for s in &m.staged {
         let p = &s.proposal;
-        kit::card(ui, |ui| {
+        crate::view::home_hero::card(ui, |ui| {
             ui.set_width(ui.available_width());
             ui.horizontal(|ui| {
                 ui.label(RichText::new(&p.summary).strong());
