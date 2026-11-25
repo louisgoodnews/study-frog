@@ -1,6 +1,5 @@
 //! Effects of a rehearsal run: create it, load item content, save steps.
-use crate::msg::MsgRehearsal;
-use crate::msg::MsgReports;
+//! Answers are scored in `exec_run::answers`; the view reads are in `exec_run::stats`.
 
 use studyfrog_core::plan::RunPlan;
 use studyfrog_core::review::Rating;
@@ -8,24 +7,21 @@ use studyfrog_core::run::RunMode;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_rehearsal::input::StepOutput;
-use studyfrog_service::achievements::check_achievements;
-use studyfrog_service::compare::{record_answer_score, score_item_answer_with};
 use studyfrog_service::content::load_item_content;
 use studyfrog_service::create::fresh_id_source;
-use studyfrog_service::home::home_summary;
 use studyfrog_service::rehearse::{StepContext, record_step, start_run};
-use studyfrog_service::reports::build_reports_local;
 use studyfrog_service::rerate::rerate_latest;
-use studyfrog_service::session::{VaultSession, current_settings};
-use studyfrog_service::timezone::{local_day_window, local_offset_minutes};
-use studyfrog_slm::lexical::Lexical;
-use studyfrog_slm::models::{Opened, open_runtime};
+use studyfrog_service::session::current_settings;
+use studyfrog_service::timezone::local_day_window;
 
 use crate::exec::Worker;
-use crate::home_ui::HomeMsg;
-use crate::msg::Msg;
-use crate::run_state::{AnswerEffect, Scored};
-use studyfrog_service::choice::grade_choice_answer;
+use crate::msg::{Msg, MsgRehearsal};
+
+mod answers;
+mod stats;
+
+pub use answers::answer;
+pub use stats::{achievements, explorer, home, reports};
 
 fn millis(now_ns: i64) -> i64 {
     now_ns / 1_000_000
@@ -97,76 +93,6 @@ pub fn record(w: &mut Worker, ctx: &StepContext, out: &StepOutput, now_ns: i64) 
     ))
 }
 
-/// Compare a typed answer with the item's reference (offline, with the built-in lexical runtime).
-pub fn score(
-    w: &mut Worker,
-    (run, uid): (Uid, Uid),
-    (answer, reference): &(String, Option<String>),
-    words_only: bool,
-    now_ns: i64,
-) -> Msg {
-    let (models, loader) = (w.models_dir.clone(), w.loader);
-    let chosen: Opened = (Box::new(Lexical), Some("chosen in the settings".to_owned()));
-    let (runtime, why) = if words_only {
-        &chosen
-    } else {
-        w.slm
-            .get_or_insert_with(|| open_runtime(models.as_deref(), loader))
-    };
-    let result = match &w.session {
-        Some(session) => {
-            score_item_answer_with(session, runtime.as_ref(), uid, answer, reference.as_deref())
-                .map(|s| match why {
-                    Some(why) => Scored {
-                        engine: format!("{} ({why})", s.engine),
-                        ..s
-                    },
-                    None => s,
-                })
-                .map(|s| remember(session, run, uid, s, now_ns))
-                .map_err(|e| e.to_string())
-        }
-        None => Err("no vault is open".to_owned()),
-    };
-    Msg::Rehearsal(MsgRehearsal::AnswerScored(uid, result))
-}
-
-/// Run one answer effect: a typed answer's score, a case check's record or a choice's grade.
-pub fn answer(w: &mut Worker, effect: AnswerEffect, now_ns: i64) -> Msg {
-    match effect {
-        AnswerEffect::Score {
-            run,
-            item,
-            answer,
-            words_only,
-        } => score(w, (run, item), &answer, words_only, now_ns),
-        AnswerEffect::Record { run, item, scored } => record_case(w, run, item, &scored, now_ns),
-        AnswerEffect::Choice { run, item, picked } => choice(w, (run, item), &picked, now_ns),
-    }
-}
-
-/// Grade a choice answer with the service's rules and store it like a typed answer's score (STORY-0222).
-pub fn choice(w: &mut Worker, (run, uid): (Uid, Uid), picked: &[bool], now_ns: i64) -> Msg {
-    let result = match &w.session {
-        Some(session) => grade_choice_answer(session, uid, picked)
-            .map(|graded| remember(session, run, uid, graded.scored, now_ns))
-            .map_err(|e| e.to_string()),
-        None => Err("no vault is open".to_owned()),
-    };
-    Msg::AnswerScored(uid, result)
-}
-
-/// Store the comparison with its run; a failure is noted in the engine text, never hidden.
-fn remember(session: &VaultSession, run: Uid, item: Uid, s: Scored, now_ns: i64) -> Scored {
-    match record_answer_score(session, run, item, &s, UnixMs(millis(now_ns))) {
-        Ok(()) => s,
-        Err(e) => Scored {
-            engine: format!("{} (not saved: {e})", s.engine),
-            ..s
-        },
-    }
-}
-
 /// Replace the rating of an item's latest review and rebuild its schedule.
 pub fn rerate(w: &mut Worker, item: Uid, expected: Rating, to: Rating) -> Msg {
     let result = match &mut w.session {
@@ -174,90 +100,4 @@ pub fn rerate(w: &mut Worker, item: Uid, expected: Rating, to: Rating) -> Msg {
         None => Err("no vault is open".to_owned()),
     };
     Msg::Rehearsal(MsgRehearsal::Rerated(item, result))
-}
-
-/// Measure the achievements at the current local time.
-pub fn achievements(w: &mut Worker, now_ns: i64) -> Msg {
-    let now = UnixMs(millis(now_ns));
-    let result = match &mut w.session {
-        Some(session) => {
-            check_achievements(session, now, local_offset_minutes(now)).map_err(|e| e.to_string())
-        }
-        None => Err("no vault is open".to_owned()),
-    };
-    Msg::Reports(MsgReports::AchievementsChecked(result))
-}
-
-/// Compute the reports at the current local time.
-pub fn reports(w: &Worker, now_ns: i64) -> Msg {
-    let _timer = studyfrog_debug::timed("reports", "build");
-    let now = UnixMs(millis(now_ns));
-    let result = match &w.session {
-        Some(session) => build_reports_local(session, now)
-            .map(Box::new)
-            .map_err(|e| e.to_string()),
-        None => Err("no vault is open".to_owned()),
-    };
-    match &result {
-        Ok(_) => studyfrog_log::log_debug!("reports", "reports built"),
-        Err(e) => studyfrog_log::log_warn!("reports", "reports not built: {}", e),
-    }
-    Msg::Reports(MsgReports::ReportsBuilt(result))
-}
-
-/// Read the home screen's numbers at the current local time.
-pub fn home(w: &Worker, now_ns: i64) -> Msg {
-    let now = UnixMs(millis(now_ns));
-    let result = match &w.session {
-        Some(session) => home_summary(
-            session,
-            now,
-            local_offset_minutes(now),
-            local_day_window(now),
-        )
-        .map(Box::new)
-        .map_err(|e| e.to_string()),
-        None => Err("no vault is open".to_owned()),
-    };
-    Msg::Home(HomeMsg::Loaded(result))
-}
-
-/// Compute the performance explorer for a scope and period at the current local time.
-pub fn explorer(
-    w: &Worker,
-    (scope, period): (
-        studyfrog_service::explore::Scope,
-        studyfrog_service::explore::Period,
-    ),
-    now_ns: i64,
-) -> Msg {
-    let now = UnixMs(now_ns / 1_000_000);
-    let result = match &w.session {
-        Some(session) => studyfrog_service::explore::explore(
-            session,
-            (scope, period),
-            now,
-            local_offset_minutes(now),
-        )
-        .map(Box::new)
-        .map_err(|e| e.to_string()),
-        None => Err("no vault is open".to_owned()),
-    };
-    Msg::Explorer(crate::explorer_ui::ExplorerMsg::Loaded(result))
-}
-
-/// Store a case check's score for its item, the way a typed answer's score is stored.
-pub fn record_case(
-    w: &mut Worker,
-    run: Uid,
-    item: Uid,
-    scored: &studyfrog_service::compare::Scored,
-    now_ns: i64,
-) -> Msg {
-    let done = match w.session.as_ref() {
-        None => Err("no vault is open".to_owned()),
-        Some(s) => record_answer_score(s, run, item, scored, UnixMs(millis(now_ns)))
-            .map_err(|e| e.to_string()),
-    };
-    Msg::Case(crate::setup::case::CaseMsg::Recorded(done))
 }

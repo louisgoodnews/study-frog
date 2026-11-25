@@ -140,6 +140,7 @@ mod run_card;
 pub(crate) mod run_comments;
 mod run_diary_prompt;
 mod run_slow;
+mod run_strip;
 mod run_timer;
 mod screens;
 pub mod search_focus;

@@ -8,7 +8,7 @@ use studyfrog_rehearsal::choice_grade::{ChoiceKey, grade_choice};
 use studyfrog_rehearsal::input::Action;
 use studyfrog_rehearsal::session::current_item;
 
-use crate::effect::Effect;
+use crate::effect::{Effect, EffectRehearsal};
 use crate::run_state::choice::{
     ChoiceSelection, can_submit, chosen_count, from_indices, option_for_number, pick, picked_for,
 };
@@ -171,7 +171,9 @@ fn submit(
     let (state, mut effects) = act(state, Action::SubmitAnswer(grade.given));
     // The engine's text comparison is not the choice verdict: the service grades the picks instead.
     effects.retain(|e| !matches!(e, Effect::Answer(AnswerEffect::Score { .. })));
-    let accepted = effects.iter().any(|e| matches!(e, Effect::RecordStep { .. }));
+    let accepted = effects
+        .iter()
+        .any(|e| matches!(e, Effect::Rehearsal(EffectRehearsal::RecordStep { .. })));
     if let (Some(run), true) = (run, accepted) {
         effects.push(Effect::Answer(AnswerEffect::Choice {
             run,
