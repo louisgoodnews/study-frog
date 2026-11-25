@@ -9,8 +9,10 @@ use studyfrog_core::appearance::Accent;
 use crate::color_science::{Oklch, lch, oklch_to_rgb};
 use crate::theme::Palette;
 
-/// The slightly cool hue of the greys.
-pub const NEUTRAL_HUE: f32 = 265.0;
+/// The hue of the light theme's greys: lavender (STORY-0226).
+pub const LIGHT_NEUTRAL_HUE: f32 = 295.0;
+/// The hue of the dark theme's greys: deep blue-grey (STORY-0226).
+pub const DARK_NEUTRAL_HUE: f32 = 250.0;
 /// The hue of `success`.
 pub const SUCCESS_HUE: f32 = 150.0;
 /// The hue of `warning`.
@@ -18,7 +20,7 @@ pub const WARNING_HUE: f32 = 75.0;
 /// The hue of `danger`.
 pub const DANGER_HUE: f32 = 27.0;
 /// The hue of `alt` (the colour that is not the accent).
-pub const ALT_HUE: f32 = 300.0;
+pub const ALT_HUE: f32 = 350.0;
 
 /// The lightness, chroma and greys of one theme.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -45,58 +47,62 @@ pub struct Tokens {
     pub accent_c: f32,
 }
 
-const fn grey(l: f32, c: f32) -> Oklch {
-    lch(l, c, NEUTRAL_HUE)
+const fn dark_grey(l: f32, c: f32) -> Oklch {
+    lch(l, c, DARK_NEUTRAL_HUE)
+}
+
+const fn light_grey(l: f32, c: f32) -> Oklch {
+    lch(l, c, LIGHT_NEUTRAL_HUE)
 }
 
 const DARK: Tokens = Tokens {
-    background: grey(0.205, 0.008),
-    panel: grey(0.235, 0.008),
-    surface: grey(0.265, 0.009),
-    surface_hover: grey(0.295, 0.010),
-    border: grey(0.47, 0.012),
-    text: grey(0.93, 0.004),
-    text_weak: grey(0.78, 0.012),
-    on_accent: lch(0.14, 0.03, NEUTRAL_HUE),
+    background: dark_grey(0.205, 0.008),
+    panel: dark_grey(0.235, 0.008),
+    surface: dark_grey(0.265, 0.009),
+    surface_hover: dark_grey(0.295, 0.010),
+    border: dark_grey(0.47, 0.012),
+    text: dark_grey(0.93, 0.004),
+    text_weak: dark_grey(0.78, 0.012),
+    on_accent: lch(0.14, 0.03, DARK_NEUTRAL_HUE),
     accent_l: 0.77,
     accent_c: 0.13,
 };
 
 const DARK_HIGH: Tokens = Tokens {
-    background: grey(0.10, 0.0),
-    panel: grey(0.15, 0.004),
-    surface: grey(0.20, 0.006),
-    surface_hover: grey(0.30, 0.012),
-    border: grey(0.74, 0.012),
-    text: grey(1.0, 0.0),
-    text_weak: grey(0.90, 0.008),
-    on_accent: grey(0.0, 0.0),
+    background: dark_grey(0.10, 0.0),
+    panel: dark_grey(0.15, 0.004),
+    surface: dark_grey(0.20, 0.006),
+    surface_hover: dark_grey(0.30, 0.012),
+    border: dark_grey(0.74, 0.012),
+    text: dark_grey(1.0, 0.0),
+    text_weak: dark_grey(0.90, 0.008),
+    on_accent: dark_grey(0.0, 0.0),
     accent_l: 0.85,
     accent_c: 0.12,
 };
 
 const LIGHT: Tokens = Tokens {
-    background: grey(0.950, 0.004),
-    panel: grey(0.975, 0.003),
-    surface: grey(1.0, 0.0),
-    surface_hover: grey(0.925, 0.006),
-    border: grey(0.86, 0.010),
-    text: grey(0.24, 0.010),
-    text_weak: grey(0.52, 0.018),
-    on_accent: grey(1.0, 0.0),
+    background: light_grey(0.950, 0.008),
+    panel: light_grey(0.975, 0.006),
+    surface: light_grey(1.0, 0.002),
+    surface_hover: light_grey(0.925, 0.010),
+    border: light_grey(0.86, 0.012),
+    text: light_grey(0.24, 0.014),
+    text_weak: light_grey(0.52, 0.018),
+    on_accent: light_grey(1.0, 0.0),
     accent_l: 0.48,
     accent_c: 0.15,
 };
 
 const LIGHT_HIGH: Tokens = Tokens {
-    background: grey(0.94, 0.003),
-    panel: grey(0.97, 0.002),
-    surface: grey(1.0, 0.0),
-    surface_hover: grey(0.92, 0.006),
-    border: grey(0.40, 0.014),
-    text: grey(0.0, 0.0),
-    text_weak: grey(0.33, 0.014),
-    on_accent: grey(1.0, 0.0),
+    background: light_grey(0.94, 0.006),
+    panel: light_grey(0.97, 0.004),
+    surface: light_grey(1.0, 0.0),
+    surface_hover: light_grey(0.92, 0.010),
+    border: light_grey(0.40, 0.014),
+    text: light_grey(0.0, 0.0),
+    text_weak: light_grey(0.33, 0.014),
+    on_accent: light_grey(1.0, 0.0),
     accent_l: 0.42,
     accent_c: 0.16,
 };
@@ -116,7 +122,7 @@ pub fn accent_hue(accent: Accent) -> f32 {
     match accent {
         Accent::Blue => 258.0,
         Accent::Green => 150.0,
-        Accent::Purple => 300.0,
+        Accent::Purple => 295.0,
         Accent::Orange => 55.0,
         Accent::Pink => 355.0,
         Accent::Teal => 195.0,
