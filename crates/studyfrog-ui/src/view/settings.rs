@@ -8,7 +8,7 @@ use studyfrog_core::settings::AnswerEngine;
 use crate::app_settings_ui::{SHOWN, SettingsTab, SettingsTabMsg, current_tab, tab_label};
 use crate::msg::Msg;
 use crate::state::State;
-use crate::view::kit;
+use crate::view::{home_hero, kit, screen_title};
 
 /// A part of a tab: draws one group of settings.
 pub type Section = fn(&State, &mut egui::Ui, &mut Vec<Msg>);
@@ -45,8 +45,11 @@ pub fn sections_of(tab: SettingsTab) -> &'static [Section] {
 
 /// The settings screen: a tab bar and the groups of the chosen tab.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.heading("Settings");
+    let _timer = studyfrog_debug::timed("ui", "settings draw");
     let tab = current_tab(&state.app);
+    studyfrog_log::log_debug!("ui", "settings tab shown"; tab = format!("{tab:?}"));
+    screen_title::headline(ui, "Settings");
+    ui.add_space(6.0);
     tab_bar(ui, tab, out);
     ui.separator();
     egui::ScrollArea::vertical()
@@ -59,6 +62,12 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 }
             });
         });
+}
+
+/// A heading for a group of settings, then a redesign card that holds its controls.
+fn card_section(ui: &mut egui::Ui, title: &str, add: impl FnOnce(&mut egui::Ui)) {
+    kit::section(ui, title);
+    home_hero::card(ui, add);
 }
 
 fn tab_bar(ui: &mut egui::Ui, current: SettingsTab, out: &mut Vec<Msg>) {
@@ -85,35 +94,37 @@ fn tab_bar(ui: &mut egui::Ui, current: SettingsTab, out: &mut Vec<Msg>) {
 
 /// Whether the app records how long items are viewed.
 fn view_tracking(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    crate::view::kit::section(ui, "Familiarity");
-    let mut on = !state.app.views_untracked;
-    if ui
-        .checkbox(&mut on, "Record how long I look at items")
-        .changed()
-    {
-        out.push(Msg::Vault(MsgVault::SetTrackViews(on)));
-    }
-    ui.weak("Used to tell how familiar you are with an item. Only the time and the item are stored, on this computer, and they are part of backups.");
+    card_section(ui, "Familiarity", |ui| {
+        let mut on = !state.app.views_untracked;
+        if ui
+            .checkbox(&mut on, "Record how long I look at items")
+            .changed()
+        {
+            out.push(Msg::Vault(MsgVault::SetTrackViews(on)));
+        }
+        ui.weak("Used to tell how familiar you are with an item. Only the time and the item are stored, on this computer, and they are part of backups.");
+    });
 }
 
 /// Import and export of the library or a stack.
 fn transfer(_: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    crate::view::kit::section(ui, "Import and export");
-    ui.weak("Write the library or a stack as JSON, CSV or Markdown, or read a file, an Anki package or an Obsidian vault, with a preview first.");
-    ui.horizontal(|ui| {
-        for (label, tab) in [
-            ("Export…", crate::transfer_ui::Tab::Export),
-            ("Import…", crate::transfer_ui::Tab::Import),
-        ] {
-            if ui
-                .button(label)
-                .on_hover_text("Opens the transfer dialog on this tab.")
-                .clicked()
-            {
-                let open = crate::transfer_ui::TransferMsg::Open(tab, None);
-                out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
+    card_section(ui, "Import and export", |ui| {
+        ui.weak("Write the library or a stack as JSON, CSV or Markdown, or read a file, an Anki package or an Obsidian vault, with a preview first.");
+        ui.horizontal(|ui| {
+            for (label, tab) in [
+                ("Export…", crate::transfer_ui::Tab::Export),
+                ("Import…", crate::transfer_ui::Tab::Import),
+            ] {
+                if ui
+                    .button(label)
+                    .on_hover_text("Opens the transfer dialog on this tab.")
+                    .clicked()
+                {
+                    let open = crate::transfer_ui::TransferMsg::Open(tab, None);
+                    out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
+                }
             }
-        }
+        });
     });
 }
 
@@ -124,7 +135,10 @@ fn replay(state: &State, ui: &mut egui::Ui, _out: &mut Vec<Msg>) {
 
 /// The scheduler settings the vault uses (read-only) and where to change them.
 fn scheduling(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    crate::view::kit::section(ui, "Scheduling");
+    card_section(ui, "Scheduling", |ui| scheduling_body(state, ui, out));
+}
+
+fn scheduling_body(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let Some(vault) = &state.vault else { return };
     if let Some(e) = &vault.settings_error {
         ui.colored_label(
@@ -188,25 +202,29 @@ fn scheduling(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 /// How typed answers are compared, and the thresholds that turn reading time into suggestions.
 fn answer_comparison(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    crate::view::kit::section(ui, "Answer comparison");
-    ui.horizontal(|ui| {
-        for (engine, label) in [
-            (AnswerEngine::Auto, "Language model when installed"),
-            (AnswerEngine::Words, "Word matching only"),
-        ] {
-            if ui
-                .selectable_label(state.app.answer_engine == engine, label)
-                .clicked()
-            {
-                out.push(Msg::Vault(MsgVault::SetAnswerEngine(engine)));
+    card_section(ui, "Answer comparison", |ui| {
+        ui.horizontal(|ui| {
+            for (engine, label) in [
+                (AnswerEngine::Auto, "Language model when installed"),
+                (AnswerEngine::Words, "Word matching only"),
+            ] {
+                if ui
+                    .selectable_label(state.app.answer_engine == engine, label)
+                    .clicked()
+                {
+                    out.push(Msg::Vault(MsgVault::SetAnswerEngine(engine)));
+                }
             }
-        }
+        });
+        ui.weak("A high match means similar wording or meaning, not that the facts are right.");
+        let p = studyfrog_rehearsal::reading::reading_params(
+            state.app.reading_wpm,
+            &state.app.reading,
+        );
+        ui.label(format!(
+            "Reading suggestions: fast is under {} % of the expected time, slow is over {} %, answers under {} words are ignored.",
+            p.fast_percent, p.slow_percent, p.min_words
+        ));
+        ui.weak("Change reading_fast_percent, reading_slow_percent and reading_min_words in app.toml.");
     });
-    ui.weak("A high match means similar wording or meaning, not that the facts are right.");
-    let p = studyfrog_rehearsal::reading::reading_params(state.app.reading_wpm, &state.app.reading);
-    ui.label(format!(
-        "Reading suggestions: fast is under {} % of the expected time, slow is over {} %, answers under {} words are ignored.",
-        p.fast_percent, p.slow_percent, p.min_words
-    ));
-    ui.weak("Change reading_fast_percent, reading_slow_percent and reading_min_words in app.toml.");
 }

@@ -2,7 +2,7 @@
 use super::*;
 
 pub(in crate::view) fn sample_section(_: &State, ui: &mut egui::Ui, _: &mut Vec<Msg>) {
-    kit::group(ui, "Sample", |ui| {
+    group(ui, "Sample", |ui| {
         let p = palette_of(ui);
         ui.label(
             RichText::new("A heading")

@@ -12,10 +12,19 @@ use crate::appearance_ui::AppearanceMsg;
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::{Look, palette_of, palette_with};
-use crate::view::kit;
+use crate::view::{home_hero, kit};
 
 fn send(out: &mut Vec<Msg>, m: AppearanceMsg) {
     out.push(Msg::Appearance(m));
+}
+
+/// A caption and, under it, a redesign card that holds the group's controls.
+fn group(ui: &mut egui::Ui, title: &str, add: impl FnOnce(&mut egui::Ui)) {
+    kit::caption(ui, title);
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        add(ui);
+    });
 }
 
 /// A row of choices, one selected; the new choice when one was picked. Each is named "`name`: `label`" for screen readers.
@@ -51,7 +60,7 @@ pub(super) fn theme_choice(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>)
 }
 
 pub(super) fn theme_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    kit::group(ui, "Theme", |ui| {
+    group(ui, "Theme", |ui| {
         theme_choice(state, ui, out);
         ui.weak("Follow system uses the theme of your desktop and changes with it while StudyFrog is open.");
     });
@@ -78,7 +87,7 @@ fn percent_box(ui: &mut egui::Ui, name: &str, steps: &[u16], current: u16) -> Op
 
 pub(super) fn size_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let a = &state.app.appearance;
-    kit::group(ui, "Size and density", |ui| {
+    group(ui, "Size and density", |ui| {
         ui.horizontal(|ui| {
             ui.label("Interface size");
             if let Some(z) = percent_box(ui, "Interface size", &ZOOMS, a.zoom) {
@@ -154,7 +163,7 @@ fn swatch(ui: &mut egui::Ui, accent: Accent, selected: bool) -> egui::Response {
 
 pub(super) fn colours_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let a = &state.app.appearance;
-    kit::group(ui, "Colours and motion", |ui| {
+    group(ui, "Colours and motion", |ui| {
         ui.label("Accent colour");
         ui.horizontal(|ui| {
             for c in ACCENT_LIST {
@@ -179,7 +188,7 @@ pub(super) fn colours_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Ms
 
 pub(super) fn startup_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let a = &state.app.appearance;
-    kit::group(ui, "Start-up and window", |ui| {
+    group(ui, "Start-up and window", |ui| {
         ui.label("Open this screen first");
         let options = [
             (StartScreen::Home, "Home"),

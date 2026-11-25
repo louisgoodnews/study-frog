@@ -5,6 +5,7 @@ use eframe::egui;
 use crate::help_types::{HelpMsg, PageEdit};
 use crate::msg::Msg;
 use crate::view::md_editor::{Mode, md_editor};
+use crate::view::screen_title;
 use crate::view::widgets::text_field;
 
 fn send(out: &mut Vec<Msg>, m: HelpMsg) {
@@ -18,7 +19,7 @@ pub fn editor(edit: &PageEdit, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     } else {
         "New page"
     };
-    ui.heading(heading);
+    screen_title::headline(ui, heading);
     ui.weak("Kept as a Markdown file in the wiki folder of your vault. Link to a help page with [[id]], for example [[library]].");
     if let Some(name) = text_field(ui, "Page name", &edit.name, "File name, without .md", 1) {
         send(out, HelpMsg::EditName(name));

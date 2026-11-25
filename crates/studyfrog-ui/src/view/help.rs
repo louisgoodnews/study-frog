@@ -1,18 +1,15 @@
 //! The help screen: search and the page tree on the left, the page on the right.
 use crate::msg::MsgEditor;
-use crate::msg::MsgVault;
 
 use eframe::egui::{self, RichText, ScrollArea, TextEdit};
-use studyfrog_service::help::{Hit, PAGES, PageRef, SECTIONS, title_of, user_title};
+use studyfrog_service::help::{Hit, PageRef};
 
-use crate::console_ui::ConsoleMsg;
 use crate::help_types::{HelpMsg, HelpState};
 use crate::help_ui::current;
 use crate::msg::Msg;
-use crate::script_studio::wiki_panel::WikiMsg;
 use crate::state::{Screen, State};
 use crate::theme::palette_of;
-use crate::view::kit;
+use crate::view::{help_tree, kit, screen_title};
 
 const TREE_WIDTH: f32 = 230.0;
 
@@ -32,7 +29,9 @@ pub fn screen_name(screen: Screen) -> &'static str {
 
 /// The screen.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let _timer = studyfrog_debug::timed("ui", "help draw");
     let help = &state.help;
+    studyfrog_log::log_debug!("ui", "help page shown"; page = format!("{:?}", current(help)));
     egui::Panel::left("help-tree")
         .resizable(false)
         .exact_size(TREE_WIDTH)
@@ -53,6 +52,8 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 fn side(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let help = &state.help;
+    screen_title::headline(ui, "Help");
+    ui.add_space(6.0);
     let mut text = help.search.clone();
     let field = ui.add(
         TextEdit::singleline(&mut text)
@@ -65,73 +66,10 @@ fn side(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
     ui.add_space(6.0);
     if help.search.trim().is_empty() {
-        tree(state, ui, out);
+        help_tree::tree(state, ui, out);
     } else {
         hits(&help.hits, &help.search, ui, out);
     }
-}
-
-fn entry(ui: &mut egui::Ui, open: bool, title: &str, page: PageRef, out: &mut Vec<Msg>) {
-    let width = ui.available_width();
-    let button = egui::Button::selectable(open, title).min_size(egui::vec2(width, 24.0));
-    if ui
-        .add(button)
-        .on_hover_text("Opens this help page.")
-        .clicked()
-    {
-        send(out, HelpMsg::Open(page));
-    }
-}
-
-fn tree(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let shown = current(&state.help);
-    kit::caption(ui, "FrogScript");
-    if state.vault.is_none() {
-        ui.weak("Open a vault to use the FrogScript reference.");
-    } else if ui
-        .button("FrogScript reference")
-        .on_hover_text("Opens the reference of FrogScript in ScriptStudio.")
-        .clicked()
-    {
-        out.push(Msg::Console(ConsoleMsg::Wiki(WikiMsg::Show)));
-        out.push(Msg::Vault(MsgVault::Navigate(Screen::Console)));
-    }
-    ui.add_space(6.0);
-    for (section, name) in SECTIONS {
-        kit::caption(ui, name);
-        for p in PAGES.iter().filter(|p| p.section == section) {
-            let page = PageRef::Supplied(p.id.to_owned());
-            entry(ui, shown == page, title_of(p.text, p.id), page, out);
-        }
-        ui.add_space(6.0);
-    }
-    kit::caption(ui, "Your pages");
-    for u in &state.help.user {
-        let page = PageRef::User(u.file.clone());
-        entry(ui, shown == page, user_title(u), page, out);
-    }
-    if state.vault.is_none() {
-        ui.weak("Open a vault to keep your own pages.");
-    } else {
-        if ui
-            .button("+ New page")
-            .on_hover_text("Adds a new page.")
-            .clicked()
-        {
-            send(out, HelpMsg::New);
-        }
-        if ui
-            .button("Ask the assistant")
-            .on_hover_text("The assistant reads your pages (after you press Send) and proposes new pages or edits.")
-            .clicked()
-        {
-            let on = crate::agent_types::AgentMsg::UseHelpPages(true);
-            out.push(Msg::Agent(on));
-            out.push(Msg::Vault(MsgVault::Navigate(Screen::Agent)));
-        }
-    }
-    ui.add_space(6.0);
-    crate::view::tutorial::tutorials(state, ui, out);
 }
 
 fn hits(hits: &[Hit], query: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
