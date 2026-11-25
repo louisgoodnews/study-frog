@@ -46,6 +46,7 @@ fn running(p: Pacing) -> Model {
     for (uid, prompt, answer) in [(1, "Capital of France?", "Paris"), (2, "7 x 8?", "56")] {
         let content = ItemContent {
             case: None,
+            answer_type: None,
             title: prompt.into(),
             prompt: prompt.into(),
             answer: answer.into(),

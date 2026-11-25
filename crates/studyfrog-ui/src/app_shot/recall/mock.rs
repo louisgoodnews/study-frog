@@ -66,6 +66,7 @@ pub fn long_run(model: &mut Model) -> Vec<Effect> {
         .join("\n\n");
     let content = ItemContent {
         case: None,
+        answer_type: None,
         title: "Long item".into(),
         prompt: "Explain the reliability coefficient in full.".into(),
         answer,

@@ -22,6 +22,7 @@ fn with_gap(mode: RunMode) -> Model {
     let mut m = running_model(mode);
     let content = ItemContent {
         case: None,
+        answer_type: None,
         title: "Sun".into(),
         prompt: "The `[a star]` is hot.".into(),
         answer: "The **<span style=\"color:#1e8449\">sun</span>** is hot.".into(),

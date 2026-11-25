@@ -89,7 +89,7 @@ pub fn render(prompt: &str, rows: &[Row]) -> String {
 /// The body a new question starts with: the prompt, and for a choice type the option template. A prompt that
 /// already holds options, or open text, is kept as it is.
 pub fn create_body(prompt: &str, t: AnswerType) -> String {
-    if t == AnswerType::Open || parse_choice(prompt).is_some() {
+    if t == AnswerType::Open || parse_choice(prompt).is_ok() {
         return prompt.to_owned();
     }
     render(prompt, &template_rows(t))
@@ -97,7 +97,7 @@ pub fn create_body(prompt: &str, t: AnswerType) -> String {
 
 /// The choice in a body, when it has one.
 pub fn block_of(body: &str) -> Option<ChoiceBlock> {
-    parse_choice(body)
+    parse_choice(body).ok()
 }
 
 /// The options of a parsed choice, in order.
@@ -140,12 +140,12 @@ pub fn agrees(t: AnswerType, rows: &[Row]) -> bool {
 
 /// Switching to open text removes the option markers, so it needs a confirmation first.
 pub fn open_text_needs_confirm(body: &str) -> bool {
-    parse_choice(body).is_some()
+    parse_choice(body).is_ok()
 }
 
 /// The body of an open-text question: the prompt alone, with the option lines removed.
 pub fn open_text_body(body: &str) -> String {
-    match parse_choice(body) {
+    match parse_choice(body).ok() {
         Some(block) => block.prompt.trim_end().to_owned(),
         None => body.to_owned(),
     }

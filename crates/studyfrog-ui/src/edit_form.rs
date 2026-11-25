@@ -12,7 +12,6 @@ use studyfrog_md::names::{extra_names, with_extra_names};
 use studyfrog_md::refs::{references_of, with_references};
 use studyfrog_md::status::{status_of, with_status};
 use crate::view::choice_body::{AnswerType, answer_type_name, stated_type};
-use crate::view::choice_body::{AnswerType, answer_type_name, stated_type};
 
 /// One multi-line text area.
 #[derive(Debug, Clone, PartialEq, Eq)]
