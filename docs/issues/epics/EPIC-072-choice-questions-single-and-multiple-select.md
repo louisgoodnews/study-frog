@@ -27,6 +27,8 @@ studyfrog-md, graded by the rehearsal engine with the mock exam's rules, and sho
 - [ ] The mock exam's grading is reused
 
 ## Design Notes
+- Answer type (decided 2026-11-25): stored in the item front matter as `answer_type: open | single | multiple`; the body
+  options must agree with it.
 - Syntax (proposal, decided in STORY-0220): a list whose items start with `- [ ]` (wrong) or `- [x]` (correct), placed
   in the body of a card or question, after the prompt. Example:
   ```

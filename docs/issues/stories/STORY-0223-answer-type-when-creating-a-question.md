@@ -28,11 +28,13 @@ Add the answer type to the question creation path (the dialog and the control co
 - [ ] Created choice items are recognised everywhere
 
 ## Design Notes
-The answer type is not a separate field: it is derived from the option markers in the body (STORY-0220). The Create
-dialog only writes the template. Open question below.
+Decided 2026-11-25 (owner): the answer type is stored in the item's front matter as `answer_type: open | single | multiple`.
+The option markers in the body (STORY-0220) must agree with it: `single` needs exactly one `[x]`, `multiple` two or more,
+`open` none. A body that disagrees is reported, not silently re-typed. The Create dialog writes both the front matter and
+the option template.
 
 ## Dependencies
 - STORY-0220 (parser), STORY-0221 (grading) for rehearsal.
 
 ## Open Questions
-- Should the answer type also be stored in the front matter, so that it survives an edit that removes the markers?
+- None. Answer type in the front matter: decided 2026-11-25.
