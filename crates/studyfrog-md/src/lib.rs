@@ -8,6 +8,7 @@ mod blocks_table;
 mod blocks_text;
 pub mod build;
 pub mod build_diary;
+pub mod choice;
 pub mod cloze;
 pub mod codeblock;
 pub mod comments;

@@ -25,6 +25,8 @@ studyfrog-achieve.workspace = true
 studyfrog-ext.workspace = true
 studyfrog-pdf.workspace = true
 studyfrog-report.workspace = true
+studyfrog-log = { path = "../studyfrog-log" }
+studyfrog-debug = { path = "../studyfrog-debug" }
 chrono.workspace = true
 rusqlite.workspace = true
 serde.workspace = true

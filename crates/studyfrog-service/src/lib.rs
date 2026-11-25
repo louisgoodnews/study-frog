@@ -18,6 +18,7 @@ pub mod bulk;
 pub mod calibration_report;
 pub mod case_codec;
 pub mod case_items;
+pub mod choice;
 pub mod classroom_context;
 pub mod classroom_grade;
 pub mod classroom_group;

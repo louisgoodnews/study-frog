@@ -1,6 +1,7 @@
 //! Rehearsal run engine: event stream, per-item latency capture and outcomes, as pure state transitions.
 
 pub mod case_study;
+pub mod choice_grade;
 pub mod clock;
 pub mod curriculum;
 pub mod curriculum_build;
