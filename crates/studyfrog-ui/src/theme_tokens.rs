@@ -117,6 +117,9 @@ pub fn tokens(dark: bool, high_contrast: bool) -> Tokens {
     }
 }
 
+/// How much lighter the headline gradient's ends are in high-contrast dark mode (lightness points, OKLCH).
+pub const GRADIENT_DARK_LIFT: f32 = 0.01;
+
 /// The OKLCH hue of an accent.
 pub fn accent_hue(accent: Accent) -> f32 {
     match accent {
@@ -138,6 +141,13 @@ pub fn chromatic(t: &Tokens, hue: f32) -> Oklch {
 pub fn build(dark: bool, high_contrast: bool, accent: Accent) -> Palette {
     let t = tokens(dark, high_contrast);
     let at = |hue| oklch_to_rgb(chromatic(&t, hue));
+    // High-contrast dark: the gradient ends are lighter than the accent, so black text reaches the APCA target.
+    let gradient_l = if dark && high_contrast {
+        t.accent_l + GRADIENT_DARK_LIFT
+    } else {
+        t.accent_l
+    };
+    let at_lightness = |hue, l| oklch_to_rgb(lch(l, t.accent_c, hue));
     Palette {
         background: oklch_to_rgb(t.background),
         panel: oklch_to_rgb(t.panel),
@@ -152,5 +162,7 @@ pub fn build(dark: bool, high_contrast: bool, accent: Accent) -> Palette {
         warning: at(WARNING_HUE),
         danger: at(DANGER_HUE),
         alt: at(ALT_HUE),
+        gradient_start: at_lightness(accent_hue(accent), gradient_l),
+        gradient_stop: at_lightness(ALT_HUE, gradient_l),
     }
 }

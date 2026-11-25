@@ -39,6 +39,10 @@ pub struct Palette {
     pub danger: Color32,
     /// A fourth colour that is not the accent, for kinds that need one (appointments, notes in the graph).
     pub alt: Color32,
+    /// The headline gradient's start: the accent, a little lighter in high-contrast dark mode so black text passes.
+    pub gradient_start: Color32,
+    /// The headline gradient's end: the alt colour, lightened the same way as `gradient_start`.
+    pub gradient_stop: Color32,
 }
 
 /// What of the user's appearance settings the palette depends on; kept in egui's memory by [`crate::theme_apply`].
