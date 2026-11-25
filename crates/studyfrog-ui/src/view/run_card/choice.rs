@@ -23,9 +23,13 @@ const NUMBER_KEYS: [Key; 9] = [
 ];
 
 /// The current item's choice block when the card shows its options: a typed item, awaiting the reveal
-/// or already answered.
+/// or already answered. An exam offers its options while the item awaits its submit, never after it:
+/// an exam shows no answer until the end.
 pub(crate) fn shown(run: &RunView) -> Option<(Uid, &ChoiceBlock)> {
-    if !is_item_typed(run) || !(awaiting_reveal(run) || awaiting_rating(run)) {
+    let exam = crate::exam_ui::is_exam(run);
+    let offered = exam || is_item_typed(run);
+    let open = awaiting_reveal(run) || (awaiting_rating(run) && !exam);
+    if !offered || !open {
         return None;
     }
     pending_block(run)
@@ -66,13 +70,40 @@ pub(crate) fn options(
     let picked = picked_for(&run.choice, uid, block.options.len());
     if awaiting_rating(run) {
         answered(block, &picked, ui);
+    } else if crate::exam_ui::is_exam(run) {
+        answering(
+            block,
+            &picked,
+            (
+                "Submit and lock answer",
+                "Submits your choice and locks it.",
+            ),
+            ui,
+            out,
+        );
     } else {
-        answering(block, &picked, ui, out);
+        answering(
+            block,
+            &picked,
+            (
+                "Submit answer",
+                "Checks the chosen options against the card (Enter).",
+            ),
+            ui,
+            out,
+        );
     }
 }
 
-/// Radio buttons for single choice, checkboxes for multiple select, then the Submit button.
-fn answering(block: &ChoiceBlock, picked: &[bool], ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+/// Radio buttons for single choice, checkboxes for multiple select, then the Submit button (its label and
+/// hover text given by the caller).
+fn answering(
+    block: &ChoiceBlock,
+    picked: &[bool],
+    (label, tip): (&str, &str),
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+) {
     let multiple = is_multiple(block);
     // The boxes and circles take a visible outline in the weak text colour, so they show on both themes.
     let p = crate::theme::palette_of(ui);
@@ -98,8 +129,7 @@ fn answering(block: &ChoiceBlock, picked: &[bool], ui: &mut egui::Ui, out: &mut 
     ui.add_space(6.0);
     let clicked = ui
         .add_enabled_ui(can_submit(picked), |ui| {
-            kit::primary_button(ui, "Submit answer")
-                .on_hover_text("Checks the chosen options against the card (Enter).")
+            kit::primary_button(ui, label).on_hover_text(tip)
         })
         .inner
         .clicked();

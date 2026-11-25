@@ -119,9 +119,10 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) -> bool
         .cloned()
         .unwrap_or_else(|| blocks_of(content));
     let heading = crate::typo::size(ui, crate::typo::Tier::Heading);
-    // A choice item shows its prompt above the options, not the list of options as Markdown.
+    // A choice item shows its prompt above the options, never the option list as Markdown: that would tick
+    // the correct box in an exam, which shows no answer until the end.
     let on_screen = choice::shown(run);
-    let prompt = match on_screen {
+    let prompt = match crate::run_update::choice::pending_block(run) {
         Some((_, block)) => studyfrog_md::blocks::parse_blocks(&block.prompt),
         None => prompt,
     };
@@ -132,16 +133,17 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) -> bool
     }
     source_link(content, ui, out);
     ui.add_space(8.0);
-    if crate::exam_ui::is_exam(run) {
-        if let Some(case) = content.case.as_deref() {
-            crate::view::exam_card::case_question(case, ui);
-        }
-        crate::view::exam_card::controls(run, ui, out);
-        return false;
+    let exam = crate::exam_ui::is_exam(run);
+    if let (true, Some(case)) = (exam, content.case.as_deref()) {
+        crate::view::exam_card::case_question(case, ui);
     }
     if let Some((uid, block)) = on_screen {
         choice::options(run, uid, block, ui, out);
         ui.add_space(8.0);
+    }
+    if exam {
+        crate::view::exam_card::controls(run, on_screen.is_some(), ui, out);
+        return false;
     }
     mark_row(run, ui, out);
     ui.add_space(12.0);

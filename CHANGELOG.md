@@ -35,6 +35,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - The first-run setup wizard's steps (vault, local model, remote provider, MiniLM, summary), skipping, revisiting and what is done, as a pure model in `studyfrog-config` (TASK-0297, STORY-0212).
 
 ### Fixed
+- Fixed: in a mock exam a choice item shows its options as selectable radio buttons or checkboxes with a Submit and lock answer button, and no longer shows the correct option ticked; the choice is graded by the choice grading setting, and `rehearse choose` then `rehearse submit` works in an exam (STORY-0241).
 - Fixed: the mock exam's Start and Finish and grade buttons sit above the questions (Start under the summary, Finish beside the timer), so they stay in view on a 1000 by 720 window after the redesign cards made the forms taller (STORY-0241, STORY-0242).
 - Fixed: a failed exam or rehearsal grade and its per-item marks are shown in the danger colour (they were green); the Canvas empty state uses the redesign headline and card (STORY-0240, STORY-0241).
 - The GGUF catalog's digests and sizes for Qwen2.5-1.5B and Llama-3.2-1B were wrong, and the Llama digest was that of an empty file; SmolLM2 pointed at a file the repository does not have, so it is now the Q8_0 file that exists (TASK-0298).

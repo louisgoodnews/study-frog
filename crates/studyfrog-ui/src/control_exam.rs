@@ -9,6 +9,7 @@ use crate::control_cmd::RehearseCmd;
 use crate::control_state::ulid;
 use crate::exam_ui::{answers, is_exam};
 use crate::run_state::RunView;
+use crate::run_update::choice::{is_pending, is_ready};
 use crate::run_update::is_over;
 use crate::state::State;
 
@@ -28,7 +29,10 @@ pub fn check(state: &State, cmd: &RehearseCmd) -> Result<(), String> {
         RehearseCmd::Answer(t) if blank(t) => {
             Err("write an answer before submitting it".to_owned())
         }
-        RehearseCmd::Submit if blank(&run.answer) => {
+        RehearseCmd::Submit if is_pending(state) && !is_ready(state) => {
+            Err("the choice is empty: rehearse choose <n> first".to_owned())
+        }
+        RehearseCmd::Submit if !is_pending(state) && blank(&run.answer) => {
             Err("the answer is empty: rehearse type <text> first".to_owned())
         }
         RehearseCmd::Finish if !is_over(run) => Err(

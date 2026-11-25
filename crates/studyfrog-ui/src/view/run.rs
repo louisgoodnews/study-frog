@@ -87,10 +87,10 @@ fn shortcuts(run: &RunView, ui: &egui::Ui, out: &mut Vec<Msg>) {
             crate::rehearsal_edit::RehearsalEditMsg::ToggleComments,
         ));
     }
+    crate::view::run_card::choice::keys(run, ui, out);
     if crate::exam_ui::is_exam(run) {
         return exam_shortcuts(run, &pressed, out);
     }
-    crate::view::run_card::choice::keys(run, ui, out);
     let edit_pressed = ui.input(|i| {
         (i.key_pressed(Key::E) && (i.modifiers.command || i.modifiers.ctrl))
             || i.key_pressed(Key::F2)

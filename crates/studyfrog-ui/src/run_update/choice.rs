@@ -27,11 +27,12 @@ pub enum ChoiceMsg {
     Submit,
 }
 
-/// A loaded item's choice block, when it is a choice item in an answer run. The front matter's
+/// A loaded item's choice block, when it is a choice item in an answer or an exam run. The front matter's
 /// `answer_type` must agree with the option markers in the body; a disagreement is logged and the
 /// item is answered as typed text instead.
 pub(crate) fn note_item(run: &mut RunView, uid: Uid, content: &ItemContent) {
-    if run.session.run.mode != RunMode::Answer || content.is_note {
+    let written = matches!(run.session.run.mode, RunMode::Answer | RunMode::Exam);
+    if !written || content.is_note {
         return;
     }
     let declared = content.answer_type.as_deref();
@@ -77,6 +78,15 @@ pub(crate) fn is_pending(state: &State) -> bool {
         .run
         .as_ref()
         .is_some_and(|run| pending_block(run).is_some())
+}
+
+/// Whether the pending choice item has at least one option chosen, so a submit has something to send.
+pub(crate) fn is_ready(state: &State) -> bool {
+    state.rehearse.run.as_ref().is_some_and(|run| {
+        pending_block(run).is_some_and(|(uid, block)| {
+            can_submit(&picked_for(&run.choice, uid, block.options.len()))
+        })
+    })
 }
 
 /// Check `rehearse choose` numbers (1-based) against the current choice item, and give them as

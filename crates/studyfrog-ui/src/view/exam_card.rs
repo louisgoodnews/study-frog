@@ -45,9 +45,14 @@ pub fn case_question(case: &CaseStudyItem, ui: &mut egui::Ui) {
     ui.add_space(6.0);
 }
 
-/// The answer field and the submit button.
-pub fn controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+/// The answer field and the submit button; a choice item (`choosing`) is answered with its options, which
+/// carry their own submit button, so only the progress line is left here.
+pub fn controls(run: &RunView, choosing: bool, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if !awaiting_reveal(run) {
+        return;
+    }
+    if choosing {
+        progress(run, ui);
         return;
     }
     if let Some(text) = text_field(ui, "Your answer", &run.answer, "write your answer", 4) {
@@ -66,12 +71,17 @@ pub fn controls(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 Action::SubmitAnswer(run.answer.clone()),
             )));
         }
-        let done = answers(run).len();
-        ui.weak(format!("{done} of {} answered", run.session.queue.len()));
+        progress(run, ui);
     });
     if !ready {
         ui.weak("Write an answer to submit it; you cannot skip an item.");
     }
+}
+
+/// How many items are answered so far.
+fn progress(run: &RunView, ui: &mut egui::Ui) {
+    let done = answers(run).len();
+    ui.weak(format!("{done} of {} answered", run.session.queue.len()));
 }
 
 #[cfg(test)]
