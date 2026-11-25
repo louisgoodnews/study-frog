@@ -52,10 +52,12 @@ fn viewer_at_1280(model: Model) -> egui_kittest::Harness<'static, (Model, Vec<Ef
 fn header_row_buttons(h: &egui_kittest::Harness<'_, (Model, Vec<Effect>)>) -> Vec<String> {
     use eframe::egui::accesskit::Role;
     use egui_kittest::kittest::{NodeT, Queryable};
-    let row = h.get_by_label("Previous").rect().min.y;
+    // Only the content area: the sidebar's buttons can sit at the same height, but left of "Previous".
+    let previous = h.get_by_label("Previous").rect();
+    let (row, left) = (previous.min.y, previous.min.x - 4.0);
     let mut labels: Vec<String> = h
         .query_all_by_role(Role::Button)
-        .filter(|n| (n.rect().min.y - row).abs() < 4.0)
+        .filter(|n| (n.rect().min.y - row).abs() < 4.0 && n.rect().min.x >= left)
         .filter_map(|n| n.accesskit_node().label())
         .collect();
     labels.sort();

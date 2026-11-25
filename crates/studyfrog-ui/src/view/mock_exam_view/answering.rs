@@ -34,11 +34,16 @@ pub fn draw(
     m: &MockExamUi,
     out: &mut Vec<Msg>,
 ) {
-    if m.locked {
-        ui.weak("Submitted. Your answers are locked until the result is shown.");
-    } else {
-        timer_line(ui, g.exam.time_limit_min * 60, m.elapsed_sec);
-    }
+    // The timer and the finish button sit together above the questions, so the exam can be submitted without
+    // scrolling past every question (the redesign cards made the form taller than a 1000 by 720 window).
+    ui.horizontal_wrapped(|ui| {
+        if m.locked {
+            ui.weak("Submitted. Your answers are locked until the result is shown.");
+        } else {
+            timer_line(ui, g.exam.time_limit_min * 60, m.elapsed_sec);
+            finish_button(ui, out);
+        }
+    });
     ui.add_enabled_ui(!m.locked, |ui| {
         for (i, q) in all_questions(&g.exam).into_iter().enumerate() {
             ui.add_space(6.0);
@@ -48,10 +53,9 @@ pub fn draw(
             });
         }
     });
-    ui.add_space(8.0);
-    if m.locked {
-        return;
-    }
+}
+
+fn finish_button(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if kit::primary_button(ui, "Finish and grade")
         .on_hover_text(
             "Grades every answer and shows the grade with the review. The exam also ends when the time runs out.",

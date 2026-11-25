@@ -12,9 +12,15 @@ use crate::setup::mock_exam::{MockExamMsg, MockExamUi};
 use crate::theme::palette_of;
 use crate::view::{home_hero, kit};
 
-/// Draw the exam before it starts: the summary, the questions and the buttons that start, save or show the answers.
+/// Draw the exam before it starts: the summary, the buttons that start, save or show the answers, then the
+/// questions. The buttons sit above the questions so Start stays in view on a short window.
 pub fn draw(ui: &mut egui::Ui, g: &Generated, m: &MockExamUi, out: &mut Vec<Msg>) {
     summary(ui, g, m);
+    ui.add_space(8.0);
+    buttons(ui, m, out);
+    if let Some(path) = &m.saved {
+        ui.weak(format!("Saved as {path}"));
+    }
     let mut n = 0;
     for section in &g.exam.sections {
         ui.add_space(6.0);
@@ -30,10 +36,6 @@ pub fn draw(ui: &mut egui::Ui, g: &Generated, m: &MockExamUi, out: &mut Vec<Msg>
     ui.add_space(8.0);
     if m.show_answers {
         reference_answers(ui, g);
-    }
-    buttons(ui, m, out);
-    if let Some(path) = &m.saved {
-        ui.weak(format!("Saved as {path}"));
     }
 }
 
