@@ -2,7 +2,7 @@
 id: STORY-0201
 type: story
 title: "Reference runs on the owner's machine, with the machine's identity recorded"
-status: in_progress
+status: blocked
 epic: EPIC-067
 parents: ['EPIC-067']
 estimate: 5
@@ -40,6 +40,7 @@ between machines with no code change, so a result without its machine is not com
   A test run there spread 9.8% over 5 runs and was extended to 10 (see TASK-0278).
 
 ## Dependencies
+- Blocked 2026-11-25: TASK-0279 (paired runs) is written in code but untested; the owner's test comes first. Parked to free a WIP slot for EPIC-072.
 
 Unblocked by ADR 0014 (2026-11-24): this machine is the reference. The reference run is done; TASK-0279 remains.
 
