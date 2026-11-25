@@ -6,17 +6,20 @@ pub mod steps;
 pub mod types;
 pub mod update;
 
-use eframe::egui;
+use eframe::egui::{self, RichText};
 use studyfrog_config::wizard::{self as flow, Installed, Status, Step, Wizard};
 
 use crate::msg::Msg;
 use crate::state::State;
-use crate::view::home_hero;
-use crate::view::kit;
+use crate::theme::style::Style;
 use crate::view::wizard::installed::installed_of;
 use crate::view::wizard::types::{WizardMsg, flow_of, title_of};
+use crate::view::{gradient_panel, home_hero, kit};
 
-/// The wizard's whole screen.
+/// The height of the headline panel, in points (EPIC-073, STORY-0242).
+const HEADLINE_HEIGHT: f32 = 150.0;
+
+/// The wizard's whole screen: the headline on the gradient, the stepper and the step in cards, the buttons.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let current = flow_of(&state.wizard);
     let installed = installed_of(state);
@@ -24,9 +27,13 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .auto_shrink([false, false])
         .show(ui, |ui| {
             kit::column(ui, 860.0, |ui| {
-                ui.heading("Set up StudyFrog");
-                ui.weak("Each step is optional. Skip any of them. Settings runs this setup again.");
-                stepper(&current, &installed, ui, out);
+                ui.add_space(16.0);
+                gradient_panel::panel(ui, HEADLINE_HEIGHT, headline);
+                ui.add_space(12.0);
+                home_hero::card(ui, |ui| {
+                    ui.set_width(ui.available_width());
+                    stepper(&current, &installed, ui, out);
+                });
                 ui.add_space(12.0);
                 home_hero::card(ui, |ui| {
                     steps::body(state, &current, &installed, ui, out);
@@ -35,6 +42,23 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                 nav(&current, ui, out);
             });
         });
+}
+
+/// The title and the note that every step is optional, on the gradient.
+fn headline(ui: &mut egui::Ui, s: Style) {
+    ui.label(
+        RichText::new("Set up StudyFrog")
+            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+            .strong()
+            .color(s.gradient_text),
+    );
+    ui.add(
+        egui::Label::new(
+            RichText::new("Each step is optional. Skip any of them. Settings runs this setup again.")
+                .color(s.gradient_text),
+        )
+        .wrap(),
+    );
 }
 
 /// The Settings entry that runs the setup again (STORY-0212). Nothing is downloaded by opening it.
