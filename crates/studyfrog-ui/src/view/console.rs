@@ -4,35 +4,20 @@
 use eframe::egui::{self, RichText, TextStyle};
 
 pub mod code;
+pub mod headline;
 pub mod jobs;
 pub mod output;
 
-use crate::console_ui::{ConsoleMsg, Entry, EntryKind};
+use crate::console_ui::ConsoleMsg;
 use crate::msg::Msg;
 use crate::script_studio::active_tab;
 use crate::state::State;
 use crate::theme::palette_of;
-use crate::view::kit;
+use crate::view::{home_hero, kit};
 
 const HINT: &str = "Type a control command (e.g., `query type = card`, `state`, `logs`, `help`)";
 
-fn entry(ui: &mut egui::Ui, e: &Entry) {
-    let p = palette_of(ui);
-    let (prefix, color) = match e.kind {
-        EntryKind::Command => ("› ", p.accent),
-        EntryKind::Answer => ("", p.text),
-        EntryKind::Error => ("error: ", p.danger),
-        EntryKind::Event => ("event ", p.text_weak),
-        EntryKind::Script => ("+ ", p.success),
-        EntryKind::Stdout => ("stdout: ", p.text),
-        EntryKind::Stderr => ("stderr: ", p.danger),
-    };
-    // Each line carries its time on the app's clock, so a failure can be placed among the other lines.
-    let text = RichText::new(format!("{:>8.1}s  {prefix}{}", e.at, e.text))
-        .text_style(TextStyle::Monospace)
-        .color(color);
-    ui.add(egui::Label::new(text).wrap().selectable(true));
-}
+const DESCRIPTION: &str = "Execute control commands or develop automated FrogScript pipelines with reactive triggers and dedicated stdout/stderr streams.";
 
 fn singleline_input(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let c = &state.console;
@@ -139,74 +124,34 @@ fn editor_column(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     code::show(ui, &mut code, out);
 }
 
-/// The Console and ScriptStudio screen.
+/// The Console and ScriptStudio screen: the headline, the command on a card, the editor on a card when it is
+/// open, and the output on a card that takes the rest of the window.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let expanded = state.console.studio.expanded;
 
-    ui.horizontal(|ui| {
-        ui.heading("Console");
-        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if kit::primary_button(ui, "Run Command")
-                .on_hover_text("Runs the command you typed.")
-                .clicked()
-            {
-                out.push(Msg::Console(ConsoleMsg::Submit));
-            }
-            let label = if expanded {
-                "Hide ScriptStudio"
-            } else {
-                "ScriptStudio Editor"
-            };
-            if ui
-                .button(label)
-                .on_hover_text("Shows or hides the ScriptStudio editor.")
-                .clicked()
-            {
-                out.push(Msg::Console(ConsoleMsg::StudioToggleExpanded));
-            }
-        });
+    headline::draw(expanded, ui, out);
+    ui.add_space(8.0);
+
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        ui.label(RichText::new(DESCRIPTION).color(palette_of(ui).text_weak));
+        ui.add_space(6.0);
+        singleline_input(state, ui, out);
     });
-
-    let pal = palette_of(ui);
-    ui.label(
-        RichText::new("Execute control commands or develop automated FrogScript pipelines with reactive triggers and dedicated stdout/stderr streams.")
-            .color(pal.text_weak),
-    );
-    ui.add_space(6.0);
-
-    singleline_input(state, ui, out);
-    ui.add_space(6.0);
+    ui.add_space(8.0);
 
     if expanded {
-        studio_editor(state, ui, out);
-        ui.add_space(6.0);
+        home_hero::card(ui, |ui| {
+            ui.set_width(ui.available_width());
+            studio_editor(state, ui, out);
+        });
+        ui.add_space(8.0);
     }
 
-    output::bar(state, ui, out);
-    ui.add_space(4.0);
-
-    let visible_entries: Vec<_> = state
-        .console
-        .entries
-        .iter()
-        .filter(|e| super::console::output::visible(e, &state.console))
-        .collect();
-
-    egui::ScrollArea::vertical()
-        .auto_shrink([false, false])
-        .stick_to_bottom(true)
-        .show(ui, |ui| {
-            if visible_entries.is_empty() {
-                ui.label(
-                    RichText::new(
-                        "No entries for selected filter. Type a command or run FrogScript above.",
-                    )
-                    .color(pal.text_weak),
-                );
-            }
-            for e in visible_entries {
-                entry(ui, e);
-                ui.add_space(2.0);
-            }
-        });
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        output::bar(state, ui, out);
+        ui.add_space(4.0);
+        output::list(state, ui);
+    });
 }
