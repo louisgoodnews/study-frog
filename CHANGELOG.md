@@ -7,6 +7,8 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-26
+
 ### Changed
 - Welcome, Folders, the item editor, the PDF viewer and the Homework planner in the redesign style: gradient headlines, redesign cards and the rail highlight, with the same controls and behaviour (STORY-0232 to STORY-0236, EPIC-073).
 - The Match grid, the Prompts screen, the Console and FrogCanvas in the redesign style: gradient headlines, cards for the tiles, the command bar, the output and the zoom controls, with the same controls and behaviour (STORY-0237 to STORY-0240, EPIC-073).
