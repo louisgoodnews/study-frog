@@ -63,6 +63,7 @@ mod home_hero;
 mod home_ring;
 pub(crate) mod homework;
 mod homework_form_view;
+mod homework_header;
 pub(crate) mod homework_marks;
 mod icons;
 pub(crate) mod image;

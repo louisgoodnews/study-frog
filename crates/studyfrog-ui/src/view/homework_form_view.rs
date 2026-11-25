@@ -7,7 +7,7 @@ use crate::homework_form::{HomeworkEdit, HomeworkForm};
 use crate::homework_msg::HomeworkMsg;
 use crate::msg::Msg;
 use crate::state::State;
-use crate::view::kit;
+use crate::view::{home_hero, kit};
 
 fn edit(out: &mut Vec<Msg>, e: HomeworkEdit) {
     out.push(Msg::Homework(HomeworkMsg::Edit(e)));
@@ -23,7 +23,7 @@ fn priority_name(p: HomeworkPriority) -> &'static str {
 
 /// Draw the dialog for `form`.
 pub fn draw(state: &State, form: &HomeworkForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         let heading = if form.existing.is_some() {
             "Edit homework"
         } else {
@@ -118,6 +118,8 @@ pub fn draw(state: &State, form: &HomeworkForm, ui: &mut egui::Ui, out: &mut Vec
                 }
             }
         });
+    });
+    home_hero::card(ui, |ui| {
         ui.label("Checklist (one step per line)");
         let mut steps = form.checklist.clone();
         if ui
