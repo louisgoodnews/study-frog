@@ -38,6 +38,7 @@ fn item(
     parent: Option<&'static str>,
 ) -> NewItem<'static> {
     NewItem {
+        answer_type: None,
         source: None,
         kind,
         title,

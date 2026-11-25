@@ -101,6 +101,7 @@ fn a_cloze_card_needs_no_back_and_its_title_gives_nothing_away() {
     let dir = gapped("cloze-create");
     let mut s = open(&dir);
     let item = NewItem {
+        answer_type: None,
         kind: NewKind::Card,
         title: "",
         text: FRONT,
@@ -124,6 +125,7 @@ fn a_cloze_card_needs_no_back_and_its_title_gives_nothing_away() {
         "the syntax is kept as written: {text}"
     );
     let plain = NewItem {
+        answer_type: None,
         text: "no gaps",
         ..item
     };

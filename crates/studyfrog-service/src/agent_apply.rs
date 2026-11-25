@@ -107,6 +107,7 @@ fn create(session: &mut VaultSession, change: &Change, ids: IdSource) -> Result<
     };
     let source = from.and_then(|s| s.strip_prefix(PDF_PREFIX));
     let item = NewItem {
+        answer_type: None,
         source,
         kind,
         title,

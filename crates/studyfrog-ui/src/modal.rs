@@ -1,12 +1,11 @@
 //! The modal dialogs (create an item, open a vault) and the toasts that can open them. Pure.
-use crate::effect::EffectImport;
 use crate::effect::EffectPlanner;
 
 use studyfrog_service::create_more::NewKind;
 
 use crate::browse::reload;
 use crate::effect::Effect;
-use crate::modal_form::{due_of, form_new, tags_of, toggled};
+use crate::modal_form::{form_new, toggled};
 use crate::state::{Notice, NoticeKind, Screen, Selection, State};
 
 pub use crate::modal_types::{
@@ -46,20 +45,7 @@ fn submit(state: State) -> (State, Vec<Effect>) {
         });
         return (state, vec![effect]);
     }
-    let effect = Effect::Import(EffectImport::CreateItem {
-        kind: form.kind,
-        title: form.title.trim().to_owned(),
-        text: form.text.clone(),
-        answer: form.answer.clone(),
-        tags: tags_of(&form.tags),
-        parent: form.parent.clone(),
-        also_in: form.also_in.clone(),
-        due: due_of(&form),
-        choices: (
-            Some(form.priority),
-            (form.kind != NewKind::Stack).then_some(form.difficulty),
-        ),
-    });
+    let effect = Effect::Import(crate::modal_form::create_effect(&form));
     let (state, _) = with_form(state, |f| CreateForm {
         busy: true,
         error: None,

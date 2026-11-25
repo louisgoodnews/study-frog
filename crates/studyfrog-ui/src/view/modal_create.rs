@@ -13,7 +13,8 @@ use crate::msg::Msg;
 use crate::state::State;
 use crate::view::md_editor::{Mode, md_editor};
 use crate::view::widgets::text_field;
-use crate::view::{kit, modal_fields};
+use crate::view::choice_body::AnswerType;
+use crate::view::{kit, modal_answer_row, modal_fields};
 
 const KINDS: [(NewKind, &str); 4] = [
     (NewKind::Card, "Card"),
@@ -108,10 +109,15 @@ fn editors(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     let ((text_label, text_hint), answer_label) = labels(f.kind);
+    // A choice question keeps its answers as options in the prompt, so it has no reference answer.
+    let answer_label = answer_label.filter(|_| f.answer_type == AnswerType::Open);
     let (rows, mode) = match f.kind {
         NewKind::Note => (16, Mode::Write),
         _ => (5, Mode::Write),
     };
+    if f.kind == NewKind::Question {
+        modal_answer_row::row(f, ui, out);
+    }
     ui.weak(text_hint);
     let image = Some(ImageTarget::Create(Field::Text));
     if let Some(t) = md_editor(ui, text_label, &f.text, (rows, mode), image, out) {

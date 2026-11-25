@@ -11,6 +11,8 @@ use studyfrog_md::extra::{extra_value, with_extra};
 use studyfrog_md::names::{extra_names, with_extra_names};
 use studyfrog_md::refs::{references_of, with_references};
 use studyfrog_md::status::{status_of, with_status};
+use crate::view::choice_body::{AnswerType, answer_type_name, stated_type};
+use crate::view::choice_body::{AnswerType, answer_type_name, stated_type};
 
 /// One multi-line text area.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -38,6 +40,8 @@ pub struct EditForm {
     pub difficulty: Option<Difficulty>,
     /// The status the item states itself; `None`: derived from its history.
     pub status: Option<Status>,
+    /// The answer type of a question, stored as `answer_type` in the front matter (EPIC-072).
+    pub answer_type: AnswerType,
     /// The subjects a stack names (empty for other kinds and for a stack that names none).
     pub subjects: Vec<String>,
     /// The other stacks that reference this item (by stack UID string).
@@ -63,6 +67,8 @@ pub enum EditAction {
     Priority(Option<Priority>),
     /// The item's own difficulty; `None` takes the stack's.
     Difficulty(Option<Difficulty>),
+    /// The answer type of a question (EPIC-072).
+    AnswerType(AnswerType),
     /// The item's own status; `None` leaves it to the history.
     Status(Option<Status>),
     /// The item's colour (a palette word or `#RRGGBB`); `None` removes it.
@@ -123,6 +129,7 @@ pub fn form_from_doc(doc: &Doc) -> EditForm {
         fields,
         priority: extra_value(doc, "priority").and_then(|w| priority_from_name(&w)),
         difficulty: extra_value(doc, "difficulty").and_then(|w| difficulty_from_name(&w)),
+        answer_type: stated_type(extra_value(doc, "answer_type").as_deref()),
         status: status_of(doc),
         subjects: extra_names(doc, "subjects"),
         referenced_by: references_of(doc),
@@ -214,6 +221,12 @@ pub fn apply_form(doc: &Doc, form: &EditForm) -> Result<Doc, String> {
         out
     } else {
         with_status(&out, form.status)
+    };
+    let out = if matches!(out, Doc::Question(_)) {
+        let stated = (form.answer_type != AnswerType::Open).then(|| answer_type_name(form.answer_type));
+        with_extra(&out, "answer_type", stated)
+    } else {
+        out
     };
     let out = studyfrog_md::comments::with_comments(&out, &form.comments);
     if !matches!(out, Doc::Stack(_)) {

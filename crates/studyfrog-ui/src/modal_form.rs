@@ -4,8 +4,10 @@ use studyfrog_core::civil::parse_date;
 use studyfrog_service::create_more::NewKind;
 use studyfrog_service::track::{DEFAULT_DUE_MINUTE, DueDate};
 
+use crate::effect::EffectImport;
 use crate::modal_types::CreateForm;
 use crate::state::{Selection, State};
+use crate::view::choice_body::{AnswerType, answer_type_name, create_body, option_count};
 
 pub(crate) fn default_parent(state: &State) -> Option<String> {
     match &state.browser.selection {
@@ -43,6 +45,52 @@ pub(crate) fn form_new(state: &State, kind: Option<NewKind>) -> CreateForm {
         difficulty: studyfrog_core::event::Difficulty::Difficult,
         confirm_discard: false,
         is_stack: true,
+        answer_type: AnswerType::Open,
+    }
+}
+
+/// The body the dialog submits: a question's prompt with the option template of its answer type.
+pub(crate) fn body_of(f: &CreateForm) -> String {
+    if f.kind != NewKind::Question {
+        return f.text.clone();
+    }
+    create_body(&f.text, f.answer_type)
+}
+
+/// The reference answer the dialog submits: none for a choice question, whose answers are its options.
+pub(crate) fn answer_of(f: &CreateForm) -> String {
+    if f.kind == NewKind::Question && f.answer_type != AnswerType::Open {
+        return String::new();
+    }
+    f.answer.clone()
+}
+
+/// The effect that creates the item the dialog holds; logs a choice item when one is created.
+pub(crate) fn create_effect(f: &CreateForm) -> EffectImport {
+    let text = body_of(f);
+    if f.kind == NewKind::Question && f.answer_type != AnswerType::Open {
+        let options = option_count(&text);
+        studyfrog_log::log_info!(
+            "ui.choice",
+            "choice item created: {} with {} option line(s)",
+            answer_type_name(f.answer_type),
+            options
+        );
+    }
+    EffectImport::CreateItem {
+        kind: f.kind,
+        title: f.title.trim().to_owned(),
+        text,
+        answer: answer_of(f),
+        tags: tags_of(&f.tags),
+        parent: f.parent.clone(),
+        also_in: f.also_in.clone(),
+        due: due_of(f),
+        choices: (
+            Some(f.priority),
+            (f.kind != NewKind::Stack).then_some(f.difficulty),
+        ),
+        answer_type: f.answer_type,
     }
 }
 
@@ -83,7 +131,9 @@ pub fn problem(f: &CreateForm) -> Option<&'static str> {
         NewKind::Card if blank(&f.text) || blank(&f.answer) => {
             Some("A card needs a front and a back.")
         }
-        NewKind::Question if blank(&f.text) || blank(&f.answer) => {
+        NewKind::Question
+            if blank(&f.text) || (f.answer_type == AnswerType::Open && blank(&f.answer)) =>
+        {
             Some("A question needs a prompt and a reference answer.")
         }
         NewKind::Stack | NewKind::Note => None,

@@ -138,6 +138,8 @@ pub struct NewItemArgs {
     pub tags: String,
     /// The stack folder it goes into.
     pub stack: Option<String>,
+    /// For a question: open text, single choice or multiple select (`--answer-type`).
+    pub answer_type: crate::view::choice_body::AnswerType,
 }
 
 /// Which field `item edit` changes.

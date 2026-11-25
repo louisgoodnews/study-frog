@@ -128,6 +128,7 @@ pub fn save_exam(
 ) -> Result<String, ServiceError> {
     let text = exam_markdown(exam, keys);
     let item = NewItem {
+        answer_type: None,
         kind: NewKind::Note,
         title,
         text: &text,

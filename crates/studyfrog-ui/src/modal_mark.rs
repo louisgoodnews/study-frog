@@ -124,6 +124,16 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             });
             (state, Vec::new())
         }
+        ModalMsg::SetAnswerType(answer_type) => {
+            if let Some(Modal::Create(f)) = &state.modal {
+                state.modal = Some(Modal::Create(crate::modal_types::CreateForm {
+                    answer_type,
+                    error: None,
+                    ..f.clone()
+                }));
+            }
+            (state, Vec::new())
+        }
         ModalMsg::SetIsStack(is_stack) => {
             if let Some(Modal::Create(f)) = &state.modal {
                 state.modal = Some(Modal::Create(crate::modal_types::CreateForm {

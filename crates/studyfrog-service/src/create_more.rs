@@ -14,6 +14,7 @@ use crate::create::{
     IdSource, check_title, default_card_title, invalid, meta, refresh, render_error, slug,
     unique_name, with_new_defaults, write_new,
 };
+use crate::create_choice::{answer_type_agrees, choice_question};
 use crate::session::{ServiceError, VaultInfo, VaultSession};
 use studyfrog_core::event::difficulty_name;
 use studyfrog_core::priority::priority_name;
@@ -55,6 +56,8 @@ pub struct NewItem<'a> {
     pub difficulty: Option<studyfrog_core::event::Difficulty>,
     /// Another stack that references this item (optional).
     pub also_in: Option<&'a str>,
+    /// For a question: `open`, `single` or `multiple`, written as the `answer_type` key; `None` writes none.
+    pub answer_type: Option<&'a str>,
 }
 
 /// What was created.
@@ -121,7 +124,8 @@ fn title_of(item: &NewItem<'_>) -> Result<String, ServiceError> {
     match item.kind {
         NewKind::Stack | NewKind::Note if given.is_empty() => Err(invalid("give it a title")),
         NewKind::Card | NewKind::Question
-            if item.text.trim().is_empty() || (item.answer.trim().is_empty() && !gapped(item)) =>
+            if item.text.trim().is_empty()
+                || (item.answer.trim().is_empty() && !gapped(item) && !choice_question(item)) =>
         {
             let (first, second) = if item.kind == NewKind::Card {
                 ("front", "back")
@@ -137,6 +141,12 @@ fn title_of(item: &NewItem<'_>) -> Result<String, ServiceError> {
 
 /// The document with the priority and difficulty the user chose.
 fn with_choices(doc: Doc, item: &NewItem<'_>) -> Doc {
+    let doc = match item.answer_type {
+        Some(stated) if item.kind == NewKind::Question => {
+            with_extra(&doc, "answer_type", Some(stated))
+        }
+        _ => doc,
+    };
     let doc = match item.priority {
         Some(p) => with_extra(&doc, "priority", Some(priority_name(p))),
         None => doc,
@@ -155,6 +165,7 @@ pub fn create_item(
 ) -> Result<(VaultInfo, Created), ServiceError> {
     let title = title_of(item)?;
     check_title(&title)?;
+    answer_type_agrees(item)?;
     if item.source.is_some_and(|s| s.contains(['"', '\n'])) {
         return Err(invalid(
             "the source of an item cannot contain quotes or line breaks",

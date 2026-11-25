@@ -40,6 +40,7 @@ fn item(
     parent: Option<&'static str>,
 ) -> NewItem<'static> {
     NewItem {
+        answer_type: None,
         source: None,
         kind,
         title,
@@ -117,6 +118,7 @@ fn items_go_into_a_stack_with_tags_and_count_for_the_nearest_stack() {
     .unwrap();
     let tags = vec!["geo".to_owned(), "easy".to_owned()];
     let card = NewItem {
+        answer_type: None,
         source: None,
         tags: &tags,
         ..item(NewKind::Card, "", "Bonjour?", "Hello", Some("french/verbs"))

@@ -39,6 +39,7 @@ pub mod contrast;
 mod contrast_save;
 pub mod create;
 pub mod create_more;
+mod create_choice;
 pub mod day;
 pub mod distractor_service;
 pub mod document;

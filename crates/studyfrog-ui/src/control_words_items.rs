@@ -3,6 +3,7 @@
 use studyfrog_service::create_more::NewKind;
 
 use crate::control_cmd::{EditTarget, ItemCmd, NewItemArgs, StackCmd};
+use crate::view::choice_body::{AnswerType, answer_type_named};
 
 /// Flags with their values (`""` for a bare flag), in order.
 pub type Flags<'a> = Vec<(&'a str, &'a str)>;
@@ -87,19 +88,35 @@ pub fn numbers(words: &[String]) -> Result<Vec<usize>, String> {
     Ok(list)
 }
 
+/// The fields of `item create <kind> <title>`; `--answer-type` applies to questions only.
+fn new_item(rest: &[&str], flags: &Flags<'_>) -> Result<NewItemArgs, String> {
+    let kind = kind_named(need(rest, 1, "kind")?)?;
+    let answer_type = match flag(flags, "answer-type") {
+        None => AnswerType::Open,
+        Some(word) => answer_type_named(word).ok_or_else(|| {
+            format!("unknown answer type {word} (open, single, multiple)")
+        })?,
+    };
+    if answer_type != AnswerType::Open && kind != NewKind::Question {
+        return Err("--answer-type applies to questions only".to_owned());
+    }
+    Ok(NewItemArgs {
+        kind,
+        title: need(rest, 2, "title")?.to_owned(),
+        text: flag(flags, "text").unwrap_or_default().to_owned(),
+        answer: flag(flags, "answer").unwrap_or_default().to_owned(),
+        tags: flag(flags, "tags").unwrap_or_default().to_owned(),
+        stack: flag(flags, "stack").map(str::to_owned),
+        answer_type,
+    })
+}
+
 /// The words after `item`.
 pub fn item(words: &[String]) -> Result<ItemCmd, String> {
     let (flags, rest) = split_flags(words, &[])?;
     let item = || need(&rest, 1, "item (ULID or key)").map(str::to_owned);
     Ok(match need(&rest, 0, "item operation")? {
-        "create" => ItemCmd::Create(NewItemArgs {
-            kind: kind_named(need(&rest, 1, "kind")?)?,
-            title: need(&rest, 2, "title")?.to_owned(),
-            text: flag(&flags, "text").unwrap_or_default().to_owned(),
-            answer: flag(&flags, "answer").unwrap_or_default().to_owned(),
-            tags: flag(&flags, "tags").unwrap_or_default().to_owned(),
-            stack: flag(&flags, "stack").map(str::to_owned),
-        }),
+        "create" => ItemCmd::Create(new_item(&rest, &flags)?),
         "open" => ItemCmd::Open(item()?),
         "delete" => ItemCmd::Delete(item()?),
         "edit" => ItemCmd::Edit(

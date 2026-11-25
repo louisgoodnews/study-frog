@@ -13,6 +13,7 @@ use studyfrog_service::session::{ServiceError, VaultInfo, VaultSession};
 use studyfrog_service::track::{DueDate, create_tracked, track_cards};
 
 use crate::exec::Worker;
+use crate::view::choice_body::{AnswerType, answer_type_name};
 use crate::import_ui::ImportOutcome;
 use crate::modal::{CreateOutcome, ModalMsg};
 use crate::msg::Msg;
@@ -115,12 +116,14 @@ pub fn create_item(
         Option<studyfrog_core::priority::Priority>,
         Option<studyfrog_core::event::Difficulty>,
     ),
+    answer_type: AnswerType,
     now_ns: i64,
 ) -> Msg {
     let Some(session) = &mut w.session else {
         return Msg::Modal(ModalMsg::Created(Err("no vault is open".to_owned())));
     };
     let item = NewItem {
+        answer_type: (answer_type != AnswerType::Open).then(|| answer_type_name(answer_type)),
         source: None,
         kind,
         title,

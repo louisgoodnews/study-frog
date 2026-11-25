@@ -83,6 +83,7 @@ fn create(state: &State, a: &NewItemArgs) -> Result<Plan, String> {
     let mut msgs = vec![
         m(ModalMsg::OpenCreate),
         m(ModalMsg::SetKind(a.kind)),
+        m(ModalMsg::SetAnswerType(a.answer_type)),
         m(ModalMsg::SetParent(a.stack.clone())),
         m(ModalMsg::Edit(Field::Title, a.title.clone())),
     ];

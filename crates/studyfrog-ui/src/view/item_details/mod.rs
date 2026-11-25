@@ -1,6 +1,7 @@
 //! The side column of the item page: a tabbed notebook view organizing item details
 //! into Properties, Schedule, Relations, and Learning tabs.
 
+mod choice_view;
 mod color_row;
 mod tab_comments;
 mod tab_learning;
@@ -102,6 +103,7 @@ pub(super) fn item_card<R>(
 /// The details view entry point for the item editor side column.
 pub fn details(state: &State, e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     kit::section(ui, "Details");
+    choice_view::draw(e, ui);
     let current = tab_bar(e, ui);
     ui.add_space(8.0);
     match current {

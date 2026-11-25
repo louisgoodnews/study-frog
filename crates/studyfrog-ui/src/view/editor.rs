@@ -206,6 +206,7 @@ fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         }
         ui.add_space(10.0);
         if i == 0 {
+            crate::view::choice_editor::panel(e, ui, out);
             crate::view::occlusion_edit::section(e, ui, out);
         }
     }

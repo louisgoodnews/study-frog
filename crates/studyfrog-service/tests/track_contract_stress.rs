@@ -51,6 +51,7 @@ fn item<'a>(
     priority: Option<Priority>,
 ) -> NewItem<'a> {
     NewItem {
+        answer_type: None,
         source: None,
         kind,
         title,

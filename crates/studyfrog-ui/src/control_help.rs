@@ -35,7 +35,7 @@ pub const COMMANDS: &[Row] = &[
         "write",
     ),
     (
-        "item create <note|card|question> <title> [--text T] [--answer A] [--tags T] [--stack F]",
+        "item create <note|card|question> <title> [--text T] [--answer A] [--tags T] [--stack F] [--answer-type open|single|multiple]",
         "Modal: OpenCreate, SetKind, SetParent, Edit(fields), Submit -> Effect::CreateItem",
         "write",
     ),

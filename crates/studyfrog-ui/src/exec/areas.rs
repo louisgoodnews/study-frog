@@ -70,12 +70,14 @@ pub fn import(w: &mut Worker, e: EffectImport, now_ns: i64) -> Vec<Msg> {
             also_in,
             due,
             choices,
+            answer_type,
         } => exec_import::create_item(
             w,
             kind,
             [&title, &text, &answer],
             (&tags, parent.as_deref(), also_in.as_deref(), due.as_ref()),
             choices,
+            answer_type,
             now_ns,
         ),
         EffectImport::CreateCard {

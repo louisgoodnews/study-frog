@@ -11,6 +11,7 @@ pub(super) fn stack(state: &State, cmd: &StackCmd) -> Result<Plan, String> {
                 answer: String::new(),
                 tags: String::new(),
                 stack: parent.clone(),
+                answer_type: crate::view::choice_body::AnswerType::Open,
             };
             return create(state, &args);
         }

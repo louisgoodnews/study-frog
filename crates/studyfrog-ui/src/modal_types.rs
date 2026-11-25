@@ -79,6 +79,8 @@ pub struct CreateForm {
     pub confirm_discard: bool,
     /// When creating a stack/folder: whether to mark it as a stack (`_stack.md`).
     pub is_stack: bool,
+    /// For a question: open text, single choice or multiple select (EPIC-072).
+    pub answer_type: crate::view::choice_body::AnswerType,
 }
 
 /// A field of the create dialog.
@@ -160,6 +162,8 @@ pub enum ModalMsg {
     Discard,
     /// Another kind of item.
     SetKind(NewKind),
+    /// The answer type of a question.
+    SetAnswerType(crate::view::choice_body::AnswerType),
     /// A field changed.
     Edit(Field, String),
     /// Another parent stack.

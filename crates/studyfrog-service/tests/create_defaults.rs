@@ -16,6 +16,7 @@ fn ids(n: u8) -> IdSource {
 
 fn item(kind: NewKind, title: &'static str, parent: Option<&'static str>) -> NewItem<'static> {
     NewItem {
+        answer_type: None,
         source: None,
         kind,
         title,

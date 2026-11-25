@@ -59,6 +59,7 @@ pub(crate) fn edit(state: State, action: EditAction) -> (State, Vec<Effect>) {
             EditAction::Priority(p) => e.form.priority = p,
             EditAction::Difficulty(d) => e.form.difficulty = d,
             EditAction::Status(s) => e.form.status = s,
+            EditAction::AnswerType(t) => e.form.answer_type = t,
             EditAction::Color(c) => e.form.color = c.and_then(|c| normalize_color(&c)),
             EditAction::Occlusion(o) => e.form.occlusion = o,
             EditAction::AddComment(c) => e.form.comments.push(c),

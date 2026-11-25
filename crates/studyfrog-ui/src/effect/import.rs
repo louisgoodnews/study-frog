@@ -41,6 +41,8 @@ pub enum EffectImport {
         due: Option<studyfrog_service::track::DueDate>,
         /// Priority and difficulty chosen.
         choices: crate::modal_types::Choices,
+        /// For a question: open text, single choice or multiple select (EPIC-072).
+        answer_type: crate::view::choice_body::AnswerType,
     },
     /// Choose a picture, copy it into the vault and report where it went.
     AddImage(crate::image_ui::ImageTarget),

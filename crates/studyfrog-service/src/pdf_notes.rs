@@ -158,6 +158,7 @@ pub fn note_from_pdf(
     let text = format!("From {name}, {pages}.\n\n{body}{images}");
     let source = source_of(req.pdf, first);
     let item = NewItem {
+        answer_type: None,
         kind: NewKind::Note,
         title: &title,
         text: &text,
@@ -219,6 +220,7 @@ pub fn item_from_pdf(
     }
     let source = source_of(req.pdf, req.page);
     let item = NewItem {
+        answer_type: None,
         kind: req.kind,
         title: "",
         text: req.front,
