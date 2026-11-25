@@ -33,4 +33,4 @@ Hashes of the installed files (2026-11-25): config.json 953f9c0d…, tokenizer.j
 - TASK-0297.
 
 ## Open Questions
-- The STORY-0206 "no other host" wording (see EPIC-069).
+- Resolved 2026-11-25: STORY-0206 now allows any model provider with the source shown and confirmed.

@@ -37,6 +37,5 @@ chooser, the hardware audit and Ollama status of STORY-0206, the remote provider
 - STORY-0206 (Ollama assistant, done), STORY-0083 and STORY-0084 (remote providers, done), TASK-0050 (candle embedder, done).
 
 ## Open Questions
-- STORY-0206 says the assistant contacts only the local Ollama address. The wizard's downloads go to huggingface.co, which
-  breaks that rule for the wizard. The owner accepted per-download consent; the STORY-0206 wording should be updated to
-  say so before this is built.
+- Resolved 2026-11-25: STORY-0206's "no other host" wording was rewritten by the owner. Any model provider is allowed,
+  provided the source is shown and the user confirms before anything is contacted or downloaded.

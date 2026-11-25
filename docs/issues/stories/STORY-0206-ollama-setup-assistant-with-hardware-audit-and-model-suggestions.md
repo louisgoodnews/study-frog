@@ -13,7 +13,7 @@ acceptance_criteria:
   - "The assistant lists models suggested for this machine, ranked by fit: each suggestion shows its download size, the memory it needs, whether it fits in memory or video memory, whether it is already installed, and a short reason for its rank; the list updates when the audit or the installed models change"
   - "The assistant guides the setup step by step from the state it found (install Ollama, start the service, pull a model, run it), with each command shown in a copyable block and the next step highlighted; the steps are the same whether the user is on Linux, macOS or Windows"
   - "The user picks a suggested or installed model as StudyFrog's local model, and the assistant checks it with one short test prompt before it is used for scoring or grading"
-  - "Nothing is downloaded, installed or started without the user's explicit confirmation; the assistant contacts only the local Ollama address and no other host"
+  - "Nothing is downloaded, installed or started without the user's explicit confirmation; the assistant may contact any model provider the user has chosen (local or remote, such as Ollama, Hugging Face or another remote model provider), and each download or provider connection shows its source before it runs"
   - "The same audit, status and suggestions are available through the control protocol (for example `ollama status`, `ollama suggest`), so an AI agent can run the setup check"
 ---
 
@@ -34,12 +34,13 @@ Add an assistant (a panel in the local-model settings and a screen reachable fro
 - [x] The assistant lists models suggested for this machine, ranked by fit: each suggestion shows its download size, the memory it needs, whether it fits in memory or video memory, whether it is already installed, and a short reason for its rank; the list updates when the audit or the installed models change
 - [x] The assistant guides the setup step by step from the state it found (install Ollama, start the service, pull a model, run it), with each command shown in a copyable block and the next step highlighted; the steps are the same whether the user is on Linux, macOS or Windows
 - [x] The user picks a suggested or installed model as StudyFrog's local model, and the assistant checks it with one short test prompt before it is used for scoring or grading
-- [x] Nothing is downloaded, installed or started without the user's explicit confirmation; the assistant contacts only the local Ollama address and no other host
+- [x] Nothing is downloaded, installed or started without the user's explicit confirmation; the assistant may contact any model provider the user has chosen (local or remote, such as Ollama, Hugging Face or another remote model provider), and each download or provider connection shows its source before it runs
 - [x] The same audit, status and suggestions are available through the control protocol (for example `ollama status`, `ollama suggest`), so an AI agent can run the setup check
 
 ## Design Notes
 - Decided at build time (2026-11-23): the catalog is the curated `crates/studyfrog-service/data/ollama_catalog.toml`, shipped with the app (first open question). Pulling, installing and starting Ollama are shown as commands to copy and run by the user; the app runs none of them (a background pull was left out, so no progress bar or cancel exists yet). The app runs only read-only probes (`ollama --version`, `nvidia-smi`, `sysctl`, `vm_stat`, `df`, `/proc` and sysfs reads, each with a timeout) and HTTP GET to 127.0.0.1:11434 (the probe refuses any other host).
 - The app does not start the Ollama service (second open question); the guide says `ollama serve`.
+- Changed 2026-11-25 (owner decision): the "no other host" wording is replaced. Any model provider is allowed, as long as the source is shown and the user confirms before anything is contacted or downloaded. The probes built here still reach only 127.0.0.1:11434; allowing other sources is for the first-run wizard (EPIC-069, TASK-0298), not a change to this build.
 - A graphics card that does not report its memory (for example integrated graphics) is treated as having no video memory: its models fit only in free memory (third open question).
 - The panel is on the Assistant screen, Connections tab, above the connection list (not in Settings). The control protocol answers `audit`, `ollama status` and `ollama suggest` from the same check.
 - Build versus buy (P10): the parsers and the fit rule are written here; no hardware-probing crate was added. The HTTP GET reuses `ureq` through `studyfrog-net`, next to the POST that the agent already uses.

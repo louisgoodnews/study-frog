@@ -32,4 +32,4 @@ Step order: local model, remote provider, MiniLM, summary. Remote providers are 
 - EPIC-069; STORY-0206, STORY-0083, STORY-0084.
 
 ## Open Questions
-- Wording of STORY-0206's "no other host" criterion (see EPIC-069).
+- Resolved 2026-11-25: STORY-0206 now allows any model provider with the source shown and confirmed.
