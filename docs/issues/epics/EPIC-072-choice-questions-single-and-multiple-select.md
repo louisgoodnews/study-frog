@@ -42,4 +42,5 @@ studyfrog-md, graded by the rehearsal engine with the mock exam's rules, and sho
 - studyfrog-md (parser), studyfrog-rehearsal (grading, exam_answer.rs), studyfrog-ui (rehearsal card), control protocol.
 
 ## Open Questions
+- Stories STORY-0223 (creating) and STORY-0224 (editing and viewing) added 2026-11-25 for the owner's report that choice items cannot be created, edited, viewed or rehearsed.
 - Partial credit for multiple select: all-or-nothing for now (see Design Notes).

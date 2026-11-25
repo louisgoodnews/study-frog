@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (14) | Ready (0) | In progress (3/3) | Review (5) | Blocked (3) | Done (620) |
+| Backlog (14) | Ready (2) | In progress (3/3) | Review (5) | Blocked (3) | Done (620) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -576,6 +576,8 @@
 | [STORY-0220](docs/issues/stories/STORY-0220-choice-item-syntax-and-parsing.md) Choice item syntax: options in Markdown, parsed into single-choice or multiple-select items (3) | in_progress | 0/0 |
 | [STORY-0221](docs/issues/stories/STORY-0221-choice-grading-and-recording-in-rehearsal.md) Choice grading in rehearsal: reuse the mock exam rules and record the result like a typed answer (5) | backlog | 0/0 |
 | [STORY-0222](docs/issues/stories/STORY-0222-choice-rendering-keys-and-control-in-rehearsal.md) Choice rendering in the rehearsal card: options, number keys, submit, and the control protocol (5) | backlog | 0/0 |
+| [STORY-0223](docs/issues/stories/STORY-0223-answer-type-when-creating-a-question.md) Answer type when creating a question: open text, single choice or multiple select (5) | ready | 0/0 |
+| [STORY-0224](docs/issues/stories/STORY-0224-edit-and-view-choice-items.md) Edit and view choice items: options and correct answers in the editor and the item viewer (5) | ready | 0/0 |
 
 ## Epics
 
@@ -652,5 +654,5 @@
 | [EPIC-069](docs/issues/epics/EPIC-069-first-run-setup-wizard.md) First-run setup wizard: vault, local model (Ollama), remote provider and the MiniLM model | backlog | 0/1 |
 | [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark) | in_progress | 4/6 |
 | [EPIC-071](docs/issues/epics/EPIC-071-in-house-logging-and-debugging.md) In-house logging and debugging: studyfrog-log and studyfrog-debug, written without external crates | in_progress | 0/1 |
-| [EPIC-072](docs/issues/epics/EPIC-072-choice-questions-single-and-multiple-select.md) Choice questions in rehearsal: single choice and multiple select | backlog | 0/3 |
+| [EPIC-072](docs/issues/epics/EPIC-072-choice-questions-single-and-multiple-select.md) Choice questions in rehearsal: single choice and multiple select | backlog | 0/5 |
 | [EPIC-073](docs/issues/epics/EPIC-073-whole-app-redesign-with-a-new-theme.md) Whole-app redesign with a new theme: a new palette, applied to every screen | backlog | 0/0 |
