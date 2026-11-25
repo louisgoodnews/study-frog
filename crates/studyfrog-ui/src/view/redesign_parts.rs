@@ -1,7 +1,9 @@
 //! Badges and progress bars in the redesign style (EPIC-070, STORY-0229). Both take their colours from `style_of`, so a
 //! badge and a bar read the same on every palette. The text is the caller's; nothing here changes what it says.
 
-use eframe::egui::{self, Align2, CornerRadius, Frame, Margin, Rect, RichText, Sense, vec2};
+use eframe::egui::{
+    self, Align2, CornerRadius, Frame, Margin, Rect, RichText, Role, Sense, WidgetInfo, vec2,
+};
 
 use crate::theme::palette_of;
 use crate::theme::style::style_of;
@@ -28,8 +30,9 @@ pub(super) fn badge(ui: &mut egui::Ui, text: &str) {
 pub(super) fn progress(ui: &mut egui::Ui, fraction: f32, text: &str) {
     let p = palette_of(ui);
     let s = style_of(&p);
-    let (rect, _) =
+    let (rect, response) =
         ui.allocate_exact_size(vec2(ui.available_width(), PROGRESS_HEIGHT), Sense::hover());
+    response.widget_info(|| WidgetInfo::labeled(Role::ProgressIndicator, true, text));
     let radius = CornerRadius::same(PILL_RADIUS);
     let painter = ui.painter();
     painter.rect_filled(rect, radius, s.ring_track);
