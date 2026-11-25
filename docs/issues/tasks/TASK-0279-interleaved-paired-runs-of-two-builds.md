@@ -2,7 +2,7 @@
 id: TASK-0279
 type: task
 title: "Interleaved paired runs of two builds (baseline and new, alternating)"
-status: backlog
+status: review
 epic: EPIC-067
 parents: ['STORY-0201']
 estimate: 2

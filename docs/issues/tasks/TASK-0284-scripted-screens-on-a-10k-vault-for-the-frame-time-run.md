@@ -2,7 +2,7 @@
 id: TASK-0284
 type: task
 title: "Scripted visit of the rehearsal card, reports and console on a 10k-note vault"
-status: backlog
+status: review
 epic: EPIC-067
 parents: ['STORY-0204']
 estimate: 2

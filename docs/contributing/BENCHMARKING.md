@@ -250,3 +250,7 @@ again alone (see below). Every hot path is within its budget:
 The CMRR simulation is the closest to its budget (about 10 % under it on a quiet machine, over it on a loaded one); it
 runs once when the Reports screen is built, so a loaded machine makes the report slower to appear, not the app slower.
 
+
+## Paired runs and screen timing (EPIC-067, TASK-0279, TASK-0284)
+- `scripts/bench-paired.sh` runs one case of two builds alternately (A, B, A, B, ...) so machine drift hits both equally. Its header gives the arguments and the result folder. Its `<slug>-A.ns` and `<slug>-B.ns` files feed `scripts/bench-compare.sh`.
+- `scripts/gen-vault-10k.sh` writes a seeded 10,000-note scratch vault, and `scripts/bench-screens.sh` times a scripted visit of the rehearsal card, the reports screen and the console through `studyfrog ctl`. Both screen steps need a running window; the header of `bench-screens.sh` says what the numbers do and do not include.
