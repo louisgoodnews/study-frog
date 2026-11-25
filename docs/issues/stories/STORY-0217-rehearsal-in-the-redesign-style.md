@@ -2,7 +2,7 @@
 id: STORY-0217
 type: story
 title: "Rehearsal in the redesign style: setup, card view and result"
-status: done
+status: review
 epic: EPIC-070
 parents: ['EPIC-070']
 estimate: 5
@@ -20,9 +20,9 @@ Rehearsal is the study moment, so the card view must keep its focus while the st
 Apply the tokens of STORY-0213 to the rehearsal screens. Presentation only.
 
 ## Acceptance Criteria
-- [x] Setup, card view and result in the redesign style
+- [ ] Setup, card view and result in the redesign style
 - [x] Answering, rating and shortcuts unchanged
-- [x] Screenshot check in both themes; contrast on the answer text
+- [ ] Screenshot check in both themes; contrast on the answer text
 
 ## Design Notes
 No gradient behind the card text.
@@ -45,3 +45,6 @@ None.
   gradient header, legible in both themes.
 - Not checked: the card view and the result with a real item. The scratch vault has no items, so no populated
   rehearsal was captured. The exam result (`view/exam_result.rs`) was not restyled.
+
+## Review note (2026-11-25)
+Moved from done to review by the owner's rule that a done item has no unchecked criteria. Still open: the card view and the result with a real item (the scratch vault has no items, so no populated rehearsal was checked); the card view itself was not restyled (it already uses the same tokens, so only its look with an item is unverified); the answer-text contrast on the card has no new test (existing tests cover the item-tinted card fills).
