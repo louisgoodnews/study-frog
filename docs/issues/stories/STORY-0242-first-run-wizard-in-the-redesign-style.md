@@ -2,7 +2,7 @@
 id: STORY-0242
 type: story
 title: "First-run wizard screens in the redesign style"
-status: ready
+status: review
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 3

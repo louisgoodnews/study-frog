@@ -2,7 +2,7 @@
 id: STORY-0239
 type: story
 title: "Console in the redesign style"
-status: ready
+status: review
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 3

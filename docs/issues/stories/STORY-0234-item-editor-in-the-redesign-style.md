@@ -2,7 +2,7 @@
 id: STORY-0234
 type: story
 title: "Item editor (Editor screen) in the redesign style"
-status: ready
+status: review
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 5

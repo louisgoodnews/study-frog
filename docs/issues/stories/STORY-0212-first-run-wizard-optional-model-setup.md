@@ -2,7 +2,7 @@
 id: STORY-0212
 type: story
 title: "First-run wizard: optional model setup after the vault, with confirmed downloads"
-status: backlog
+status: review
 epic: EPIC-069
 parents: ['EPIC-069']
 estimate: 5

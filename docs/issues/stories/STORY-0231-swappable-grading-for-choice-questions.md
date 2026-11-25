@@ -2,7 +2,7 @@
 id: STORY-0231
 type: story
 title: "Swappable grading for multiple choice and multiple select: all-or-nothing, Zapechelnyuk, or count-based partial credit"
-status: ready
+status: review
 epic: EPIC-072
 parents: ['EPIC-072']
 estimate: 5

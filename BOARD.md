@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (5) | Ready (12) | In progress (1/3) | Review (21) | Blocked (3) | Done (623) |
+| Backlog (4) | Ready (0) | In progress (1/3) | Review (34) | Blocked (3) | Done (623) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -565,7 +565,7 @@
 | [STORY-0209](docs/issues/stories/STORY-0209-ai-teacher-and-simulated-student-lecture-orchestration.md) AI teacher and simulated student lecture orchestration (local and remote models) (5) | done | 2/2 |
 | [STORY-0210](docs/issues/stories/STORY-0210-individual-and-group-task-assignments-turn-in-and-grading.md) Individual and group task assignments, turn-in workflow, and automated grading (5) | done | 2/2 |
 | [STORY-0211](docs/issues/stories/STORY-0211-classroom-chat-ui-session-browser-and-assignment-workspace.md) Classroom-chat UI, session browser, and assignment submission workspace (5) | done | 4/4 |
-| [STORY-0212](docs/issues/stories/STORY-0212-first-run-wizard-optional-model-setup.md) First-run wizard: optional model setup after the vault, with confirmed downloads (5) | backlog | 2/3 |
+| [STORY-0212](docs/issues/stories/STORY-0212-first-run-wizard-optional-model-setup.md) First-run wizard: optional model setup after the vault, with confirmed downloads (5) | review | 2/3 |
 | [STORY-0213](docs/issues/stories/STORY-0213-redesign-visual-tokens-for-cards-rings-gradients-and-rail.md) Redesign visual tokens: cards, stat rings, gradient headline cards, avatars and the navigation rail (5) | done | 0/0 |
 | [STORY-0214](docs/issues/stories/STORY-0214-home-screen-in-the-redesign-style.md) Home in the redesign style: headline card, statistic ring, card lists and the rail (5) | done | 0/0 |
 | [STORY-0215](docs/issues/stories/STORY-0215-stack-page-in-the-redesign-style.md) Stack page in the redesign style: header, tab rail, summary cards and the ring (5) | done | 0/0 |
@@ -584,18 +584,18 @@
 | [STORY-0228](docs/issues/stories/STORY-0228-calendar-and-board-in-the-redesign-style.md) Calendar and Board in the redesign style (5) | review | 0/0 |
 | [STORY-0229](docs/issues/stories/STORY-0229-diary-and-achievements-in-the-redesign-style.md) Diary and Achievements in the redesign style (3) | review | 0/0 |
 | [STORY-0230](docs/issues/stories/STORY-0230-graph-assistant-and-classroom-in-the-redesign-style.md) Graph, Assistant and Classroom in the redesign style (5) | review | 0/0 |
-| [STORY-0231](docs/issues/stories/STORY-0231-swappable-grading-for-choice-questions.md) Swappable grading for multiple choice and multiple select: all-or-nothing, Zapechelnyuk, or count-based partial credit (5) | ready | 0/0 |
-| [STORY-0232](docs/issues/stories/STORY-0232-welcome-vault-chooser-in-the-redesign-style.md) Welcome (vault chooser) in the redesign style (3) | ready | 0/0 |
-| [STORY-0233](docs/issues/stories/STORY-0233-folders-in-the-redesign-style.md) Folders in the redesign style (3) | ready | 0/0 |
-| [STORY-0234](docs/issues/stories/STORY-0234-item-editor-in-the-redesign-style.md) Item editor (Editor screen) in the redesign style (5) | ready | 0/0 |
-| [STORY-0235](docs/issues/stories/STORY-0235-pdf-viewer-in-the-redesign-style.md) PDF viewer in the redesign style (3) | ready | 0/0 |
-| [STORY-0236](docs/issues/stories/STORY-0236-homework-planner-in-the-redesign-style.md) Homework planner in the redesign style (3) | ready | 0/0 |
-| [STORY-0237](docs/issues/stories/STORY-0237-match-grid-in-the-redesign-style.md) Match grid in the redesign style (3) | ready | 0/0 |
-| [STORY-0238](docs/issues/stories/STORY-0238-prompt-library-in-the-redesign-style.md) Prompt library in the redesign style (3) | ready | 0/0 |
-| [STORY-0239](docs/issues/stories/STORY-0239-console-in-the-redesign-style.md) Console in the redesign style (3) | ready | 0/0 |
-| [STORY-0240](docs/issues/stories/STORY-0240-canvas-in-the-redesign-style.md) Canvas in the redesign style (3) | ready | 0/0 |
-| [STORY-0241](docs/issues/stories/STORY-0241-mock-exam-screens-in-the-redesign-style.md) Mock exam screens (setup, exam view, result) in the redesign style (5) | ready | 0/0 |
-| [STORY-0242](docs/issues/stories/STORY-0242-first-run-wizard-in-the-redesign-style.md) First-run wizard screens in the redesign style (3) | ready | 0/0 |
+| [STORY-0231](docs/issues/stories/STORY-0231-swappable-grading-for-choice-questions.md) Swappable grading for multiple choice and multiple select: all-or-nothing, Zapechelnyuk, or count-based partial credit (5) | review | 0/0 |
+| [STORY-0232](docs/issues/stories/STORY-0232-welcome-vault-chooser-in-the-redesign-style.md) Welcome (vault chooser) in the redesign style (3) | review | 0/0 |
+| [STORY-0233](docs/issues/stories/STORY-0233-folders-in-the-redesign-style.md) Folders in the redesign style (3) | review | 0/0 |
+| [STORY-0234](docs/issues/stories/STORY-0234-item-editor-in-the-redesign-style.md) Item editor (Editor screen) in the redesign style (5) | review | 0/0 |
+| [STORY-0235](docs/issues/stories/STORY-0235-pdf-viewer-in-the-redesign-style.md) PDF viewer in the redesign style (3) | review | 0/0 |
+| [STORY-0236](docs/issues/stories/STORY-0236-homework-planner-in-the-redesign-style.md) Homework planner in the redesign style (3) | review | 0/0 |
+| [STORY-0237](docs/issues/stories/STORY-0237-match-grid-in-the-redesign-style.md) Match grid in the redesign style (3) | review | 0/0 |
+| [STORY-0238](docs/issues/stories/STORY-0238-prompt-library-in-the-redesign-style.md) Prompt library in the redesign style (3) | review | 0/0 |
+| [STORY-0239](docs/issues/stories/STORY-0239-console-in-the-redesign-style.md) Console in the redesign style (3) | review | 0/0 |
+| [STORY-0240](docs/issues/stories/STORY-0240-canvas-in-the-redesign-style.md) Canvas in the redesign style (3) | review | 0/0 |
+| [STORY-0241](docs/issues/stories/STORY-0241-mock-exam-screens-in-the-redesign-style.md) Mock exam screens (setup, exam view, result) in the redesign style (5) | review | 0/0 |
+| [STORY-0242](docs/issues/stories/STORY-0242-first-run-wizard-in-the-redesign-style.md) First-run wizard screens in the redesign style (3) | review | 0/0 |
 
 ## Epics
 

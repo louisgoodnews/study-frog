@@ -2,7 +2,7 @@
 id: STORY-0236
 type: story
 title: "Homework planner in the redesign style"
-status: ready
+status: review
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 3

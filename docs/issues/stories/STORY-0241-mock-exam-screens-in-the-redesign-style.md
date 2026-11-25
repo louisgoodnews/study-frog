@@ -2,7 +2,7 @@
 id: STORY-0241
 type: story
 title: "Mock exam screens (setup, exam view, result) in the redesign style"
-status: ready
+status: review
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 5

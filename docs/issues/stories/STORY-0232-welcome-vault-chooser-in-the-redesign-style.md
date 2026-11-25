@@ -2,7 +2,7 @@
 id: STORY-0232
 type: story
 title: "Welcome (vault chooser) in the redesign style"
-status: ready
+status: review
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 3

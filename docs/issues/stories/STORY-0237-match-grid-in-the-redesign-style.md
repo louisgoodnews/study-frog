@@ -2,7 +2,7 @@
 id: STORY-0237
 type: story
 title: "Match grid in the redesign style"
-status: ready
+status: review
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 3
