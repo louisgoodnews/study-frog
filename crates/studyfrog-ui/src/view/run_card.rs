@@ -122,10 +122,7 @@ pub(crate) fn item(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) -> bool
     // A choice item shows its prompt above the options, never the option list as Markdown: that would tick
     // the correct box in an exam, which shows no answer until the end.
     let on_screen = choice::shown(run);
-    let prompt = match crate::run_update::choice::pending_block(run) {
-        Some((_, block)) => studyfrog_md::blocks::parse_blocks(&block.prompt),
-        None => prompt,
-    };
+    let prompt = choice::prompt_or(run, prompt);
     markdown(ui, &prompt, heading, None, out);
     if let Some(v) = &content.occlusion {
         let shown = awaiting_rating(run) && !crate::exam_ui::is_exam(run);

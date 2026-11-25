@@ -9,6 +9,17 @@ use crate::msg::MsgRehearsal;
 use crate::run_state::choice::{can_submit, picked_for};
 use crate::run_update::choice::{ChoiceMsg, pending_block};
 
+/// The prompt to draw: a pending choice item's prompt without its option list, else the item's own prompt.
+pub(crate) fn prompt_or(
+    run: &RunView,
+    own: Vec<studyfrog_md::blocks::Block>,
+) -> Vec<studyfrog_md::blocks::Block> {
+    match pending_block(run) {
+        Some((_, block)) => studyfrog_md::blocks::parse_blocks(&block.prompt),
+        None => own,
+    }
+}
+
 /// Number keys 1 to 9, option 1 to 9.
 const NUMBER_KEYS: [Key; 9] = [
     Key::Num1,
