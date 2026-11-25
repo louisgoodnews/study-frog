@@ -45,3 +45,16 @@ desktop session (RELEASING step 6).
 ## Related
 - ADR 0013 (scripting out of process) and the release process in `docs/contributing/RELEASING.md`.
 - `docs/RELEASE_AUDIT_1.0.0.md`, `docs/RELEASE_NOTES_1.0.0.md`.
+
+## Addendum (2026-11-24): reference baseline for 1.0.0
+
+The owner decided on 2026-11-24, after the release benchmark check reported `regression` for 16 to 17 of 28 cases
+against the first reference run:
+
+> Re-baseline the 1.0.0 reference on runs 2 to 4. Run 1 is recorded as contaminated by load (14 busy processes during
+> the run); runs 2 to 4 are the reference.
+
+Reason: run 1 ran with 14 busy processes (load 3.0, governor powersave); runs 2 to 4 ran with one busy process and agree
+with each other on all 28 cases. The earlier decisions above are unchanged. Run 1 stays in `docs/benchmarks/reference-1.0.0/`
+as recorded data, but it is not the baseline for the 1.0.0 comparison. The spread-rule cases that remain above 5% after
+10 runs are recorded as known noise in `docs/RELEASE_AUDIT_1.0.0.md`, not as passes.

@@ -114,6 +114,15 @@ Benchmark comparison of the two reference runs (`scripts/bench-compare.sh`): 16 
 Runs 3 and 4 (`docs/benchmarks/repeat-1.0.0/`) agree with run 2 (no-change on all 28 cases). Against run 1 they give regression
 for 16 to 17 cases, so the regression persists. The spread rule still fails for 5 cases in run 4.
 
+### 8.0b Re-baseline (owner decision, 2026-11-24, ADR 0014 addendum)
+Run 1 is recorded as contaminated by load (14 busy processes). Runs 2 to 4 are the 1.0.0 reference.
+- `bench-compare`, run 2 against run 3: no-change on all 28 cases.
+- `bench-compare`, run 2 against run 4: no-change on all 28 cases.
+- Verdict: the benchmark comparison passes against the re-baselined reference.
+- Known noise (spread above 5% after 10 runs in run 4; recorded as noise, not as passes): `pdf_render_1x` 13.2%,
+  `pdf_info` 9.2%, `rehearsal_queue_lowest` 9.9%, `rehearsal_queue_shuffled` 7.4%, `graph_project` 6.9%.
+- Known budget miss, not noise: analytics CMRR 71 to 85 ms against its 50 ms budget (unchanged budget, STORY-0203).
+
 ### 8.1 Tag decision
 
-The v1.0.0 tag is **not pushed** and not created (owner instruction, repeat runs 3 and 4 do not clear the regression). Authority item 3 requires the benchmark run to have passed, and the release check verdict is `regression`. The owner must accept the verdict in writing, or a repeat run must clear it, before the tag. Also still open: the window checks in section 3 and the heavy candle tests with a model.
+The v1.0.0 tag is created and pushed after the re-baseline (section 8.0b), once `scripts/check.sh` passes on the final tree. Authority item 3 requires the benchmark run to have passed, and the release check verdict is `regression`. The owner must accept the verdict in writing, or a repeat run must clear it, before the tag. Also still open: the window checks in section 3 and the heavy candle tests with a model.
