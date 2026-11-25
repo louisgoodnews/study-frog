@@ -1,5 +1,6 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)] // tests may panic on failure
 //! The performance explorer on the reports screen.
+use eframe::egui;
 use studyfrog_ui::effect::EffectEditor;
 use studyfrog_ui::effect::EffectReports;
 
@@ -106,6 +107,9 @@ fn the_screen_shows_the_numbers_the_chart_and_one_level_down() {
 #[test]
 fn clicking_a_row_or_a_crumb_or_a_period_asks_for_the_numbers() {
     let mut h = harness(model(Scope::Vault));
+    // The redesign's headline and chart cards sit above the rows; at the default 720 pt height the
+    // first row is below the visible area, so the test gives the screen room to show it.
+    h.set_size(egui::vec2(1000.0, 1000.0));
     h.run_steps(2);
     h.get_all_by_label("French").last().unwrap().click();
     h.run_steps(2);
