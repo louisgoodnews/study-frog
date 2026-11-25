@@ -7,6 +7,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Added
+- The first-run setup wizard's steps (vault, local model, remote provider, MiniLM, summary), skipping, revisiting and what is done, as a pure model in `studyfrog-config` (TASK-0297, STORY-0212).
+
 ## [1.0.0] - 2026-11-24
 
 ### Added

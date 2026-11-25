@@ -14,3 +14,4 @@ pub mod stack;
 pub mod subjects;
 pub mod values;
 pub mod vault;
+pub mod wizard;
