@@ -13,8 +13,11 @@ use crate::msg::Msg;
 use crate::run_state::RunView;
 use crate::state::State;
 use crate::theme::palette_of;
-use crate::view::kit;
 use crate::view::summary::verdict_label;
+use crate::view::{gradient_panel, home_hero, kit};
+
+/// The height of the heading's gradient panel, in points.
+const HEADER_HEIGHT: f32 = 64.0;
 
 /// Heading, the result banner, the review and the diary prompt.
 pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
@@ -24,26 +27,7 @@ pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         .auto_shrink([false, false])
         .show(ui, |ui| {
             let stopped = run.session.run.state == RunState::Aborted;
-            ui.horizontal(|ui| {
-                let title = if stopped {
-                    "Exam stopped"
-                } else {
-                    "Exam finished"
-                };
-                ui.label(
-                    RichText::new(title)
-                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                        .strong(),
-                );
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if kit::primary_button(ui, "Back to setup")
-                        .on_hover_text("Goes back to the setup of the run.")
-                        .clicked()
-                    {
-                        out.push(Msg::Rehearsal(MsgRehearsal::LeaveRun));
-                    }
-                });
-            });
+            headline(stopped, ui, out);
             banner(run, stopped, ui);
             ui.weak("An exam never changes your review schedule.");
             ui.add_space(4.0);
@@ -56,8 +40,35 @@ pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         });
 }
 
+/// The heading on the gradient panel, with the Back button beside it.
+fn headline(stopped: bool, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    gradient_panel::panel(ui, HEADER_HEIGHT, |ui, s| {
+        ui.horizontal(|ui| {
+            let title = if stopped {
+                "Exam stopped"
+            } else {
+                "Exam finished"
+            };
+            ui.label(
+                RichText::new(title)
+                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                    .strong()
+                    .color(s.gradient_text),
+            );
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                if kit::primary_button(ui, "Back to setup")
+                    .on_hover_text("Goes back to the setup of the run.")
+                    .clicked()
+                {
+                    out.push(Msg::Rehearsal(MsgRehearsal::LeaveRun));
+                }
+            });
+        });
+    });
+}
+
 fn banner(run: &RunView, stopped: bool, ui: &mut egui::Ui) {
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         if stopped {
             ui.label("You stopped the exam, so it is not graded. Your answers are kept in the run's history.");
@@ -123,7 +134,7 @@ fn short_engine(engine: &str) -> &str {
 fn item_card(run: &RunView, item: Uid, ui: &mut egui::Ui) {
     let p = palette_of(ui);
     let content = run.content.get(&item);
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
         let title = content.map_or("(not loaded)", |c| c.title.as_str());

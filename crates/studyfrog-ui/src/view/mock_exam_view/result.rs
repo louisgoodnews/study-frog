@@ -13,7 +13,7 @@ use crate::setup::mock_exam::grading::{
     Graded, GradingEngine, breakdown, breakdown_by_format, total,
 };
 use crate::theme::palette_of;
-use crate::view::kit;
+use crate::view::{home_hero, kit};
 
 /// Summary sentence describing which grading engines scored the exam.
 pub fn engine_line(graded: &[Graded]) -> String {
@@ -84,32 +84,35 @@ pub fn draw(ui: &mut egui::Ui, graded: &[Graded], pass_mark: f32, out: &mut Vec<
     } else {
         ("Not passed", pal.danger)
     };
-    pass_mark_line(ui, pass_mark, out);
-    ui.label(
-        RichText::new(format!(
-            "{} / {} points · {:.0} % · Grade {} ({})",
-            t.earned,
-            t.possible,
-            pct,
-            grade_label(t.grade),
-            t.word
-        ))
-        .strong(),
-    );
-    ui.colored_label(color, verdict);
-    ui.weak(engine_line(graded));
-    if graded
-        .iter()
-        .any(|g| g.format == ExamItemFormat::MultipleSelect)
-    {
-        ui.weak(MULTI_SELECT_RULE);
-    }
-    let left_out = graded.iter().filter(|g| !g.counted).count();
-    if left_out > 0 {
-        ui.weak(format!(
-            "{left_out} question(s) not counted: no rubric point of them could be checked by word overlap."
-        ));
-    }
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        pass_mark_line(ui, pass_mark, out);
+        ui.label(
+            RichText::new(format!(
+                "{} / {} points · {:.0} % · Grade {} ({})",
+                t.earned,
+                t.possible,
+                pct,
+                grade_label(t.grade),
+                t.word
+            ))
+            .strong(),
+        );
+        ui.colored_label(color, verdict);
+        ui.weak(engine_line(graded));
+        if graded
+            .iter()
+            .any(|g| g.format == ExamItemFormat::MultipleSelect)
+        {
+            ui.weak(MULTI_SELECT_RULE);
+        }
+        let left_out = graded.iter().filter(|g| !g.counted).count();
+        if left_out > 0 {
+            ui.weak(format!(
+                "{left_out} question(s) not counted: no rubric point of them could be checked by word overlap."
+            ));
+        }
+    });
     draw_breakdowns(ui, graded, pass_mark);
     ui.add_space(8.0);
     ui.label(RichText::new("Review").strong());
@@ -159,8 +162,15 @@ fn draw_breakdowns(ui: &mut egui::Ui, graded: &[Graded], pass_mark: f32) {
 }
 
 fn draw_question_review(ui: &mut egui::Ui, i: usize, g: &Graded) {
-    let pal = palette_of(ui);
     ui.add_space(6.0);
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        question_review(ui, i, g);
+    });
+}
+
+fn question_review(ui: &mut egui::Ui, i: usize, g: &Graded) {
+    let pal = palette_of(ui);
     let score = if g.counted {
         format!("{} / {} points", g.earned, g.possible)
     } else {

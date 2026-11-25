@@ -10,7 +10,7 @@ use crate::msg::Msg;
 use crate::run_clock::mmss;
 use crate::setup::mock_exam::{MockExamMsg, MockExamUi};
 use crate::theme::palette_of;
-use crate::view::kit;
+use crate::view::{home_hero, kit};
 
 fn timer_line(ui: &mut egui::Ui, limit_sec: u32, elapsed_sec: u32) {
     let pal = palette_of(ui);
@@ -34,7 +34,6 @@ pub fn draw(
     m: &MockExamUi,
     out: &mut Vec<Msg>,
 ) {
-    let pal = palette_of(ui);
     if m.locked {
         ui.weak("Submitted. Your answers are locked until the result is shown.");
     } else {
@@ -43,19 +42,10 @@ pub fn draw(
     ui.add_enabled_ui(!m.locked, |ui| {
         for (i, q) in all_questions(&g.exam).into_iter().enumerate() {
             ui.add_space(6.0);
-            ui.horizontal_wrapped(|ui| {
-                kit::pill(ui, format_label(q.format), pal.accent);
-                ui.label(format!("{}. ({} points, {})", i + 1, q.points.0, q.topic));
+            home_hero::card(ui, |ui| {
+                ui.set_width(ui.available_width());
+                question(ui, i, q, m.answers.get(i), out);
             });
-            let ans = m.answers.get(i);
-            match q.format {
-                ExamItemFormat::OpenQuestion
-                | ExamItemFormat::Calculation
-                | ExamItemFormat::CaseScenario => draw_text(ui, i, q, ans, out),
-                ExamItemFormat::FillInGaps => draw_gaps(ui, i, q, ans, out),
-                ExamItemFormat::SingleSelect => draw_single(ui, i, q, ans, out),
-                ExamItemFormat::MultipleSelect => draw_multiple(ui, i, q, ans, out),
-            }
         }
     });
     ui.add_space(8.0);
@@ -69,6 +59,29 @@ pub fn draw(
         .clicked()
     {
         out.push(Msg::MockExam(MockExamMsg::Finish));
+    }
+}
+
+/// One question's heading and its answer control, chosen by the item's format.
+fn question(
+    ui: &mut egui::Ui,
+    i: usize,
+    q: &ExamQuestion,
+    ans: Option<&ExamAnswer>,
+    out: &mut Vec<Msg>,
+) {
+    let pal = palette_of(ui);
+    ui.horizontal_wrapped(|ui| {
+        kit::pill(ui, format_label(q.format), pal.accent);
+        ui.label(format!("{}. ({} points, {})", i + 1, q.points.0, q.topic));
+    });
+    match q.format {
+        ExamItemFormat::OpenQuestion
+        | ExamItemFormat::Calculation
+        | ExamItemFormat::CaseScenario => draw_text(ui, i, q, ans, out),
+        ExamItemFormat::FillInGaps => draw_gaps(ui, i, q, ans, out),
+        ExamItemFormat::SingleSelect => draw_single(ui, i, q, ans, out),
+        ExamItemFormat::MultipleSelect => draw_multiple(ui, i, q, ans, out),
     }
 }
 
