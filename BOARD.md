@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (12) | Ready (0) | In progress (3/3) | Review (3) | Blocked (1) | Done (619) |
+| Backlog (11) | Ready (0) | In progress (2/3) | Review (3) | Blocked (2) | Done (620) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -556,7 +556,7 @@
 | [STORY-0200](docs/issues/stories/STORY-0200-local-model-scoring-of-case-study-justifications.md) Local-model scoring of case-study justifications, with the rubric prompt template (3) | done | 0/0 |
 | [STORY-0201](docs/issues/stories/STORY-0201-reference-runs-on-the-owners-machine-with-identity-recorded.md) Reference runs on the owner's machine, with the machine's identity recorded (5) | in_progress | 1/3 |
 | [STORY-0202](docs/issues/stories/STORY-0202-regression-rule-compare-two-runs-flag-only-real-large-changes.md) Regression rule: compare two runs and flag only real, large changes (5) | review | 2/3 |
-| [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines on the owner's machine (2) | in_progress | 0/0 |
+| [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines on the owner's machine (2) | blocked | 0/0 |
 | [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time of the rehearsal card, reports and console measured in the running window (5) | backlog | 0/2 |
 | [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Allocations in the render loops, counted with dhat, and a profile of the slowest screen (3) | backlog | 1/2 |
 | [STORY-0206](docs/issues/stories/STORY-0206-ollama-setup-assistant-with-hardware-audit-and-model-suggestions.md) Ollama setup assistant: hardware audit, live Ollama status and model suggestions that fit this machine (5) | done | 0/0 |
@@ -569,7 +569,7 @@
 | [STORY-0213](docs/issues/stories/STORY-0213-redesign-visual-tokens-for-cards-rings-gradients-and-rail.md) Redesign visual tokens: cards, stat rings, gradient headline cards, avatars and the navigation rail (5) | done | 0/0 |
 | [STORY-0214](docs/issues/stories/STORY-0214-home-screen-in-the-redesign-style.md) Home in the redesign style: headline card, statistic ring, card lists and the rail (5) | done | 0/0 |
 | [STORY-0215](docs/issues/stories/STORY-0215-stack-page-in-the-redesign-style.md) Stack page in the redesign style: header, tab rail, summary cards and the ring (5) | done | 0/0 |
-| [STORY-0216](docs/issues/stories/STORY-0216-library-in-the-redesign-style.md) Library in the redesign style: headline, card lists and the rail (5) | backlog | 0/0 |
+| [STORY-0216](docs/issues/stories/STORY-0216-library-in-the-redesign-style.md) Library in the redesign style: headline, card lists and the rail (5) | done | 0/0 |
 | [STORY-0217](docs/issues/stories/STORY-0217-rehearsal-in-the-redesign-style.md) Rehearsal in the redesign style: setup, card view and result (5) | backlog | 0/0 |
 | [STORY-0218](docs/issues/stories/STORY-0218-reports-in-the-redesign-style.md) Reports in the redesign style: charts and figure cards (5) | backlog | 0/0 |
 
@@ -646,4 +646,4 @@
 | [EPIC-067](docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement | blocked | 0/5 |
 | [EPIC-068](docs/issues/epics/EPIC-068-classroom-simulation-with-ai-teacher-and-students.md) Classroom simulation: AI-driven lectures, simulated students, group tasks, and graded submissions | done | 4/4 |
 | [EPIC-069](docs/issues/epics/EPIC-069-first-run-setup-wizard.md) First-run setup wizard: vault, local model (Ollama), remote provider and the MiniLM model | backlog | 0/1 |
-| [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark) | in_progress | 3/6 |
+| [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark) | in_progress | 4/6 |

@@ -10,7 +10,7 @@ use crate::modal::ModalMsg;
 use crate::msg::Msg;
 use crate::state::{Selection, State};
 use crate::theme::palette_of;
-use crate::view::{items, kit};
+use crate::view::{gradient_panel, items, kit};
 
 fn limit(n: Option<u32>) -> String {
     n.map_or_else(|| "–".to_owned(), |v| v.to_string())
@@ -121,15 +121,18 @@ fn overview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .sum::<usize>()
         + o.inbox_items;
     egui::ScrollArea::vertical().show(ui, |ui| {
-        ui.label(
-            RichText::new("All stacks")
-                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                .strong(),
-        );
-        ui.label(
-            RichText::new(format!("{} stacks, {items} items", o.stacks.len()))
-                .color(palette_of(ui).text_weak),
-        );
+        gradient_panel::panel(ui, OVERVIEW_HEIGHT, |ui, s| {
+            ui.label(
+                RichText::new("All stacks")
+                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                    .strong()
+                    .color(s.gradient_text),
+            );
+            ui.label(
+                RichText::new(format!("{} stacks, {items} items", o.stacks.len()))
+                    .color(s.gradient_text),
+            );
+        });
         ui.add_space(8.0);
         if o.stacks.is_empty() {
             ui.label(
@@ -146,6 +149,8 @@ fn overview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 const COLUMNS: usize = 3;
+/// The height of the "All stacks" headline panel (EPIC-070, STORY-0216).
+const OVERVIEW_HEIGHT: f32 = 110.0;
 
 fn stack_cards(o: &VaultOverview, default: Scheduler, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     for row in o.stacks.chunks(COLUMNS) {
