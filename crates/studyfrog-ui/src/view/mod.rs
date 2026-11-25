@@ -126,6 +126,7 @@ mod popup;
 mod preview;
 mod preview_rich;
 mod profiles;
+mod prompts_header;
 mod prompts_screen;
 mod redesign_parts;
 mod report_cmrr;

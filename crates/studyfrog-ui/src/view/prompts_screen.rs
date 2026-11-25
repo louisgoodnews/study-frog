@@ -4,11 +4,12 @@ use eframe::egui;
 
 use crate::msg::Msg;
 use crate::state::State;
-use crate::view::{agent_prompts, kit};
+use crate::view::{agent_prompts, kit, prompts_header};
 
-/// The screen.
+/// The screen: the headline, then the prompts on cards.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.heading("Prompts");
+    prompts_header::headline(ui);
+    ui.add_space(8.0);
     egui::ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {

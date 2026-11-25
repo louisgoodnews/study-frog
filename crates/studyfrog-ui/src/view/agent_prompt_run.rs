@@ -151,8 +151,14 @@ fn answer(text: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 
 /// The section under the list of prompts.
 pub fn run(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    crate::view::home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        section(state, ui, out);
+    });
+}
+
+fn section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let run = &state.prompt_run;
-    ui.separator();
     ui.label(
         RichText::new("Run a prompt with the assistant")
             .size(crate::typo::size(ui, crate::typo::Tier::Heading))
