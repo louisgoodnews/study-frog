@@ -81,8 +81,8 @@ fn list_item(
 ) {
     ui.horizontal_top(|ui| {
         let mark = match item.checked {
-            Some(true) => "☑".to_owned(),
-            Some(false) => "☐".to_owned(),
+            Some(true) => "[x]".to_owned(),
+            Some(false) => "[ ]".to_owned(),
             None => marker,
         };
         // A paragraph's first line sits in a row at least as tall as a button, with its text in the middle of

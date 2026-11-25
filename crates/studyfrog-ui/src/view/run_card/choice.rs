@@ -74,6 +74,10 @@ pub(crate) fn options(
 /// Radio buttons for single choice, checkboxes for multiple select, then the Submit button.
 fn answering(block: &ChoiceBlock, picked: &[bool], ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let multiple = is_multiple(block);
+    // The boxes and circles take a visible outline in the weak text colour, so they show on both themes.
+    let p = crate::theme::palette_of(ui);
+    ui.visuals_mut().widgets.inactive.bg_stroke = egui::Stroke::new(1.5, p.text_weak);
+    ui.visuals_mut().widgets.hovered.bg_stroke = egui::Stroke::new(1.5, p.accent);
     for (i, option) in block.options.iter().enumerate() {
         let response = if multiple {
             let mut on = picked[i];
