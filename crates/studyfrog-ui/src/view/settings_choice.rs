@@ -16,7 +16,7 @@ const SCHEMES: [(ChoiceGrading, &str, &str); 3] = [
     (
         ChoiceGrading::Zapechelnyuk,
         "Zapechelnyuk",
-        "Zapechelnyuk (2015): a choice earns 1/k of the credit when at least one chosen option is correct, k being the number of options chosen. Choosing more options dilutes the credit.",
+        "Zapechelnyuk (2015): a choice earns 1/k of the credit when at least one chosen option is correct, k being the number of options chosen. Choosing more options dilutes the credit. Choosing every correct option and no wrong one earns full credit.",
     ),
     (
         ChoiceGrading::CountPartial,

@@ -1,3 +1,4 @@
+//! Formatting of log lines (studyfrog-log).
 use studyfrog_log::{Level, Record, format_line};
 
 fn record(message: &str, fields: &[(&str, &str)]) -> Record {

@@ -1,3 +1,4 @@
+//! The size-rotating file sink (studyfrog-log).
 use std::fs;
 use std::path::PathBuf;
 

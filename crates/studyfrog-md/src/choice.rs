@@ -88,12 +88,11 @@ pub fn parse_choice(body: &str) -> Result<ChoiceBlock, ChoiceError> {
 fn option_line(trimmed: &str) -> Option<ChoiceOption> {
     let (correct, rest) = if let Some(rest) = trimmed.strip_prefix("- [ ]") {
         (false, rest)
-    } else if let Some(rest) = trimmed.strip_prefix("- [x]") {
-        (true, rest)
-    } else if let Some(rest) = trimmed.strip_prefix("- [X]") {
-        (true, rest)
     } else {
-        return None;
+        let rest = trimmed
+            .strip_prefix("- [x]")
+            .or_else(|| trimmed.strip_prefix("- [X]"))?;
+        (true, rest)
     };
     Some(ChoiceOption {
         text: rest.trim().to_owned(),

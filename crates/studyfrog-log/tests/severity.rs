@@ -1,3 +1,4 @@
+//! Log level names and parsing (studyfrog-log).
 use studyfrog_log::{Level, name, parse_level};
 
 #[test]

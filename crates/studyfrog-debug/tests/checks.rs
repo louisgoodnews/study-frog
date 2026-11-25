@@ -1,3 +1,4 @@
+//! Debug checks and counters (studyfrog-debug).
 use studyfrog_debug::{check, count, counts, truncate_chars};
 
 #[test]

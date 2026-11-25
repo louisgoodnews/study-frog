@@ -1,3 +1,4 @@
+//! Debug timers (studyfrog-debug).
 use studyfrog_debug::{elapsed_us, timed};
 
 #[test]

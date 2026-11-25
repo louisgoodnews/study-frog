@@ -1,3 +1,4 @@
+//! Dispatch of log records to the ring and the level filter (studyfrog-log).
 // Global state (level and ring) is changed here, so all checks that change it run in one test
 // function. Records use unique targets so that other tests in this binary cannot disturb them.
 use studyfrog_log::{Level, RING_CAPACITY, emit, level, recent, set_level};

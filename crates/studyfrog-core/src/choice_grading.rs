@@ -8,6 +8,8 @@ pub enum ChoiceGrading {
     #[default]
     AllOrNothing,
     /// Zapechelnyuk (2015): 1/k when at least one chosen option is correct, k being the number chosen.
+    /// Owner override: every correct option chosen and no wrong one is full credit (1), a deliberate
+    /// deviation from the published rule.
     Zapechelnyuk,
     /// (correct chosen minus wrong chosen) divided by the number of correct options, never below zero.
     CountPartial,

@@ -150,6 +150,22 @@ fn zapechelnyuk_credits_one_over_the_number_chosen() {
 }
 
 #[test]
+fn zapechelnyuk_all_correct_and_no_wrong_is_full_credit() {
+    let (_dir, session) = vault("zapechelnyuk-full");
+    // Owner override: Whale and Bat chosen, both correct, nothing wrong: full credit and Good.
+    let out = grade_choice_answer(
+        &session,
+        MULTIPLE,
+        &[true, false, true],
+        ChoiceGrading::Zapechelnyuk,
+    )
+    .unwrap();
+    assert_eq!(out.scored.score.value, 1.0);
+    assert_eq!(out.scored.score.verdict, Verdict::Correct);
+    assert_eq!(out.scored.rating, Rating::Good);
+}
+
+#[test]
 fn engine_text_names_the_rule_for_choice_scores_only() {
     assert_eq!(CHOICE_ENGINE, "choice");
     assert_eq!(

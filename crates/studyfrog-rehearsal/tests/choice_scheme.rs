@@ -90,8 +90,8 @@ fn multiple_one_correct_chosen_alone() {
 #[test]
 fn multiple_all_correct_chosen() {
     assert_fraction(AllOrNothing, &[true, false, true], &MULTIPLE, 1.0);
-    // The published rule divides by the number chosen: 2 chosen gives 1/2.
-    assert_fraction(Zapechelnyuk, &[true, false, true], &MULTIPLE, 0.5);
+    // Owner override: every correct option and no wrong one is full credit, not 1/2.
+    assert_fraction(Zapechelnyuk, &[true, false, true], &MULTIPLE, 1.0);
     assert_fraction(CountPartial, &[true, false, true], &MULTIPLE, 1.0);
 }
 

@@ -112,11 +112,11 @@ pub fn create_item(
     kind: NewKind,
     [title, text, answer]: [&str; 3],
     (tags, parent, also_in, due): ItemOpts<'_>,
-    (priority, difficulty): (
+    (priority, difficulty, answer_type): (
         Option<studyfrog_core::priority::Priority>,
         Option<studyfrog_core::event::Difficulty>,
+        AnswerType,
     ),
-    answer_type: AnswerType,
     now_ns: i64,
 ) -> Msg {
     let Some(session) = &mut w.session else {

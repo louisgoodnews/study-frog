@@ -76,8 +76,7 @@ pub fn import(w: &mut Worker, e: EffectImport, now_ns: i64) -> Vec<Msg> {
             kind,
             [&title, &text, &answer],
             (&tags, parent.as_deref(), also_in.as_deref(), due.as_ref()),
-            choices,
-            answer_type,
+            (choices.0, choices.1, answer_type),
             now_ns,
         ),
         EffectImport::CreateCard {

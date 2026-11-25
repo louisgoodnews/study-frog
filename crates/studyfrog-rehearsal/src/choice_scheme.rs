@@ -16,7 +16,8 @@ struct Tally {
 ///
 /// All-or-nothing gives 1 only when the chosen options are exactly the correct ones. Zapechelnyuk
 /// gives 1/k when at least one chosen option is correct, k being the number chosen, and 0 otherwise
-/// (nothing chosen is 0). Count-based partial credit is (correct chosen minus wrong chosen) divided
+/// (nothing chosen is 0), except that every correct option and no wrong one is full credit (owner
+/// override, see below). Count-based partial credit is (correct chosen minus wrong chosen) divided
 /// by the correct total, never below 0.
 pub fn credited_fraction(scheme: ChoiceGrading, picked: &[bool], correct: &[bool]) -> f32 {
     let t = tally(picked, correct);
@@ -29,8 +30,12 @@ pub fn credited_fraction(scheme: ChoiceGrading, picked: &[bool], correct: &[bool
                 0.0
             }
         }
+        // Owner override (2026-11-25): choosing every correct option and no wrong one is full
+        // credit. The published rule would give 1/k here, so this is a deliberate deviation.
         ChoiceGrading::Zapechelnyuk => {
-            if t.right == 0 {
+            if t.total > 0 && t.right == t.total && t.wrong == 0 {
+                1.0
+            } else if t.right == 0 {
                 0.0
             } else {
                 1.0 / chosen as f32
