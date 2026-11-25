@@ -204,19 +204,21 @@ fn rect_of(h: &egui_kittest::Harness<'_, common::views::App>, label: &str) -> ef
 fn the_summary_figures_have_room_and_the_page_keeps_a_margin_from_the_sidebar() {
     let mut h = harness(home_model(3));
     h.run_steps(6);
-    let (ready, streak, reviews) = (
+    // The figures share one row under the headline; today's reviews are the ring's caption (STORY-0214).
+    let (ready, streak, vault) = (
         rect_of(&h, "items ready for today"),
         rect_of(&h, "Streak"),
-        rect_of(&h, "Reviews today"),
+        rect_of(&h, "Items in your vault"),
     );
     assert!(
         streak.left() - ready.right() >= 30.0,
         "{ready:?} {streak:?}"
     );
     assert!(
-        reviews.left() - streak.right() >= 30.0,
-        "{streak:?} {reviews:?}"
+        vault.left() - streak.right() >= 30.0,
+        "{streak:?} {vault:?}"
     );
+    assert!(h.query_by_label("Reviews today").is_some());
     let sidebar = rect_of(&h, "Items");
     let title = h
         .get_by_label_contains("Good morning")

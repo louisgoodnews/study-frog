@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (12) | Ready (0) | In progress (2/3) | Review (3) | Blocked (1) | Done (617) |
+| Backlog (11) | Ready (0) | In progress (2/3) | Review (3) | Blocked (1) | Done (618) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0283](docs/issues/tasks/TASK-0283-opt-in-frame-time-capture-in-the-app-window.md) Opt-in frame-time capture in the app window (3) |  |  | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -567,7 +567,7 @@
 | [STORY-0211](docs/issues/stories/STORY-0211-classroom-chat-ui-session-browser-and-assignment-workspace.md) Classroom-chat UI, session browser, and assignment submission workspace (5) | done | 4/4 |
 | [STORY-0212](docs/issues/stories/STORY-0212-first-run-wizard-optional-model-setup.md) First-run wizard: optional model setup after the vault, with confirmed downloads (5) | backlog | 2/3 |
 | [STORY-0213](docs/issues/stories/STORY-0213-redesign-visual-tokens-for-cards-rings-gradients-and-rail.md) Redesign visual tokens: cards, stat rings, gradient headline cards, avatars and the navigation rail (5) | done | 0/0 |
-| [STORY-0214](docs/issues/stories/STORY-0214-home-screen-in-the-redesign-style.md) Home in the redesign style: headline card, statistic ring, card lists and the rail (5) | backlog | 0/0 |
+| [STORY-0214](docs/issues/stories/STORY-0214-home-screen-in-the-redesign-style.md) Home in the redesign style: headline card, statistic ring, card lists and the rail (5) | done | 0/0 |
 | [STORY-0215](docs/issues/stories/STORY-0215-stack-page-in-the-redesign-style.md) Stack page in the redesign style: header, tab rail, summary cards and the ring (5) | backlog | 0/0 |
 
 ## Epics
@@ -643,4 +643,4 @@
 | [EPIC-067](docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement | blocked | 0/5 |
 | [EPIC-068](docs/issues/epics/EPIC-068-classroom-simulation-with-ai-teacher-and-students.md) Classroom simulation: AI-driven lectures, simulated students, group tasks, and graded submissions | done | 4/4 |
 | [EPIC-069](docs/issues/epics/EPIC-069-first-run-setup-wizard.md) First-run setup wizard: vault, local model (Ollama), remote provider and the MiniLM model | backlog | 0/1 |
-| [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark) | backlog | 1/3 |
+| [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark) | backlog | 2/3 |

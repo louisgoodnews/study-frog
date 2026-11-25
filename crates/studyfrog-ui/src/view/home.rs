@@ -1,18 +1,16 @@
 //! The home screen: what is due now, what is coming up, and what happened recently. The three columns
 //! stretch to the window so nothing important hides below the fold and no part sits empty.
 use crate::msg::MsgBrowse;
-use crate::msg::MsgVault;
 
 use eframe::egui::{self, RichText};
-use studyfrog_core::count::counted;
 use studyfrog_core::plan::item_kind_name;
 use studyfrog_service::home::HomeSummary;
 
 use crate::home_ui::HomeMsg;
 use crate::msg::Msg;
-use crate::state::{Screen, State};
+use crate::state::State;
 use crate::theme::palette_of;
-use crate::view::{home_cards, kit, library_pdfs};
+use crate::view::{home_cards, home_hero, kit, library_pdfs};
 
 const DAY_MS: i64 = 86_400_000;
 const MIN_COLUMN_HEIGHT: f32 = 240.0;
@@ -66,7 +64,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             let stacks = vault.overview.stacks.len();
             ui.label(RichText::new(format!("{stacks} stacks")).color(palette_of(ui).text_weak));
             ui.add_space(8.0);
-            hero(
+            home_hero::draw(
                 h,
                 vault
                     .overview
@@ -93,40 +91,9 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
 }
 
-/// What is ready, the numbers behind the streak, and the one button that matters.
-fn hero(h: &HomeSummary, items: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    kit::card(ui, |ui| {
+pub(super) fn column_card(ui: &mut egui::Ui, _fill: f32, add: impl FnOnce(&mut egui::Ui)) {
+    home_hero::card(ui, |ui| {
         ui.set_width(ui.available_width());
-        ui.horizontal(|ui| {
-            ui.spacing_mut().item_spacing.x = 40.0;
-            kit::stat(ui, &h.ready_today.to_string(), "items ready for today");
-            kit::stat(ui, &counted(h.streak_days, "day", "days"), "Streak");
-            kit::stat(ui, &h.reviews_today.to_string(), "Reviews today");
-            kit::stat(ui, &items.to_string(), "Items in your vault");
-            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                if h.ready_today > 0 {
-                    if kit::primary_button(ui, "Start today's rehearsal")
-                        .on_hover_text("Starts a rehearsal of what is due today.")
-                        .clicked()
-                    {
-                        out.push(Msg::Home(HomeMsg::StartToday));
-                    }
-                } else if ui
-                    .button("Practice something else")
-                    .on_hover_text("Starts a different drill.")
-                    .clicked()
-                {
-                    out.push(Msg::Vault(MsgVault::Navigate(Screen::Rehearse)));
-                }
-            });
-        });
-    });
-}
-
-pub(super) fn column_card(ui: &mut egui::Ui, fill: f32, add: impl FnOnce(&mut egui::Ui)) {
-    kit::card(ui, |ui| {
-        ui.set_width(ui.available_width());
-        ui.set_min_height(fill.min(280.0));
         add(ui);
     });
 }

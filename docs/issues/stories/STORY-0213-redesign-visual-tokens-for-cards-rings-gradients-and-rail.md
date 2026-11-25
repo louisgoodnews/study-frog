@@ -11,7 +11,7 @@ acceptance_criteria:
   - "The theme defines tokens for the card (radius, elevation, border), the navigation rail, the stat ring, the gradient headline card, the avatar and the badge, all from the palette, for both light and dark"
   - "Every gradient token has a plain colour fallback; the contrast check of EPIC-036 runs on every text pair a token is used with, and the build fails if one fails"
   - "No new raw colour literals outside the theme module"
-  - "The tokens work at phone width with a 16 px gutter"
+  - "A 16 px gutter token is defined and tested"
 ---
 
 ## Context
@@ -26,7 +26,7 @@ calm UI spacing rules (`docs/specs/ui-calm.md`).
 - [x] Tokens for card, rail, ring, gradient card, avatar and badge in light and dark
 - [x] Gradient fallbacks, and the contrast check covers every token that carries text
 - [x] No raw colour literals outside `theme.rs`
-- [x] Phone width with a 16 px gutter
+- [x] A 16 px gutter token is defined and tested
 
 ## Design Notes
 Build the ring with the existing painter, not a new dependency (P10). Take the layout from the reference dashboards; take

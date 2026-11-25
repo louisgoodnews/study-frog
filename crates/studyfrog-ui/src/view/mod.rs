@@ -53,6 +53,8 @@ mod help;
 mod help_edit;
 mod home;
 mod home_cards;
+mod home_hero;
+mod home_ring;
 pub(crate) mod homework;
 mod homework_form_view;
 pub(crate) mod homework_marks;

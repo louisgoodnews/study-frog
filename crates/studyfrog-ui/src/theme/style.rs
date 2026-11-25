@@ -8,7 +8,7 @@ use crate::theme::{Palette, blend};
 
 /// Corner radius of a card, larger than the controls' so cards read as containers.
 pub const CARD_RADIUS: u8 = 12;
-/// Gutter at the edge of a screen, the same at phone width.
+/// Gutter at the edge of a screen.
 pub const GUTTER: f32 = 16.0;
 /// Opacity of a tinted fill behind an accent-coloured mark (a badge, the active rail item).
 pub const TINT_ALPHA: u8 = 40;

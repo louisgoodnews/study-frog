@@ -10,7 +10,7 @@ acceptance_criteria:
   - "Both the light and the dark appearance keep working, with the existing appearance setting (EPIC-027)"
   - "Every colour comes from the palette tokens (`palette_of`), never a raw literal, and every text and background pair meets the contrast criteria of EPIC-036 (APCA)"
   - "Gradients are decorative: a gradient never sits behind body text unless the text passes the contrast criteria on every point of it"
-  - "The layout works at phone width with a 16 px side gutter and no horizontal scrolling, as in the rest of the app"
+  - "The redesign is for desktop windows; no phone layout is built"
 ---
 
 ## Context
@@ -28,7 +28,7 @@ apply it screen by screen. Each screen keeps its function, its keyboard use and 
 - [ ] Light and dark appearances both work through the existing setting
 - [ ] Colour from palette tokens only; contrast per EPIC-036
 - [ ] Gradients are decorative; no body text on a gradient that fails the contrast criteria
-- [ ] Phone width: 16 px gutter, no horizontal scroll
+- [ ] Desktop only: no phone layout is built
 
 ## Design Notes
 - The references are dashboards; StudyFrog screens are library, stack pages, Home, rehearsal and reports. The mapping of

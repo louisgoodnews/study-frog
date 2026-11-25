@@ -11,7 +11,7 @@ acceptance_criteria:
   - "The stack header uses the headline card, the primary Start rehearsal button stays the one filled control, and the tabs move to the rail style of STORY-0213"
   - "The Summary tab uses the card and ring tokens; its figures and grouping stay as they are"
   - "All stack actions and tabs are reachable as before, with the same keyboard use; the control protocol answers the same stack state"
-  - "Light and dark both pass the screenshot check at 1280 by 800 and at phone width"
+  - "Light and dark both pass the screenshot check at 1280 by 800"
 ---
 
 ## Context

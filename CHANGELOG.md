@@ -7,6 +7,9 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+### Changed
+- Home in the redesign style: a gradient headline card with the next due item and its action, a statistic ring for today's reviews, and card lists without the empty tall boxes (STORY-0214, EPIC-070).
+
 ### Added
 - Visual tokens for the redesign (cards, the navigation rail, the stat ring, the gradient headline card, avatars and badges), derived from the palette and checked against the APCA targets in all 24 palettes (STORY-0213, EPIC-070).
 - Confirmed model downloads: a plan (title, source host, file sizes and pinned SHA-256) for the MiniLM model and the catalog's GGUF models, and a fetch that asks for confirmation before it contacts anything, keeps verified files and removes a file whose digest is wrong (TASK-0298, STORY-0212).
