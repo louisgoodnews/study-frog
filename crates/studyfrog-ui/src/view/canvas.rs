@@ -4,20 +4,22 @@
 
 use std::collections::HashMap;
 
-use eframe::egui::{self, Pos2, Rect as EguiRect, Sense, Vec2};
+use eframe::egui::{self, Pos2, Rect as EguiRect, Sense, Stroke, StrokeKind, Vec2};
 use studyfrog_graph::quadtree::new_rect;
 
 use crate::canvas_types::{CanvasMsg, CanvasState, screen_to_world, world_to_screen};
 use crate::msg::Msg;
 use crate::state::State;
+use crate::theme::style::{CARD_RADIUS, style_of};
 use crate::theme::{palette_of, tint};
 use crate::view::canvas_edge::draw_edge;
+use crate::view::canvas_header;
 use crate::view::canvas_paint::{
     build_node_quadtree, cull_visible_nodes, paint_frame, paint_grid, paint_node,
 };
 use crate::view::canvas_preview::draw_preview;
 
-/// Header bar, zoom controls, interactive 2D canvas, and card preview popovers.
+/// Headline and zoom toolbar, interactive 2D canvas in a card-edged frame, and card preview popovers.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = palette_of(ui);
     let Some(canvas) = &state.canvas else {
@@ -25,7 +27,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     };
 
-    draw_header(canvas, ui, out);
+    canvas_header::draw(canvas, ui, out);
     ui.add_space(4.0);
 
     let height = (ui.available_height() - 20.0).max(250.0);
@@ -35,7 +37,14 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     handle_input(canvas, &resp, rect, ui, out);
 
     let painter = ui.painter_at(rect);
-    painter.rect_filled(rect, 4.0, p.background);
+    let s = style_of(&p);
+    painter.rect_filled(rect, CARD_RADIUS, p.background);
+    painter.rect_stroke(
+        rect,
+        CARD_RADIUS,
+        Stroke::new(1.0, s.card_edge),
+        StrokeKind::Inside,
+    );
 
     paint_grid(&painter, &canvas.transform, rect, tint(p.border, 70));
 
@@ -85,34 +94,6 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if let Some(preview) = &canvas.preview {
         draw_preview(ui.ctx(), preview, out);
     }
-}
-
-fn draw_header(canvas: &CanvasState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.horizontal(|ui| {
-        ui.heading("FrogCanvas");
-        ui.add_space(8.0);
-        let n = canvas.doc.nodes.len();
-        let e = canvas.doc.edges.len();
-        let f = canvas.doc.frames.len();
-        ui.label(format!("{n} nodes · {e} edges · {f} frames"));
-
-        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            if ui
-                .button("Reset View")
-                .on_hover_text("Puts the view back the way it was at the start.")
-                .clicked()
-            {
-                out.push(Msg::Canvas(CanvasMsg::ResetView));
-            }
-            if ui.button("－").on_hover_text("Zooms out.").clicked() {
-                out.push(Msg::Canvas(CanvasMsg::Zoom(0.8)));
-            }
-            if ui.button("＋").on_hover_text("Zooms in.").clicked() {
-                out.push(Msg::Canvas(CanvasMsg::Zoom(1.25)));
-            }
-            ui.label(format!("{:.0}%", canvas.transform.zoom * 100.0));
-        });
-    });
 }
 
 fn handle_input(

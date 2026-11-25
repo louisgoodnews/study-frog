@@ -26,6 +26,7 @@ mod calendar_timetable;
 mod calendar_week;
 pub mod canvas;
 pub mod canvas_edge;
+pub mod canvas_header;
 pub mod canvas_paint;
 pub mod canvas_preview;
 mod case_view;
