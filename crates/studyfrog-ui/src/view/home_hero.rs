@@ -8,8 +8,9 @@ use studyfrog_service::home::HomeSummary;
 use crate::home_ui::HomeMsg;
 use crate::msg::{Msg, MsgVault};
 use crate::state::Screen;
+use crate::theme::palette_of;
 use crate::theme::style::{CARD_RADIUS, style_of};
-use crate::theme::{PAD_CARD, palette_of};
+use crate::theme_space::rhythm_of;
 use crate::view::{gradient_panel, home_ring, kit};
 
 const HEADLINE_HEIGHT: f32 = 220.0;
@@ -23,7 +24,7 @@ pub(super) fn card(ui: &mut egui::Ui, add: impl FnOnce(&mut egui::Ui)) {
         .fill(s.card)
         .stroke(Stroke::new(1.0, s.card_edge))
         .corner_radius(CARD_RADIUS)
-        .inner_margin(PAD_CARD)
+        .inner_margin(rhythm_of(ui).card.round() as i8)
         .show(ui, add);
 }
 
@@ -108,7 +109,7 @@ fn headline_action(
 /// The three figures that are not the ring, in one row.
 fn figures_card(h: &HomeSummary, items: usize, width: f32, ui: &mut egui::Ui) {
     card(ui, |ui| {
-        ui.set_width(width - 2.0 * PAD_CARD);
+        ui.set_width(width - 2.0 * rhythm_of(ui).card);
         ui.horizontal(|ui| {
             ui.spacing_mut().item_spacing.x = 40.0;
             kit::stat(ui, &h.ready_today.to_string(), "items ready for today");
@@ -122,7 +123,7 @@ fn ring_card(h: &HomeSummary, width: f32, ui: &mut egui::Ui) {
     let p = palette_of(ui);
     let s = style_of(&p);
     card(ui, |ui| {
-        ui.set_width(width - 2.0 * PAD_CARD);
+        ui.set_width(width - 2.0 * rhythm_of(ui).card);
         ui.vertical_centered(|ui| {
             let fraction = home_ring::fraction(
                 h.reviews_today,
