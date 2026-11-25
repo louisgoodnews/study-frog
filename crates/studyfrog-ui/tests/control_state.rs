@@ -11,6 +11,7 @@ use studyfrog_ui::control_cmd::{Command, ItemCmd};
 use studyfrog_ui::control_help::ollama::ROWS as OLLAMA_ROWS;
 use studyfrog_ui::control_help::panels::ROWS as PANEL_ROWS;
 use studyfrog_ui::control_help::screens::ROWS as SCREEN_ROWS;
+use studyfrog_ui::control_help::wizard::ROWS as WIZARD_ROWS;
 use studyfrog_ui::control_help::{COMMANDS, help_json};
 use studyfrog_ui::control_parse::parse_request;
 use studyfrog_ui::control_plan::{plan_for, resolve_item, resolve_stack};
@@ -181,7 +182,11 @@ fn answers_and_events_are_single_json_lines() {
     assert_eq!(err, json!({"id": null, "ok": false, "error": "no"}));
     assert!(!event_line("log", json!({"m": "a\nb"})).contains('\n'));
     let help = help_json();
-    let rows = COMMANDS.len() + SCREEN_ROWS.len() + PANEL_ROWS.len() + OLLAMA_ROWS.len();
+    let rows = COMMANDS.len()
+        + SCREEN_ROWS.len()
+        + PANEL_ROWS.len()
+        + OLLAMA_ROWS.len()
+        + WIZARD_ROWS.len();
     assert_eq!(help["commands"].as_array().unwrap().len(), rows);
     assert!(
         COMMANDS

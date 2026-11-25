@@ -83,10 +83,13 @@ fn create(state: &State, a: &NewItemArgs) -> Result<Plan, String> {
     let mut msgs = vec![
         m(ModalMsg::OpenCreate),
         m(ModalMsg::SetKind(a.kind)),
-        m(ModalMsg::SetAnswerType(a.answer_type)),
         m(ModalMsg::SetParent(a.stack.clone())),
         m(ModalMsg::Edit(Field::Title, a.title.clone())),
     ];
+    // Only a question has an answer type (STORY-0223); other kinds keep their message list unchanged.
+    if a.kind == NewKind::Question {
+        msgs.insert(2, m(ModalMsg::SetAnswerType(a.answer_type)));
+    }
     if a.kind != NewKind::Stack {
         msgs.push(m(ModalMsg::Edit(Field::Text, a.text.clone())));
         msgs.push(m(ModalMsg::Edit(Field::Answer, a.answer.clone())));
