@@ -2,6 +2,7 @@
 //! studyfrog-ui and the optional heavy runtimes; nothing else depends on this crate.
 
 pub mod mcp_http;
+pub mod model_host;
 pub mod picker;
 
 use studyfrog_ext::registry::registry_new;
@@ -22,5 +23,6 @@ pub fn host() -> Host {
         transport: Some(studyfrog_net::send),
         get: Some(studyfrog_net::get),
         opener: Some(picker::open_folder),
+        models: Some(model_host::model_host()),
     }
 }

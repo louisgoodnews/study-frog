@@ -20,6 +20,7 @@ pub mod homework;
 pub mod import;
 pub mod ollama;
 pub mod panels;
+pub mod wizard;
 pub mod pdf;
 pub mod report_tabs;
 pub mod reports;
@@ -132,6 +133,7 @@ pub fn result_for(state: &State, cmd: &Command, before: &Option<Notice>) -> Resu
         Command::Audit => ollama::audit_json(state),
         Command::Ollama(OllamaCmd::Status) => ollama::status_json(state),
         Command::Ollama(OllamaCmd::Suggest) => ollama::suggest_json(state),
+        Command::Wizard(_) => wizard::status_json(state),
         Command::Screens(c) => panels::answer(state, c),
         Command::Stack(StackCmd::Delete(folder)) => panels::stack_deleted(state, folder),
         Command::Diary(c) => diary::answer(state, c),

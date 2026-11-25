@@ -6,6 +6,7 @@ use crate::control_cmd::calendar::CalendarCmd;
 use crate::control_cmd::diary::DiaryCmd;
 use crate::control_cmd::screens::{AssistantCmd, MatchCmd, ScreenCmd, SettingsCmd};
 use crate::control_cmd::ui::UiCmd;
+use crate::control_cmd::wizard::WizardCmd;
 use crate::control_cmd::{Command, HomeworkCmd, ItemCmd, RehearseCmd, StackCmd};
 
 /// How much a command may change.
@@ -63,6 +64,7 @@ pub fn class_of(cmd: &Command) -> Class {
         C::Board(BoardCmd::Add { .. }) | C::Diary(DiaryCmd::Add(_)) => Class::Write,
         C::Board(_) | C::Diary(_) => Class::Read,
         C::Appearance(_) => Class::Write,
+        C::Wizard(WizardCmd::Step(_)) => Class::Write,
         C::PdfFind(Some(_), _) => Class::Write,
         C::Item(_) | C::Stack(_) | C::Import { .. } | C::Export(_) => Class::Write,
         C::VaultOpen(_) | C::VaultClose | C::Screenshot(_) => Class::Write,

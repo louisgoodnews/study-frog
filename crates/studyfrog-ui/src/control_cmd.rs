@@ -15,6 +15,7 @@ pub mod homework;
 pub mod ollama;
 pub mod screens;
 pub mod ui;
+pub mod wizard;
 pub use homework::{HomeworkCmd, HomeworkNew};
 /// One request: the caller's id (echoed in the answer) and the command.
 #[derive(Debug, Clone, PartialEq)]
@@ -89,6 +90,8 @@ pub enum Command {
     Audit,
     /// The local Ollama service: its status, or the models suggested for this computer.
     Ollama(ollama::OllamaCmd),
+    /// The first-run setup wizard: its status, or a move through its steps (STORY-0212).
+    Wizard(wizard::WizardCmd),
     /// Read (and maybe follow) the console log.
     Logs(LogsQuery),
     /// Stream lifecycle events of these kinds (all when empty) until the connection closes.

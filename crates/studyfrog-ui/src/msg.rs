@@ -109,5 +109,7 @@ pub enum Msg {
     Match(crate::match_ui::MatchMsg),
     /// A message of the classroom screen.
     Classroom(crate::classroom_types::ClassroomMsg),
+    /// A message of the first-run setup wizard (STORY-0212).
+    Wizard(crate::view::wizard::types::WizardMsg),
 }
 pub use crate::{edit_form::EditAction, state::DraftField};

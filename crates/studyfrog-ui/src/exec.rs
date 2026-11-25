@@ -56,6 +56,8 @@ pub struct Worker {
     pub pdf_bytes: Option<(String, studyfrog_pdf::PdfBytes)>,
     /// Shows a folder in the system's file manager, if the host can.
     pub opener: Option<crate::host::Opener>,
+    /// The setup wizard's model download, if the host provides one (STORY-0212).
+    pub model_host: Option<crate::host::ModelHost>,
 }
 
 pub use crate::exec_worker::{worker_new, worker_with_host};
@@ -64,6 +66,7 @@ mod areas;
 mod classroom;
 mod classroom_saved;
 mod mock;
+mod wizard;
 
 /// Perform one effect and report what happened. `now_ns` is the current Unix time in nanoseconds.
 pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
@@ -94,6 +97,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
         Effect::Diary(e) => return crate::exec_diary::execute(w, e, now_ns),
         Effect::Agent(e) => crate::exec_mcp::run(w, e, now_ns),
         Effect::Classroom(e) => classroom::run(w, e, now_ns),
+        Effect::Wizard(e) => return wizard::run(w, e),
         e @ (Effect::Assistant(EffectAssistant::LoadAgent)
         | Effect::Assistant(EffectAssistant::SaveConnection { .. })
         | Effect::Assistant(EffectAssistant::PrepareWiki { .. })

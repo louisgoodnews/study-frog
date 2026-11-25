@@ -203,4 +203,6 @@ pub struct State {
     pub match_state: Option<crate::match_ui::MatchUiState>,
     /// The Classroom screen: the session form and the lecture chat.
     pub classroom: crate::classroom_types::ClassroomState,
+    /// The first-run setup wizard: open or not, its step and what its MiniLM step has read (STORY-0212).
+    pub wizard: crate::view::wizard::types::WizardState,
 }

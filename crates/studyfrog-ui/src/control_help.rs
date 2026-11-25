@@ -6,6 +6,7 @@ use serde_json::{Value, json};
 pub mod ollama;
 pub mod panels;
 pub mod screens;
+pub mod wizard;
 
 /// One row: usage, what it does in the application (messages or effects), class.
 pub type Row = (&'static str, &'static str, &'static str);
@@ -225,6 +226,7 @@ pub fn help_json() -> Value {
         .chain(screens::ROWS.iter())
         .chain(panels::ROWS.iter())
         .chain(ollama::ROWS.iter())
+        .chain(wizard::ROWS.iter())
         .map(|(usage, does, class)| json!({"usage": usage, "does": does, "class": class}))
         .collect();
     json!({

@@ -7,6 +7,9 @@ use crate::state::{Screen, State};
 
 /// Draw the active screen inside the central panel.
 pub fn draw_screen(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if state.wizard.open {
+        return super::wizard::draw(state, ui, out);
+    }
     match state.screen {
         Screen::Welcome => super::welcome::draw(state, ui, out),
         Screen::Home => super::home::draw(state, ui, out),

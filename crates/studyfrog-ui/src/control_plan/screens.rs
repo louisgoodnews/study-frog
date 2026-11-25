@@ -6,12 +6,14 @@ use crate::msg::MsgVault;
 use crate::control_cmd::Command;
 use crate::control_cmd::board::BoardCmd;
 use crate::control_cmd::diary::{DiaryCmd, DiaryNew};
+use crate::control_cmd::wizard::{StepOp, WizardCmd};
 use crate::control_plan::Plan;
 use crate::diary_msg::DiaryMsg;
 use crate::explorer_ui::ExplorerMsg;
 use crate::kanban_msg::BoardMsg;
 use crate::msg::Msg;
 use crate::state::Screen;
+use crate::view::wizard::types::WizardMsg;
 
 fn open(screen: Screen) -> Vec<Msg> {
     vec![Msg::Vault(MsgVault::Navigate(screen))]
@@ -83,6 +85,7 @@ pub fn plan(cmd: &Command) -> Result<Plan, String> {
         Command::Diary(c) => diary(c),
         Command::Reports(tab) => reports(*tab),
         Command::Audit | Command::Ollama(_) => vec![vec![ollama_check()]],
+        Command::Wizard(WizardCmd::Step(op)) => vec![vec![wizard_step(*op)]],
         _ => Vec::new(),
     })
 }
@@ -90,4 +93,15 @@ pub fn plan(cmd: &Command) -> Result<Plan, String> {
 /// The local-model setup's check of this computer and Ollama (STORY-0206); the answer reads it.
 fn ollama_check() -> Msg {
     crate::agent_types::ollama::msg(crate::agent_types::ollama::OllamaMsg::Refresh)
+}
+
+/// A move of the setup wizard, as the message its own buttons send (STORY-0212). No step starts a download.
+fn wizard_step(op: StepOp) -> Msg {
+    studyfrog_log::log_info!("ui.control", "wizard step command received: {:?}", op);
+    Msg::Wizard(match op {
+        StepOp::Next => WizardMsg::Next,
+        StepOp::Previous => WizardMsg::Previous,
+        StepOp::Skip => WizardMsg::Skip,
+        StepOp::Goto(step) => WizardMsg::Goto(step),
+    })
 }

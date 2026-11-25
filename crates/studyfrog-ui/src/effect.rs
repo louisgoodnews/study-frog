@@ -78,4 +78,6 @@ pub enum Effect {
     RehearsalEdit(crate::rehearsal_edit::RehearsalEditEffect),
     /// A classroom turn or session change, run through the service.
     Classroom(crate::classroom_types::ClassroomEffect),
+    /// The setup wizard's probe of the models folder and its MiniLM download (STORY-0212).
+    Wizard(crate::view::wizard::types::WizardEffect),
 }

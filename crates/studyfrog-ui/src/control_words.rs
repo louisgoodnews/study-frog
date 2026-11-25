@@ -18,6 +18,7 @@ pub mod panels;
 pub mod pdf;
 pub mod reports;
 pub mod ui;
+pub mod wizard;
 use crate::setup::Preset;
 use crate::state::Screen;
 use crate::transfer_types::Format;
@@ -235,6 +236,7 @@ pub fn command_from_words(words: &[String]) -> Result<Command, String> {
         }
         "audit" => Command::Audit,
         "ollama" => ollama::parse(&words[1..])?,
+        "wizard" => wizard::parse(&words[1..])?,
         "back" => Command::Back,
         "forward" => Command::Forward,
         "notices" | "notifications" => Command::Notices,

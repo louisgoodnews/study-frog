@@ -24,6 +24,7 @@ pub fn worker_new(config_dir: Option<PathBuf>) -> Worker {
         state_dir: None,
         pdf_bytes: None,
         opener: None,
+        model_host: None,
     }
 }
 
@@ -42,6 +43,7 @@ pub fn worker_with_host(
         transport: host.transport,
         get: host.get,
         opener: host.opener,
+        model_host: host.models,
         ..worker_new(config_dir)
     }
 }

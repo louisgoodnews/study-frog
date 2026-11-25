@@ -84,6 +84,8 @@ pub(crate) fn vault_opened(
 ) -> (State, Vec<Effect>) {
     match result {
         Ok(info) => {
+            // No vault remembered before means this is the first boot: the setup wizard starts after the vault (STORY-0212).
+            let first_boot = state.app.vault.is_none();
             let app = with_opened_vault(&state.app, &info.root);
             let state = State {
                 screen: Screen::Home,
@@ -106,6 +108,12 @@ pub(crate) fn vault_opened(
                 crate::pdf_library_ui::load(),
             ];
             effects.extend(go);
+            let (state, wizard) = if first_boot {
+                crate::view::wizard::update::first_boot(state)
+            } else {
+                (state, Vec::new())
+            };
+            effects.extend(wizard);
             (state, effects)
         }
         Err(e) => {

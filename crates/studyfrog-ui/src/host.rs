@@ -2,7 +2,7 @@
 //! libraries (a language model, native dialogs) and the extensions to offer, injected so the UI
 //! crate and its tests do not link them. A missing piece degrades gracefully.
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use studyfrog_ext::types::Registry;
 use studyfrog_slm::models::Loader;
@@ -36,6 +36,28 @@ pub struct Host {
     pub get: Option<studyfrog_agent::provider::HttpGet>,
     /// Shows a folder in the system's file manager (the logs folder from Settings > Data).
     pub opener: Option<Opener>,
+    /// The setup wizard's model download (the application links the network library).
+    pub models: Option<ModelHost>,
+}
+
+/// The model download the setup wizard offers, supplied by the application (STORY-0212).
+#[derive(Debug, Clone, Copy)]
+pub struct ModelHost {
+    /// The MiniLM download as the wizard shows it: title, source and files, before the user's click.
+    pub minilm_plan: fn() -> PlanView,
+    /// Downloads MiniLM into this folder when `confirmed` is true; nothing is contacted otherwise.
+    pub fetch_minilm: fn(&Path, bool) -> Result<(), String>,
+}
+
+/// A download as the wizard shows it: what it is, where it comes from and its files with their sizes.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PlanView {
+    /// Human-readable title.
+    pub title: String,
+    /// The host the files are fetched from.
+    pub source_host: String,
+    /// File name and expected size in bytes, in download order.
+    pub files: Vec<(String, u64)>,
 }
 
 /// What the user can choose from the registry, as plain text for the views.

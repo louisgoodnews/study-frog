@@ -8,7 +8,7 @@ use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::view::widgets::text_field;
-mod ollama;
+pub(crate) mod ollama;
 use crate::view::{agent_wiki, kit};
 
 fn send(out: &mut Vec<Msg>, m: AgentMsg) {

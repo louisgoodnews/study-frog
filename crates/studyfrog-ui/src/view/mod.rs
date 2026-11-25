@@ -171,6 +171,7 @@ mod toast;
 mod tutorial;
 pub(crate) mod vault_menu;
 mod welcome;
+pub(crate) mod wizard;
 pub(crate) mod widgets;
 pub(crate) mod window_frame;
 mod zen;

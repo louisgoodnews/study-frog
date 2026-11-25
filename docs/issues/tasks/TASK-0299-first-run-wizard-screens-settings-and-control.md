@@ -2,7 +2,7 @@
 id: TASK-0299
 type: task
 title: "Wizard screens after the vault, reopen from Settings, and wizard commands in the control protocol"
-status: backlog
+status: review
 epic: EPIC-069
 parents: ['STORY-0212']
 estimate: 5

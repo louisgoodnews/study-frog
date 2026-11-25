@@ -27,6 +27,7 @@ pub fn sections_of(tab: SettingsTab) -> &'static [Section] {
             crate::view::backup::draw,
             transfer,
             super::settings_files::draw,
+            super::wizard::reopen,
         ],
         SettingsTab::Subjects => &[crate::view::subjects::draw],
         SettingsTab::Diary => &[crate::view::diary::settings::draw],
