@@ -7,7 +7,7 @@ use studyfrog_store::overview::StackRow;
 use crate::msg::Msg;
 use crate::pdf_types::{PageKey, PdfMsg, PdfView, Side, THUMB_SCALE_MILLI};
 use crate::view::pdf_page::{mark_used, picture_for, texture};
-use crate::view::{pdf_extract, pdf_notes};
+use crate::view::{home_hero, pdf_extract, pdf_notes};
 
 const THUMB_WIDTH: f32 = 120.0;
 
@@ -77,20 +77,22 @@ fn thumbnail(view: &PdfView, page: usize, ui: &mut egui::Ui, out: &mut Vec<Msg>)
     }
 }
 
-/// Draw the panel that `view.side` names.
+/// Draw the panel that `view.side` names, inside a redesign card (EPIC-073, STORY-0235).
 pub fn draw(view: &PdfView, stacks: &[StackRow], ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ScrollArea::vertical()
         .id_salt("pdf-side-scroll")
-        .show(ui, |ui| match view.side {
-            Side::Outline => outline(view, ui, out),
-            Side::Pages => {
-                let pages = view.info.as_ref().map_or(0, |i| i.page_count);
-                for page in 0..pages {
-                    thumbnail(view, page, ui, out);
+        .show(ui, |ui| {
+            home_hero::card(ui, |ui| match view.side {
+                Side::Outline => outline(view, ui, out),
+                Side::Pages => {
+                    let pages = view.info.as_ref().map_or(0, |i| i.page_count);
+                    for page in 0..pages {
+                        thumbnail(view, page, ui, out);
+                    }
                 }
-            }
-            Side::Notes => pdf_notes::list(view, ui, out),
-            Side::Extract => pdf_extract::draw(view, stacks, ui, out),
-            Side::Closed => {}
+                Side::Notes => pdf_notes::list(view, ui, out),
+                Side::Extract => pdf_extract::draw(view, stacks, ui, out),
+                Side::Closed => {}
+            });
         });
 }

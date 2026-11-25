@@ -11,10 +11,33 @@ use crate::msg::Msg;
 use crate::pdf_link_types::LinkMsg;
 use crate::pdf_types::{PdfMsg, PdfView, Side};
 use crate::state::State;
-use crate::view::{pdf_arrange, pdf_notes, pdf_page, pdf_side};
+use crate::view::{gradient_panel, home_hero, pdf_arrange, pdf_notes, pdf_page, pdf_side};
+
+/// The height of the headline panel, in points.
+const HEADER_HEIGHT: f32 = 64.0;
 
 fn msg(out: &mut Vec<Msg>, m: PdfMsg) {
     out.push(Msg::Pdf(m));
+}
+
+/// The document's title and page counter on the gradient panel (EPIC-073, STORY-0235).
+fn headline(view: &PdfView, ui: &mut egui::Ui) {
+    gradient_panel::panel(ui, HEADER_HEIGHT, |ui, s| {
+        ui.horizontal_wrapped(|ui| {
+            ui.label(
+                RichText::new(crate::pdf_names::label(&view.path, &view.title))
+                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                    .strong()
+                    .color(s.gradient_text),
+            );
+            if let Some(info) = &view.info {
+                ui.label(
+                    RichText::new(format!("Page {} of {}", view.page + 1, info.page_count))
+                        .color(s.gradient_text),
+                );
+            }
+        });
+    });
 }
 
 fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool) {
@@ -55,21 +78,23 @@ fn search(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool
 }
 
 /// The header shows three buttons: Previous, Next and More. Back to library, zoom, search hits, copy,
-/// arrange and the side panels are in More.
+/// arrange and the side panels are in More. The row sits in a redesign card.
 fn toolbar(view: &PdfView, ui: &mut egui::Ui, out: &mut Vec<Msg>, requested: bool) {
-    ui.horizontal_wrapped(|ui| {
-        ui.label(RichText::new(crate::pdf_names::label(&view.path, &view.title)).strong());
-        ui.separator();
-        navigation(view, ui, out);
-        ui.separator();
-        search(view, ui, out, requested);
-        ui.separator();
-        more(view, ui, out);
+    home_hero::card(ui, |ui| {
+        ui.horizontal_wrapped(|ui| {
+            navigation(view, ui, out);
+            ui.separator();
+            search(view, ui, out, requested);
+            ui.separator();
+            more(view, ui, out);
+        });
     });
 }
 
 /// Draw the viewer for the open PDF.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    studyfrog_log::log_debug!("ui", "pdf viewer shown");
+    let _timer = studyfrog_debug::timed("ui", "pdf draw");
     let stacks = state
         .vault
         .as_ref()
@@ -84,8 +109,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             format!("This PDF cannot be shown: {error}"),
         );
     }
+    headline(view, ui);
+    ui.add_space(8.0);
     toolbar(view, ui, out, state.chrome.search_focus);
-    pdf_notes::bar(view, ui, out);
+    home_hero::card(ui, |ui| pdf_notes::bar(view, ui, out));
     link_question(view, ui, out);
     ui.separator();
     if view.info.is_none() {
