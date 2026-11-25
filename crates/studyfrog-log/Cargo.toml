@@ -1,0 +1,13 @@
+[package]
+name = "studyfrog-log"
+description = "In-house logging: levels, a process-wide minimum level and sink, a ring of recent records and a size-rotating file sink. No external crates."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]

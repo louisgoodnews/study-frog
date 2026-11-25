@@ -4,6 +4,8 @@ members = [
     "crates/studyfrog-core",
     "crates/studyfrog-config",
     "crates/studyfrog-graph",
+    "crates/studyfrog-log",
+    "crates/studyfrog-debug",
     "crates/studyfrog-md",
     "crates/studyfrog-store",
     "crates/studyfrog-srs",
@@ -39,6 +41,8 @@ authors = ["louisgoodnews"]
 studyfrog-core = { path = "crates/studyfrog-core" }
 studyfrog-config = { path = "crates/studyfrog-config" }
 studyfrog-graph = { path = "crates/studyfrog-graph" }
+studyfrog-log = { path = "crates/studyfrog-log" }
+studyfrog-debug = { path = "crates/studyfrog-debug" }
 studyfrog-md = { path = "crates/studyfrog-md" }
 studyfrog-store = { path = "crates/studyfrog-store" }
 studyfrog-srs = { path = "crates/studyfrog-srs" }

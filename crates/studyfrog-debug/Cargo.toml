@@ -1,0 +1,14 @@
+[package]
+name = "studyfrog-debug"
+description = "Debugging helpers on top of studyfrog-log: timers, checkpoints, value dumps, checks and counters."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+studyfrog-log.workspace = true
