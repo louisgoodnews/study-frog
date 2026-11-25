@@ -14,7 +14,10 @@ use crate::run_state::RunView;
 use crate::state::State;
 use crate::summary::summarize;
 use crate::theme::palette_of;
-use crate::view::{kit, summary_items};
+use crate::view::{gradient_panel, kit, summary_items};
+
+/// The result's gradient header: the outcome and the way back.
+const SUMMARY_HEADER_HEIGHT: f32 = 72.0;
 
 pub(crate) fn rating_name(r: Rating) -> &'static str {
     match r {
@@ -80,24 +83,33 @@ pub fn draw(state: &State, run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg>)
         .auto_shrink([false, false])
         .show(ui, |ui| {
             let stopped = run.session.run.state == RunState::Aborted;
-            ui.horizontal(|ui| {
-                let title = if stopped {
-                    "Run stopped"
-                } else {
-                    "Run finished"
-                };
-                ui.label(
-                    RichText::new(title)
-                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                        .strong(),
-                );
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if kit::primary_button(ui, "Back to setup")
-                        .on_hover_text("Goes back to the setup of the run.")
-                        .clicked()
-                    {
-                        out.push(Msg::Rehearsal(MsgRehearsal::LeaveRun));
-                    }
+            let title = if stopped {
+                "Run stopped"
+            } else {
+                "Run finished"
+            };
+            gradient_panel::panel(ui, SUMMARY_HEADER_HEIGHT, |ui, s| {
+                ui.horizontal(|ui| {
+                    ui.label(
+                        RichText::new(title)
+                            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                            .strong()
+                            .color(s.gradient_text),
+                    );
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        let button = egui::Button::new(
+                            RichText::new("Back to setup").color(s.gradient_text),
+                        )
+                        .fill(s.gradient[0])
+                        .min_size(egui::vec2(0.0, crate::theme::MIN_TARGET));
+                        if ui
+                            .add(button)
+                            .on_hover_text("Goes back to the setup of the run.")
+                            .clicked()
+                        {
+                            out.push(Msg::Rehearsal(MsgRehearsal::LeaveRun));
+                        }
+                    });
                 });
             });
             counts(run, ui);

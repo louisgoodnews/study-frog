@@ -33,7 +33,7 @@ fn frame(ui: &egui::Ui, fill: Color32, stroke: Stroke) -> Frame {
     Frame::new()
         .fill(fill)
         .stroke(stroke)
-        .corner_radius(CornerRadius::same(12))
+        .corner_radius(CornerRadius::same(crate::theme::style::CARD_RADIUS))
         .inner_margin(Margin::same(pad.round() as i8))
 }
 

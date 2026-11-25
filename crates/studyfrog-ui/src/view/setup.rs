@@ -8,7 +8,10 @@ use crate::msg::Msg;
 use crate::setup::{Preview, SetupStep};
 use crate::state::State;
 use crate::theme::palette_of;
-use crate::view::{kit, setup_how, setup_review, setup_what};
+use crate::view::{gradient_panel, kit, setup_how, setup_review, setup_what};
+
+/// The setup's gradient header: the screen name, the step and its hint.
+const SETUP_HEADER_HEIGHT: f32 = 110.0;
 
 const STEPS: [(SetupStep, &str, &str); 3] = [
     (SetupStep::What, "1  What", "Choose the stacks"),
@@ -55,13 +58,6 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         .auto_shrink([false, false])
         .show(ui, |ui| {
             kit::column(ui, kit::READING_WIDTH, |ui| {
-                ui.label(
-                    RichText::new("Rehearse")
-                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                        .strong(),
-                );
-                step_bar(step, ui, out);
-                ui.add_space(12.0);
                 let (title, hint) = match step {
                     SetupStep::What => (
                         "What do you want to rehearse?",
@@ -73,12 +69,19 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
                     ),
                     SetupStep::Review => ("Ready?", "Check your choices, then begin."),
                 };
-                ui.label(
-                    RichText::new(title)
-                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                        .strong(),
-                );
-                ui.label(RichText::new(hint).color(palette_of(ui).text_weak));
+                gradient_panel::panel(ui, SETUP_HEADER_HEIGHT, |ui, s| {
+                    ui.label(RichText::new("Rehearse").small().color(s.gradient_text));
+                    ui.label(
+                        RichText::new(title)
+                            .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                            .strong()
+                            .color(s.gradient_text),
+                    );
+                    ui.label(RichText::new(hint).color(s.gradient_text));
+                });
+                ui.add_space(8.0);
+                step_bar(step, ui, out);
+                ui.add_space(12.0);
                 match step {
                     SetupStep::What => {
                         ui.horizontal_wrapped(|ui| {
