@@ -5,7 +5,7 @@ use eframe::egui::{self, Grid, Key};
 use studyfrog_core::scheduler::scheduler_name;
 use studyfrog_core::settings::AnswerEngine;
 
-use crate::app_settings_ui::{SHOWN, SettingsTab, SettingsTabMsg, current_tab, tab_label};
+use crate::app_settings_ui::{SettingsTab, SettingsTabMsg, current_tab};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::view::{home_hero, kit, screen_title};
@@ -82,16 +82,7 @@ fn card_section(ui: &mut egui::Ui, title: &str, add: impl FnOnce(&mut egui::Ui))
 }
 
 fn tab_bar(ui: &mut egui::Ui, current: SettingsTab, out: &mut Vec<Msg>) {
-    ui.horizontal_wrapped(|ui| {
-        for tab in SHOWN {
-            if ui
-                .selectable_label(tab == current, tab_label(tab))
-                .clicked()
-            {
-                out.push(Msg::SettingsTab(SettingsTabMsg::Select(tab)));
-            }
-        }
-    });
+    super::settings_tabs::buttons(ui, current, out);
     if ui.ctx().egui_wants_keyboard_input() {
         return;
     }

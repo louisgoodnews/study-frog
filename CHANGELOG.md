@@ -11,6 +11,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 - **Reference-run script closed (`TASK-0278`)**: repeated invocations, medians and the spread rule are verified against all acceptance criteria and marked `done`. The rest of the `EPIC-067` chain is unchanged.
 - **Review items closed (`STORY-0221`, `STORY-0225`)**: choice grading and recording in rehearsal, and the file split with the merged rehearsal code fix, verified against their acceptance criteria and marked `done`.
 - **Decisions recorded from the review pass**: `TASK-0283` criterion names the `--frame-times FILE` flag; `STORY-0212` accepts Ollama's own pull check for the suggested model; `TASK-0286` moved to backlog until a profile can be recorded; `TASK-0284`: `scripts/bench-frame-time.sh` generates the 10k vault when its folder is missing or empty.
+- **Settings tabs as a rail (`STORY-0227`)**: the Settings tabs are rail buttons in the redesign style, each with a hover explanation. Graph and Classroom rails are still open.
 - **Performance benchmarking epic unblocked (`EPIC-067`)**: moved from `blocked` to `ready` now that the owner's machine is the reference (ADR 0014). `STORY-0201` and `STORY-0203` stay blocked until `TASK-0279` is tested.
 
 ## [1.4.0] - 2026-11-26

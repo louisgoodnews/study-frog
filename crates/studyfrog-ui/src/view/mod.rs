@@ -164,6 +164,7 @@ mod settings_files;
 pub mod settings_reading;
 pub mod settings_rehearsal_fsrs;
 mod settings_replay;
+mod settings_tabs;
 mod setup;
 mod setup_how;
 mod setup_pacing;
