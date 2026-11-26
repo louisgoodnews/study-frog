@@ -2,7 +2,7 @@
 id: STORY-0221
 type: story
 title: "Choice grading in rehearsal: reuse the mock exam rules and record the result like a typed answer"
-status: review
+status: done
 epic: EPIC-072
 parents: ['EPIC-072']
 estimate: 5
