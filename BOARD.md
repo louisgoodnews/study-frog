@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (20) | Ready (0) | In progress (1/3) | Review (34) | Blocked (3) | Done (636) |
+| Backlog (21) | Ready (0) | In progress (1/3) | Review (34) | Blocked (3) | Done (636) |
 | --- | --- | --- | --- | --- | --- |
 | [BUG-0060](docs/issues/bugs/BUG-0060-duplicate-hover-tooltips-on-buttons.md) Duplicate hover tooltips rendered on certain buttons (e.g. Rehearse 'Show answer (Space)') (1) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0305](docs/issues/tasks/TASK-0305-exam-plan-and-prep-window-domain-types.md) Exam plan, preparation window, and linked target types in studyfrog-calendar (2) |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -16,7 +16,7 @@
 | [TASK-0311](docs/issues/tasks/TASK-0311-headless-ui-and-service-tests-for-exam-scheduler.md) Headless UI, service, and re-balancing tests for the Exam Scheduler (2) |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
 | [TASK-0312](docs/issues/tasks/TASK-0312-audit-question-and-answer-type-imports.md) Verify and fix question and answer-type (open, single, multiple, case, cloze) import functionality across all supported formats (3) |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
 | [TASK-0313](docs/issues/tasks/TASK-0313-full-width-text-wrapping-in-preview-and-rehearse.md) Remove narrow reading-measure wrap cap in preview, Rehearse cards, and editors so text uses full available width (2) |  |  |  |  | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |
-|  |  |  |  |  | [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |
+| [TASK-0314](docs/issues/tasks/TASK-0314-prevent-diary-rating-pills-crushing-on-right-edge.md) Prevent rating pills and chips from crushing vertically at the right edge of wrapped rows (Diary & kit::pill) (1) |  |  |  |  | [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |
 |  |  |  |  |  | [BUG-0012](docs/issues/bugs/BUG-0012-rehearsal-card-text-wrapping-and-unquoted-csv-comma-truncation.md) Rehearsal card text wrapping and unquoted CSV comma truncation (2) |
 |  |  |  |  |  | [BUG-0013](docs/issues/bugs/BUG-0013-rehearsal-result-view-scrollability-review-stretch-and-suggested-rating.md) Rehearsal result view scrollability, stretched review area, and suggested rating visibility (2) |
 |  |  |  |  |  | [BUG-0014](docs/issues/bugs/BUG-0014-csv-import-fails-on-unquoted-multiline-fields.md) CSV importer fails on unquoted multiline fields in AI-generated CSV files (2) |
@@ -611,7 +611,7 @@
 | [STORY-0247](docs/issues/stories/STORY-0247-adaptive-preparation-window-estimator-and-windowed-scheduler.md) Adaptive preparation-window estimator and windowed item scheduler (5) | backlog | 0/2 |
 | [STORY-0248](docs/issues/stories/STORY-0248-exam-scheduler-ui-preview-and-calendar-rehearsal-integration.md) Exam Scheduler UI, workload preview, and Calendar/Home/Rehearsal integration (5) | backlog | 0/3 |
 | [STORY-0249](docs/issues/stories/STORY-0249-question-and-answer-type-import-verification.md) Verify and preserve Question items and answer types across all import formats (3) | backlog | 0/1 |
-| [STORY-0250](docs/issues/stories/STORY-0250-expand-text-wrapping-to-full-width.md) Expand prose and card text wrapping to full available container width (2) | backlog | 0/1 |
+| [STORY-0250](docs/issues/stories/STORY-0250-expand-text-wrapping-to-full-width.md) Expand prose and card text wrapping to full available container width (2) | backlog | 0/2 |
 
 ## Epics
 
