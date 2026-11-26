@@ -5,7 +5,7 @@ use studyfrog_service::create_more::NewKind;
 
 use crate::browse::reload;
 use crate::effect::Effect;
-use crate::modal_form::{form_new, toggled};
+use crate::modal_form::{form_new, refresh_complexity, toggled};
 use crate::state::{Notice, NoticeKind, Screen, Selection, State};
 
 pub use crate::modal_types::{
@@ -141,22 +141,6 @@ fn click_toast(state: State, i: usize) -> (State, Vec<Effect>) {
     (state, Vec::new())
 }
 
-fn refresh_complexity(
-    mut f: CreateForm,
-    profile: Option<&studyfrog_report::complexity_baseline::RetentionComplexityProfile>,
-) -> CreateForm {
-    if f.complexity_dismissed || !matches!(f.kind, NewKind::Card | NewKind::Question) {
-        f.complexity_warning = None;
-        return f;
-    }
-    f.complexity_warning = profile
-        .and_then(|p| {
-            studyfrog_report::complexity_baseline::check_wip_complexity(p, &f.text, &f.answer)
-        })
-        .map(|w| w.reason);
-    f
-}
-
 /// Handle the modal and toast messages.
 pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
     match msg {
@@ -172,7 +156,7 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             (State { modal, ..state }, fx)
         }
         ModalMsg::ComplexityProfileLoaded(profile) => {
-            let mut st = State {
+            let st = State {
                 complexity_profile: profile,
                 ..state
             };
@@ -219,31 +203,18 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
         }),
         ModalMsg::Edit(field, text) => {
             let prof = state.complexity_profile.clone();
-            with_form(state, |f| {
-                let updated = match field {
-                    Field::Title => CreateForm {
-                        title: text,
-                        error: None,
-                        ..f
-                    },
-                    Field::Text => CreateForm {
-                        text,
-                        error: None,
-                        ..f
-                    },
-                    Field::Answer => CreateForm {
-                        answer: text,
-                        error: None,
-                        ..f
-                    },
-                    Field::Tags => CreateForm { tags: text, ..f },
-                    Field::Due => CreateForm {
-                        due: text,
-                        error: None,
-                        ..f
-                    },
-                };
-                refresh_complexity(updated, prof.as_ref())
+            with_form(state, |mut f| {
+                match field {
+                    Field::Title => f.title = text,
+                    Field::Text => f.text = text,
+                    Field::Answer => f.answer = text,
+                    Field::Tags => f.tags = text,
+                    Field::Due => f.due = text,
+                }
+                if field != Field::Tags {
+                    f.error = None;
+                }
+                crate::modal_form::refresh_complexity(f, prof.as_ref())
             })
         }
         ModalMsg::SetParent(parent) => with_form(state, |f| CreateForm {

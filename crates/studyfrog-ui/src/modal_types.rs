@@ -1,7 +1,6 @@
 //! The data of the dialogs and toasts, and the small pure functions about it.
 
 use studyfrog_service::create_more::{Created, NewKind};
-use studyfrog_store::overview::VaultOverview;
 
 use crate::state::VaultInfo;
 
@@ -227,31 +226,4 @@ pub enum ModalMsg {
     DismissComplexityWarning,
 }
 
-/// The stacks as (folder, "Parent / Child" label), in tree order.
-pub fn stack_labels(o: &VaultOverview) -> Vec<(String, String)> {
-    let title_of = |folder: &str| {
-        o.stacks
-            .iter()
-            .find(|s| s.folder == folder)
-            .map(|s| s.title.clone())
-    };
-    o.stacks
-        .iter()
-        .map(|s| {
-            let mut chain = vec![s.title.clone()];
-            let mut up = s.parent.clone();
-            while let Some(p) = up {
-                chain.push(title_of(&p).unwrap_or_else(|| p.clone()));
-                up = o
-                    .stacks
-                    .iter()
-                    .find(|x| x.folder == p)
-                    .and_then(|x| x.parent.clone());
-            }
-            chain.reverse();
-            (s.folder.clone(), chain.join(" / "))
-        })
-        .collect()
-}
-
-pub use crate::modal_form::problem;
+pub use crate::modal_form::{problem, stack_labels};

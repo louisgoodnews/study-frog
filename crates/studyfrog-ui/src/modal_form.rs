@@ -51,6 +51,55 @@ pub(crate) fn form_new(state: &State, kind: Option<NewKind>) -> CreateForm {
     }
 }
 
+pub(crate) fn refresh_complexity(
+    mut f: CreateForm,
+    profile: Option<&studyfrog_report::complexity_baseline::RetentionComplexityProfile>,
+) -> CreateForm {
+    if f.complexity_dismissed
+        || !matches!(
+            f.kind,
+            studyfrog_service::create_more::NewKind::Card
+                | studyfrog_service::create_more::NewKind::Question
+        )
+    {
+        f.complexity_warning = None;
+        return f;
+    }
+    f.complexity_warning = profile
+        .and_then(|p| {
+            studyfrog_report::complexity_baseline::check_wip_complexity(p, &f.text, &f.answer)
+        })
+        .map(|w| w.reason);
+    f
+}
+
+/// The stacks as (folder, "Parent / Child" label), in tree order.
+pub fn stack_labels(o: &studyfrog_store::overview::VaultOverview) -> Vec<(String, String)> {
+    let title_of = |folder: &str| {
+        o.stacks
+            .iter()
+            .find(|s| s.folder == folder)
+            .map(|s| s.title.clone())
+    };
+    o.stacks
+        .iter()
+        .map(|s| {
+            let mut chain = vec![s.title.clone()];
+            let mut up = s.parent.clone();
+            while let Some(p) = up {
+                chain.push(title_of(&p).unwrap_or_else(|| p.clone()));
+                up = o
+                    .stacks
+                    .iter()
+                    .find(|x| x.folder == p)
+                    .and_then(|x| x.parent.clone());
+            }
+            chain.reverse();
+            (s.folder.clone(), chain.join(" / "))
+        })
+        .collect()
+}
+
 /// The body the dialog submits: a question's prompt with the option template of its answer type.
 pub(crate) fn body_of(f: &CreateForm) -> String {
     if f.kind != NewKind::Question {
