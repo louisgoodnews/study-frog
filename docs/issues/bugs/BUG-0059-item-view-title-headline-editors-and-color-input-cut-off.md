@@ -2,7 +2,7 @@
 id: BUG-0059
 type: bug
 title: "Item view cuts off Title input, Color hex field, and under-sizes headline and Front/Back editors"
-status: backlog
+status: done
 estimate: 2
 labels: [m14, ui]
 acceptance_criteria:
@@ -24,11 +24,11 @@ Reported by the user with a screenshot of the Item view (card editor for *"Was v
 Fix the width sizing and cut-off bugs in the Item view (`crates/studyfrog-ui/src/view/editor.rs`, `crates/studyfrog-ui/src/view/editor_md.rs`, and `crates/studyfrog-ui/src/view/item_details/tab_properties.rs`) so the gradient headline, `Title` input, `Front`/`Back` editors, and Details `Color` hex input use their available width cleanly without clipping.
 
 ## Acceptance Criteria
-- [ ] The Item view's gradient headline panel spans the full width of the editor column cleanly without stopping mid-way
-- [ ] The Title input fills the available editor width (and scrolls horizontally for very long titles) instead of cutting off mid-sentence
-- [ ] The Front and Back text editors fill the available width of their enclosing cards (or align cleanly with the reading measure without leaving mismatched empty space inside wide cards)
-- [ ] The Color hex input (`#RRGGBB`) in Details > Properties is wide enough to display a full 7-character hex code without clipping to `#RRG...`
-- [ ] Headless UI tests verify these fields at 1280x800 and 960x640 with long titles and full hex values
+- [x] The Item view's gradient headline panel spans the full width of the editor column cleanly without stopping mid-way
+- [x] The Title input fills the available editor width (and scrolls horizontally for very long titles) instead of cutting off mid-sentence
+- [x] The Front and Back text editors fill the available width of their enclosing cards (or align cleanly with the reading measure without leaving mismatched empty space inside wide cards)
+- [x] The Color hex input (`#RRGGBB`) in Details > Properties is wide enough to display a full 7-character hex code without clipping to `#RRG...`
+- [x] Headless UI tests verify these fields at 1280x800 and 960x640 with long titles and full hex values
 
 ## Design Notes
 - Likely root cause: reading-measure width clamping (`STORY-0114`) applied to inner `TextEdit` / `gradient_panel` widgets while their enclosing `Front`/`Back` cards expand to `ui.available_width()`, plus an overly narrow `desired_width` on the Color `#RRGGBB` input in `tab_properties.rs`.

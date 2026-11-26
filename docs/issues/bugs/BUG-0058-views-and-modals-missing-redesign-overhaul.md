@@ -2,7 +2,7 @@
 id: BUG-0058
 type: bug
 title: "Several views and modals are missing the EPIC-070/EPIC-073 redesign overhaul"
-status: backlog
+status: done
 estimate: 3
 labels: [m14, ui]
 acceptance_criteria:
@@ -33,12 +33,12 @@ Bring the four listed views and modals into visual parity with the `EPIC-070` / 
 - **Vault switcher:** Apply redesign card/surface tokens, active vault badge/highlight, and clean spacing for switching, opening, and managing vaults.
 
 ## Acceptance Criteria
-- [ ] The Items (`All items` / stack list) view uses the redesign style: gradient headline panel, redesign card framing for the filter bar and item table, and consistent rail highlight styling for the left Stacks sub-rail
-- [ ] The `Create an item` modal uses the redesign card/surface tokens, clean header styling, structured field cards, and consistent spacing without cramped toolbar clusters
-- [ ] The `Import and export` modal uses the redesign header/card hierarchy for its mode tabs, `Found on this computer` discovered sources list, and file/folder picker controls
-- [ ] The Profile / Workspace popover menu uses the redesign card/surface tokens and consistent section grouping across Dark, Light, and High-contrast themes
-- [ ] The Vault switcher popover/view uses the redesign card/surface tokens, active vault indicator, and clean section grouping
-- [ ] Headless UI and visual-rhythm tests pass across all updated views and modals with zero missing accessible names
+- [x] The Items (`All items` / stack list) view uses the redesign style: gradient headline panel, redesign card framing for the filter bar and item table, and consistent rail highlight styling for the left Stacks sub-rail
+- [x] The `Create an item` modal uses the redesign card/surface tokens, clean header styling, structured field cards, and consistent spacing without cramped toolbar clusters
+- [x] The `Import and export` modal uses the redesign header/card hierarchy for its mode tabs, `Found on this computer` discovered sources list, and file/folder picker controls
+- [x] The Profile / Workspace popover menu uses the redesign card/surface tokens and consistent section grouping across Dark, Light, and High-contrast themes
+- [x] The Vault switcher popover/view uses the redesign card/surface tokens, active vault indicator, and clean section grouping
+- [x] Headless UI and visual-rhythm tests pass across all updated views and modals with zero missing accessible names
 
 ## Design Notes
 - Affected source files:

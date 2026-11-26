@@ -106,7 +106,16 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             out.push(Msg::Editor(MsgEditor::CloseEditor));
         }
         key_pill(e, ui);
-        ui.label(RichText::new(&e.path).color(palette_of(ui).text_weak));
+        let path_w = (ui.available_width() - 220.0).max(80.0);
+        ui.allocate_ui_with_layout(
+            egui::vec2(path_w, 22.0),
+            egui::Layout::left_to_right(egui::Align::Center),
+            |ui| {
+                crate::view::kit::hscroll(ui, ("editor-path", e.uid), |ui| {
+                    ui.label(RichText::new(&e.path).color(palette_of(ui).text_weak));
+                });
+            },
+        );
         status(e, dirty, ui);
         if let Some(source) = studyfrog_md::extra::extra_value(&e.doc, "source") {
             crate::view::pdf_split::jump_button(&source, ui, out);
@@ -175,26 +184,21 @@ fn toolbar(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 }
 
-/// The item's title on the gradient panel (EPIC-073, STORY-0234). It shows the title as it is now; the field
-/// below is still the one that edits it.
+/// The item's title on the gradient panel (EPIC-073, STORY-0234; full column width per BUG-0059).
 fn headline(e: &Editor, ui: &mut egui::Ui) {
-    let measure = crate::typo::measure(ui);
-    ui.scope(|ui| {
-        ui.set_max_width(measure);
-        gradient_panel::panel(ui, HEADER_HEIGHT, |ui, s| {
-            let shown = if e.form.title.trim().is_empty() {
-                "Untitled item"
-            } else {
-                e.form.title.as_str()
-            };
-            let size = crate::typo::size(ui, crate::typo::Tier::Heading);
-            ui.label(
-                RichText::new(shown)
-                    .size(size)
-                    .strong()
-                    .color(s.gradient_text),
-            );
-        });
+    gradient_panel::panel(ui, HEADER_HEIGHT, |ui, s| {
+        let shown = if e.form.title.trim().is_empty() {
+            "Untitled item"
+        } else {
+            e.form.title.as_str()
+        };
+        let size = crate::typo::size(ui, crate::typo::Tier::Heading);
+        ui.label(
+            RichText::new(shown)
+                .size(size)
+                .strong()
+                .color(s.gradient_text),
+        );
     });
     ui.add_space(8.0);
 }
@@ -202,18 +206,13 @@ fn headline(e: &Editor, ui: &mut egui::Ui) {
 fn main_column(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     headline(e, ui);
     let title = ui.label(RichText::new("Title").color(palette_of(ui).text_weak));
-    // The title is part of the text column, so it keeps to the same reading measure as the text.
-    let measure = crate::typo::measure(ui);
-    ui.scope(|ui| {
-        ui.set_max_width(measure);
-        let mut text = e.form.title.clone();
-        let edit = TextEdit::singleline(&mut text)
-            .font(crate::typo::font(ui, crate::typo::Tier::Heading))
-            .desired_width(f32::INFINITY);
-        if ui.add(edit).labelled_by(title.id).changed() {
-            out.push(Msg::Editor(MsgEditor::Edit(EditAction::Title(text))));
-        }
-    });
+    let mut text = e.form.title.clone();
+    let edit = TextEdit::singleline(&mut text)
+        .font(crate::typo::font(ui, crate::typo::Tier::Heading))
+        .desired_width(f32::INFINITY);
+    if ui.add(edit).labelled_by(title.id).changed() {
+        out.push(Msg::Editor(MsgEditor::Edit(EditAction::Title(text))));
+    }
     ui.add_space(8.0);
     // A note opens as Write. Split puts the rendering under the text, not beside it, so the text keeps
     // the reading measure in every view; beside it, each side fell to 28 to 50 characters per line.

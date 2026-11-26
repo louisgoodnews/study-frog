@@ -6,8 +6,8 @@ use eframe::egui::{self, RichText};
 use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
-use crate::view::kit;
 use crate::view::popup::close;
+use crate::view::{gradient_panel, home_hero, kit};
 
 pub(crate) fn segments(path: &str) -> Vec<&str> {
     path.split(['/', '\\']).filter(|s| !s.is_empty()).collect()
@@ -46,17 +46,24 @@ pub fn vault_label(path: &str, recent: &[String]) -> String {
 /// Draw the overhauled vault switcher menu.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = palette_of(ui);
-    ui.horizontal(|ui| {
-        ui.strong("Vaults");
-        let count = state.app.recent.len();
-        if count > 0 {
-            kit::pill(ui, &format!("{count} recent"), p.text_weak);
-        }
+    gradient_panel::panel(ui, 38.0, |ui, s| {
+        ui.horizontal(|ui| {
+            ui.label(RichText::new("Vaults").strong().color(s.gradient_text));
+            let count = state.app.recent.len();
+            if count > 0 {
+                ui.label(
+                    RichText::new(format!("{count} recent"))
+                        .small()
+                        .color(s.gradient_text),
+                );
+            }
+        });
     });
     ui.add_space(6.0);
 
     if let Some(v) = &state.vault {
-        kit::card(ui, |ui| {
+        home_hero::card(ui, |ui| {
+            ui.set_width(ui.available_width());
             ui.horizontal(|ui| {
                 kit::pill(ui, "Active", p.accent);
                 if let Some(&parent) = segments(&v.root).iter().rev().nth(1) {

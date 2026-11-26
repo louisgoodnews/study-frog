@@ -2,7 +2,7 @@
 id: STORY-0243
 type: story
 title: "Horizontal scrollability and responsive sizing for constrained widgets across views"
-status: backlog
+status: done
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 3
@@ -27,10 +27,10 @@ Introduce reusable horizontal scrollability and responsive-width primitives in `
    - Apply horizontal scrollability to wide Markdown tables, unwrappable code blocks, long vault-relative path strips in the Item header, and narrow tab/toolbar rows where wrapping is undesirable.
 
 ## Acceptance Criteria
-- [ ] Shared helper(s) in `studyfrog-ui` provide opt-in horizontal scroll containers (`ScrollArea::horizontal`) with unobtrusive scrollbars and mouse-wheel/drag support for widgets that can exceed narrow panel widths
-- [ ] Constrained single-line text inputs (such as Item Title, file/path bars, Tags, and Color hex inputs) expand to available width up to a sensible maximum and scroll horizontally without clipping text
-- [ ] Wide or overflow-prone horizontal widget strips (such as Markdown tables, wide code blocks, long breadcrumb/path headers, and dense tab/chip bars in narrow panes) scroll horizontally cleanly instead of clipping or pushing parent panels past window edges
-- [ ] Headless UI tests verify horizontal scrollability and zero unintended clipping at 960x640 and 1280x800
+- [x] Shared helper(s) in `studyfrog-ui` provide opt-in horizontal scroll containers (`ScrollArea::horizontal`) with unobtrusive scrollbars and mouse-wheel/drag support for widgets that can exceed narrow panel widths
+- [x] Constrained single-line text inputs (such as Item Title, file/path bars, Tags, and Color hex inputs) expand to available width up to a sensible maximum and scroll horizontally without clipping text
+- [x] Wide or overflow-prone horizontal widget strips (such as Markdown tables, wide code blocks, long breadcrumb/path headers, and dense tab/chip bars in narrow panes) scroll horizontally cleanly instead of clipping or pushing parent panels past window edges
+- [x] Headless UI tests verify horizontal scrollability and zero unintended clipping at 960x640 and 1280x800
 
 ## Design Notes
 - Keep helpers pure and modular under `crates/studyfrog-ui/src/view/`, adhering to Invariant P1 (zero inherent `impl` blocks) and Invariant P6 ($\le 250$ LOC per file).

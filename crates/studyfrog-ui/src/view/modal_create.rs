@@ -14,7 +14,7 @@ use crate::state::State;
 use crate::view::choice_body::AnswerType;
 use crate::view::md_editor::{Mode, md_editor};
 use crate::view::widgets::text_field;
-use crate::view::{kit, modal_answer_row, modal_fields};
+use crate::view::{gradient_panel, kit, modal_answer_row, modal_fields};
 
 const KINDS: [(NewKind, &str); 4] = [
     (NewKind::Card, "Card"),
@@ -51,22 +51,25 @@ fn type_combo(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 }
 
 fn header(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    // The window controls have a row of their own, so the pickers below can never push them out.
+    gradient_panel::band(ui);
+    ui.add_space(4.0);
     ui.horizontal(|ui| {
         ui.label(
             RichText::new("Create an item")
-                .size(crate::typo::size(ui, crate::typo::Tier::Body))
+                .size(crate::typo::size(ui, crate::typo::Tier::Heading))
                 .strong(),
         );
         let ctx = ui.ctx().clone();
         super::modal_size::window_buttons(&ctx, f, ui, out);
     });
     ui.add_space(4.0);
-    ui.horizontal(|ui| {
-        modal_fields::parent_picker(state, f, ui, out);
-        modal_fields::also_in_picker(state, f, ui, out);
-        ui.separator();
-        type_combo(f, ui, out);
+    super::modal_size::modal_card(ui, |ui| {
+        ui.horizontal(|ui| {
+            modal_fields::parent_picker(state, f, ui, out);
+            modal_fields::also_in_picker(state, f, ui, out);
+            ui.separator();
+            type_combo(f, ui, out);
+        });
     });
 }
 
@@ -111,23 +114,44 @@ fn editors(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let ((text_label, text_hint), answer_label) = labels(f.kind);
     // A choice question keeps its answers as options in the prompt, so it has no reference answer.
     let answer_label = answer_label.filter(|_| f.answer_type == AnswerType::Open);
-    let (rows, mode) = match f.kind {
-        NewKind::Note => (16, Mode::Write),
-        _ => (5, Mode::Write),
-    };
+    let rows = if f.kind == NewKind::Note { 16 } else { 5 };
     if f.kind == NewKind::Question {
         modal_answer_row::row(f, ui, out);
     }
     ui.weak(text_hint);
-    let image = Some(ImageTarget::Create(Field::Text));
-    if let Some(t) = md_editor(ui, text_label, &f.text, (rows, mode), image, out) {
+    if let Some(t) = card_editor(
+        ui,
+        text_label,
+        &f.text,
+        (rows, Mode::Write),
+        ImageTarget::Create(Field::Text),
+        out,
+    ) {
         send(out, ModalMsg::Edit(Field::Text, t));
     }
     let Some(label) = answer_label else { return };
-    let image = Some(ImageTarget::Create(Field::Answer));
-    if let Some(t) = md_editor(ui, label, &f.answer, (4, Mode::Write), image, out) {
+    ui.add_space(6.0);
+    if let Some(t) = card_editor(
+        ui,
+        label,
+        &f.answer,
+        (4, Mode::Write),
+        ImageTarget::Create(Field::Answer),
+        out,
+    ) {
         send(out, ModalMsg::Edit(Field::Answer, t));
     }
+}
+
+fn card_editor(
+    ui: &mut egui::Ui,
+    label: &str,
+    value: &str,
+    cfg: (usize, Mode),
+    target: ImageTarget,
+    out: &mut Vec<Msg>,
+) -> Option<String> {
+    super::modal_size::modal_card(ui, |ui| md_editor(ui, label, value, cfg, Some(target), out))
 }
 
 fn fields(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
@@ -193,40 +217,14 @@ fn footer(f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     });
 }
 
-/// 'Discard what you wrote?' with the two ways out, shown when closing was asked for with something written.
-fn discard_question(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    let warning = crate::theme::palette_of(ui).warning;
-    ui.add_space(6.0);
-    egui::Frame::group(ui.style()).show(ui, |ui| {
-        ui.set_width(ui.available_width());
-        ui.colored_label(warning, "Discard what you wrote? It will be lost.");
-        ui.horizontal(|ui| {
-            if ui
-                .button("Keep editing")
-                .on_hover_text("Goes back to editing without discarding.")
-                .clicked()
-            {
-                send(out, ModalMsg::KeepEditing);
-            }
-            if ui
-                .button("Discard")
-                .on_hover_text("Throws away the changes and closes.")
-                .clicked()
-            {
-                send(out, ModalMsg::Discard);
-            }
-        });
-    });
-}
-
 /// The dialog's content.
 pub fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     header(state, f, ui, out);
     if f.confirm_discard {
-        discard_question(ui, out);
+        super::modal_size::discard_question(ui, out);
     }
     ui.add_space(6.0);
-    let room = (ui.ctx().content_rect().height() - 140.0).max(240.0);
+    let room = (ui.ctx().content_rect().height() - 210.0).max(160.0);
     ui.style_mut().animation_time = 0.0;
     egui::ScrollArea::vertical()
         .max_height(room)
@@ -235,9 +233,9 @@ pub fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Ms
             title_field(f, ui, out);
             editors(f, ui, out);
             fields(state, f, ui, out);
-            if let Some(e) = &f.error {
-                ui.colored_label(ui.visuals().error_fg_color, e);
-            }
         });
+    if let Some(e) = &f.error {
+        ui.colored_label(ui.visuals().error_fg_color, e);
+    }
     footer(f, ui, out);
 }

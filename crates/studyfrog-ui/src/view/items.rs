@@ -9,6 +9,7 @@ use crate::msg::Msg;
 use crate::planner::PlanMsg;
 use crate::state::{Selection, State};
 use crate::theme::palette_of;
+use crate::view::{gradient_panel, home_hero};
 
 /// The page's heading: the stack's name, "Inbox" or "All items".
 fn heading(state: &State) -> String {
@@ -33,57 +34,63 @@ fn can_add_from_extension(state: &State) -> bool {
 
 /// The search field, the count, the column menu and the table of items.
 pub(super) fn list(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    crate::view::library_search::draw(state, ui, out);
-    ui.horizontal(|ui| {
-        ui.label(crate::view::library_table::count_line(state));
-        crate::view::library_table::column_menu(state, ui, out);
-        crate::view::library_bulk::filters_menu(state, ui, out);
-        let scope = match &state.browser.selection {
-            Selection::Stack(folder) => Some(folder.clone()),
-            _ => None,
-        };
-        ui.menu_button("More…", |ui| {
-            if ui
-                .button("Export…")
-                .on_hover_text(
-                    "Opens the export dialog: choose a format and where to write the file.",
-                )
-                .clicked()
-            {
-                let open = crate::transfer_ui::TransferMsg::Open(
-                    crate::transfer_ui::Tab::Export,
-                    scope.clone(),
-                );
-                out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
-                ui.close();
-            }
-            if can_add_from_extension(state)
-                && ui
-                    .button("Add from extension…")
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        crate::view::library_search::draw(state, ui, out);
+        ui.horizontal_wrapped(|ui| {
+            ui.label(crate::view::library_table::count_line(state));
+            crate::view::library_table::column_menu(state, ui, out);
+            crate::view::library_bulk::filters_menu(state, ui, out);
+            let scope = match &state.browser.selection {
+                Selection::Stack(folder) => Some(folder.clone()),
+                _ => None,
+            };
+            ui.menu_button("More…", |ui| {
+                if ui
+                    .button("Export…")
                     .on_hover_text(
-                        "Adds cards from a card type or importer that an extension provides.",
+                        "Opens the export dialog: choose a format and where to write the file.",
                     )
                     .clicked()
-            {
-                out.push(Msg::Modal(crate::modal::ModalMsg::OpenImport));
-                ui.close();
-            }
-            crate::view::library_keys::button(state, ui, out);
-        })
-        .response
-        .on_hover_text("Shows more options.");
+                {
+                    let open = crate::transfer_ui::TransferMsg::Open(
+                        crate::transfer_ui::Tab::Export,
+                        scope.clone(),
+                    );
+                    out.push(Msg::Library(crate::library_ui::LibraryMsg::Transfer(open)));
+                    ui.close();
+                }
+                if can_add_from_extension(state)
+                    && ui
+                        .button("Add from extension…")
+                        .on_hover_text(
+                            "Adds cards from a card type or importer that an extension provides.",
+                        )
+                        .clicked()
+                {
+                    out.push(Msg::Modal(crate::modal::ModalMsg::OpenImport));
+                    ui.close();
+                }
+                crate::view::library_keys::button(state, ui, out);
+            })
+            .response
+            .on_hover_text("Shows more options.");
+        });
     });
+    ui.add_space(6.0);
     crate::view::library_keys::confirm_bar(state, ui, out);
     crate::view::library_bulk::bar(state, ui, out);
-    ui.allocate_ui(
-        egui::vec2(
-            ui.available_width(),
-            (ui.available_height() - 16.0).max(260.0),
-        ),
-        |ui| {
-            crate::view::library_table::draw(state, ui, out);
-        },
-    );
+    home_hero::card(ui, |ui| {
+        ui.allocate_ui(
+            egui::vec2(
+                ui.available_width(),
+                (ui.available_height() - 16.0).max(260.0),
+            ),
+            |ui| {
+                crate::view::library_table::draw(state, ui, out);
+            },
+        );
+    });
 }
 
 /// Heading and the list of items; for a stack also its due date, status roll-up, PDFs and the new-card form.
@@ -95,11 +102,15 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     egui::ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
-            ui.label(
-                RichText::new(heading(state))
-                    .size(crate::typo::size(ui, crate::typo::Tier::Heading))
-                    .strong(),
-            );
+            gradient_panel::panel(ui, 64.0, |ui, s| {
+                ui.label(
+                    RichText::new(heading(state))
+                        .size(crate::typo::size(ui, crate::typo::Tier::Heading))
+                        .strong()
+                        .color(s.gradient_text),
+                );
+            });
+            ui.add_space(8.0);
             let stack = matches!(state.browser.selection, Selection::Stack(_));
             if stack {
                 due_row(state, ui, out);

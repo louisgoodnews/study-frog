@@ -8,8 +8,8 @@ use crate::msg::Msg;
 use crate::state::State;
 use crate::theme::palette_of;
 use crate::transfer_ui::{Format, Tab, TransferMsg};
-use crate::view::kit;
 use crate::view::widgets::text_field;
+use crate::view::{gradient_panel, home_hero};
 
 fn send(out: &mut Vec<Msg>, m: TransferMsg) {
     out.push(Msg::Library(LibraryMsg::Transfer(m)));
@@ -55,7 +55,8 @@ pub(super) fn scope_menu(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>, l
 fn mode_question(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let t = &state.transfer;
     ui.add_space(8.0);
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
         ui.label(
             RichText::new("Export mode")
                 .size(crate::typo::size(ui, crate::typo::Tier::Heading))
@@ -105,7 +106,8 @@ fn export_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         return;
     }
     ui.add_space(6.0);
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
         ui.label(
             RichText::new("Export Library or Stack")
                 .size(crate::typo::size(ui, crate::typo::Tier::Heading))
@@ -187,11 +189,14 @@ fn export_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 pub fn transfer(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let t = &state.transfer;
 
+    gradient_panel::band(ui);
+    ui.add_space(6.0);
     ui.horizontal(|ui| {
         ui.strong(
             RichText::new("Import and export")
                 .size(crate::typo::size(ui, crate::typo::Tier::Heading)),
         );
+        ui.add_space(8.0);
         let tabs = [
             (
                 Tab::Export,

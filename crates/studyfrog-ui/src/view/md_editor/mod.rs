@@ -39,9 +39,14 @@ fn macro_at_caret(
     Some((text, sel, e.picture))
 }
 
-/// The widest the text may be: one reading measure in every mode. Never wider than the space there is.
-fn column_width(ui: &egui::Ui) -> f32 {
-    typo::measure(ui).min(ui.available_width())
+/// Keep long-form note bodies to the reading measure (STORY-0114), while card/question editors fill
+/// their enclosing card width cleanly (BUG-0059).
+fn column_width(ui: &egui::Ui, name: &str) -> f32 {
+    if name == "Body" {
+        typo::measure(ui).min(ui.available_width())
+    } else {
+        ui.available_width().max(120.0)
+    }
 }
 
 /// How the editor shows the text.
@@ -117,7 +122,7 @@ pub fn md_editor(
             });
     };
     ui.scope(|ui| {
-        ui.set_max_width(column_width(ui));
+        ui.set_max_width(column_width(ui, name));
         match mode {
             Mode::Write => body(ui, &mut current, &mut changed),
             Mode::Preview => rendered(ui, text, out),

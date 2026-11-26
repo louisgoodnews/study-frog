@@ -39,10 +39,11 @@ fn hex_field(e: &Editor, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         Some((was, draft)) if was == current => draft,
         _ => current.clone().unwrap_or_default(),
     };
+    let width = ui.available_width().clamp(108.0, 140.0);
     let r = ui.add(
         egui::TextEdit::singleline(&mut text)
             .hint_text("#RRGGBB")
-            .desired_width(80.0),
+            .desired_width(width),
     );
     r.widget_info(|| WidgetInfo::labeled(Role::TextInput, true, "Custom color (#RRGGBB)"));
     let valid = normalize_color(&text).filter(|v| v.starts_with('#'));

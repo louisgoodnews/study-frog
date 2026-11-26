@@ -112,3 +112,39 @@ pub(super) fn grip(kind: NewKind, ui: &mut egui::Ui) {
         set_width(ui.ctx(), kind, now + step + drag);
     }
 }
+
+/// Compact redesign card frame for modal sections without vertical bloat.
+pub(super) fn modal_card<R>(ui: &mut egui::Ui, add: impl FnOnce(&mut egui::Ui) -> R) -> R {
+    let s = crate::theme::style::style_of(&crate::theme::palette_of(ui));
+    egui::Frame::new()
+        .fill(s.card)
+        .stroke(egui::Stroke::new(1.0, s.card_edge))
+        .corner_radius(egui::CornerRadius::same(crate::theme::style::CARD_RADIUS))
+        .inner_margin(egui::Margin::same(8))
+        .show(ui, add)
+        .inner
+}
+
+/// 'Discard what you wrote?' banner shown when closing a dirty Create dialog.
+pub(super) fn discard_question(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let warning = crate::theme::palette_of(ui).warning;
+    ui.add_space(6.0);
+    egui::Frame::group(ui.style()).show(ui, |ui| {
+        ui.set_width(ui.available_width());
+        ui.colored_label(warning, "Discard what you wrote? It will be lost.");
+        ui.horizontal(|ui| {
+            let keep = ui
+                .button("Keep editing")
+                .on_hover_text("Goes back to editing without discarding.");
+            if keep.clicked() {
+                out.push(Msg::Modal(ModalMsg::KeepEditing));
+            }
+            let disc = ui
+                .button("Discard")
+                .on_hover_text("Throws away the changes and closes.");
+            if disc.clicked() {
+                out.push(Msg::Modal(ModalMsg::Discard));
+            }
+        });
+    });
+}

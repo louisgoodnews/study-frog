@@ -111,6 +111,22 @@ pub fn reading<R>(ui: &mut egui::Ui, add: impl FnOnce(&mut egui::Ui) -> R) -> R 
     column(ui, width, add)
 }
 
+/// An opt-in horizontally scrollable strip bounded to the parent's available width (STORY-0243).
+/// Prevents wide single-line content (paths, code, tables, dense bars) from clipping or pushing sibling panes.
+pub fn hscroll<R>(
+    ui: &mut egui::Ui,
+    id: impl std::hash::Hash + std::fmt::Debug,
+    add: impl FnOnce(&mut egui::Ui) -> R,
+) -> R {
+    let max_w = ui.available_width().max(40.0);
+    egui::ScrollArea::horizontal()
+        .id_salt(id)
+        .max_width(max_w)
+        .auto_shrink([false, true])
+        .show(ui, add)
+        .inner
+}
+
 /// One row of [`bar_rows`].
 pub struct BarRow {
     /// The name in the first column.

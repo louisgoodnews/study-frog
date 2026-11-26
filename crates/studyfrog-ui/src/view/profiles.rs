@@ -7,6 +7,7 @@ use crate::msg::Msg;
 use crate::profile_ui::ProfileMsg;
 use crate::state::State;
 use crate::theme::palette_of;
+use crate::view::home_hero;
 use crate::view::kit;
 use crate::view::widgets::text_field;
 
@@ -35,7 +36,8 @@ pub(super) fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let p = &state.profiles;
     let pal = palette_of(ui);
 
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
         ui.horizontal(|ui| {
             avatar_badge(ui, &p.list.current, pal.accent, pal.on_accent);
             ui.vertical(|ui| {
@@ -59,7 +61,8 @@ pub(super) fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.add_space(4.0);
         ui.weak("Switch profile");
         for name in others {
-            kit::card(ui, |ui| {
+            home_hero::card(ui, |ui| {
+                ui.set_width(ui.available_width());
                 ui.horizontal(|ui| {
                     avatar_badge(ui, name, pal.surface_hover, pal.text);
 
@@ -121,7 +124,8 @@ pub(super) fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 
     ui.add_space(6.0);
-    kit::card(ui, |ui| {
+    home_hero::card(ui, |ui| {
+        ui.set_width(ui.available_width());
         ui.label(RichText::new("Add new profile").strong());
         ui.add_space(2.0);
         if let Some(t) = text_field(ui, "New profile", &p.draft, "Profile name…", 1) {
