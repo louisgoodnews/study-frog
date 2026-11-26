@@ -60,9 +60,10 @@ fn draw_month_layout(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: 
         });
         ui.allocate_ui_with_layout(vec2(side_width, height), down, |ui| {
             ui.set_min_size(vec2(side_width, height));
-            egui::ScrollArea::vertical().show(ui, |ui| match &p.form {
-                Some(form) => session_form::draw(state, form, ui, out),
-                None => calendar_side::side(state, scope, ui, out),
+            egui::ScrollArea::vertical().show(ui, |ui| match (&p.exam_form, &p.form) {
+                (Some(ef), _) => super::exam_scheduler::draw_form(state, ef, ui, out),
+                (None, Some(form)) => session_form::draw(state, form, ui, out),
+                (None, None) => calendar_side::side(state, scope, ui, out),
             });
         });
     });

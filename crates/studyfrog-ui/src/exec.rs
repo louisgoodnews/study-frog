@@ -65,6 +65,7 @@ pub use crate::exec_worker::{worker_new, worker_with_host};
 mod areas;
 mod classroom;
 mod classroom_saved;
+mod exam_sched;
 mod mock;
 mod wizard;
 

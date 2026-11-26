@@ -1,6 +1,9 @@
 //! Calendar and planning: scheduled learning sessions linked to stacks, with recurrence. Pure; the
 //! local time zone is supplied by the caller as a UTC offset.
 
+pub mod exam_plan;
+pub mod exam_schedule;
+pub mod exam_window;
 pub mod homework;
 pub mod homework_query;
 pub mod homework_reminders;

@@ -144,6 +144,7 @@ pub fn planner(w: &mut Worker, e: EffectPlanner, now_ns: i64) -> Vec<Msg> {
         EffectPlanner::DeleteTimetable(id) => exec_plan::delete_timetable(w, id),
         EffectPlanner::LoadBoard => exec_plan::load_board(w, now_ns),
         EffectPlanner::BoardCommand(op) => exec_plan::board_command(w, &op, now_ns),
+        EffectPlanner::ExamSched(e) => super::exam_sched::run(w, e, now_ns),
     };
     vec![msg]
 }

@@ -48,6 +48,7 @@ pub mod exam_card;
 pub mod exam_mcq;
 pub mod exam_mcq_view;
 pub mod exam_result;
+mod exam_scheduler;
 mod explorer;
 mod explorer_charts;
 pub mod extract_panel;

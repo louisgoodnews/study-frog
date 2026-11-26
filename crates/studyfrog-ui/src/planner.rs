@@ -18,6 +18,9 @@ use crate::session_form::{SessionForm, apply_form_edit, form_from, form_new};
 use crate::state::State;
 use crate::timetable_form::{TimetableForm, timetable_form_from, timetable_form_new};
 
+#[path = "planner_exam.rs"]
+pub mod exam_sched;
+
 /// The week starts on Monday.
 pub const WEEK_START: Weekday = Weekday::Mon;
 
@@ -62,6 +65,10 @@ pub struct Planner {
     pub moving: Option<crate::planner_reviews::MoveForm>,
     /// How to take back the last move of reviews.
     pub undo: Option<Vec<studyfrog_service::review_plan::Prior>>,
+    /// Persisted exam preparation plans (EPIC-076).
+    pub exam_plans: Vec<studyfrog_calendar::exam_plan::ExamPlan>,
+    /// Open Exam Scheduler form, if any.
+    pub exam_form: Option<exam_sched::ExamSchedForm>,
 }
 
 impl Default for Planner {
@@ -91,6 +98,8 @@ impl Default for Planner {
             reviews: Vec::new(),
             moving: None,
             undo: None,
+            exam_plans: Vec::new(),
+            exam_form: None,
         }
     }
 }
@@ -240,5 +249,6 @@ fn update_one(state: State, msg: PlanMsg) -> (State, Vec<Effect>) {
         PlanMsg::Rehearse(id) => crate::planner_rehearse::rehearse(state, id),
         PlanMsg::Memory(stack) => crate::planner_rehearse::memory(state, stack),
         PlanMsg::Reviews(m) => crate::planner_reviews::update(state, m),
+        PlanMsg::ExamSched(m) => exam_sched::update(state, m),
     }
 }

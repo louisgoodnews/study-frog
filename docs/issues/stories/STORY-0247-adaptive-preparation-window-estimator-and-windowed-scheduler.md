@@ -2,7 +2,7 @@
 id: STORY-0247
 type: story
 title: "Adaptive preparation-window estimator and windowed item scheduler"
-status: backlog
+status: done
 epic: EPIC-076
 parents: ['EPIC-076']
 estimate: 5
@@ -23,10 +23,10 @@ Implement two pure, deterministic engines in `studyfrog-calendar` / `studyfrog-s
 2. **Windowed Item Scheduler & Re-balancer**: distributes associated items across the preparation window, prioritizes weak/new material early, respects daily caps, and re-balances smoothly when plans change.
 
 ## Acceptance Criteria
-- [ ] A pure estimator function proposes a preparation window in weeks from linked item count, familiarity, FSRS stability/retrievability, historical accuracy, and daily capacity, returning both the week count and a short explanation of factors
-- [ ] A pure windowed scheduler distributes linked items across `[exam_date - N weeks, exam_date - 1 day]`, front-loading new and low-familiarity items and pacing spaced reviews toward exam day
-- [ ] Re-balancing recomputes remaining days cleanly when items are added/removed, the exam date shifts, or planned days are missed
-- [ ] Deterministic unit and property tests verify schedule coverage, date bounds, and re-balancing behavior
+- [x] A pure estimator function proposes a preparation window in weeks from linked item count, familiarity, FSRS stability/retrievability, historical accuracy, and daily capacity, returning both the week count and a short explanation of factors
+- [x] A pure windowed scheduler distributes linked items across `[exam_date - N weeks, exam_date - 1 day]`, front-loading new and low-familiarity items and pacing spaced reviews toward exam day
+- [x] Re-balancing recomputes remaining days cleanly when items are added/removed, the exam date shifts, or planned days are missed
+- [x] Deterministic unit and property tests verify schedule coverage, date bounds, and re-balancing behavior
 
 ## Design Notes
 - Reuse existing `studyfrog-srs` and `studyfrog-report` familiarity/velocity metrics; inject clocks/dates as arguments (P2) so all scheduling math is 100% deterministic.

@@ -2,7 +2,7 @@
 id: EPIC-076
 type: epic
 title: "Exam scheduler: automatically schedule exam-linked stacks and items within a user-set or stats-proposed week window"
-status: backlog
+status: done
 parents: []
 labels: [m14, calendar, srs, report, ui]
 acceptance_criteria:
@@ -37,11 +37,11 @@ Build an **Exam Scheduler** spanning `studyfrog-core`, `studyfrog-store`, `study
    - Scheduled blocks appear in Calendar (Month/Week/Day views), Home ("Coming up" / "Due now"), and can launch a scoped rehearsal run for that day's exam items in one click.
 
 ## Acceptance Criteria
-- [ ] Users can create an exam with a target date and attach associated vault items to it (whole stacks, individual flashcards, questions, and notes)
-- [ ] Users can either set a preparation window in weeks themselves (e.g. `N` weeks before the exam date) or accept a StudyFrog-proposed week window calculated from vault stats (item count, familiarity, FSRS stability/retrievability, past performance, and study pace)
-- [ ] StudyFrog automatically schedules the exam's associated items across the chosen preparation window—prioritizing unfamiliar and weak items early, pacing reviews toward peak retention on exam day, and populating calendar study sessions / planned review blocks
-- [ ] Users can preview the generated schedule (daily workload, coverage by week, projected readiness) before applying, and re-balance the schedule when items are added/removed or days are missed
-- [ ] Exam-to-item links, chosen window settings, and generated schedules persist locally in SQLite and integrate cleanly with the Calendar, Home, and Rehearsal views
+- [x] Users can create an exam with a target date and attach associated vault items to it (whole stacks, individual flashcards, questions, and notes)
+- [x] Users can either set a preparation window in weeks themselves (e.g. `N` weeks before the exam date) or accept a StudyFrog-proposed week window calculated from vault stats (item count, familiarity, FSRS stability/retrievability, past performance, and study pace)
+- [x] StudyFrog automatically schedules the exam's associated items across the chosen preparation window—prioritizing unfamiliar and weak items early, pacing reviews toward peak retention on exam day, and populating calendar study sessions / planned review blocks
+- [x] Users can preview the generated schedule (daily workload, coverage by week, projected readiness) before applying, and re-balance the schedule when items are added/removed or days are missed
+- [x] Exam-to-item links, chosen window settings, and generated schedules persist locally in SQLite and integrate cleanly with the Calendar, Home, and Rehearsal views
 
 ## Design Notes
 - Reuse existing `studyfrog-calendar::review_plan`, `studyfrog-report` familiarity/velocity telemetry (`EPIC-060`), and `studyfrog-srs` FSRS simulations (`STORY-0105`) rather than duplicating scheduling math.

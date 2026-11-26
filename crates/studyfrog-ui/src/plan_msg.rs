@@ -78,4 +78,6 @@ pub enum PlanMsg {
     PeekDue,
     /// The reminders due now were read (or not).
     DuePeeked(Result<studyfrog_calendar::reminders::DueAll, String>),
+    /// Exam Scheduler messages (EPIC-076).
+    ExamSched(crate::planner::exam_sched::ExamSchedMsg),
 }

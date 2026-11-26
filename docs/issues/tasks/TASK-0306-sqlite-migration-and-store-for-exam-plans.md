@@ -2,7 +2,7 @@
 id: TASK-0306
 type: task
 title: "SQLite migration and repository for exam plans, item links, and schedule blocks"
-status: backlog
+status: done
 epic: EPIC-076
 parents: ['STORY-0246']
 estimate: 3
@@ -20,9 +20,9 @@ Part of `STORY-0246`. Persists exam schedules and item associations locally in t
 Add the next SQLite migration and `exam_plan` store module in `studyfrog-store` with atomic CRUD operations and round-trip tests.
 
 ## Acceptance Criteria
-- [ ] A new sequential SQLite migration in `studyfrog-store` creates tables for `exam_plan`, `exam_target`, and `exam_schedule_block`
-- [ ] Transactional repository functions save, load, list, update, and delete exam plans and their linked targets/blocks
-- [ ] Store integration tests verify full round-trip persistence across reopen and cascading deletes
+- [x] A new sequential SQLite migration in `studyfrog-store` creates tables for `exam_plan`, `exam_target`, and `exam_schedule_block`
+- [x] Transactional repository functions save, load, list, update, and delete exam plans and their linked targets/blocks
+- [x] Store integration tests verify full round-trip persistence across reopen and cascading deletes
 
 ## Design Notes
 - Keep migrations idempotent and follow existing `studyfrog-store` schema conventions.

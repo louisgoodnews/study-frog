@@ -83,7 +83,7 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             let fill = (viewport - (ui.cursor().top() - top) - 76.0).max(MIN_COLUMN_HEIGHT);
             ui.columns(3, |c| {
                 due_column(h, fill, &mut c[0], out);
-                home_cards::ahead_column(h, fill, &mut c[1]);
+                home_cards::ahead_column(h, &state.planner.exam_plans, fill, &mut c[1], out);
                 home_cards::recent_column(h, fill, &mut c[2], out);
             });
             ui.add_space(10.0);

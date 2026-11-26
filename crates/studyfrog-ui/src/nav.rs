@@ -20,6 +20,9 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
             State { screen, ..state },
             vec![
                 Effect::Planner(EffectPlanner::LoadSessions),
+                Effect::Planner(EffectPlanner::ExamSched(
+                    crate::planner::exam_sched::ExamSchedEffect::LoadPlans,
+                )),
                 Effect::LoadHomework,
             ],
         ),
@@ -41,6 +44,9 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
             vec![
                 Effect::Vault(EffectVault::LoadHome),
                 Effect::Planner(EffectPlanner::LoadSessions),
+                Effect::Planner(EffectPlanner::ExamSched(
+                    crate::planner::exam_sched::ExamSchedEffect::LoadPlans,
+                )),
                 Effect::Folders(crate::folders_types::FolderEffect::Scan),
                 crate::pdf_library_ui::load(),
             ],

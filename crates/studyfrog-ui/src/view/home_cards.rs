@@ -13,12 +13,18 @@ use crate::view::calendar_grid::kind_color;
 use crate::view::home::{ago, column_card};
 use crate::view::kit;
 
-pub(super) fn ahead_column(h: &HomeSummary, fill: f32, ui: &mut egui::Ui) {
+pub(super) fn ahead_column(
+    h: &HomeSummary,
+    exams: &[studyfrog_calendar::exam_plan::ExamPlan],
+    fill: f32,
+    ui: &mut egui::Ui,
+    out: &mut Vec<Msg>,
+) {
     kit::section(ui, "Coming up");
     column_card(ui, fill, |ui| {
         let p = palette_of(ui);
         ui.label(RichText::new("Today").strong());
-        if h.sessions_today.is_empty() {
+        if h.sessions_today.is_empty() && exams.is_empty() {
             ui.weak("No study sessions today. Plan one in the Calendar.");
         }
         for s in &h.sessions_today {
@@ -33,6 +39,24 @@ pub(super) fn ahead_column(h: &HomeSummary, fill: f32, ui: &mut egui::Ui) {
                 format_minute(end),
                 s.title
             ));
+        }
+        for exam in exams {
+            if let Some(block) = exam.blocks.first() {
+                ui.horizontal_wrapped(|ui| {
+                    kit::pill(ui, "exam", p.accent);
+                    if ui
+                        .link(format!("{} ({} items)", exam.title, block.item_uids.len()))
+                        .on_hover_text("Starts a rehearsal run for this exam's scheduled items.")
+                        .clicked()
+                    {
+                        out.push(Msg::Plan(crate::planner::PlanMsg::ExamSched(
+                            crate::planner::exam_sched::ExamSchedMsg::RehearseBlock(
+                                block.item_uids.clone(),
+                            ),
+                        )));
+                    }
+                });
+            }
         }
         ui.add_space(8.0);
         ui.label(RichText::new("Next 7 days").strong());

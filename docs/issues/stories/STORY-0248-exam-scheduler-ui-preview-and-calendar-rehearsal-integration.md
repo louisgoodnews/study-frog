@@ -2,7 +2,7 @@
 id: STORY-0248
 type: story
 title: "Exam Scheduler UI, workload preview, and Calendar/Home/Rehearsal integration"
-status: backlog
+status: done
 epic: EPIC-076
 parents: ['EPIC-076']
 estimate: 5
@@ -24,10 +24,10 @@ Build the Exam Scheduler UI and service wiring in `studyfrog-service` and `study
 - Headless UI and service integration tests.
 
 ## Acceptance Criteria
-- [ ] Users can add/edit an exam, attach stacks and individual items (cards, questions, notes), and choose between Custom weeks or StudyFrog proposed weeks (with factor reasoning shown)
-- [ ] A schedule preview displays weekly/daily item load and readiness summary before the user applies or re-balances the schedule
-- [ ] Applied exam schedule blocks appear in Calendar and Home views and offer a one-click button to start a rehearsal run scoped to that day's exam items
-- [ ] Headless UI and service tests verify exam creation, item attachment, window switching, preview/apply, and accessible widget names
+- [x] Users can add/edit an exam, attach stacks and individual items (cards, questions, notes), and choose between Custom weeks or StudyFrog proposed weeks (with factor reasoning shown)
+- [x] A schedule preview displays weekly/daily item load and readiness summary before the user applies or re-balances the schedule
+- [x] Applied exam schedule blocks appear in Calendar and Home views and offer a one-click button to start a rehearsal run scoped to that day's exam items
+- [x] Headless UI and service tests verify exam creation, item attachment, window switching, preview/apply, and accessible widget names
 
 ## Design Notes
 - Follow the `EPIC-070`/`EPIC-073` redesign style (`palette_of(ui)`, `home_hero::card`, `gradient_panel`), Invariant P1, and P6 ($\le 250$ LOC per file).

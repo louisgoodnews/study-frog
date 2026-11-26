@@ -5,6 +5,7 @@ use crate::schema_classroom::{V32, V33, V34};
 use crate::schema_diary::V23;
 use crate::schema_early::{V2, V3};
 use crate::schema_exam::V25;
+use crate::schema_exam_plan::V35;
 use crate::schema_focus::V26;
 use crate::schema_homework::V29;
 use crate::schema_keys::V24;
@@ -84,6 +85,11 @@ pub const MIGRATIONS: &[Migration] = &[
         version: 34,
         name: "classroom grade rubric breakdown",
         sql: V34,
+    },
+    Migration {
+        version: 35,
+        name: "exam scheduler plans",
+        sql: V35,
     },
 ];
 

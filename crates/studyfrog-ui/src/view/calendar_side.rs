@@ -67,6 +67,9 @@ pub(super) fn side(state: &State, scope: Option<Uid>, ui: &mut egui::Ui, out: &m
         plan(out, PlanMsg::New);
     }
     ui.add_space(14.0);
+    kit::section(ui, "Exam Scheduler");
+    super::exam_scheduler::side_section(state, ui, out);
+    ui.add_space(14.0);
     kit::section(ui, "Planned reviews");
     super::calendar_reviews::side_section(state, scope, ui, out);
     ui.add_space(14.0);

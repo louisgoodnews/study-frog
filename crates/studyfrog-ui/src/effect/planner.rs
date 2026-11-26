@@ -23,4 +23,6 @@ pub enum EffectPlanner {
     SaveTimetable(studyfrog_calendar::timetable::TimetableEntry),
     /// Delete a timetable entry.
     DeleteTimetable(Uid),
+    /// Exam Scheduler effects (EPIC-076).
+    ExamSched(crate::planner::exam_sched::ExamSchedEffect),
 }
