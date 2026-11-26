@@ -1,14 +1,6 @@
 //! The calendar screen: state and update logic (STORY-0141, STORY-0142).
-use crate::effect::EffectPlanner;
-use crate::effect::EffectVault;
-
-use studyfrog_calendar::homework::HomeworkItem;
-use studyfrog_calendar::session::{Occurrence, Session};
-use studyfrog_calendar::timetable::TimetableEntry;
-use studyfrog_core::civil::{Date, LocalTime, Weekday, month_grid};
-
 use crate::calendar_mode::CalendarViewMode;
-use crate::effect::Effect;
+use crate::effect::{Effect, EffectPlanner, EffectVault};
 pub use crate::plan_msg::PlanMsg;
 use crate::planner_ops::{
     changed, failed, loaded, month_of, save, save_timetable, shift_month, shift_period, show_month,
@@ -17,6 +9,10 @@ use crate::planner_ops::{
 use crate::session_form::{SessionForm, apply_form_edit, form_from, form_new};
 use crate::state::State;
 use crate::timetable_form::{TimetableForm, timetable_form_from, timetable_form_new};
+use studyfrog_calendar::homework::HomeworkItem;
+use studyfrog_calendar::session::{Occurrence, Session};
+use studyfrog_calendar::timetable::TimetableEntry;
+use studyfrog_core::civil::{Date, LocalTime, Weekday, month_grid};
 
 #[path = "planner_exam.rs"]
 pub mod exam_sched;

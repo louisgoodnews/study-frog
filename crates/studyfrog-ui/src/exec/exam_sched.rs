@@ -1,6 +1,7 @@
 //! Worker executor for Exam Scheduler effects (EPIC-076).
 
 use studyfrog_calendar::exam_plan::{ExamPlan, PrepWindow};
+use studyfrog_core::civil::date_from_days;
 use studyfrog_core::time::UnixMs;
 use studyfrog_core::uid::Uid;
 use studyfrog_service::create::fresh_id_source;
@@ -8,8 +9,7 @@ use studyfrog_service::exam_scheduler::{
     delete_vault_exam_plan, list_vault_exam_plans, preview_exam_plan, rebalance_and_save_exam_plan,
     save_and_apply_exam_plan,
 };
-use studyfrog_service::session::current_settings;
-use studyfrog_service::timezone::local_today;
+use studyfrog_service::timezone::local_day_of;
 
 use crate::exec::Worker;
 use crate::msg::Msg;
@@ -20,16 +20,14 @@ fn wrap(m: ExamSchedMsg) -> Msg {
     Msg::Plan(PlanMsg::ExamSched(m))
 }
 
-fn daily_capacity(w: &Worker) -> usize {
-    w.session
-        .as_ref()
-        .map_or(20, |s| current_settings(s).daily_review_limit.max(10))
+fn daily_capacity(_w: &Worker) -> usize {
+    20
 }
 
 /// Execute an `ExamSchedEffect` against the open vault.
 pub fn run(w: &mut Worker, effect: ExamSchedEffect, now_ns: i64) -> Msg {
     let now = UnixMs(now_ns / 1_000_000);
-    let today = local_today(now);
+    let today = date_from_days(local_day_of(now));
     let cap = daily_capacity(w);
 
     match effect {

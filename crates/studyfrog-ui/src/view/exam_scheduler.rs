@@ -193,7 +193,7 @@ pub(super) fn side_section(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>)
                     block.new_count,
                     block.review_count
                 ));
-                if kit::primary_button(ui, format!("Rehearse {} items", exam.title))
+                if kit::primary_button(ui, &format!("Rehearse {} items", exam.title))
                     .on_hover_text("Starts a rehearsal run for today's scheduled exam items.")
                     .clicked()
                 {

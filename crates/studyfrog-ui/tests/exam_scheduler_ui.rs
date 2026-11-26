@@ -78,7 +78,7 @@ fn exam_scheduler_form_toggles_proposed_vs_custom_previews_and_applies() {
     assert_all_named(&h, "exam scheduler form");
 
     // Switch to Custom weeks and apply via worker
-    let mut model = h.state().0.clone();
+    let mut model = std::mem::take(&mut h.state_mut().0);
     send(
         &mut model,
         &mut worker,
