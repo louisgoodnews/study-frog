@@ -7,6 +7,14 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-26
+
+### Added
+- **Nautilus/Thunar-style Folders view redesign (`EPIC-074`)**: replaced the single indented tree with a file-manager header (Back/Forward/Up history, clickable breadcrumb path bar, inline folder filter, and a Grid / List / Tree view switcher), responsive Icon Grid with theme-aware vector icons for folders, stacks, notes, PDFs, and images, full-width Detailed List with clickable sortable column headers (Name, Type, Size/Items, Modified) and star/bookmark toggles, 8-way sorting with a Folders-first toggle, and a bottom-right selection status pill.
+
+### Fixed
+- **Home screen three-column overflow (`BUG-0057`)**: bounded the `Due now`, `Coming up`, and `Recent activity` column cards to their allocated 1/3 widths with wrapped item rows and stack rows so long titles no longer overflow into adjacent columns or clip past the window edge.
+
 ## [1.1.1] - 2026-11-26
 
 ### Fixed
