@@ -190,3 +190,51 @@ fn editing_an_entry() {
     let h = harness(m);
     assert_all_named(&h, "diary active editor");
 }
+
+#[test]
+fn diary_entry_with_many_rating_pills_never_crushes_pills_vertically() {
+    use egui_kittest::kittest::Queryable;
+
+    let mut m = open_model();
+    let _ = apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Diary)));
+    let mut entry = sample_entry(
+        99,
+        Date {
+            year: 2026,
+            month: 11,
+            day: 26,
+        },
+        "Diary: 2026-11-26",
+        "diag",
+        1,
+        4,
+    );
+    for key in [
+        "confidence",
+        "difficulty",
+        "effort",
+        "energy",
+        "mood",
+        "motivation",
+        "satisfaction",
+        "sleep",
+        "stress",
+        "success",
+        "understanding",
+    ] {
+        entry.ratings.insert(key.into(), RatingValue::Int(1));
+    }
+    let _ = apply(&mut m, Msg::Diary(DiaryMsg::EntriesLoaded(vec![entry])));
+
+    let mut h = harness(m);
+    h.set_size(eframe::egui::vec2(1280.0, 800.0));
+    h.run_steps(4);
+
+    let pill_rect = h.get_by_label("understanding: 1/5").rect();
+    assert!(
+        pill_rect.height() <= 32.0,
+        "rating pill should stay single-line and wrap to next row, got height {}",
+        pill_rect.height()
+    );
+    assert_all_named(&h, "diary with many rating pills");
+}

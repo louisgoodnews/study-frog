@@ -24,17 +24,31 @@ pub fn to_csv(b: &Bundle) -> String {
         .filter(|i| i.kind != ItemKind::Note)
         .collect();
     let refs = items.iter().any(|i| !i.also_in.is_empty());
+    let has_at = items
+        .iter()
+        .any(|i| i.extra.iter().any(|(k, _)| k == "answer_type"));
     let mut head = HEADER.to_vec();
     if refs {
         head.push("also_in");
+    }
+    if has_at {
+        head.push("answer_type");
     }
     let mut out = format!("{}\n", head.join(","));
     for i in items {
         let kind = crate::xfer_json::kind_word(i.kind);
         let (tags, also) = (i.tags.join(";"), i.also_in.join(";"));
+        let at = i
+            .extra
+            .iter()
+            .find(|(k, _)| k == "answer_type")
+            .map_or("", |(_, v)| v.as_str());
         let mut row = vec![i.stack.as_str(), kind, &i.title, &i.text, &i.answer, &tags];
         if refs {
             row.push(&also);
+        }
+        if has_at {
+            row.push(at);
         }
         out.push_str(&row.iter().map(|c| quote(c)).collect::<Vec<_>>().join(","));
         out.push('\n');

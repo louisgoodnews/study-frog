@@ -2,7 +2,7 @@
 id: TASK-0312
 type: task
 title: "Verify and fix question and answer-type (open, single, multiple, case, cloze) import functionality across all supported formats"
-status: backlog
+status: done
 epic: EPIC-072
 parents: ['STORY-0249']
 estimate: 3
@@ -30,10 +30,10 @@ Audit and verify the full import pipeline for `Question` items and all supported
    - Add service-level integration tests verifying each question answer type imports into a real vault, parses back into the expected `Doc::Question` with intact `answer_type` and options, and loads cleanly via `load_item_content`.
 
 ## Acceptance Criteria
-- [ ] Audit every supported import format (Markdown, Obsidian, CSV, JSON, TOML, RON, ZIP, Anki, PDF) for how Question items and answer types (`open`, `single`, `multiple`, `case`, `cloze`) are parsed, mapped, and persisted
-- [ ] Verify that front-matter fields (such as `answer_type: open | single | multiple`, choice option lists, reference answers, and extra metadata) survive import and round-trip export -> import without loss or coercion into plain cards
-- [ ] Fix any gaps or data loss discovered during the audit (e.g. missing `answer_type` preservation in `xfer_import.rs` / `xfer_export.rs` / `xfer_model.rs` or CSV/Markdown/Obsidian adapters)
-- [ ] Add end-to-end service integration tests covering importing questions across every answer type and format, verifying the resulting vault files parse and rehearse cleanly
+- [x] Audit every supported import format (Markdown, Obsidian, CSV, JSON, TOML, RON, ZIP, Anki, PDF) for how Question items and answer types (`open`, `single`, `multiple`, `case`, `cloze`) are parsed, mapped, and persisted
+- [x] Verify that front-matter fields (such as `answer_type: open | single | multiple`, choice option lists, reference answers, and extra metadata) survive import and round-trip export -> import without loss or coercion into plain cards
+- [x] Fix any gaps or data loss discovered during the audit (e.g. missing `answer_type` preservation in `xfer_import.rs` / `xfer_export.rs` / `xfer_model.rs` or CSV/Markdown/Obsidian adapters)
+- [x] Add end-to-end service integration tests covering importing questions across every answer type and format, verifying the resulting vault files parse and rehearse cleanly
 
 ## Design Notes
 - Key files to inspect:

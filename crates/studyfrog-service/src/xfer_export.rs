@@ -41,6 +41,12 @@ fn item_of(
         Some((r, s, a)) => (r.to_vec(), s, a),
         None => (Vec::new(), Vec::new(), None),
     };
+    let mut extra = Vec::new();
+    for key in ["answer_type", "color", "source"] {
+        if let Some(val) = extra_value(doc, key) {
+            extra.push((key.to_owned(), val));
+        }
+    }
     XItem {
         id: Some(m.uid),
         kind,
@@ -56,7 +62,7 @@ fn item_of(
         reviews,
         stacks,
         average,
-        extra: Vec::new(),
+        extra,
     }
 }
 

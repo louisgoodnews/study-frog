@@ -174,6 +174,14 @@ fn missing_stacks(session: &VaultSession, folders: &[String]) -> usize {
     seen.len()
 }
 
+fn is_choice_question(item: &XItem) -> bool {
+    item.kind == ItemKind::Question
+        && item.extra.iter().any(|(k, v)| {
+            k == "answer_type"
+                && (v.eq_ignore_ascii_case("single") || v.eq_ignore_ascii_case("multiple"))
+        })
+}
+
 /// The dry run: what the import would create, what exists already and what fails. Nothing is written.
 pub fn plan_import(
     session: &VaultSession,
@@ -202,7 +210,11 @@ pub fn plan_import(
             Ok(f) if item.text.trim().is_empty() => {
                 (f, Verdict::Error("it has no text".to_owned()))
             }
-            Ok(f) if item.kind != ItemKind::Note && item.answer.trim().is_empty() => {
+            Ok(f)
+                if item.kind != ItemKind::Note
+                    && !is_choice_question(item)
+                    && item.answer.trim().is_empty() =>
+            {
                 (f, Verdict::Error("it has no back".to_owned()))
             }
             Ok(f) => {

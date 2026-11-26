@@ -23,7 +23,7 @@ pub fn figure_pill(ui: &mut egui::Ui, text: &str, color: Color32, widest: &str) 
         .inner_margin(Margin::symmetric(8, 2))
         .show(ui, |ui| {
             ui.set_min_width(min);
-            ui.label(RichText::new(text).color(color).font(font));
+            ui.add(egui::Label::new(RichText::new(text).color(color).font(font)).extend());
         });
 }
 

@@ -28,6 +28,7 @@ const TAGS: [&str; 2] = ["tags", "tag"];
 const STACK: [&str; 4] = ["stack", "deck", "folder", "category"];
 const ALSO_IN: [&str; 4] = ["also_in", "also in", "alsoin", "references"];
 const KIND: [&str; 2] = ["kind", "type"];
+const ANSWER_TYPE: [&str; 3] = ["answer_type", "answer type", "answertype"];
 
 /// The text of the bytes: UTF-8 (a leading mark removed), or Latin-1 when forced or when the bytes are not UTF-8.
 pub fn decode(bytes: &[u8], latin1: Option<bool>) -> (String, bool) {
@@ -58,25 +59,21 @@ fn find(head: &[String], names: &[&str]) -> Option<usize> {
 }
 
 fn looks_like_header(first: &[String]) -> bool {
-    first.iter().any(|c| {
-        [&FRONT[..], &BACK, &TITLE, &TAGS, &STACK, &KIND, &ALSO_IN]
-            .iter()
-            .any(|names| named(c, names))
-    })
+    let groups: &[&[&str]] = &[&FRONT, &BACK, &TITLE, &TAGS, &STACK, &KIND, &ALSO_IN];
+    first.iter().any(|c| groups.iter().any(|g| named(c, g)))
 }
 
 fn guess_map(head: &[String], header: bool) -> Option<Mapping> {
-    let by_name = |names: &[&str]| header.then(|| find(head, names)).flatten();
-    let (stack, kind) = (by_name(&STACK), by_name(&KIND));
-    let (title, tags) = (by_name(&TITLE), by_name(&TAGS));
-    let also_in = by_name(&ALSO_IN);
+    let by = |names: &[&str]| header.then(|| find(head, names)).flatten();
+    let (stack, kind, title, tags, also_in) =
+        (by(&STACK), by(&KIND), by(&TITLE), by(&TAGS), by(&ALSO_IN));
     let taken: Vec<usize> = [stack, kind, title, tags, also_in]
         .into_iter()
         .flatten()
         .collect();
     let mut free = (0..head.len()).filter(|i| !taken.contains(i));
-    let front = by_name(&FRONT).or_else(|| free.next())?;
-    let back = by_name(&BACK).or_else(|| free.find(|i| *i != front))?;
+    let front = by(&FRONT).or_else(|| free.next())?;
+    let back = by(&BACK).or_else(|| free.find(|i| *i != front))?;
     Some(Mapping {
         front,
         back,
@@ -136,10 +133,13 @@ fn row_item(
         clean_cell(row, Some(m.front)),
         clean_cell(row, Some(m.back)),
     );
+    let at = cell(row, find(names, &ANSWER_TYPE));
+    let choice = kind == ItemKind::Question
+        && (at.eq_ignore_ascii_case("single") || at.eq_ignore_ascii_case("multiple"));
     if front.is_empty() {
         want(m.front, "the text of the front", "");
     }
-    if back.is_empty() && kind != ItemKind::Note {
+    if back.is_empty() && kind != ItemKind::Note && !choice {
         want(m.back, "the text of the back", "");
     }
     if !bad.is_empty() {
@@ -147,18 +147,19 @@ fn row_item(
     }
     let mut it = item(kind, cell(row, m.stack), &front, &back);
     it.title = cell(row, m.title).to_owned();
-    it.tags = cell(row, m.tags)
-        .split(';')
-        .map(str::trim)
-        .filter(|t| !t.is_empty())
-        .map(str::to_owned)
-        .collect();
-    it.also_in = cell(row, m.also_in)
-        .split(';')
-        .map(str::trim)
-        .filter(|f| !f.is_empty())
-        .map(str::to_owned)
-        .collect();
+    if !at.is_empty() {
+        it.extra.push(("answer_type".to_owned(), at.to_lowercase()));
+    }
+    let split_semi = |col| {
+        cell(row, col)
+            .split(';')
+            .map(str::trim)
+            .filter(|t| !t.is_empty())
+            .map(str::to_owned)
+            .collect()
+    };
+    it.tags = split_semi(m.tags);
+    it.also_in = split_semi(m.also_in);
     Ok(it)
 }
 
@@ -232,13 +233,12 @@ pub fn read_csv(bytes: &[u8], o: &CsvOptions) -> Result<CsvRead, String> {
         }
     }
     bundle.warnings = problems.iter().map(problem_text).collect();
-    let first_rows = body.into_iter().take(SHOWN_ROWS).collect();
     let sheet = Sheet {
         delimiter,
         latin1,
         header,
         names,
-        first_rows,
+        first_rows: body.into_iter().take(SHOWN_ROWS).collect(),
         map,
     };
     Ok(CsvRead {

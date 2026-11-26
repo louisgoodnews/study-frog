@@ -2,7 +2,7 @@
 id: BUG-0060
 type: bug
 title: "Duplicate hover tooltips rendered on certain buttons (e.g. Rehearse 'Show answer (Space)')"
-status: backlog
+status: done
 estimate: 1
 labels: [m14, ui]
 acceptance_criteria:
@@ -27,9 +27,9 @@ Direct cause in `crates/studyfrog-ui/src/view/run_card/parts.rs`: `.on_hover_tex
 3. Add a regression test ensuring no button attaches duplicate hover tooltips.
 
 ## Acceptance Criteria
-- [ ] Hovering `"Show answer (Space)"` (and `"Show answer without answering (Space)"`) in Rehearse displays a single tooltip instead of two stacked identical tooltips
-- [ ] Audit all views in `crates/studyfrog-ui/src/view/` for chained or duplicate `.on_hover_text(...)` calls on the same widget response and remove any duplicates
-- [ ] Add a regression check (or extend `text_button_tooltips`) to catch duplicate `.on_hover_text(...)` calls on a single button
+- [x] Hovering `"Show answer (Space)"` (and `"Show answer without answering (Space)"`) in Rehearse displays a single tooltip instead of two stacked identical tooltips
+- [x] Audit all views in `crates/studyfrog-ui/src/view/` for chained or duplicate `.on_hover_text(...)` calls on the same widget response and remove any duplicates
+- [x] Add a regression check (or extend `text_button_tooltips`) to catch duplicate `.on_hover_text(...)` calls on a single button
 
 ## Design Notes
 - Check `crates/studyfrog-ui/src/view/run_card/parts.rs:70-85` and scan `crates/studyfrog-ui/src/view/**/*.rs` for duplicate `on_hover_text` / `on_disabled_hover_text` chains.

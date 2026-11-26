@@ -8,12 +8,9 @@ use crate::msg::Msg;
 use crate::typo::{self, Tier};
 use crate::view::preview_rich as rich;
 
-/// Set (as a temporary flag of the frame) by the rehearsal card, which lets its prose run wider than the
-/// reading measure: the item takes more of the screen (STORY-0195).
+/// Set (as a temporary flag of the frame) by the rehearsal card (STORY-0195).
 #[derive(Clone, Copy)]
 pub struct WideProse;
-/// How much wider the rehearsal card's prose is than the reading measure (about 110 characters a line).
-pub const RUN_PROSE_SHARE: f32 = 1.4;
 
 /// Draw `blocks`; clicking a wikilink pushes [`Msg::Editor(MsgEditor::OpenLink)`].
 pub fn draw_blocks(ui: &mut egui::Ui, blocks: &[Block], out: &mut Vec<Msg>) {
@@ -149,25 +146,20 @@ pub(super) fn styled(ui: &egui::Ui, span: &Span, heading: Option<u8>) -> RichTex
     text
 }
 
-/// One paragraph or heading: spans flow and wrap, links are clickable.
+/// One paragraph or heading: spans flow and wrap across the full available container width (STORY-0250).
 pub(super) fn spans_line(
     ui: &mut egui::Ui,
     spans: &[Span],
     heading: Option<u8>,
     out: &mut Vec<Msg>,
 ) {
-    let wide = ui
-        .data(|d| d.get_temp::<WideProse>(egui::Id::NULL))
-        .is_some();
-    let measure = typo::measure(ui) * if wide { RUN_PROSE_SHARE } else { 1.0 };
     let line = typo::line_height(text_size(ui, heading));
     // The row height is taken when the wrapping layout starts, so it is set on a scope around it: then the first
     // line of a paragraph is exactly as tall as the others.
     ui.spacing_mut().interact_size.y = line;
     ui.spacing_mut().item_spacing.y = 0.0;
     ui.horizontal_wrapped(|ui| {
-        // Prose is never wider than the reading measure.
-        ui.set_max_width(ui.available_width().min(measure));
+        ui.set_max_width(ui.available_width());
         ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
         ui.spacing_mut().item_spacing.x = 0.0;
         for span in spans {

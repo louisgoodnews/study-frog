@@ -58,8 +58,7 @@ pub fn pill(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
             crate::typo::text_width(ui.ctx(), &crate::typo::figure_template(&label), &font);
         let pad = 2.0 * ui.spacing().button_padding.x;
         let text = RichText::new(label).color(palette_of(ui).accent);
-        ui.add(egui::Button::new(text).min_size(egui::vec2(widest + pad, 0.0)))
-            .on_hover_text("Starts the focus timer with this length.")
+        ui.add(egui::Button::new(text).min_size(egui::vec2(widest + pad, 0.0))) // hover: from the caller
     };
     egui::Popup::menu(&r)
         .close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside)

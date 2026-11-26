@@ -57,6 +57,12 @@ fn item_to_export(i: &XItem, scheduling: bool) -> ExportItem {
         (None, Vec::new(), Vec::new())
     };
 
+    let answer_type = i
+        .extra
+        .iter()
+        .find(|(k, _)| k == "answer_type")
+        .map(|(_, v)| v.clone());
+
     ExportItem {
         kind: item_kind_name(i.kind).to_owned(),
         title: i.title.clone(),
@@ -69,6 +75,7 @@ fn item_to_export(i: &XItem, scheduling: bool) -> ExportItem {
         status: i.status.clone(),
         priority: i.priority.clone(),
         difficulty: i.difficulty.clone(),
+        answer_type,
         average,
         stacks,
         reviews,
@@ -139,6 +146,11 @@ fn item_from_export(n: usize, i: ExportItem) -> Result<XItem, String> {
         difficulty: a.difficulty,
     });
 
+    let mut extra = Vec::new();
+    if let Some(at) = i.answer_type.filter(|s| !s.trim().is_empty()) {
+        extra.push(("answer_type".to_owned(), at));
+    }
+
     Ok(XItem {
         id,
         kind,
@@ -154,7 +166,7 @@ fn item_from_export(n: usize, i: ExportItem) -> Result<XItem, String> {
         reviews,
         stacks,
         average,
-        extra: Vec::new(),
+        extra,
     })
 }
 

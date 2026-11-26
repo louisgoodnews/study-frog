@@ -71,12 +71,10 @@ fn draw_header(sort: SortOrder, widths: [f32; 4], ui: &mut egui::Ui, out: &mut V
         .enumerate()
         {
             let label = format!("{title}{}", col_arrow(sort, col));
+            let header = egui::Button::new(RichText::new(label).small().color(pal.text_weak)) // hover: from the caller
+                .frame(false);
             let btn = ui
-                .add_sized(
-                    Vec2::new(widths[idx], 24.0),
-                    egui::Button::new(RichText::new(label).small().color(pal.text_weak))
-                        .frame(false),
-                )
+                .add_sized(Vec2::new(widths[idx], 24.0), header)
                 .on_hover_text(format!("Sort by {title}."));
             btn.clone().widget_info(|| {
                 WidgetInfo::labeled(Role::Button, true, format!("Sort by {title}"))

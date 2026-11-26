@@ -115,3 +115,37 @@ fn a_click_hides_the_tooltip_so_it_never_stays_over_the_control() {
     h.run_steps(5);
     assert!(h.query_by_label(EXPLAIN).is_none(), "gone after the click");
 }
+
+#[test]
+fn no_view_chains_duplicate_on_hover_text_calls() {
+    fn walk(dir: &std::path::Path, out: &mut Vec<std::path::PathBuf>) {
+        for e in std::fs::read_dir(dir).unwrap().flatten() {
+            let p = e.path();
+            if p.is_dir() {
+                walk(&p, out);
+            } else if p.extension().and_then(|s| s.to_str()) == Some("rs") {
+                out.push(p);
+            }
+        }
+    }
+    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src/view");
+    let mut files = Vec::new();
+    walk(&root, &mut files);
+    let mut dupes = Vec::new();
+    for file in files {
+        let src = std::fs::read_to_string(&file).unwrap();
+        let compact: String = src.chars().filter(|c| !c.is_whitespace()).collect();
+        if compact.contains(").on_hover_text(")
+            && compact
+                .split(".on_hover_text(")
+                .skip(1)
+                .any(|after| after.starts_with("crate::view::tips::show_answer()).on_hover_text("))
+        {
+            dupes.push(file.display().to_string());
+        }
+    }
+    assert!(
+        dupes.is_empty(),
+        "duplicate on_hover_text chains: {dupes:?}"
+    );
+}

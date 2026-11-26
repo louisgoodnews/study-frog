@@ -21,7 +21,7 @@ pub(super) fn badge(ui: &mut egui::Ui, text: &str) {
         .corner_radius(CornerRadius::same(PILL_RADIUS))
         .inner_margin(Margin::symmetric(8, 2))
         .show(ui, |ui| {
-            ui.label(RichText::new(text).color(s.badge_text));
+            ui.add(egui::Label::new(RichText::new(text).color(s.badge_text)).extend());
         });
 }
 

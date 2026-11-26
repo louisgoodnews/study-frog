@@ -2,7 +2,7 @@
 id: STORY-0249
 type: story
 title: "Verify and preserve Question items and answer types across all import formats"
-status: backlog
+status: done
 epic: EPIC-072
 parents: ['EPIC-072']
 estimate: 3
@@ -20,9 +20,9 @@ With choice questions (`EPIC-072`) and other question answer types (`open`, `sin
 Audit all supported importers for `Question` items and answer types, fix any preservation gaps in `studyfrog-service`, and cover them with integration tests (`TASK-0312`).
 
 ## Acceptance Criteria
-- [ ] Question items and their answer types (`open`, `single`, `multiple`, `case`, `cloze`) are audited across all supported import formats
-- [ ] Front-matter metadata (including `answer_type` and choice options) survives import and export -> import round-trips without data loss
-- [ ] Automated service tests verify Question and answer-type import fidelity
+- [x] Question items and their answer types (`open`, `single`, `multiple`, `case`, `cloze`) are audited across all supported import formats
+- [x] Front-matter metadata (including `answer_type` and choice options) survives import and export -> import round-trips without data loss
+- [x] Automated service tests verify Question and answer-type import fidelity
 
 ## Design Notes
 - Child task: `TASK-0312`

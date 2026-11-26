@@ -77,10 +77,7 @@ pub(super) fn reveal_buttons(run: &RunView, ui: &mut egui::Ui, out: &mut Vec<Msg
             } else {
                 kit::primary_button(ui, label).on_hover_text(crate::view::tips::show_answer())
             };
-            if show
-                .on_hover_text(crate::view::tips::show_answer())
-                .clicked()
-            {
+            if show.clicked() {
                 act(out, Action::Flip);
             }
             if ui

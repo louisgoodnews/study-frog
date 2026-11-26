@@ -2,7 +2,7 @@
 id: TASK-0314
 type: task
 title: "Prevent rating pills and chips from crushing vertically at the right edge of wrapped rows (Diary & kit::pill)"
-status: backlog
+status: done
 epic: EPIC-073
 parents: ['STORY-0250']
 estimate: 1
@@ -23,9 +23,9 @@ Fix chip/pill wrapping in `crates/studyfrog-ui/src/view/kit.rs` (`figure_pill` /
 3. Add a headless UI regression test in `crates/studyfrog-ui/tests/diary_ui.rs` with 13 rating pills asserting every pill stays single-line height (`<= 32 px`).
 
 ## Acceptance Criteria
-- [ ] Rating pills in the Diary list and calendar views wrap cleanly as whole single-line chips onto the next row instead of crushing vertically into 2-character-wide columns at the right edge
-- [ ] `kit::pill` / `kit::figure_pill` renders its label with `TextWrapMode::Extend` (no internal mid-word wrapping) so `horizontal_wrapped` layouts move overflowing pills cleanly to the next line across all screens
-- [ ] Headless UI test verifies Diary entry cards with 12+ rating pills wrap cleanly without tall crushed pills
+- [x] Rating pills in the Diary list and calendar views wrap cleanly as whole single-line chips onto the next row instead of crushing vertically into 2-character-wide columns at the right edge
+- [x] `kit::pill` / `kit::figure_pill` renders its label with `TextWrapMode::Extend` (no internal mid-word wrapping) so `horizontal_wrapped` layouts move overflowing pills cleanly to the next line across all screens
+- [x] Headless UI test verifies Diary entry cards with 12+ rating pills wrap cleanly without tall crushed pills
 
 ## Design Notes
 - Affected files:

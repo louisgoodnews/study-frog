@@ -93,6 +93,9 @@ pub struct ExportItem {
     /// Stated difficulty.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub difficulty: Option<String>,
+    /// Question answer type (`open`, `single`, `multiple`), if stated (TASK-0312).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub answer_type: Option<String>,
     /// Average values across referencing stacks.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub average: Option<ExportAverage>,

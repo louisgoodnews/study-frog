@@ -52,7 +52,7 @@ fn help_paragraphs_keep_to_the_measure_on_a_wide_window() {
 }
 
 #[test]
-fn a_long_answer_in_a_run_keeps_to_about_one_and_a_half_measures() {
+fn a_long_answer_in_a_run_expands_across_the_card_width() {
     let mut m = running_model(RunMode::Flip);
     let content = ItemContent {
         case: None,
@@ -77,12 +77,13 @@ fn a_long_answer_in_a_run_keeps_to_about_one_and_a_half_measures() {
     h.run();
     h.get_by_label("Show answer (Space)").click();
     h.run();
-    // The run's prose may run wider than the reading measure: `preview::RUN_PROSE_SHARE` (STORY-0195).
-    let measure = measure_at(&h.ctx, 15.0) * 1.4;
+    // STORY-0250 / TASK-0313: Rehearse prose wraps across the full available card width.
+    let measure = measure_at(&h.ctx, 15.0);
     let answer = h.get_by_label_contains("Because small, uncharged").rect();
     assert!(
-        answer.width() <= measure + 1.0,
-        "{} > {measure}",
+        answer.width() > measure * 1.4,
+        "expected answer to expand across card width (> {}), got {}",
+        measure * 1.4,
         answer.width()
     );
 }
