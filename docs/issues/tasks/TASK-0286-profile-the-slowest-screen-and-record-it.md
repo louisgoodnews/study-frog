@@ -2,7 +2,7 @@
 id: TASK-0286
 type: task
 title: "Profile the slowest screen and record the profile"
-status: review
+status: backlog
 epic: EPIC-067
 parents: ['STORY-0205']
 estimate: 1

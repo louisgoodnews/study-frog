@@ -9,7 +9,7 @@ estimate: 5
 labels: [m14, slm, ui, tooling]
 acceptance_criteria:
   - "After the vault is chosen at first boot, the wizard offers the optional steps local model, remote provider, MiniLM and summary; each can be skipped"
-  - "Each download (MiniLM, suggested Ollama model) shows size and source and needs a click; checksums are verified; a failed download can be retried"
+  - "Each download (MiniLM, suggested Ollama model) shows size and source and needs a click; MiniLM checksums are verified (the suggested Ollama model is checked by Ollama's own pull); a failed download can be retried"
   - "The wizard can be reopened from Settings and from the control protocol (`wizard status`, `wizard step`)"
 ---
 

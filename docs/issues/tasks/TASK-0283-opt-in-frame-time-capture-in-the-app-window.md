@@ -8,7 +8,7 @@ parents: ['STORY-0204']
 estimate: 3
 labels: [m14, perf, ui]
 acceptance_criteria:
-  - 'With an environment variable set, the app records the duration of each frame of the open screen and writes median, p95, worst and frame count on exit'
+  - 'With the --frame-times FILE flag given, the app records the duration of each frame of the open screen and writes median, p95, worst and frame count on exit'
   - 'The summary is a pure function over the durations; the clock is passed in, not read inside it'
 ---
 

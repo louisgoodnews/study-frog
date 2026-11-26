@@ -3,7 +3,7 @@
 # (EPIC-067, STORY-0204, TASK-0283 capture, TASK-0284 scripted visit).
 #
 # Usage: scripts/bench-frame-time.sh <vault-dir> <out-dir> [passes=3]
-#   <vault-dir>  a vault to open, e.g. one made by scripts/gen-vault-10k.sh (10,000 notes)
+#   <vault-dir>  a vault to open; if missing or empty it is made by scripts/gen-vault-10k.sh (10,000 notes)
 #   <out-dir>    results folder; must not already hold results (give a new folder)
 #   [passes=3]   each pass is a separate app run, so each pass starts with a fresh process
 #   Environment:
@@ -59,7 +59,12 @@ out="$2"
 passes="${3:-3}"
 case "$passes" in '' | *[!0-9]*) echo "passes must be a positive integer" >&2; exit 2 ;; esac
 [ "$passes" -ge 1 ] || { echo "passes must be a positive integer" >&2; exit 2; }
-[ -d "$vault" ] || { echo "error: no vault folder at $vault" >&2; exit 2; }
+# A missing or empty vault folder is generated first (TASK-0284).
+if [ ! -d "$vault" ] || [ -z "$(ls -A "$vault")" ]; then
+    mkdir -p "$vault"
+    bash "$(dirname "$0")/gen-vault-10k.sh" "$vault" >/dev/null
+    echo "generated the 10k vault at $vault"
+fi
 
 bin="${STUDYFROG_BIN:-studyfrog}"
 command -v "$bin" >/dev/null 2>&1 || { echo "error: '$bin' not found; set STUDYFROG_BIN" >&2; exit 2; }
