@@ -91,6 +91,11 @@ fn screen_effects(state: State, screen: Screen) -> (State, Vec<Effect>) {
             vec![Effect::Planner(EffectPlanner::LoadBoard)],
         ),
         Screen::Rehearse => crate::setup::refresh_preview(State { screen, ..state }),
+        Screen::Match => {
+            let mut st = State { screen, ..state };
+            let fx = crate::match_ui::request_load(&mut st);
+            (st, fx)
+        }
         _ => (State { screen, ..state }, Vec::new()),
     }
 }

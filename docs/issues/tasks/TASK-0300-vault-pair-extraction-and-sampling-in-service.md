@@ -2,7 +2,7 @@
 id: TASK-0300
 type: task
 title: "Vault flashcard and question pair extraction and sampling in studyfrog-service"
-status: backlog
+status: done
 epic: EPIC-075
 parents: ['STORY-0244']
 estimate: 2
@@ -20,9 +20,9 @@ Part of `STORY-0244`. Match mode needs real front/back and prompt/answer text fr
 Add a `match_pairs` module in `studyfrog-service` that loads cards and questions matching the requested scope, strips Markdown syntax into clean tile strings, deduplicates, and returns the pair pool for round sampling.
 
 ## Acceptance Criteria
-- [ ] A pure service function reads Card front/back and Question prompt/answer pairs from the open vault filtered by scope (all vault, selected stack folders, due/weak filter)
-- [ ] Markdown formatting is stripped into clean plain text and empty or duplicate pairs are skipped
-- [ ] A deterministic sampler draws fresh N-pair rounds from the full pair pool using a seed
+- [x] A pure service function reads Card front/back and Question prompt/answer pairs from the open vault filtered by scope (all vault, selected stack folders, due/weak filter)
+- [x] Markdown formatting is stripped into clean plain text and empty or duplicate pairs are skipped
+- [x] A deterministic sampler draws fresh N-pair rounds from the full pair pool using a seed
 
 ## Design Notes
 - Reuse existing `studyfrog-store` item loading and `studyfrog-md` parsing helpers; keep files $\le 250$ LOC (P6).

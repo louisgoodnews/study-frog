@@ -2,7 +2,7 @@
 id: EPIC-075
 type: epic
 title: "Make Match mode usable: source real front/back pairs from vault flashcards and questions with stack selection and playable tile layout"
-status: backlog
+status: done
 parents: []
 labels: [m14, rehearse, service, ui]
 acceptance_criteria:
@@ -38,11 +38,11 @@ Turn Match mode into a genuinely useful active-recall drill backed by the user's
    - Persist personal best times/scores per scope (or session) and optionally record match completions in activity/reports.
 
 ## Acceptance Criteria
-- [ ] Opening Match mode loads real prompt/answer pairs (card front/back and question prompt/answer) from the active vault via `studyfrog-service` instead of hardcoded biology demo cards
-- [ ] Users can choose the source scope before or between rounds (entire vault, one or more selected stacks, or due/weak items) and configure pair count / grid size (e.g. 4, 6, 8 pairs)
-- [ ] Starting a new round or clicking "Next round" draws a fresh randomized set of pairs from the chosen scope rather than repeating only the same 6 cards, while "Restart" reshuffles the current round
-- [ ] Match tiles handle real-world vault card text cleanly (dynamic sizing or readable wrapping/truncation with full-text hover preview, clear prompt vs answer distinction, and responsive grid filling the screen width)
-- [ ] When the chosen scope has too few cards/questions to start a match, the screen shows a clear empty state explaining what is needed instead of silently substituting unrelated demo biology cards
+- [x] Opening Match mode loads real prompt/answer pairs (card front/back and question prompt/answer) from the active vault via `studyfrog-service` instead of hardcoded biology demo cards
+- [x] Users can choose the source scope before or between rounds (entire vault, one or more selected stacks, or due/weak items) and configure pair count / grid size (e.g. 4, 6, 8 pairs)
+- [x] Starting a new round or clicking "Next round" draws a fresh randomized set of pairs from the chosen scope rather than repeating only the same 6 cards, while "Restart" reshuffles the current round
+- [x] Match tiles handle real-world vault card text cleanly (dynamic sizing or readable wrapping/truncation with full-text hover preview, clear prompt vs answer distinction, and responsive grid filling the screen width)
+- [x] When the chosen scope has too few cards/questions to start a match, the screen shows a clear empty state explaining what is needed instead of silently substituting unrelated demo biology cards
 
 ## Design Notes
 - Existing files:

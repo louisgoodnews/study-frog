@@ -60,20 +60,26 @@ fn result_card(session: &MatchModeSession, high_score: u32, p: &Palette, ui: &mu
     });
 }
 
-/// The Play Again and Done actions, in the same order and with the same messages as before.
+/// The New round, Play Again, and Done actions.
 fn actions(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     ui.horizontal(|ui| {
-        ui.add_space(ui.available_width() * 0.3);
+        ui.add_space(ui.available_width() * 0.25);
+        if crate::view::kit::primary_button(ui, "New round")
+            .on_hover_text("Deals a fresh set of pairs from the selected scope.")
+            .clicked()
+        {
+            out.push(Msg::Match(MatchMsg::NewRound));
+        }
         if ui
             .button("Play Again")
-            .on_hover_text("Starts the game again.")
+            .on_hover_text("Reshuffles and replays the same round.")
             .clicked()
         {
             out.push(Msg::Match(MatchMsg::Restart));
         }
         if ui
             .button("Done")
-            .on_hover_text("Closes this when you have finished.")
+            .on_hover_text("Leaves Match mode.")
             .clicked()
         {
             out.push(Msg::Match(MatchMsg::Leave));

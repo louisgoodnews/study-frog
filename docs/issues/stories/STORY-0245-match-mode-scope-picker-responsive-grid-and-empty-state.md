@@ -2,7 +2,7 @@
 id: STORY-0245
 type: story
 title: "Match mode scope picker, playable responsive tile grid, and empty state"
-status: backlog
+status: done
 epic: EPIC-075
 parents: ['EPIC-075']
 estimate: 5
@@ -25,10 +25,10 @@ Upgrade the Match screen (`crates/studyfrog-ui/src/view/match_grid.rs`, `match_v
 - Clear empty state when the selected scope has fewer than 2 valid cards/questions.
 
 ## Acceptance Criteria
-- [ ] Users can pick Match mode scope (entire vault or specific stacks), filter (All, Due first, Least familiar), and pair count (4, 6, 8 pairs)
-- [ ] The HUD distinguishes Restart (reshuffle current round) from New round (deal fresh pairs) and fixes the Exit button tooltip
-- [ ] The tile grid fills and centers within the viewport cleanly, wraps or truncates long card text inside tile bounds with full-text hover preview, and shows an honest empty state when fewer than 2 valid pairs exist
-- [ ] Headless UI tests verify scope switching, round dealing, empty state, and accessible widget names
+- [x] Users can pick Match mode scope (entire vault or specific stacks), filter (All, Due first, Least familiar), and pair count (4, 6, 8 pairs)
+- [x] The HUD distinguishes Restart (reshuffle current round) from New round (deal fresh pairs) and fixes the Exit button tooltip
+- [x] The tile grid fills and centers within the viewport cleanly, wraps or truncates long card text inside tile bounds with full-text hover preview, and shows an honest empty state when fewer than 2 valid pairs exist
+- [x] Headless UI tests verify scope switching, round dealing, empty state, and accessible widget names
 
 ## Design Notes
 - Use only `palette_of(ui)` / `style_of` tokens and keep every file $\le 250$ LOC (Invariant P6).

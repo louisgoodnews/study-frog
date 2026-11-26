@@ -80,4 +80,6 @@ pub enum Effect {
     Classroom(crate::classroom_types::ClassroomEffect),
     /// The setup wizard's probe of the models folder and its MiniLM download (STORY-0212).
     Wizard(crate::view::wizard::types::WizardEffect),
+    /// Match mode vault pair loading (EPIC-075).
+    Match(crate::match_ui::MatchEffect),
 }

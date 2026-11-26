@@ -82,6 +82,7 @@ pub mod library_keys;
 mod library_pdfs;
 pub mod library_search;
 pub mod library_table;
+mod match_controls;
 pub mod match_grid;
 mod match_victory;
 mod math_view;

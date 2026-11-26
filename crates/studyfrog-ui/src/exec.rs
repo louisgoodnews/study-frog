@@ -118,6 +118,7 @@ pub fn execute(w: &mut Worker, effect: Effect, now_ns: i64) -> Vec<Msg> {
             comment,
         )) => exec_doc::append_rehearsal_comment_msg(w, uid, comment, now_ns),
         Effect::Exam(e) => crate::exec_exam::execute(w, e, now_ns),
+        Effect::Match(e) => run_match(w, e, now_ns),
     };
     vec![msg]
 }
@@ -169,4 +170,25 @@ fn search(w: &Worker, query: String) -> Msg {
         None => Ok(Vec::new()),
     };
     Msg::Chrome(ChromeMsg::SearchResults(query, result))
+}
+
+fn run_match(w: &Worker, effect: crate::match_ui::MatchEffect, now_ns: i64) -> Msg {
+    let crate::match_ui::MatchEffect::LoadPairs {
+        stack_folder,
+        filter,
+    } = effect;
+    let res = match &w.session {
+        Some(session) => studyfrog_service::match_pairs::load_match_pairs(
+            session,
+            &studyfrog_service::match_pairs::MatchPairRequest {
+                stack_folder,
+                filter,
+                now: UnixMs(now_ns / 1_000_000),
+            },
+        )
+        .map(|pool| pool.pairs)
+        .map_err(|e| e.to_string()),
+        None => Ok(Vec::new()),
+    };
+    Msg::Match(crate::match_ui::MatchMsg::PairsLoaded(res))
 }

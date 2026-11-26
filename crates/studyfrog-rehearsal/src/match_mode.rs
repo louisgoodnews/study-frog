@@ -98,7 +98,7 @@ pub fn match_session_new(
     start_t_ms: u32,
     seed: u64,
 ) -> MatchModeSession {
-    let take_count = pairs.len().min(6);
+    let take_count = pairs.len().min(8);
     let mut tiles = Vec::with_capacity(take_count * 2);
     for (pair_id, (prompt, answer)) in pairs.iter().take(take_count).enumerate() {
         push_tile(&mut tiles, pair_id, prompt.clone(), TileKind::Prompt);

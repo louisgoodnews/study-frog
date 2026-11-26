@@ -86,6 +86,7 @@ pub mod learn_mode_store;
 pub mod learn_run;
 pub mod library_rows;
 pub mod logging;
+pub mod match_pairs;
 pub mod mcp_client_io;
 pub mod mcp_servers;
 pub mod mcp_staging;
