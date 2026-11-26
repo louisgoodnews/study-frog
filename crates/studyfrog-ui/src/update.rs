@@ -114,6 +114,7 @@ fn step(state: State, msg: Msg) -> (State, Vec<Effect>) {
         | Msg::Graph(MsgGraph::GraphZoom(_))
         | Msg::Graph(MsgGraph::GraphHover(_))
         | Msg::Graph(MsgGraph::GraphRestart)
+        | Msg::Graph(MsgGraph::Section(_))
         | Msg::Graph(MsgGraph::GraphClick(_))) => crate::graph::update(state, graph),
         edit @ (Msg::Browse(MsgBrowse::OpenItem(_))
         | Msg::Editor(MsgEditor::DocumentLoaded(..))

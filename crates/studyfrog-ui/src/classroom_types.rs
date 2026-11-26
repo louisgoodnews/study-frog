@@ -24,6 +24,16 @@ pub struct SavedSession {
     pub tasks: usize,
 }
 
+/// The parts of the Classroom screen before a session starts, which the rail switches between.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum ClassroomSection {
+    /// Start a new session.
+    #[default]
+    Setup,
+    /// Resume, export or delete a saved session.
+    Saved,
+}
+
 /// What the Classroom screen remembers between frames.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct ClassroomState {
@@ -51,6 +61,8 @@ pub struct ClassroomState {
     pub error: Option<String>,
     /// The assignment open in the task drawer, if one is.
     pub open_task: Option<Uid>,
+    /// The part of the screen the rail shows before a session starts.
+    pub section: ClassroomSection,
     /// The answer being drafted for each assignment, not yet turned in.
     pub drafts: Vec<(Uid, String)>,
     /// The composer text for the open task's group thread.
@@ -106,6 +118,8 @@ pub enum SavedEffect {
 /// A message of the Classroom screen.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ClassroomMsg {
+    /// The rail selected this part of the screen.
+    Section(ClassroomSection),
     /// An action on the saved sessions, or the list read back.
     Saved(SavedMsg),
     /// The session title was edited.

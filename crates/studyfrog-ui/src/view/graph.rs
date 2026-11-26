@@ -1,6 +1,8 @@
 //! The link graph canvas: nodes and edges drawn from the screen positions computed in `update`.
 use crate::msg::MsgBrowse;
 use crate::msg::MsgGraph;
+use crate::msg::graph::GraphSection;
+use crate::view::rail;
 
 use eframe::egui::{self, Color32, Pos2, Sense, Stroke};
 use studyfrog_core::plan::ItemKind;
@@ -28,7 +30,21 @@ fn kind_color(p: &crate::theme::Palette, kind: ItemKind) -> Color32 {
     }
 }
 
-/// The headline, the stats card, the canvas and the accessible item list.
+/// The rail: the drawn graph, or the same items as a list.
+const SECTIONS: [rail::Item<GraphSection>; 2] = [
+    (
+        GraphSection::Map,
+        "Map",
+        "Shows the items as a drawn graph.",
+    ),
+    (
+        GraphSection::List,
+        "List",
+        "Shows the items as a list you can read and open.",
+    ),
+];
+
+/// The headline, the rail, the stats card, then the map or the list.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let _timer = studyfrog_debug::timed("ui", "graph draw");
     studyfrog_log::log_debug!("ui", "graph shown");
@@ -38,6 +54,10 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.label("Loading the graph…");
         return;
     };
+    if let Some(section) = rail::buttons(ui, &SECTIONS, g.section) {
+        out.push(Msg::Graph(MsgGraph::Section(section)));
+    }
+    ui.add_space(6.0);
     let (n, m) = (g.graph.nodes.len(), g.graph.edges.len());
     home_hero::card(ui, |ui| {
         ui.horizontal(|ui| {
@@ -56,12 +76,17 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         ui.label("There are no items yet.");
         return;
     }
-    canvas(g, ui, out);
-    ui.add_space(6.0);
-    if let Some(i) = g.hovered {
-        ui.label(format!("Pointing at: {}", g.graph.nodes[i].title));
+    match g.section {
+        GraphSection::Map => {
+            canvas(g, ui, out);
+            ui.add_space(6.0);
+            if let Some(i) = g.hovered {
+                ui.label(format!("Pointing at: {}", g.graph.nodes[i].title));
+            }
+            item_list(g, ui, out, false);
+        }
+        GraphSection::List => item_list(g, ui, out, true),
     }
-    item_list(g, ui, out);
 }
 
 /// The screen title on the gradient panel (EPIC-070).
@@ -164,26 +189,28 @@ fn paint(g: &GraphState, ui: &egui::Ui, rect: egui::Rect) {
 }
 
 /// The canvas cannot be read by a screen reader, so the same items are offered as links.
-fn item_list(g: &GraphState, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
-    ui.collapsing("Items as a list", |ui| {
-        egui::ScrollArea::vertical()
-            .max_height(160.0)
-            .show(ui, |ui| {
-                for node in g.graph.nodes.iter().take(LIST_LIMIT) {
-                    if ui
-                        .link(&node.title)
-                        .on_hover_text("Opens this item.")
-                        .clicked()
-                    {
-                        out.push(Msg::Browse(MsgBrowse::OpenItem(node.uid)));
+fn item_list(g: &GraphState, ui: &mut egui::Ui, out: &mut Vec<Msg>, open: bool) {
+    egui::CollapsingHeader::new("Items as a list")
+        .default_open(open)
+        .show(ui, |ui| {
+            egui::ScrollArea::vertical()
+                .max_height(160.0)
+                .show(ui, |ui| {
+                    for node in g.graph.nodes.iter().take(LIST_LIMIT) {
+                        if ui
+                            .link(&node.title)
+                            .on_hover_text("Opens this item.")
+                            .clicked()
+                        {
+                            out.push(Msg::Browse(MsgBrowse::OpenItem(node.uid)));
+                        }
                     }
-                }
-                if g.graph.nodes.len() > LIST_LIMIT {
-                    ui.weak(format!(
-                        "… and {} more (use the graph or the stack browser)",
-                        g.graph.nodes.len() - LIST_LIMIT
-                    ));
-                }
-            });
-    });
+                    if g.graph.nodes.len() > LIST_LIMIT {
+                        ui.weak(format!(
+                            "… and {} more (use the graph or the stack browser)",
+                            g.graph.nodes.len() - LIST_LIMIT
+                        ));
+                    }
+                });
+        });
 }

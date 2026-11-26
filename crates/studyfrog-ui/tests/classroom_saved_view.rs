@@ -49,6 +49,7 @@ fn the_browser_lists_each_saved_session_with_its_title_topic_date_and_counts() {
 
     let mut m = m;
     m.state.screen = Screen::Classroom;
+    m.state.classroom.section = studyfrog_ui::classroom_types::ClassroomSection::Saved;
     let h = sized(m, 960.0, 640.0);
     assert!(
         h.query_by_label("Resume Classroom").is_some(),
@@ -66,6 +67,7 @@ fn an_empty_browser_says_so_and_shows_no_rows() {
     let (_vault, mut m, _w) = common::flow::opened("classroom-browser-empty");
     assert!(m.state.classroom.saved.is_empty());
     m.state.screen = Screen::Classroom;
+    m.state.classroom.section = studyfrog_ui::classroom_types::ClassroomSection::Saved;
     let h = sized(m, 960.0, 640.0);
     assert!(h.query_by_label_contains("No saved sessions yet").is_some());
     assert!(h.query_by_label("Resume Classroom").is_none());
@@ -77,6 +79,7 @@ fn the_browser_fits_phone_and_desktop_widths_without_horizontal_overflow() {
         let (_vault, m, _w, _cfg) = saved_one();
         let mut m = m;
         m.state.screen = Screen::Classroom;
+        m.state.classroom.section = studyfrog_ui::classroom_types::ClassroomSection::Saved;
         // A phone has no room for the 150-point screen list beside the form, so it is folded away.
         m.state.chrome.sidebar_hidden = w_px < 720.0;
         let h = sized(m, w_px, h_px);

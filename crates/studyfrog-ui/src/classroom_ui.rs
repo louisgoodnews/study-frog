@@ -24,6 +24,10 @@ pub fn update(mut state: State, msg: ClassroomMsg) -> (State, Vec<Effect>) {
 
 fn apply(state: &mut State, msg: ClassroomMsg) -> Vec<Effect> {
     match msg {
+        ClassroomMsg::Section(section) => {
+            state.classroom.section = section;
+            Vec::new()
+        }
         ClassroomMsg::Title(title) => {
             state.classroom.title = title;
             Vec::new()

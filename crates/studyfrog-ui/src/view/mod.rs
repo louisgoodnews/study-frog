@@ -131,6 +131,7 @@ mod preview_rich;
 mod profiles;
 mod prompts_header;
 mod prompts_screen;
+pub mod rail;
 mod redesign_parts;
 mod report_cmrr;
 mod report_pacer;

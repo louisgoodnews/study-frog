@@ -34,6 +34,8 @@ pub struct GraphState {
     pub seed: u64,
     /// Pan and zoom.
     pub view: View,
+    /// The part of the screen the rail shows.
+    pub section: crate::msg::graph::GraphSection,
     /// Screen x of each node relative to the canvas centre (written every frame).
     pub sx: Vec<f32>,
     /// Screen y of each node relative to the canvas centre.
@@ -66,6 +68,7 @@ fn graph_state(graph: LinkGraph, seed: u64, previous: Option<&GraphState>) -> Gr
         params,
         seed,
         view,
+        section: previous.map_or_else(Default::default, |o| o.section),
         sx: vec![0.0; n],
         sy: vec![0.0; n],
         steps: 0,
@@ -131,6 +134,9 @@ pub fn update(state: State, msg: Msg) -> (State, Vec<Effect>) {
             (with_graph(state, |g| g.hovered = node), Vec::new())
         }
         Msg::Graph(MsgGraph::GraphRestart) => (with_graph(state, restart), Vec::new()),
+        Msg::Graph(MsgGraph::Section(section)) => {
+            (with_graph(state, |g| g.section = section), Vec::new())
+        }
         Msg::Graph(MsgGraph::GraphClick(i)) => click(state, i),
         _ => (state, Vec::new()),
     }

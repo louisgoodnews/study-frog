@@ -148,6 +148,7 @@ fn delete_waits_for_confirmation_and_removes_the_session_only_when_confirmed() {
 fn the_browser_buttons_ask_the_right_effects_and_delete_waits_for_the_confirm_button() {
     let (_vault, mut m, _w, _cfg) = saved_one();
     m.state.screen = Screen::Classroom;
+    m.state.classroom.section = studyfrog_ui::classroom_types::ClassroomSection::Saved;
     let id = first_id(&m);
     let mut h = sized(m, 960.0, 640.0);
 

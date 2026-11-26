@@ -1,6 +1,8 @@
 //! The Classroom screen (TASK-0293, TASK-0294): the session form until a session is started, then the
 //! lecture chat beside the assignments panel. Below the wide breakpoint the panel stacks under the chat.
 
+use crate::classroom_types::{ClassroomMsg, ClassroomSection};
+use crate::view::rail;
 use eframe::egui::{self, RichText};
 
 use crate::msg::Msg;
@@ -35,15 +37,32 @@ fn headline(ui: &mut egui::Ui) {
     });
 }
 
-/// The session form, then the saved sessions below it, in one scrolling column.
+/// The rail: the session form, or the saved sessions.
+const SECTIONS: [rail::Item<ClassroomSection>; 2] = [
+    (
+        ClassroomSection::Setup,
+        "Set up",
+        "Starts a new lecture session.",
+    ),
+    (
+        ClassroomSection::Saved,
+        "Saved sessions",
+        "Resumes, exports or deletes a saved session.",
+    ),
+];
+
+/// The rail, then the session form or the saved sessions, whichever it selects.
 fn setup_and_saved(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    if let Some(section) = rail::buttons(ui, &SECTIONS, state.classroom.section) {
+        out.push(Msg::Classroom(ClassroomMsg::Section(section)));
+    }
+    ui.add_space(8.0);
     egui::ScrollArea::vertical()
         .id_salt("classroom-setup")
         .auto_shrink([false, false])
-        .show(ui, |ui| {
-            super::classroom_setup::draw(state, ui, out);
-            ui.add_space(12.0);
-            super::classroom_saved::draw(state, ui, out);
+        .show(ui, |ui| match state.classroom.section {
+            ClassroomSection::Setup => super::classroom_setup::draw(state, ui, out),
+            ClassroomSection::Saved => super::classroom_saved::draw(state, ui, out),
         });
 }
 

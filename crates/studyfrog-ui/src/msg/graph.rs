@@ -2,9 +2,21 @@
 
 use studyfrog_store::overview::LinkGraph;
 
+/// The parts of the link graph screen that the rail switches between.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum GraphSection {
+    /// The drawn graph.
+    #[default]
+    Map,
+    /// The items as a list that can be read and opened.
+    List,
+}
+
 /// Link graph canvas messages.
 #[derive(Debug, Clone, PartialEq)]
 pub enum MsgGraph {
+    /// The rail selected this part of the screen.
+    Section(GraphSection),
     /// The link graph was read from the index.
     GraphLoaded(Result<LinkGraph, String>),
     /// A frame of the graph canvas of this size (pixels) is being drawn.
