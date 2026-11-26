@@ -2,7 +2,7 @@
 id: TASK-0278
 type: task
 title: "Reference-run script: repeated invocations, medians and the spread rule"
-status: review
+status: done
 epic: EPIC-067
 parents: ['STORY-0201']
 estimate: 2

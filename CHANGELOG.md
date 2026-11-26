@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Changed
+- **Reference-run script closed (`TASK-0278`)**: repeated invocations, medians and the spread rule are verified against all acceptance criteria and marked `done`. The rest of the `EPIC-067` chain is unchanged.
 - **Performance benchmarking epic unblocked (`EPIC-067`)**: moved from `blocked` to `ready` now that the owner's machine is the reference (ADR 0014). `STORY-0201` and `STORY-0203` stay blocked until `TASK-0279` is tested.
 
 ## [1.4.0] - 2026-11-26
