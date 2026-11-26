@@ -234,6 +234,7 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
   - [x] [STORY-0245](docs/issues/stories/STORY-0245-match-mode-scope-picker-responsive-grid-and-empty-state.md) Match mode scope picker, responsive tile grid, and empty state ([TASK-0302](docs/issues/tasks/TASK-0302-match-scope-selector-pair-count-and-new-round-hud.md), [TASK-0303](docs/issues/tasks/TASK-0303-responsive-match-tile-grid-and-empty-state.md), [TASK-0304](docs/issues/tasks/TASK-0304-headless-ui-and-service-tests-for-match-mode.md))
 - [ ] [STORY-0249](docs/issues/stories/STORY-0249-question-and-answer-type-import-verification.md) / [TASK-0312](docs/issues/tasks/TASK-0312-audit-question-and-answer-type-imports.md) Audit and verify Question and answer-type (`open`, `single`, `multiple`, `case`, `cloze`) imports across all formats
 - [ ] [BUG-0060](docs/issues/bugs/BUG-0060-duplicate-hover-tooltips-on-buttons.md) Duplicate hover tooltips on certain buttons (e.g. Rehearse `Show answer (Space)`)
+- [ ] [STORY-0250](docs/issues/stories/STORY-0250-expand-text-wrapping-to-full-width.md) / [TASK-0313](docs/issues/tasks/TASK-0313-full-width-text-wrapping-in-preview-and-rehearse.md) Expand text wrapping to full available card/container width (Rehearse cards, previews, editors)
 
 ## Planned: v1.4.0 (Exam Scheduler)
 - [ ] [EPIC-076](docs/issues/epics/EPIC-076-exam-scheduler-with-adaptive-preparation-window.md) Exam scheduler: automatically schedule exam-linked stacks and items within a user-set or stats-proposed week window
