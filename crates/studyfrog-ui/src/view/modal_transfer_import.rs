@@ -59,77 +59,79 @@ fn destination_menu(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
 pub fn import_tab(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let t = &state.transfer;
 
-    let room = (ui.ctx().content_rect().height() - 140.0).max(200.0);
-    egui::ScrollArea::vertical()
-        .max_height(room)
-        .auto_shrink([false, true])
-        .show(ui, |ui| {
-            crate::view::kit::card(ui, |ui| {
-                ui.set_width(ui.available_width());
-                super::modal_found::found(state, ui, out);
-                super::modal_formats::formats(ui, out);
-            });
-            ui.add_space(6.0);
-            crate::view::kit::card(ui, |ui| {
-                ui.set_width(ui.available_width());
-                if let Some(text) =
-                    text_field(ui, "File or folder to import", &t.path, "/path/to/file", 1)
-                {
-                    send(out, TransferMsg::Path(text));
-                }
-                if let Some(name) = &t.new_stack
-                    && let Some(text) =
-                        text_field(ui, "New stack name", name, "e.g. Spanish/verbs", 1)
-                {
-                    send(out, TransferMsg::NewStackName(text));
-                }
-                if !t.path.trim().is_empty() {
-                    let is_dir = std::path::Path::new(t.path.trim()).is_dir();
-                    let described =
-                        studyfrog_service::xfer_adapters::describe_input(&t.path, is_dir);
-                    ui.weak(described);
-                }
+    crate::view::kit::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        super::modal_found::found(state, ui, out);
+        super::modal_formats::formats(ui, out);
+    });
+    ui.add_space(6.0);
+    crate::view::kit::card(ui, |ui| {
+        ui.set_width(ui.available_width());
+        if let Some(text) = text_field(ui, "File or folder to import", &t.path, "/path/to/file", 1)
+        {
+            send(out, TransferMsg::Path(text));
+        }
+        if let Some(name) = &t.new_stack
+            && let Some(text) = text_field(ui, "New stack name", name, "e.g. Spanish/verbs", 1)
+        {
+            send(out, TransferMsg::NewStackName(text));
+        }
+        if !t.path.trim().is_empty() {
+            let is_dir = std::path::Path::new(t.path.trim()).is_dir();
+            let described = studyfrog_service::xfer_adapters::describe_input(&t.path, is_dir);
+            ui.weak(described);
+        }
 
-                ui.add_space(4.0);
-                ui.horizontal_wrapped(|ui| {
-                    if ui
-                        .add(egui::Button::new("Choose file…").min_size(vec2(110.0, 28.0)))
-                        .on_hover_text("Opens a dialog to pick a file.")
-                        .clicked()
-                    {
-                        send(out, TransferMsg::Browse(true, false));
-                    }
-                    ui.add_space(4.0);
-                    if ui
-                        .add(egui::Button::new("Choose folder…").min_size(vec2(120.0, 28.0)))
-                        .on_hover_text("Opens a dialog to pick a folder.")
-                        .clicked()
-                    {
-                        send(out, TransferMsg::Browse(true, true));
-                    }
-                    ui.add_space(8.0);
-                    destination_menu(state, ui, out);
-                    ui.add_space(8.0);
+        ui.add_space(4.0);
+        ui.horizontal_wrapped(|ui| {
+            if ui
+                .add(egui::Button::new("Choose file…").min_size(vec2(110.0, 28.0)))
+                .on_hover_text("Opens a dialog to pick a file.")
+                .clicked()
+            {
+                send(out, TransferMsg::Browse(true, false));
+            }
+            ui.add_space(4.0);
+            if ui
+                .add(egui::Button::new("Choose folder…").min_size(vec2(120.0, 28.0)))
+                .on_hover_text("Opens a dialog to pick a folder.")
+                .clicked()
+            {
+                send(out, TransferMsg::Browse(true, true));
+            }
+            ui.add_space(8.0);
+            destination_menu(state, ui, out);
+            ui.add_space(8.0);
 
-                    let can_preview = !t.busy && !t.path.trim().is_empty();
-                    let preview_btn = egui::Button::new(
-                        RichText::new("Preview")
-                            .strong()
-                            .size(crate::typo::size(ui, crate::typo::Tier::Body)),
-                    )
-                    .fill(palette_of(ui).surface_hover)
-                    .min_size(vec2(90.0, 28.0));
+            let can_preview = !t.busy && !t.path.trim().is_empty();
+            let preview_btn = egui::Button::new(
+                RichText::new("Preview")
+                    .strong()
+                    .size(crate::typo::size(ui, crate::typo::Tier::Body)),
+            )
+            .fill(palette_of(ui).surface_hover)
+            .min_size(vec2(90.0, 28.0));
 
-                    if ui
-                        .add_enabled(can_preview, preview_btn)
-                        .on_hover_text("Shows what the import would do, without writing anything.")
-                        .clicked()
-                    {
-                        send(out, TransferMsg::Preview);
-                    }
-                });
-            });
-
-            super::modal_transfer_preview::preview(state, ui, out);
+            if ui
+                .add_enabled(can_preview, preview_btn)
+                .on_hover_text("Shows what the import would do, without writing anything.")
+                .clicked()
+            {
+                send(out, TransferMsg::Preview);
+            }
         });
+    });
+
+    if t.preview.is_some() {
+        let room = (ui.ctx().content_rect().height() - 360.0).max(160.0);
+        egui::ScrollArea::vertical()
+            .id_salt("transfer-preview-scroll")
+            .max_height(room)
+            .auto_shrink([false, true])
+            .show(ui, |ui| {
+                super::modal_transfer_preview::preview(state, ui, out);
+            });
+    } else {
+        super::modal_transfer_preview::preview(state, ui, out);
+    }
 }

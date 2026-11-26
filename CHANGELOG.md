@@ -7,6 +7,12 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-26
+
+### Added
+- **Exam Scheduler with adaptive preparation window (`EPIC-076`, `STORY-0246`, `STORY-0247`, `STORY-0248`)**: added exam-to-item linkage (`ExamPlan`, `ExamPlanRow`, `ExamLink`) with SQLite persistence, a stats-driven adaptive preparation-window estimator and windowed item scheduler (`studyfrog-calendar`), an Exam Scheduler modal with workload preview and manual/auto week-window configuration, and integration across Calendar, Home, and Rehearsal.
+- **Personalized WIP item-complexity warnings (`EPIC-077`, `STORY-0252`)**: added a retention-complexity baseline estimator (`studyfrog-report::complexity_baseline`, `studyfrog-service::complexity`) computed from the user's reviewed vault items, and surfaced a live, dismissible complexity guardrail banner in the Create an item modal when a work-in-progress Card or Question exceeds the complexity the user usually retains.
+
 ## [1.3.0] - 2026-11-26
 
 ### Added

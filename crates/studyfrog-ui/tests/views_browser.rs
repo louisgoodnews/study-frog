@@ -104,7 +104,7 @@ fn the_new_stack_button_opens_the_dialog_for_a_stack() {
     let mut h = harness(stack_open());
     h.run();
     h.get_by_label("New stack…").click();
-    h.run();
+    h.run_steps(6);
     assert!(
         matches!(&h.state().0.state.modal, Some(studyfrog_ui::modal::Modal::Create(f)) if f.kind == studyfrog_service::create_more::NewKind::Stack),
         "the button opens the dialog for a stack"

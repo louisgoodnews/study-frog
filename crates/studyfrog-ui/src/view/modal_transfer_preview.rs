@@ -116,9 +116,10 @@ pub fn preview(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     }
 
     ui.add_space(4.0);
+    let preview_height = (ui.ctx().content_rect().height() - 600.0).clamp(60.0, 140.0);
     egui::ScrollArea::vertical()
         .id_salt("preview-items-scroll")
-        .max_height(140.0)
+        .max_height(preview_height)
         .show(ui, |ui| {
             for l in &p.lines {
                 line_item(ui, &l.title, &l.folder, &l.verdict);

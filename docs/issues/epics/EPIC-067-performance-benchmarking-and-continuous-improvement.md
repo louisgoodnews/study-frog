@@ -2,7 +2,7 @@
 id: EPIC-067
 type: epic
 title: "Performance benchmarking and continuous improvement"
-status: blocked
+status: ready
 parents: []
 labels: [m14, perf, tooling]
 acceptance_criteria:
@@ -37,7 +37,7 @@ Make performance a routine check instead of an occasional one:
 
 ## Dependencies
 
-Blocked: The owner's local machine (reference runs and baselines, see STORY-0201 and STORY-0203).
+Unblocked 2026-11-26 by the owner: EPIC-067 is ready again. The owner's local machine is the reference (ADR 0014); its reference runs and baselines are tracked in STORY-0201 and STORY-0203, which stay blocked until TASK-0279 is tested.
 
 The existing benchmarks in the eight crates that have them (`studyfrog-srs`, `studyfrog-store`, `studyfrog-graph`, `studyfrog-rehearsal`, `studyfrog-report`, `studyfrog-slm`, `studyfrog-pdf`). The owner's local machine, on a schedule (see Decisions).
 

@@ -195,6 +195,12 @@ fn settings_list_the_sections_and_set_the_slow_answer_notice() {
 #[test]
 fn match_is_inactive_until_started_and_then_has_tiles() {
     let (vault, logs) = (sample_vault("ctl-match"), temp_dir("ctl-match-logs"));
+    // Match mode deduplicates identical pairs; give `b.md` distinct content so 2+ pairs exist.
+    std::fs::write(
+        vault.path.join("french/b.md"),
+        "---\nid: 0000000000000000000000000B\nkind: card\ntitle: B\n---\nq2\n???\na2\n",
+    )
+    .unwrap();
     let mut e = engine(&vault.path, &logs.path, policy_default());
     assert_eq!(ask(&mut e, "match")["result"]["active"], false);
     let started = ask(&mut e, "match start");
