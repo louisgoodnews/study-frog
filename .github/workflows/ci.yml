@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
 
+# Debug info off: the runner's disk cannot hold the linked debug test binaries (the linker failed with a bus error on release 1.1.0).
+env:
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
+
 jobs:
   check:
     runs-on: ubuntu-latest
