@@ -235,6 +235,7 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 - [x] [STORY-0249](docs/issues/stories/STORY-0249-question-and-answer-type-import-verification.md) / [TASK-0312](docs/issues/tasks/TASK-0312-audit-question-and-answer-type-imports.md) Audit and verify Question and answer-type (`open`, `single`, `multiple`, `case`, `cloze`) imports across all formats
 - [x] [BUG-0060](docs/issues/bugs/BUG-0060-duplicate-hover-tooltips-on-buttons.md) Duplicate hover tooltips on certain buttons (e.g. Rehearse `Show answer (Space)`)
 - [x] [STORY-0250](docs/issues/stories/STORY-0250-expand-text-wrapping-to-full-width.md) / [TASK-0313](docs/issues/tasks/TASK-0313-full-width-text-wrapping-in-preview-and-rehearse.md), [TASK-0314](docs/issues/tasks/TASK-0314-prevent-diary-rating-pills-crushing-on-right-edge.md) Expand text wrapping to full available card/container width and prevent right-edge pill crushing (Rehearse cards, previews, editors, Diary pills)
+- [ ] [STORY-0251](docs/issues/stories/STORY-0251-rehearse-setup-preset-highlight-and-item-limit.md) / [TASK-0315](docs/issues/tasks/TASK-0315-highlight-rehearse-preset-and-enforced-item-limit.md) Highlight active Rehearse setup preset and streamline/enforce run item limit
 
 ## Planned: v1.4.0 (Exam Scheduler)
 - [ ] [EPIC-076](docs/issues/epics/EPIC-076-exam-scheduler-with-adaptive-preparation-window.md) Exam scheduler: automatically schedule exam-linked stacks and items within a user-set or stats-proposed week window
