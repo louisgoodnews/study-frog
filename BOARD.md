@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (5) | Ready (1) | In progress (1/3) | Review (30) | Blocked (2) | Done (660) |
+| Backlog (5) | Ready (1) | In progress (1/3) | Review (29) | Blocked (2) | Done (661) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -605,7 +605,7 @@
 | [STORY-0228](docs/issues/stories/STORY-0228-calendar-and-board-in-the-redesign-style.md) Calendar and Board in the redesign style (5) | review | 0/0 |
 | [STORY-0229](docs/issues/stories/STORY-0229-diary-and-achievements-in-the-redesign-style.md) Diary and Achievements in the redesign style (3) | review | 0/0 |
 | [STORY-0230](docs/issues/stories/STORY-0230-graph-assistant-and-classroom-in-the-redesign-style.md) Graph, Assistant and Classroom in the redesign style (5) | review | 0/0 |
-| [STORY-0231](docs/issues/stories/STORY-0231-swappable-grading-for-choice-questions.md) Swappable grading for multiple choice and multiple select: all-or-nothing, Zapechelnyuk, or count-based partial credit (5) | review | 0/0 |
+| [STORY-0231](docs/issues/stories/STORY-0231-swappable-grading-for-choice-questions.md) Swappable grading for multiple choice and multiple select: all-or-nothing, Zapechelnyuk, or count-based partial credit (5) | done | 0/0 |
 | [STORY-0232](docs/issues/stories/STORY-0232-welcome-vault-chooser-in-the-redesign-style.md) Welcome (vault chooser) in the redesign style (3) | review | 0/0 |
 | [STORY-0233](docs/issues/stories/STORY-0233-folders-in-the-redesign-style.md) Folders in the redesign style (3) | review | 0/0 |
 | [STORY-0234](docs/issues/stories/STORY-0234-item-editor-in-the-redesign-style.md) Item editor (Editor screen) in the redesign style (5) | review | 0/0 |
@@ -703,7 +703,7 @@
 | [EPIC-069](docs/issues/epics/EPIC-069-first-run-setup-wizard.md) First-run setup wizard: vault, local model (Ollama), remote provider and the MiniLM model | backlog | 0/1 |
 | [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark) | in_progress | 4/6 |
 | [EPIC-071](docs/issues/epics/EPIC-071-in-house-logging-and-debugging.md) In-house logging and debugging: studyfrog-log and studyfrog-debug, written without external crates | done | 1/1 |
-| [EPIC-072](docs/issues/epics/EPIC-072-choice-questions-single-and-multiple-select.md) Choice questions in rehearsal: single choice and multiple select | backlog | 4/8 |
+| [EPIC-072](docs/issues/epics/EPIC-072-choice-questions-single-and-multiple-select.md) Choice questions in rehearsal: single choice and multiple select | backlog | 5/8 |
 | [EPIC-073](docs/issues/epics/EPIC-073-whole-app-redesign-with-a-new-theme.md) Whole-app redesign with a new theme: a new palette, applied to every screen | backlog | 3/19 |
 | [EPIC-074](docs/issues/epics/EPIC-074-nautilus-style-folders-view-redesign.md) Folders view redesign: Nautilus/Thunar-style file manager with view switcher, icon grid, detailed list, and sorting | done | 0/0 |
 | [EPIC-075](docs/issues/epics/EPIC-075-usable-match-mode-sourced-from-vault-flashcards.md) Make Match mode usable: source real front/back pairs from vault flashcards and questions with stack selection and playable tile layout | done | 2/2 |

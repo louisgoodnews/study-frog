@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Changed
+- **Zapechelnyuk credit is 1/k (`STORY-0231`)**: as published, a choice with several options earns 1/k when at least one chosen option is correct. The 2026-11-25 full-credit override is removed on the owner's choice, and the story is marked `done`.
 - **Rails on Settings, Graph and Classroom (`STORY-0227`, `STORY-0230`)**: the Settings tabs, the Graph (map or list) and the Classroom (set up or saved sessions) use a shared navigation rail with hover text. The Classroom saved browser is behind its rail button; the Graph's accessible item list stays under the map.
 - **Reference-run script closed (`TASK-0278`)**: repeated invocations, medians and the spread rule are verified against all acceptance criteria and marked `done`. The rest of the `EPIC-067` chain is unchanged.
 - **Review items closed (`STORY-0221`, `STORY-0225`)**: choice grading and recording in rehearsal, and the file split with the merged rehearsal code fix, verified against their acceptance criteria and marked `done`.

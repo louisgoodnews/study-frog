@@ -2,7 +2,7 @@
 id: STORY-0231
 type: story
 title: "Swappable grading for multiple choice and multiple select: all-or-nothing, Zapechelnyuk, or count-based partial credit"
-status: review
+status: done
 epic: EPIC-072
 parents: ['EPIC-072']
 estimate: 5
@@ -27,12 +27,12 @@ item's maximum by the fraction; the suggested rating follows the fraction (full 
 The scheme is chosen by a global setting.
 
 ## Acceptance Criteria
-- [ ] Three pure grading schemes
-- [ ] Zapechelnyuk rule as published, applied to several correct options as chosen (1/k when any correct option is chosen)
-- [ ] Count-based partial credit, never below zero
-- [ ] Global setting; all-or-nothing by default
-- [ ] Grade text states the scheme and the fraction; recorded score and rating follow it
-- [ ] Unit tests for each scheme, single and multiple, at the boundaries
+- [x] Three pure grading schemes
+- [x] Zapechelnyuk rule as published, applied to several correct options as chosen (1/k when any correct option is chosen)
+- [x] Count-based partial credit, never below zero
+- [x] Global setting; all-or-nothing by default
+- [x] Grade text states the scheme and the fraction; recorded score and rating follow it
+- [x] Unit tests for each scheme, single and multiple, at the boundaries
 
 ## Design Notes
 - Zapechelnyuk, per the owner's choice: credit 1/k when any correct option is chosen, k being the number of options chosen.
