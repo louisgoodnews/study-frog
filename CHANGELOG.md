@@ -7,6 +7,20 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-26
+
+### Added
+- **Usable vault-sourced Match mode (`EPIC-075`, `STORY-0244`, `STORY-0245`)**: Match mode now loads real `Card` front/back and `Question` prompt/answer pairs from the active vault via `studyfrog-service::match_pairs` (with Markdown stripping, deduplication, and stack/due/familiarity filtering) instead of hardcoded biology demo cards; adds a scope selector (`Entire vault` / specific stack), filter (`All`, `Due first`, `Least familiar`), pair-count selector (`4`, `6`, `8` pairs), distinct **Restart** vs **New round** HUD actions, corrected **Exit** tooltip, responsive centered tile grid with `Prompt`/`Answer` badges and full-text hover tooltips, and an honest empty state when fewer than 2 valid pairs exist.
+- **Horizontal scroll helper (`STORY-0243`)**: added reusable `kit::hscroll` (`ScrollArea::horizontal`) for constrained single-line strips such as long vault-relative item paths.
+- **Rehearse setup preset highlight and run item-limit chips (`STORY-0251`, `TASK-0315`)**: highlighted the active Rehearse setup preset in Step 2 (`How`) and added quick-pick run item-limit chips (`No limit`, `10`, `20`, `30`, `50`) with inline validation feedback alongside the custom numeric input.
+
+### Fixed
+- **Item view cut-offs (`BUG-0059`)**: expanded the Item view gradient headline, `Title` input, and Card/Question `Front`/`Back` editors to fill the editor column cleanly (while keeping long-form Note `Body` prose at its reading measure), and widened the Details > Properties Color `#RRGGBB` input so full 7-character hex codes no longer clip.
+- **Redesign parity for missed views and modals (`BUG-0058`)**: applied redesign gradient/card framing to Items (`All items`), the Create an item modal, the Import and export modal, the Profile/Workspace popover, and the Vault switcher.
+- **Duplicate button hover tooltips (`BUG-0060`)**: removed duplicate `.on_hover_text(...)` chains on the Rehearse `Show answer` and Focus timer buttons and added a regression check.
+- **Full-width text wrapping & right-edge pill alignment (`STORY-0250`, `TASK-0313`, `TASK-0314`)**: expanded rendered Markdown prose in Rehearse cards and previews to wrap across the full available card width, and prevented Diary rating badges and `kit::pill` chips from crushing vertically at the right edge of wrapped rows.
+- **Question & answer-type import preservation (`STORY-0249`, `TASK-0312`)**: preserved `answer_type` (`open`, `single`, `multiple`) across JSON, TOML, RON, and CSV export/import round-trips and allowed choice questions without a separate reference answer during import planning and CSV parsing.
+
 ## [1.2.0] - 2026-11-26
 
 ### Added

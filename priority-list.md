@@ -225,7 +225,7 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 - [x] [BUG-0057](docs/issues/bugs/BUG-0057-home-three-columns-overflow-and-overlap-on-long-titles.md) Home screen three-column cards overflow and overlap adjacent columns on long item titles
 - [x] [EPIC-074](docs/issues/epics/EPIC-074-nautilus-style-folders-view-redesign.md) Nautilus/Thunar-style Folders view redesign (view switcher, Icon Grid, Detailed List, 8-way sorting, breadcrumbs, selection status pill)
 
-## Planned: v1.3.0 (UI Polish, Bug Fixes & Usable Match Mode)
+## Shipped in v1.3.0 (2026-11-26)
 - [x] [BUG-0058](docs/issues/bugs/BUG-0058-views-and-modals-missing-redesign-overhaul.md) Redesign overhaul for missing views and modals (Items / All items, Create an item modal, Import and export modal, Profile popover, Vault switcher)
 - [x] [BUG-0059](docs/issues/bugs/BUG-0059-item-view-title-headline-editors-and-color-input-cut-off.md) Item view cut-offs (Title input, gradient headline, Front/Back editors, Color `#RRGGBB` input)
 - [x] [STORY-0243](docs/issues/stories/STORY-0243-horizontal-scrollability-and-responsive-sizing-for-constrained-widgets.md) Horizontal scrollability and responsive sizing for constrained widgets
