@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (6) | Ready (0) | In progress (1/3) | Review (34) | Blocked (3) | Done (655) |
+| Backlog (4) | Ready (0) | In progress (1/3) | Review (34) | Blocked (3) | Done (657) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -625,7 +625,7 @@
 | [STORY-0249](docs/issues/stories/STORY-0249-question-and-answer-type-import-verification.md) Verify and preserve Question items and answer types across all import formats (3) | done | 1/1 |
 | [STORY-0250](docs/issues/stories/STORY-0250-expand-text-wrapping-to-full-width.md) Expand prose and card text wrapping to full available container width (2) | done | 2/2 |
 | [STORY-0251](docs/issues/stories/STORY-0251-rehearse-setup-preset-highlight-and-item-limit.md) Highlight active Rehearse setup preset and streamline run item-limit selection (2) | done | 1/1 |
-| [STORY-0252](docs/issues/stories/STORY-0252-warn-when-wip-item-exceeds-user-retention-complexity.md) Warn via toast or modal when a WIP new item exceeds the complexity the user usually retains (5) | backlog | 0/0 |
+| [STORY-0252](docs/issues/stories/STORY-0252-warn-when-wip-item-exceeds-user-retention-complexity.md) Warn via toast or modal when a WIP new item exceeds the complexity the user usually retains (5) | done | 0/0 |
 
 ## Epics
 
@@ -707,4 +707,4 @@
 | [EPIC-074](docs/issues/epics/EPIC-074-nautilus-style-folders-view-redesign.md) Folders view redesign: Nautilus/Thunar-style file manager with view switcher, icon grid, detailed list, and sorting | done | 0/0 |
 | [EPIC-075](docs/issues/epics/EPIC-075-usable-match-mode-sourced-from-vault-flashcards.md) Make Match mode usable: source real front/back pairs from vault flashcards and questions with stack selection and playable tile layout | done | 2/2 |
 | [EPIC-076](docs/issues/epics/EPIC-076-exam-scheduler-with-adaptive-preparation-window.md) Exam scheduler: automatically schedule exam-linked stacks and items within a user-set or stats-proposed week window | done | 3/3 |
-| [EPIC-077](docs/issues/epics/EPIC-077-personalized-item-complexity-and-authoring-coach.md) Personalized item-complexity guardrails during authoring based on user retention history | backlog | 0/1 |
+| [EPIC-077](docs/issues/epics/EPIC-077-personalized-item-complexity-and-authoring-coach.md) Personalized item-complexity guardrails during authoring based on user retention history | done | 1/1 |

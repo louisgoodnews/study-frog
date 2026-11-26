@@ -87,6 +87,17 @@ pub fn import(w: &mut Worker, e: EffectImport, now_ns: i64) -> Vec<Msg> {
         } => exec_import::create(w, now_ns, |s, i| {
             create_card_tracked(s, (&folder, &title, &front, &back), i)
         }),
+        EffectImport::LoadComplexityProfile => {
+            let prof = w.session.as_ref().and_then(|s| {
+                studyfrog_service::complexity::load_retention_complexity_profile(
+                    s,
+                    studyfrog_core::time::UnixMs(now_ns / 1_000_000),
+                )
+                .ok()
+                .flatten()
+            });
+            crate::msg::Msg::Modal(crate::modal::ModalMsg::ComplexityProfileLoaded(prof))
+        }
     };
     vec![msg]
 }

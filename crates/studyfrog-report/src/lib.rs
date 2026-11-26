@@ -6,6 +6,7 @@ pub mod calibration;
 pub mod calibration_types;
 pub mod chronotype;
 pub mod cmrr;
+pub mod complexity_baseline;
 pub mod confusion;
 pub mod difficulty;
 pub mod exam_pacer;

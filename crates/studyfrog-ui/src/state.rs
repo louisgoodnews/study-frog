@@ -205,4 +205,7 @@ pub struct State {
     pub classroom: crate::classroom_types::ClassroomState,
     /// The first-run setup wizard: open or not, its step and what its MiniLM step has read (STORY-0212).
     pub wizard: crate::view::wizard::types::WizardState,
+    /// Personalized retained-complexity baseline for WIP authoring hints (EPIC-077, STORY-0252).
+    pub complexity_profile:
+        Option<studyfrog_report::complexity_baseline::RetentionComplexityProfile>,
 }

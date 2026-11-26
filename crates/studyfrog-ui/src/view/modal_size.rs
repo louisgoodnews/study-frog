@@ -148,3 +148,22 @@ pub(super) fn discard_question(ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
     });
 }
+
+/// Non-blocking complexity hint shown when a WIP draft exceeds the user's retained average (EPIC-077).
+pub(super) fn complexity_banner(warning: &str, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    let color = crate::theme::palette_of(ui).warning;
+    ui.add_space(4.0);
+    egui::Frame::group(ui.style()).show(ui, |ui| {
+        ui.set_width(ui.available_width());
+        ui.horizontal_wrapped(|ui| {
+            ui.colored_label(color, warning);
+            if ui
+                .small_button("Dismiss")
+                .on_hover_text("Hides this complexity hint for the current draft.")
+                .clicked()
+            {
+                out.push(Msg::Modal(ModalMsg::DismissComplexityWarning));
+            }
+        });
+    });
+}

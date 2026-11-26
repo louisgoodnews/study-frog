@@ -81,6 +81,10 @@ pub struct CreateForm {
     pub is_stack: bool,
     /// For a question: open text, single choice or multiple select (EPIC-072).
     pub answer_type: crate::view::choice_body::AnswerType,
+    /// Active complexity warning for this WIP draft (EPIC-077, STORY-0252).
+    pub complexity_warning: Option<String>,
+    /// Whether the user dismissed the complexity warning for the current draft.
+    pub complexity_dismissed: bool,
 }
 
 /// A field of the create dialog.
@@ -215,6 +219,12 @@ pub enum ModalMsg {
     CreatedFolder(Result<(VaultInfo, String), String>),
     /// Set whether a folder is a stack folder.
     SetIsStack(bool),
+    /// Loaded personalized item-complexity baseline from vault history (EPIC-077).
+    ComplexityProfileLoaded(
+        Option<studyfrog_report::complexity_baseline::RetentionComplexityProfile>,
+    ),
+    /// Dismiss the active WIP item-complexity warning for this draft.
+    DismissComplexityWarning,
 }
 
 /// The stacks as (folder, "Parent / Child" label), in tree order.

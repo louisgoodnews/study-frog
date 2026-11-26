@@ -2,7 +2,7 @@
 id: STORY-0252
 type: story
 title: "Warn via toast or modal when a WIP new item exceeds the complexity the user usually retains"
-status: backlog
+status: done
 epic: EPIC-077
 parents: ['EPIC-077']
 estimate: 5
@@ -28,11 +28,11 @@ Implement real-time WIP complexity warnings in the item creation flow (`modal_cr
    - Surface a calm, non-blocking toast or modal notice when the threshold is crossed, explaining the comparison against the user's own retained average, with a one-click **Dismiss** (and option to ignore for the current draft).
 
 ## Acceptance Criteria
-- [ ] A pure domain/service estimator computes the user retained-complexity baseline (word count, list/clause density, and `text_complexity` of well-retained items vs leeches) from the active vault
-- [ ] When creating a new Card or Question, StudyFrog compares the WIP draft complexity against the user baseline in real time without blocking input
-- [ ] When the WIP draft becomes significantly more complex than the user typically retains, a dismissible toast or modal banner notifies the user with a concise, data-backed explanation and option to continue or simplify/split
-- [ ] The warning triggers at most once per draft (until reset/dismissed) and stays silent when the vault lacks sufficient review history
-- [ ] Unit and headless UI tests verify baseline estimation, threshold triggering, dismissal, and accessible widget names
+- [x] A pure domain/service estimator computes the user retained-complexity baseline (word count, list/clause density, and `text_complexity` of well-retained items vs leeches) from the active vault
+- [x] When creating a new Card or Question, StudyFrog compares the WIP draft complexity against the user baseline in real time without blocking input
+- [x] When the WIP draft becomes significantly more complex than the user typically retains, a dismissible toast or modal banner notifies the user with a concise, data-backed explanation and option to continue or simplify/split
+- [x] The warning triggers at most once per draft (until reset/dismissed) and stays silent when the vault lacks sufficient review history
+- [x] Unit and headless UI tests verify baseline estimation, threshold triggering, dismissal, and accessible widget names
 
 ## Design Notes
 - Reuse `studyfrog-store::telemetry` / `library_rows` / `analytics_leech` signals without blocking the UI thread (compute baseline asynchronously on worker and cache in `State`).

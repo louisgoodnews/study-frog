@@ -223,6 +223,9 @@ pub fn create(state: &State, f: &CreateForm, ui: &mut egui::Ui, out: &mut Vec<Ms
     if f.confirm_discard {
         super::modal_size::discard_question(ui, out);
     }
+    if let Some(warn) = &f.complexity_warning {
+        super::modal_size::complexity_banner(warn, ui, out);
+    }
     ui.add_space(6.0);
     let room = (ui.ctx().content_rect().height() - 210.0).max(160.0);
     ui.style_mut().animation_time = 0.0;

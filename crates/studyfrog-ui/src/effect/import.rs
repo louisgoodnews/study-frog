@@ -49,4 +49,6 @@ pub enum EffectImport {
     /// Create a card in the stack at `folder`.
     #[rustfmt::skip]
     CreateCard { #[doc = "Folder."] folder: String, #[doc = "Title."] title: String, #[doc = "Front."] front: String, #[doc = "Back."] back: String },
+    /// Compute the user's retained-complexity baseline from reviewed vault items (EPIC-077).
+    LoadComplexityProfile,
 }

@@ -2,7 +2,7 @@
 id: EPIC-077
 type: epic
 title: "Personalized item-complexity guardrails during authoring based on user retention history"
-status: backlog
+status: done
 parents: []
 labels: [m14, analytics, service, ui]
 acceptance_criteria:
@@ -25,10 +25,10 @@ Use the user's own local retention history to provide real-time, personalized au
    - Trigger a non-blocking, dismissible toast or calm inline modal/banner once the WIP draft crosses significantly above the user's retained-complexity ceiling (e.g. `> 1.5x` their usual retained complexity), showing concrete numbers (e.g. *"This card is ~85 words; items you retain well average ~28 words — consider splitting into 2–3 focused cards"*).
 
 ## Acceptance Criteria
-- [ ] StudyFrog computes a per-user retained-complexity baseline from existing vault history (item length/word count, concept/list density, familiarity, lapse/Again rate, and telemetry `text_complexity`)
-- [ ] While authoring a new item in the Create dialog (or Editor), StudyFrog evaluates the WIP item complexity in real time without blocking typing
-- [ ] When a WIP item significantly exceeds the complexity level the user typically retains well, a calm, dismissible toast or inline warning explains why and suggests splitting it into smaller cards/questions
-- [ ] Users with insufficient review history fall back gracefully (either silent until enough data exists or a gentle general threshold) and can dismiss or disable complexity nudges
+- [x] StudyFrog computes a per-user retained-complexity baseline from existing vault history (item length/word count, concept/list density, familiarity, lapse/Again rate, and telemetry `text_complexity`)
+- [x] While authoring a new item in the Create dialog (or Editor), StudyFrog evaluates the WIP item complexity in real time without blocking typing
+- [x] When a WIP item significantly exceeds the complexity level the user typically retains well, a calm, dismissible toast or inline warning explains why and suggests splitting it into smaller cards/questions
+- [x] Users with insufficient review history fall back gracefully (either silent until enough data exists or a gentle general threshold) and can dismiss or disable complexity nudges
 
 ## Design Notes
 - Strictly local-first (Invariant P8): computed purely from the local SQLite index and Markdown vault.

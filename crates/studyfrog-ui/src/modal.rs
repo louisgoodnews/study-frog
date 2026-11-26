@@ -141,13 +141,49 @@ fn click_toast(state: State, i: usize) -> (State, Vec<Effect>) {
     (state, Vec::new())
 }
 
+fn refresh_complexity(
+    mut f: CreateForm,
+    profile: Option<&studyfrog_report::complexity_baseline::RetentionComplexityProfile>,
+) -> CreateForm {
+    if f.complexity_dismissed || !matches!(f.kind, NewKind::Card | NewKind::Question) {
+        f.complexity_warning = None;
+        return f;
+    }
+    f.complexity_warning = profile
+        .and_then(|p| {
+            studyfrog_report::complexity_baseline::check_wip_complexity(p, &f.text, &f.answer)
+        })
+        .map(|w| w.reason);
+    f
+}
+
 /// Handle the modal and toast messages.
 pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
     match msg {
         ModalMsg::OpenCreate => {
+            let fx = if state.complexity_profile.is_none() {
+                vec![Effect::Import(
+                    crate::effect::EffectImport::LoadComplexityProfile,
+                )]
+            } else {
+                Vec::new()
+            };
             let modal = Some(Modal::Create(form_new(&state, None)));
-            (State { modal, ..state }, Vec::new())
+            (State { modal, ..state }, fx)
         }
+        ModalMsg::ComplexityProfileLoaded(profile) => {
+            let mut st = State {
+                complexity_profile: profile,
+                ..state
+            };
+            let prof = st.complexity_profile.clone();
+            with_form(st, |f| refresh_complexity(f, prof.as_ref()))
+        }
+        ModalMsg::DismissComplexityWarning => with_form(state, |f| CreateForm {
+            complexity_warning: None,
+            complexity_dismissed: true,
+            ..f
+        }),
         ModalMsg::OpenCreateStack => {
             let modal = Some(Modal::Create(form_new(&state, Some(NewKind::Stack))));
             (State { modal, ..state }, Vec::new())
@@ -181,29 +217,35 @@ pub fn update(state: State, msg: ModalMsg) -> (State, Vec<Effect>) {
             error: None,
             ..f
         }),
-        ModalMsg::Edit(field, text) => with_form(state, |f| match field {
-            Field::Title => CreateForm {
-                title: text,
-                error: None,
-                ..f
-            },
-            Field::Text => CreateForm {
-                text,
-                error: None,
-                ..f
-            },
-            Field::Answer => CreateForm {
-                answer: text,
-                error: None,
-                ..f
-            },
-            Field::Tags => CreateForm { tags: text, ..f },
-            Field::Due => CreateForm {
-                due: text,
-                error: None,
-                ..f
-            },
-        }),
+        ModalMsg::Edit(field, text) => {
+            let prof = state.complexity_profile.clone();
+            with_form(state, |f| {
+                let updated = match field {
+                    Field::Title => CreateForm {
+                        title: text,
+                        error: None,
+                        ..f
+                    },
+                    Field::Text => CreateForm {
+                        text,
+                        error: None,
+                        ..f
+                    },
+                    Field::Answer => CreateForm {
+                        answer: text,
+                        error: None,
+                        ..f
+                    },
+                    Field::Tags => CreateForm { tags: text, ..f },
+                    Field::Due => CreateForm {
+                        due: text,
+                        error: None,
+                        ..f
+                    },
+                };
+                refresh_complexity(updated, prof.as_ref())
+            })
+        }
         ModalMsg::SetParent(parent) => with_form(state, |f| CreateForm {
             parent,
             error: None,

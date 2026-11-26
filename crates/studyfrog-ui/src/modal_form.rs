@@ -46,6 +46,8 @@ pub(crate) fn form_new(state: &State, kind: Option<NewKind>) -> CreateForm {
         confirm_discard: false,
         is_stack: true,
         answer_type: AnswerType::Open,
+        complexity_warning: None,
+        complexity_dismissed: false,
     }
 }
 

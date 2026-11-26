@@ -31,6 +31,7 @@ pub mod cognitive_curves;
 pub mod cognitive_items;
 pub mod cognitive_report;
 pub mod compare;
+pub mod complexity;
 pub mod content;
 pub mod content_case;
 pub mod content_cloze;
