@@ -91,9 +91,13 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
         });
 }
 
-pub(super) fn column_card(ui: &mut egui::Ui, _fill: f32, add: impl FnOnce(&mut egui::Ui)) {
+pub(super) fn column_card(ui: &mut egui::Ui, fill: f32, add: impl FnOnce(&mut egui::Ui)) {
+    let pad = crate::theme_space::rhythm_of(ui).card;
+    let inner = (ui.available_width() - 2.0 * pad).max(40.0);
     home_hero::card(ui, |ui| {
-        ui.set_width(ui.available_width());
+        ui.set_min_size(egui::vec2(inner, fill));
+        ui.set_max_width(inner);
+        ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
         add(ui);
     });
 }
@@ -115,7 +119,7 @@ fn due_column(h: &HomeSummary, fill: f32, ui: &mut egui::Ui, out: &mut Vec<Msg>)
             ui.label(text);
         }
         for i in &h.due_items {
-            ui.horizontal(|ui| {
+            ui.horizontal_wrapped(|ui| {
                 kit::pill(ui, item_kind_name(i.kind), p.text_weak);
                 if ui
                     .link(&i.title)
@@ -146,29 +150,24 @@ fn stacks_waiting(h: &HomeSummary, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     if waiting.is_empty() {
         ui.weak("Nothing is waiting in any stack.");
     }
-    egui::Grid::new("home-waiting")
-        .num_columns(3)
-        .spacing([16.0, 10.0])
-        .show(ui, |ui| {
-            for s in waiting.into_iter().take(6) {
-                ui.label(RichText::new(&s.title).strong());
-                ui.horizontal(|ui| {
-                    if s.due > 0 {
-                        kit::pill(ui, &format!("{} due", s.due), p.warning);
-                    }
-                    if s.new > 0 {
-                        kit::pill(ui, &format!("{} new", s.new), p.accent);
-                    }
-                });
-                let name = format!("Rehearse {}", s.title);
-                let button = ui.button("Rehearse").on_hover_text("Starts a rehearsal.");
-                button.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, &name));
-                if button.clicked() {
-                    out.push(Msg::Home(HomeMsg::RehearseStack(s.folder.clone())));
-                }
-                ui.end_row();
+    for s in waiting.into_iter().take(6) {
+        ui.horizontal_wrapped(|ui| {
+            ui.label(RichText::new(&s.title).strong());
+            if s.due > 0 {
+                kit::pill(ui, &format!("{} due", s.due), p.warning);
+            }
+            if s.new > 0 {
+                kit::pill(ui, &format!("{} new", s.new), p.accent);
+            }
+            let name = format!("Rehearse {}", s.title);
+            let button = ui.button("Rehearse").on_hover_text("Starts a rehearsal.");
+            button.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, &name));
+            if button.clicked() {
+                out.push(Msg::Home(HomeMsg::RehearseStack(s.folder.clone())));
             }
         });
+        ui.add_space(4.0);
+    }
 }
 
 /// The first-run tour offer: it stays until the user starts it or says not now.

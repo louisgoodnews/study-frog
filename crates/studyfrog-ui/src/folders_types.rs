@@ -3,7 +3,10 @@
 use std::collections::BTreeSet;
 use studyfrog_service::folder_ops::{DeletePlan, MovePlan};
 
-/// Tree sorting order.
+use crate::folders_browse::{BrowseMsg, FoldersViewMode};
+pub use crate::folders_nav::{FoldersKey, NewFolderForm};
+
+/// File manager sorting order.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SortOrder {
     /// Alphabetical (A to Z).
@@ -15,6 +18,14 @@ pub enum SortOrder {
     MtimeDesc,
     /// Modified time (oldest first).
     MtimeAsc,
+    /// Entry kind (A to Z).
+    KindAsc,
+    /// Entry kind (Z to A).
+    KindDesc,
+    /// Size or child count (largest first).
+    SizeDesc,
+    /// Size or child count (smallest first).
+    SizeAsc,
 }
 
 /// The kind of entry in the vault tree.
@@ -51,6 +62,8 @@ pub struct FolderEntry {
     pub kind: EntryKind,
     /// Modification time in nanoseconds since Unix epoch.
     pub mtime_ns: i64,
+    /// File size in bytes (0 for folders).
+    pub size_bytes: u64,
 }
 
 /// A row rendered in the virtualized tree view.
@@ -70,17 +83,6 @@ pub struct VisibleRow {
     pub kind: EntryKind,
     /// Whether the folder is currently expanded.
     pub expanded: bool,
-}
-
-/// Popover form state for creating a new folder.
-#[derive(Debug, Clone, PartialEq)]
-pub struct NewFolderForm {
-    /// Target parent folder.
-    pub parent: String,
-    /// Typed name.
-    pub name: String,
-    /// Whether to mark as a stack folder.
-    pub is_stack: bool,
 }
 
 /// Complete state of the Folders file explorer view.
@@ -104,6 +106,22 @@ pub struct FoldersState {
     pub confirm_move: Option<Box<MovePlan>>,
     /// Pending delete awaiting confirmation.
     pub confirm_delete: Option<Box<DeletePlan>>,
+    /// Active presentation mode (Grid, List, or Tree).
+    pub view_mode: FoldersViewMode,
+    /// Current directory shown in Grid/List modes (`""` = vault root).
+    pub current_dir: String,
+    /// Directory navigation back stack.
+    pub nav_back: Vec<String>,
+    /// Directory navigation forward stack.
+    pub nav_forward: Vec<String>,
+    /// Inline filter string.
+    pub filter: String,
+    /// When `false` (default), folders sort before files; when `true`, mixed.
+    pub folders_mixed: bool,
+    /// Starred / bookmarked vault-relative paths.
+    pub starred: BTreeSet<String>,
+    /// When `true`, show only starred entries.
+    pub show_starred_only: bool,
 }
 
 /// Asynchronous effect for folder operations.
@@ -212,23 +230,6 @@ pub enum FoldersMsg {
     KeyAction(FoldersKey),
     /// Operation completed, refresh overview.
     OpDone(Result<studyfrog_service::session::VaultInfo, String>),
-}
-
-/// Keyboard navigation actions in the tree.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum FoldersKey {
-    /// Up arrow.
-    Up,
-    /// Down arrow.
-    Down,
-    /// Left arrow.
-    Left,
-    /// Right arrow.
-    Right,
-    /// Enter key.
-    Enter,
-    /// F2 key.
-    F2,
-    /// Delete or Backspace key.
-    Delete,
+    /// Browsing, view-switcher, directory navigation, and filter actions.
+    Browse(BrowseMsg),
 }

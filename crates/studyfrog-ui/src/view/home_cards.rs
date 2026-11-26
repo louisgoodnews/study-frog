@@ -40,7 +40,7 @@ pub(super) fn ahead_column(h: &HomeSummary, fill: f32, ui: &mut egui::Ui) {
             ui.weak("Nothing planned. Exams, tasks and deadlines you add show up here.");
         }
         for u in &h.upcoming {
-            ui.horizontal(|ui| {
+            ui.horizontal_wrapped(|ui| {
                 kit::pill(ui, event_kind_name(u.kind), kind_color(&p, u.kind));
                 ui.label(format!(
                     "{} {}  {}",
@@ -62,7 +62,7 @@ pub(super) fn recent_column(h: &HomeSummary, fill: f32, ui: &mut egui::Ui, out: 
             ui.weak("No items yet. Use Create to make your first one.");
         }
         for i in &h.recent_items {
-            ui.horizontal(|ui| {
+            ui.horizontal_wrapped(|ui| {
                 kit::pill(ui, item_kind_name(i.kind), p.text_weak);
                 if ui
                     .link(&i.title)

@@ -238,5 +238,9 @@ pub fn update(mut state: State, msg: FoldersMsg) -> (State, Vec<Effect>) {
             });
             (state, Vec::new())
         }
+        FoldersMsg::Browse(b) => {
+            crate::folders_browse::apply_browse(&mut state.folders, b);
+            (state, Vec::new())
+        }
     }
 }

@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (4) | Ready (0) | In progress (1/3) | Review (34) | Blocked (3) | Done (623) |
+| Backlog (4) | Ready (0) | In progress (1/3) | Review (34) | Blocked (3) | Done (625) |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -62,6 +62,7 @@
 |  |  |  |  |  | [BUG-0054](docs/issues/bugs/BUG-0054-rehearsal-setup-without-preset-keeps-practice-only.md) A rehearsal setup without a preset keeps the previous practice preset, so the run writes no reviews (2) |
 |  |  |  |  |  | [BUG-0055](docs/issues/bugs/BUG-0055-mock-exam-question-counts-ignore-the-40-30-30-plan.md) Mock exam question counts do not follow the 40 / 30 / 30 plan when the notes are short (2) |
 |  |  |  |  |  | [BUG-0056](docs/issues/bugs/BUG-0056-mock-exam-and-note-details-clip-priority-and-difficulty-chips.md) Note editor details column clips priority and difficulty chips at 1280x800 (1) |
+|  |  |  |  |  | [BUG-0057](docs/issues/bugs/BUG-0057-home-three-columns-overflow-and-overlap-on-long-titles.md) Home screen three-column cards overflow and overlap adjacent columns on long item titles (2) |
 |  |  |  |  |  | [TASK-0001](docs/issues/tasks/TASK-0001-convert-to-cargo-workspace.md) Convert to Cargo workspace (1) |
 |  |  |  |  |  | [TASK-0002](docs/issues/tasks/TASK-0002-create-crate-skeletons-with-doc-comments.md) Create crate skeletons with doc comments (2) |
 |  |  |  |  |  | [TASK-0003](docs/issues/tasks/TASK-0003-dependency-direction-check-script.md) Dependency-direction check script (2) |
@@ -674,3 +675,4 @@
 | [EPIC-071](docs/issues/epics/EPIC-071-in-house-logging-and-debugging.md) In-house logging and debugging: studyfrog-log and studyfrog-debug, written without external crates | done | 1/1 |
 | [EPIC-072](docs/issues/epics/EPIC-072-choice-questions-single-and-multiple-select.md) Choice questions in rehearsal: single choice and multiple select | backlog | 1/7 |
 | [EPIC-073](docs/issues/epics/EPIC-073-whole-app-redesign-with-a-new-theme.md) Whole-app redesign with a new theme: a new palette, applied to every screen | backlog | 0/16 |
+| [EPIC-074](docs/issues/epics/EPIC-074-nautilus-style-folders-view-redesign.md) Folders view redesign: Nautilus/Thunar-style file manager with view switcher, icon grid, detailed list, and sorting | done | 0/0 |

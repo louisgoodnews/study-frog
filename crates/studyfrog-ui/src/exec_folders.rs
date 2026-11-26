@@ -161,12 +161,13 @@ fn scan_dir(
         } else {
             format!("{rel_parent}/{name}")
         };
-        let mtime_ns = entry
-            .metadata()
-            .and_then(|m| m.modified())
-            .ok()
+        let meta = entry.metadata().ok();
+        let mtime_ns = meta
+            .as_ref()
+            .and_then(|m| m.modified().ok())
             .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
             .map_or(0, |d| d.as_nanos() as i64);
+        let size_bytes = meta.as_ref().map_or(0, std::fs::Metadata::len);
 
         if path.is_dir() {
             let is_stack = path.join("_stack.md").is_file();
@@ -179,6 +180,7 @@ fn scan_dir(
                 depth,
                 kind: EntryKind::Folder,
                 mtime_ns,
+                size_bytes: 0,
             });
             scan_dir(_root, &path, &rel, depth + 1, out)?;
         } else if path.is_file() {
@@ -212,6 +214,7 @@ fn scan_dir(
                 depth,
                 kind,
                 mtime_ns,
+                size_bytes,
             });
         }
     }

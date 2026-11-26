@@ -10,19 +10,7 @@ use crate::state::VaultInfo;
 
 /// Compare entries according to sort order (folders always come before files).
 pub fn compare_entries(a: &FolderEntry, b: &FolderEntry, sort: SortOrder) -> Ordering {
-    if a.is_folder != b.is_folder {
-        return if a.is_folder {
-            Ordering::Less
-        } else {
-            Ordering::Greater
-        };
-    }
-    match sort {
-        SortOrder::NameAsc => a.name.to_lowercase().cmp(&b.name.to_lowercase()),
-        SortOrder::NameDesc => b.name.to_lowercase().cmp(&a.name.to_lowercase()),
-        SortOrder::MtimeDesc => b.mtime_ns.cmp(&a.mtime_ns),
-        SortOrder::MtimeAsc => a.mtime_ns.cmp(&b.mtime_ns),
-    }
+    crate::folders_browse::compare_with_options(a, b, sort, true, &[])
 }
 
 /// Compute visible rows in depth-first order respecting expanded folders and sort.
@@ -94,6 +82,7 @@ pub fn entries_from_vault(vault: &VaultInfo, items: &[LibraryItem]) -> Vec<Folde
                     depth: i,
                     kind: EntryKind::Folder,
                     mtime_ns: 0,
+                    size_bytes: 0,
                 });
             }
         }
@@ -132,6 +121,7 @@ pub fn entries_from_vault(vault: &VaultInfo, items: &[LibraryItem]) -> Vec<Folde
             depth,
             kind,
             mtime_ns: 0,
+            size_bytes: 0,
         });
     }
 

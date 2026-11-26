@@ -1,5 +1,4 @@
-//! GUI layer. Thin: renders state and dispatches to domain crates.
-//! Pure core (`state`, `msg`, `effect`, `update`) knows nothing of egui.
+//! GUI layer: renders state and dispatches to domain crates; pure core (`state`, `msg`, `effect`, `update`) knows nothing of egui.
 pub mod achievements;
 pub mod agent_chat;
 pub mod agent_conn;
@@ -94,6 +93,7 @@ pub mod exec_worker;
 pub mod explorer_ui;
 pub mod focus_timer;
 pub mod focus_ui;
+pub mod folders_browse;
 pub mod folders_nav;
 pub mod folders_tree;
 pub mod folders_types;

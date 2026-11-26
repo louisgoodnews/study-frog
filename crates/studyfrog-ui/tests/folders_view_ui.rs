@@ -6,6 +6,7 @@ mod common;
 
 use common::views::{assert_all_named, harness, open_model};
 use egui_kittest::kittest::Queryable;
+use studyfrog_ui::folders_browse::FoldersViewMode;
 use studyfrog_ui::folders_types::{EntryKind, FolderEntry, FoldersKey, FoldersMsg, SortOrder};
 use studyfrog_ui::model::apply;
 use studyfrog_ui::msg::Msg;
@@ -31,6 +32,7 @@ fn entry(
         depth,
         kind,
         mtime_ns: mtime,
+        size_bytes: 0,
     }
 }
 
@@ -92,6 +94,7 @@ fn sample_entries() -> Vec<FolderEntry> {
 #[test]
 fn folders_navigation_from_sidebar_and_accessible_names() {
     let mut m = open_model();
+    m.state.folders.view_mode = FoldersViewMode::Tree;
     m.state.folders.entries = sample_entries();
     m.state.folders.expanded.insert("french".into());
     m.state.folders.expanded.insert("assets".into());
@@ -113,6 +116,7 @@ fn folders_navigation_from_sidebar_and_accessible_names() {
 fn folders_tree_renders_badges_and_strips_markdown_extension() {
     let mut m = open_model();
     apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Folders)));
+    m.state.folders.view_mode = FoldersViewMode::Tree;
     m.state.folders.entries = sample_entries();
     m.state.folders.expanded.insert("french".into());
     m.state.folders.expanded.insert("assets".into());
@@ -139,6 +143,7 @@ fn folders_tree_renders_badges_and_strips_markdown_extension() {
 fn folders_toolbar_expand_collapse_and_sort() {
     let mut m = open_model();
     apply(&mut m, Msg::Vault(MsgVault::Navigate(Screen::Folders)));
+    m.state.folders.view_mode = FoldersViewMode::Tree;
     m.state.folders.entries = sample_entries();
 
     let mut h = harness(m);

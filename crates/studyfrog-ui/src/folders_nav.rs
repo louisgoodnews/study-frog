@@ -3,8 +3,38 @@ use crate::effect::EffectEditor;
 
 use crate::effect::Effect;
 use crate::folders_tree::tree_visible_rows;
-use crate::folders_types::{FolderEffect, FoldersKey, FoldersState};
+use crate::folders_types::{FolderEffect, FoldersState};
 use crate::state::State;
+
+/// Popover form state for creating a new folder.
+#[derive(Debug, Clone, PartialEq)]
+pub struct NewFolderForm {
+    /// Target parent folder.
+    pub parent: String,
+    /// Typed name.
+    pub name: String,
+    /// Whether to mark as a stack folder.
+    pub is_stack: bool,
+}
+
+/// Keyboard navigation actions in the tree.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FoldersKey {
+    /// Up arrow.
+    Up,
+    /// Down arrow.
+    Down,
+    /// Left arrow.
+    Left,
+    /// Right arrow.
+    Right,
+    /// Enter key.
+    Enter,
+    /// F2 key.
+    F2,
+    /// Delete or Backspace key.
+    Delete,
+}
 
 /// Open a note or PDF file.
 pub fn open_entry(state: &State, path: &str) -> Vec<Effect> {
@@ -25,10 +55,10 @@ pub fn open_entry(state: &State, path: &str) -> Vec<Effect> {
     Vec::new()
 }
 
-/// Find the folder path containing the currently selected entry.
+/// Find the folder path containing the currently selected entry (or the active directory).
 pub fn selected_parent(folders: &FoldersState) -> String {
     let Some(sel) = &folders.selected else {
-        return String::new();
+        return folders.current_dir.clone();
     };
     if let Some(entry) = folders.entries.iter().find(|e| &e.rel_path == sel) {
         if entry.is_folder {
@@ -36,7 +66,7 @@ pub fn selected_parent(folders: &FoldersState) -> String {
         }
         return entry.parent.clone();
     }
-    String::new()
+    folders.current_dir.clone()
 }
 
 /// Handle a keyboard navigation shortcut.
