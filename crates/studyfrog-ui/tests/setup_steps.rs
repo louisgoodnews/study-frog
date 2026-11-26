@@ -165,3 +165,35 @@ fn the_how_step_offers_least_familiar_first_and_a_familiarity_filter_that_reache
         studyfrog_ui::setup_form::plan_from_form(&h.state().0.state.rehearse.form, 1).unwrap();
     assert_eq!(plan.filter.familiarity_below, Some(0.6));
 }
+
+#[test]
+fn preset_is_highlighted_and_quick_limit_chips_cap_the_plan() {
+    let mut m = setup_model();
+    apply(
+        &mut m,
+        Msg::Rehearsal(MsgRehearsal::SetupStep(SetupStep::How)),
+    );
+    assert_eq!(
+        studyfrog_ui::setup::preset_of(&m.state.rehearse.form),
+        Some(Preset::Spaced)
+    );
+
+    let mut h = harness(m);
+    h.set_size(eframe::egui::vec2(1280.0, 800.0));
+    h.run_steps(4);
+    assert!(h.query_by_label("No limit").is_some());
+    assert!(h.query_by_label("20").is_some());
+    assert_all_named(&h, "setup how with preset highlight and limit chips");
+
+    h.get_by_label("20").click();
+    h.run_steps(4);
+    assert_eq!(h.state().0.state.rehearse.form.limit, "20");
+    let capped = h.state().1.iter().any(|e| {
+        matches!(
+            e,
+            Effect::Rehearsal(EffectRehearsal::PreviewQueue { plan, .. })
+                if plan.limit == Some(20)
+        )
+    });
+    assert!(capped, "clicking 20 should request a preview capped at 20");
+}

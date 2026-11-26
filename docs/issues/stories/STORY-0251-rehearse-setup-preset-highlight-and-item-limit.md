@@ -2,7 +2,7 @@
 id: STORY-0251
 type: story
 title: "Highlight active Rehearse setup preset and streamline run item-limit selection"
-status: backlog
+status: done
 epic: EPIC-073
 parents: ['EPIC-073']
 estimate: 2
@@ -22,9 +22,9 @@ Reported by the user with a screenshot of **Rehearse -> Step 2 (`How do you want
 Upgrade `crates/studyfrog-ui/src/view/setup_how.rs` and `crates/studyfrog-ui/src/setup/` so the active preset is highlighted and run item limits are easy to set and strictly enforced (`TASK-0315`).
 
 ## Acceptance Criteria
-- [ ] The active Rehearse setup preset (`Spaced repetition`, `Everything, in order`, `Everything, shuffled`, `Hardest first`, `Not seen for longest`) is visually highlighted in Step 2 (`How`) whenever the current settings match that preset
-- [ ] Setting a maximum number of items for a run is clear, ergonomic (quick preset chips plus custom numeric input with validation), and reliably caps the preview count and actual run queue
-- [ ] Headless UI tests verify preset highlighting and run item-limit enforcement
+- [x] The active Rehearse setup preset (`Spaced repetition`, `Everything, in order`, `Everything, shuffled`, `Hardest first`, `Not seen for longest`) is visually highlighted in Step 2 (`How`) whenever the current settings match that preset
+- [x] Setting a maximum number of items for a run is clear, ergonomic (quick preset chips plus custom numeric input with validation), and reliably caps the preview count and actual run queue
+- [x] Headless UI tests verify preset highlighting and run item-limit enforcement
 
 ## Design Notes
 - Child task: `TASK-0315`

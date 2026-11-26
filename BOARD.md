@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (19) | Ready (0) | In progress (1/3) | Review (34) | Blocked (3) | Done (642) |
+| Backlog (17) | Ready (0) | In progress (1/3) | Review (34) | Blocked (3) | Done (644) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0305](docs/issues/tasks/TASK-0305-exam-plan-and-prep-window-domain-types.md) Exam plan, preparation window, and linked target types in studyfrog-calendar (2) |  |  | [TASK-0278](docs/issues/tasks/TASK-0278-reference-run-script-repeated-invocations-medians-and-spread-rule.md) Reference-run script: repeated invocations, medians and the spread rule (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 | [TASK-0306](docs/issues/tasks/TASK-0306-sqlite-migration-and-store-for-exam-plans.md) SQLite migration and repository for exam plans, item links, and schedule blocks (3) |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -13,7 +13,7 @@
 | [TASK-0309](docs/issues/tasks/TASK-0309-exam-scheduler-dialog-and-workload-preview-ui.md) Exam Scheduler dialog with stack/item picker, Custom vs Proposed weeks, and load preview (3) |  |  | [TASK-0284](docs/issues/tasks/TASK-0284-scripted-screens-on-a-10k-vault-for-the-frame-time-run.md) Scripted visit of the rehearsal card, reports and console on a 10k-note vault (2) |  | [BUG-0005](docs/issues/bugs/BUG-0005-the-exit-button-is-cut-off-at-the-window-edge.md) The exit button is cut off at the window edge (2) |
 | [TASK-0310](docs/issues/tasks/TASK-0310-surface-exam-blocks-in-calendar-home-and-rehearsal.md) Surface exam-scheduled blocks in Calendar, Home, and one-click scoped Rehearsal (2) |  |  | [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  | [BUG-0006](docs/issues/bugs/BUG-0006-the-roadmap-is-too-small.md) The roadmap is too small (2) |
 | [TASK-0311](docs/issues/tasks/TASK-0311-headless-ui-and-service-tests-for-exam-scheduler.md) Headless UI, service, and re-balancing tests for the Exam Scheduler (2) |  |  | [TASK-0299](docs/issues/tasks/TASK-0299-first-run-wizard-screens-settings-and-control.md) Wizard screens after the vault, reopen from Settings, and wizard commands in the control protocol (5) |  | [BUG-0007](docs/issues/bugs/BUG-0007-enter-in-a-list-does-not-continue-the-list.md) Enter in a list does not continue the list (3) |
-| [TASK-0315](docs/issues/tasks/TASK-0315-highlight-rehearse-preset-and-enforced-item-limit.md) Highlight active Rehearse setup preset and add ergonomic, enforced run item-limit controls (2) |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
+|  |  |  |  |  | [BUG-0008](docs/issues/bugs/BUG-0008-bullet-points-sit-higher-than-their-text.md) Bullet points sit higher than their text (2) |
 |  |  |  |  |  | [BUG-0009](docs/issues/bugs/BUG-0009-pdf-lists-show-a-placeholder-title-instead-of-the-file-name.md) PDF lists show a placeholder title instead of the file name (2) |
 |  |  |  |  |  | [BUG-0010](docs/issues/bugs/BUG-0010-pdf-pages-are-illegible-depending-on-zoom-or-page-fit-mode.md) PDF pages are illegible depending on zoom or page fit mode (3) |
 |  |  |  |  |  | [BUG-0011](docs/issues/bugs/BUG-0011-importer-only-accepts-tsv-and-fails-on-csv-prompt-outputs.md) Importer only accepts TSV format and fails on CSV prompt outputs (3) |
@@ -362,6 +362,7 @@
 |  |  |  |  |  | [TASK-0312](docs/issues/tasks/TASK-0312-audit-question-and-answer-type-imports.md) Verify and fix question and answer-type (open, single, multiple, case, cloze) import functionality across all supported formats (3) |
 |  |  |  |  |  | [TASK-0313](docs/issues/tasks/TASK-0313-full-width-text-wrapping-in-preview-and-rehearse.md) Remove narrow reading-measure wrap cap in preview, Rehearse cards, and editors so text uses full available width (2) |
 |  |  |  |  |  | [TASK-0314](docs/issues/tasks/TASK-0314-prevent-diary-rating-pills-crushing-on-right-edge.md) Prevent rating pills and chips from crushing vertically at the right edge of wrapped rows (Diary & kit::pill) (1) |
+|  |  |  |  |  | [TASK-0315](docs/issues/tasks/TASK-0315-highlight-rehearse-preset-and-enforced-item-limit.md) Highlight active Rehearse setup preset and add ergonomic, enforced run item-limit controls (2) |
 
 ## Stories
 
@@ -616,7 +617,7 @@
 | [STORY-0248](docs/issues/stories/STORY-0248-exam-scheduler-ui-preview-and-calendar-rehearsal-integration.md) Exam Scheduler UI, workload preview, and Calendar/Home/Rehearsal integration (5) | backlog | 0/3 |
 | [STORY-0249](docs/issues/stories/STORY-0249-question-and-answer-type-import-verification.md) Verify and preserve Question items and answer types across all import formats (3) | done | 1/1 |
 | [STORY-0250](docs/issues/stories/STORY-0250-expand-text-wrapping-to-full-width.md) Expand prose and card text wrapping to full available container width (2) | done | 2/2 |
-| [STORY-0251](docs/issues/stories/STORY-0251-rehearse-setup-preset-highlight-and-item-limit.md) Highlight active Rehearse setup preset and streamline run item-limit selection (2) | backlog | 0/1 |
+| [STORY-0251](docs/issues/stories/STORY-0251-rehearse-setup-preset-highlight-and-item-limit.md) Highlight active Rehearse setup preset and streamline run item-limit selection (2) | done | 1/1 |
 | [STORY-0252](docs/issues/stories/STORY-0252-warn-when-wip-item-exceeds-user-retention-complexity.md) Warn via toast or modal when a WIP new item exceeds the complexity the user usually retains (5) | backlog | 0/0 |
 
 ## Epics
@@ -695,7 +696,7 @@
 | [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign in the style of the owner's reference dashboards (gradients, card grids, stat rings, light and dark) | in_progress | 4/6 |
 | [EPIC-071](docs/issues/epics/EPIC-071-in-house-logging-and-debugging.md) In-house logging and debugging: studyfrog-log and studyfrog-debug, written without external crates | done | 1/1 |
 | [EPIC-072](docs/issues/epics/EPIC-072-choice-questions-single-and-multiple-select.md) Choice questions in rehearsal: single choice and multiple select | backlog | 2/8 |
-| [EPIC-073](docs/issues/epics/EPIC-073-whole-app-redesign-with-a-new-theme.md) Whole-app redesign with a new theme: a new palette, applied to every screen | backlog | 2/19 |
+| [EPIC-073](docs/issues/epics/EPIC-073-whole-app-redesign-with-a-new-theme.md) Whole-app redesign with a new theme: a new palette, applied to every screen | backlog | 3/19 |
 | [EPIC-074](docs/issues/epics/EPIC-074-nautilus-style-folders-view-redesign.md) Folders view redesign: Nautilus/Thunar-style file manager with view switcher, icon grid, detailed list, and sorting | done | 0/0 |
 | [EPIC-075](docs/issues/epics/EPIC-075-usable-match-mode-sourced-from-vault-flashcards.md) Make Match mode usable: source real front/back pairs from vault flashcards and questions with stack selection and playable tile layout | done | 2/2 |
 | [EPIC-076](docs/issues/epics/EPIC-076-exam-scheduler-with-adaptive-preparation-window.md) Exam scheduler: automatically schedule exam-linked stacks and items within a user-set or stats-proposed week window | backlog | 0/3 |

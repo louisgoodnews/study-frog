@@ -2,7 +2,7 @@
 id: TASK-0315
 type: task
 title: "Highlight active Rehearse setup preset and add ergonomic, enforced run item-limit controls"
-status: backlog
+status: done
 epic: EPIC-073
 parents: ['STORY-0251']
 estimate: 2
@@ -23,10 +23,10 @@ Part of `STORY-0251`. In `crates/studyfrog-ui/src/view/setup_how.rs:52-62`, the 
 3. Add headless UI and service tests confirming preset highlighting and item-limit capping.
 
 ## Acceptance Criteria
-- [ ] In `setup_how.rs`, the 5 preset buttons render as highlighted selectable pills reflecting the active preset (derived from `SetupForm` state or tracked active preset)
-- [ ] The `Maximum number of items` control provides quick-pick limit buttons (`No limit`, `10`, `20`, `30`, `50`) alongside the custom numeric input, and displays a clear hint if the entered value is not a positive integer
-- [ ] Verify and test that the configured limit caps both the Step 2/Step 3 preview count and the generated run queue in `studyfrog-service` / `studyfrog-rehearsal`
-- [ ] Headless UI tests in `crates/studyfrog-ui/tests/` verify preset highlight state and item-limit selection
+- [x] In `setup_how.rs`, the 5 preset buttons render as highlighted selectable pills reflecting the active preset (derived from `SetupForm` state or tracked active preset)
+- [x] The `Maximum number of items` control provides quick-pick limit buttons (`No limit`, `10`, `20`, `30`, `50`) alongside the custom numeric input, and displays a clear hint if the entered value is not a positive integer
+- [x] Verify and test that the configured limit caps both the Step 2/Step 3 preview count and the generated run queue in `studyfrog-service` / `studyfrog-rehearsal`
+- [x] Headless UI tests in `crates/studyfrog-ui/tests/` verify preset highlight state and item-limit selection
 
 ## Design Notes
 - Affected files:

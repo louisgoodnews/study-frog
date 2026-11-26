@@ -49,10 +49,11 @@ fn edit(out: &mut Vec<Msg>, e: SetupEdit) {
 /// The step.
 pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     let form = &state.rehearse.form;
+    let active_preset = crate::setup::preset_of(form);
     ui.horizontal_wrapped(|ui| {
         for (preset, label) in PRESETS {
             if ui
-                .button(label)
+                .selectable_label(active_preset == Some(preset), label)
                 .on_hover_text("Uses this preset for the run.")
                 .clicked()
             {
@@ -118,11 +119,41 @@ pub fn draw(state: &State, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
     {
         edit(out, SetupEdit::Shuffle(shuffle));
     }
+    limit_controls(form, ui, out);
+    schedule(form, ui, out);
+    ui.collapsing("More options", |ui| more(form, ui, out));
+}
+
+fn limit_controls(form: &SetupForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
+    ui.horizontal_wrapped(|ui| {
+        ui.label("Run item limit");
+        for (val, label) in [
+            ("", "No limit"),
+            ("10", "10"),
+            ("20", "20"),
+            ("30", "30"),
+            ("50", "50"),
+        ] {
+            let active = form.limit.trim() == val;
+            if ui
+                .selectable_label(active, label)
+                .on_hover_text("Caps how many items are included in this run.")
+                .clicked()
+            {
+                edit(out, SetupEdit::Limit(val.to_owned()));
+            }
+        }
+    });
     if let Some(text) = text_field(ui, "Maximum number of items", &form.limit, "no limit", 1) {
         edit(out, SetupEdit::Limit(text));
     }
-    schedule(form, ui, out);
-    ui.collapsing("More options", |ui| more(form, ui, out));
+    let trimmed = form.limit.trim();
+    if !trimmed.is_empty() && trimmed.parse::<usize>().ok().filter(|&n| n > 0).is_none() {
+        ui.colored_label(
+            crate::theme::palette_of(ui).danger,
+            "Enter a whole number greater than 0, or leave empty for no limit.",
+        );
+    }
 }
 
 fn schedule(form: &SetupForm, ui: &mut egui::Ui, out: &mut Vec<Msg>) {
