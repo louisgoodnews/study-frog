@@ -7,6 +7,11 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-11-26
+
+### Fixed
+- Fixed: the release and CI gates build their test binaries without debug info, so the runner's linker no longer fails with a bus error (CI configuration only; the application is unchanged).
+
 ## [1.1.0] - 2026-11-26
 
 ### Changed
