@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup: rehearsal card (recall first)</title>
+<link rel="stylesheet" href="mockup.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="rail" aria-label="Main">
+    <div class="brand">StudyFrog</div>
+    <a href="shell.html">Today</a>
+    <a href="rehearsal.html" aria-current="page">Rehearse</a>
+    <a href="#">Items</a>
+    <a href="#">Graph</a>
+    <a href="#">Assistant</a>
+    <a href="#">Settings</a>
+  </nav>
+
+  <main>
+    <p class="muted" aria-live="polite">Session 3 of 12 · item 4 of 15 · no timer</p>
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="15" aria-valuenow="4" aria-label="Session progress"><span style="width: 27%"></span></div>
+
+    <section class="card" aria-labelledby="prompt-h" style="margin-top:16px">
+      <p class="muted" id="prompt-h">Question · French stack · choose every answer that applies</p>
+      <h1 style="font-size:1.35rem;margin:8px 0 0">Which of these are irregular past forms?</h1>
+
+      <fieldset class="options" style="border:0;padding:0;margin:16px 0">
+        <legend class="sr-only">Options</legend>
+        <label class="option"><input type="checkbox" name="o" value="1"><span class="num">1</span> <span>allé</span></label>
+        <label class="option"><input type="checkbox" name="o" value="2" checked><span class="num">2</span> <span>fait</span></label>
+        <label class="option"><input type="checkbox" name="o" value="3"><span class="num">3</span> <span>parlé</span></label>
+        <label class="option"><input type="checkbox" name="o" value="4" checked><span class="num">4</span> <span>vu</span></label>
+      </fieldset>
+
+      <div class="row">
+        <button class="btn primary" type="button">Check answer <span class="kbd">Enter</span></button>
+        <span class="muted">Number keys select · <span class="kbd">Space</span> shows the answer without grading</span>
+      </div>
+    </section>
+
+    <section class="card feedback" aria-labelledby="fb-h">
+      <h2 id="fb-h">Correct: 2 of 2 right, 0 wrong</h2>
+      <p><strong>fait</strong> and <strong>vu</strong> are irregular past participles. <strong>allé</strong> and <strong>parlé</strong> follow the regular pattern.</p>
+      <p class="muted">Source: <a href="#">Irregular verbs, p. 2</a></p>
+      <p class="muted">Next step: review <em>allé</em> in the next session if you miss it again.</p>
+
+      <p class="muted" id="rate-h" style="margin-top:16px">How well did you recall it?</p>
+      <div class="ratings" role="group" aria-labelledby="rate-h">
+        <button class="btn" type="button"><span class="kbd">1</span> Again</button>
+        <button class="btn" type="button"><span class="kbd">2</span> Hard</button>
+        <button class="btn suggested" type="button" aria-describedby="sug"><span class="kbd">3</span> Good</button>
+        <button class="btn" type="button"><span class="kbd">4</span> Easy</button>
+      </div>
+      <p class="muted" id="sug">The suggested rating is based on your answer; you choose the final one.</p>
+    </section>
+
+    <details>
+      <summary>Why this layout?</summary>
+      <p class="muted">One prompt, one decision, then feedback in the same place (segmenting and recall-before-reveal, see the UI research report). No timer and no points: the progress line counts the session, not a score.</p>
+    </details>
+  </main>
+</div>
+</body>
+</html>

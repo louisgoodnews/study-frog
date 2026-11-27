@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup: match debrief with retention</title>
+<link rel="stylesheet" href="mockup.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="rail" aria-label="Main">
+    <div class="brand">StudyFrog</div>
+    <a href="shell.html">Today</a>
+    <a href="rehearsal.html">Rehearse</a>
+    <a href="#" aria-current="page">Match</a>
+    <a href="#">Items</a>
+    <a href="#">Settings</a>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <h1>Round complete: 12 pairs</h1>
+      <p style="margin:6px 0 0">First try: 9 of 12 pairs (75%). Come back in 2 days to check what you kept.</p>
+    </div>
+
+    <section class="card" aria-labelledby="acc-h">
+      <h2 id="acc-h" style="font-size:1.1rem;margin-top:0">Accuracy</h2>
+      <div class="bars">
+        <div class="bar"><span>First try now</span><div class="track"><div class="fill" style="width:75%"></div></div><span>75%</span></div>
+        <div class="bar"><span>Retained, day 2</span><div class="track"><div class="fill alt" style="width:0%"></div></div><span>scheduled</span></div>
+      </div>
+      <p class="muted">The retained figure appears after the delayed re-test. It is not shown as a score on this screen.</p>
+    </section>
+
+    <section class="card" aria-labelledby="conf-h">
+      <h2 id="conf-h" style="font-size:1.1rem;margin-top:0">Pairs you mixed up</h2>
+      <ul style="padding-left:20px;margin:0">
+        <li style="margin-bottom:10px">
+          <strong>avoir / être</strong> · confused twice
+          <div class="row" style="margin-top:6px"><button class="btn" type="button">Drill this pair</button></div>
+        </li>
+        <li>
+          <strong>savoir / connaître</strong> · confused once
+          <div class="row" style="margin-top:6px"><button class="btn" type="button">Drill this pair</button></div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="card" aria-labelledby="next-h">
+      <h2 id="next-h" style="font-size:1.1rem;margin-top:0">Next</h2>
+      <div class="row">
+        <button class="btn primary" type="button">Drill missed items (3)</button>
+        <button class="btn" type="button">Back to Today</button>
+      </div>
+      <p class="muted" style="margin-top:12px">One primary action. The day-2 re-test is scheduled automatically and can be moved in Settings.</p>
+    </section>
+
+    <details>
+      <summary>How the retention check works</summary>
+      <p class="muted">The same pairs come back after a delay. Retained accuracy after a delay is the outcome that matters for learning; first-try accuracy alone can reflect the immediate practice effect. Data stays in your vault.</p>
+    </details>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup: Today and the app shell</title>
+<link rel="stylesheet" href="mockup.css">
+</head>
+<body>
+<div class="shell">
+  <nav class="rail" aria-label="Main">
+    <div class="brand">StudyFrog</div>
+    <a href="#" aria-current="page">Today</a>
+    <a href="rehearsal.html">Rehearse</a>
+    <a href="#">Items</a>
+    <a href="#">Graph</a>
+    <a href="#">Assistant</a>
+    <a href="#">Settings</a>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <h1>Good morning. One session is enough today.</h1>
+      <p style="margin:6px 0 0">12 items are due, and 3 were missed yesterday.</p>
+    </div>
+
+    <section class="card" aria-labelledby="next-h">
+      <p class="muted" id="next-h">Suggested next</p>
+      <h2 style="margin:4px 0 8px;font-size:1.25rem">Irregular verbs: 15 items, about 8 minutes</h2>
+      <p class="muted">Why: these are due now, and you missed 3 of them last session. Starting with them keeps the gap from growing.</p>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" type="button">Start session</button>
+        <button class="btn" type="button">Choose a different set</button>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="this-h">
+      <h2 id="this-h" style="font-size:1.1rem;margin-top:0">This week</h2>
+      <div class="bars">
+        <div class="bar"><span>Sessions completed</span><div class="track"><div class="fill" style="width:60%"></div></div><span>3 of 5</span></div>
+        <div class="bar"><span>Delayed re-tests passed</span><div class="track"><div class="fill alt" style="width:80%"></div></div><span>8 of 10</span></div>
+      </div>
+      <details>
+        <summary>What do these numbers mean?</summary>
+        <p class="muted">Sessions completed is a plan measure. Delayed re-tests passed is the learning measure: it counts items recalled after a delay. Neither is a streak, and missing a day has no penalty.</p>
+      </details>
+    </section>
+
+    <section class="card" aria-labelledby="rail-h">
+      <h2 id="rail-h" style="font-size:1.1rem;margin-top:0">Shortcuts</h2>
+      <p class="muted">Press <span class="kbd">/</span> to search items, <span class="kbd">?</span> to see all keys. Every shortcut has a button or menu entry too.</p>
+    </section>
+  </main>
+</div>
+</body>
+</html>
