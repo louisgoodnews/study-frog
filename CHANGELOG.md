@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Changed
+- **Issue status reconciled (`STORY-0221`, `STORY-0225`, `EPIC-030`)**: the criteria of STORY-0221 and STORY-0225 are ticked after each was checked, and EPIC-030 is reopened while its child STORY-0254 is in backlog.
 - **Classroom UI files under the line limit (`studyfrog-ui`)**: the saved-session types move from `classroom_types` to `classroom_types/saved_types`, and the selection helpers from `classroom_ui` to `classroom_ui/selection`. Import paths are unchanged (re-exported); no behaviour change.
 - **UI and UX research and strategy (`docs/research/ui-ux-learning-evidence-report.md`, `docs/design/ui-strategy.md`)**: evidence on cognitive load, retrieval feedback, motion, dashboards, touch targets and display mode, with a UI strategy and local HTML mockups in `docs/design/mockups/`. Effect sizes are secondary-sourced until the primary texts are read.
 - **Serious-games research report (`docs/research/serious-games-report.md`)**: effectiveness of serious games from secondary summaries, a StudyFrog mapping and a strategy. Effect sizes are unverified until the primary texts are read.

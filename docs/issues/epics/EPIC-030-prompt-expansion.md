@@ -2,7 +2,7 @@
 id: EPIC-030
 type: epic
 title: "Prompt expansion"
-status: done
+status: in_progress
 parents: []
 labels: [m12, agent, docs, ui]
 acceptance_criteria:

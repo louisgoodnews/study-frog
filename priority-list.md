@@ -5,7 +5,7 @@ The order in which Claude works on the planned items of phase M10 (0.3.0), kept 
 [docs/roadmap/M10-usability-and-insight.md](docs/roadmap/M10-usability-and-insight.md). Tick an item when it is done and
 verified (`scripts/check.sh` passes), and report it to the owner. The owner may reorder the list at any time.
 
-Last updated: 2026-11-24 (613 of 626 issues done; 13 open, all in EPIC-067; v1.0.0 awaiting packaging/owner benchmarks/tag).
+Last updated: 2026-11-27 (660 issues done per BOARD.md; 2 in progress (EPIC-070, EPIC-030); EPIC-067 ready with 2 blocked stories; 1.4.0 released 2026-11-26).
 
 ## Wave 1: start now
 - [x] 1. [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Names with commas cannot be used
@@ -104,7 +104,7 @@ Details in [docs/roadmap/M12-models-and-extensibility.md](docs/roadmap/M12-model
 **Wave 4: MCP server/client, external AI providers, prompt expansion, Python API, and achievements**
 - [x] 9. [EPIC-037](docs/issues/epics/EPIC-037-state-of-the-art-model-context-protocol-mcp-server-client-and-registry.md): [STORY-0117](docs/issues/stories/STORY-0117-pure-json-rpc-2-0-mcp-protocol-engine-and-plain-data-registry.md) to [STORY-0121](docs/issues/stories/STORY-0121-built-in-assistant-mcp-client-host-for-external-academic-tool-servers.md) State-of-the-art MCP Server (`studyfrog-app --mcp`), plain-data `McpRegistry`, and Assistant MCP Client Host — **0.5.0, partly:** STORY-0117 done; STORY-0118 (read-only resources and search) and STORY-0120 (stdio and config block) partly. **Moves on:** reports, diary and more tools, STORY-0119, STORY-0121. **2026-11-08:** STORY-0120 done (the localhost HTTP transport with bearer token and Host/Origin checks). STORY-0118 in review: reports, diary, item schedules and the due-queue, analytics, forecast and PDF tools built; leeches, study minutes and true retention curves wait for EPIC-034. STORY-0119 done (prompts, staged authoring tools, destructive tools with undo). STORY-0121 done (the assistant uses external MCP tool servers with approval). EPIC-037 in review until STORY-0118 is done. **2026-11-08:** STORY-0118 done (leeches, study minutes, true retention over MCP); EPIC-037 done.
 - [x] 10. [EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md): [STORY-0083](docs/issues/stories/STORY-0083-google-gemini-in-models-for-studyfrog.md) Google Gemini, [STORY-0084](docs/issues/stories/STORY-0084-deepseek-in-models-for-studyfrog.md) DeepSeek, and Python modding API — **0.5.0, partly:** STORY-0083 and STORY-0084 (no real-endpoint run). **Moves on:** the Python modding API. **2026-11-08:** the Python modding API is built on `feature/complete-m12` (ADR 0013; STORY-0130 lifecycle events, STORY-0131 Python client, STORY-0132 script runner with cron and event-bound jobs, STORY-0133 Console screen, STORY-0134 docs and examples, all done). The item stays open for STORY-0085 (PDF performance, another package) and the review of STORY-0083/0084. **Done 2026-11-08:** STORY-0085 done; STORY-0083 and STORY-0084 done with "Test connection" (offline checks only).
-- [x] 11. [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md): [STORY-0088](docs/issues/stories/STORY-0088-multi-level-file-explanation-prompt.md) to [STORY-0092](docs/issues/stories/STORY-0092-prompt-library-categorization-and-parameterized-execution-ui.md) and [TASK-0233](docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Prompt library expansion and standalone sidebar navigation
+- [ ] 11. [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md) (reopened 2026-11-27: STORY-0254 is in backlog under it): [STORY-0088](docs/issues/stories/STORY-0088-multi-level-file-explanation-prompt.md) to [STORY-0092](docs/issues/stories/STORY-0092-prompt-library-categorization-and-parameterized-execution-ui.md) and [TASK-0233](docs/issues/tasks/TASK-0233-move-prompt-library-to-standalone-left-sidebar-navigation.md) Prompt library expansion and standalone sidebar navigation
 - [x] 12. [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md): [STORY-0086](docs/issues/stories/STORY-0086-expanded-achievement-catalog-and-milestone-tiers.md) and [STORY-0087](docs/issues/stories/STORY-0087-per-stack-achievement-ui-and-filtering.md) Expanded achievements and per-stack progression
 
 ## Next: phase M13 (0.7.0)
@@ -202,17 +202,17 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
   - [x] [STORY-0207](docs/issues/stories/STORY-0207-exam-generation-item-format-selection-modal.md) Interactive modal to choose item formats during mock exam generation (done 2026-11-23)
 
 **Milestone 14.5: release hardening and 1.0.0 launch**
-- [ ] Regression audit, packaging (AppImage, tarball), documentation, release tag `v1.0.0`
+- [x] Regression audit, packaging (AppImage, tarball), documentation, release tag `v1.0.0` (tag 2026-11-25; the benchmark check TASK-0282 is still in review under EPIC-067)
 
 ## Next: Performance Benchmarking (`EPIC-067`) & Classroom Simulation (`EPIC-068`)
 
 **Performance benchmarking & continuous improvement**
-- [ ] [EPIC-067](docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement (`blocked` on owner's reference machine)
-  - [ ] [STORY-0201](docs/issues/stories/STORY-0201-reference-runs-on-the-owners-machine-with-identity-recorded.md) Reference runs on the owner's machine (`blocked`; `TASK-0278` in review, `TASK-0279` interleaved paired runs in backlog)
-  - [ ] [STORY-0202](docs/issues/stories/STORY-0202-regression-rule-compare-two-runs-flag-only-real-large-changes.md) Regression rule (`review`; `TASK-0282` release check in backlog)
+- [ ] [EPIC-067](docs/issues/epics/EPIC-067-performance-benchmarking-and-continuous-improvement.md) Performance benchmarking and continuous improvement (`ready`; STORY-0201 and STORY-0203 blocked on the owner's reference machine)
+  - [ ] [STORY-0201](docs/issues/stories/STORY-0201-reference-runs-on-the-owners-machine-with-identity-recorded.md) Reference runs on the owner's machine (`blocked`; `TASK-0278` done, `TASK-0279` in review)
+  - [ ] [STORY-0202](docs/issues/stories/STORY-0202-regression-rule-compare-two-runs-flag-only-real-large-changes.md) Regression rule (`review`; `TASK-0282` release check in review)
   - [ ] [STORY-0203](docs/issues/stories/STORY-0203-budgets-replaced-by-measured-baselines.md) Provisional budgets replaced by measured baselines (`blocked`)
-  - [ ] [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time measured in the running window (`backlog`; `TASK-0283`, `TASK-0284`)
-  - [ ] [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Render-loop allocations with `dhat` and slowest-screen profile (`backlog`; `TASK-0285`, `TASK-0286`)
+  - [ ] [STORY-0204](docs/issues/stories/STORY-0204-frame-time-measured-in-the-running-window.md) Frame time measured in the running window (`review`; `TASK-0283`, `TASK-0284` in review)
+  - [ ] [STORY-0205](docs/issues/stories/STORY-0205-allocations-in-render-loops-with-dhat-and-a-profile-of-the-slowest-screen.md) Render-loop allocations with `dhat` and slowest-screen profile (`backlog`; `TASK-0285` done, `TASK-0286` backlog)
 
 **Classroom simulation**
 - [x] [EPIC-068](docs/issues/epics/EPIC-068-classroom-simulation-with-ai-teacher-and-students.md) Classroom simulation: AI-driven lectures, simulated students, group tasks, and graded submissions (`done`)
@@ -237,10 +237,22 @@ Eight epics and 23 stories, in the roadmap's order. Each item is ticked when its
 - [x] [STORY-0250](docs/issues/stories/STORY-0250-expand-text-wrapping-to-full-width.md) / [TASK-0313](docs/issues/tasks/TASK-0313-full-width-text-wrapping-in-preview-and-rehearse.md), [TASK-0314](docs/issues/tasks/TASK-0314-prevent-diary-rating-pills-crushing-on-right-edge.md) Expand text wrapping to full available card/container width and prevent right-edge pill crushing (Rehearse cards, previews, editors, Diary pills)
 - [x] [STORY-0251](docs/issues/stories/STORY-0251-rehearse-setup-preset-highlight-and-item-limit.md) / [TASK-0315](docs/issues/tasks/TASK-0315-highlight-rehearse-preset-and-enforced-item-limit.md) Highlight active Rehearse setup preset and streamline/enforce run item limit
 
-## Planned: v1.4.0 (Exam Scheduler & Adaptive Authoring)
+## Shipped in v1.4.0 (2026-11-26, Exam Scheduler & Adaptive Authoring)
 - [x] [EPIC-076](docs/issues/epics/EPIC-076-exam-scheduler-with-adaptive-preparation-window.md) Exam scheduler: automatically schedule exam-linked stacks and items within a user-set or stats-proposed week window
   - [x] [STORY-0246](docs/issues/stories/STORY-0246-exam-to-item-linkage-model-and-sqlite-persistence.md) Exam-to-item linkage model and SQLite persistence ([TASK-0305](docs/issues/tasks/TASK-0305-exam-plan-and-prep-window-domain-types.md), [TASK-0306](docs/issues/tasks/TASK-0306-sqlite-migration-and-store-for-exam-plans.md))
   - [x] [STORY-0247](docs/issues/stories/STORY-0247-adaptive-preparation-window-estimator-and-windowed-scheduler.md) Adaptive preparation-window estimator and windowed item scheduler ([TASK-0307](docs/issues/tasks/TASK-0307-stats-driven-preparation-window-estimator.md), [TASK-0308](docs/issues/tasks/TASK-0308-windowed-item-distribution-and-rebalancing-scheduler.md))
   - [x] [STORY-0248](docs/issues/stories/STORY-0248-exam-scheduler-ui-preview-and-calendar-rehearsal-integration.md) Exam Scheduler UI, workload preview, and Calendar/Home/Rehearsal integration ([TASK-0309](docs/issues/tasks/TASK-0309-exam-scheduler-dialog-and-workload-preview-ui.md), [TASK-0310](docs/issues/tasks/TASK-0310-surface-exam-blocks-in-calendar-home-and-rehearsal.md), [TASK-0311](docs/issues/tasks/TASK-0311-headless-ui-and-service-tests-for-exam-scheduler.md))
 - [x] [EPIC-077](docs/issues/epics/EPIC-077-personalized-item-complexity-and-authoring-coach.md) Personalized item-complexity guardrails during authoring
   - [x] [STORY-0252](docs/issues/stories/STORY-0252-warn-when-wip-item-exceeds-user-retention-complexity.md) Warn via toast or modal when a WIP new item exceeds the complexity the user usually retains
+
+## In progress
+- [ ] [EPIC-070](docs/issues/epics/EPIC-070-ui-redesign-gradient-dashboard-style.md) UI redesign, gradient dashboard style (`in_progress`)
+
+## Backlog: Future Epics
+- [ ] [EPIC-078](docs/issues/epics/EPIC-078-bio-recording-eat-drink-sleep-and-reporting.md) Bio recording: log when the user eats, drinks, or sleeps and report on it
+  - [ ] [STORY-0253](docs/issues/stories/STORY-0253-mid-or-post-run-bio-check-in-prompts.md) Prompt for bio check-in (eat, drink, sleep) mid-run or post-run during rehearsal
+- [ ] [EPIC-079](docs/issues/epics/EPIC-079-game-modes-for-learning-gamified-rehearsal.md) More game modes for learning: make studying and active recall feel like a game
+- [ ] [EPIC-080](docs/issues/epics/EPIC-080-rehearsal-modes-new-learning-vs-active-recall-serious-games.md) Rehearsal modes: initial learning (encoding) vs. active recall grounded in serious-games science
+- [ ] [STORY-0254](docs/issues/stories/STORY-0254-layman-interpretable-analysis-report-on-assistant-prompt.md) Generate a layman-interpretable analysis report from an Assistant prompt
+- [ ] [EPIC-081](docs/issues/epics/EPIC-081-studyfrog-tamagotchi-companion-skins-and-gamification.md) StudyFrog as Tamagotchi: companion frog, achievement-unlocked skins, and non-punitive gamification
+  - [ ] [STORY-0255](docs/issues/stories/STORY-0255-achievement-unlocked-animation.md) Animate newly unlocked achievements (and companion rewards) with a celebratory reveal

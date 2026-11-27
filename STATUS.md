@@ -1,7 +1,7 @@
 # Status
 
-**Phase:** 1.0.0 prepared (2026-11-22): regression audit, packaging and notes done; not tagged, not published. See `docs/RELEASE_AUDIT_1.0.0.md`. **Branch:** `main`.
-Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
+**Phase:** 1.4.0 released (2026-11-26, tag `v1.4.0`). The `v1.0.0` tag exists (2026-11-25), but its benchmark release check (TASK-0282) is still in review. **Branch:** `main`.
+Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md). Release notes: `docs/RELEASE_NOTES_<version>.md`.
 
 ## What exists
 - A Cargo workspace of 21 crates under `crates/` plus an example extension under `examples/` (layering enforced by `scripts/check-deps.sh`, ADR 0001):
@@ -14,21 +14,22 @@ Live work: [BOARD.md](BOARD.md). History: [CHANGELOG.md](CHANGELOG.md).
   and FrogScript automation.
 - Guardrails: `scripts/check.sh` (fmt, clippy, tests, line count, layering, no-OOP, issue and board checks).
 
-## Active work: v1.0.0 (2026-11-23)
-- **Release 1.0.0 (2026-11-24, in progress):** the AppImage and tarball are built and checksummed, and the AppImage opened a vault on the desktop. The `v1.0.0` tag is **not pushed**: the release benchmark check (TASK-0282, STORY-0202) still gives a `regression` verdict against run 1 after two repeat runs (which agree with each other), so the tag is held. Open flags: the heavy candle tests skipped (no MiniLM model), the CMRR budget (71 to 85 ms against 50 ms), the spread rule (12 of 28 cases above 5%), TASK-0286 profile (no `perf`). Details: `docs/RELEASE_AUDIT_1.0.0.md` section 8.
-Working through [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md) in milestone order, tracked in the v1.0.0 section of [priority-list.md](priority-list.md). Across `docs/issues/`, **613 of 626 issues are done** (0 open bugs, 0 in progress); **13 remain open**, all in `EPIC-067` performance benchmarking.
-- **Next / owner-machine actions:** implement `TASK-0279` (interleaved paired bench runs) and run the `EPIC-067` reference benchmarks (`STORY-0201`, `STORY-0203`, `TASK-0278`, `STORY-0202`/`TASK-0282`) plus the remaining backlog tasks (`STORY-0204`/`TASK-0283`–`0284`, `STORY-0205`/`TASK-0285`–`0286`); complete v1.0.0 packaging (AppImage with `desktop-file-utils`), desktop smoke check, and tagging (see `docs/RELEASE_AUDIT_1.0.0.md`).
-- **Active task:** none. `EPIC-068` (classroom simulation) is done: `STORY-0208` to `STORY-0211` and their tasks `TASK-0287` to `TASK-0295` are done, and each story's criteria are ticked. Known gaps are listed in the verification notes of `EPIC-068` and `STORY-0211` (fake or stub models only; notes are not offered as a classroom source).
-- **Open in review (2) — `EPIC-067`:** `STORY-0202` (`bench-compare`) and `TASK-0278` (`scripts/bench-reference.sh`) are built and tested locally; full reference runs on the owner's machine and the release-check documentation (`TASK-0282`) remain open.
-- **Blocked (3) & Backlog (8) — `EPIC-067` (performance benchmarking):** `EPIC-067`, `STORY-0201`, and `STORY-0203` are blocked on the owner's reference machine (reference runs, 10-run idle spread, replacing provisional budgets in `BENCHMARKING.md`). Backlog items: interleaved paired runs (`TASK-0279`), release-check docs (`TASK-0282`), in-window frame-time capture on a 10k-note vault (`STORY-0204`, `TASK-0283`, `TASK-0284`), and slowest-screen profile (`STORY-0205`, `TASK-0286`; `TASK-0285`, dhat allocation budgets, is done).
-- **Closed in this stretch (2026-11-22 to 2026-11-24):**
-  - **Classroom simulation (`EPIC-068` / `STORY-0208` to `STORY-0211`, 2026-11-24):** session model and SQLite store, lecture orchestration, solo and group tasks with turn-in and grading, the Classroom screen with its assignments panel, and the saved-session browser (resume, Markdown export, confirmed delete, control protocol). The follow-up fixes for exam format mix and gap parity under `STORY-0207` are in the same stretch.
-  - **Mock exam item format selection (`EPIC-063` / `STORY-0207`, 2026-11-23):** Interactive format selection modal (6 formats, counts/proportions, session persistence), format-aware SLM prompting & offline template fallbacks, inline cloze/radio/checkbox answering, objective + SLM/word-overlap grading with explicit multi-select partial-credit rule (`EPIC-063` now `done`).
-  - **Live Ollama verification (2026-11-23):** `EPIC-055` / `STORY-0206` (hardware audit, live `no_models` -> `ready` status, rank-1 promotion, live `qwen2.5:1.5b` test prompt passing in 4.7 s and saving `config/providers.toml`) and `EPIC-063` / `STORY-0186` (live `qwen2.5:1.5b` multi-chunk mock exam generation, grounded reference answer, and active filtering of 8 unsupported items).
-  - **M12/M14 & control:** `EPIC-036` / `STORY-0114` (Split "Preview below" keeps 55–75 cpl measure), `EPIC-038` / `STORY-0124` & `EPIC-064` (`STORY-0191`, `STORY-0192`, `STORY-0194` — full control protocol and widget tree `ui tree|find|click`), `EPIC-049` (`STORY-0150`–`0152`).
-  - **v1.0.0 milestones 14.1–14.4:** `EPIC-056` (`STORY-0165`–`0167`, homework planner & reminders), `EPIC-057` (`STORY-0168`–`0170`, UI streamlining & Universal Import Hub), `EPIC-058` (`STORY-0171`–`0172`, FrogScript wiki; minor open flags: tab row overlaps "Hide reference" at 1280px with 2 tabs, and the "Overdue review analyzer" cookbook recipe prints `{len(overdue)}` literally), `EPIC-059` (`STORY-0173`–`0175`, Memory Mode), `EPIC-060` (`STORY-0176`–`0178`, cognitive profiling & calibrated FSRS start), `EPIC-061` (`STORY-0179`–`0181`, `STORY-0199`–`0200`, case-study decision matrices), `EPIC-062` (`STORY-0182`–`0184`, `BUG-0051`, psychometric formula engine & math drill), `STORY-0189`, `STORY-0195`–`0198`, and `BUG-0020`–`BUG-0056`.
+## Active work (2026-11-27)
+- **Active task:** EPIC-070 (UI redesign, gradient dashboard style), the only item in progress.
+- **Board** ([BOARD.md](BOARD.md), as last generated): Done 660, In progress 2 (EPIC-070, EPIC-030), Ready 1 (EPIC-067), Review 29, Blocked 2, Backlog 15. Regenerated with `scripts/board.sh` on 2026-11-27; rerun it before quoting these again.
+- **Performance benchmarking (EPIC-067, ready):**
+  - In review: STORY-0202 (regression rule, `bench-compare`), STORY-0204 (frame time in the running window), TASK-0279 (interleaved paired runs), TASK-0282 (release check), TASK-0283 and TASK-0284 (frame-time capture and scripted screens).
+  - Blocked: STORY-0201 and STORY-0203, until the owner runs the reference benchmarks on the reference machine.
+  - Backlog: STORY-0205 and TASK-0286 (slowest-screen profile). TASK-0278 (reference-run script) and TASK-0285 (dhat budgets) are done.
+- **Uncommitted work** (34 entries in `git status`): Match-mode debrief and stealth-logging code (`match_debrief`, `match_entries`, `match_ui/`), epics EPIC-078 to EPIC-081, stories STORY-0253 to STORY-0255, and the serious-games and UI research docs. The CHANGELOG `[Unreleased]` section describes it. Nothing is committed or on the board yet.
+- **Status conflicts to resolve:** EPIC-073 (whole-app redesign) is `backlog` in its file, but CHANGELOG 1.1.0 records its stories as shipped. EPIC-069 (first-run wizard) is `backlog`, while TASK-0299 (wizard screens) is in review.
 
 ## Latest
+- **1.4.0 released (2026-11-26):** exam scheduler with an adaptive preparation window (EPIC-076) and WIP complexity warnings in the Create dialog (EPIC-077). See `docs/RELEASE_NOTES_1.4.0.md`.
+- **1.3.0 released (2026-11-26):** vault-sourced Match mode (EPIC-075), full-width text wrapping and the Rehearse preset highlight with item-limit chips (STORY-0250, STORY-0251), question and answer-type import fixes (STORY-0249), and BUG-0058 to BUG-0060. See `docs/RELEASE_NOTES_1.3.0.md`.
+- **1.2.0 released (2026-11-26):** Nautilus-style Folders view (EPIC-074) and the Home three-column overflow fix (BUG-0057). See `docs/RELEASE_NOTES_1.2.0.md`.
+- **1.1.1 and 1.1.0 released (2026-11-26):** 1.1.1 fixes the CI test build (a linker bus error). 1.1.0 moves most screens to the redesign style (EPIC-073, and parts of EPIC-070) and makes violet the default accent. See `docs/RELEASE_NOTES_1.1.0.md`.
+- **1.0.0 released (2026-11-25 tag, CHANGELOG dated 2026-11-24):** the academic workstation: homework planner, Universal Import hub, FrogScript wiki, Memory Mode, cognitive profile, case-study matrices, psychometric math drills and a mock-exam generator with the German grade scale (EPIC-056 to EPIC-063). See `docs/RELEASE_NOTES_1.0.0.md`.
 - **0.9.0 released (2026-11-16):** FrogCanvas 2D spatial concept board (`crates/studyfrog-ui`, `crates/studyfrog-store`), PDF precision area cropping and synchronized split navigation (`crates/studyfrog-pdf`), continuous priority queue and anti-paralysis slicing (`crates/studyfrog-srs`), gamified match mode and embedding distractor exams (`crates/studyfrog-ui`, `crates/studyfrog-candle`), FSRS Adam parameter optimizer and inline card syntax scanner (`crates/studyfrog-srs`, `crates/studyfrog-md`), and private offline local SLM assistant sidecar (`crates/studyfrog-agent`, `crates/studyfrog-app`). See `docs/RELEASE_NOTES_0.9.0.md`.
 - **0.8.0 released (2026-11-11):** FrogScript standalone domain-specific language engine (`crates/studyfrog-script`), ScriptStudio multi-tab automation workbench with in-vault script persistence (`.studyfrog/scripts/`), dedicated stdout and stderr stream execution logging with filter controls, and full 14-event reactive application lifecycle event bus. See `docs/RELEASE_NOTES_0.8.0.md`.
 - **0.7.1 released (2026-11-11):** Assistant conversational chat interface, universal importer integration in items view, file launching in folders view, dedicated item deletion modal popup, difficulty-weighted metacognitive calibration, window icon integration, ScriptStudio & FrogScript rebranding and language specification, and critical fixes for calendar rehearsal setup and due item calculation. See `docs/RELEASE_NOTES_0.7.1.md`.
@@ -116,23 +117,10 @@ Working through [docs/v1.0.0-roadmap.md](docs/v1.0.0-roadmap.md) in milestone or
   unverified from memory. The remote `origin` exists (github.com/louisgoodnews/study-frog); CI has not run on this code yet.
 
 ## Next
-- **0.3.0 and 0.3.1 (phase M10) are released.** **Now (0.4.0, phase M11), built and committed on local `main`, not pushed and not released (the owner wants the whole priority list done first):** appearance settings, navigation history, list continuation, PDF names, auto-save with the "Saved" toast, Open on the created notice, import formats and examples, CSV mapping, standard prompts and the Prompts tab, running a prompt through the assistant, tables, underline, colour, a table of contents, code highlighting, text macros, ADR 0011, `referenced_by` with the `membership` view (schema v20), and the services, library column, JSON, CSV and import following the membership (TASK-0212).
-- **Done:** TASK-0218 (memory per stack: schema v21 and v22, ratings, queues, daily counts, Home, calendar, rerate) and TASK-0219 (familiarity and difficulty per stack, averaged on the item). Screens that show one value per item (status, due column, reports' item lists) still read the primary stack's schedule through the views `mem_primary`, `sm2_primary` and `review_once`.
-- **Next, in `priority-list.md` order:** TASK-0213 (references in the interface, in progress), TASK-0217 (mark a folder as a stack), TASK-0220 (TOML and RON export), then the views (TASK-0202 spec, TASK-0203, TASK-0204), TASK-0195 (calm the remaining screens), the diary (TASK-0170 to TASK-0174), then the release steps of `docs/contributing/RELEASING.md` (version bump to 0.4.0, notes with the install steps, AppImage, tag, push).
-- **Open points for the owner:** ADR 0011 is marked accepted on the strength of the owner's decisions of 2026-11-03; the wording is Claude's. Not built or not tried: attaching PDF pages to a prompt run, a mapping remembered per file name, `also_in` in the query language. The auto-save, prompts, tables and macros were tested headless only.
-- **Not verified by hand:** the owner tried the title bar and the new layout on their GNOME/Wayland machine and was satisfied; the progress bar was seen at 0 done only (partial fill and repeats are tested headless). The benchmarks were not re-run for 0.3.1.
-- **Open flag:** the help outline (`docs/help/README.md`, TASK-0161) shipped at the owner's release instruction without a separate review of the outline; the help screen and tutorial card were tested headless only.
-- **0.3.0 is planned** (phase M10, EPIC-023, `docs/roadmap/M10-usability-and-insight.md`): 15 stories and one bug (BUG-0001, commas in teacher names), all in backlog.
-  The owner answered the open design questions on 2026-11-02 (accepted choices are listed in the phase file); what is still
-  open is in each story's Open Questions. The familiarity and FSRS model is researched and decided (`docs/research/familiarity-and-fsrs.md`: relative factor, on from the start).
-  Priority order in four waves is in the phase file; wave 1 is `ready` (BUG-0001 is done; the list is `priority-list.md`): TASK-0143 (statuses spec), TASK-0142 (settings
-  tabs), TASK-0128 (vault name), TASK-0135 (familiarity spec).
-- **The AppImage builds and starts** (`scripts/package-appimage.sh`: 9.5 MB, SHA-256 `40721ef0...6825fd`, stripped
-  binary, no libraries beyond libc; OpenGL, X11, Wayland and xkbcommon come from the host). The CI workflow
-  (`.github/workflows/ci.yml`) passes `actionlint` but has never run because there is no git remote: that is the
-  one unmet M8 exit criterion ("builds from CI").
-- Then cut the release by the steps in [RELEASING](docs/contributing/RELEASING.md); the notes are drafted in
-  [RELEASE_NOTES_0.1.0](docs/RELEASE_NOTES_0.1.0.md). The version is already 0.1.0, so there is no bump.
+- **Owner action:** run the EPIC-067 reference benchmarks on the reference machine. STORY-0201 and STORY-0203 are blocked on it. Then close TASK-0279, TASK-0282, STORY-0202 and STORY-0204.
+- **In progress:** EPIC-070 (UI redesign).
+- **Decide:** whether the uncommitted Match-mode and research work goes into a release. Then commit it with its board updates.
+- **Backlog:** EPIC-078 to EPIC-081 (bio recording, game modes, rehearsal modes, companion frog), plus STORY-0254 and STORY-0255.
 
 ## Using the app now
 `cargo run -p studyfrog-app`: pick a vault folder, create a stack and cards, set up a run (any order or filter),

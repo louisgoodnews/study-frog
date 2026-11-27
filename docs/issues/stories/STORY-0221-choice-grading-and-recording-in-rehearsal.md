@@ -20,9 +20,9 @@ Grading exists for the mock exam; rehearsal needs the same rules for ordinary it
 Connect a rehearsal choice item to the existing objective grading, and record the outcome in the run like a typed answer.
 
 ## Acceptance Criteria
-- [ ] Reuses exam_answer grading
-- [ ] Suggested rating and recording follow typed answers
-- [ ] Tests for the five cases above
+- [x] Reuses exam_answer grading (`choice_grade.rs` calls `exam_answer::grade_objective`)
+- [x] Suggested rating and recording follow typed answers (`service/choice.rs` uses `suggested_rating`, as typed answers do)
+- [x] Tests for the five cases above (`rehearsal/tests/choice_grading.rs`: 8 tests, all pass)
 
 ## Design Notes
 Keep the rehearsal engine's action names unchanged; add the choice variant to the existing answer path.

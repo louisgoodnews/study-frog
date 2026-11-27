@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (8) | Ready (1) | In progress (1/3) | Review (29) | Blocked (2) | Done (661) |
+| Backlog (15) | Ready (1) | In progress (2/3) | Review (29) | Blocked (2) | Done (660) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -627,6 +627,9 @@
 | [STORY-0250](docs/issues/stories/STORY-0250-expand-text-wrapping-to-full-width.md) Expand prose and card text wrapping to full available container width (2) | done | 2/2 |
 | [STORY-0251](docs/issues/stories/STORY-0251-rehearse-setup-preset-highlight-and-item-limit.md) Highlight active Rehearse setup preset and streamline run item-limit selection (2) | done | 1/1 |
 | [STORY-0252](docs/issues/stories/STORY-0252-warn-when-wip-item-exceeds-user-retention-complexity.md) Warn via toast or modal when a WIP new item exceeds the complexity the user usually retains (5) | done | 0/0 |
+| [STORY-0253](docs/issues/stories/STORY-0253-mid-or-post-run-bio-check-in-prompts.md) Prompt for bio check-in (eat, drink, sleep) mid-run or post-run during rehearsal (5) | backlog | 0/0 |
+| [STORY-0254](docs/issues/stories/STORY-0254-layman-interpretable-analysis-report-on-assistant-prompt.md) Generate a layman-interpretable analysis report from an Assistant prompt (5) | backlog | 0/0 |
+| [STORY-0255](docs/issues/stories/STORY-0255-achievement-unlocked-animation.md) Animate newly unlocked achievements (and companion rewards) with a celebratory reveal (3) | backlog | 0/0 |
 
 ## Epics
 
@@ -661,7 +664,7 @@
 | [EPIC-027](docs/issues/epics/EPIC-027-appearance-and-ui-settings.md) Appearance and UI settings | done | 2/2 |
 | [EPIC-028](docs/issues/epics/EPIC-028-extensibility-plugin-modding-and-python-api.md) Extensibility, plugin modding, and Python API | done | 8/8 |
 | [EPIC-029](docs/issues/epics/EPIC-029-expanded-achievements-and-per-stack-progression.md) Expanded achievements and per-stack progression | done | 2/2 |
-| [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md) Prompt expansion | done | 5/5 |
+| [EPIC-030](docs/issues/epics/EPIC-030-prompt-expansion.md) Prompt expansion | in_progress | 5/6 |
 | [EPIC-031](docs/issues/epics/EPIC-031-details-tabs-create-workflow-csv-import.md) Details tabs, create workflow, and CSV import for 0.4.1 | done | 6/6 |
 | [EPIC-032](docs/issues/epics/EPIC-032-item-keys-colorization-and-reporting-export.md) Item keys, colorization, and reporting export | done | 4/4 |
 | [EPIC-033](docs/issues/epics/EPIC-033-exam-run-mode-with-semantic-comparison-and-grading.md) Exam run mode with mandatory text entry, semantic comparison, and percentage grading | done | 5/5 |
@@ -709,6 +712,10 @@
 | [EPIC-075](docs/issues/epics/EPIC-075-usable-match-mode-sourced-from-vault-flashcards.md) Make Match mode usable: source real front/back pairs from vault flashcards and questions with stack selection and playable tile layout | done | 2/2 |
 | [EPIC-076](docs/issues/epics/EPIC-076-exam-scheduler-with-adaptive-preparation-window.md) Exam scheduler: automatically schedule exam-linked stacks and items within a user-set or stats-proposed week window | done | 3/3 |
 | [EPIC-077](docs/issues/epics/EPIC-077-personalized-item-complexity-and-authoring-coach.md) Personalized item-complexity guardrails during authoring based on user retention history | done | 1/1 |
+| [EPIC-078](docs/issues/epics/EPIC-078-bio-recording-eat-drink-sleep-and-reporting.md) Bio recording: log when the user eats, drinks, or sleeps and report on it | backlog | 0/1 |
+| [EPIC-079](docs/issues/epics/EPIC-079-game-modes-for-learning-gamified-rehearsal.md) More game modes for learning: make studying and active recall feel like a game | backlog | 0/0 |
+| [EPIC-080](docs/issues/epics/EPIC-080-rehearsal-modes-new-learning-vs-active-recall-serious-games.md) Rehearsal modes: initial learning (encoding) vs. active recall grounded in serious-games science | backlog | 0/0 |
+| [EPIC-081](docs/issues/epics/EPIC-081-studyfrog-tamagotchi-companion-skins-and-gamification.md) StudyFrog as Tamagotchi: companion frog, achievement-unlocked skins, and non-punitive gamification | backlog | 0/1 |
 | [EPIC-082](docs/issues/epics/EPIC-082-research-learner-types-and-modality-support.md) Research into learner types (auditory, visual and others) and how StudyFrog could support them | backlog | 0/0 |
 | [EPIC-083](docs/issues/epics/EPIC-083-research-voice-handling-local-speech-models.md) Research into voice handling: local models for speech comprehension and emission | backlog | 0/0 |
 | [EPIC-084](docs/issues/epics/EPIC-084-pdf-editor-touch-and-handwritten-notes.md) PDF editor with touch support: handwritten notes on PDFs, converted into Markdown notes | backlog | 0/0 |

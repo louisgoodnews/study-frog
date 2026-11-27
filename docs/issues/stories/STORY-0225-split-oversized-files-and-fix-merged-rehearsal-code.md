@@ -23,10 +23,10 @@ Move code out of the two large files into well-named modules, remove the unused 
 names against main's layout.
 
 ## Acceptance Criteria
-- [ ] exec_run.rs and view/run.rs are at most 250 lines each
-- [ ] No unused imports in control_plan/stacks.rs
-- [ ] Hand-merged rehearsal choice code uses main's names
-- [ ] linecount passes
+- [x] exec_run.rs and view/run.rs are at most 250 lines each (103 and 154 lines)
+- [x] No unused imports in control_plan/stacks.rs (`cargo check -p studyfrog-ui` reports no warnings)
+- [x] Hand-merged rehearsal choice code uses main's names (it compiles against main's layout; no branch-only names remain)
+- [x] linecount passes (the gate's line-count step reports no file over 250 lines)
 
 ## Design Notes
 Behaviour must not change. Keep public function names and the module paths the rest of the code uses, or update their
