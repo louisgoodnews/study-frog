@@ -8,6 +8,7 @@ everything is under `Unreleased` until the first tagged version. Each entry name
 ## [Unreleased]
 
 ### Changed
+- **Classroom UI files under the line limit (`studyfrog-ui`)**: the saved-session types move from `classroom_types` to `classroom_types/saved_types`, and the selection helpers from `classroom_ui` to `classroom_ui/selection`. Import paths are unchanged (re-exported); no behaviour change.
 - **UI and UX research and strategy (`docs/research/ui-ux-learning-evidence-report.md`, `docs/design/ui-strategy.md`)**: evidence on cognitive load, retrieval feedback, motion, dashboards, touch targets and display mode, with a UI strategy and local HTML mockups in `docs/design/mockups/`. Effect sizes are secondary-sourced until the primary texts are read.
 - **Serious-games research report (`docs/research/serious-games-report.md`)**: effectiveness of serious games from secondary summaries, a StudyFrog mapping and a strategy. Effect sizes are unverified until the primary texts are read.
 - **Zapechelnyuk credit is 1/k (`STORY-0231`)**: as published, a choice with several options earns 1/k when at least one chosen option is correct. The 2026-11-25 full-credit override is removed on the owner's choice, and the story is marked `done`.
