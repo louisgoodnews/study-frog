@@ -4,7 +4,7 @@
 > `status:` and regenerate; `scripts/check.sh` fails if this file is stale.
 > Workflow and WIP rules: [issues/README](docs/issues/README.md).
 
-| Backlog (5) | Ready (1) | In progress (1/3) | Review (29) | Blocked (2) | Done (661) |
+| Backlog (8) | Ready (1) | In progress (1/3) | Review (29) | Blocked (2) | Done (661) |
 | --- | --- | --- | --- | --- | --- |
 | [TASK-0286](docs/issues/tasks/TASK-0286-profile-the-slowest-screen-and-record-it.md) Profile the slowest screen and record the profile (1) |  |  | [TASK-0279](docs/issues/tasks/TASK-0279-interleaved-paired-runs-of-two-builds.md) Interleaved paired runs of two builds (baseline and new, alternating) (2) |  | [BUG-0001](docs/issues/bugs/BUG-0001-teacher-and-subject-names-with-a-comma-cannot-be-used.md) Teacher and subject names with a comma cannot be used (3) |
 |  |  |  | [TASK-0282](docs/issues/tasks/TASK-0282-release-check-compares-the-reference-run-with-the-saved-baseline.md) Release check: compare the reference run with the saved baseline before tagging (1) |  | [BUG-0002](docs/issues/bugs/BUG-0002-the-stack-page-has-no-padding-at-its-left-edge.md) The stack page has no padding at its left edge (2) |
@@ -709,3 +709,6 @@
 | [EPIC-075](docs/issues/epics/EPIC-075-usable-match-mode-sourced-from-vault-flashcards.md) Make Match mode usable: source real front/back pairs from vault flashcards and questions with stack selection and playable tile layout | done | 2/2 |
 | [EPIC-076](docs/issues/epics/EPIC-076-exam-scheduler-with-adaptive-preparation-window.md) Exam scheduler: automatically schedule exam-linked stacks and items within a user-set or stats-proposed week window | done | 3/3 |
 | [EPIC-077](docs/issues/epics/EPIC-077-personalized-item-complexity-and-authoring-coach.md) Personalized item-complexity guardrails during authoring based on user retention history | done | 1/1 |
+| [EPIC-082](docs/issues/epics/EPIC-082-research-learner-types-and-modality-support.md) Research into learner types (auditory, visual and others) and how StudyFrog could support them | backlog | 0/0 |
+| [EPIC-083](docs/issues/epics/EPIC-083-research-voice-handling-local-speech-models.md) Research into voice handling: local models for speech comprehension and emission | backlog | 0/0 |
+| [EPIC-084](docs/issues/epics/EPIC-084-pdf-editor-touch-and-handwritten-notes.md) PDF editor with touch support: handwritten notes on PDFs, converted into Markdown notes | backlog | 0/0 |
